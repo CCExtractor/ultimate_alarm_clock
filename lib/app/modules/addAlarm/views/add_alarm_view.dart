@@ -1,4 +1,7 @@
-import 'package:alarm/alarm.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,22 +9,14 @@ import 'package:get/get.dart';
 import '../controllers/add_alarm_controller.dart';
 
 class AddAlarmView extends GetView<AddAlarmController> {
+  final bool _enabled = true;
+
   const AddAlarmView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final alarmSettings = AlarmSettings(
-            dateTime: DateTime.now().add(Duration(seconds: 10)),
-            assetAudioPath: 'assets/music/alarm.mp3',
-            loopAudio: true,
-            notificationTitle: 'This is the title',
-            notificationBody: 'This is the body',
-            enableNotificationOnKill: false,
-          );
-          await Alarm.set(settings: alarmSettings);
-        },
+        onPressed: () async {},
         child: Icon(Icons.add),
       ),
       appBar: AppBar(

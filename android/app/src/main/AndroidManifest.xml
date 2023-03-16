@@ -1,15 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ultimate_alarm_clock">
-
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 <uses-permission android:name="android.permission.WAKE_LOCK"/>
 <!-- For apps with targetSDK=31 (Android 12) -->
 <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
    <application
+    tools:replace="android:label"
         android:label="ultimate_alarm_clock"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
+<service 
+    android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+     />
 <service
     android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
     android:permission="android.permission.BIND_JOB_SERVICE"

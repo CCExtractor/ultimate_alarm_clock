@@ -9,7 +9,8 @@ dependencies:
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
-  alarm: ^0.1.5
+  flutter_foreground_task: ^4.1.0
+  flutter_ringtone_player: ^3.2.0
   flutter:
     sdk: flutter
 
