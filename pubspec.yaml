@@ -2,21 +2,23 @@ name: ultimate_alarm_clock
 version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
-environment: 
-  sdk: '>=2.19.2 <3.0.0'
+environment:
+  sdk: ">=2.19.2 <3.0.0"
 
-dependencies: 
+dependencies:
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
-  flutter: 
+  alarm: ^0.1.5
+  flutter:
     sdk: flutter
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^2.0.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
-flutter: 
+flutter:
   uses-material-design: true
-
+  assets:
+    - assets/music/alarm.mp3

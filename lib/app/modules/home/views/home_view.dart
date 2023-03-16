@@ -9,6 +9,10 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed('add-alarm'),
+        child: Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text('HomeView'),
         centerTitle: true,
