@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/addAlarm/bindings/add_alarm_binding.dart';
 import '../modules/addAlarm/views/add_alarm_view.dart';
+import '../modules/alarm-control/bindings/alarm_control_binding.dart';
+import '../modules/alarm-control/views/alarm_control_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 
@@ -20,8 +22,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ADD_ALARM,
-      page: () => const AddAlarmView(),
+      page: () => AddAlarmView(),
       binding: AddAlarmBinding(),
+    ),
+    GetPage(
+      name: _Paths.ALARM_CONTROL,
+      page: () => const AlarmControlView(),
+      binding: AlarmControlBinding(),
     ),
   ];
 }
