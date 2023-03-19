@@ -13,6 +13,8 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   flutter_time_picker_spinner: ^2.0.0
   sqflite: ^2.2.6
+  objectbox: ^1.7.2
+  timeago: ^3.4.0
   flutter:
     sdk: flutter
 
