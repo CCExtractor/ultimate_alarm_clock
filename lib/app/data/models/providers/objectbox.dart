@@ -6,17 +6,22 @@ import '../../../../objectbox.g.dart';
 
 class ObjectBox {
   /// The Store of this app.
-  late final Store _store;
-  late final Box<AlarmModel> _alarmBox;
+  static late final Store _store;
+  static late final Box<AlarmModel> _alarmBox;
 
-  ObjectBox._init(this._store) {
+  ObjectBox._init(Store store) {
     _alarmBox = Box<AlarmModel>(_store);
   }
 
-  static Future<ObjectBox> init() async {
-    final store = await openStore();
-
-    return ObjectBox._init(store);
+  static Future init() async {
+    var docsDir = await getApplicationDocumentsDirectory();
+    var dbPath = p.join(docsDir.path, "objectbox");
+    if (Store.isOpen(dbPath)) {
+      _store = Store.attach(getObjectBoxModel(), dbPath);
+    } else {
+      _store = await openStore(directory: dbPath);
+    }
+    return ObjectBox._init(_store);
   }
 
   AlarmModel? getAlarm(int id) => _alarmBox.get(id);
@@ -31,4 +36,6 @@ class ObjectBox {
   bool deleteAlarm(int id) => _alarmBox.remove(id);
 
   List<AlarmModel> getAllAlarms() => _alarmBox.getAll();
+
+  deleteAllAlarms() => _alarmBox.removeAll();
 }
