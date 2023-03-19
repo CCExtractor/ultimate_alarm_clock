@@ -45,8 +45,12 @@ class HomeView extends GetView<HomeController> {
                           separatorBuilder: (context, _) {
                             return SizedBox(height: height * 0.02);
                           },
-                          itemCount: alarms.length,
+                          itemCount: alarms.length + 1,
                           itemBuilder: (context, index) {
+                            // Spacing after last card
+                            if (index == alarms.length) {
+                              return SizedBox(height: height * 0.02);
+                            }
                             final alarm = alarms[index];
                             final time12 =
                                 Utils.convertTo12HourFormat(alarm.alarmTime);
