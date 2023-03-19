@@ -3,34 +3,31 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:screen_state/screen_state.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmHandlerModel extends TaskHandler {
-  Future<void> deleteFromDatabase(int id) async {
-    print("deleting $id");
-    await _database!.delete(
-      'Alarms',
-      where: "id = ?",
-      whereArgs: [id],
-    );
-  }
-
   Screen? _screen;
   StreamSubscription<ScreenStateEvent>? _subscription;
+
+  late ObjectBox objectbox;
+
   SendPort? _sendPort;
-  Database? _database;
   Stopwatch? _stopwatch;
+
+  // AlarmHandlerModel({required this.box});
+
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
+    objectbox = await ObjectBox.init();
+    List<AlarmModel> list = objectbox.getAllAlarms();
+    print(list);
     _stopwatch = Stopwatch();
     _sendPort = sendPort;
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'demoing.db');
-    _database = await openDatabase(path, version: 1);
     _screen = new Screen();
     _subscription =
         _screen!.screenStateStream!.listen((ScreenStateEvent event) {
@@ -47,14 +44,15 @@ class AlarmHandlerModel extends TaskHandler {
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
     print('CHANGING TO LATEST ALARM VIA EVENT!');
-    List<Map> list = await _database!.rawQuery('SELECT * FROM Alarms');
+    List<AlarmModel> list = objectbox.getAllAlarms();
+
     print(list);
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
 
-    for (Map item in list) {
+    for (AlarmModel alarm in list) {
       TimeOfDay currentTime = TimeOfDay.now();
-      TimeOfDay time = Utils.stringToTimeOfDay(item['time']);
+      TimeOfDay time = Utils.stringToTimeOfDay(alarm.alarmTime);
       DateTime dateTime =
           today.add(Duration(hours: time.hour, minutes: time.minute));
 
@@ -71,25 +69,16 @@ class AlarmHandlerModel extends TaskHandler {
           FlutterRingtonePlayer.playAlarm();
         }
       } else if (dateTime.isBefore(now)) {
-        int id = item['id'];
-        await deleteFromDatabase(id);
+        // Don't ring handle with getMiliseconds() to add a day if before
       } else {
-        if (item['lock'] == 0) {
-          _database!.update(
-            'Alarms',
-            {'lock': 1},
-            where: "id = ?",
-            whereArgs: [item['id']],
-          );
-          int ms = Utils.getMillisecondsToAlarm(DateTime.now(), dateTime);
-          print("SENDING: ${item['time']} : $ms");
-          FlutterForegroundTask.updateService(
-            notificationTitle: 'Alarm set!',
-            notificationText: 'Rings at ${item['time']}',
-          );
+        int ms = Utils.getMillisecondsToAlarm(DateTime.now(), dateTime);
+        print("SENDING: ${alarm.alarmTime} : $ms");
+        FlutterForegroundTask.updateService(
+          notificationTitle: 'Alarm set!',
+          notificationText: 'Rings at ${alarm.alarmTime}',
+        );
 
-          _sendPort?.send(ms);
-        }
+        // _sendPort?.send(ms);
       }
     }
   }
