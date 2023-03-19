@@ -16,7 +16,7 @@ class Utils {
 
   static int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
     if (alarmTime.isBefore(now)) {
-      print('The alarm time has already occurred.');
+      alarmTime.add(const Duration(days: 1));
     }
 
     int milliseconds = alarmTime.difference(now).inMilliseconds;
