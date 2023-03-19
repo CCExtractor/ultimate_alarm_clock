@@ -7,22 +7,20 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
 
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
+import 'package:ultimate_alarm_clock/main.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
-  FlutterForegroundTask.setTaskHandler(AlarmModel());
+  FlutterForegroundTask.setTaskHandler(AlarmHandlerModel());
 }
 
 class AddAlarmController extends GetxController {
   final selectedTime = DateTime.now().obs;
-  ReceivePort? _receivePort;
-  Database? _database;
+  final isActivityenabled = false.obs;
 
-  void addTime(String time) async {
-    await _database!.insert('Alarms', {'time': time, 'lock': 0});
-  }
+  ReceivePort? _receivePort;
 
   void createForegroundTask(int intervalForAlarm) {
     FlutterForegroundTask.init(
@@ -132,16 +130,6 @@ class AddAlarmController extends GetxController {
         final newReceivePort = FlutterForegroundTask.receivePort;
         _registerReceivePort(newReceivePort);
       }
-    });
-
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'demoing.db');
-
-    _database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      // When creating the db, create the table
-      await db.execute(
-          'CREATE TABLE Alarms (id INTEGER PRIMARY KEY, time TEXT, lock INTEGER)');
     });
   }
 
