@@ -32,9 +32,26 @@ class AddAlarmView extends GetView<AddAlarmController> {
     var height = Get.height;
     return WithForegroundTask(
       child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {},
-            child: Icon(Icons.add),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Padding(
+            padding: EdgeInsets.all(18.0),
+            child: SizedBox(
+              height: height * 0.06,
+              width: width * 0.8,
+              child: TextButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(kprimaryColor)),
+                child: Text(
+                  'Save',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall!
+                      .copyWith(color: ksecondaryTextColor),
+                ),
+                onPressed: () {},
+              ),
+            ),
           ),
           appBar: AppBar(
             backgroundColor: ksecondaryBackgroundColor,
@@ -52,6 +69,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 height: height * 0.28,
                 width: width,
                 child: TimePickerSpinner(
+                  alignment: Alignment.center,
                   is24HourMode: false,
                   normalTextStyle: Theme.of(context)
                       .textTheme
@@ -65,6 +83,31 @@ class AddAlarmView extends GetView<AddAlarmController> {
                     controller.selectedTime.value = dateTime;
                   },
                 ),
+              ),
+              Container(
+                color: ksecondaryTextColor,
+                height: 10,
+                width: width,
+              ),
+              Container(
+                color: ksecondaryBackgroundColor,
+                child: Column(children: [
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'Enable Activity',
+                          style: const TextStyle(color: kprimaryTextColor),
+                        ),
+                        trailing: Switch(
+                          onChanged: (value) {},
+                          value: true,
+                        ),
+                      )
+                    ],
+                  )
+                ]),
               )
             ],
           )),
