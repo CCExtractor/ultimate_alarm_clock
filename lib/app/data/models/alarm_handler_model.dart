@@ -9,7 +9,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:screen_state/screen_state.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-class AlarmModel extends TaskHandler {
+class AlarmHandlerModel extends TaskHandler {
   Future<void> deleteFromDatabase(int id) async {
     print("deleting $id");
     await _database!.delete(

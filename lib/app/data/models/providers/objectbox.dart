@@ -1,6 +1,6 @@
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 
 import '../../../../objectbox.g.dart';
 
