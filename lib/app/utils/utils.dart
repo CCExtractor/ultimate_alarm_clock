@@ -16,11 +16,11 @@ class Utils {
 
   static int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
     if (alarmTime.isBefore(now)) {
-      alarmTime.add(const Duration(days: 1));
+      alarmTime = alarmTime.add(const Duration(days: 1));
     }
 
     int milliseconds = alarmTime.difference(now).inMilliseconds;
-    return milliseconds;
+    return milliseconds - 1000;
   }
 
   static List<String> convertTo12HourFormat(String time) {
