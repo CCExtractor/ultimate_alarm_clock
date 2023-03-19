@@ -11,6 +11,7 @@ dependencies:
   get: 4.6.5
   flutter_foreground_task: ^4.1.0
   flutter_ringtone_player: ^3.2.0
+  flutter_time_picker_spinner: ^2.0.0
   sqflite: ^2.2.6
   flutter:
     sdk: flutter
