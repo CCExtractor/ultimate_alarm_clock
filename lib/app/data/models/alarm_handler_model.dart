@@ -16,72 +16,78 @@ class AlarmHandlerModel extends TaskHandler {
   StreamSubscription<ScreenStateEvent>? _subscription;
   late int alarmId;
   late ObjectBox objectbox;
-
+  late AlarmModel alarmRecord;
   SendPort? _sendPort;
   Stopwatch? _stopwatch;
-
-  // AlarmHandlerModel({required this.box});
 
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
     objectbox = await ObjectBox.init();
-    List<AlarmModel> list = objectbox.getAllAlarms();
-    _stopwatch = Stopwatch();
     _sendPort = sendPort;
-    _screen = new Screen();
     alarmId = await FlutterForegroundTask.getData(key: 'alarmId');
+    alarmRecord = objectbox.getAlarm(alarmId)!;
 
+    if (alarmRecord.isActivityEnabled == true) {
+      _screen = new Screen();
+      _stopwatch = Stopwatch();
+      _subscription =
+          _screen!.screenStateStream!.listen((ScreenStateEvent event) {
+        // // Starting stopwatch since screen will initially be unlocked obviously
+        // _stopwatch!.start();
+        if (event == ScreenStateEvent.SCREEN_UNLOCKED) {
+          _stopwatch!.start();
+        } else if (event == ScreenStateEvent.SCREEN_OFF) {
+          // Stop the stopwatch and update _unlockedDuration when the screen is turned off
+          _stopwatch!.stop();
+          _stopwatch!.reset();
+        }
+      });
+    }
     print('customData: $alarmId');
-    _subscription =
-        _screen!.screenStateStream!.listen((ScreenStateEvent event) {
-      if (event == ScreenStateEvent.SCREEN_UNLOCKED) {
-        _stopwatch!.start();
-      } else if (event == ScreenStateEvent.SCREEN_OFF) {
-        // Stop the stopwatch and update _unlockedDuration when the screen is turned off
-        _stopwatch!.stop();
-        _stopwatch!.reset();
-      }
-    });
   }
 
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
-    print('CHANGING TO LATEST ALARM VIA EVENT!');
-    List<AlarmModel> list = objectbox.getAllAlarms();
+    // print('CHANGING TO LATEST ALARM VIA EVENT!');
+    // List<AlarmModel> list = objectbox.getAllAlarms();
+    bool shouldAlarmRing = true;
 
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
 
-    for (AlarmModel alarm in list) {
-      TimeOfDay currentTime = TimeOfDay.now();
-      TimeOfDay time = Utils.stringToTimeOfDay(alarm.alarmTime);
-      DateTime dateTime =
-          today.add(Duration(hours: time.hour, minutes: time.minute));
+    TimeOfDay currentTime = TimeOfDay.now();
+    TimeOfDay time = Utils.stringToTimeOfDay(alarmRecord.alarmTime);
+    DateTime dateTime =
+        today.add(Duration(hours: time.hour, minutes: time.minute));
 
-      if (time.hour == currentTime.hour && time.minute == currentTime.minute) {
-        if (_stopwatch!.isRunning) {
-          _stopwatch!.stop();
-        }
-        // One minute since screen was active!
-        if (_stopwatch!.elapsedMilliseconds < 6000) {
-          print(_stopwatch!.elapsedMilliseconds);
-          FlutterForegroundTask.wakeUpScreen();
-          FlutterForegroundTask.launchApp('/alarm-control');
-
-          FlutterRingtonePlayer.playAlarm();
-        }
-      } else if (dateTime.isBefore(now)) {
-        // Don't ring handle with getMiliseconds() to add a day if before
-      } else {
-        int ms = Utils.getMillisecondsToAlarm(DateTime.now(), dateTime);
-        print("SENDING: ${alarm.alarmTime} : $ms");
-        FlutterForegroundTask.updateService(
-          notificationTitle: 'Alarm set!',
-          notificationText: 'Rings at ${alarm.alarmTime}',
-        );
-
-        // _sendPort?.send(ms);
+    if (alarmRecord.isActivityEnabled == true) {
+      if (_stopwatch!.isRunning) {
+        _stopwatch!.stop();
       }
+      // Screen active for one minute?
+      if (_stopwatch!.elapsedMilliseconds >= 6000) {
+        shouldAlarmRing = false;
+      }
+    }
+
+    if (time.hour == currentTime.hour && time.minute == currentTime.minute) {
+      // One minute since screen was active!
+      print("StopWatch Timer: ${_stopwatch!.elapsedMilliseconds}");
+      FlutterForegroundTask.wakeUpScreen();
+      FlutterForegroundTask.launchApp('/alarm-control');
+      // Ring only if necessary
+      if (shouldAlarmRing == true) FlutterRingtonePlayer.playAlarm();
+    }
+    //  Don't ring handle with getMiliseconds() to add a day if before
+    else {
+      int ms = Utils.getMillisecondsToAlarm(DateTime.now(), dateTime);
+      print("SENDING: ${alarmRecord.alarmTime} : $ms");
+      FlutterForegroundTask.updateService(
+        notificationTitle: 'Alarm set!',
+        notificationText: 'Rings at ${alarmRecord.alarmTime}',
+      );
+
+      // _sendPort?.send(ms);
     }
   }
 
