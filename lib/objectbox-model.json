@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:4289873114435469248",
-      "lastPropertyId": "4:5914924845092073997",
+      "lastPropertyId": "6:4223736418501520765",
       "name": "AlarmModel",
       "properties": [
         {
@@ -27,6 +27,16 @@
         {
           "id": "4:5914924845092073997",
           "name": "intervalToAlarm",
+          "type": 6
+        },
+        {
+          "id": "5:8162323245508634219",
+          "name": "isActivityEnabled",
+          "type": 1
+        },
+        {
+          "id": "6:4223736418501520765",
+          "name": "activityInterval",
           "type": 6
         }
       ],

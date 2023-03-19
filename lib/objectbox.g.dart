@@ -22,7 +22,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 4289873114435469248),
       name: 'AlarmModel',
-      lastPropertyId: const IdUid(4, 5914924845092073997),
+      lastPropertyId: const IdUid(6, 4223736418501520765),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -43,6 +43,16 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(4, 5914924845092073997),
             name: 'intervalToAlarm',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 8162323245508634219),
+            name: 'isActivityEnabled',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 4223736418501520765),
+            name: 'activityInterval',
             type: 6,
             flags: 0)
       ],
@@ -93,11 +103,13 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (AlarmModel object, fb.Builder fbb) {
           final alarmTimeOffset = fbb.writeString(object.alarmTime);
-          fbb.startTable(5);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, alarmTimeOffset);
           fbb.addBool(2, object.isEnabled);
           fbb.addInt64(3, object.intervalToAlarm);
+          fbb.addBool(4, object.isActivityEnabled);
+          fbb.addInt64(5, object.activityInterval);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -112,7 +124,11 @@ ModelDefinition getObjectBoxModel() {
               isEnabled:
                   const fb.BoolReader().vTableGet(buffer, rootOffset, 8, false),
               intervalToAlarm:
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0));
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+              isActivityEnabled: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 12, false),
+              activityInterval:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0));
 
           return object;
         })
@@ -138,4 +154,12 @@ class AlarmModel_ {
   /// see [AlarmModel.intervalToAlarm]
   static final intervalToAlarm =
       QueryIntegerProperty<AlarmModel>(_entities[0].properties[3]);
+
+  /// see [AlarmModel.isActivityEnabled]
+  static final isActivityEnabled =
+      QueryBooleanProperty<AlarmModel>(_entities[0].properties[4]);
+
+  /// see [AlarmModel.activityInterval]
+  static final activityInterval =
+      QueryIntegerProperty<AlarmModel>(_entities[0].properties[5]);
 }
