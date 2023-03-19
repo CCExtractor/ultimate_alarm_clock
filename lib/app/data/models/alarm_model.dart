@@ -11,6 +11,6 @@ class AlarmModel {
   AlarmModel(
       {this.id = 0,
       required this.alarmTime,
-      required this.isEnabled,
+      this.isEnabled = true,
       required this.intervalToAlarm});
 }

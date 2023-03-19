@@ -6,7 +6,7 @@ environment:
   sdk: ">=2.19.2 <3.0.0"
 
 dependencies:
-  objectbox_flutter_libs: any
+  objectbox_flutter_libs: ^1.7.2
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
