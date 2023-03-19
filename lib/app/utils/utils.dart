@@ -22,4 +22,16 @@ class Utils {
     int milliseconds = alarmTime.difference(now).inMilliseconds;
     return milliseconds;
   }
+
+  static List<String> convertTo12HourFormat(String time) {
+    int hour = int.parse(time.substring(0, 2));
+    String minute = time.substring(3);
+    String period = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    if (hour == 0) {
+      hour = 12;
+    }
+
+    return ['$hour:$minute', period];
+  }
 }
