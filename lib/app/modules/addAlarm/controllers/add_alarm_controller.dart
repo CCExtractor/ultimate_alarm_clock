@@ -16,90 +16,13 @@ void startCallback() {
 }
 
 class AddAlarmController extends GetxController {
+  final selectedTime = TimeOfDay.now().obs;
+
   ReceivePort? _receivePort;
+  Database? _database;
 
-  Future<bool> _stopForegroundTask() {
-    return FlutterForegroundTask.stopService();
-  }
-
-  void _closeReceivePort() {
-    _receivePort?.close();
-    _receivePort = null;
-  }
-
-  bool _registerReceivePort(ReceivePort? newReceivePort) {
-    if (newReceivePort == null) {
-      return false;
-    }
-
-    _closeReceivePort();
-
-    _receivePort = newReceivePort;
-    _receivePort?.listen((message) {
-      if (message is int) {
-        print('CONVERTING TO $message');
-
-        _stopForegroundTask();
-        createForegroundTask(getMillisecondsToAlarm(
-            DateTime.now(), DateTime.now().add(Duration(minutes: message))));
-        startForegroundTask(message.toString());
-      }
-      print('MAIN RECIEVED $message');
-      // FlutterForegroundTask.updateService(
-      //   notificationTitle: 'Ultimate Alarm Clock',
-      //   notificationText: 'RECEIVED $message',
-      // );
-      if (message is String) {
-        if (message == 'onNotificationPressed') {
-          Get.to('/alarm-control');
-        }
-      }
-    });
-
-    return _receivePort != null;
-  }
-
-  Future<bool> startForegroundTask(String count) async {
-    if (!await FlutterForegroundTask.canDrawOverlays) {
-      final isGranted =
-          await FlutterForegroundTask.openSystemAlertWindowSettings();
-      if (!isGranted) {
-        print('SYSTEM_ALERT_WINDOW permission denied!');
-        return false;
-      }
-    }
-    print('STARTING TASK AT ${count}');
-
-    await FlutterForegroundTask.saveData(key: 'time', value: count);
-
-    final ReceivePort? receivePort = FlutterForegroundTask.receivePort;
-    final bool isRegistered = _registerReceivePort(receivePort);
-    if (!isRegistered) {
-      print('Failed to register receivePort!');
-      return false;
-    }
-
-    if (await FlutterForegroundTask.isRunningService) {
-      print("restarting");
-      return FlutterForegroundTask.restartService();
-    } else {
-      print('we go weeeeeee');
-      return FlutterForegroundTask.startService(
-        notificationTitle: 'Foreground Service is running',
-        notificationText: 'Tap to return to the app',
-        callback: startCallback,
-      );
-    }
-  }
-
-  int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
-    if (alarmTime.isBefore(now)) {
-      print('The alarm time has already occurred.');
-    }
-
-    int milliseconds = alarmTime.difference(now).inMilliseconds;
-    print(milliseconds);
-    return milliseconds;
+  void addTime(String time) async {
+    await _database!.insert('Alarms', {'time': time, 'lock': 0});
   }
 
   void createForegroundTask(int intervalForAlarm) {
@@ -131,6 +54,74 @@ class AddAlarmController extends GetxController {
     );
   }
 
+  Future<bool> startForegroundTask(String count) async {
+    if (!await FlutterForegroundTask.canDrawOverlays) {
+      final isGranted =
+          await FlutterForegroundTask.openSystemAlertWindowSettings();
+      if (!isGranted) {
+        print('SYSTEM_ALERT_WINDOW permission denied!');
+        return false;
+      }
+    }
+    print('STARTING TASK AT ${count}');
+
+    await FlutterForegroundTask.saveData(key: 'time', value: count);
+
+    final ReceivePort? receivePort = FlutterForegroundTask.receivePort;
+    final bool isRegistered = _registerReceivePort(receivePort);
+    if (!isRegistered) {
+      print('Failed to register receivePort!');
+      return false;
+    }
+
+    if (await FlutterForegroundTask.isRunningService) {
+      return FlutterForegroundTask.restartService();
+    } else {
+      return FlutterForegroundTask.startService(
+        notificationTitle: 'Foreground Service is running',
+        notificationText: 'Tap to return to the app',
+        callback: startCallback,
+      );
+    }
+  }
+
+  Future<bool> _stopForegroundTask() {
+    return FlutterForegroundTask.stopService();
+  }
+
+  void _closeReceivePort() {
+    _receivePort?.close();
+    _receivePort = null;
+  }
+
+  bool _registerReceivePort(ReceivePort? newReceivePort) {
+    if (newReceivePort == null) {
+      return false;
+    }
+
+    _closeReceivePort();
+
+    _receivePort = newReceivePort;
+    _receivePort?.listen((message) {
+      if (message is int) {
+        print('CONVERTING TO $message');
+
+        _stopForegroundTask();
+        createForegroundTask(message);
+        startForegroundTask(message.toString());
+      }
+      print('MAIN RECIEVED $message');
+
+      if (message is String) {
+        if (message == 'onNotificationPressed') {
+          Get.to('/alarm-control');
+        }
+      }
+    });
+
+    return _receivePort != null;
+  }
+
   T? _ambiguate<T>(T? value) => value;
 
   @override
@@ -142,6 +133,16 @@ class AddAlarmController extends GetxController {
         final newReceivePort = FlutterForegroundTask.receivePort;
         _registerReceivePort(newReceivePort);
       }
+    });
+
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demoing.db');
+
+    _database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      // When creating the db, create the table
+      await db.execute(
+          'CREATE TABLE Alarms (id INTEGER PRIMARY KEY, time TEXT, lock INTEGER)');
     });
   }
 
