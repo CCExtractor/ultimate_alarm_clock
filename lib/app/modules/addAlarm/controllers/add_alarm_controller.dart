@@ -27,9 +27,9 @@ class AddAlarmController extends GetxController {
   createAlarm(AlarmModel alarmRecord) async {
     int intervaltoAlarm =
         Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value);
-    int alarmId = alarmRecord.id;
+    int alarmId = objectbox.insertAlarm(alarmRecord);
+
     if (await FlutterForegroundTask.isRunningService == false) {
-      objectbox.insertAlarm(alarmRecord);
       // Starting service mandatorily!
       createForegroundTask(intervaltoAlarm);
       startForegroundTask(alarmId);
@@ -38,10 +38,10 @@ class AddAlarmController extends GetxController {
     }
   }
 
-  restartForegroundTask(int alarmId, int intervalToAlarm) {
-    _stopForegroundTask();
+  restartForegroundTask(int alarmId, int intervalToAlarm) async {
+    await _stopForegroundTask();
     createForegroundTask(intervalToAlarm);
-    startForegroundTask(alarmId);
+    await startForegroundTask(alarmId);
   }
 
   void createForegroundTask(int intervalForAlarm) {
@@ -82,6 +82,7 @@ class AddAlarmController extends GetxController {
         return false;
       }
     }
+    print("AlarmId Recieved : $alarmId");
 
     await FlutterForegroundTask.saveData(key: 'alarmId', value: alarmId);
 
