@@ -5,8 +5,8 @@ import '../controllers/add_alarm_controller.dart';
 class AddAlarmBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddAlarmController>(
-      () => AddAlarmController(),
+    Get.put<AddAlarmController>(
+      AddAlarmController(),
     );
   }
 }
