@@ -11,22 +11,7 @@ import 'package:ultimate_alarm_clock/main.dart';
 import '../controllers/add_alarm_controller.dart';
 
 class AddAlarmView extends GetView<AddAlarmController> {
-  final bool _enabled = true;
   AddAlarmView({Key? key}) : super(key: key);
-  Future<TimeOfDay?> selectTime(BuildContext context) async {
-    final TimeOfDay? selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      builder: (BuildContext context, Widget? child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child!,
-        );
-      },
-    );
-
-    return selectedTime;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +38,17 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 ),
                 onPressed: () {
                   AlarmModel alarmRecord = AlarmModel(
-                      alarmTime: Utils.timeOfDayToString(TimeOfDay.fromDateTime(
-                          controller.selectedTime.value)),
-                      intervalToAlarm: Utils.getMillisecondsToAlarm(
-                          DateTime.now(), controller.selectedTime.value));
+                    alarmTime: Utils.timeOfDayToString(
+                        TimeOfDay.fromDateTime(controller.selectedTime.value)),
+                    intervalToAlarm: Utils.getMillisecondsToAlarm(
+                        DateTime.now(), controller.selectedTime.value),
+                    isActivityEnabled: controller.isActivityenabled.value,
+                  );
                   objectbox.insertAlarm(alarmRecord);
+                  // Starting service mandatorily!
+                  controller.createForegroundTask(Utils.getMillisecondsToAlarm(
+                      DateTime.now(), controller.selectedTime.value));
+                  controller.startForegroundTask(alarmRecord.alarmTime);
                 },
               ),
             ),
@@ -78,6 +69,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 height: height * 0.28,
                 width: width,
                 child: TimePickerSpinner(
+                  isForce2Digits: true,
                   alignment: Alignment.center,
                   is24HourMode: false,
                   normalTextStyle: Theme.of(context)
@@ -101,20 +93,24 @@ class AddAlarmView extends GetView<AddAlarmController> {
               Container(
                 color: ksecondaryBackgroundColor,
                 child: Column(children: [
-                  ListView(
-                    shrinkWrap: true,
-                    children: [
-                      ListTile(
-                        title: Text(
-                          'Enable Activity',
-                          style: const TextStyle(color: kprimaryTextColor),
-                        ),
-                        trailing: Switch(
-                          onChanged: (value) {},
-                          value: true,
-                        ),
-                      )
-                    ],
+                  Obx(
+                    () => ListView(
+                      shrinkWrap: true,
+                      children: [
+                        ListTile(
+                          title: Text(
+                            'Enable Activity',
+                            style: const TextStyle(color: kprimaryTextColor),
+                          ),
+                          trailing: Switch(
+                            onChanged: (value) {
+                              controller.isActivityenabled.value = value;
+                            },
+                            value: controller.isActivityenabled.value,
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ]),
               )
