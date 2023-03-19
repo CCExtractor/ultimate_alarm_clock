@@ -28,5 +28,7 @@ class ObjectBox {
 
   int insertAlarm(AlarmModel alarmRecord) => _alarmBox.put(alarmRecord);
 
-  bool deleteUser(int id) => _alarmBox.remove(id);
+  bool deleteAlarm(int id) => _alarmBox.remove(id);
+
+  List<AlarmModel> getAllAlarms() => _alarmBox.getAll();
 }
