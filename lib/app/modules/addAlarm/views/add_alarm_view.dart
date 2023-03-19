@@ -3,6 +3,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/add_alarm_controller.dart';
@@ -27,50 +28,43 @@ class AddAlarmView extends GetView<AddAlarmController> {
 
   @override
   Widget build(BuildContext context) {
+    var width = Get.width;
+    var height = Get.height;
     return WithForegroundTask(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            Get.defaultDialog(
-                title: "Add Alarm",
-                content: Column(
-                  children: [
-                    TextButton.icon(
-                        onPressed: () async {
-                          final TimeOfDay? selectedTime =
-                              await selectTime(context);
-                          if (selectedTime != null) {
-                            controller.selectedTime.value = selectedTime;
-                          }
-                        },
-                        icon: Icon(Icons.alarm),
-                        label: Text('Select time!')),
-                    TextButton(
-                        onPressed: () {
-                          controller.addTime(Utils.timeOfDayToString(
-                              controller.selectedTime.value));
-                          controller.createForegroundTask(
-                              Utils.getMillisecondsToAlarm(DateTime.now(),
-                                  DateTime.now().add(Duration(minutes: 1))));
-                          controller.startForegroundTask(1.toString());
-                        },
-                        child: Text('Add alarm!'))
-                  ],
-                ));
-          },
-          child: Icon(Icons.add),
-        ),
-        appBar: AppBar(
-          title: const Text('AddAlarmView'),
-          centerTitle: true,
-        ),
-        body: const Center(
-          child: Text(
-            'AddAlarmView is working',
-            style: TextStyle(fontSize: 20),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {},
+            child: Icon(Icons.add),
           ),
-        ),
-      ),
+          appBar: AppBar(
+            backgroundColor: ksecondaryBackgroundColor,
+            elevation: 0.0,
+            centerTitle: true,
+            title: Text(
+              'Ring',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+          body: Column(
+            children: [
+              Container(
+                color: ksecondaryBackgroundColor,
+                height: height * 0.28,
+                width: width,
+                child: TimePickerSpinner(
+                  is24HourMode: false,
+                  normalTextStyle: Theme.of(context)
+                      .textTheme
+                      .displayMedium!
+                      .copyWith(
+                          fontWeight: FontWeight.normal,
+                          color: kprimaryDisabledTextColor),
+                  highlightedTextStyle:
+                      Theme.of(context).textTheme.displayMedium,
+                ),
+              )
+            ],
+          )),
     );
   }
 }
