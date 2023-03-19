@@ -3,8 +3,10 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/main.dart';
 
 import '../controllers/add_alarm_controller.dart';
 
@@ -49,7 +51,14 @@ class AddAlarmView extends GetView<AddAlarmController> {
                       .displaySmall!
                       .copyWith(color: ksecondaryTextColor),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  AlarmModel alarmRecord = AlarmModel(
+                      alarmTime: Utils.timeOfDayToString(TimeOfDay.fromDateTime(
+                          controller.selectedTime.value)),
+                      intervalToAlarm: Utils.getMillisecondsToAlarm(
+                          DateTime.now(), controller.selectedTime.value));
+                  objectbox.insertAlarm(alarmRecord);
+                },
               ),
             ),
           ),
