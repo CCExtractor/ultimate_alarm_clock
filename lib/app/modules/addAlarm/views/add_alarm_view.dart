@@ -41,7 +41,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
             elevation: 0.0,
             centerTitle: true,
             title: Text(
-              'Ring',
+              'Add your alarm',
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
@@ -61,6 +61,9 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           color: kprimaryDisabledTextColor),
                   highlightedTextStyle:
                       Theme.of(context).textTheme.displayMedium,
+                  onTimeChange: (dateTime) {
+                    controller.selectedTime.value = dateTime;
+                  },
                 ),
               )
             ],

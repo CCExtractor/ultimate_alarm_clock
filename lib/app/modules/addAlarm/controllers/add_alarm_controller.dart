@@ -16,8 +16,7 @@ void startCallback() {
 }
 
 class AddAlarmController extends GetxController {
-  final selectedTime = TimeOfDay.now().obs;
-
+  final selectedTime = DateTime.now().obs;
   ReceivePort? _receivePort;
   Database? _database;
 
