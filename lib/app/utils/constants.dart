@@ -11,6 +11,10 @@ ThemeData kThemeData = ThemeData(
             color: kprimaryTextColor,
             fontFamily: 'poppins',
             letterSpacing: 0.15),
+        bodyMedium: TextStyle(
+            color: kprimaryTextColor,
+            fontFamily: 'poppins',
+            letterSpacing: 0.15),
         displayMedium: TextStyle(
             fontSize: 25,
             color: kprimaryTextColor,
@@ -26,8 +30,6 @@ ThemeData kThemeData = ThemeData(
     floatingActionButtonTheme: FloatingActionButtonThemeData(
         foregroundColor: Colors.black, backgroundColor: kprimaryColor),
     primaryColor: kprimaryColor,
-    cardColor: ksecondaryBackgroundColor,
-    canvasColor: ksecondaryBackgroundColor,
     colorScheme: ColorScheme.fromSwatch().copyWith(
         secondary: ksecondaryColor,
         background: kprimaryBackgroundColor,

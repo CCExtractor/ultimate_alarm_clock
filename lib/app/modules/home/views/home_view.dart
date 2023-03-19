@@ -90,37 +90,56 @@ class HomeView extends GetView<HomeController> {
                                   //     ),
                                   //   ),
                                   // ),
-                                  Column(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Switch(
-                                            value: true,
-                                            onChanged: (bool value) {}),
-                                      ),
-                                      PopupMenuButton(
-                                          color: kprimaryTextColor,
-                                          itemBuilder: (context) {
-                                            return [
-                                              const PopupMenuItem<int>(
-                                                value: 0,
-                                                child: Text("Preview Alarm"),
-                                              ),
-                                              const PopupMenuItem<int>(
-                                                value: 1,
-                                                child: Text("Delete Alarm"),
-                                              ),
-                                            ];
-                                          },
-                                          onSelected: (value) {
-                                            if (value == 0) {
-                                              print(
-                                                  "Preview menu is selected.");
-                                            } else if (value == 1) {
-                                              print("Delete menu is selected.");
-                                            }
-                                          })
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Switch(
+                                              value: true,
+                                              onChanged: (bool value) {}),
+                                        ),
+                                        PopupMenuButton(
+                                            color: kprimaryBackgroundColor,
+                                            icon: const Icon(
+                                              Icons.more_vert,
+                                              color: kprimaryTextColor,
+                                            ),
+                                            itemBuilder: (context) {
+                                              return [
+                                                PopupMenuItem<int>(
+                                                  value: 0,
+                                                  child: Text(
+                                                    "Preview Alarm",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium,
+                                                  ),
+                                                ),
+                                                PopupMenuItem<int>(
+                                                  value: 1,
+                                                  child: Text(
+                                                    "Delete Alarm",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium,
+                                                  ),
+                                                ),
+                                              ];
+                                            },
+                                            onSelected: (value) {
+                                              if (value == 0) {
+                                                print(
+                                                    "Preview menu is selected.");
+                                              } else if (value == 1) {
+                                                print(
+                                                    "Delete menu is selected.");
+                                              }
+                                            })
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
