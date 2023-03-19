@@ -36,7 +36,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                       .displaySmall!
                       .copyWith(color: ksecondaryTextColor),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
                     alarmTime: Utils.timeOfDayToString(
                         TimeOfDay.fromDateTime(controller.selectedTime.value)),
@@ -44,11 +44,10 @@ class AddAlarmView extends GetView<AddAlarmController> {
                         DateTime.now(), controller.selectedTime.value),
                     isActivityEnabled: controller.isActivityenabled.value,
                   );
-                  objectbox.insertAlarm(alarmRecord);
-                  // Starting service mandatorily!
-                  controller.createForegroundTask(Utils.getMillisecondsToAlarm(
-                      DateTime.now(), controller.selectedTime.value));
-                  controller.startForegroundTask(alarmRecord.alarmTime);
+
+                  await controller.createAlarm(alarmRecord);
+
+                  Get.back();
                 },
               ),
             ),
