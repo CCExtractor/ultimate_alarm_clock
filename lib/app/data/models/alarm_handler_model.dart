@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class AlarmHandlerModel extends TaskHandler {
   Screen? _screen;
   StreamSubscription<ScreenStateEvent>? _subscription;
-
+  late int alarmId;
   late ObjectBox objectbox;
 
   SendPort? _sendPort;
@@ -25,10 +26,12 @@ class AlarmHandlerModel extends TaskHandler {
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
     objectbox = await ObjectBox.init();
     List<AlarmModel> list = objectbox.getAllAlarms();
-    print(list);
     _stopwatch = Stopwatch();
     _sendPort = sendPort;
     _screen = new Screen();
+    alarmId = await FlutterForegroundTask.getData(key: 'alarmId');
+
+    print('customData: $alarmId');
     _subscription =
         _screen!.screenStateStream!.listen((ScreenStateEvent event) {
       if (event == ScreenStateEvent.SCREEN_UNLOCKED) {
@@ -46,7 +49,6 @@ class AlarmHandlerModel extends TaskHandler {
     print('CHANGING TO LATEST ALARM VIA EVENT!');
     List<AlarmModel> list = objectbox.getAllAlarms();
 
-    print(list);
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
 
@@ -61,7 +63,7 @@ class AlarmHandlerModel extends TaskHandler {
           _stopwatch!.stop();
         }
         // One minute since screen was active!
-        if (_stopwatch!.elapsedMilliseconds < 60000) {
+        if (_stopwatch!.elapsedMilliseconds < 6000) {
           print(_stopwatch!.elapsedMilliseconds);
           FlutterForegroundTask.wakeUpScreen();
           FlutterForegroundTask.launchApp('/alarm-control');
