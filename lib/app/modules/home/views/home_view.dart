@@ -25,7 +25,7 @@ class HomeView extends GetView<HomeController> {
         children: [
           Expanded(
             child: GlowingOverscrollIndicator(
-              color: kprimaryColor,
+              color: kprimaryDisabledTextColor,
               axisDirection: AxisDirection.down,
               child: StreamBuilder<List<AlarmModel>>(
                   stream: controller.streamAlarms,
@@ -34,6 +34,13 @@ class HomeView extends GetView<HomeController> {
                       return const Center(child: CircularProgressIndicator());
                     } else {
                       final alarms = snapshot.data!;
+                      if (alarms.isEmpty) {
+                        return Center(
+                            child: Text(
+                          'Add an alarm to get started!',
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ));
+                      }
                       return ListView.separated(
                           separatorBuilder: (context, _) {
                             return SizedBox(height: height * 0.02);
@@ -69,14 +76,26 @@ class HomeView extends GetView<HomeController> {
                                                 Text('One Time',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .bodySmall),
+                                                        .bodySmall!
+                                                        .copyWith(
+                                                            color: (alarm
+                                                                        .isEnabled ==
+                                                                    true)
+                                                                ? kprimaryTextColor
+                                                                : kprimaryDisabledTextColor)),
                                                 Row(
                                                   children: [
                                                     Text(
                                                       time12[0],
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .displayLarge,
+                                                          .displayLarge!
+                                                          .copyWith(
+                                                              color: (alarm
+                                                                          .isEnabled ==
+                                                                      true)
+                                                                  ? kprimaryTextColor
+                                                                  : kprimaryDisabledTextColor),
                                                     ),
                                                     Padding(
                                                       padding: const EdgeInsets
@@ -86,7 +105,13 @@ class HomeView extends GetView<HomeController> {
                                                         time12[1],
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .displayMedium,
+                                                            .displayMedium!
+                                                            .copyWith(
+                                                                color: (alarm
+                                                                            .isEnabled ==
+                                                                        true)
+                                                                    ? kprimaryTextColor
+                                                                    : kprimaryDisabledTextColor),
                                                       ),
                                                     ),
                                                   ],
@@ -123,45 +148,41 @@ class HomeView extends GetView<HomeController> {
                                               Expanded(
                                                 flex: 0,
                                                 child: PopupMenuButton(
-                                                    color:
-                                                        kprimaryBackgroundColor,
-                                                    icon: const Icon(
-                                                      Icons.more_vert,
-                                                      color: kprimaryTextColor,
-                                                    ),
-                                                    itemBuilder: (context) {
-                                                      return [
-                                                        PopupMenuItem<int>(
-                                                          value: 0,
-                                                          child: Text(
-                                                            "Preview Alarm",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyMedium,
-                                                          ),
+                                                  color:
+                                                      kprimaryBackgroundColor,
+                                                  icon: Icon(Icons.more_vert,
+                                                      color: (alarm.isEnabled ==
+                                                              true)
+                                                          ? kprimaryTextColor
+                                                          : kprimaryDisabledTextColor),
+                                                  itemBuilder: (context) {
+                                                    return [
+                                                      PopupMenuItem<int>(
+                                                        value: 0,
+                                                        child: Text(
+                                                          "Preview Alarm",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium,
                                                         ),
-                                                        PopupMenuItem<int>(
-                                                          value: 1,
-                                                          child: Text(
-                                                            "Delete Alarm",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyMedium,
-                                                          ),
+                                                      ),
+                                                      PopupMenuItem<int>(
+                                                        value: 1,
+                                                        child: Text(
+                                                          "Delete Alarm",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium,
                                                         ),
-                                                      ];
-                                                    },
-                                                    onSelected: (value) {
-                                                      if (value == 0) {
-                                                        print(
-                                                            "Preview menu is selected.");
-                                                      } else if (value == 1) {
-                                                        print(
-                                                            "Delete menu is selected.");
-                                                      }
-                                                    }),
+                                                        onTap: () => objectbox
+                                                            .deleteAlarm(
+                                                                alarm.id),
+                                                      ),
+                                                    ];
+                                                  },
+                                                ),
                                               )
                                             ],
                                           ),
