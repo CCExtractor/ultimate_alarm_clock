@@ -8,7 +8,9 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
 
 import 'package:path/path.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/main.dart';
 
 @pragma('vm:entry-point')
@@ -21,6 +23,26 @@ class AddAlarmController extends GetxController {
   final isActivityenabled = false.obs;
 
   ReceivePort? _receivePort;
+
+  createAlarm(AlarmModel alarmRecord) async {
+    int intervaltoAlarm =
+        Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value);
+    int alarmId = alarmRecord.id;
+    if (await FlutterForegroundTask.isRunningService == false) {
+      objectbox.insertAlarm(alarmRecord);
+      // Starting service mandatorily!
+      createForegroundTask(intervaltoAlarm);
+      startForegroundTask(alarmId);
+    } else {
+      await restartForegroundTask(alarmRecord.id, intervaltoAlarm);
+    }
+  }
+
+  restartForegroundTask(int alarmId, int intervalToAlarm) {
+    _stopForegroundTask();
+    createForegroundTask(intervalToAlarm);
+    startForegroundTask(alarmId);
+  }
 
   void createForegroundTask(int intervalForAlarm) {
     FlutterForegroundTask.init(
@@ -51,7 +73,7 @@ class AddAlarmController extends GetxController {
     );
   }
 
-  Future<bool> startForegroundTask(String count) async {
+  Future<bool> startForegroundTask(int alarmId) async {
     if (!await FlutterForegroundTask.canDrawOverlays) {
       final isGranted =
           await FlutterForegroundTask.openSystemAlertWindowSettings();
@@ -60,9 +82,8 @@ class AddAlarmController extends GetxController {
         return false;
       }
     }
-    print('STARTING TASK AT ${count}');
 
-    await FlutterForegroundTask.saveData(key: 'time', value: count);
+    await FlutterForegroundTask.saveData(key: 'alarmId', value: alarmId);
 
     final ReceivePort? receivePort = FlutterForegroundTask.receivePort;
     final bool isRegistered = _registerReceivePort(receivePort);
@@ -75,7 +96,7 @@ class AddAlarmController extends GetxController {
       return FlutterForegroundTask.restartService();
     } else {
       return FlutterForegroundTask.startService(
-        notificationTitle: 'Foreground Service is running',
+        notificationTitle: 'UltiClock is running!',
         notificationText: 'Tap to return to the app',
         callback: startCallback,
       );
@@ -103,9 +124,8 @@ class AddAlarmController extends GetxController {
       if (message is int) {
         print('CONVERTING TO $message');
 
-        _stopForegroundTask();
-        createForegroundTask(message);
-        startForegroundTask(message.toString());
+        // We're setting service for the next alarm and passing alarmId for that
+        // TODO pass interval, not id to createForegroundTask
       }
       print('MAIN RECIEVED $message');
 
