@@ -1,0 +1,47 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:4289873114435469248",
+      "lastPropertyId": "4:5914924845092073997",
+      "name": "AlarmModel",
+      "properties": [
+        {
+          "id": "1:7857471152738723087",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:191915127189955183",
+          "name": "alarmTime",
+          "type": 9
+        },
+        {
+          "id": "3:6851735567850953523",
+          "name": "isEnabled",
+          "type": 1
+        },
+        {
+          "id": "4:5914924845092073997",
+          "name": "intervalToAlarm",
+          "type": 6
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:4289873114435469248",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
