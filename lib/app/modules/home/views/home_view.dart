@@ -62,7 +62,7 @@ class HomeView extends GetView<HomeController> {
                                               "8:03",
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .displayMedium,
+                                                  .displayLarge,
                                             ),
                                             Padding(
                                               padding:
@@ -72,7 +72,7 @@ class HomeView extends GetView<HomeController> {
                                                 "AM",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displaySmall,
+                                                    .displayMedium,
                                               ),
                                             ),
                                           ],
