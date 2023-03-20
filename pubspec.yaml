@@ -7,6 +7,7 @@ environment:
 
 dependencies:
   # objectbox_flutter_libs: ^1.7.2
+  firebase_core: ^2.8.0
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
