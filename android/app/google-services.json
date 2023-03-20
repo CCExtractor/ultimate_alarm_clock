@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:951082036741:android:403d98ee7770ce3071766c",
         "android_client_info": {
-          "package_name": "com.markisdev.ulticlock"
+          "package_name": "com.example.ultimate_alarm_clock"
         }
       },
       "oauth_client": [
