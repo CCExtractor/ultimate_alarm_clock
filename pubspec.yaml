@@ -6,13 +6,14 @@ environment:
   sdk: ">=2.19.2 <3.0.0"
 
 dependencies:
-  objectbox_flutter_libs: ^1.7.2
+  # objectbox_flutter_libs: ^1.7.2
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
   flutter_foreground_task: ^4.1.0
   flutter_ringtone_player: ^3.2.0
   flutter_time_picker_spinner: ^2.0.0
+  cloud_firestore: ^4.4.5
   sqflite: ^2.2.6
   flutter:
     sdk: flutter
@@ -43,5 +44,5 @@ flutter:
         - asset: assets/fonts/raleway/Raleway-SemiBold.ttf
           weight: 600
   uses-material-design: true
-  assets:
-    - assets/music/alarm.mp3
+  # assets:
+  #   - assets/music/alarm.mp3

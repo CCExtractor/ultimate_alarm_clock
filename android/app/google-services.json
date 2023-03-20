@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "951082036741",
+    "project_id": "ulticock-c13a2",
+    "storage_bucket": "ulticock-c13a2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951082036741:android:403d98ee7770ce3071766c",
+        "android_client_info": {
+          "package_name": "com.markisdev.ulticlock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951082036741-fj3aoh9q4svfdmjmhj019li0tr6ebco5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEgfAAOgj5oLlX7LtXn_vCoW7AkMj7Qv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951082036741-fj3aoh9q4svfdmjmhj019li0tr6ebco5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
