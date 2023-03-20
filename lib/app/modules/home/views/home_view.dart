@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:ultimate_alarm_clock/main.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -27,13 +28,17 @@ class HomeView extends GetView<HomeController> {
             child: GlowingOverscrollIndicator(
               color: kprimaryDisabledTextColor,
               axisDirection: AxisDirection.down,
-              child: StreamBuilder<List<AlarmModel>>(
+              child: StreamBuilder<QuerySnapshot>(
                   stream: controller.streamAlarms,
-                  builder: (context, snapshot) {
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     } else {
-                      final alarms = snapshot.data!;
+                      final alarms =
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        return AlarmModel.fromDocumentSnapshot(
+                            documentSnapshot: document);
+                      }).toList();
                       if (alarms.isEmpty) {
                         return Center(
                             child: Text(
@@ -145,8 +150,8 @@ class HomeView extends GetView<HomeController> {
                                                     value: alarm.isEnabled,
                                                     onChanged: (bool value) {
                                                       alarm.isEnabled = value;
-                                                      objectbox
-                                                          .insertAlarm(alarm);
+                                                      // objectbox
+                                                      //     .insertAlarm(alarm);
                                                     }),
                                               ),
                                               Expanded(
@@ -172,18 +177,19 @@ class HomeView extends GetView<HomeController> {
                                                         ),
                                                       ),
                                                       PopupMenuItem<int>(
-                                                        value: 1,
-                                                        child: Text(
-                                                          "Delete Alarm",
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .bodyMedium,
-                                                        ),
-                                                        onTap: () => objectbox
-                                                            .deleteAlarm(
-                                                                alarm.id),
-                                                      ),
+                                                          value: 1,
+                                                          child: Text(
+                                                            "Delete Alarm",
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium,
+                                                          ),
+                                                          onTap: () =>
+                                                              FirestoreDb
+                                                                  .deleteAlarm(
+                                                                      alarm
+                                                                          .id!)),
                                                     ];
                                                   },
                                                 ),
