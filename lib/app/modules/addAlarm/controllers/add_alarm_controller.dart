@@ -9,7 +9,8 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
 
 import 'package:path/path.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
+// import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/main.dart';
 
@@ -27,18 +28,18 @@ class AddAlarmController extends GetxController {
   createAlarm(AlarmModel alarmRecord) async {
     int intervaltoAlarm =
         Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value);
-    int alarmId = objectbox.insertAlarm(alarmRecord);
+    String alarmId = await FirestoreDb.addAlarm(alarmRecord);
 
     if (await FlutterForegroundTask.isRunningService == false) {
       // Starting service mandatorily!
       createForegroundTask(intervaltoAlarm);
       startForegroundTask(alarmId);
     } else {
-      await restartForegroundTask(alarmRecord.id, intervaltoAlarm);
+      await restartForegroundTask(alarmId, intervaltoAlarm);
     }
   }
 
-  restartForegroundTask(int alarmId, int intervalToAlarm) async {
+  restartForegroundTask(String alarmId, int intervalToAlarm) async {
     await _stopForegroundTask();
     createForegroundTask(intervalToAlarm);
     await startForegroundTask(alarmId);
@@ -73,7 +74,7 @@ class AddAlarmController extends GetxController {
     );
   }
 
-  Future<bool> startForegroundTask(int alarmId) async {
+  Future<bool> startForegroundTask(String alarmId) async {
     if (!await FlutterForegroundTask.canDrawOverlays) {
       final isGranted =
           await FlutterForegroundTask.openSystemAlertWindowSettings();
