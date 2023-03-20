@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 import 'app/routes/app_pages.dart';
 
-late ObjectBox objectbox;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  objectbox = await ObjectBox.init();
+  await Firebase.initializeApp(); // objectbox = await ObjectBox.init();
+  // objectbox.deleteAllAlarms();
   runApp(
     GetMaterialApp(
       theme: kThemeData,
