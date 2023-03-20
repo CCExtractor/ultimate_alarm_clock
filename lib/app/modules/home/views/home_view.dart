@@ -150,8 +150,8 @@ class HomeView extends GetView<HomeController> {
                                                     value: alarm.isEnabled,
                                                     onChanged: (bool value) {
                                                       alarm.isEnabled = value;
-                                                      // objectbox
-                                                      //     .insertAlarm(alarm);
+                                                      FirestoreDb.updateAlarm(
+                                                          alarm);
                                                     }),
                                               ),
                                               Expanded(
