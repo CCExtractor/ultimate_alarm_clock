@@ -15,8 +15,9 @@ class FirestoreDb {
     return id;
   }
 
-  static updateAlarm(String id, AlarmModel alarmRecord) async =>
-      await _alarmsCollection.doc(id).update(AlarmModel.toMap(alarmRecord));
+  static updateAlarm(AlarmModel alarmRecord) async => await _alarmsCollection
+      .doc(alarmRecord.id)
+      .update(AlarmModel.toMap(alarmRecord));
 
   static getAlarm(String id) => _alarmsCollection.doc(id).get();
 
