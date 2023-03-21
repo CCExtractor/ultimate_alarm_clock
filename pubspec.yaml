@@ -15,7 +15,6 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   flutter_time_picker_spinner: ^2.0.0
   cloud_firestore: ^4.4.5
-  sqflite: ^2.2.6
   flutter:
     sdk: flutter
 
