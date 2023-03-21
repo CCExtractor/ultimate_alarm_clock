@@ -12,7 +12,6 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
 // import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:ultimate_alarm_clock/main.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
@@ -22,27 +21,28 @@ void startCallback() {
 class AddAlarmController extends GetxController {
   final selectedTime = DateTime.now().obs;
   final isActivityenabled = false.obs;
-
+  late SendPort _sendPort;
+  late AlarmModel _alarmRecord;
   ReceivePort? _receivePort;
 
-  createAlarm(AlarmModel alarmRecord) async {
+  createAlarm(AlarmModel alarmData) async {
     int intervaltoAlarm =
         Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value);
-    String alarmId = await FirestoreDb.addAlarm(alarmRecord);
+    _alarmRecord = await FirestoreDb.addAlarm(alarmData);
 
     if (await FlutterForegroundTask.isRunningService == false) {
       // Starting service mandatorily!
       createForegroundTask(intervaltoAlarm);
-      startForegroundTask(alarmId);
+      startForegroundTask(_alarmRecord);
     } else {
-      await restartForegroundTask(alarmId, intervaltoAlarm);
+      await restartForegroundTask(_alarmRecord, intervaltoAlarm);
     }
   }
 
-  restartForegroundTask(String alarmId, int intervalToAlarm) async {
+  restartForegroundTask(AlarmModel alarmRecord, int intervalToAlarm) async {
     await _stopForegroundTask();
     createForegroundTask(intervalToAlarm);
-    await startForegroundTask(alarmId);
+    await startForegroundTask(alarmRecord);
   }
 
   void createForegroundTask(int intervalForAlarm) {
@@ -74,7 +74,7 @@ class AddAlarmController extends GetxController {
     );
   }
 
-  Future<bool> startForegroundTask(String alarmId) async {
+  Future<bool> startForegroundTask(AlarmModel alarmRecord) async {
     if (!await FlutterForegroundTask.canDrawOverlays) {
       final isGranted =
           await FlutterForegroundTask.openSystemAlertWindowSettings();
@@ -83,9 +83,10 @@ class AddAlarmController extends GetxController {
         return false;
       }
     }
-    print("AlarmId Recieved : $alarmId");
+    print("AlarmId Recieved : ${alarmRecord.id}");
 
-    await FlutterForegroundTask.saveData(key: 'alarmId', value: alarmId);
+    // await FlutterForegroundTask.saveData(
+    //     key: 'alarmData', value: AlarmModel.toJson(alarmRecord));
 
     final ReceivePort? receivePort = FlutterForegroundTask.receivePort;
     final bool isRegistered = _registerReceivePort(receivePort);
@@ -123,6 +124,11 @@ class AddAlarmController extends GetxController {
 
     _receivePort = newReceivePort;
     _receivePort?.listen((message) {
+      if (message is SendPort) {
+        _sendPort = message;
+        // Send port has been initialized, let's send it the alarm details
+        _sendPort.send(AlarmModel.toMap(_alarmRecord));
+      }
       if (message is int) {
         print('CONVERTING TO $message');
 
