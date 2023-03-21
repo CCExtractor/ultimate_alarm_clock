@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -26,8 +28,26 @@ class AlarmModel {
     activityInterval = documentSnapshot['activityInterval'];
   }
 
+  AlarmModel.fromMap(Map<String, dynamic> alarmData) {
+    id = alarmData['id'];
+    alarmTime = alarmData['alarmTime'];
+    isEnabled = alarmData['isEnabled'];
+    intervalToAlarm = alarmData['intervalToAlarm'];
+    isActivityEnabled = alarmData['isActivityEnabled'];
+    activityInterval = alarmData['activityInterval'];
+  }
+
+  AlarmModel.fromJson(String alarmData) {
+    AlarmModel.fromMap(jsonDecode(alarmData));
+  }
+
+  static String toJson(AlarmModel alarmRecord) {
+    return jsonEncode(AlarmModel.toMap(alarmRecord));
+  }
+
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
     return {
+      'id': alarmRecord.id,
       'alarmTime': alarmRecord.alarmTime,
       'intervalToAlarm': alarmRecord.intervalToAlarm,
       'isEnabled': alarmRecord.isEnabled,
