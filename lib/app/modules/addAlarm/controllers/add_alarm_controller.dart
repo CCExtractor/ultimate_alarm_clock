@@ -23,6 +23,7 @@ void startCallback() {
 class AddAlarmController extends GetxController {
   final selectedTime = DateTime.now().obs;
   final isActivityenabled = false.obs;
+  final isLocationEnabled = false.obs;
   late SendPort _sendPort;
   late AlarmModel _alarmRecord;
   ReceivePort? _receivePort;
@@ -165,7 +166,10 @@ class AddAlarmController extends GetxController {
       markersList.clear();
       markersList.add(Marker(
         point: point,
-        builder: (ctx) => Icon(Icons.location_on),
+        builder: (ctx) => const Icon(
+          Icons.location_on,
+          size: 35,
+        ),
       ));
     });
   }
