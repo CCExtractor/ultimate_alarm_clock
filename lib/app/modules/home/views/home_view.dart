@@ -42,6 +42,12 @@ class HomeView extends GetView<HomeController> {
                         return AlarmModel.fromDocumentSnapshot(
                             documentSnapshot: document);
                       }).toList();
+
+                      alarms.sort((a, b) => a.isEnabled == b.isEnabled
+                          ? 0
+                          : a.isEnabled
+                              ? -1
+                              : 1);
                       if (alarms.isEmpty) {
                         return Center(
                             child: Text(
