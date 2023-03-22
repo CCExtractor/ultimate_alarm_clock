@@ -32,7 +32,10 @@ class HomeView extends GetView<HomeController> {
                   stream: controller.streamAlarms,
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: kprimaryColor,
+                      ));
                     } else {
                       final alarms =
                           snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -160,7 +163,7 @@ class HomeView extends GetView<HomeController> {
                                                   onSelected: (value) {
                                                     if (value == 0) {
                                                       Get.back();
-                                                      Get.toNamed(
+                                                      Get.offNamed(
                                                           'alarm-control');
                                                     } else if (value == 1) {
                                                       FirestoreDb.deleteAlarm(
