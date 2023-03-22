@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -11,14 +12,14 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    FlutterRingtonePlayer.playAlarm();
     Timer.periodic(
         Duration(
             milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
                 DateTime.now().add(const Duration(minutes: 1)))), (timer) {
       formattedDate.value = Utils.getFormattedDate(DateTime.now());
       timeNow.value =
-          Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()))
-              .obs;
+          Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
     });
   }
 
@@ -30,5 +31,6 @@ class AlarmControlController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    FlutterRingtonePlayer.stop();
   }
 }
