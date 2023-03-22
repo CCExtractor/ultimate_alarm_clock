@@ -15,6 +15,11 @@ class Utils {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
+  static DateTime timeOfDayToDateTime(TimeOfDay time) {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day, time.hour, time.minute);
+  }
+
   static int timeOfDayToInt(TimeOfDay time) {
     return time.hour * 60 + time.minute;
   }
