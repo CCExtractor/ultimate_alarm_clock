@@ -157,6 +157,16 @@ class HomeView extends GetView<HomeController> {
                                               Expanded(
                                                 flex: 0,
                                                 child: PopupMenuButton(
+                                                  onSelected: (value) {
+                                                    if (value == 0) {
+                                                      Get.back();
+                                                      Get.toNamed(
+                                                          'alarm-control');
+                                                    } else if (value == 1) {
+                                                      FirestoreDb.deleteAlarm(
+                                                          alarm.id!);
+                                                    }
+                                                  },
                                                   color:
                                                       kprimaryBackgroundColor,
                                                   icon: Icon(Icons.more_vert,
@@ -177,19 +187,15 @@ class HomeView extends GetView<HomeController> {
                                                         ),
                                                       ),
                                                       PopupMenuItem<int>(
-                                                          value: 1,
-                                                          child: Text(
-                                                            "Delete Alarm",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyMedium,
-                                                          ),
-                                                          onTap: () =>
-                                                              FirestoreDb
-                                                                  .deleteAlarm(
-                                                                      alarm
-                                                                          .id!)),
+                                                        value: 1,
+                                                        child: Text(
+                                                          "Delete Alarm",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium,
+                                                        ),
+                                                      )
                                                     ];
                                                   },
                                                 ),
