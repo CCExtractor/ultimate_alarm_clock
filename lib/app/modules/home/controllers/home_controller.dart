@@ -7,9 +7,8 @@ import 'package:ultimate_alarm_clock/main.dart';
 class HomeController extends GetxController {
   late Stream<QuerySnapshot> streamAlarms;
 
-  final count = 0.obs;
   @override
-  void onInit() async {
+  void onInit() {
     streamAlarms = FirestoreDb.getAlarms();
 
     super.onInit();
