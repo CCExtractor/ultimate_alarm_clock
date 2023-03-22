@@ -33,7 +33,7 @@ class AddAlarmController extends GetxController {
     if (await FlutterForegroundTask.isRunningService == false) {
       // Starting service mandatorily!
       createForegroundTask(intervaltoAlarm);
-      startForegroundTask(_alarmRecord);
+      await startForegroundTask(_alarmRecord);
     } else {
       await restartForegroundTask(_alarmRecord, intervaltoAlarm);
     }
@@ -83,7 +83,6 @@ class AddAlarmController extends GetxController {
         return false;
       }
     }
-    print("AlarmId Recieved : ${alarmRecord.id}");
 
     // await FlutterForegroundTask.saveData(
     //     key: 'alarmData', value: AlarmModel.toJson(alarmRecord));
@@ -128,12 +127,6 @@ class AddAlarmController extends GetxController {
         _sendPort = message;
         // Send port has been initialized, let's send it the alarm details
         _sendPort.send(AlarmModel.toMap(_alarmRecord));
-      }
-      if (message is int) {
-        print('CONVERTING TO $message');
-
-        // We're setting service for the next alarm and passing alarmId for that
-        // TODO pass interval, not id to createForegroundTask
       }
       print('MAIN RECIEVED $message');
 
