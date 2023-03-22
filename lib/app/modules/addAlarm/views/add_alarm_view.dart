@@ -45,6 +45,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                     isActivityEnabled: controller.isActivityenabled.value,
                     minutesSinceMidnight: Utils.timeOfDayToInt(
                         TimeOfDay.fromDateTime(controller.selectedTime.value)),
+                    isLocationEnabled: controller.isLocationEnabled.value,
                   );
 
                   await controller.createAlarm(alarmRecord);
@@ -110,49 +111,166 @@ class AddAlarmView extends GetView<AddAlarmController> {
                             value: controller.isActivityenabled.value,
                           ),
                         ),
+                        const Divider(
+                          color: kprimaryDisabledTextColor,
+                        ),
                         ListTile(
                             title: const Text(
-                              'Location based',
+                              'Location Based',
                               style: TextStyle(color: kprimaryTextColor),
                             ),
-                            trailing: const Icon(
-                              Icons.chevron_right,
-                              color: kprimaryTextColor,
-                            ),
-                            onTap: () {
-                              Get.defaultDialog(
-                                content: SizedBox(
-                                  height: height * 0.65,
-                                  width: width * 0.92,
-                                  child: FlutterMap(
-                                    mapController: controller.mapController,
-                                    options: MapOptions(
-                                      onTap: (tapPosition, point) {
-                                        controller.selectedPoint.value = point;
-                                      },
-                                      screenSize:
-                                          Size(width * 0.3, height * 0.8),
-                                      center: LatLng(51.509364, -0.128928),
-                                      zoom: 9.2,
-                                    ),
-                                    nonRotatedChildren: [
-                                      AttributionWidget.defaultWidget(
-                                        source: 'OpenStreetMap contributors',
-                                        onSourceTapped: null,
-                                      ),
-                                    ],
-                                    children: [
-                                      TileLayer(
-                                        urlTemplate:
-                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                      ),
-                                      MarkerLayer(
-                                          markers: controller.markersList),
-                                    ],
-                                  ),
+                            trailing: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              // mainAxisSize: MainAxisSize.min,
+                              // mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  controller.isLocationEnabled.value == false
+                                      ? 'Off'
+                                      : 'Enabled',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: (controller.isLocationEnabled
+                                                      .value ==
+                                                  false)
+                                              ? kprimaryDisabledTextColor
+                                              : kprimaryTextColor),
                                 ),
-                              );
-                            }),
+                                PopupMenuButton(
+                                  onSelected: (value) {
+                                    if (value == 0) {
+                                      controller.isLocationEnabled.value =
+                                          false;
+                                    } else if (value == 1) {
+                                      // Get.back();
+                                      controller.isLocationEnabled.value = true;
+                                      Get.defaultDialog(
+                                        backgroundColor:
+                                            ksecondaryBackgroundColor,
+                                        title:
+                                            'Set location to automatically cancel alarm!',
+                                        titleStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        content: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: height * 0.65,
+                                              width: width * 0.92,
+                                              child: FlutterMap(
+                                                mapController:
+                                                    controller.mapController,
+                                                options: MapOptions(
+                                                  onTap: (tapPosition, point) {
+                                                    controller.selectedPoint
+                                                        .value = point;
+                                                  },
+                                                  screenSize: Size(width * 0.3,
+                                                      height * 0.8),
+                                                  center: LatLng(
+                                                      51.509364, -0.128928),
+                                                  zoom: 9.2,
+                                                ),
+                                                children: [
+                                                  TileLayer(
+                                                    urlTemplate:
+                                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                                  ),
+                                                  MarkerLayer(
+                                                      markers: controller
+                                                          .markersList),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  color: kprimaryBackgroundColor,
+                                  icon: Icon(
+                                    Icons.chevron_right,
+                                    color:
+                                        (controller.isLocationEnabled.value ==
+                                                false)
+                                            ? kprimaryDisabledTextColor
+                                            : kprimaryTextColor,
+                                  ),
+                                  itemBuilder: (context) {
+                                    return [
+                                      PopupMenuItem<int>(
+                                        value: 0,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              "Off",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(
+                                                      color: (controller
+                                                                  .isLocationEnabled
+                                                                  .value ==
+                                                              true)
+                                                          ? kprimaryDisabledTextColor
+                                                          : kprimaryTextColor),
+                                            ),
+                                            Radio(
+                                                fillColor: MaterialStateProperty
+                                                    .all((controller
+                                                                .isLocationEnabled
+                                                                .value ==
+                                                            true)
+                                                        ? kprimaryDisabledTextColor
+                                                        : kprimaryColor),
+                                                value: !controller
+                                                    .isLocationEnabled.value,
+                                                groupValue: true,
+                                                onChanged: (value) {}),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem<int>(
+                                        value: 1,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              "Choose location",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(
+                                                      color: (controller
+                                                                  .isLocationEnabled
+                                                                  .value ==
+                                                              false)
+                                                          ? kprimaryDisabledTextColor
+                                                          : kprimaryTextColor),
+                                            ),
+                                            Icon(
+                                              Icons.chevron_right,
+                                              color: (controller
+                                                          .isLocationEnabled
+                                                          .value ==
+                                                      false)
+                                                  ? kprimaryDisabledTextColor
+                                                  : kprimaryTextColor,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ];
+                                  },
+                                )
+                              ],
+                            ),
+                            onTap: () {}),
                       ],
                     ),
                   )
