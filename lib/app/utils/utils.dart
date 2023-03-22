@@ -78,4 +78,13 @@ class Utils {
   static LatLng geoPointToLatLng(GeoPoint geoPoint) {
     return LatLng(geoPoint.latitude, geoPoint.longitude);
   }
+
+  static String geoPointToString(GeoPoint geoPoint) {
+    return '${geoPoint.latitude},${geoPoint.longitude}';
+  }
+
+  static GeoPoint stringToGeoPoint(String string) {
+    List<String> latLng = string.split(',');
+    return GeoPoint(double.parse(latLng[0]), double.parse(latLng[1]));
+  }
 }
