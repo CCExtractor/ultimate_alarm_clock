@@ -1,18 +1,11 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:isolate';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:path/path.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:screen_state/screen_state.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'dart:convert';
 
 class AlarmHandlerModel extends TaskHandler {
   Screen? _screen;
@@ -21,6 +14,7 @@ class AlarmHandlerModel extends TaskHandler {
   SendPort? _sendPort;
   Stopwatch? _stopwatch;
   late ReceivePort _uiReceivePort;
+  bool isScreenActive = true;
 
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
@@ -42,8 +36,11 @@ class AlarmHandlerModel extends TaskHandler {
             // _stopwatch!.start();
             if (event == ScreenStateEvent.SCREEN_UNLOCKED) {
               _stopwatch!.start();
-            } else if (event == ScreenStateEvent.SCREEN_OFF) {
+              isScreenActive = true;
+            } else if (event == ScreenStateEvent.SCREEN_OFF ||
+                event == ScreenStateEvent.SCREEN_ON) {
               // Stop the stopwatch and update _unlockedDuration when the screen is turned off
+              isScreenActive = false;
               _stopwatch!.stop();
               _stopwatch!.reset();
             }
@@ -55,8 +52,7 @@ class AlarmHandlerModel extends TaskHandler {
 
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
-    print('CHANGING TO LATEST ALARM VIA EVENT! ${TimeOfDay.now()}');
-    // List<AlarmModel> list = objectbox.getAllAlarms();
+    // print('CHANGING TO LATEST ALARM VIA EVENT! ${TimeOfDay.now()}');
     bool shouldAlarmRing = true;
 
     final DateTime now = DateTime.now();
@@ -78,11 +74,15 @@ class AlarmHandlerModel extends TaskHandler {
     }
 
     if (time.hour == currentTime.hour && time.minute == currentTime.minute) {
-      // One minute since screen was active!
-      // FlutterForegroundTask.wakeUpScreen();
-      FlutterForegroundTask.launchApp('/alarm-control');
       // Ring only if necessary
-      if (shouldAlarmRing == true) FlutterRingtonePlayer.playAlarm();
+      if (shouldAlarmRing == true) {
+        // One minute since screen was active!
+        if (isScreenActive == false) {
+          FlutterForegroundTask.wakeUpScreen();
+        }
+        FlutterForegroundTask.launchApp('/alarm-control');
+        // FlutterRingtonePlayer.playAlarm();
+      }
     }
     //  The time will never be before since getMilliSeconds will always adjust it a day forward
     else {
