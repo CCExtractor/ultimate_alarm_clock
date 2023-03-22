@@ -38,17 +38,23 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 ),
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
-                    alarmTime: Utils.timeOfDayToString(
-                        TimeOfDay.fromDateTime(controller.selectedTime.value)),
-                    intervalToAlarm: Utils.getMillisecondsToAlarm(
-                        DateTime.now(), controller.selectedTime.value),
-                    isActivityEnabled: controller.isActivityenabled.value,
-                    minutesSinceMidnight: Utils.timeOfDayToInt(
-                        TimeOfDay.fromDateTime(controller.selectedTime.value)),
-                    isLocationEnabled: controller.isLocationEnabled.value,
-                  );
+                      alarmTime: Utils.timeOfDayToString(TimeOfDay.fromDateTime(
+                          controller.selectedTime.value)),
+                      intervalToAlarm: Utils.getMillisecondsToAlarm(
+                          DateTime.now(), controller.selectedTime.value),
+                      isActivityEnabled: controller.isActivityenabled.value,
+                      minutesSinceMidnight: Utils.timeOfDayToInt(
+                          TimeOfDay.fromDateTime(
+                              controller.selectedTime.value)),
+                      isLocationEnabled: controller.isLocationEnabled.value,
+                      location: Utils.geoPointToString(Utils.latLngToGeoPoint(
+                          controller.selectedPoint.value)));
 
-                  await controller.createAlarm(alarmRecord);
+                  try {
+                    await controller.createAlarm(alarmRecord);
+                  } catch (e) {
+                    print(e);
+                  }
 
                   Get.back();
                 },
@@ -183,6 +189,23 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                           .markersList),
                                                 ],
                                               ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            TextButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          kprimaryColor)),
+                                              child: Text(
+                                                'Save',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall!
+                                                    .copyWith(
+                                                        color:
+                                                            ksecondaryTextColor),
+                                              ),
+                                              onPressed: () => Get.back(),
                                             ),
                                           ],
                                         ),
