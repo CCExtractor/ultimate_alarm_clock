@@ -17,8 +17,8 @@ dependencies:
   cloud_firestore: ^4.4.5
   intl: ^0.18.0
   latlong2: ^0.8.1
-  geolocator: ^9.0.2
   flutter_map: ^3.1.0
+  location: ^4.4.0
   flutter:
     sdk: flutter
 
