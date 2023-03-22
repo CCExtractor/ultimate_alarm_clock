@@ -12,7 +12,6 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
 import 'package:path/path.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
-// import 'package:ultimate_alarm_clock/app/data/models/providers/objectbox.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 @pragma('vm:entry-point')
@@ -30,6 +29,7 @@ class AddAlarmController extends GetxController {
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
+
   createAlarm(AlarmModel alarmData) async {
     _alarmRecord = await FirestoreDb.addAlarm(alarmData);
     AlarmModel latestAlarm = await FirestoreDb.getLatestAlarm(_alarmRecord);
@@ -41,9 +41,9 @@ class AddAlarmController extends GetxController {
     if (await FlutterForegroundTask.isRunningService == false) {
       // Starting service mandatorily!
       createForegroundTask(intervaltoAlarm);
-      await startForegroundTask(_alarmRecord);
+      await startForegroundTask(latestAlarm);
     } else {
-      await restartForegroundTask(_alarmRecord, intervaltoAlarm);
+      await restartForegroundTask(latestAlarm, intervaltoAlarm);
     }
   }
 
@@ -91,7 +91,7 @@ class AddAlarmController extends GetxController {
         return false;
       }
     }
-
+    // print('Setting alarm for time: ${alarmRecord.alarmTime}');
     // await FlutterForegroundTask.saveData(
     //     key: 'alarmData', value: AlarmModel.toJson(alarmRecord));
 
@@ -140,7 +140,7 @@ class AddAlarmController extends GetxController {
 
       if (message is String) {
         if (message == 'onNotificationPressed') {
-          Get.to('/alarm-control');
+          Get.toNamed('/alarm-control');
         }
       }
     });
