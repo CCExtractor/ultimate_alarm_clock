@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class AlarmModel {
   String? id;
   late String alarmTime;
@@ -11,11 +9,13 @@ class AlarmModel {
   late int intervalToAlarm;
   late bool isActivityEnabled;
   int? activityInterval;
+  late int minutesSinceMidnight;
   AlarmModel(
       {required this.alarmTime,
       this.isEnabled = true,
       required this.intervalToAlarm,
       required this.isActivityEnabled,
+      required this.minutesSinceMidnight,
       this.activityInterval = 600000});
 
   AlarmModel.fromDocumentSnapshot(
@@ -26,6 +26,7 @@ class AlarmModel {
     intervalToAlarm = documentSnapshot['intervalToAlarm'];
     isActivityEnabled = documentSnapshot['isActivityEnabled'];
     activityInterval = documentSnapshot['activityInterval'];
+    minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -35,6 +36,7 @@ class AlarmModel {
     intervalToAlarm = alarmData['intervalToAlarm'];
     isActivityEnabled = alarmData['isActivityEnabled'];
     activityInterval = alarmData['activityInterval'];
+    minutesSinceMidnight = alarmData['minutesSinceMidnight'];
   }
 
   AlarmModel.fromJson(String alarmData) {
@@ -52,7 +54,8 @@ class AlarmModel {
       'intervalToAlarm': alarmRecord.intervalToAlarm,
       'isEnabled': alarmRecord.isEnabled,
       'isActivityEnabled': alarmRecord.isActivityEnabled,
-      'activityInterval': alarmRecord.activityInterval
+      'activityInterval': alarmRecord.activityInterval,
+      'minutesSinceMidnight': alarmRecord.minutesSinceMidnight
     };
   }
 }
