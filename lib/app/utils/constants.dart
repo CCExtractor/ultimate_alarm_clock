@@ -9,6 +9,8 @@ const Color ksecondaryTextColor = Colors.black;
 
 const Color kprimaryDisabledTextColor = Color(0xff595f6b);
 ThemeData kThemeData = ThemeData(
+    textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(foregroundColor: ksecondaryColor)),
     fontFamily: 'poppins',
     textTheme: const TextTheme(
         titleSmall: TextStyle(color: kprimaryTextColor, letterSpacing: 0.15),
