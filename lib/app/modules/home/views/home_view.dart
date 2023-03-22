@@ -136,16 +136,6 @@ class HomeView extends GetView<HomeController> {
                                                 ),
                                               ]),
                                         ),
-                                        // Flexible(
-                                        //   flex: 3,
-                                        //   child: Transform.rotate(
-                                        //     angle: 30 * math.pi / 180,
-                                        //     child: VerticalDivider(
-                                        //       color: kprimaryColor,
-                                        //       thickness: 3.5,
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10.0),
