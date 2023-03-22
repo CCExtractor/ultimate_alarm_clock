@@ -3,11 +3,11 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:ultimate_alarm_clock/main.dart';
-
+import 'package:flutter_map/flutter_map.dart';
 import '../controllers/add_alarm_controller.dart';
 
 class AddAlarmView extends GetView<AddAlarmController> {
@@ -43,6 +43,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                     intervalToAlarm: Utils.getMillisecondsToAlarm(
                         DateTime.now(), controller.selectedTime.value),
                     isActivityEnabled: controller.isActivityenabled.value,
+                    minutesSinceMidnight: Utils.timeOfDayToInt(
+                        TimeOfDay.fromDateTime(controller.selectedTime.value)),
                   );
 
                   await controller.createAlarm(alarmRecord);
@@ -107,7 +109,50 @@ class AddAlarmView extends GetView<AddAlarmController> {
                             },
                             value: controller.isActivityenabled.value,
                           ),
-                        )
+                        ),
+                        ListTile(
+                            title: const Text(
+                              'Location based',
+                              style: TextStyle(color: kprimaryTextColor),
+                            ),
+                            trailing: const Icon(
+                              Icons.chevron_right,
+                              color: kprimaryTextColor,
+                            ),
+                            onTap: () {
+                              Get.defaultDialog(
+                                content: SizedBox(
+                                  height: height * 0.65,
+                                  width: width * 0.92,
+                                  child: FlutterMap(
+                                    mapController: controller.mapController,
+                                    options: MapOptions(
+                                      onTap: (tapPosition, point) {
+                                        controller.selectedPoint.value = point;
+                                      },
+                                      screenSize:
+                                          Size(width * 0.3, height * 0.8),
+                                      center: LatLng(51.509364, -0.128928),
+                                      zoom: 9.2,
+                                    ),
+                                    nonRotatedChildren: [
+                                      AttributionWidget.defaultWidget(
+                                        source: 'OpenStreetMap contributors',
+                                        onSourceTapped: null,
+                                      ),
+                                    ],
+                                    children: [
+                                      TileLayer(
+                                        urlTemplate:
+                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                      ),
+                                      MarkerLayer(
+                                          markers: controller.markersList),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
                       ],
                     ),
                   )
