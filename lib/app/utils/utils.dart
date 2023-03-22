@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
   static String timeOfDayToString(TimeOfDay time) {
@@ -33,5 +34,29 @@ class Utils {
     }
 
     return ['$hour:$minute', period];
+  }
+
+  static String getFormattedDate(DateTime now) {
+    final formattedDate = DateFormat("EEE, MMMM d").format(now);
+    int day = now.day;
+    String daySuffix = "";
+    if (day >= 11 && day <= 13) {
+      daySuffix = "th";
+    }
+    switch (day % 10) {
+      case 1:
+        daySuffix = "st";
+        break;
+      case 2:
+        daySuffix = "nd";
+        break;
+      case 3:
+        daySuffix = "rd";
+        break;
+      default:
+        daySuffix = "th";
+    }
+
+    return "$formattedDate$daySuffix";
   }
 }
