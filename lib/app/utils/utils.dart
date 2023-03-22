@@ -15,6 +15,10 @@ class Utils {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
+  static int timeOfDayToInt(TimeOfDay time) {
+    return time.hour * 60 + time.minute;
+  }
+
   static int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
     if (alarmTime.isBefore(now)) {
       alarmTime = alarmTime.add(const Duration(days: 1));
