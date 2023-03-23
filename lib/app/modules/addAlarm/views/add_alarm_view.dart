@@ -176,9 +176,9 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                   },
                                                   screenSize: Size(width * 0.3,
                                                       height * 0.8),
-                                                  center: LatLng(
-                                                      51.509364, -0.128928),
-                                                  zoom: 9.2,
+                                                  center: controller
+                                                      .selectedPoint.value,
+                                                  zoom: 15,
                                                 ),
                                                 children: [
                                                   TileLayer(
