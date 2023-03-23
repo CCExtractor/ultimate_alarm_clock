@@ -145,11 +145,12 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                               : kprimaryTextColor),
                                 ),
                                 PopupMenuButton(
-                                  onSelected: (value) {
+                                  onSelected: (value) async {
                                     if (value == 0) {
                                       controller.isLocationEnabled.value =
                                           false;
                                     } else if (value == 1) {
+                                      await controller.getLocation();
                                       // Get.back();
                                       controller.isLocationEnabled.value = true;
                                       Get.defaultDialog(
