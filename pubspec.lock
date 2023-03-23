@@ -166,6 +166,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_fgbg:
+    dependency: "direct main"
+    description:
+      name: flutter_fgbg
+      sha256: d37511eef6afb7e2e3f2278ec6498bb12c650ed517c81bcd09452d910e8b9174
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   flutter_foreground_task:
     dependency: "direct main"
     description:
