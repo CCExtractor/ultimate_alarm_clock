@@ -61,7 +61,7 @@ class AlarmHandlerModel extends TaskHandler {
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
     print('CHANGING TO LATEST ALARM VIA EVENT! at ${TimeOfDay.now()}');
-    bool shouldAlarmRing = false;
+    bool shouldAlarmRing = true;
 
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
@@ -88,11 +88,10 @@ class AlarmHandlerModel extends TaskHandler {
     if (alarmRecord.isLocationEnabled == true) {
       LatLng destination = LatLng(0, 0);
       LatLng source = Utils.stringToLatLng(alarmRecord.location);
-      final currentLocation = FlLocation.getLocationStream().first.then(
-          (value) => destination =
-              Utils.stringToLatLng("${value.latitude}, ${value.longitude}"));
+      destination = await FlLocation.getLocationStream().first.then((value) =>
+          Utils.stringToLatLng("${value.latitude}, ${value.longitude}"));
 
-      if (!Utils.isWithinRadius(source, destination, 100)) {
+      if (Utils.isWithinRadius(source, destination, 500)) {
         shouldAlarmRing = false;
       }
     }
@@ -107,7 +106,7 @@ class AlarmHandlerModel extends TaskHandler {
 
         FlutterForegroundTask.launchApp('/alarm-control');
       } else {
-        // print("STOPPING ALARM");
+        print("STOPPING ALARM");
         // FlutterForegroundTask.launchApp('/alarm-control');
         FlutterForegroundTask.launchApp('/alarm-control-ignore');
         // _sendPort?.send('testing');
