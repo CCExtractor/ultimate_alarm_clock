@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import 'dart:math';
 
 class Utils {
   static String timeOfDayToString(TimeOfDay time) {
@@ -86,5 +87,25 @@ class Utils {
   static GeoPoint stringToGeoPoint(String string) {
     List<String> latLng = string.split(',');
     return GeoPoint(double.parse(latLng[0]), double.parse(latLng[1]));
+  }
+
+  static bool isWithinRadius(LatLng source, LatLng destination, double radius) {
+    var R = 6371e3;
+    var dLat = deg2rad(destination.latitude - source.latitude);
+    var dLon = deg2rad(destination.longitude - source.longitude);
+    var lat1 = deg2rad(source.latitude);
+    var lat2 = deg2rad(destination.latitude);
+
+    var a = sin(dLat / 2) * sin(dLat / 2) +
+        sin(dLon / 2) * sin(dLon / 2) * cos(lat1) * cos(lat2);
+    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    var d = R * c;
+
+    return d <= radius;
+  }
+
+  static double deg2rad(deg) {
+    return deg * (pi / 180);
   }
 }
