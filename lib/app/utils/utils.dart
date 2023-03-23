@@ -84,6 +84,11 @@ class Utils {
     return '${geoPoint.latitude},${geoPoint.longitude}';
   }
 
+  static LatLng stringToLatLng(String loc) {
+    List<String> latLng = loc.split(',');
+    return LatLng(double.parse(latLng[0]), double.parse(latLng[1]));
+  }
+
   static GeoPoint stringToGeoPoint(String string) {
     List<String> latLng = string.split(',');
     return GeoPoint(double.parse(latLng[0]), double.parse(latLng[1]));
