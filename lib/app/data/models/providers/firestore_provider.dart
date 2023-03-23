@@ -16,6 +16,19 @@ class FirestoreDb {
     return alarmRecord;
   }
 
+  static getTriggeredAlarm(String time) async {
+    QuerySnapshot snapshot = await _alarmsCollection
+        .where('isEnabled', isEqualTo: true)
+        .where('alarmTime', isEqualTo: time)
+        .get();
+
+    List list = snapshot.docs.map((DocumentSnapshot document) {
+      return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
+    }).toList();
+
+    return list[0];
+  }
+
   static getLatestAlarm(AlarmModel alarmRecord) async {
     int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
     late List list;
