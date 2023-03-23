@@ -31,8 +31,10 @@ class AddAlarmController extends GetxController {
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
       final timeLimit = const Duration(seconds: 10);
-      await FlLocation.getLocation(timeLimit: timeLimit).then((location) {
-        print('location: ${location.toJson().toString()}');
+      await FlLocation.getLocation(
+              timeLimit: timeLimit, accuracy: LocationAccuracy.best)
+          .then((location) {
+        selectedPoint.value = LatLng(location.latitude, location.longitude);
       }).onError((error, stackTrace) {
         print('error: ${error.toString()}');
       });
