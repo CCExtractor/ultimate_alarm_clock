@@ -21,6 +21,7 @@ class AddAlarmController extends GetxController {
   final selectedTime = DateTime.now().obs;
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
+  final timeToAlarm = ''.obs;
   late SendPort _sendPort;
   late AlarmModel _alarmRecord;
   ReceivePort? _receivePort;
@@ -173,7 +174,7 @@ class AddAlarmController extends GetxController {
         // Send port has been initialized, let's send it the alarm details
         _sendPort.send(AlarmModel.toMap(_alarmRecord));
       }
-      print('MAIN RECIEVED $message');
+      // print('MAIN RECIEVED $message');
 
       if (message is String) {
         if (message == 'onNotificationPressed') {
@@ -208,6 +209,11 @@ class AddAlarmController extends GetxController {
           size: 35,
         ),
       ));
+    });
+
+    // Updating UI to show time to alarm
+    selectedTime.listen((time) {
+      timeToAlarm.value = Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time));
     });
   }
 
