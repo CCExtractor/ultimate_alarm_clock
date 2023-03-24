@@ -113,4 +113,36 @@ class Utils {
   static double deg2rad(deg) {
     return deg * (pi / 180);
   }
+
+  static String timeUntilAlarm(TimeOfDay alarmTime) {
+    final now = DateTime.now();
+    final todayAlarm = DateTime(
+        now.year, now.month, now.day, alarmTime.hour, alarmTime.minute);
+    final tomorrowAlarm = DateTime(
+        now.year, now.month, now.day + 1, alarmTime.hour, alarmTime.minute);
+
+    Duration duration;
+
+    if (now.isBefore(todayAlarm)) {
+      duration = todayAlarm.difference(now);
+    } else {
+      duration = tomorrowAlarm.difference(now);
+    }
+
+    if (duration.inMinutes <= 1) {
+      return 'less than 1 minute';
+    } else if (duration.inDays == 1) {
+      return '1 day';
+    } else {
+      final hours = duration.inHours;
+      final minutes = duration.inMinutes % 60;
+      if (hours == 0) {
+        return '$minutes minutes';
+      } else if (minutes == 0) {
+        return '$hours hours';
+      } else {
+        return '$hours hours $minutes minutes';
+      }
+    }
+  }
 }
