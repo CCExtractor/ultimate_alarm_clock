@@ -56,7 +56,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                     print(e);
                   }
 
-                  Get.back();
+                  Get.offNamed('home');
                 },
               ),
             ),
