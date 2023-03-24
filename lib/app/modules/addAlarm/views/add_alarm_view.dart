@@ -65,9 +65,11 @@ class AddAlarmView extends GetView<AddAlarmController> {
             backgroundColor: ksecondaryBackgroundColor,
             elevation: 0.0,
             centerTitle: true,
-            title: Text(
-              'Add your alarm',
-              style: Theme.of(context).textTheme.titleSmall,
+            title: Obx(
+              () => Text(
+                "Rings in ${controller.timeToAlarm.value}",
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
             ),
           ),
           body: Column(
