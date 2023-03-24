@@ -27,6 +27,7 @@ class Utils {
     return time.hour * 60 + time.minute;
   }
 
+// Adding an extra day since this function is used for scheduling service
   static int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
     if (alarmTime.isBefore(now)) {
       alarmTime = alarmTime.add(const Duration(days: 1));
