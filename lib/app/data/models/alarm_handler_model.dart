@@ -84,7 +84,7 @@ class AlarmHandlerModel extends TaskHandler {
       }
     }
 
-    // Checking if the user is within 100m of set location if enabled
+    // Checking if the user is within 500m of set location if enabled
     if (alarmRecord.isLocationEnabled == true) {
       LatLng destination = LatLng(0, 0);
       LatLng source = Utils.stringToLatLng(alarmRecord.location);
