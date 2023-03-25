@@ -11,6 +11,7 @@ import 'package:ultimate_alarm_clock/main.dart';
 class HomeController extends GetxController {
   late Stream<QuerySnapshot> streamAlarms;
   final alarmTime = 'No upcoming alarms!'.obs;
+  bool refreshTimer = false;
   @override
   void onInit() {
     super.onInit();
@@ -20,7 +21,6 @@ class HomeController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
-
     // Fake object to get latest alarm
     AlarmModel alarmRecord = AlarmModel(
         isEnabled: false,
@@ -41,10 +41,16 @@ class HomeController extends GetxController {
           Duration(
               milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
                   DateTime.now().add(const Duration(minutes: 1)))), (timer) {
+        if (refreshTimer == true) {
+          timer.cancel();
+          refreshTimer = false;
+        }
         timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime));
         alarmTime.value = "Rings in $timeToAlarm";
       });
+    } else {
+      alarmTime.value = 'No upcoming alarms!';
     }
   }
 
