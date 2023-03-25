@@ -12,6 +12,8 @@ class HomeController extends GetxController {
   late Stream<QuerySnapshot> streamAlarms;
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
+  bool isEmpty = true;
+  Timer? _timer;
   @override
   void onInit() {
     super.onInit();
@@ -21,6 +23,11 @@ class HomeController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
+    // Cancel timer if we have to refresh
+    if (refreshTimer == true && isEmpty == false) {
+      _timer!.cancel();
+      refreshTimer = false;
+    }
     // Fake object to get latest alarm
     AlarmModel alarmRecord = AlarmModel(
         isEnabled: false,
@@ -36,15 +43,12 @@ class HomeController extends GetxController {
         Utils.timeUntilAlarm(Utils.stringToTimeOfDay(latestAlarm.alarmTime));
     alarmTime.value = "Rings in $timeToAlarm";
     if (latestAlarm.minutesSinceMidnight != alarmRecord.minutesSinceMidnight) {
+      isEmpty = false;
       // Starting timer for live refresh
-      Timer.periodic(
+      _timer = Timer.periodic(
           Duration(
               milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
                   DateTime.now().add(const Duration(minutes: 1)))), (timer) {
-        if (refreshTimer == true) {
-          timer.cancel();
-          refreshTimer = false;
-        }
         timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime));
         alarmTime.value = "Rings in $timeToAlarm";
