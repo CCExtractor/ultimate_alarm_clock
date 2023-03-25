@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 @pragma('vm:entry-point')
@@ -18,6 +19,7 @@ void startCallback() {
 }
 
 class AddAlarmController extends GetxController {
+  var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().obs;
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
@@ -225,5 +227,7 @@ class AddAlarmController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    homeController.refreshTimer = true;
+    homeController.onReady();
   }
 }
