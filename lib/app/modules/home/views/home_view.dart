@@ -199,14 +199,15 @@ class HomeView extends GetView<HomeController> {
                                                     Expanded(
                                                       flex: 0,
                                                       child: PopupMenuButton(
-                                                        onSelected: (value) {
+                                                        onSelected:
+                                                            (value) async {
                                                           if (value == 0) {
                                                             Get.back();
                                                             Get.offNamed(
                                                                 'alarm-control');
                                                           } else if (value ==
                                                               1) {
-                                                            FirestoreDb
+                                                            await FirestoreDb
                                                                 .deleteAlarm(
                                                                     alarm.id!);
                                                             controller
