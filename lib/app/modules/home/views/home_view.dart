@@ -18,7 +18,7 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       // backgroundColor: kprimaryBackgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.offNamed('add-alarm'),
+        onPressed: () => Get.toNamed('add-alarm'),
         child: Icon(Icons.add),
       ),
       body: SafeArea(
@@ -209,6 +209,11 @@ class HomeView extends GetView<HomeController> {
                                                             FirestoreDb
                                                                 .deleteAlarm(
                                                                     alarm.id!);
+                                                            controller
+                                                                    .refreshTimer =
+                                                                true;
+                                                            controller
+                                                                .onReady();
                                                           }
                                                         },
                                                         color:
