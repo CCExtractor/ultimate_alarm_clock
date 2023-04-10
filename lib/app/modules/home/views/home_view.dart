@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -51,6 +52,7 @@ class HomeView extends GetView<HomeController> {
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(
                   child: GlowingOverscrollIndicator(
@@ -79,13 +81,26 @@ class HomeView extends GetView<HomeController> {
                                     : 1);
                             if (alarms.isEmpty) {
                               return Center(
-                                  child: Text(
-                                'No alarms set!',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(color: kprimaryDisabledTextColor),
-                              ));
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/images/empty.svg',
+                                      height: height * 0.3,
+                                      width: width * 0.8,
+                                    ),
+                                    Text(
+                                      'Add an alarm to get started!',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
+                                              color: kprimaryDisabledTextColor),
+                                    ),
+                                  ],
+                                ),
+                              );
                             }
                             return ListView.separated(
                                 separatorBuilder: (context, _) {
