@@ -21,6 +21,7 @@ dependencies:
   app_minimizer: ^1.0.0+2
   fl_location: ^1.2.2
   flutter_fgbg: ^0.2.2
+  flutter_svg: ^2.0.4
   flutter:
     sdk: flutter
 
@@ -48,5 +49,5 @@ flutter:
         - asset: assets/fonts/raleway/Raleway-SemiBold.ttf
           weight: 600
   uses-material-design: true
-  # assets:
-  #   - assets/music/alarm.mp3
+  assets:
+    - assets/images/
