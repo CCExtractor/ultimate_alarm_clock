@@ -73,6 +73,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
             ),
           ),
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 color: ksecondaryBackgroundColor,
@@ -95,6 +96,39 @@ class AddAlarmView extends GetView<AddAlarmController> {
                   },
                 ),
               ),
+              ListTile(
+                  tileColor: ksecondaryBackgroundColor,
+                  title: const Text('Repeat',
+                      style: TextStyle(
+                          color: kprimaryTextColor,
+                          fontWeight: FontWeight.w500)),
+                  trailing: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      // mainAxisSize: MainAxisSize.min,
+                      // mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          controller.isLocationEnabled.value == false
+                              ? 'Never'
+                              : '...',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  color: (controller.isLocationEnabled.value ==
+                                          false)
+                                      ? kprimaryDisabledTextColor
+                                      : kprimaryTextColor),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              Get.defaultDialog();
+                            },
+                            icon: Icon(
+                              Icons.chevron_right,
+                              color: kprimaryDisabledTextColor,
+                            ))
+                      ])),
               Container(
                 color: ksecondaryTextColor,
                 height: 10,
