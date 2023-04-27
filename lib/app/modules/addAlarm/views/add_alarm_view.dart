@@ -38,6 +38,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 ),
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
+                      days: controller.repeatDays.toList(),
                       alarmTime: Utils.timeOfDayToString(TimeOfDay.fromDateTime(
                           controller.selectedTime.value)),
                       intervalToAlarm: Utils.getMillisecondsToAlarm(
@@ -99,9 +100,10 @@ class AddAlarmView extends GetView<AddAlarmController> {
               InkWell(
                 onTap: () {
                   Get.defaultDialog(
+                      titlePadding: EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: ksecondaryBackgroundColor,
                       title: 'Repeat',
-                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                      titleStyle: Theme.of(context).textTheme.displayMedium,
                       content: Obx(
                         () => Column(
                           children: [
