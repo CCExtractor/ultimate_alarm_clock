@@ -30,6 +30,7 @@ class HomeController extends GetxController {
     }
     // Fake object to get latest alarm
     AlarmModel alarmRecord = AlarmModel(
+        days: [],
         isEnabled: false,
         isActivityEnabled: false,
         isLocationEnabled: false,
