@@ -130,7 +130,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[0];
                                           }),
                                       Text(
-                                        'Sunday',
+                                        'Monday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -162,7 +162,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[1];
                                           }),
                                       Text(
-                                        'Monday',
+                                        'Tuesday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -194,7 +194,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[2];
                                           }),
                                       Text(
-                                        'Tuesday',
+                                        'Wednesday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -226,7 +226,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[3];
                                           }),
                                       Text(
-                                        'Wednesday',
+                                        'Thursday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -258,7 +258,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[4];
                                           }),
                                       Text(
-                                        'Thursday',
+                                        'Friday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -290,7 +290,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[5];
                                           }),
                                       Text(
-                                        'Friday',
+                                        'Saturday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -322,7 +322,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 !controller.repeatDays[6];
                                           }),
                                       Text(
-                                        'Saturday',
+                                        'Sunday',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
@@ -346,19 +346,19 @@ class AddAlarmView extends GetView<AddAlarmController> {
                         // mainAxisSize: MainAxisSize.min,
                         // mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            controller.isLocationEnabled.value == false
-                                ? 'Never'
-                                : '...',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    color:
-                                        (controller.isLocationEnabled.value ==
-                                                false)
-                                            ? kprimaryDisabledTextColor
-                                            : kprimaryTextColor),
+                          Obx(
+                            () => Text(
+                              controller.daysRepeating.value,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color:
+                                          (controller.isLocationEnabled.value ==
+                                                  false)
+                                              ? kprimaryDisabledTextColor
+                                              : kprimaryTextColor),
+                            ),
                           ),
                           Icon(
                             Icons.chevron_right,
