@@ -12,6 +12,10 @@ ThemeData kThemeData = ThemeData(
     textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(foregroundColor: ksecondaryColor)),
     fontFamily: 'poppins',
+    checkboxTheme: CheckboxThemeData(
+      checkColor: MaterialStateProperty.all(kprimaryTextColor),
+      fillColor: MaterialStateProperty.all(kprimaryColor),
+    ),
     textTheme: const TextTheme(
         titleSmall: TextStyle(color: kprimaryTextColor, letterSpacing: 0.15),
         bodySmall: TextStyle(color: kprimaryTextColor, letterSpacing: 0.15),
