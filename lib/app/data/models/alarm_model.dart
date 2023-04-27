@@ -12,9 +12,11 @@ class AlarmModel {
   late String location;
   int? activityInterval;
   late int minutesSinceMidnight;
+  late List days;
   AlarmModel(
       {required this.alarmTime,
       this.isEnabled = true,
+      required this.days,
       required this.intervalToAlarm,
       required this.isActivityEnabled,
       required this.minutesSinceMidnight,
@@ -25,6 +27,7 @@ class AlarmModel {
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot}) {
     id = documentSnapshot.id;
+    days = documentSnapshot['days'];
     alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
     intervalToAlarm = documentSnapshot['intervalToAlarm'];
@@ -38,6 +41,7 @@ class AlarmModel {
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     id = alarmData['id'];
     alarmTime = alarmData['alarmTime'];
+    days = alarmData['days'];
     isEnabled = alarmData['isEnabled'];
     intervalToAlarm = alarmData['intervalToAlarm'];
     isActivityEnabled = alarmData['isActivityEnabled'];
@@ -58,6 +62,7 @@ class AlarmModel {
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
     return {
       'id': alarmRecord.id,
+      'days': alarmRecord.days,
       'alarmTime': alarmRecord.alarmTime,
       'intervalToAlarm': alarmRecord.intervalToAlarm,
       'isEnabled': alarmRecord.isEnabled,
