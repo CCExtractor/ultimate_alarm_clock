@@ -96,39 +96,274 @@ class AddAlarmView extends GetView<AddAlarmController> {
                   },
                 ),
               ),
-              ListTile(
-                  tileColor: ksecondaryBackgroundColor,
-                  title: const Text('Repeat',
-                      style: TextStyle(
-                          color: kprimaryTextColor,
-                          fontWeight: FontWeight.w500)),
-                  trailing: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      // mainAxisSize: MainAxisSize.min,
-                      // mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          controller.isLocationEnabled.value == false
-                              ? 'Never'
-                              : '...',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                  color: (controller.isLocationEnabled.value ==
-                                          false)
-                                      ? kprimaryDisabledTextColor
-                                      : kprimaryTextColor),
+              InkWell(
+                onTap: () {
+                  Get.defaultDialog(
+                      backgroundColor: ksecondaryBackgroundColor,
+                      title: 'Repeat',
+                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                      content: Obx(
+                        () => Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[0] =
+                                    !controller.repeatDays[0];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[0],
+                                          onChanged: (value) {
+                                            controller.repeatDays[0] =
+                                                !controller.repeatDays[0];
+                                          }),
+                                      Text(
+                                        'Sunday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[1] =
+                                    !controller.repeatDays[1];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[1],
+                                          onChanged: (value) {
+                                            controller.repeatDays[1] =
+                                                !controller.repeatDays[1];
+                                          }),
+                                      Text(
+                                        'Monday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[2] =
+                                    !controller.repeatDays[2];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[2],
+                                          onChanged: (value) {
+                                            controller.repeatDays[2] =
+                                                !controller.repeatDays[2];
+                                          }),
+                                      Text(
+                                        'Tuesday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[3] =
+                                    !controller.repeatDays[3];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[3],
+                                          onChanged: (value) {
+                                            controller.repeatDays[3] =
+                                                !controller.repeatDays[3];
+                                          }),
+                                      Text(
+                                        'Wednesday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[4] =
+                                    !controller.repeatDays[4];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[4],
+                                          onChanged: (value) {
+                                            controller.repeatDays[4] =
+                                                !controller.repeatDays[4];
+                                          }),
+                                      Text(
+                                        'Thursday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[5] =
+                                    !controller.repeatDays[5];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[5],
+                                          onChanged: (value) {
+                                            controller.repeatDays[5] =
+                                                !controller.repeatDays[5];
+                                          }),
+                                      Text(
+                                        'Friday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                controller.repeatDays[6] =
+                                    !controller.repeatDays[6];
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          side: BorderSide(
+                                              width: 1.5,
+                                              color: kprimaryTextColor
+                                                  .withOpacity(0.5)),
+                                          value: controller.repeatDays[6],
+                                          onChanged: (value) {
+                                            controller.repeatDays[6] =
+                                                !controller.repeatDays[6];
+                                          }),
+                                      Text(
+                                        'Saturday',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                            onPressed: () {
-                              Get.defaultDialog();
-                            },
-                            icon: Icon(
-                              Icons.chevron_right,
-                              color: kprimaryDisabledTextColor,
-                            ))
-                      ])),
+                      ));
+                },
+                child: ListTile(
+                    tileColor: ksecondaryBackgroundColor,
+                    title: const Text('Repeat',
+                        style: TextStyle(
+                            color: kprimaryTextColor,
+                            fontWeight: FontWeight.w500)),
+                    trailing: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        // mainAxisSize: MainAxisSize.min,
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            controller.isLocationEnabled.value == false
+                                ? 'Never'
+                                : '...',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color:
+                                        (controller.isLocationEnabled.value ==
+                                                false)
+                                            ? kprimaryDisabledTextColor
+                                            : kprimaryTextColor),
+                          ),
+                          Icon(
+                            Icons.chevron_right,
+                            color: kprimaryDisabledTextColor,
+                          )
+                        ])),
+              ),
               Container(
                 color: ksecondaryTextColor,
                 height: 10,
