@@ -30,8 +30,10 @@ class AddAlarmController extends GetxController {
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
+  final daysRepeating = "Never".obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
+
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
       final timeLimit = const Duration(seconds: 10);
@@ -217,6 +219,11 @@ class AddAlarmController extends GetxController {
     // Updating UI to show time to alarm
     selectedTime.listen((time) {
       timeToAlarm.value = Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time));
+    });
+
+    //Updating UI to show repeated days
+    repeatDays.listen((days) {
+      daysRepeating.value = Utils.getRepeatDays(days);
     });
   }
 
