@@ -30,7 +30,8 @@ class AddAlarmController extends GetxController {
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
-
+  final List<bool> repeatDays =
+      [false, false, false, false, false, false, false].obs;
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
       final timeLimit = const Duration(seconds: 10);
