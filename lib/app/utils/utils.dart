@@ -146,4 +146,34 @@ class Utils {
       }
     }
   }
+
+  static String getRepeatDays(List<bool> days) {
+    const dayAbbreviations = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
+    int weekdayCount = 0;
+    int weekendCount = 0;
+    List<String> selectedDays = [];
+
+    for (int i = 0; i < days.length; i++) {
+      if (days[i]) {
+        if (i < 5) {
+          weekdayCount++;
+        } else {
+          weekendCount++;
+        }
+        selectedDays.add(dayAbbreviations[i]);
+      }
+    }
+
+    if (weekdayCount + weekendCount == 7) {
+      return 'Everyday';
+    } else if (weekdayCount == 5 && weekendCount == 0) {
+      return 'Weekdays';
+    } else if (weekendCount == 2 && weekdayCount == 0) {
+      return 'Weekends';
+    } else if (selectedDays.isEmpty) {
+      return 'Never';
+    } else {
+      return selectedDays.join(',');
+    }
+  }
 }
