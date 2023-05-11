@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+
 class Utils {
   static String timeOfDayToString(TimeOfDay time) {
     final hours = time.hour.toString().padLeft(2, '0');
@@ -174,6 +176,15 @@ class Utils {
       return 'Never';
     } else {
       return selectedDays.join(',');
+    }
+  }
+
+  static AlarmModel getFirstScheduledAlarm(
+      AlarmModel alarm1, AlarmModel alarm2) {
+    if (alarm1.minutesSinceMidnight < alarm2.minutesSinceMidnight) {
+      return alarm1;
+    } else {
+      return alarm2;
     }
   }
 }
