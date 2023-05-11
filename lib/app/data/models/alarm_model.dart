@@ -2,7 +2,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:isar/isar.dart';
+part 'alarm_model.g.dart';
+
+@Collection()
 class AlarmModel {
+  Id isarId = Isar.autoIncrement;
+
   String? id;
   late String alarmTime;
   late bool isEnabled;
@@ -12,7 +18,8 @@ class AlarmModel {
   late String location;
   int? activityInterval;
   late int minutesSinceMidnight;
-  late List days;
+  late List<bool> days;
+
   AlarmModel(
       {required this.alarmTime,
       this.isEnabled = true,
