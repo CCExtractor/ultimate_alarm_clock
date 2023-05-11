@@ -181,10 +181,53 @@ class Utils {
 
   static AlarmModel getFirstScheduledAlarm(
       AlarmModel alarm1, AlarmModel alarm2) {
-    if (alarm1.minutesSinceMidnight < alarm2.minutesSinceMidnight) {
-      return alarm1;
-    } else {
-      return alarm2;
+    // Compare the isEnabled property for each alarm
+    if (alarm1.isEnabled != alarm2.isEnabled) {
+      return alarm1.isEnabled ? alarm1 : alarm2;
     }
+
+    // Get the current time
+    final now = DateTime.now();
+    final currentTimeInMinutes = now.hour * 60 + now.minute;
+    final currentDay = now.weekday - 1; // Monday is 0
+
+    // Calculate the time until the next occurrence of each alarm
+    num timeUntilNextOccurrence(AlarmModel alarm) {
+      // Check if the alarm can never repeat
+      if (alarm.days.every((day) => !day)) {
+        int timeUntilNextAlarm =
+            alarm.minutesSinceMidnight - currentTimeInMinutes;
+        return timeUntilNextAlarm < 0 ? double.infinity : timeUntilNextAlarm;
+      }
+
+      // Check if the alarm repeats every day
+      if (alarm.days.every((day) => day)) {
+        int timeUntilNextAlarm =
+            alarm.minutesSinceMidnight - currentTimeInMinutes;
+        return timeUntilNextAlarm < 0
+            ? timeUntilNextAlarm + 24 * 60
+            : timeUntilNextAlarm;
+      }
+
+      // Calculate the time until the next occurrence for repeatable alarms
+      int dayDifference =
+          alarm.days.indexWhere((day) => day, currentDay) - currentDay;
+      if (dayDifference < 0) {
+        dayDifference += 7;
+      }
+      int timeUntilNextDay = dayDifference * 24 * 60;
+      int timeUntilNextAlarm =
+          alarm.minutesSinceMidnight - currentTimeInMinutes;
+      if (timeUntilNextAlarm < 0) {
+        timeUntilNextAlarm += 24 * 60;
+        timeUntilNextDay += 24 * 60;
+      }
+      return timeUntilNextDay + timeUntilNextAlarm;
+    }
+
+    // Compare the time until the next occurrence for each alarm
+    return timeUntilNextOccurrence(alarm1) < timeUntilNextOccurrence(alarm2)
+        ? alarm1
+        : alarm2;
   }
 }
