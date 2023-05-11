@@ -1,23 +1,43 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/main.dart';
 
 class HomeController extends GetxController {
-  late Stream<QuerySnapshot> streamAlarms;
+  late Stream<QuerySnapshot> firestoreStreamAlarms;
+  late Stream isarStreamAlarms;
+  late Stream streamAlarms;
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
   Timer? _timer;
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    streamAlarms = FirestoreDb.getAlarms();
+    firestoreStreamAlarms = FirestoreDb.getAlarms();
+    isarStreamAlarms = FirestoreDb.getAlarms();
+    streamAlarms = StreamZip([firestoreStreamAlarms, isarStreamAlarms])
+        .asyncMap((List<dynamic> data) async {
+      QuerySnapshot querySnapshot = data[0] as QuerySnapshot;
+      List<DocumentSnapshot> firestoreDocuments = querySnapshot.docs;
+      List firestoreAlarms = firestoreDocuments
+          .map((DocumentSnapshot doc) =>
+              AlarmModel.fromDocumentSnapshot(documentSnapshot: doc))
+          .toList();
+
+      List<AlarmModel> isarAlarms = await IsarDb.getAlarms();
+
+      List<AlarmModel> alarms = [...firestoreAlarms, ...isarAlarms];
+
+      return alarms;
+    });
   }
 
   @override
@@ -34,6 +54,7 @@ class HomeController extends GetxController {
         isEnabled: false,
         isActivityEnabled: false,
         isLocationEnabled: false,
+        isSharedAlarmEnabled: false,
         intervalToAlarm: 0,
         location: '',
         alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
