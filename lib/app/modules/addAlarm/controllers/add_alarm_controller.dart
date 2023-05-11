@@ -5,11 +5,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:isar/isar.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -23,6 +25,7 @@ class AddAlarmController extends GetxController {
   final selectedTime = DateTime.now().obs;
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
+  final isSharedAlarmEnabled = false.obs;
   final timeToAlarm = ''.obs;
   late SendPort _sendPort;
   late AlarmModel _alarmRecord;
@@ -74,8 +77,18 @@ class AddAlarmController extends GetxController {
   }
 
   createAlarm(AlarmModel alarmData) async {
-    _alarmRecord = await FirestoreDb.addAlarm(alarmData);
-    AlarmModel latestAlarm = await FirestoreDb.getLatestAlarm(_alarmRecord);
+    if (isSharedAlarmEnabled.value == true) {
+      _alarmRecord = await FirestoreDb.addAlarm(alarmData);
+    } else {
+      _alarmRecord = await IsarDb.addAlarm(alarmData);
+    }
+
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(_alarmRecord);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
     int intervaltoAlarm = Utils.getMillisecondsToAlarm(
