@@ -57,13 +57,18 @@ const AlarmModelSchema = CollectionSchema(
       name: r'isLocationEnabled',
       type: IsarType.bool,
     ),
-    r'location': PropertySchema(
+    r'isSharedAlarmEnabled': PropertySchema(
       id: 8,
+      name: r'isSharedAlarmEnabled',
+      type: IsarType.bool,
+    ),
+    r'location': PropertySchema(
+      id: 9,
       name: r'location',
       type: IsarType.string,
     ),
     r'minutesSinceMidnight': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'minutesSinceMidnight',
       type: IsarType.long,
     )
@@ -114,8 +119,9 @@ void _alarmModelSerialize(
   writer.writeBool(offsets[5], object.isActivityEnabled);
   writer.writeBool(offsets[6], object.isEnabled);
   writer.writeBool(offsets[7], object.isLocationEnabled);
-  writer.writeString(offsets[8], object.location);
-  writer.writeLong(offsets[9], object.minutesSinceMidnight);
+  writer.writeBool(offsets[8], object.isSharedAlarmEnabled);
+  writer.writeString(offsets[9], object.location);
+  writer.writeLong(offsets[10], object.minutesSinceMidnight);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -132,8 +138,9 @@ AlarmModel _alarmModelDeserialize(
     isActivityEnabled: reader.readBool(offsets[5]),
     isEnabled: reader.readBoolOrNull(offsets[6]) ?? true,
     isLocationEnabled: reader.readBool(offsets[7]),
-    location: reader.readString(offsets[8]),
-    minutesSinceMidnight: reader.readLong(offsets[9]),
+    isSharedAlarmEnabled: reader.readBool(offsets[8]),
+    location: reader.readString(offsets[9]),
+    minutesSinceMidnight: reader.readLong(offsets[10]),
   );
   object.id = reader.readStringOrNull(offsets[3]);
   object.isarId = id;
@@ -164,8 +171,10 @@ P _alarmModelDeserializeProp<P>(
     case 7:
       return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
+      return (reader.readString(offset)) as P;
+    case 10:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -803,6 +812,16 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      isSharedAlarmEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isSharedAlarmEnabled',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> isarIdEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -1143,6 +1162,20 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByIsSharedAlarmEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSharedAlarmEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByIsSharedAlarmEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSharedAlarmEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByLocation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.asc);
@@ -1260,6 +1293,20 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByIsSharedAlarmEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSharedAlarmEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByIsSharedAlarmEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSharedAlarmEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -1353,6 +1400,13 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct>
+      distinctByIsSharedAlarmEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isSharedAlarmEnabled');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByLocation(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1421,6 +1475,13 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, bool, QQueryOperations> isLocationEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isLocationEnabled');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations>
+      isSharedAlarmEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isSharedAlarmEnabled');
     });
   }
 

@@ -13,6 +13,7 @@ class AlarmModel {
   late String alarmTime;
   late bool isEnabled;
   late bool isLocationEnabled;
+  late bool isSharedAlarmEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
@@ -28,13 +29,14 @@ class AlarmModel {
       required this.isActivityEnabled,
       required this.minutesSinceMidnight,
       required this.isLocationEnabled,
+      required this.isSharedAlarmEnabled,
       required this.location,
       this.activityInterval = 600000});
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot}) {
     id = documentSnapshot.id;
-    days = documentSnapshot['days'];
+    days = List<bool>.from(documentSnapshot['days']);
     alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
     intervalToAlarm = documentSnapshot['intervalToAlarm'];
@@ -42,6 +44,7 @@ class AlarmModel {
     activityInterval = documentSnapshot['activityInterval'];
     minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
+    isSharedAlarmEnabled = documentSnapshot['isLocationEnabled'];
     location = documentSnapshot['location'];
   }
 
@@ -55,6 +58,7 @@ class AlarmModel {
     activityInterval = alarmData['activityInterval'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     isLocationEnabled = alarmData['isLocationEnabled'];
+    isSharedAlarmEnabled = alarmData['isLocationEnabled'];
     location = alarmData['location'];
   }
 
@@ -77,7 +81,8 @@ class AlarmModel {
       'activityInterval': alarmRecord.activityInterval,
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,
-      'location': alarmRecord.location
+      'location': alarmRecord.location,
+      'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled
     };
   }
 }
