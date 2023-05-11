@@ -35,7 +35,60 @@ class HomeController extends GetxController {
       List<AlarmModel> isarAlarms = await IsarDb.getAlarms();
 
       List<AlarmModel> alarms = [...firestoreAlarms, ...isarAlarms];
+      alarms.sort((a, b) {
+        // Compare the isEnabled property for each alarm
+        int enabledComparison =
+            a.isEnabled == b.isEnabled ? 0 : (a.isEnabled ? -1 : 1);
+        if (enabledComparison != 0) {
+          return enabledComparison;
+        }
 
+        // Get the current time
+        final now = DateTime.now();
+        final currentTimeInMinutes = now.hour * 60 + now.minute;
+        final currentDay = now.weekday - 1; // Monday is 0
+
+        // Calculate the time until the next occurrence of each alarm
+        num timeUntilNextOccurrence(AlarmModel alarm) {
+          // Check if the alarm can never repeat
+          if (alarm.days.every((day) => !day)) {
+            int timeUntilNextAlarm =
+                alarm.minutesSinceMidnight - currentTimeInMinutes;
+            return timeUntilNextAlarm < 0
+                ? double.infinity
+                : timeUntilNextAlarm;
+          }
+
+          // Check if the alarm repeats every day
+          if (alarm.days.every((day) => day)) {
+            int timeUntilNextAlarm =
+                alarm.minutesSinceMidnight - currentTimeInMinutes;
+            return timeUntilNextAlarm < 0
+                ? timeUntilNextAlarm + 24 * 60
+                : timeUntilNextAlarm;
+          }
+
+          // Calculate the time until the next occurrence for repeatable alarms
+          int dayDifference =
+              alarm.days.indexWhere((day) => day, currentDay) - currentDay;
+          if (dayDifference < 0) {
+            dayDifference += 7;
+          }
+          int timeUntilNextDay = dayDifference * 24 * 60;
+          int timeUntilNextAlarm =
+              alarm.minutesSinceMidnight - currentTimeInMinutes;
+          if (timeUntilNextAlarm < 0) {
+            timeUntilNextAlarm += 24 * 60;
+            timeUntilNextDay += 24 * 60;
+          }
+          return timeUntilNextDay + timeUntilNextAlarm;
+        }
+
+        // Compare the time until the next occurrence for each alarm
+        int arrivalComparison =
+            timeUntilNextOccurrence(a).compareTo(timeUntilNextOccurrence(b));
+        return arrivalComparison;
+      });
       return alarms;
     });
   }
