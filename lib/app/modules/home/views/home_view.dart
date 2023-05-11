@@ -58,27 +58,22 @@ class HomeView extends GetView<HomeController> {
                   child: GlowingOverscrollIndicator(
                     color: kprimaryDisabledTextColor,
                     axisDirection: AxisDirection.down,
-                    child: StreamBuilder<QuerySnapshot>(
+                    child: StreamBuilder(
                         stream: controller.streamAlarms,
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
                                 child: CircularProgressIndicator(
                               color: kprimaryColor,
                             ));
                           } else {
-                            final alarms = snapshot.data!.docs
-                                .map((DocumentSnapshot document) {
-                              return AlarmModel.fromDocumentSnapshot(
-                                  documentSnapshot: document);
-                            }).toList();
+                            // final alarms = snapshot.data!.docs
+                            //     .map((DocumentSnapshot document) {
+                            //   return AlarmModel.fromDocumentSnapshot(
+                            //       documentSnapshot: document);
+                            // }).toList();
+                            List<AlarmModel> alarms = snapshot.data;
 
-                            alarms.sort((a, b) => a.isEnabled == b.isEnabled
-                                ? 0
-                                : a.isEnabled
-                                    ? -1
-                                    : 1);
                             if (alarms.isEmpty) {
                               return Center(
                                 child: Column(
