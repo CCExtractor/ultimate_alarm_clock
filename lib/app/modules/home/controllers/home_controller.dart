@@ -4,6 +4,7 @@ import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/isar_provider.dart';
@@ -14,27 +15,32 @@ class HomeController extends GetxController {
   late Stream<QuerySnapshot> firestoreStreamAlarms;
   late Stream isarStreamAlarms;
   late Stream streamAlarms;
+  List<AlarmModel> latestFirestoreAlarms = [];
+  List<AlarmModel> latestIsarAlarms = [];
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
   Timer? _timer;
+  List alarms = [].obs;
   @override
   void onInit() async {
     super.onInit();
     firestoreStreamAlarms = FirestoreDb.getAlarms();
-    isarStreamAlarms = FirestoreDb.getAlarms();
-    streamAlarms = StreamZip([firestoreStreamAlarms, isarStreamAlarms])
-        .asyncMap((List<dynamic> data) async {
-      QuerySnapshot querySnapshot = data[0] as QuerySnapshot;
-      List<DocumentSnapshot> firestoreDocuments = querySnapshot.docs;
-      List firestoreAlarms = firestoreDocuments
-          .map((DocumentSnapshot doc) =>
-              AlarmModel.fromDocumentSnapshot(documentSnapshot: doc))
-          .toList();
+    isarStreamAlarms = IsarDb.getAlarms();
 
-      List<AlarmModel> isarAlarms = await IsarDb.getAlarms();
+    streamAlarms = StreamGroup.merge([firestoreStreamAlarms, isarStreamAlarms])
+        .map((data) {
+      if (data is QuerySnapshot) {
+        List<DocumentSnapshot> firestoreDocuments = data.docs;
+        latestFirestoreAlarms = firestoreDocuments
+            .map((DocumentSnapshot doc) =>
+                AlarmModel.fromDocumentSnapshot(documentSnapshot: doc))
+            .toList();
+      } else {
+        latestIsarAlarms = data as List<AlarmModel>;
+      }
 
-      List<AlarmModel> alarms = [...firestoreAlarms, ...isarAlarms];
+      List<AlarmModel> alarms = [...latestFirestoreAlarms, ...latestIsarAlarms];
       alarms.sort((a, b) {
         // Compare the isEnabled property for each alarm
         int enabledComparison =
@@ -89,9 +95,12 @@ class HomeController extends GetxController {
             timeUntilNextOccurrence(a).compareTo(timeUntilNextOccurrence(b));
         return arrivalComparison;
       });
+
       return alarms;
     });
   }
+
+  getAlarms() {}
 
   @override
   void onReady() async {
