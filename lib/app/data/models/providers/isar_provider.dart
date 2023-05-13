@@ -19,7 +19,8 @@ class IsarDb {
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
-      return await Isar.open([AlarmModelSchema], directory: dir.path);
+      return await Isar.open([AlarmModelSchema],
+          directory: dir.path, inspector: true);
     }
     return Future.value(Isar.getInstance());
   }
@@ -82,7 +83,9 @@ class IsarDb {
   static Future<void> updateAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    await db.alarmModels.put(alarmRecord);
+    await db.writeTxn(() async {
+      await db.alarmModels.put(alarmRecord);
+    });
   }
 
   static Future<AlarmModel?> getAlarm(int id) async {
@@ -91,21 +94,23 @@ class IsarDb {
     return db.alarmModels.get(id);
   }
 
-  static Future<Stream> watchAlarms() async {
-    final isarProvider = IsarDb();
-    final db = await isarProvider.db;
-    return db.alarmModels.watchLazy(fireImmediately: true);
-  }
-
-  static getAlarms() async {
-    final isarProvider = IsarDb();
-    final db = await isarProvider.db;
-    return await db.alarmModels.where().findAll();
+  static getAlarms() async* {
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
+      yield* db.alarmModels.where().watch(fireImmediately: true);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
   }
 
   static Future<void> deleteAlarm(int id) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    await db.alarmModels.delete(id);
+
+    await db.writeTxn(() async {
+      await db.alarmModels.delete(id);
+    });
   }
 }
