@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/models/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -67,14 +69,9 @@ class HomeView extends GetView<HomeController> {
                               color: kprimaryColor,
                             ));
                           } else {
-                            // final alarms = snapshot.data!.docs
-                            //     .map((DocumentSnapshot document) {
-                            //   return AlarmModel.fromDocumentSnapshot(
-                            //       documentSnapshot: document);
-                            // }).toList();
-                            List<AlarmModel> alarms = snapshot.data;
+                            final alarms = snapshot.data;
 
-                            if (alarms.isEmpty) {
+                            if (alarms!.isEmpty) {
                               return Center(
                                 child: Column(
                                   mainAxisAlignment:
@@ -107,7 +104,7 @@ class HomeView extends GetView<HomeController> {
                                   if (index == alarms.length) {
                                     return SizedBox(height: height * 0.02);
                                   }
-                                  final alarm = alarms[index];
+                                  final AlarmModel alarm = alarms[index];
                                   final time12 = Utils.convertTo12HourFormat(
                                       alarm.alarmTime);
                                   return Center(
@@ -197,13 +194,27 @@ class HomeView extends GetView<HomeController> {
                                                       child: Switch(
                                                           value:
                                                               alarm.isEnabled,
-                                                          onChanged:
-                                                              (bool value) {
+                                                          onChanged: (bool
+                                                              value) async {
                                                             alarm.isEnabled =
                                                                 value;
-                                                            FirestoreDb
-                                                                .updateAlarm(
-                                                                    alarm);
+
+                                                            if (alarm
+                                                                    .isSharedAlarmEnabled ==
+                                                                true) {
+                                                              await FirestoreDb
+                                                                  .updateAlarm(
+                                                                      alarm);
+                                                            } else {
+                                                              await IsarDb
+                                                                  .updateAlarm(
+                                                                      alarm);
+                                                            }
+                                                            controller
+                                                                    .refreshTimer =
+                                                                true;
+                                                            controller
+                                                                .onReady();
                                                           }),
                                                     ),
                                                     Expanded(
@@ -217,9 +228,23 @@ class HomeView extends GetView<HomeController> {
                                                                 'alarm-control');
                                                           } else if (value ==
                                                               1) {
-                                                            await FirestoreDb
-                                                                .deleteAlarm(
-                                                                    alarm.id!);
+                                                            print(alarm
+                                                                .isSharedAlarmEnabled);
+
+                                                            if (alarm
+                                                                    .isSharedAlarmEnabled ==
+                                                                true) {
+                                                              await FirestoreDb
+                                                                  .deleteAlarm(
+                                                                      alarm
+                                                                          .id!);
+                                                            } else {
+                                                              await IsarDb
+                                                                  .deleteAlarm(
+                                                                      alarm
+                                                                          .isarId);
+                                                            }
+
                                                             controller
                                                                     .refreshTimer =
                                                                 true;
