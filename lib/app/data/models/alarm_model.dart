@@ -44,7 +44,7 @@ class AlarmModel {
     activityInterval = documentSnapshot['activityInterval'];
     minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
-    isSharedAlarmEnabled = documentSnapshot['isLocationEnabled'];
+    isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
     location = documentSnapshot['location'];
   }
 
@@ -58,7 +58,7 @@ class AlarmModel {
     activityInterval = alarmData['activityInterval'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     isLocationEnabled = alarmData['isLocationEnabled'];
-    isSharedAlarmEnabled = alarmData['isLocationEnabled'];
+    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     location = alarmData['location'];
   }
 
