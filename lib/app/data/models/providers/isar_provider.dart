@@ -51,35 +51,58 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
-    late List<AlarmModel> alarms;
 
-    // Searching alarms scheduled in future
-    alarms = await db.alarmModels
-        .where()
-        .filter()
-        .isEnabledEqualTo(true)
-        .and()
-        .minutesSinceMidnightGreaterThan(nowInMinutes - 1)
-        .sortByMinutesSinceMidnight()
-        .findAll();
-
-    if (alarms.isEmpty) {
-      // Searching alarms less than current time
-      alarms = await db.alarmModels
-          .where()
-          .filter()
-          .isEnabledEqualTo(true)
-          .and()
-          .minutesSinceMidnightLessThan(alarmRecord.minutesSinceMidnight + 1)
-          .sortByMinutesSinceMidnight()
-          .findAll();
-    }
+    // Get all enabled alarms
+    List<AlarmModel> alarms =
+        await db.alarmModels.where().filter().isEnabledEqualTo(true).findAll();
 
     if (alarms.isEmpty) {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
-      return alarms.first;
+      // Get the closest alarm to the current time
+      AlarmModel closestAlarm = alarms.reduce((a, b) {
+        int aTimeUntilNextAlarm = a.minutesSinceMidnight - nowInMinutes;
+        int bTimeUntilNextAlarm = b.minutesSinceMidnight - nowInMinutes;
+
+        // Check if alarm repeats on any day
+        bool aRepeats = a.days.any((day) => day);
+        bool bRepeats = b.days.any((day) => day);
+
+        // If alarm is one-time and has already passed, set time until next alarm to next day
+        if (!aRepeats && aTimeUntilNextAlarm < 0) {
+          aTimeUntilNextAlarm += Duration.minutesPerDay;
+        }
+        if (!bRepeats && bTimeUntilNextAlarm < 0) {
+          bTimeUntilNextAlarm += Duration.minutesPerDay;
+        }
+
+        // If alarm repeats on any day, find the next upcoming day
+        if (aRepeats) {
+          int currentDay = DateTime.now().weekday - 1;
+          for (int i = 0; i < a.days.length; i++) {
+            int dayIndex = (currentDay + i) % a.days.length;
+            if (a.days[dayIndex]) {
+              aTimeUntilNextAlarm += i * Duration.minutesPerDay;
+              break;
+            }
+          }
+        }
+
+        if (bRepeats) {
+          int currentDay = DateTime.now().weekday - 1;
+          for (int i = 0; i < b.days.length; i++) {
+            int dayIndex = (currentDay + i) % b.days.length;
+            if (b.days[dayIndex]) {
+              bTimeUntilNextAlarm += i * Duration.minutesPerDay;
+              break;
+            }
+          }
+        }
+
+        return aTimeUntilNextAlarm < bTimeUntilNextAlarm ? a : b;
+      });
+      return closestAlarm;
     }
   }
 
