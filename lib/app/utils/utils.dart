@@ -117,26 +117,50 @@ class Utils {
     return deg * (pi / 180);
   }
 
-  static String timeUntilAlarm(TimeOfDay alarmTime) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
     final now = DateTime.now();
     final todayAlarm = DateTime(
         now.year, now.month, now.day, alarmTime.hour, alarmTime.minute);
-    final tomorrowAlarm = DateTime(
-        now.year, now.month, now.day + 1, alarmTime.hour, alarmTime.minute);
 
     Duration duration;
 
-    if (now.isBefore(todayAlarm)) {
+    // Check if the alarm is a one-time alarm
+    if (days.every((day) => !day)) {
+      if (now.isBefore(todayAlarm)) {
+        duration = todayAlarm.difference(now);
+      } else {
+        // Schedule the alarm for the next day
+        final nextAlarm = todayAlarm.add(const Duration(days: 1));
+        duration = nextAlarm.difference(now);
+      }
+    } else if (now.isBefore(todayAlarm) && days[now.weekday - 1]) {
       duration = todayAlarm.difference(now);
     } else {
-      duration = tomorrowAlarm.difference(now);
+      int daysUntilNextAlarm = 7;
+      DateTime? nextAlarm;
+
+      for (int i = 1; i <= 7; i++) {
+        int nextDayIndex = (now.weekday + i - 1) % 7;
+
+        if (days[nextDayIndex]) {
+          if (i < daysUntilNextAlarm) {
+            daysUntilNextAlarm = i;
+            nextAlarm = DateTime(now.year, now.month, now.day + i,
+                alarmTime.hour, alarmTime.minute);
+          }
+        }
+      }
+
+      if (nextAlarm != null) {
+        duration = nextAlarm.difference(now);
+      } else {
+        return 'No upcoming alarms';
+      }
     }
 
     if (duration.inMinutes <= 1) {
       return 'less than 1 minute';
-    } else if (duration.inDays == 1) {
-      return '1 day';
-    } else {
+    } else if (duration.inHours < 24) {
       final hours = duration.inHours;
       final minutes = duration.inMinutes % 60;
       if (hours == 0) {
@@ -146,6 +170,10 @@ class Utils {
       } else {
         return '$hours hours $minutes minutes';
       }
+    } else if (duration.inDays == 1) {
+      return '1 day';
+    } else {
+      return '${duration.inDays} days';
     }
   }
 
@@ -191,13 +219,16 @@ class Utils {
     final currentTimeInMinutes = now.hour * 60 + now.minute;
     final currentDay = now.weekday - 1; // Monday is 0
 
-    // Calculate the time until the next occurrence of each alarm
     num timeUntilNextOccurrence(AlarmModel alarm) {
-      // Check if the alarm can never repeat
+      // Check if the alarm is a one-time alarm
       if (alarm.days.every((day) => !day)) {
         int timeUntilNextAlarm =
             alarm.minutesSinceMidnight - currentTimeInMinutes;
-        return timeUntilNextAlarm < 0 ? double.infinity : timeUntilNextAlarm;
+        if (timeUntilNextAlarm < 0) {
+          // Schedule the alarm for the next day
+          timeUntilNextAlarm += 24 * 60;
+        }
+        return timeUntilNextAlarm;
       }
 
       // Check if the alarm repeats every day
@@ -234,7 +265,7 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
-        days: [],
+        days: [false, false, false, false, false, false, false],
         isEnabled: false,
         isActivityEnabled: false,
         isLocationEnabled: false,
