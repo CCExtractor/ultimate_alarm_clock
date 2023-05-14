@@ -33,24 +33,23 @@ class FirestoreDb {
     int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
     late List list;
     late QuerySnapshot snapshot;
-// Alarm is set for a value in the future
-    if (alarmRecord.minutesSinceMidnight >= nowInMinutes) {
-      // We'll find the alarm that's in future but least and schedule it
-      snapshot = await _alarmsCollection
-          .where('isEnabled', isEqualTo: true)
-          .where('minutesSinceMidnight', isGreaterThanOrEqualTo: nowInMinutes)
-          .orderBy('minutesSinceMidnight', descending: false)
-          .get();
 
-      list = snapshot.docs.map((DocumentSnapshot document) {
-        return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
-      }).toList();
-    } else {
-      // We are sure that the alarm is set in the past, so we'll find the least value among all alarms before this date
+    // Find the next alarm that is scheduled after the current time
+    snapshot = await _alarmsCollection
+        .where('isEnabled', isEqualTo: true)
+        .where('minutesSinceMidnight', isGreaterThanOrEqualTo: nowInMinutes)
+        .orderBy('minutesSinceMidnight', descending: false)
+        .get();
+
+    list = snapshot.docs.map((DocumentSnapshot document) {
+      return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
+    }).toList();
+
+    // If no alarms are found that are scheduled after the current time,
+    // find the next alarm that is scheduled before the current time
+    if (list.isEmpty) {
       snapshot = await _alarmsCollection
           .where('isEnabled', isEqualTo: true)
-          .where('minutesSinceMidnight',
-              isLessThanOrEqualTo: alarmRecord.minutesSinceMidnight)
           .orderBy('minutesSinceMidnight', descending: false)
           .get();
 
@@ -58,13 +57,10 @@ class FirestoreDb {
         return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
       }).toList();
     }
-// For past :
-    // All these alarms are set in the past, so will be scheduled for the next day, same time via getMilliSeconds()
-    // If empty, the set alarm is the least value othwerwise there's a least alarm set
-// For future :
-    // If list is empty, the set alarm is the only one in future
-    // Otherwise, there's an alarm set before this
-    if (list.isEmpty == true) {
+
+    // If no alarms are found, return the original alarmRecord object
+    if (list.isEmpty) {
+      alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
       return list.first;
