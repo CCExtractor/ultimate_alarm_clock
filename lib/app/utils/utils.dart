@@ -230,4 +230,18 @@ class Utils {
         ? alarm1
         : alarm2;
   }
+
+  // Utility function to create a dummy model to pass to functions
+  static AlarmModel genFakeAlarmModel() {
+    return AlarmModel(
+        days: [],
+        isEnabled: false,
+        isActivityEnabled: false,
+        isLocationEnabled: false,
+        isSharedAlarmEnabled: false,
+        intervalToAlarm: 0,
+        location: '',
+        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()));
+  }
 }
