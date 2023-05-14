@@ -178,7 +178,7 @@ class Utils {
   }
 
   static String getRepeatDays(List<bool> days) {
-    const dayAbbreviations = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
+    const dayAbbreviations = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
     int weekdayCount = 0;
     int weekendCount = 0;
     List<String> selectedDays = [];
@@ -203,7 +203,7 @@ class Utils {
     } else if (selectedDays.isEmpty) {
       return 'Never';
     } else {
-      return selectedDays.join(',');
+      return selectedDays.join(', ');
     }
   }
 
