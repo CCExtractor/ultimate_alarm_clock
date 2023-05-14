@@ -127,7 +127,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
 
     // Updating UI to show time to alarm
     selectedTime.listen((time) {
-      timeToAlarm.value = Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time));
+      timeToAlarm.value =
+          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
     });
 
     //Updating UI to show repeated days
