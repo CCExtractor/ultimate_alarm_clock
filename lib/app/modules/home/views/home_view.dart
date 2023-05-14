@@ -214,7 +214,7 @@ class HomeView extends GetView<HomeController> {
                                                                     .refreshTimer =
                                                                 true;
                                                             controller
-                                                                .onReady();
+                                                                .refreshUpcomingAlarms();
                                                           }),
                                                     ),
                                                     Expanded(
@@ -249,7 +249,7 @@ class HomeView extends GetView<HomeController> {
                                                                     .refreshTimer =
                                                                 true;
                                                             controller
-                                                                .onReady();
+                                                                .refreshUpcomingAlarms();
                                                           }
                                                         },
                                                         color:
