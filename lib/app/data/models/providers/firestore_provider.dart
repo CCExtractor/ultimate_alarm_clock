@@ -29,41 +29,64 @@ class FirestoreDb {
     return list[0];
   }
 
-  static getLatestAlarm(AlarmModel alarmRecord) async {
+  static Future<AlarmModel> getLatestAlarm(AlarmModel alarmRecord) async {
     int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
-    late List list;
-    late QuerySnapshot snapshot;
+    late List<AlarmModel> alarms;
 
-    // Find the next alarm that is scheduled after the current time
-    snapshot = await _alarmsCollection
-        .where('isEnabled', isEqualTo: true)
-        .where('minutesSinceMidnight', isGreaterThanOrEqualTo: nowInMinutes)
-        .orderBy('minutesSinceMidnight', descending: false)
-        .get();
-
-    list = snapshot.docs.map((DocumentSnapshot document) {
+    // Get all enabled alarms
+    QuerySnapshot snapshot =
+        await _alarmsCollection.where('isEnabled', isEqualTo: true).get();
+    alarms = snapshot.docs.map((DocumentSnapshot document) {
       return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
     }).toList();
 
-    // If no alarms are found that are scheduled after the current time,
-    // find the next alarm that is scheduled before the current time
-    if (list.isEmpty) {
-      snapshot = await _alarmsCollection
-          .where('isEnabled', isEqualTo: true)
-          .orderBy('minutesSinceMidnight', descending: false)
-          .get();
-
-      list = snapshot.docs.map((DocumentSnapshot document) {
-        return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
-      }).toList();
-    }
-
-    // If no alarms are found, return the original alarmRecord object
-    if (list.isEmpty) {
+    if (alarms.isEmpty) {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
-      return list.first;
+      // Get the closest alarm to the current time
+      AlarmModel closestAlarm = alarms.reduce((a, b) {
+        int aTimeUntilNextAlarm = a.minutesSinceMidnight - nowInMinutes;
+        int bTimeUntilNextAlarm = b.minutesSinceMidnight - nowInMinutes;
+
+        // Check if alarm repeats on any day
+        bool aRepeats = a.days.any((day) => day);
+        bool bRepeats = b.days.any((day) => day);
+
+        // If alarm is one-time and has already passed, set time until next alarm to next day
+        if (!aRepeats && aTimeUntilNextAlarm < 0) {
+          aTimeUntilNextAlarm += Duration.minutesPerDay;
+        }
+        if (!bRepeats && bTimeUntilNextAlarm < 0) {
+          bTimeUntilNextAlarm += Duration.minutesPerDay;
+        }
+
+        // If alarm repeats on any day, find the next upcoming day
+        if (aRepeats) {
+          int currentDay = DateTime.now().weekday - 1;
+          for (int i = 0; i < a.days.length; i++) {
+            int dayIndex = (currentDay + i) % a.days.length;
+            if (a.days[dayIndex]) {
+              aTimeUntilNextAlarm += i * Duration.minutesPerDay;
+              break;
+            }
+          }
+        }
+
+        if (bRepeats) {
+          int currentDay = DateTime.now().weekday - 1;
+          for (int i = 0; i < b.days.length; i++) {
+            int dayIndex = (currentDay + i) % b.days.length;
+            if (b.days[dayIndex]) {
+              bTimeUntilNextAlarm += i * Duration.minutesPerDay;
+              break;
+            }
+          }
+        }
+
+        return aTimeUntilNextAlarm < bTimeUntilNextAlarm ? a : b;
+      });
+      return closestAlarm;
     }
   }
 
