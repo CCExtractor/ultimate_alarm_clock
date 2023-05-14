@@ -53,16 +53,18 @@ class IsarDb {
     int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
     late List<AlarmModel> alarms;
 
-    if (alarmRecord.minutesSinceMidnight >= nowInMinutes) {
-      alarms = await db.alarmModels
-          .where()
-          .filter()
-          .isEnabledEqualTo(true)
-          .and()
-          .minutesSinceMidnightGreaterThan(nowInMinutes - 1)
-          .sortByMinutesSinceMidnight()
-          .findAll();
-    } else {
+    // Searching alarms scheduled in future
+    alarms = await db.alarmModels
+        .where()
+        .filter()
+        .isEnabledEqualTo(true)
+        .and()
+        .minutesSinceMidnightGreaterThan(nowInMinutes - 1)
+        .sortByMinutesSinceMidnight()
+        .findAll();
+
+    if (alarms.isEmpty) {
+      // Searching alarms less than current time
       alarms = await db.alarmModels
           .where()
           .filter()
@@ -74,6 +76,7 @@ class IsarDb {
     }
 
     if (alarms.isEmpty) {
+      alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
       return alarms.first;
