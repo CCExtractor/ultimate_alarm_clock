@@ -20,7 +20,7 @@ class HomeController extends GetxController {
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
-  Timer? _timer;
+  Timer _timer = Timer.periodic(Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
   @override
   void onInit() async {
@@ -98,36 +98,30 @@ class HomeController extends GetxController {
 
       return alarms;
     });
+
+    refreshUpcomingAlarms();
   }
 
-  getAlarms() {}
-
-  @override
-  void onReady() async {
-    super.onReady();
+  refreshUpcomingAlarms() async {
     // Cancel timer if we have to refresh
-    if (refreshTimer == true && isEmpty == false) {
-      _timer!.cancel();
+    if (refreshTimer == true && _timer.isActive) {
+      _timer.cancel();
       refreshTimer = false;
     }
     // Fake object to get latest alarm
-    AlarmModel alarmRecord = AlarmModel(
-        days: [],
-        isEnabled: false,
-        isActivityEnabled: false,
-        isLocationEnabled: false,
-        isSharedAlarmEnabled: false,
-        intervalToAlarm: 0,
-        location: '',
-        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()));
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord);
 
-    AlarmModel latestAlarm = await FirestoreDb.getLatestAlarm(alarmRecord);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(alarmRecord);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+
     String timeToAlarm =
         Utils.timeUntilAlarm(Utils.stringToTimeOfDay(latestAlarm.alarmTime));
     alarmTime.value = "Rings in $timeToAlarm";
-    if (latestAlarm.minutesSinceMidnight != alarmRecord.minutesSinceMidnight) {
-      isEmpty = false;
+
+    if (latestAlarm.minutesSinceMidnight > -1) {
       // Starting timer for live refresh
       _timer = Timer.periodic(
           Duration(
@@ -140,6 +134,11 @@ class HomeController extends GetxController {
     } else {
       alarmTime.value = 'No upcoming alarms!';
     }
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
   }
 
   @override
