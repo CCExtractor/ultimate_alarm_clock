@@ -107,6 +107,8 @@ class HomeView extends GetView<HomeController> {
                                   final AlarmModel alarm = alarms[index];
                                   final time12 = Utils.convertTo12HourFormat(
                                       alarm.alarmTime);
+                                  final repeatDays =
+                                      Utils.getRepeatDays(alarm.days);
                                   return Center(
                                     child: Container(
                                       width: width * 0.91,
@@ -133,16 +135,22 @@ class HomeView extends GetView<HomeController> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text('One Time',
+                                                      Text(
+                                                          repeatDays.replaceAll(
+                                                              "Never",
+                                                              "One Time"),
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
                                                               .bodySmall!
                                                               .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
                                                                   color: (alarm
                                                                               .isEnabled ==
                                                                           true)
-                                                                      ? kprimaryTextColor
+                                                                      ? kprimaryColor
                                                                       : kprimaryDisabledTextColor)),
                                                       Row(
                                                         children: [
