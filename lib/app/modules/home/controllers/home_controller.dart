@@ -42,58 +42,55 @@ class HomeController extends GetxController {
 
       List<AlarmModel> alarms = [...latestFirestoreAlarms, ...latestIsarAlarms];
       alarms.sort((a, b) {
-        // Compare the isEnabled property for each alarm
-        int enabledComparison =
-            a.isEnabled == b.isEnabled ? 0 : (a.isEnabled ? -1 : 1);
-        if (enabledComparison != 0) {
-          return enabledComparison;
+        // First sort by isEnabled
+        if (a.isEnabled != b.isEnabled) {
+          return a.isEnabled ? -1 : 1;
         }
 
-        // Get the current time
-        final now = DateTime.now();
-        final currentTimeInMinutes = now.hour * 60 + now.minute;
-        final currentDay = now.weekday - 1; // Monday is 0
+        // Then sort by upcoming time
+        int aUpcomingTime = a.minutesSinceMidnight;
+        int bUpcomingTime = b.minutesSinceMidnight;
 
-        // Calculate the time until the next occurrence of each alarm
-        num timeUntilNextOccurrence(AlarmModel alarm) {
-          // Check if the alarm can never repeat
-          if (alarm.days.every((day) => !day)) {
-            int timeUntilNextAlarm =
-                alarm.minutesSinceMidnight - currentTimeInMinutes;
-            return timeUntilNextAlarm < 0
-                ? double.infinity
-                : timeUntilNextAlarm;
-          }
+        // Check if alarm repeats on any day
+        bool aRepeats = a.days.any((day) => day);
+        bool bRepeats = b.days.any((day) => day);
 
-          // Check if the alarm repeats every day
-          if (alarm.days.every((day) => day)) {
-            int timeUntilNextAlarm =
-                alarm.minutesSinceMidnight - currentTimeInMinutes;
-            return timeUntilNextAlarm < 0
-                ? timeUntilNextAlarm + 24 * 60
-                : timeUntilNextAlarm;
+        // If alarm repeats on any day, find the next upcoming day
+        if (aRepeats) {
+          int currentDay = DateTime.now().weekday - 1;
+          for (int i = 0; i < a.days.length; i++) {
+            int dayIndex = (currentDay + i) % a.days.length;
+            if (a.days[dayIndex]) {
+              aUpcomingTime += i * Duration.minutesPerDay;
+              break;
+            }
           }
-
-          // Calculate the time until the next occurrence for repeatable alarms
-          int dayDifference =
-              alarm.days.indexWhere((day) => day, currentDay) - currentDay;
-          if (dayDifference < 0) {
-            dayDifference += 7;
+        } else {
+          // If alarm is one-time and has already passed, set upcoming time to next day
+          if (aUpcomingTime <
+              DateTime.now().hour * 60 + DateTime.now().minute) {
+            aUpcomingTime += Duration.minutesPerDay;
           }
-          int timeUntilNextDay = dayDifference * 24 * 60;
-          int timeUntilNextAlarm =
-              alarm.minutesSinceMidnight - currentTimeInMinutes;
-          if (timeUntilNextAlarm < 0) {
-            timeUntilNextAlarm += 24 * 60;
-            timeUntilNextDay += 24 * 60;
-          }
-          return timeUntilNextDay + timeUntilNextAlarm;
         }
 
-        // Compare the time until the next occurrence for each alarm
-        int arrivalComparison =
-            timeUntilNextOccurrence(a).compareTo(timeUntilNextOccurrence(b));
-        return arrivalComparison;
+        if (bRepeats) {
+          int currentDay = DateTime.now().weekday - 1;
+          for (int i = 0; i < b.days.length; i++) {
+            int dayIndex = (currentDay + i) % b.days.length;
+            if (b.days[dayIndex]) {
+              bUpcomingTime += i * Duration.minutesPerDay;
+              break;
+            }
+          }
+        } else {
+          // If alarm is one-time and has already passed, set upcoming time to next day
+          if (bUpcomingTime <
+              DateTime.now().hour * 60 + DateTime.now().minute) {
+            bUpcomingTime += Duration.minutesPerDay;
+          }
+        }
+
+        return aUpcomingTime.compareTo(bUpcomingTime);
       });
 
       return alarms;
@@ -117,8 +114,11 @@ class HomeController extends GetxController {
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
-    String timeToAlarm =
-        Utils.timeUntilAlarm(Utils.stringToTimeOfDay(latestAlarm.alarmTime));
+    print("ISAR: ${isarLatestAlarm.alarmTime}");
+    print("Fire: ${firestoreLatestAlarm.alarmTime}");
+
+    String timeToAlarm = Utils.timeUntilAlarm(
+        Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
     alarmTime.value = "Rings in $timeToAlarm";
 
     if (latestAlarm.minutesSinceMidnight > -1) {
@@ -128,7 +128,7 @@ class HomeController extends GetxController {
               milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
                   DateTime.now().add(const Duration(minutes: 1)))), (timer) {
         timeToAlarm = Utils.timeUntilAlarm(
-            Utils.stringToTimeOfDay(latestAlarm.alarmTime));
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
         alarmTime.value = "Rings in $timeToAlarm";
       });
     } else {
