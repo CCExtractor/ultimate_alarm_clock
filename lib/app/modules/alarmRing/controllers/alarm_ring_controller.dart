@@ -5,9 +5,9 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/alarm_handler_setup_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/alarm_handler_setup_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmControlController extends GetxController
