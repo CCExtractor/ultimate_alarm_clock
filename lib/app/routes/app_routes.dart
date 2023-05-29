@@ -5,14 +5,14 @@ abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
   static const ADD_ALARM = _Paths.ADD_ALARM;
-  static const ALARM_CONTROL = _Paths.ALARM_CONTROL;
-  static const ALARM_CONTROL_IGNORE = _Paths.ALARM_CONTROL_IGNORE;
+  static const ALARM_RING = _Paths.ALARM_RING;
+  static const ALARM_RING_IGNORE = _Paths.ALARM_RING_IGNORE;
 }
 
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
   static const ADD_ALARM = '/add-alarm';
-  static const ALARM_CONTROL = '/alarm-control';
-  static const ALARM_CONTROL_IGNORE = '/alarm-control-ignore';
+  static const ALARM_RING = '/alarm-ring';
+  static const ALARM_RING_IGNORE = '/alarm-ring-ignore';
 }

@@ -2,10 +2,10 @@ import 'package:get/get.dart';
 
 import '../modules/addAlarm/bindings/add_alarm_binding.dart';
 import '../modules/addAlarm/views/add_alarm_view.dart';
-import '../modules/alarm-control/bindings/alarm_control_binding.dart';
-import '../modules/alarm-control/views/alarm_control_view.dart';
-import '../modules/alarm_control_ignore/bindings/alarm_control_ignore_binding.dart';
-import '../modules/alarm_control_ignore/views/alarm_control_ignore_view.dart';
+import '../modules/alarmRing/bindings/alarm_ring_binding.dart';
+import '../modules/alarmRing/views/alarm_ring_view.dart';
+import '../modules/alarmRingIgnore/bindings/alarm_ring_ignore_binding.dart';
+import '../modules/alarmRingIgnore/views/alarm_ring_ignore_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 
@@ -28,12 +28,12 @@ class AppPages {
       binding: AddAlarmBinding(),
     ),
     GetPage(
-      name: _Paths.ALARM_CONTROL,
+      name: _Paths.ALARM_RING,
       page: () => const AlarmControlView(),
       binding: AlarmControlBinding(),
     ),
     GetPage(
-      name: _Paths.ALARM_CONTROL_IGNORE,
+      name: _Paths.ALARM_RING_IGNORE,
       page: () => const AlarmControlIgnoreView(),
       binding: AlarmControlIgnoreBinding(),
     ),

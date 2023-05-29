@@ -3,7 +3,6 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 import 'package:get/get.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -48,8 +47,11 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           TimeOfDay.fromDateTime(
                               controller.selectedTime.value)),
                       isLocationEnabled: controller.isLocationEnabled.value,
-                      location: Utils.geoPointToString(Utils.latLngToGeoPoint(
-                          controller.selectedPoint.value)));
+                      location: Utils.geoPointToString(
+                        Utils.latLngToGeoPoint(controller.selectedPoint.value),
+                      ),
+                      isSharedAlarmEnabled:
+                          controller.isSharedAlarmEnabled.value);
 
                   try {
                     await controller.createAlarm(alarmRecord);
@@ -81,6 +83,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 height: height * 0.28,
                 width: width,
                 child: TimePickerSpinner(
+                  time: controller.selectedTime.value,
                   isForce2Digits: true,
                   alignment: Alignment.center,
                   is24HourMode: false,
@@ -388,6 +391,21 @@ class AddAlarmView extends GetView<AddAlarmController> {
                               controller.isActivityenabled.value = value;
                             },
                             value: controller.isActivityenabled.value,
+                          ),
+                        ),
+                        const Divider(
+                          color: kprimaryDisabledTextColor,
+                        ),
+                        ListTile(
+                          title: Text(
+                            'Enable Shared Alarm',
+                            style: const TextStyle(color: kprimaryTextColor),
+                          ),
+                          trailing: Switch(
+                            onChanged: (value) {
+                              controller.isSharedAlarmEnabled.value = value;
+                            },
+                            value: controller.isSharedAlarmEnabled.value,
                           ),
                         ),
                         const Divider(

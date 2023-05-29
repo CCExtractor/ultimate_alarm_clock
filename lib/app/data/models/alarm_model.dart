@@ -2,17 +2,25 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:isar/isar.dart';
+part 'alarm_model.g.dart';
+
+@Collection()
 class AlarmModel {
+  Id isarId = Isar.autoIncrement;
+
   String? id;
   late String alarmTime;
   late bool isEnabled;
   late bool isLocationEnabled;
+  late bool isSharedAlarmEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
   int? activityInterval;
   late int minutesSinceMidnight;
-  late List days;
+  late List<bool> days;
+
   AlarmModel(
       {required this.alarmTime,
       this.isEnabled = true,
@@ -21,13 +29,14 @@ class AlarmModel {
       required this.isActivityEnabled,
       required this.minutesSinceMidnight,
       required this.isLocationEnabled,
+      required this.isSharedAlarmEnabled,
       required this.location,
       this.activityInterval = 600000});
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot}) {
     id = documentSnapshot.id;
-    days = documentSnapshot['days'];
+    days = List<bool>.from(documentSnapshot['days']);
     alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
     intervalToAlarm = documentSnapshot['intervalToAlarm'];
@@ -35,6 +44,7 @@ class AlarmModel {
     activityInterval = documentSnapshot['activityInterval'];
     minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
+    isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
     location = documentSnapshot['location'];
   }
 
@@ -48,6 +58,7 @@ class AlarmModel {
     activityInterval = alarmData['activityInterval'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     isLocationEnabled = alarmData['isLocationEnabled'];
+    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     location = alarmData['location'];
   }
 
@@ -70,7 +81,8 @@ class AlarmModel {
       'activityInterval': alarmRecord.activityInterval,
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,
-      'location': alarmRecord.location
+      'location': alarmRecord.location,
+      'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled
     };
   }
 }

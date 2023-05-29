@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'dart:ffi';
 
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ class AlarmHandlerModel extends TaskHandler {
   SendPort? _sendPort;
   Stopwatch? _stopwatch;
   late ReceivePort _uiReceivePort;
-  StreamSubscription<Location>? _streamSubscription;
 
   bool isScreenActive = true;
 
@@ -104,11 +102,11 @@ class AlarmHandlerModel extends TaskHandler {
           FlutterForegroundTask.wakeUpScreen();
         }
 
-        FlutterForegroundTask.launchApp('/alarm-control');
+        FlutterForegroundTask.launchApp('/alarm-ring');
       } else {
         print("STOPPING ALARM");
         // FlutterForegroundTask.launchApp('/alarm-control');
-        FlutterForegroundTask.launchApp('/alarm-control-ignore');
+        FlutterForegroundTask.launchApp('/alarm-ring-ignore');
         // _sendPort?.send('testing');
       }
     }

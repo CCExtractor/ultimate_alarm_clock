@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -58,28 +58,18 @@ class HomeView extends GetView<HomeController> {
                   child: GlowingOverscrollIndicator(
                     color: kprimaryDisabledTextColor,
                     axisDirection: AxisDirection.down,
-                    child: StreamBuilder<QuerySnapshot>(
+                    child: StreamBuilder(
                         stream: controller.streamAlarms,
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
                                 child: CircularProgressIndicator(
                               color: kprimaryColor,
                             ));
                           } else {
-                            final alarms = snapshot.data!.docs
-                                .map((DocumentSnapshot document) {
-                              return AlarmModel.fromDocumentSnapshot(
-                                  documentSnapshot: document);
-                            }).toList();
+                            final alarms = snapshot.data;
 
-                            alarms.sort((a, b) => a.isEnabled == b.isEnabled
-                                ? 0
-                                : a.isEnabled
-                                    ? -1
-                                    : 1);
-                            if (alarms.isEmpty) {
+                            if (alarms!.isEmpty) {
                               return Center(
                                 child: Column(
                                   mainAxisAlignment:
@@ -112,9 +102,11 @@ class HomeView extends GetView<HomeController> {
                                   if (index == alarms.length) {
                                     return SizedBox(height: height * 0.02);
                                   }
-                                  final alarm = alarms[index];
+                                  final AlarmModel alarm = alarms[index];
                                   final time12 = Utils.convertTo12HourFormat(
                                       alarm.alarmTime);
+                                  final repeatDays =
+                                      Utils.getRepeatDays(alarm.days);
                                   return Center(
                                     child: Container(
                                       width: width * 0.91,
@@ -141,16 +133,22 @@ class HomeView extends GetView<HomeController> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text('One Time',
+                                                      Text(
+                                                          repeatDays.replaceAll(
+                                                              "Never",
+                                                              "One Time"),
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
                                                               .bodySmall!
                                                               .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
                                                                   color: (alarm
                                                                               .isEnabled ==
                                                                           true)
-                                                                      ? kprimaryTextColor
+                                                                      ? kprimaryColor
                                                                       : kprimaryDisabledTextColor)),
                                                       Row(
                                                         children: [
@@ -202,13 +200,27 @@ class HomeView extends GetView<HomeController> {
                                                       child: Switch(
                                                           value:
                                                               alarm.isEnabled,
-                                                          onChanged:
-                                                              (bool value) {
+                                                          onChanged: (bool
+                                                              value) async {
                                                             alarm.isEnabled =
                                                                 value;
-                                                            FirestoreDb
-                                                                .updateAlarm(
-                                                                    alarm);
+
+                                                            if (alarm
+                                                                    .isSharedAlarmEnabled ==
+                                                                true) {
+                                                              await FirestoreDb
+                                                                  .updateAlarm(
+                                                                      alarm);
+                                                            } else {
+                                                              await IsarDb
+                                                                  .updateAlarm(
+                                                                      alarm);
+                                                            }
+                                                            controller
+                                                                    .refreshTimer =
+                                                                true;
+                                                            controller
+                                                                .refreshUpcomingAlarms();
                                                           }),
                                                     ),
                                                     Expanded(
@@ -222,14 +234,28 @@ class HomeView extends GetView<HomeController> {
                                                                 'alarm-control');
                                                           } else if (value ==
                                                               1) {
-                                                            await FirestoreDb
-                                                                .deleteAlarm(
-                                                                    alarm.id!);
+                                                            print(alarm
+                                                                .isSharedAlarmEnabled);
+
+                                                            if (alarm
+                                                                    .isSharedAlarmEnabled ==
+                                                                true) {
+                                                              await FirestoreDb
+                                                                  .deleteAlarm(
+                                                                      alarm
+                                                                          .id!);
+                                                            } else {
+                                                              await IsarDb
+                                                                  .deleteAlarm(
+                                                                      alarm
+                                                                          .isarId);
+                                                            }
+
                                                             controller
                                                                     .refreshTimer =
                                                                 true;
                                                             controller
-                                                                .onReady();
+                                                                .refreshUpcomingAlarms();
                                                           }
                                                         },
                                                         color:
