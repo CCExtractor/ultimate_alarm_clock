@@ -440,9 +440,11 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                   if (value == 0) {
                                     controller.isLocationEnabled.value = false;
                                   } else if (value == 1) {
-                                    await controller.getLocation();
                                     // Get.back();
+                                    if (controller.isLocationEnabled.value ==
+                                        false) await controller.getLocation();
                                     controller.isLocationEnabled.value = true;
+
                                     Get.defaultDialog(
                                       backgroundColor:
                                           ksecondaryBackgroundColor,
