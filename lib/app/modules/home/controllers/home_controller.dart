@@ -23,7 +23,7 @@ class HomeController extends GetxController {
   Timer _timer = Timer.periodic(Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     firestoreStreamAlarms = FirestoreDb.getAlarms();
     isarStreamAlarms = IsarDb.getAlarms();
@@ -55,7 +55,7 @@ class HomeController extends GetxController {
         bool aRepeats = a.days.any((day) => day);
         bool bRepeats = b.days.any((day) => day);
 
-        // If alarm repeats on any day, find the next upcoming day
+        // If alarm repeats on any day, find the next up+coming day
         if (aRepeats) {
           int currentDay = DateTime.now().weekday - 1;
           for (int i = 0; i < a.days.length; i++) {
@@ -67,7 +67,7 @@ class HomeController extends GetxController {
           }
         } else {
           // If alarm is one-time and has already passed, set upcoming time to next day
-          if (aUpcomingTime <
+          if (aUpcomingTime <=
               DateTime.now().hour * 60 + DateTime.now().minute) {
             aUpcomingTime += Duration.minutesPerDay;
           }
@@ -84,7 +84,7 @@ class HomeController extends GetxController {
           }
         } else {
           // If alarm is one-time and has already passed, set upcoming time to next day
-          if (bUpcomingTime <
+          if (bUpcomingTime <=
               DateTime.now().hour * 60 + DateTime.now().minute) {
             bUpcomingTime += Duration.minutesPerDay;
           }
