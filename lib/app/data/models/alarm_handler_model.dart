@@ -104,11 +104,11 @@ class AlarmHandlerModel extends TaskHandler {
           FlutterForegroundTask.wakeUpScreen();
         }
 
-        FlutterForegroundTask.launchApp('/alarm-control');
+        FlutterForegroundTask.launchApp('/alarm-ring');
       } else {
         print("STOPPING ALARM");
         // FlutterForegroundTask.launchApp('/alarm-control');
-        FlutterForegroundTask.launchApp('/alarm-control-ignore');
+        FlutterForegroundTask.launchApp('/alarm-ring-ignore');
         // _sendPort?.send('testing');
       }
     }
