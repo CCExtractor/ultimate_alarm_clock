@@ -107,196 +107,206 @@ class HomeView extends GetView<HomeController> {
                                       alarm.alarmTime);
                                   final repeatDays =
                                       Utils.getRepeatDays(alarm.days);
-                                  return Center(
-                                    child: Container(
-                                      width: width * 0.91,
-                                      height: height * 0.135,
-                                      decoration: const BoxDecoration(
-                                          color: ksecondaryBackgroundColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(18))),
-                                      child: Center(
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 25.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                flex: 3,
-                                                child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                          repeatDays.replaceAll(
-                                                              "Never",
-                                                              "One Time"),
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .bodySmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: (alarm
-                                                                              .isEnabled ==
-                                                                          true)
-                                                                      ? kprimaryColor
-                                                                      : kprimaryDisabledTextColor)),
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            time12[0],
+                                  // Main card
+                                  return InkWell(
+                                    onTap: () {
+                                      Get.toNamed('/update-alarm',
+                                          arguments: alarm);
+                                    },
+                                    child: Center(
+                                      child: Container(
+                                        width: width * 0.91,
+                                        height: height * 0.135,
+                                        decoration: const BoxDecoration(
+                                            color: ksecondaryBackgroundColor,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(18))),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 25.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            repeatDays
+                                                                .replaceAll(
+                                                                    "Never",
+                                                                    "One Time"),
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayLarge!
+                                                                .bodySmall!
                                                                 .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
                                                                     color: (alarm.isEnabled ==
                                                                             true)
-                                                                        ? kprimaryTextColor
-                                                                        : kprimaryDisabledTextColor),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        3.0),
-                                                            child: Text(
-                                                              time12[1],
+                                                                        ? kprimaryColor
+                                                                        : kprimaryDisabledTextColor)),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              time12[0],
                                                               style: Theme.of(
                                                                       context)
                                                                   .textTheme
-                                                                  .displayMedium!
+                                                                  .displayLarge!
                                                                   .copyWith(
                                                                       color: (alarm.isEnabled ==
                                                                               true)
                                                                           ? kprimaryTextColor
                                                                           : kprimaryDisabledTextColor),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ]),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 0,
-                                                      child: Switch(
-                                                          value:
-                                                              alarm.isEnabled,
-                                                          onChanged: (bool
-                                                              value) async {
-                                                            alarm.isEnabled =
-                                                                value;
-
-                                                            if (alarm
-                                                                    .isSharedAlarmEnabled ==
-                                                                true) {
-                                                              await FirestoreDb
-                                                                  .updateAlarm(
-                                                                      alarm);
-                                                            } else {
-                                                              await IsarDb
-                                                                  .updateAlarm(
-                                                                      alarm);
-                                                            }
-                                                            controller
-                                                                    .refreshTimer =
-                                                                true;
-                                                            controller
-                                                                .refreshUpcomingAlarms();
-                                                          }),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 0,
-                                                      child: PopupMenuButton(
-                                                        onSelected:
-                                                            (value) async {
-                                                          if (value == 0) {
-                                                            Get.back();
-                                                            Get.offNamed(
-                                                                'alarm-control');
-                                                          } else if (value ==
-                                                              1) {
-                                                            print(alarm
-                                                                .isSharedAlarmEnabled);
-
-                                                            if (alarm
-                                                                    .isSharedAlarmEnabled ==
-                                                                true) {
-                                                              await FirestoreDb
-                                                                  .deleteAlarm(
-                                                                      alarm
-                                                                          .id!);
-                                                            } else {
-                                                              await IsarDb
-                                                                  .deleteAlarm(
-                                                                      alarm
-                                                                          .isarId);
-                                                            }
-
-                                                            controller
-                                                                    .refreshTimer =
-                                                                true;
-                                                            controller
-                                                                .refreshUpcomingAlarms();
-                                                          }
-                                                        },
-                                                        color:
-                                                            kprimaryBackgroundColor,
-                                                        icon: Icon(
-                                                            Icons.more_vert,
-                                                            color: (alarm
-                                                                        .isEnabled ==
-                                                                    true)
-                                                                ? kprimaryTextColor
-                                                                : kprimaryDisabledTextColor),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem<int>(
-                                                              value: 0,
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      3.0),
                                                               child: Text(
-                                                                "Preview Alarm",
+                                                                time12[1],
                                                                 style: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .bodyMedium,
+                                                                    .displayMedium!
+                                                                    .copyWith(
+                                                                        color: (alarm.isEnabled ==
+                                                                                true)
+                                                                            ? kprimaryTextColor
+                                                                            : kprimaryDisabledTextColor),
                                                               ),
                                                             ),
-                                                            PopupMenuItem<int>(
-                                                              value: 1,
-                                                              child: Text(
-                                                                "Delete Alarm",
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodyMedium,
-                                                              ),
-                                                            )
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
+                                                          ],
+                                                        ),
+                                                      ]),
                                                 ),
-                                              ),
-                                            ],
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 0,
+                                                        child: Switch(
+                                                            value:
+                                                                alarm.isEnabled,
+                                                            onChanged: (bool
+                                                                value) async {
+                                                              alarm.isEnabled =
+                                                                  value;
+
+                                                              if (alarm
+                                                                      .isSharedAlarmEnabled ==
+                                                                  true) {
+                                                                await FirestoreDb
+                                                                    .updateAlarm(
+                                                                        alarm);
+                                                              } else {
+                                                                await IsarDb
+                                                                    .updateAlarm(
+                                                                        alarm);
+                                                              }
+                                                              controller
+                                                                      .refreshTimer =
+                                                                  true;
+                                                              controller
+                                                                  .refreshUpcomingAlarms();
+                                                            }),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 0,
+                                                        child: PopupMenuButton(
+                                                          onSelected:
+                                                              (value) async {
+                                                            if (value == 0) {
+                                                              Get.back();
+                                                              Get.offNamed(
+                                                                  'alarm-control');
+                                                            } else if (value ==
+                                                                1) {
+                                                              print(alarm
+                                                                  .isSharedAlarmEnabled);
+
+                                                              if (alarm
+                                                                      .isSharedAlarmEnabled ==
+                                                                  true) {
+                                                                await FirestoreDb
+                                                                    .deleteAlarm(
+                                                                        alarm
+                                                                            .id!);
+                                                              } else {
+                                                                await IsarDb
+                                                                    .deleteAlarm(
+                                                                        alarm
+                                                                            .isarLocalId);
+                                                              }
+
+                                                              controller
+                                                                      .refreshTimer =
+                                                                  true;
+                                                              controller
+                                                                  .refreshUpcomingAlarms();
+                                                            }
+                                                          },
+                                                          color:
+                                                              kprimaryBackgroundColor,
+                                                          icon: Icon(
+                                                              Icons.more_vert,
+                                                              color: (alarm
+                                                                          .isEnabled ==
+                                                                      true)
+                                                                  ? kprimaryTextColor
+                                                                  : kprimaryDisabledTextColor),
+                                                          itemBuilder:
+                                                              (context) {
+                                                            return [
+                                                              PopupMenuItem<
+                                                                  int>(
+                                                                value: 0,
+                                                                child: Text(
+                                                                  "Preview Alarm",
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium,
+                                                                ),
+                                                              ),
+                                                              PopupMenuItem<
+                                                                  int>(
+                                                                value: 1,
+                                                                child: Text(
+                                                                  "Delete Alarm",
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium,
+                                                                ),
+                                                              )
+                                                            ];
+                                                          },
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),

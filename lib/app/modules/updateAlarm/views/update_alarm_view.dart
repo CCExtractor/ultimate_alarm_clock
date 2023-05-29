@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+
+import '../controllers/update_alarm_controller.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
-import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:flutter_map/flutter_map.dart';
-import '../controllers/add_alarm_controller.dart';
 
-class AddAlarmView extends GetView<AddAlarmController> {
-  AddAlarmView({Key? key}) : super(key: key);
-
+class UpdateAlarmView extends GetView<UpdateAlarmController> {
+  const UpdateAlarmView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -29,7 +30,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(kprimaryColor)),
                 child: Text(
-                  'Save',
+                  'Update',
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
@@ -54,7 +55,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           controller.isSharedAlarmEnabled.value);
 
                   try {
-                    await controller.createAlarm(alarmRecord);
+                    await controller.updateAlarm(alarmRecord);
                   } catch (e) {
                     print(e);
                   }
@@ -444,7 +445,6 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                     if (controller.isLocationEnabled.value ==
                                         false) await controller.getLocation();
                                     controller.isLocationEnabled.value = true;
-
                                     Get.defaultDialog(
                                       backgroundColor:
                                           ksecondaryBackgroundColor,

@@ -11,6 +11,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmHandlerModel extends TaskHandler {
   Screen? _screen;
+  // ignore: unused_field
   StreamSubscription<ScreenStateEvent>? _subscription;
 
   late AlarmModel alarmRecord;

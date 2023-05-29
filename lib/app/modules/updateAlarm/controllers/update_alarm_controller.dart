@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
@@ -12,20 +12,24 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
+class UpdateAlarmController extends GetxController with AlarmHandlerSetupModel {
   var homeController = Get.find<HomeController>();
-  final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
+
+  final MapController mapController = MapController();
+  final daysRepeating = "Never".obs;
+
+// AlarmModel is being passed as parameter
+  AlarmModel _alarmRecord = Get.arguments;
+
+  // Reinitialize these in onInit()
+  final selectedTime = DateTime.now().obs;
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
   final timeToAlarm = ''.obs;
 
-  AlarmModel? _alarmRecord;
-
-  final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
-  final daysRepeating = "Never".obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
 
@@ -68,16 +72,16 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
     return true;
   }
 
-  createAlarm(AlarmModel alarmData) async {
+  updateAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
-      _alarmRecord = await FirestoreDb.addAlarm(alarmData);
+      await FirestoreDb.updateAlarm(alarmData);
     } else {
-      _alarmRecord = await IsarDb.addAlarm(alarmData);
+      await IsarDb.updateAlarm(alarmData);
     }
 
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord!);
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_alarmRecord!);
+        await FirestoreDb.getLatestAlarm(_alarmRecord);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
@@ -100,15 +104,41 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onInit() async {
     super.onInit();
+
+// Reinitializing all values here
+    selectedTime.value = Utils.timeOfDayToDateTime(
+        Utils.stringToTimeOfDay(_alarmRecord.alarmTime));
+    // Shows the "Rings in" time
+    timeToAlarm.value = Utils.timeUntilAlarm(
+        TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
+
+    repeatDays.value = _alarmRecord.days;
+    // Shows the selected days in UI
+    daysRepeating.value = Utils.getRepeatDays(repeatDays);
+
+    isActivityenabled.value = _alarmRecord.isActivityEnabled;
+    isLocationEnabled.value = _alarmRecord.isLocationEnabled;
+    isSharedAlarmEnabled.value = _alarmRecord.isSharedAlarmEnabled;
+    selectedPoint.value = Utils.stringToLatLng(_alarmRecord.location);
+    // Shows the marker in UI
+    markersList.add(Marker(
+      point: selectedPoint.value,
+      builder: (ctx) => const Icon(
+        Icons.location_on,
+        size: 35,
+      ),
+    ));
+
     _ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) async {
       // You can get the previous ReceivePort without restarting the service.
       if (await FlutterForegroundTask.isRunningService) {
         final newReceivePort = FlutterForegroundTask.receivePort;
         _alarmRecord = Utils.genFakeAlarmModel();
-        registerReceivePort(newReceivePort, _alarmRecord!);
+        registerReceivePort(newReceivePort, _alarmRecord);
       }
     });
 
+// This section contains all the UI updates for various options
     // Adding to markers list, to display on map (MarkersLayer takes only List<Marker>)
     selectedPoint.listen((point) {
       selectedPoint.value = point;
