@@ -50,7 +50,12 @@ class IsarDb {
   static Future<AlarmModel> getLatestAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
+
+// Increasing a day since we need alarms AFTER the current time
+// Logically, alarms at current time will ring in the future ;-;
+
+    int nowInMinutes = Utils.timeOfDayToInt(
+        TimeOfDay(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute));
 
     // Get all enabled alarms
     List<AlarmModel> alarms =
@@ -69,7 +74,7 @@ class IsarDb {
         bool aRepeats = a.days.any((day) => day);
         bool bRepeats = b.days.any((day) => day);
 
-        // If alarm is one-time and has already passed, set time until next alarm to next day
+        // If alarm is one-time and has already passed or is happening now, set time until next alarm to next day
         if (!aRepeats && aTimeUntilNextAlarm < 0) {
           aTimeUntilNextAlarm += Duration.minutesPerDay;
         }
