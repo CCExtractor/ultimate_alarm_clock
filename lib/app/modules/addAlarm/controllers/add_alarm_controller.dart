@@ -18,7 +18,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   var homeController = Get.find<HomeController>();
-  final selectedTime = DateTime.now().obs;
+  final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
