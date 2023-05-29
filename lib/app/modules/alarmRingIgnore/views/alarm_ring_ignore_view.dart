@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/home/views/home_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
-import '../controllers/alarm_control_ignore_controller.dart';
+import '../controllers/alarm_ring_ignore_controller.dart';
 
 class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
   const AlarmControlIgnoreView({Key? key}) : super(key: key);

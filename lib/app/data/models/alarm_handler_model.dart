@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'dart:ffi';
 
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ class AlarmHandlerModel extends TaskHandler {
   SendPort? _sendPort;
   Stopwatch? _stopwatch;
   late ReceivePort _uiReceivePort;
-  StreamSubscription<Location>? _streamSubscription;
 
   bool isScreenActive = true;
 
