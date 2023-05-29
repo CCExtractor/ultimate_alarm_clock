@@ -30,7 +30,9 @@ class FirestoreDb {
   }
 
   static Future<AlarmModel> getLatestAlarm(AlarmModel alarmRecord) async {
-    int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
+    int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
+        hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+
     late List<AlarmModel> alarms;
 
     // Get all enabled alarms
