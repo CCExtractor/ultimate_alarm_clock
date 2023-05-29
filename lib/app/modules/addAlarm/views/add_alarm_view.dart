@@ -84,6 +84,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 height: height * 0.28,
                 width: width,
                 child: TimePickerSpinner(
+                  time: controller.selectedTime.value,
                   isForce2Digits: true,
                   alignment: Alignment.center,
                   is24HourMode: false,
