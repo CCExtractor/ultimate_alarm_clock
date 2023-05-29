@@ -7,6 +7,7 @@ abstract class Routes {
   static const ADD_ALARM = _Paths.ADD_ALARM;
   static const ALARM_RING = _Paths.ALARM_RING;
   static const ALARM_RING_IGNORE = _Paths.ALARM_RING_IGNORE;
+  static const UPDATE_ALARM = _Paths.UPDATE_ALARM;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const ADD_ALARM = '/add-alarm';
   static const ALARM_RING = '/alarm-ring';
   static const ALARM_RING_IGNORE = '/alarm-ring-ignore';
+  static const UPDATE_ALARM = '/update-alarm';
 }
