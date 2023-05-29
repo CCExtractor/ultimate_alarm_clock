@@ -111,6 +111,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
 
     // Adding to markers list, to display on map (MarkersLayer takes only List<Marker>)
     selectedPoint.listen((point) {
+      selectedPoint.value = point;
       markersList.clear();
       markersList.add(Marker(
         point: point,
