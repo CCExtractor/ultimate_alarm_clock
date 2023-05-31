@@ -6,7 +6,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/alarm_handler_setup_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
@@ -73,9 +73,12 @@ class UpdateAlarmController extends GetxController with AlarmHandlerSetupModel {
   }
 
   updateAlarm(AlarmModel alarmData) async {
+    // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
+      alarmData.firestoreId = _alarmRecord.firestoreId;
       await FirestoreDb.updateAlarm(alarmData);
     } else {
+      alarmData.isarId = _alarmRecord.isarId;
       await IsarDb.updateAlarm(alarmData);
     }
 
@@ -133,7 +136,6 @@ class UpdateAlarmController extends GetxController with AlarmHandlerSetupModel {
       // You can get the previous ReceivePort without restarting the service.
       if (await FlutterForegroundTask.isRunningService) {
         final newReceivePort = FlutterForegroundTask.receivePort;
-        _alarmRecord = Utils.genFakeAlarmModel();
         registerReceivePort(newReceivePort, _alarmRecord);
       }
     });
