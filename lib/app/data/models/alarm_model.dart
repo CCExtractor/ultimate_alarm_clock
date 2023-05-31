@@ -5,11 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:isar/isar.dart';
 part 'alarm_model.g.dart';
 
-@Collection()
+@collection
 class AlarmModel {
   Id isarId = Isar.autoIncrement;
 
-  String? id;
+  String? firestoreId;
   late String alarmTime;
   late bool isEnabled;
   late bool isLocationEnabled;
@@ -35,7 +35,7 @@ class AlarmModel {
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot}) {
-    id = documentSnapshot.id;
+    firestoreId = documentSnapshot.id;
     days = List<bool>.from(documentSnapshot['days']);
     alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
@@ -49,7 +49,7 @@ class AlarmModel {
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
-    id = alarmData['id'];
+    firestoreId = alarmData['firestoreId'];
     alarmTime = alarmData['alarmTime'];
     days = alarmData['days'];
     isEnabled = alarmData['isEnabled'];
@@ -72,7 +72,7 @@ class AlarmModel {
 
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
     return {
-      'id': alarmRecord.id,
+      'firestoreId': alarmRecord.firestoreId,
       'days': alarmRecord.days,
       'alarmTime': alarmRecord.alarmTime,
       'intervalToAlarm': alarmRecord.intervalToAlarm,

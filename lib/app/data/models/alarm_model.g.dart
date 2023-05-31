@@ -32,9 +32,9 @@ const AlarmModelSchema = CollectionSchema(
       name: r'days',
       type: IsarType.boolList,
     ),
-    r'id': PropertySchema(
+    r'firestoreId': PropertySchema(
       id: 3,
-      name: r'id',
+      name: r'firestoreId',
       type: IsarType.string,
     ),
     r'intervalToAlarm': PropertySchema(
@@ -96,7 +96,7 @@ int _alarmModelEstimateSize(
   bytesCount += 3 + object.alarmTime.length * 3;
   bytesCount += 3 + object.days.length;
   {
-    final value = object.id;
+    final value = object.firestoreId;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -114,7 +114,7 @@ void _alarmModelSerialize(
   writer.writeLong(offsets[0], object.activityInterval);
   writer.writeString(offsets[1], object.alarmTime);
   writer.writeBoolList(offsets[2], object.days);
-  writer.writeString(offsets[3], object.id);
+  writer.writeString(offsets[3], object.firestoreId);
   writer.writeLong(offsets[4], object.intervalToAlarm);
   writer.writeBool(offsets[5], object.isActivityEnabled);
   writer.writeBool(offsets[6], object.isEnabled);
@@ -142,7 +142,7 @@ AlarmModel _alarmModelDeserialize(
     location: reader.readString(offsets[9]),
     minutesSinceMidnight: reader.readLong(offsets[10]),
   );
-  object.id = reader.readStringOrNull(offsets[3]);
+  object.firestoreId = reader.readStringOrNull(offsets[3]);
   object.isarId = id;
   return object;
 }
@@ -580,36 +580,40 @@ extension AlarmModelQueryFilter
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idIsNull() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'id',
+        property: r'firestoreId',
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idIsNotNull() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'id',
+        property: r'firestoreId',
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idEqualTo(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
+        property: r'firestoreId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -617,14 +621,15 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'id',
+        property: r'firestoreId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idLessThan(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -632,14 +637,15 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'id',
+        property: r'firestoreId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idBetween(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -648,7 +654,7 @@ extension AlarmModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
+        property: r'firestoreId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -658,69 +664,71 @@ extension AlarmModelQueryFilter
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idStartsWith(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'id',
+        property: r'firestoreId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idEndsWith(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'id',
+        property: r'firestoreId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'id',
+        property: r'firestoreId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'id',
+        property: r'firestoreId',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idIsEmpty() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
+        property: r'firestoreId',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> idIsNotEmpty() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      firestoreIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'id',
+        property: r'firestoreId',
         value: '',
       ));
     });
@@ -1099,15 +1107,15 @@ extension AlarmModelQuerySortBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortById() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByFirestoreId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(r'firestoreId', Sort.asc);
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIdDesc() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByFirestoreIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
+      return query.addSortBy(r'firestoreId', Sort.desc);
     });
   }
 
@@ -1230,15 +1238,15 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenById() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByFirestoreId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(r'firestoreId', Sort.asc);
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByFirestoreIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
+      return query.addSortBy(r'firestoreId', Sort.desc);
     });
   }
 
@@ -1367,10 +1375,10 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctById(
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByFirestoreId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'firestoreId', caseSensitive: caseSensitive);
     });
   }
 
@@ -1448,9 +1456,9 @@ extension AlarmModelQueryProperty
     });
   }
 
-  QueryBuilder<AlarmModel, String?, QQueryOperations> idProperty() {
+  QueryBuilder<AlarmModel, String?, QQueryOperations> firestoreIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'firestoreId');
     });
   }
 
