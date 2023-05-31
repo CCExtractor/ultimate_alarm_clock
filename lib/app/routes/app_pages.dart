@@ -8,6 +8,8 @@ import '../modules/alarmRingIgnore/bindings/alarm_ring_ignore_binding.dart';
 import '../modules/alarmRingIgnore/views/alarm_ring_ignore_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/settings/bindings/settings_binding.dart';
+import '../modules/settings/views/settings_view.dart';
 import '../modules/updateAlarm/bindings/update_alarm_binding.dart';
 import '../modules/updateAlarm/views/update_alarm_view.dart';
 
@@ -43,6 +45,11 @@ class AppPages {
       name: _Paths.UPDATE_ALARM,
       page: () => const UpdateAlarmView(),
       binding: UpdateAlarmBinding(),
+    ),
+    GetPage(
+      name: _Paths.SETTINGS,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
     ),
   ];
 }
