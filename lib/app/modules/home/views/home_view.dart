@@ -249,12 +249,12 @@ class HomeView extends GetView<HomeController> {
                                                                 await FirestoreDb
                                                                     .deleteAlarm(
                                                                         alarm
-                                                                            .id!);
+                                                                            .firestoreId!);
                                                               } else {
                                                                 await IsarDb
                                                                     .deleteAlarm(
                                                                         alarm
-                                                                            .isarLocalId);
+                                                                            .isarId);
                                                               }
 
                                                               controller
