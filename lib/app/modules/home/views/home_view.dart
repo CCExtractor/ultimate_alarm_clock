@@ -27,28 +27,42 @@ class HomeView extends GetView<HomeController> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-              padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Next alarm',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall!
-                        .copyWith(color: kprimaryDisabledTextColor),
-                  ),
-                  Obx(
-                    () => Text(controller.alarmTime.value,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Next alarm',
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall!
-                            .copyWith(
-                                color: kprimaryTextColor.withOpacity(0.75))),
-                  )
-                ],
-              )),
+                            .copyWith(color: kprimaryDisabledTextColor),
+                      ),
+                      Obx(
+                        () => Text(controller.alarmTime.value,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                    color:
+                                        kprimaryTextColor.withOpacity(0.75))),
+                      )
+                    ],
+                  )),
+              IconButton(
+                onPressed: () {
+                  Get.toNamed('/settings');
+                },
+                icon: const Icon(Icons.settings),
+                color: kprimaryTextColor.withOpacity(0.75),
+                iconSize: 27,
+              )
+            ],
+          ),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
