@@ -12,7 +12,7 @@ class FirestoreDb {
   static addAlarm(AlarmModel alarmRecord) async {
     await _alarmsCollection
         .add(AlarmModel.toMap(alarmRecord))
-        .then((value) => alarmRecord.id = value.id);
+        .then((value) => alarmRecord.firestoreId = value.id);
     return alarmRecord;
   }
 
@@ -93,7 +93,7 @@ class FirestoreDb {
   }
 
   static updateAlarm(AlarmModel alarmRecord) async => await _alarmsCollection
-      .doc(alarmRecord.id)
+      .doc(alarmRecord.firestoreId)
       .update(AlarmModel.toMap(alarmRecord));
 
   static getAlarm(String id) async => await _alarmsCollection.doc(id).get();
