@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+
+import 'constants.dart';
 
 class Utils {
   static String timeOfDayToString(TimeOfDay time) {
@@ -274,5 +277,15 @@ class Utils {
         location: '',
         alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
         minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()));
+  }
+
+  static storeApiKey(ApiKeys key, String val) async {
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: key.toString(), value: val);
+  }
+
+  static retrieveApiKey(ApiKeys key) async {
+    final storage = new FlutterSecureStorage();
+    return await storage.read(key: key.toString());
   }
 }

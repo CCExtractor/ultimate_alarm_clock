@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+enum ApiKeys {
+  openWeatherMap,
+}
+
 const Color kprimaryColor = Color(0xffAFFC41);
 const Color ksecondaryColor = Color(0xffB8E9C4);
 const Color kprimaryBackgroundColor = Color(0xff16171c);
