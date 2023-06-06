@@ -28,6 +28,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   weather: ^2.0.1
   shake: ^2.2.0
+  numberpicker: ^2.1.2
   flutter:
     sdk: flutter
 
