@@ -14,12 +14,14 @@ class AlarmModel {
   late bool isEnabled;
   late bool isLocationEnabled;
   late bool isSharedAlarmEnabled;
+  late bool isWeatherEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
   int? activityInterval;
   late int minutesSinceMidnight;
   late List<bool> days;
+  late List<int> weatherTypes;
 
   AlarmModel(
       {required this.alarmTime,
@@ -30,7 +32,9 @@ class AlarmModel {
       required this.minutesSinceMidnight,
       required this.isLocationEnabled,
       required this.isSharedAlarmEnabled,
+      required this.isWeatherEnabled,
       required this.location,
+      required this.weatherTypes,
       this.activityInterval = 600000});
 
   AlarmModel.fromDocumentSnapshot(
@@ -45,6 +49,8 @@ class AlarmModel {
     minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
     isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
+    isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
+    weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
     location = documentSnapshot['location'];
   }
 
@@ -55,6 +61,9 @@ class AlarmModel {
     isEnabled = alarmData['isEnabled'];
     intervalToAlarm = alarmData['intervalToAlarm'];
     isActivityEnabled = alarmData['isActivityEnabled'];
+    isWeatherEnabled = alarmData['isWeatherEnabled'];
+    weatherTypes = alarmData['weatherTypes'];
+
     activityInterval = alarmData['activityInterval'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     isLocationEnabled = alarmData['isLocationEnabled'];
@@ -78,6 +87,8 @@ class AlarmModel {
       'intervalToAlarm': alarmRecord.intervalToAlarm,
       'isEnabled': alarmRecord.isEnabled,
       'isActivityEnabled': alarmRecord.isActivityEnabled,
+      'weatherTypes': alarmRecord.weatherTypes,
+      'isWeatherEnabled': alarmRecord.isWeatherEnabled,
       'activityInterval': alarmRecord.activityInterval,
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,

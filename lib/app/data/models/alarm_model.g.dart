@@ -62,15 +62,25 @@ const AlarmModelSchema = CollectionSchema(
       name: r'isSharedAlarmEnabled',
       type: IsarType.bool,
     ),
-    r'location': PropertySchema(
+    r'isWeatherEnabled': PropertySchema(
       id: 9,
+      name: r'isWeatherEnabled',
+      type: IsarType.bool,
+    ),
+    r'location': PropertySchema(
+      id: 10,
       name: r'location',
       type: IsarType.string,
     ),
     r'minutesSinceMidnight': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'minutesSinceMidnight',
       type: IsarType.long,
+    ),
+    r'weatherTypes': PropertySchema(
+      id: 12,
+      name: r'weatherTypes',
+      type: IsarType.longList,
     )
   },
   estimateSize: _alarmModelEstimateSize,
@@ -102,6 +112,7 @@ int _alarmModelEstimateSize(
     }
   }
   bytesCount += 3 + object.location.length * 3;
+  bytesCount += 3 + object.weatherTypes.length * 8;
   return bytesCount;
 }
 
@@ -120,8 +131,10 @@ void _alarmModelSerialize(
   writer.writeBool(offsets[6], object.isEnabled);
   writer.writeBool(offsets[7], object.isLocationEnabled);
   writer.writeBool(offsets[8], object.isSharedAlarmEnabled);
-  writer.writeString(offsets[9], object.location);
-  writer.writeLong(offsets[10], object.minutesSinceMidnight);
+  writer.writeBool(offsets[9], object.isWeatherEnabled);
+  writer.writeString(offsets[10], object.location);
+  writer.writeLong(offsets[11], object.minutesSinceMidnight);
+  writer.writeLongList(offsets[12], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -139,8 +152,10 @@ AlarmModel _alarmModelDeserialize(
     isEnabled: reader.readBoolOrNull(offsets[6]) ?? true,
     isLocationEnabled: reader.readBool(offsets[7]),
     isSharedAlarmEnabled: reader.readBool(offsets[8]),
-    location: reader.readString(offsets[9]),
-    minutesSinceMidnight: reader.readLong(offsets[10]),
+    isWeatherEnabled: reader.readBool(offsets[9]),
+    location: reader.readString(offsets[10]),
+    minutesSinceMidnight: reader.readLong(offsets[11]),
+    weatherTypes: reader.readLongList(offsets[12]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[3]);
   object.isarId = id;
@@ -173,9 +188,13 @@ P _alarmModelDeserializeProp<P>(
     case 8:
       return (reader.readBool(offset)) as P;
     case 9:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 10:
+      return (reader.readString(offset)) as P;
+    case 11:
       return (reader.readLong(offset)) as P;
+    case 12:
+      return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -830,6 +849,16 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      isWeatherEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isWeatherEnabled',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> isarIdEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -1072,6 +1101,151 @@ extension AlarmModelQueryFilter
       ));
     });
   }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'weatherTypes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'weatherTypes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'weatherTypes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'weatherTypes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weatherTypes',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weatherTypes',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weatherTypes',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weatherTypes',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weatherTypes',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      weatherTypesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weatherTypes',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension AlarmModelQueryObject
@@ -1181,6 +1355,19 @@ extension AlarmModelQuerySortBy
       sortByIsSharedAlarmEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isSharedAlarmEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsWeatherEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWeatherEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByIsWeatherEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWeatherEnabled', Sort.desc);
     });
   }
 
@@ -1315,6 +1502,19 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsWeatherEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWeatherEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByIsWeatherEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWeatherEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -1415,6 +1615,12 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsWeatherEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isWeatherEnabled');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByLocation(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1426,6 +1632,12 @@ extension AlarmModelQueryWhereDistinct
       distinctByMinutesSinceMidnight() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'minutesSinceMidnight');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByWeatherTypes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'weatherTypes');
     });
   }
 }
@@ -1493,6 +1705,12 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, bool, QQueryOperations> isWeatherEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isWeatherEnabled');
+    });
+  }
+
   QueryBuilder<AlarmModel, String, QQueryOperations> locationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'location');
@@ -1503,6 +1721,12 @@ extension AlarmModelQueryProperty
       minutesSinceMidnightProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'minutesSinceMidnight');
+    });
+  }
+
+  QueryBuilder<AlarmModel, List<int>, QQueryOperations> weatherTypesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'weatherTypes');
     });
   }
 }
