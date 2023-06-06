@@ -11,6 +11,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   var homeController = Get.find<HomeController>();
@@ -18,6 +19,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
+  final isWeatherEnabled = false.obs;
   final timeToAlarm = ''.obs;
 
   AlarmModel? _alarmRecord;
@@ -26,6 +28,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
   final daysRepeating = "Never".obs;
+  final weatherTypes = "Off".obs;
+  final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
 
@@ -95,6 +99,10 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
     }
   }
 
+  getKey(ApiKeys key) async {
+    return await Utils.retrieveApiKey(key);
+  }
+
   T? _ambiguate<T>(T? value) => value;
 
   @override
@@ -131,6 +139,16 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
     //Updating UI to show repeated days
     repeatDays.listen((days) {
       daysRepeating.value = Utils.getRepeatDays(days);
+    });
+
+    // Updating UI to show weather types
+    selectedWeather.listen((weather) {
+      if (weather.toList().isEmpty) {
+        isWeatherEnabled.value = false;
+      } else {
+        isWeatherEnabled.value = true;
+      }
+      weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
     });
   }
 

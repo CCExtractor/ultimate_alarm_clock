@@ -21,7 +21,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
-            padding: EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(18.0),
             child: SizedBox(
               height: height * 0.06,
               width: width * 0.8,
@@ -47,6 +47,9 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           TimeOfDay.fromDateTime(
                               controller.selectedTime.value)),
                       isLocationEnabled: controller.isLocationEnabled.value,
+                      weatherTypes: Utils.getIntFromWeatherTypes(
+                          controller.selectedWeather.toList()),
+                      isWeatherEnabled: controller.isWeatherEnabled.value,
                       location: Utils.geoPointToString(
                         Utils.latLngToGeoPoint(controller.selectedPoint.value),
                       ),
@@ -103,7 +106,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
               InkWell(
                 onTap: () {
                   Get.defaultDialog(
-                      titlePadding: EdgeInsets.symmetric(vertical: 20),
+                      titlePadding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: ksecondaryBackgroundColor,
                       title: 'Repeat',
                       titleStyle: Theme.of(context).textTheme.displayMedium,
@@ -363,7 +366,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                               : kprimaryTextColor),
                             ),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.chevron_right,
                             color: kprimaryDisabledTextColor,
                           )
@@ -382,9 +385,9 @@ class AddAlarmView extends GetView<AddAlarmController> {
                       shrinkWrap: true,
                       children: [
                         ListTile(
-                          title: Text(
+                          title: const Text(
                             'Enable Activity',
-                            style: const TextStyle(color: kprimaryTextColor),
+                            style: TextStyle(color: kprimaryTextColor),
                           ),
                           trailing: Switch(
                             onChanged: (value) {
@@ -397,9 +400,419 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           color: kprimaryDisabledTextColor,
                         ),
                         ListTile(
-                          title: Text(
+                            tileColor: ksecondaryBackgroundColor,
+                            title: const Text('Enable Weather',
+                                style: TextStyle(
+                                    color: kprimaryTextColor,
+                                    fontWeight: FontWeight.w500)),
+                            trailing: (controller
+                                        .getKey(ApiKeys.openWeatherMap) !=
+                                    null)
+                                ? InkWell(
+                                    onTap: () {
+                                      Get.defaultDialog(
+                                          titlePadding: EdgeInsets.symmetric(
+                                              vertical: 20),
+                                          backgroundColor:
+                                              ksecondaryBackgroundColor,
+                                          title: 'Select weather types',
+                                          titleStyle: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall,
+                                          content: Obx(
+                                            () => Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (controller
+                                                        .selectedWeather
+                                                        .contains(WeatherTypes
+                                                            .sunny)) {
+                                                      controller.selectedWeather
+                                                          .remove(WeatherTypes
+                                                              .sunny);
+                                                    } else {
+                                                      controller.selectedWeather
+                                                          .add(WeatherTypes
+                                                              .sunny);
+                                                    }
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Checkbox(
+                                                              side: BorderSide(
+                                                                  width: 1.5,
+                                                                  color: kprimaryTextColor
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                              value: controller
+                                                                  .selectedWeather
+                                                                  .contains(
+                                                                      WeatherTypes
+                                                                          .sunny),
+                                                              onChanged:
+                                                                  (value) {
+                                                                if (controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                        WeatherTypes
+                                                                            .sunny)) {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .remove(WeatherTypes
+                                                                          .sunny);
+                                                                } else {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .add(WeatherTypes
+                                                                          .sunny);
+                                                                }
+                                                              }),
+                                                          Text(
+                                                            'Sunny',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall!
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        15),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (controller
+                                                        .selectedWeather
+                                                        .contains(WeatherTypes
+                                                            .cloudy)) {
+                                                      controller.selectedWeather
+                                                          .remove(WeatherTypes
+                                                              .cloudy);
+                                                    } else {
+                                                      controller.selectedWeather
+                                                          .add(WeatherTypes
+                                                              .cloudy);
+                                                    }
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Checkbox(
+                                                              side: BorderSide(
+                                                                  width: 1.5,
+                                                                  color: kprimaryTextColor
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                              value: controller
+                                                                  .selectedWeather
+                                                                  .contains(
+                                                                      WeatherTypes
+                                                                          .cloudy),
+                                                              onChanged:
+                                                                  (value) {
+                                                                if (controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                        WeatherTypes
+                                                                            .cloudy)) {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .remove(WeatherTypes
+                                                                          .cloudy);
+                                                                } else {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .add(WeatherTypes
+                                                                          .cloudy);
+                                                                }
+                                                              }),
+                                                          Text(
+                                                            'Cloudy',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall!
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        15),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (controller
+                                                        .selectedWeather
+                                                        .contains(WeatherTypes
+                                                            .rainy)) {
+                                                      controller.selectedWeather
+                                                          .remove(WeatherTypes
+                                                              .rainy);
+                                                    } else {
+                                                      controller.selectedWeather
+                                                          .add(WeatherTypes
+                                                              .rainy);
+                                                    }
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Checkbox(
+                                                              side: BorderSide(
+                                                                  width: 1.5,
+                                                                  color: kprimaryTextColor
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                              value: controller
+                                                                  .selectedWeather
+                                                                  .contains(
+                                                                      WeatherTypes
+                                                                          .rainy),
+                                                              onChanged:
+                                                                  (value) {
+                                                                if (controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                        WeatherTypes
+                                                                            .rainy)) {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .remove(WeatherTypes
+                                                                          .rainy);
+                                                                } else {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .add(WeatherTypes
+                                                                          .rainy);
+                                                                }
+                                                              }),
+                                                          Text(
+                                                            'Rainy',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall!
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        15),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (controller
+                                                        .selectedWeather
+                                                        .contains(WeatherTypes
+                                                            .windy)) {
+                                                      controller.selectedWeather
+                                                          .remove(WeatherTypes
+                                                              .windy);
+                                                    } else {
+                                                      controller.selectedWeather
+                                                          .add(WeatherTypes
+                                                              .windy);
+                                                    }
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Checkbox(
+                                                              side: BorderSide(
+                                                                  width: 1.5,
+                                                                  color: kprimaryTextColor
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                              value: controller
+                                                                  .selectedWeather
+                                                                  .contains(
+                                                                      WeatherTypes
+                                                                          .windy),
+                                                              onChanged:
+                                                                  (value) {
+                                                                if (controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                        WeatherTypes
+                                                                            .windy)) {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .remove(WeatherTypes
+                                                                          .windy);
+                                                                } else {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .add(WeatherTypes
+                                                                          .windy);
+                                                                }
+                                                              }),
+                                                          Text(
+                                                            'Windy',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall!
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        15),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (controller
+                                                        .selectedWeather
+                                                        .contains(WeatherTypes
+                                                            .stormy)) {
+                                                      controller.selectedWeather
+                                                          .remove(WeatherTypes
+                                                              .stormy);
+                                                    } else {
+                                                      controller.selectedWeather
+                                                          .add(WeatherTypes
+                                                              .stormy);
+                                                    }
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Checkbox(
+                                                              side: BorderSide(
+                                                                  width: 1.5,
+                                                                  color: kprimaryTextColor
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                              value: controller
+                                                                  .selectedWeather
+                                                                  .contains(
+                                                                      WeatherTypes
+                                                                          .stormy),
+                                                              onChanged:
+                                                                  (value) {
+                                                                if (controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                        WeatherTypes
+                                                                            .stormy)) {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .remove(WeatherTypes
+                                                                          .stormy);
+                                                                } else {
+                                                                  controller
+                                                                      .selectedWeather
+                                                                      .add(WeatherTypes
+                                                                          .stormy);
+                                                                }
+                                                              }),
+                                                          Text(
+                                                            'Stormy',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall!
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        15),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ));
+                                    },
+                                    child: Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        children: [
+                                          Obx(
+                                            () => Text(
+                                              controller.weatherTypes.value,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(
+                                                      color: (controller
+                                                                  .isLocationEnabled
+                                                                  .value ==
+                                                              false)
+                                                          ? kprimaryDisabledTextColor
+                                                          : kprimaryTextColor),
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.chevron_right,
+                                            color: kprimaryDisabledTextColor,
+                                          )
+                                        ]),
+                                  )
+                                : Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.start,
+                                    children: [
+                                        Icon(
+                                          Icons.lock,
+                                          color: kprimaryTextColor
+                                              .withOpacity(0.7),
+                                        )
+                                      ])),
+                        const Divider(
+                          color: kprimaryDisabledTextColor,
+                        ),
+                        ListTile(
+                          title: const Text(
                             'Enable Shared Alarm',
-                            style: const TextStyle(color: kprimaryTextColor),
+                            style: TextStyle(color: kprimaryTextColor),
                           ),
                           trailing: Switch(
                             onChanged: (value) {
@@ -483,7 +896,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(height: 10),
+                                          const SizedBox(height: 10),
                                           TextButton(
                                             style: ButtonStyle(
                                                 backgroundColor:
