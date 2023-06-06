@@ -22,8 +22,54 @@ class SettingsView extends GetView<SettingsController> {
             child: Column(
               children: [
                 InkWell(
-                  onTap: () {
-                    Get.bottomSheet(Text('Test'));
+                  onTap: () async {
+                    Get.defaultDialog(
+                        titlePadding: EdgeInsets.symmetric(vertical: 20),
+                        backgroundColor: ksecondaryBackgroundColor,
+                        title: 'API Key',
+                        titleStyle: Theme.of(context).textTheme.displaySmall,
+                        content: Column(
+                          children: [
+                            TextField(
+                              obscureText: false,
+                              controller: controller.apiKey,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              kprimaryColor)),
+                                  child: Text(
+                                    'Save',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(color: ksecondaryTextColor),
+                                  ),
+                                  onPressed: () async {
+                                    try {
+                                      await controller.getLocation();
+                                      if (await controller.isApiKeyValid(
+                                          controller.apiKey.text)) {
+                                        await controller.addKey(
+                                            ApiKeys.openWeatherMap,
+                                            controller.apiKey.text);
+                                        Get.snackbar(
+                                            'Success!', "API Key Added!");
+                                      } else {
+                                        Get.snackbar(
+                                            'Error', "Invalid API Key!");
+                                      }
+                                    } catch (e) {
+                                      Get.snackbar(
+                                          'Error', "Failed to save API key!");
+                                    }
+                                  }),
+                            )
+                          ],
+                        ));
                   },
                   child: Container(
                     width: width * 0.91,
