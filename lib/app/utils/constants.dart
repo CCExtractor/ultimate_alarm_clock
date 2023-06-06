@@ -4,6 +4,8 @@ enum ApiKeys {
   openWeatherMap,
 }
 
+enum WeatherTypes { sunny, cloudy, rainy, windy, stormy }
+
 const Color kprimaryColor = Color(0xffAFFC41);
 const Color ksecondaryColor = Color(0xffB8E9C4);
 const Color kprimaryBackgroundColor = Color(0xff16171c);
