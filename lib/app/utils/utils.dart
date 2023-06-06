@@ -291,6 +291,27 @@ class Utils {
     return await storage.read(key: key.toString());
   }
 
+  static String getFormattedWeatherTypes(List weatherTypes) {
+    if (weatherTypes.isEmpty) {
+      return 'Off';
+    }
+
+    final allWeatherTypes = WeatherTypes.values;
+    final hasAllTypes =
+        allWeatherTypes.every((type) => weatherTypes.contains(type));
+
+    if (hasAllTypes) {
+      return 'All';
+    }
+
+    final formattedTypes = weatherTypes
+        .map((type) => type.toString().split('.').last)
+        .map((type) => type[0].toUpperCase() + type.substring(1))
+        .toList();
+
+    return formattedTypes.join(', ');
+  }
+
   static List<int> getIntFromWeatherTypes(List<WeatherTypes> weatherTypes) {
     return weatherTypes.map((type) => type.index).toList();
   }
