@@ -269,6 +269,8 @@ class Utils {
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
         days: [false, false, false, false, false, false, false],
+        weatherTypes: [],
+        isWeatherEnabled: false,
         isEnabled: false,
         isActivityEnabled: false,
         isLocationEnabled: false,
@@ -287,5 +289,13 @@ class Utils {
   static retrieveApiKey(ApiKeys key) async {
     final storage = new FlutterSecureStorage();
     return await storage.read(key: key.toString());
+  }
+
+  static List<int> getIntFromWeatherTypes(List<WeatherTypes> weatherTypes) {
+    return weatherTypes.map((type) => type.index).toList();
+  }
+
+  static List<WeatherTypes> getWeatherTypesFromInt(List<int> positions) {
+    return positions.map((position) => WeatherTypes.values[position]).toList();
   }
 }
