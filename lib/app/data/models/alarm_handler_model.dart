@@ -7,7 +7,9 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:screen_state/screen_state.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:weather/weather.dart';
 
 class AlarmHandlerModel extends TaskHandler {
   Screen? _screen;
@@ -20,6 +22,56 @@ class AlarmHandlerModel extends TaskHandler {
   late ReceivePort _uiReceivePort;
 
   bool isScreenActive = true;
+
+  Future<bool> checkWeatherCondition(
+      LatLng location, List<int> weatherTypeInt) async {
+    List<WeatherTypes> weatherTypes =
+        Utils.getWeatherTypesFromInt(weatherTypeInt);
+    String apiKey = await Utils.retrieveApiKey(ApiKeys.openWeatherMap);
+    WeatherFactory weatherFactory = WeatherFactory(apiKey);
+
+    try {
+      Weather weatherData = await weatherFactory.currentWeatherByLocation(
+          location.latitude, location.longitude);
+      for (var weatherType in weatherTypes) {
+        bool isConditionMet = false;
+        switch (weatherType) {
+          case WeatherTypes.sunny:
+            isConditionMet =
+                weatherData.weatherMain?.toLowerCase().contains('clear') ??
+                    false;
+            break;
+          case WeatherTypes.cloudy:
+            isConditionMet =
+                weatherData.weatherMain?.toLowerCase().contains('cloud') ??
+                    false;
+            break;
+          case WeatherTypes.rainy:
+            isConditionMet =
+                weatherData.weatherMain?.toLowerCase().contains('rain') ??
+                    false;
+            break;
+          case WeatherTypes.windy:
+            isConditionMet =
+                weatherData.windSpeed != null && weatherData.windSpeed! >= 15;
+            break;
+          case WeatherTypes.stormy:
+            isConditionMet =
+                weatherData.weatherMain?.toLowerCase().contains('storm') ??
+                    false;
+            break;
+        }
+
+        if (isConditionMet) {
+          return true;
+        }
+      }
+    } catch (e) {
+      print('An error occurred while fetching the weather: $e');
+    }
+
+    return false;
+  }
 
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
@@ -69,6 +121,20 @@ class AlarmHandlerModel extends TaskHandler {
     TimeOfDay time = Utils.stringToTimeOfDay(alarmRecord.alarmTime);
     DateTime dateTime =
         today.add(Duration(hours: time.hour, minutes: time.minute));
+
+    // Checking if weather activity is enabled
+    if (alarmRecord.isWeatherEnabled == true) {
+      LatLng currentLocation = LatLng(0, 0);
+
+      currentLocation = await FlLocation.getLocationStream().first.then(
+          (value) =>
+              Utils.stringToLatLng("${value.latitude}, ${value.longitude}"));
+      bool isWeatherTypeMatching = await checkWeatherCondition(
+          currentLocation, alarmRecord.weatherTypes);
+      if (isWeatherTypeMatching == true) {
+        shouldAlarmRing = false;
+      }
+    }
 
     if (alarmRecord.isActivityEnabled == true) {
       print("STOPPING WATCH");
