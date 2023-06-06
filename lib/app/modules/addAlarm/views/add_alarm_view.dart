@@ -405,11 +405,10 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                 style: TextStyle(
                                     color: kprimaryTextColor,
                                     fontWeight: FontWeight.w500)),
-                            trailing: (controller
-                                        .getKey(ApiKeys.openWeatherMap) !=
-                                    null)
+                            trailing: (controller.weatherApiKeyExists == true)
                                 ? InkWell(
-                                    onTap: () {
+                                    onTap: () async {
+                                      await controller.getLocation();
                                       Get.defaultDialog(
                                           titlePadding: EdgeInsets.symmetric(
                                               vertical: 20),

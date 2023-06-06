@@ -19,7 +19,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   final isActivityenabled = false.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
-  final isWeatherEnabled = false.obs;
+  late final isWeatherEnabled = false.obs;
+  final weatherApiKeyExists = false.obs;
   final timeToAlarm = ''.obs;
 
   AlarmModel? _alarmRecord;
@@ -150,6 +151,10 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
       }
       weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
     });
+
+    if (await getKey(ApiKeys.openWeatherMap) != null) {
+      weatherApiKeyExists.value = true;
+    }
   }
 
   @override
