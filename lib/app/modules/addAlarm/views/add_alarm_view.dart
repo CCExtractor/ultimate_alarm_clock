@@ -385,7 +385,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
                         child: Text('Auto Dismissal'),
                       ),
@@ -416,7 +416,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                     await controller.getLocation();
                                     Get.defaultDialog(
                                         titlePadding:
-                                            EdgeInsets.symmetric(vertical: 20),
+                                            const EdgeInsets.symmetric(
+                                                vertical: 20),
                                         backgroundColor:
                                             ksecondaryBackgroundColor,
                                         title: 'Select weather types',
@@ -1000,12 +1001,12 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
                       child: Text('Challenge'),
                     ),
                     ListTile(
-                        title: Text(
+                        title: const Text(
                           'Shake to dismiss',
                           style: TextStyle(color: kprimaryTextColor),
                         ),
@@ -1038,7 +1039,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                               ]),
                           onTap: () {
                             Get.defaultDialog(
-                              titlePadding: EdgeInsets.symmetric(vertical: 20),
+                              titlePadding:
+                                  const EdgeInsets.symmetric(vertical: 20),
                               backgroundColor: ksecondaryBackgroundColor,
                               title: 'Number of shakes',
                               titleStyle:
@@ -1067,7 +1069,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                       color: kprimaryDisabledTextColor,
                     ),
                     ListTile(
-                        title: Text('QR/Bar Code'),
+                        title: const Text('QR/Bar Code'),
                         trailing: InkWell(
                             child: Wrap(
                                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -1098,7 +1100,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                               controller.restartQRCodeController();
                               Get.defaultDialog(
                                 titlePadding:
-                                    EdgeInsets.symmetric(vertical: 20),
+                                    const EdgeInsets.symmetric(vertical: 20),
                                 backgroundColor: ksecondaryBackgroundColor,
                                 title: 'Scan a QR/Bar Code',
                                 titleStyle:
@@ -1186,29 +1188,37 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 ),
                                               ],
                                             )
-                                          : SizedBox()
+                                          : const SizedBox()
                                     ],
                                   ),
                                 ),
                               );
                             })),
+                    const Divider(
+                      color: kprimaryDisabledTextColor,
+                    ),
                     ListTile(
-                        title: Text('QR/Bar Code'),
+                        title: const Text('Maths'),
                         trailing: InkWell(
                             child: Wrap(
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
-                                  Text(
-                                    'Off',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: (controller.isLocationEnabled
-                                                        .value ==
-                                                    false)
-                                                ? kprimaryDisabledTextColor
-                                                : kprimaryTextColor),
+                                  Obx(
+                                    () => Text(
+                                      controller.isMathEnabled == true
+                                          ? Utils.getDifficultyLabel(
+                                              controller.mathsDifficulty.value)
+                                          : 'Off',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                              color: (controller.isMathEnabled
+                                                          .value ==
+                                                      false)
+                                                  ? kprimaryDisabledTextColor
+                                                  : kprimaryTextColor),
+                                    ),
                                   ),
                                   const Icon(
                                     Icons.chevron_right,
@@ -1217,14 +1227,128 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                 ]),
                             onTap: () {
                               controller.restartQRCodeController();
+                              controller.isMathEnabled.value = true;
                               Get.defaultDialog(
                                   titlePadding:
-                                      EdgeInsets.symmetric(vertical: 20),
+                                      const EdgeInsets.symmetric(vertical: 20),
                                   backgroundColor: ksecondaryBackgroundColor,
-                                  title: 'Scan a QR/Bar Code',
+                                  title: 'Solve Maths questions',
                                   titleStyle:
                                       Theme.of(context).textTheme.displaySmall,
-                                  content: SizedBox());
+                                  content: Obx(
+                                    () => Column(
+                                      children: [
+                                        Text(
+                                          Utils.getDifficultyLabel(
+                                              controller.mathsDifficulty.value),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall,
+                                        ),
+                                        Text(
+                                            Utils.generateMathProblem(controller
+                                                .mathsDifficulty.value)[0],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                                    color: kprimaryTextColor
+                                                        .withOpacity(0.78))),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0),
+                                          child: Slider(
+                                              min: 0.0,
+                                              max: 2.0,
+                                              divisions: 2,
+                                              value: controller
+                                                  .mathsSliderValue.value,
+                                              onChanged: (newValue) {
+                                                controller.mathsSliderValue
+                                                    .value = newValue;
+                                                controller
+                                                        .mathsDifficulty.value =
+                                                    Utils.getDifficulty(
+                                                        newValue);
+                                              }),
+                                        ),
+                                        Obx(
+                                          () => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              NumberPicker(
+                                                  value: controller
+                                                      .numMathsQuestions.value,
+                                                  minValue: 1,
+                                                  maxValue: 100,
+                                                  onChanged: (value) =>
+                                                      controller
+                                                          .numMathsQuestions
+                                                          .value = value),
+                                              Text(controller.numMathsQuestions
+                                                          .value >
+                                                      1
+                                                  ? 'questions'
+                                                  : 'question')
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(
+                                                                kprimaryColor)),
+                                                child: Text(
+                                                  'Save',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                          color:
+                                                              ksecondaryTextColor),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.back();
+                                                },
+                                              ),
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(
+                                                                kprimaryColor)),
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                          color:
+                                                              ksecondaryTextColor),
+                                                ),
+                                                onPressed: () {
+                                                  controller.isMathEnabled
+                                                      .value = false;
+                                                  Get.back();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ));
                             })),
                   ],
                 ),
