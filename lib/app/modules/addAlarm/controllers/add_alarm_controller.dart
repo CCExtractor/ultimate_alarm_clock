@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -21,10 +21,20 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   final isSharedAlarmEnabled = false.obs;
   late final isWeatherEnabled = false.obs;
   final weatherApiKeyExists = false.obs;
+  final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
+  final shakeTimes = 0.obs;
 
   AlarmModel? _alarmRecord;
 
+  var qrController = MobileScannerController(
+    autoStart: false,
+    detectionSpeed: DetectionSpeed.noDuplicates,
+    facing: CameraFacing.back,
+    torchEnabled: false,
+  );
+  final qrValue = "".obs;
+  final isQrScanned = false.obs;
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
@@ -105,6 +115,15 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   }
 
   T? _ambiguate<T>(T? value) => value;
+
+  restartQRCodeController() {
+    qrController = MobileScannerController(
+      autoStart: true,
+      detectionSpeed: DetectionSpeed.noDuplicates,
+      facing: CameraFacing.back,
+      torchEnabled: false,
+    );
+  }
 
   @override
   void onInit() async {
