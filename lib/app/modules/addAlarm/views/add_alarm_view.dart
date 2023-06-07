@@ -380,9 +380,18 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
-                        child: Text('Auto Dismissal'),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Text('Auto Dismissal',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          kprimaryTextColor.withOpacity(0.85))),
+                        ),
                       ),
                       ListTile(
                         title: const Text(
@@ -1001,9 +1010,18 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
-                      child: Text('Challenge'),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Challenge',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        kprimaryTextColor.withOpacity(0.85))),
+                      ),
                     ),
                     ListTile(
                         title: const Text(
