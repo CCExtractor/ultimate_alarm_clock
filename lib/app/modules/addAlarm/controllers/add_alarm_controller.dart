@@ -23,7 +23,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   final weatherApiKeyExists = false.obs;
   final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
-  final shakeTimes = 0.obs;
+  final shakeTimes = 1.obs;
 
   AlarmModel? _alarmRecord;
 
@@ -35,6 +35,11 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   );
   final qrValue = "".obs;
   final isQrEnabled = false.obs;
+
+  final mathsSliderValue = 0.0.obs;
+  final mathsDifficulty = Difficulty.Easy.obs;
+  final isMathEnabled = false.obs;
+  final numMathsQuestions = 1.obs;
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
