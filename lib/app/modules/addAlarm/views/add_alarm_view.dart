@@ -1066,6 +1066,127 @@ class AddAlarmView extends GetView<AddAlarmController> {
                     const Divider(
                       color: kprimaryDisabledTextColor,
                     ),
+                    ListTile(
+                        title: Text('QR/Bar Code'),
+                        trailing: InkWell(
+                            child: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Text(
+                                    'Off',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: (controller.isLocationEnabled
+                                                        .value ==
+                                                    false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor),
+                                  ),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                    color: kprimaryDisabledTextColor,
+                                  )
+                                ]),
+                            onTap: () {
+                              controller.restartQRCodeController();
+                              Get.defaultDialog(
+                                titlePadding:
+                                    EdgeInsets.symmetric(vertical: 20),
+                                backgroundColor: ksecondaryBackgroundColor,
+                                title: 'Scan a QR/Bar Code',
+                                titleStyle:
+                                    Theme.of(context).textTheme.displaySmall,
+                                content: Obx(
+                                  () => Column(
+                                    children: [
+                                      controller.isQrScanned.value == false
+                                          ? SizedBox(
+                                              height: 300,
+                                              width: 300,
+                                              child: MobileScanner(
+                                                controller:
+                                                    controller.qrController,
+                                                fit: BoxFit.cover,
+                                                onDetect: (capture) {
+                                                  final List<Barcode> barcodes =
+                                                      capture.barcodes;
+                                                  for (final barcode
+                                                      in barcodes) {
+                                                    controller.qrValue.value =
+                                                        barcode.rawValue
+                                                            .toString();
+                                                    print(barcode.rawValue
+                                                        .toString());
+                                                    controller.isQrScanned
+                                                        .value = true;
+                                                  }
+                                                },
+                                              ),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 15.0),
+                                              child: Text(
+                                                  controller.qrValue.value),
+                                            ),
+                                      controller.isQrScanned.value == true
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                                  kprimaryColor)),
+                                                  child: Text(
+                                                    'Save',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .copyWith(
+                                                            color:
+                                                                ksecondaryTextColor),
+                                                  ),
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                                  kprimaryColor)),
+                                                  child: Text(
+                                                    'Retake',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .copyWith(
+                                                            color:
+                                                                ksecondaryTextColor),
+                                                  ),
+                                                  onPressed: () async {
+                                                    controller.qrController
+                                                        .dispose();
+                                                    controller
+                                                        .restartQRCodeController();
+                                                    controller.isQrScanned
+                                                        .value = false;
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox()
+                                    ],
+                                  ),
+                                ),
+                              );
+                            })),
                   ],
                 ),
               ),
