@@ -1072,17 +1072,22 @@ class AddAlarmView extends GetView<AddAlarmController> {
                             child: Wrap(
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
-                                  Text(
-                                    'Off',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: (controller.isLocationEnabled
-                                                        .value ==
-                                                    false)
-                                                ? kprimaryDisabledTextColor
-                                                : kprimaryTextColor),
+                                  Obx(
+                                    () => Text(
+                                      controller.isQrEnabled.value == true
+                                          ? 'Enabled'
+                                          : 'Off',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: (controller
+                                                          .isLocationEnabled
+                                                          .value ==
+                                                      false)
+                                                  ? kprimaryDisabledTextColor
+                                                  : kprimaryTextColor),
+                                    ),
                                   ),
                                   const Icon(
                                     Icons.chevron_right,
@@ -1101,7 +1106,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                 content: Obx(
                                   () => Column(
                                     children: [
-                                      controller.isQrScanned.value == false
+                                      controller.isQrEnabled.value == false
                                           ? SizedBox(
                                               height: 300,
                                               width: 300,
@@ -1119,7 +1124,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                             .toString();
                                                     print(barcode.rawValue
                                                         .toString());
-                                                    controller.isQrScanned
+                                                    controller.isQrEnabled
                                                         .value = true;
                                                   }
                                                 },
@@ -1131,7 +1136,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                               child: Text(
                                                   controller.qrValue.value),
                                             ),
-                                      controller.isQrScanned.value == true
+                                      controller.isQrEnabled.value == true
                                           ? Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceEvenly,
@@ -1175,7 +1180,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                         .dispose();
                                                     controller
                                                         .restartQRCodeController();
-                                                    controller.isQrScanned
+                                                    controller.isQrEnabled
                                                         .value = false;
                                                   },
                                                 ),
@@ -1186,6 +1191,40 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                   ),
                                 ),
                               );
+                            })),
+                    ListTile(
+                        title: Text('QR/Bar Code'),
+                        trailing: InkWell(
+                            child: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Text(
+                                    'Off',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: (controller.isLocationEnabled
+                                                        .value ==
+                                                    false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor),
+                                  ),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                    color: kprimaryDisabledTextColor,
+                                  )
+                                ]),
+                            onTap: () {
+                              controller.restartQRCodeController();
+                              Get.defaultDialog(
+                                  titlePadding:
+                                      EdgeInsets.symmetric(vertical: 20),
+                                  backgroundColor: ksecondaryBackgroundColor,
+                                  title: 'Scan a QR/Bar Code',
+                                  titleStyle:
+                                      Theme.of(context).textTheme.displaySmall,
+                                  content: SizedBox());
                             })),
                   ],
                 ),

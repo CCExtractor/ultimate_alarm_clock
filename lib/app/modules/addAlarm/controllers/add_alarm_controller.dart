@@ -34,7 +34,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
     torchEnabled: false,
   );
   final qrValue = "".obs;
-  final isQrScanned = false.obs;
+  final isQrEnabled = false.obs;
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
