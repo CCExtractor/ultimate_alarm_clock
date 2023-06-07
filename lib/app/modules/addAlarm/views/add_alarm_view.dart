@@ -361,12 +361,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(
-                                      color:
-                                          (controller.isLocationEnabled.value ==
-                                                  false)
-                                              ? kprimaryDisabledTextColor
-                                              : kprimaryTextColor),
+                                  .copyWith(color: kprimaryTextColor),
                             ),
                           ),
                           const Icon(
@@ -778,7 +773,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                 .bodyMedium!
                                                 .copyWith(
                                                     color: (controller
-                                                                .isLocationEnabled
+                                                                .isWeatherEnabled
                                                                 .value ==
                                                             false)
                                                         ? kprimaryDisabledTextColor
@@ -823,170 +818,175 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           'Location Based',
                           style: TextStyle(color: kprimaryTextColor),
                         ),
-                        trailing: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          // mainAxisSize: MainAxisSize.min,
-                          // mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              controller.isLocationEnabled.value == false
-                                  ? 'Off'
-                                  : 'Enabled',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color:
-                                          (controller.isLocationEnabled.value ==
-                                                  false)
-                                              ? kprimaryDisabledTextColor
-                                              : kprimaryTextColor),
-                            ),
-                            PopupMenuButton(
-                              onSelected: (value) async {
-                                if (value == 0) {
-                                  controller.isLocationEnabled.value = false;
-                                } else if (value == 1) {
-                                  // Get.back();
-                                  if (controller.isLocationEnabled.value ==
-                                      false) await controller.getLocation();
-                                  controller.isLocationEnabled.value = true;
+                        trailing: Obx(
+                          () => Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            // mainAxisSize: MainAxisSize.min,
+                            // mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                controller.isLocationEnabled.value == false
+                                    ? 'Off'
+                                    : 'Enabled',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: (controller
+                                                    .isLocationEnabled.value ==
+                                                false)
+                                            ? kprimaryDisabledTextColor
+                                            : kprimaryTextColor),
+                              ),
+                              PopupMenuButton(
+                                onSelected: (value) async {
+                                  if (value == 0) {
+                                    controller.isLocationEnabled.value = false;
+                                  } else if (value == 1) {
+                                    // Get.back();
+                                    if (controller.isLocationEnabled.value ==
+                                        false) await controller.getLocation();
+                                    controller.isLocationEnabled.value = true;
 
-                                  Get.defaultDialog(
-                                    backgroundColor: ksecondaryBackgroundColor,
-                                    title:
-                                        'Set location to automatically cancel alarm!',
-                                    titleStyle:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                    content: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: height * 0.65,
-                                          width: width * 0.92,
-                                          child: FlutterMap(
-                                            mapController:
-                                                controller.mapController,
-                                            options: MapOptions(
-                                              onTap: (tapPosition, point) {
-                                                controller.selectedPoint.value =
-                                                    point;
-                                              },
-                                              screenSize: Size(
-                                                  width * 0.3, height * 0.8),
-                                              center: controller
-                                                  .selectedPoint.value,
-                                              zoom: 15,
-                                            ),
-                                            children: [
-                                              TileLayer(
-                                                urlTemplate:
-                                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    Get.defaultDialog(
+                                      backgroundColor:
+                                          ksecondaryBackgroundColor,
+                                      title:
+                                          'Set location to automatically cancel alarm!',
+                                      titleStyle: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                      content: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: height * 0.65,
+                                            width: width * 0.92,
+                                            child: FlutterMap(
+                                              mapController:
+                                                  controller.mapController,
+                                              options: MapOptions(
+                                                onTap: (tapPosition, point) {
+                                                  controller.selectedPoint
+                                                      .value = point;
+                                                },
+                                                screenSize: Size(
+                                                    width * 0.3, height * 0.8),
+                                                center: controller
+                                                    .selectedPoint.value,
+                                                zoom: 15,
                                               ),
-                                              MarkerLayer(
-                                                  markers:
-                                                      controller.markersList),
-                                            ],
+                                              children: [
+                                                TileLayer(
+                                                  urlTemplate:
+                                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                                ),
+                                                MarkerLayer(
+                                                    markers:
+                                                        controller.markersList),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      kprimaryColor)),
-                                          child: Text(
-                                            'Save',
+                                          const SizedBox(height: 10),
+                                          TextButton(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        kprimaryColor)),
+                                            child: Text(
+                                              'Save',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall!
+                                                  .copyWith(
+                                                      color:
+                                                          ksecondaryTextColor),
+                                            ),
+                                            onPressed: () => Get.back(),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                                color: kprimaryBackgroundColor,
+                                icon: Icon(
+                                  Icons.chevron_right,
+                                  color: (controller.isLocationEnabled.value ==
+                                          false)
+                                      ? kprimaryDisabledTextColor
+                                      : kprimaryTextColor,
+                                ),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem<int>(
+                                      value: 0,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            "Off",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displaySmall!
+                                                .bodyMedium!
                                                 .copyWith(
-                                                    color: ksecondaryTextColor),
+                                                    color: (controller
+                                                                .isLocationEnabled
+                                                                .value ==
+                                                            true)
+                                                        ? kprimaryDisabledTextColor
+                                                        : kprimaryTextColor),
                                           ),
-                                          onPressed: () => Get.back(),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              },
-                              color: kprimaryBackgroundColor,
-                              icon: Icon(
-                                Icons.chevron_right,
-                                color: (controller.isLocationEnabled.value ==
-                                        false)
-                                    ? kprimaryDisabledTextColor
-                                    : kprimaryTextColor,
-                              ),
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem<int>(
-                                    value: 0,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Off",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: (controller
+                                          Radio(
+                                              fillColor: MaterialStateProperty
+                                                  .all((controller
                                                               .isLocationEnabled
                                                               .value ==
                                                           true)
                                                       ? kprimaryDisabledTextColor
-                                                      : kprimaryTextColor),
-                                        ),
-                                        Radio(
-                                            fillColor: MaterialStateProperty
-                                                .all((controller
-                                                            .isLocationEnabled
-                                                            .value ==
-                                                        true)
-                                                    ? kprimaryDisabledTextColor
-                                                    : kprimaryColor),
-                                            value: !controller
-                                                .isLocationEnabled.value,
-                                            groupValue: true,
-                                            onChanged: (value) {}),
-                                      ],
+                                                      : kprimaryColor),
+                                              value: !controller
+                                                  .isLocationEnabled.value,
+                                              groupValue: true,
+                                              onChanged: (value) {}),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  PopupMenuItem<int>(
-                                    value: 1,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Choose location",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: (controller
-                                                              .isLocationEnabled
-                                                              .value ==
-                                                          false)
-                                                      ? kprimaryDisabledTextColor
-                                                      : kprimaryTextColor),
-                                        ),
-                                        Icon(
-                                          Icons.chevron_right,
-                                          color: (controller.isLocationEnabled
-                                                      .value ==
-                                                  false)
-                                              ? kprimaryDisabledTextColor
-                                              : kprimaryTextColor,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ];
-                              },
-                            )
-                          ],
+                                    PopupMenuItem<int>(
+                                      value: 1,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            "Choose location",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                    color: (controller
+                                                                .isLocationEnabled
+                                                                .value ==
+                                                            false)
+                                                        ? kprimaryDisabledTextColor
+                                                        : kprimaryTextColor),
+                                          ),
+                                          Icon(
+                                            Icons.chevron_right,
+                                            color: (controller.isLocationEnabled
+                                                        .value ==
+                                                    false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ];
+                                },
+                              )
+                            ],
+                          ),
                         ),
                       )
                     ]),
@@ -1025,8 +1025,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                         .textTheme
                                         .bodyMedium!
                                         .copyWith(
-                                            color: (controller.isLocationEnabled
-                                                        .value ==
+                                            color: (controller
+                                                        .isShakeEnabled.value ==
                                                     false)
                                                 ? kprimaryDisabledTextColor
                                                 : kprimaryTextColor),
@@ -1084,8 +1084,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                           .bodyMedium!
                                           .copyWith(
                                               color: (controller
-                                                          .isLocationEnabled
-                                                          .value ==
+                                                          .isQrEnabled.value ==
                                                       false)
                                                   ? kprimaryDisabledTextColor
                                                   : kprimaryTextColor),
