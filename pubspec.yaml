@@ -29,6 +29,7 @@ dependencies:
   weather: ^2.0.1
   shake: ^2.2.0
   numberpicker: ^2.1.2
+  mobile_scanner: ^3.2.0
   flutter:
     sdk: flutter
 
