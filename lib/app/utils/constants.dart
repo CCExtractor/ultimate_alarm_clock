@@ -6,6 +6,8 @@ enum ApiKeys {
 
 enum WeatherTypes { sunny, cloudy, rainy, windy, stormy }
 
+enum Difficulty { Easy, Medium, Hard }
+
 const Color kprimaryColor = Color(0xffAFFC41);
 const Color ksecondaryColor = Color(0xffB8E9C4);
 const Color kprimaryBackgroundColor = Color(0xff16171c);
@@ -43,7 +45,7 @@ ThemeData kThemeData = ThemeData(
           color: kprimaryTextColor,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.15)),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
       foregroundColor: Colors.black, backgroundColor: kprimaryColor),
   primaryColor: kprimaryColor,
   scaffoldBackgroundColor: kprimaryBackgroundColor,
@@ -53,20 +55,24 @@ ThemeData kThemeData = ThemeData(
       background: kprimaryBackgroundColor,
       onPrimaryContainer: ksecondaryBackgroundColor),
   inputDecorationTheme: InputDecorationTheme(
-      hintStyle: TextStyle(color: kprimaryTextColor),
-      labelStyle: TextStyle(color: kprimaryTextColor),
+      hintStyle: const TextStyle(color: kprimaryTextColor),
+      labelStyle: const TextStyle(color: kprimaryTextColor),
       focusColor: kprimaryTextColor,
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: kprimaryColor),
+        borderSide: const BorderSide(color: kprimaryColor),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: kprimaryColor),
+        borderSide: const BorderSide(color: kprimaryColor),
         borderRadius: BorderRadius.circular(12),
       )),
-  textSelectionTheme: TextSelectionThemeData(
+  textSelectionTheme: const TextSelectionThemeData(
     cursorColor: kprimaryColor,
     selectionColor: kprimaryColor,
     selectionHandleColor: ksecondaryColor,
   ),
+  sliderTheme: SliderThemeData(
+      thumbColor: kprimaryColor,
+      activeTrackColor: kprimaryColor,
+      inactiveTrackColor: kprimaryTextColor.withOpacity(0.3)),
 );
