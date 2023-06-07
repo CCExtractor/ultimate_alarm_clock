@@ -319,4 +319,73 @@ class Utils {
   static List<WeatherTypes> getWeatherTypesFromInt(List<int> positions) {
     return positions.map((position) => WeatherTypes.values[position]).toList();
   }
+
+  static Difficulty getDifficulty(double value) {
+    if (value <= 0.33) {
+      return Difficulty.Easy;
+    } else if (value <= 1.33) {
+      return Difficulty.Medium;
+    } else {
+      return Difficulty.Hard;
+    }
+  }
+
+  static String getDifficultyLabel(Difficulty difficulty) {
+    switch (difficulty) {
+      case Difficulty.Easy:
+        return 'Easy';
+      case Difficulty.Medium:
+        return 'Medium';
+      case Difficulty.Hard:
+        return 'Hard';
+      default:
+        return '';
+    }
+  }
+
+  static generateMathProblem(Difficulty difficulty) {
+    Random random = Random();
+    int operand1, operand2, operand3 = 0;
+    String operator;
+
+    switch (difficulty) {
+      case Difficulty.Easy:
+        operand1 = random.nextInt(90) + 10;
+        operand2 = random.nextInt(90) + 10;
+        operator = '+';
+        break;
+
+      case Difficulty.Medium:
+        operand1 = random.nextInt(90) + 10;
+        operand2 = random.nextInt(90) + 10;
+        operand3 = random.nextInt(90) + 10;
+        operator = '+';
+        break;
+
+      case Difficulty.Hard:
+        operand1 = random.nextInt(90) + 10;
+        operand2 = random.nextInt(9) + 1;
+        operand3 = random.nextInt(90) + 10;
+        operator = '*';
+        break;
+    }
+
+    String expression;
+    int result;
+
+    if (difficulty == Difficulty.Hard) {
+      expression = '($operand1$operator$operand2)+$operand3 = ?';
+      result = (operand1 * operand2) + operand3;
+    } else if (difficulty == Difficulty.Easy) {
+      expression = '$operand1 $operator $operand2 = ?';
+      result = (operator == '+') ? operand1 + operand2 : operand1 * operand2;
+    } else {
+      expression = '$operand1 $operator $operand2 $operator $operand3 = ?';
+      result = (operator == '+')
+          ? operand1 + operand2 + operand3
+          : operand1 * operand2 * operand3;
+    }
+
+    return [expression, result];
+  }
 }
