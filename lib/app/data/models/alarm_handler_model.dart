@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:screen_state/screen_state.dart';
@@ -15,7 +16,7 @@ class AlarmHandlerModel extends TaskHandler {
   Screen? _screen;
   // ignore: unused_field
   StreamSubscription<ScreenStateEvent>? _subscription;
-
+  late bool isNewAlarm;
   late AlarmModel alarmRecord;
   SendPort? _sendPort;
   Stopwatch? _stopwatch;
@@ -75,6 +76,8 @@ class AlarmHandlerModel extends TaskHandler {
 
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
+    isNewAlarm = true;
+
     _sendPort = sendPort;
     _uiReceivePort = ReceivePort();
 
@@ -83,7 +86,7 @@ class AlarmHandlerModel extends TaskHandler {
     _uiReceivePort.listen((message) async {
       if (message is Map<String, dynamic>) {
         alarmRecord = AlarmModel.fromMap(message);
-        print("Event says : ${alarmRecord}");
+        print("Event says : ${alarmRecord.alarmTime}");
 
         if (alarmRecord.isActivityEnabled == true) {
           _screen = Screen();
@@ -110,7 +113,7 @@ class AlarmHandlerModel extends TaskHandler {
   }
 
   @override
-  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
+  Future<void> onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
     print('CHANGING TO LATEST ALARM VIA EVENT! at ${TimeOfDay.now()}');
     bool shouldAlarmRing = true;
 
@@ -161,7 +164,10 @@ class AlarmHandlerModel extends TaskHandler {
       }
     }
 
-    if (time.hour == currentTime.hour && time.minute == currentTime.minute) {
+    if (time.hour == currentTime.hour &&
+        time.minute == currentTime.minute &&
+        Utils.isCurrentDayinList(alarmRecord.days) == true &&
+        isNewAlarm == false) {
       // Ring only if necessary
       if (shouldAlarmRing == true) {
         // One minute since screen was active!
@@ -170,6 +176,7 @@ class AlarmHandlerModel extends TaskHandler {
         }
 
         FlutterForegroundTask.launchApp('/alarm-ring');
+        // FlutterForegroundTask.launchApp('/alarm-ring');
       } else {
         print("STOPPING ALARM");
         // FlutterForegroundTask.launchApp('/alarm-control');
@@ -187,6 +194,7 @@ class AlarmHandlerModel extends TaskHandler {
         notificationTitle: 'Alarm set!',
         notificationText: 'Rings at ${alarmRecord.alarmTime}',
       );
+      isNewAlarm = false;
     }
   }
 
@@ -203,7 +211,7 @@ class AlarmHandlerModel extends TaskHandler {
 
   @override
   void onNotificationPressed() {
-    FlutterForegroundTask.launchApp("/alarm-control");
+    FlutterForegroundTask.launchApp("/home");
     _sendPort?.send('onNotificationPressed');
   }
 }
