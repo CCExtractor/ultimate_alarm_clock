@@ -15,7 +15,7 @@ class AlarmHandlerSetupModel {
   ReceivePort? _receivePort;
 
   restartForegroundTask(AlarmModel alarmRecord, int intervalToAlarm) async {
-    await _stopForegroundTask();
+    await stopForegroundTask();
     createForegroundTask(intervalToAlarm);
     await startForegroundTask(alarmRecord);
   }
@@ -80,7 +80,7 @@ class AlarmHandlerSetupModel {
     }
   }
 
-  Future<bool> _stopForegroundTask() {
+  Future<bool> stopForegroundTask() {
     return FlutterForegroundTask.stopService();
   }
 
