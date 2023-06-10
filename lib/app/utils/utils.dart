@@ -39,7 +39,7 @@ class Utils {
     }
 
     int milliseconds = alarmTime.difference(now).inMilliseconds;
-    return milliseconds - 1000;
+    return milliseconds;
   }
 
   static List<String> convertTo12HourFormat(String time) {
@@ -387,5 +387,19 @@ class Utils {
     }
 
     return [expression, result];
+  }
+
+  static bool isCurrentDayinList(List<bool> daysOfWeek) {
+    // Get the current day of the week (0 for Monday, 1 for Tuesday, etc.)
+    int currentDay = DateTime.now().weekday - 1;
+    if (daysOfWeek[currentDay]) {
+      return true;
+    }
+    // Check if all values in the list are false (one time alarm)
+    bool allFalse = daysOfWeek.every((day) => day == false);
+    if (allFalse) {
+      return true;
+    }
+    return false;
   }
 }
