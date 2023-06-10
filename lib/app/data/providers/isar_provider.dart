@@ -47,15 +47,21 @@ class IsarDb {
     return alarms.first;
   }
 
-  static Future<AlarmModel> getLatestAlarm(AlarmModel alarmRecord) async {
+  static Future<AlarmModel> getLatestAlarm(
+      AlarmModel alarmRecord, bool wantNextAlarm) async {
+    int nowInMinutes = 0;
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
 
 // Increasing a day since we need alarms AFTER the current time
 // Logically, alarms at current time will ring in the future ;-;
-
-    int nowInMinutes = Utils.timeOfDayToInt(
-        TimeOfDay(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute));
+    if (wantNextAlarm == true) {
+      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
+          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+    } else {
+      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
+          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute));
+    }
 
     // Get all enabled alarms
     List<AlarmModel> alarms =
