@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
@@ -93,25 +95,6 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
       _alarmRecord = await FirestoreDb.addAlarm(alarmData);
     } else {
       _alarmRecord = await IsarDb.addAlarm(alarmData);
-    }
-
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord!);
-    AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_alarmRecord!);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-
-    TimeOfDay latestAlarmTimeOfDay =
-        Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-    int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-        DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
-
-    if (await FlutterForegroundTask.isRunningService == false) {
-      // Starting service mandatorily!
-      createForegroundTask(intervaltoAlarm);
-      await startForegroundTask(latestAlarm);
-    } else {
-      await restartForegroundTask(latestAlarm, intervaltoAlarm);
     }
   }
 
