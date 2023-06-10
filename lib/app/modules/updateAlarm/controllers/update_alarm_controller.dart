@@ -82,9 +82,10 @@ class UpdateAlarmController extends GetxController with AlarmHandlerSetupModel {
       await IsarDb.updateAlarm(alarmData);
     }
 
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord);
+    AlarmModel isarLatestAlarm =
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_alarmRecord);
+        await FirestoreDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
