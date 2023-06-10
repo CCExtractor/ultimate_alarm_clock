@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_minimizer/app_minimizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -19,13 +20,15 @@ class AlarmControlController extends GetxController
   void onInit() async {
     super.onInit();
     FlutterRingtonePlayer.playAlarm();
+    TimeOfDay currentTime = TimeOfDay.now();
+
     Timer.periodic(
         Duration(
             milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
                 DateTime.now().add(const Duration(minutes: 1)))), (timer) {
       formattedDate.value = Utils.getFormattedDate(DateTime.now());
       timeNow.value =
-          Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
+          Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
     });
 
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
@@ -36,20 +39,25 @@ class AlarmControlController extends GetxController
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
+    print("LATEST : ${latestAlarm.alarmTime}");
+
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 
-    int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-        DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
-    print("INTERVAL TO ALARM: ${intervaltoAlarm}");
-
-    if (await FlutterForegroundTask.isRunningService == false) {
-      // Starting service mandatorily!
-
-      createForegroundTask(intervaltoAlarm);
-      await startForegroundTask(latestAlarm);
+// This condition will never satisfy because this will only occur if fake model is returned as latest alarm
+    if (latestAlarm.isEnabled == false) {
+      print(
+          "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current = ${currentTime.toString()}");
+      await stopForegroundTask();
     } else {
-      await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+      if (await FlutterForegroundTask.isRunningService == false) {
+        createForegroundTask(intervaltoAlarm);
+        await startForegroundTask(latestAlarm);
+      } else {
+        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      }
     }
   }
 

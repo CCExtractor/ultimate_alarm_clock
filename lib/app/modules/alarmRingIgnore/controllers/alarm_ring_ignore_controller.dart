@@ -19,13 +19,15 @@ class AlarmControlIgnoreController extends GetxController
   @override
   void onInit() async {
     super.onInit();
+    TimeOfDay currentTime = TimeOfDay.now();
+
     Timer.periodic(
         Duration(
             milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
                 DateTime.now().add(const Duration(minutes: 1)))), (timer) {
       formattedDate.value = Utils.getFormattedDate(DateTime.now());
       timeNow.value =
-          Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
+          Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
     });
 
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
@@ -38,24 +40,22 @@ class AlarmControlIgnoreController extends GetxController
 
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-    int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-        DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
 
-    if (await FlutterForegroundTask.isRunningService == false) {
-      // Starting service mandatorily!
-
-      createForegroundTask(intervaltoAlarm);
-      await startForegroundTask(latestAlarm);
+// This condition will never satisfy because this will only occur if fake model is returned as latest alarm
+    if (latestAlarm.isEnabled == false) {
+      await stopForegroundTask();
     } else {
-      await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+      if (await FlutterForegroundTask.isRunningService == false) {
+        createForegroundTask(intervaltoAlarm);
+        await startForegroundTask(latestAlarm);
+      } else {
+        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      }
     }
+
     FlutterAppMinimizer.minimize();
-
-    FGBGType status = await FGBGEvents.stream.first;
-
-    if (status == FGBGType.foreground) {
-      Get.offNamed('/home');
-    }
   }
 
   @override
