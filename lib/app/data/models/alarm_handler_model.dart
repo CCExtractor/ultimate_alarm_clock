@@ -3,7 +3,6 @@ import 'dart:isolate';
 
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:screen_state/screen_state.dart';
@@ -174,14 +173,19 @@ class AlarmHandlerModel extends TaskHandler {
         if (isScreenActive == false) {
           FlutterForegroundTask.wakeUpScreen();
         }
-
-        FlutterForegroundTask.launchApp('/alarm-ring');
-        // FlutterForegroundTask.launchApp('/alarm-ring');
+        // Ringing alarm now!
+        if (await FlutterForegroundTask.isAppOnForeground) {
+          _sendPort?.send('alarmRingRoute');
+        } else {
+          FlutterForegroundTask.launchApp('/alarm-ring');
+        }
       } else {
         print("STOPPING ALARM");
-        // FlutterForegroundTask.launchApp('/alarm-control');
-        FlutterForegroundTask.launchApp('/alarm-ring-ignore');
-        // _sendPort?.send('testing');
+        if (await FlutterForegroundTask.isAppOnForeground) {
+          _sendPort?.send('alarmRingRoute');
+        } else {
+          FlutterForegroundTask.launchApp('/alarm-ring');
+        }
       }
     }
     //  The time will never be before since getMilliSeconds will always adjust it a day forward
@@ -202,6 +206,7 @@ class AlarmHandlerModel extends TaskHandler {
   Future<void> onDestroy(DateTime timestamp, SendPort? sendPort) async {
     // You can use the clearAllData function to clear all the stored data.
     await FlutterForegroundTask.clearAllData();
+    await _subscription!.cancel();
   }
 
   @override
