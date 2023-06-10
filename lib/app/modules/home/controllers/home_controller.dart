@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController with AlarmHandlerSetupModel {
   late Stream<QuerySnapshot> firestoreStreamAlarms;
   late Stream isarStreamAlarms;
   late Stream streamAlarms;
@@ -19,6 +22,7 @@ class HomeController extends GetxController {
   bool isEmpty = true;
   Timer _timer = Timer.periodic(Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -104,10 +108,10 @@ class HomeController extends GetxController {
     }
     // Fake object to get latest alarm
     AlarmModel alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord);
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
 
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(alarmRecord);
+        await FirestoreDb.getLatestAlarm(alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
@@ -117,6 +121,11 @@ class HomeController extends GetxController {
     String timeToAlarm = Utils.timeUntilAlarm(
         Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
     alarmTime.value = "Rings in $timeToAlarm";
+
+// This function is necessary when alarms are deleted/enabled
+
+    await scheduleNextAlarm(
+        alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
 
     if (latestAlarm.minutesSinceMidnight > -1) {
       // Starting timer for live refresh
@@ -130,6 +139,28 @@ class HomeController extends GetxController {
       });
     } else {
       alarmTime.value = 'No upcoming alarms!';
+    }
+  }
+
+  scheduleNextAlarm(AlarmModel alarmRecord, AlarmModel isarLatestAlarm,
+      AlarmModel firestoreLatestAlarm, AlarmModel latestAlarm) async {
+    print("ISAR: ${isarLatestAlarm.alarmTime}");
+    print("Fire: ${firestoreLatestAlarm.alarmTime}");
+    TimeOfDay latestAlarmTimeOfDay =
+        Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+    if (latestAlarm.isEnabled == false) {
+      print(
+          "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}");
+      await stopForegroundTask();
+    } else {
+      int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+      if (await FlutterForegroundTask.isRunningService == false) {
+        createForegroundTask(intervaltoAlarm);
+        await startForegroundTask(latestAlarm);
+      } else {
+        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      }
     }
   }
 
