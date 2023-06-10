@@ -98,7 +98,7 @@ class AlarmHandlerSetupModel {
     _closeReceivePort();
 
     _receivePort = newReceivePort;
-    _receivePort?.listen((message) {
+    _receivePort?.listen((message) async {
       if (message is SendPort) {
         _sendPort = message;
         // Send port has been initialized, let's send it the alarm details
@@ -108,7 +108,11 @@ class AlarmHandlerSetupModel {
 
       if (message is String) {
         if (message == 'onNotificationPressed') {
-          Get.toNamed('/alarm-control');
+          Get.toNamed('/home');
+        } else if (message == 'alarmRingRoute') {
+          Get.offNamed('/alarm-ring');
+        } else if (message == 'alarmRingIgnoreRoute') {
+          Get.offNamed('/alarm-ring-ignore');
         }
       }
     });
