@@ -29,9 +29,16 @@ class FirestoreDb {
     return list[0];
   }
 
-  static Future<AlarmModel> getLatestAlarm(AlarmModel alarmRecord) async {
-    int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-        hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+  static Future<AlarmModel> getLatestAlarm(
+      AlarmModel alarmRecord, bool wantNextAlarm) async {
+    int nowInMinutes = 0;
+    if (wantNextAlarm == true) {
+      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
+          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+    } else {
+      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
+          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+    }
 
     late List<AlarmModel> alarms;
 
