@@ -38,6 +38,8 @@ class UpdateAlarmView extends GetView<UpdateAlarmController> {
                 ),
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
+                      weatherTypes: [],
+                      isWeatherEnabled: false,
                       days: controller.repeatDays.toList(),
                       alarmTime: Utils.timeOfDayToString(TimeOfDay.fromDateTime(
                           controller.selectedTime.value)),
