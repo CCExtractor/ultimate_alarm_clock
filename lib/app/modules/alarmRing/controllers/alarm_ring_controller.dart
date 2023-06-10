@@ -16,6 +16,32 @@ class AlarmControlController extends GetxController
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
+
+  getCurrentlyRingingAlarm() async {
+    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm =
+        await IsarDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    print("CURRENT RINGING : ${latestAlarm.alarmTime}");
+    return latestAlarm;
+  }
+
+  getNextAlarm() async {
+    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm =
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    print("LATEST : ${latestAlarm.alarmTime}");
+
+    return latestAlarm;
+  }
+
   @override
   void onInit() async {
     super.onInit();
@@ -31,19 +57,10 @@ class AlarmControlController extends GetxController
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
     });
 
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord);
-    AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_alarmRecord);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-
-    print("LATEST : ${latestAlarm.alarmTime}");
-
+    AlarmModel currentlyRingingAlarm = await getCurrentlyRingingAlarm();
+    AlarmModel latestAlarm = await getNextAlarm();
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-
 // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
     if (latestAlarm.isEnabled == false) {
       print(
@@ -67,8 +84,8 @@ class AlarmControlController extends GetxController
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     super.onClose();
-    FlutterRingtonePlayer.stop();
+    await FlutterRingtonePlayer.stop();
   }
 }
