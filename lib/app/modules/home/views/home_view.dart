@@ -251,7 +251,7 @@ class HomeView extends GetView<HomeController> {
                                                             if (value == 0) {
                                                               Get.back();
                                                               Get.offNamed(
-                                                                  'alarm-control');
+                                                                  'alarm-ring');
                                                             } else if (value ==
                                                                 1) {
                                                               print(alarm
