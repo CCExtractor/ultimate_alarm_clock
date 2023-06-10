@@ -16,6 +16,20 @@ class AlarmControlIgnoreController extends GetxController
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
+
+  getNextAlarm() async {
+    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm =
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    print("LATEST : ${latestAlarm.alarmTime}");
+
+    return latestAlarm;
+  }
+
   @override
   void onInit() async {
     super.onInit();
@@ -30,19 +44,13 @@ class AlarmControlIgnoreController extends GetxController
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
     });
 
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord);
-    AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_alarmRecord);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-
+    AlarmModel latestAlarm = await getNextAlarm();
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-
 // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
     if (latestAlarm.isEnabled == false) {
+      print(
+          "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current time = ${currentTime.toString()}");
       await stopForegroundTask();
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
@@ -54,8 +62,6 @@ class AlarmControlIgnoreController extends GetxController
         await restartForegroundTask(latestAlarm, intervaltoAlarm);
       }
     }
-
-    FlutterAppMinimizer.minimize();
   }
 
   @override
