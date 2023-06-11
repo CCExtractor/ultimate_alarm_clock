@@ -38,7 +38,14 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                 .copyWith(color: ksecondaryTextColor),
                           ),
                           onPressed: () {
-                            Get.offNamed('/home');
+                            if (Utils.isChallengeEnabled(
+                                controller.currentlyRingingAlarm.value)) {
+                              Get.toNamed('/alarm-challenge',
+                                  arguments:
+                                      controller.currentlyRingingAlarm.value);
+                            } else {
+                              Get.offNamed('/home');
+                            }
                           },
                         )
                       : SizedBox(),
