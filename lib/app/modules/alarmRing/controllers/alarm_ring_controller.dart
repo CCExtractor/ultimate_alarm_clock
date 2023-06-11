@@ -55,7 +55,6 @@ class AlarmControlController extends GetxController
     // Preventing app from being minimized!
     _subscription = FGBGEvents.stream.listen((event) {
       if (event == FGBGType.background) {
-        print(event);
         FlutterForegroundTask.launchApp();
       }
     });
