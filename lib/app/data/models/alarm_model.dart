@@ -15,6 +15,9 @@ class AlarmModel {
   late bool isLocationEnabled;
   late bool isSharedAlarmEnabled;
   late bool isWeatherEnabled;
+  late bool isMathsEnabled;
+  late bool isShakeEnabled;
+  late bool isQrEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
@@ -22,6 +25,10 @@ class AlarmModel {
   late int minutesSinceMidnight;
   late List<bool> days;
   late List<int> weatherTypes;
+  late int shakeTimes;
+  late int numMathsQuestions;
+  late int mathsDifficulty;
+  late String qrValue;
 
   AlarmModel(
       {required this.alarmTime,
@@ -35,6 +42,13 @@ class AlarmModel {
       required this.isWeatherEnabled,
       required this.location,
       required this.weatherTypes,
+      required this.isMathsEnabled,
+      required this.mathsDifficulty,
+      required this.numMathsQuestions,
+      required this.isShakeEnabled,
+      required this.shakeTimes,
+      required this.isQrEnabled,
+      required this.qrValue,
       this.activityInterval = 600000});
 
   AlarmModel.fromDocumentSnapshot(
@@ -52,6 +66,13 @@ class AlarmModel {
     isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
     weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
     location = documentSnapshot['location'];
+    isMathsEnabled = documentSnapshot['isMathsEnabled'];
+    mathsDifficulty = documentSnapshot['mathsDifficulty'];
+    numMathsQuestions = documentSnapshot['numMathsQuestions'];
+    isQrEnabled = documentSnapshot['isQrEnabled'];
+    qrValue = documentSnapshot['qrValue'];
+    isShakeEnabled = documentSnapshot['isShakeEnabled'];
+    shakeTimes = documentSnapshot['shakeTimes'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -69,6 +90,14 @@ class AlarmModel {
     isLocationEnabled = alarmData['isLocationEnabled'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     location = alarmData['location'];
+
+    isMathsEnabled = alarmData['isMathsEnabled'];
+    mathsDifficulty = alarmData['mathsDifficulty'];
+    numMathsQuestions = alarmData['numMathsQuestions'];
+    isQrEnabled = alarmData['isQrEnabled'];
+    qrValue = alarmData['qrValue'];
+    isShakeEnabled = alarmData['isShakeEnabled'];
+    shakeTimes = alarmData['shakeTimes'];
   }
 
   AlarmModel.fromJson(String alarmData) {
@@ -93,7 +122,14 @@ class AlarmModel {
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,
       'location': alarmRecord.location,
-      'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled
+      'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled,
+      'isMathsEnabled': alarmRecord.isMathsEnabled,
+      'mathsDifficulty': alarmRecord.mathsDifficulty,
+      'numMathsQuestions': alarmRecord.numMathsQuestions,
+      'isQrEnabled': alarmRecord.isQrEnabled,
+      'qrValue': alarmRecord.qrValue,
+      'isShakeEnabled': alarmRecord.isShakeEnabled,
+      'shakeTimes': alarmRecord.shakeTimes
     };
   }
 }
