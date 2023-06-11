@@ -57,7 +57,14 @@ class AddAlarmView extends GetView<AddAlarmController> {
                         Utils.latLngToGeoPoint(controller.selectedPoint.value),
                       ),
                       isSharedAlarmEnabled:
-                          controller.isSharedAlarmEnabled.value);
+                          controller.isSharedAlarmEnabled.value,
+                      isQrEnabled: controller.isQrEnabled.value,
+                      qrValue: controller.qrValue.value,
+                      isMathsEnabled: controller.isMathsEnabled.value,
+                      numMathsQuestions: controller.numMathsQuestions.value,
+                      mathsDifficulty: controller.mathsDifficulty.value.index,
+                      isShakeEnabled: controller.isShakeEnabled.value,
+                      shakeTimes: controller.shakeTimes.value);
 
                   try {
                     await controller.createAlarm(alarmRecord);
@@ -1072,8 +1079,16 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                         value: controller.shakeTimes.value,
                                         minValue: 0,
                                         maxValue: 100,
-                                        onChanged: (value) => controller
-                                            .shakeTimes.value = value),
+                                        onChanged: (value) {
+                                          if (value > 0) {
+                                            controller.isShakeEnabled.value =
+                                                true;
+                                          } else {
+                                            controller.isShakeEnabled.value =
+                                                false;
+                                          }
+                                          controller.shakeTimes.value = value;
+                                        }),
                                     Text(controller.shakeTimes.value > 1
                                         ? 'times'
                                         : 'time')
@@ -1222,7 +1237,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                 children: [
                                   Obx(
                                     () => Text(
-                                      controller.isMathEnabled == true
+                                      controller.isMathsEnabled == true
                                           ? Utils.getDifficultyLabel(
                                               controller.mathsDifficulty.value)
                                           : 'Off',
@@ -1230,7 +1245,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                           .textTheme
                                           .bodyLarge!
                                           .copyWith(
-                                              color: (controller.isMathEnabled
+                                              color: (controller.isMathsEnabled
                                                           .value ==
                                                       false)
                                                   ? kprimaryDisabledTextColor
@@ -1243,8 +1258,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                   )
                                 ]),
                             onTap: () {
-                              controller.restartQRCodeController();
-                              controller.isMathEnabled.value = true;
+                              controller.isMathsEnabled.value = true;
                               Get.defaultDialog(
                                   titlePadding:
                                       const EdgeInsets.symmetric(vertical: 20),
@@ -1355,7 +1369,7 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                                               ksecondaryTextColor),
                                                 ),
                                                 onPressed: () {
-                                                  controller.isMathEnabled
+                                                  controller.isMathsEnabled
                                                       .value = false;
                                                   Get.back();
                                                 },
