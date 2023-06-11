@@ -268,6 +268,13 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+        isMathsEnabled: false,
+        numMathsQuestions: 0,
+        mathsDifficulty: 0,
+        qrValue: "",
+        isQrEnabled: false,
+        isShakeEnabled: false,
+        shakeTimes: 0,
         days: [false, false, false, false, false, false, false],
         weatherTypes: [],
         isWeatherEnabled: false,
@@ -398,6 +405,15 @@ class Utils {
     // Check if all values in the list are false (one time alarm)
     bool allFalse = daysOfWeek.every((day) => day == false);
     if (allFalse) {
+      return true;
+    }
+    return false;
+  }
+
+  static bool isChallengeEnabled(AlarmModel alarmRecord) {
+    if (alarmRecord.isMathsEnabled ||
+        alarmRecord.isQrEnabled ||
+        alarmRecord.isShakeEnabled) {
       return true;
     }
     return false;
