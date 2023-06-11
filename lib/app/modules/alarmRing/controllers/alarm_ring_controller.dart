@@ -1,18 +1,21 @@
 import 'dart:async';
 
-import 'package:app_minimizer/app_minimizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmControlController extends GetxController
     with AlarmHandlerSetupModel {
+  late StreamSubscription<FGBGType> _subscription;
+  final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
@@ -45,8 +48,17 @@ class AlarmControlController extends GetxController
   @override
   void onInit() async {
     super.onInit();
+
     FlutterRingtonePlayer.playAlarm();
     TimeOfDay currentTime = TimeOfDay.now();
+
+    // Preventing app from being minimized!
+    _subscription = FGBGEvents.stream.listen((event) {
+      if (event == FGBGType.background) {
+        print(event);
+        FlutterForegroundTask.launchApp();
+      }
+    });
 
     Timer.periodic(
         Duration(
@@ -57,7 +69,7 @@ class AlarmControlController extends GetxController
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
     });
 
-    AlarmModel currentlyRingingAlarm = await getCurrentlyRingingAlarm();
+    currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
     AlarmModel latestAlarm = await getNextAlarm();
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
@@ -87,5 +99,6 @@ class AlarmControlController extends GetxController
   void onClose() async {
     super.onClose();
     await FlutterRingtonePlayer.stop();
+    _subscription.cancel();
   }
 }
