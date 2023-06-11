@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/addAlarm/bindings/add_alarm_binding.dart';
 import '../modules/addAlarm/views/add_alarm_view.dart';
+import '../modules/alarmChallenge/bindings/alarm_challenge_binding.dart';
+import '../modules/alarmChallenge/views/alarm_challenge_view.dart';
 import '../modules/alarmRing/bindings/alarm_ring_binding.dart';
 import '../modules/alarmRing/views/alarm_ring_view.dart';
 import '../modules/alarmRingIgnore/bindings/alarm_ring_ignore_binding.dart';
@@ -50,6 +52,16 @@ class AppPages {
       name: _Paths.SETTINGS,
       page: () => const SettingsView(),
       binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SETTINGS,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.ALARM_CHALLENGE,
+      page: () => const AlarmChallengeView(),
+      binding: AlarmChallengeBinding(),
     ),
   ];
 }
