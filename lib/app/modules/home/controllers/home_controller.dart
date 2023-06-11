@@ -22,7 +22,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   bool isEmpty = true;
   Timer _timer = Timer.periodic(Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
-
+  int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
+  Timer? delayToSchedule;
   @override
   void onInit() {
     super.onInit();
@@ -101,45 +102,61 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   }
 
   refreshUpcomingAlarms() async {
-    // Cancel timer if we have to refresh
-    if (refreshTimer == true && _timer.isActive) {
-      _timer.cancel();
-      refreshTimer = false;
+    // Check if 2 seconds have passed since the last call
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    if (currentTime - lastRefreshTime < 2000) {
+      delayToSchedule?.cancel();
     }
-    // Fake object to get latest alarm
-    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
 
-    AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(alarmRecord, true);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    if (delayToSchedule != null && delayToSchedule!.isActive) {
+      return;
+    }
 
-    print("ISAR: ${isarLatestAlarm.alarmTime}");
-    print("Fire: ${firestoreLatestAlarm.alarmTime}");
+    delayToSchedule = Timer(const Duration(seconds: 2), () async {
+      lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
+      // Cancel timer if we have to refresh
+      if (refreshTimer == true && _timer.isActive) {
+        _timer.cancel();
+        refreshTimer = false;
+      }
 
-    String timeToAlarm = Utils.timeUntilAlarm(
-        Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
-    alarmTime.value = "Rings in $timeToAlarm";
+      // Fake object to get latest alarm
+      AlarmModel alarmRecord = Utils.genFakeAlarmModel();
+      AlarmModel isarLatestAlarm =
+          await IsarDb.getLatestAlarm(alarmRecord, true);
+
+      AlarmModel firestoreLatestAlarm =
+          await FirestoreDb.getLatestAlarm(alarmRecord, true);
+      AlarmModel latestAlarm =
+          Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+
+      print("ISAR: ${isarLatestAlarm.alarmTime}");
+      print("Fire: ${firestoreLatestAlarm.alarmTime}");
+
+      String timeToAlarm = Utils.timeUntilAlarm(
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
+      alarmTime.value = "Rings in $timeToAlarm";
 
 // This function is necessary when alarms are deleted/enabled
 
-    await scheduleNextAlarm(
-        alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
+      await scheduleNextAlarm(
+          alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
 
-    if (latestAlarm.minutesSinceMidnight > -1) {
-      // Starting timer for live refresh
-      _timer = Timer.periodic(
-          Duration(
-              milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
-                  DateTime.now().add(const Duration(minutes: 1)))), (timer) {
-        timeToAlarm = Utils.timeUntilAlarm(
-            Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
-        alarmTime.value = "Rings in $timeToAlarm";
-      });
-    } else {
-      alarmTime.value = 'No upcoming alarms!';
-    }
+      if (latestAlarm.minutesSinceMidnight > -1) {
+        // Starting timer for live refresh
+        _timer = Timer.periodic(
+            Duration(
+                milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
+                    DateTime.now().add(const Duration(minutes: 1)))), (timer) {
+          timeToAlarm = Utils.timeUntilAlarm(
+              Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
+          alarmTime.value = "Rings in $timeToAlarm";
+        });
+      } else {
+        alarmTime.value = 'No upcoming alarms!';
+      }
+    });
   }
 
   scheduleNextAlarm(AlarmModel alarmRecord, AlarmModel isarLatestAlarm,
