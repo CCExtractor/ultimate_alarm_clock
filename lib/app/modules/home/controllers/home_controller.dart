@@ -161,8 +161,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
   scheduleNextAlarm(AlarmModel alarmRecord, AlarmModel isarLatestAlarm,
       AlarmModel firestoreLatestAlarm, AlarmModel latestAlarm) async {
-    print("ISAR: ${isarLatestAlarm.alarmTime}");
-    print("Fire: ${firestoreLatestAlarm.alarmTime}");
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
     if (latestAlarm.isEnabled == false) {
@@ -189,5 +187,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onClose() {
     super.onClose();
+    delayToSchedule!.cancel();
   }
 }
