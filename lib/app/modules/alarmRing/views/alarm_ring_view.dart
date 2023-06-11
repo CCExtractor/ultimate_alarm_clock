@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
@@ -16,26 +17,33 @@ class AlarmControlView extends GetView<AlarmControlController> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
-            padding: EdgeInsets.all(18.0),
-            child: SizedBox(
-              height: height * 0.06,
-              width: width * 0.8,
-              child: TextButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor)),
-                child: Text(
-                  'Dismiss',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: ksecondaryTextColor),
+              padding: EdgeInsets.all(18.0),
+              child: Obx(
+                () => SizedBox(
+                  height: height * 0.06,
+                  width: width * 0.8,
+                  child: controller.currentlyRingingAlarm.value.isEnabled
+                      ? TextButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(kprimaryColor)),
+                          child: Text(
+                            Utils.isChallengeEnabled(
+                                    controller.currentlyRingingAlarm.value)
+                                ? 'Start Challenge'
+                                : 'Dismiss',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(color: ksecondaryTextColor),
+                          ),
+                          onPressed: () {
+                            Get.offNamed('/home');
+                          },
+                        )
+                      : SizedBox(),
                 ),
-                onPressed: () {
-                  Get.offNamed('/home');
-                },
-              ),
-            ),
-          ),
+              )),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
