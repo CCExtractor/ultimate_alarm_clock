@@ -144,7 +144,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           ),
                                                           onPressed: () async {
                                                             controller
-                                                                .qrController
+                                                                .qrController!
                                                                 .dispose();
                                                             controller
                                                                 .restartQRCodeController();
