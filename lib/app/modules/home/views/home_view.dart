@@ -19,7 +19,7 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       // backgroundColor: kprimaryBackgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed('add-alarm'),
+        onPressed: () => Get.toNamed('/add-alarm'),
         child: Icon(Icons.add),
       ),
       body: SafeArea(
@@ -251,7 +251,9 @@ class HomeView extends GetView<HomeController> {
                                                             if (value == 0) {
                                                               Get.back();
                                                               Get.offNamed(
-                                                                  'alarm-ring');
+                                                                  '/alarm-ring',
+                                                                  arguments:
+                                                                      alarm);
                                                             } else if (value ==
                                                                 1) {
                                                               print(alarm
