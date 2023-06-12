@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/maths_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/qr_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/shake_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -97,7 +98,14 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                             width: 0,
                           ),
                           InkWell(
-                            onTap: () async {},
+                            onTap: () {
+                              if (controller.isMathsOngoing.value !=
+                                  Status.completed) {
+                                controller.isMathsOngoing.value =
+                                    Status.ongoing;
+                                Get.to(() => MathsChallengeView());
+                              }
+                            },
                             child: Container(
                               width: width * 0.91,
                               height: height * 0.1,
