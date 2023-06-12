@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shake/shake.dart';
@@ -9,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmChallengeController extends GetxController {
   AlarmModel alarmRecord = Get.arguments;
+
   final RxDouble progress = 1.0.obs;
 
   final RxInt shakedCount = 0.obs;
@@ -49,9 +51,11 @@ class AlarmChallengeController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     _startTimer();
+
+    await FlutterRingtonePlayer.stop();
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
@@ -65,8 +69,10 @@ class AlarmChallengeController extends GetxController {
       shakedCount.listen((value) {
         if (value == 0) {
           isShakeOngoing.value = Status.completed;
+          alarmRecord.isShakeEnabled = false;
           Get.back();
           _shakeDetector!.stopListening();
+          isChallengesComplete();
         }
       });
     }
@@ -84,7 +90,9 @@ class AlarmChallengeController extends GetxController {
         if (value == alarmRecord.qrValue) {
           isQrOngoing.value = Status.completed;
           qrController!.dispose();
+          alarmRecord.isQrEnabled = false;
           Get.back();
+          isChallengesComplete();
         }
       });
     }
@@ -95,7 +103,9 @@ class AlarmChallengeController extends GetxController {
       numMathsQuestions.listen((value) {
         if (value <= 0) {
           isMathsOngoing.value = Status.completed;
+          alarmRecord.isMathsEnabled = false;
           Get.back();
+          isChallengesComplete();
         } else {
           newMathsQuestion();
         }
@@ -129,5 +139,27 @@ class AlarmChallengeController extends GetxController {
   restartTimer() {
     progress.value = 1.0; // Reset the progress to its initial value
     _startTimer(); // Start the timer again
+  }
+
+  isChallengesComplete() {
+    if (!Utils.isChallengeEnabled(alarmRecord)) {
+      Get.offAllNamed('/home');
+    }
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  void onClose() async {
+    super.onClose();
+
+    if (!Utils.isChallengeEnabled(alarmRecord)) {
+      await FlutterRingtonePlayer.stop();
+    } else {
+      await FlutterRingtonePlayer.playAlarm();
+    }
   }
 }
