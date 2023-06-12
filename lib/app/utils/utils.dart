@@ -288,16 +288,6 @@ class Utils {
         minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()));
   }
 
-  static storeApiKey(ApiKeys key, String val) async {
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: key.toString(), value: val);
-  }
-
-  static retrieveApiKey(ApiKeys key) async {
-    final storage = new FlutterSecureStorage();
-    return await storage.read(key: key.toString());
-  }
-
   static String getFormattedWeatherTypes(List weatherTypes) {
     if (weatherTypes.isEmpty) {
       return 'Off';
