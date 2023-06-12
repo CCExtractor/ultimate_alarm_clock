@@ -68,24 +68,30 @@ class AlarmControlController extends GetxController
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
     });
 
-    currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
-    AlarmModel latestAlarm = await getNextAlarm();
-    TimeOfDay latestAlarmTimeOfDay =
-        Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+    // If it's preview mode, no need to schedule alarms again
+    if (Get.arguments == null) {
+      currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+      AlarmModel latestAlarm = await getNextAlarm();
+
+      TimeOfDay latestAlarmTimeOfDay =
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
-    if (latestAlarm.isEnabled == false) {
-      print(
-          "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current = ${currentTime.toString()}");
-      await stopForegroundTask();
-    } else {
-      int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
-      if (await FlutterForegroundTask.isRunningService == false) {
-        createForegroundTask(intervaltoAlarm);
-        await startForegroundTask(latestAlarm);
+      if (latestAlarm.isEnabled == false) {
+        print(
+            "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current = ${currentTime.toString()}");
+        await stopForegroundTask();
       } else {
-        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+        int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+            DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+        if (await FlutterForegroundTask.isRunningService == false) {
+          createForegroundTask(intervaltoAlarm);
+          await startForegroundTask(latestAlarm);
+        } else {
+          await restartForegroundTask(latestAlarm, intervaltoAlarm);
+        }
       }
+    } else {
+      currentlyRingingAlarm.value = Get.arguments;
     }
   }
 
