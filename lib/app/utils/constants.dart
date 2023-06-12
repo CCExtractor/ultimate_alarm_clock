@@ -4,6 +4,8 @@ enum ApiKeys {
   openWeatherMap,
 }
 
+enum Status { initialized, ongoing, completed }
+
 enum WeatherTypes { sunny, cloudy, rainy, windy, stormy }
 
 enum Difficulty { Easy, Medium, Hard }
