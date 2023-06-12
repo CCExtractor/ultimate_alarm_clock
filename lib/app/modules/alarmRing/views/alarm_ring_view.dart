@@ -16,41 +16,69 @@ class AlarmControlView extends GetView<AlarmControlController> {
       child: Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: Padding(
-              padding: EdgeInsets.all(18.0),
-              child: Obx(
-                () => SizedBox(
-                  height: height * 0.06,
-                  width: width * 0.8,
-                  child: controller.currentlyRingingAlarm.value.isEnabled
-                      ? TextButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(kprimaryColor)),
-                          child: Text(
-                            Utils.isChallengeEnabled(
-                                    controller.currentlyRingingAlarm.value)
-                                ? 'Start Challenge'
-                                : 'Dismiss',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(color: ksecondaryTextColor),
-                          ),
-                          onPressed: () {
-                            if (Utils.isChallengeEnabled(
-                                controller.currentlyRingingAlarm.value)) {
-                              Get.toNamed('/alarm-challenge',
-                                  arguments:
-                                      controller.currentlyRingingAlarm.value);
-                            } else {
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                  padding: EdgeInsets.all(18.0),
+                  child: Obx(
+                    () => SizedBox(
+                      height: height * 0.06,
+                      width: width * 0.8,
+                      child: controller.currentlyRingingAlarm.value.isEnabled
+                          ? TextButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(kprimaryColor)),
+                              child: Text(
+                                Utils.isChallengeEnabled(
+                                        controller.currentlyRingingAlarm.value)
+                                    ? 'Start Challenge'
+                                    : 'Dismiss',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(color: ksecondaryTextColor),
+                              ),
+                              onPressed: () {
+                                if (Utils.isChallengeEnabled(
+                                    controller.currentlyRingingAlarm.value)) {
+                                  Get.toNamed('/alarm-challenge',
+                                      arguments: controller
+                                          .currentlyRingingAlarm.value);
+                                } else {
+                                  Get.offNamed('/home');
+                                }
+                              },
+                            )
+                          : SizedBox(),
+                    ),
+                  )),
+              (Get.arguments != null)
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                          height: height * 0.06,
+                          width: width,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    kprimaryTextColor.withOpacity(0.7))),
+                            child: Text(
+                              'Exit Preview',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                            onPressed: () {
                               Get.offNamed('/home');
-                            }
-                          },
-                        )
-                      : SizedBox(),
-                ),
-              )),
+                            },
+                          )),
+                    )
+                  : SizedBox()
+            ],
+          ),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
