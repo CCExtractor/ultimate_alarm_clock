@@ -350,7 +350,7 @@ class Utils {
     }
   }
 
-  static generateMathProblem(Difficulty difficulty) {
+  static List generateMathProblem(Difficulty difficulty) {
     Random random = Random();
     int operand1, operand2, operand3 = 0;
     String operator;
