@@ -44,7 +44,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           InkWell(
                             onTap: () {
                               if (controller.isShakeOngoing.value !=
-                                  Status.completed) {
+                                      Status.completed &&
+                                  controller.alarmRecord.isShakeEnabled) {
                                 controller.shakedCount.value =
                                     controller.alarmRecord.shakeTimes;
                                 controller.isShakeOngoing.value =
@@ -80,12 +81,15 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                   ),
                                   Obx(
                                     () => Icon(
-                                      controller.alarmRecord.isShakeEnabled
+                                      (controller.alarmRecord.isShakeEnabled)
                                           ? controller.isShakeOngoing.value ==
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp
-                                          : Icons.close,
+                                          : controller.isShakeOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.close,
                                       color: kprimaryTextColor.withOpacity(0.2),
                                     ),
                                   )
@@ -100,7 +104,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           InkWell(
                             onTap: () {
                               if (controller.isMathsOngoing.value !=
-                                  Status.completed) {
+                                      Status.completed &&
+                                  controller.alarmRecord.isMathsEnabled) {
                                 controller.isMathsOngoing.value =
                                     Status.ongoing;
                                 Get.to(() => MathsChallengeView());
@@ -132,9 +137,19 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                           color: kprimaryTextColor,
                                         ),
                                   ),
-                                  Icon(
-                                    Icons.arrow_forward_ios_sharp,
-                                    color: kprimaryTextColor.withOpacity(0.2),
+                                  Obx(
+                                    () => Icon(
+                                      (controller.alarmRecord.isMathsEnabled)
+                                          ? controller.isQrOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp
+                                          : controller.isQrOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.close,
+                                      color: kprimaryTextColor.withOpacity(0.2),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -147,7 +162,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           InkWell(
                             onTap: () {
                               if (controller.isQrOngoing.value !=
-                                  Status.completed) {
+                                      Status.completed &&
+                                  controller.alarmRecord.isQrEnabled) {
                                 Get.to(() => QRChallengeView());
                               }
                             },
@@ -179,12 +195,15 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                   ),
                                   Obx(
                                     () => Icon(
-                                      controller.alarmRecord.isQrEnabled
+                                      (controller.alarmRecord.isQrEnabled)
                                           ? controller.isQrOngoing.value ==
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp
-                                          : Icons.close,
+                                          : controller.isQrOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.close,
                                       color: kprimaryTextColor.withOpacity(0.2),
                                     ),
                                   ),
