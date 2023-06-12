@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/qr_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/shake_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
@@ -136,7 +137,12 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                             width: 0,
                           ),
                           InkWell(
-                            onTap: () async {},
+                            onTap: () {
+                              if (controller.isQrOngoing.value !=
+                                  Status.completed) {
+                                Get.to(() => QRChallengeView());
+                              }
+                            },
                             child: Container(
                               width: width * 0.91,
                               height: height * 0.1,
@@ -163,9 +169,16 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                           color: kprimaryTextColor,
                                         ),
                                   ),
-                                  Icon(
-                                    Icons.arrow_forward_ios_sharp,
-                                    color: kprimaryTextColor.withOpacity(0.2),
+                                  Obx(
+                                    () => Icon(
+                                      controller.alarmRecord.isQrEnabled
+                                          ? controller.isQrOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp
+                                          : Icons.close,
+                                      color: kprimaryTextColor.withOpacity(0.2),
+                                    ),
                                   ),
                                 ],
                               ),
