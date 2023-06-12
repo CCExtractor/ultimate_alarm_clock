@@ -30,6 +30,7 @@ dependencies:
   shake: ^2.2.0
   numberpicker: ^2.1.2
   mobile_scanner: ^3.2.0
+  google_sign_in: ^6.0.2
   flutter:
     sdk: flutter
 
