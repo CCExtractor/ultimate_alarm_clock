@@ -7,14 +7,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:951082036741:android:403d98ee7770ce3071766c",
+        "mobilesdk_app_id": "1:951082036741:android:45bc3756a62c480f71766c",
         "android_client_info": {
           "package_name": "com.example.ultimate_alarm_clock"
         }
       },
       "oauth_client": [
         {
-          "client_id": "951082036741-fj3aoh9q4svfdmjmhj019li0tr6ebco5.apps.googleusercontent.com",
+          "client_id": "951082036741-q9jfduqcvikipre5ubf7774o9b2l822h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ultimate_alarm_clock",
+            "certificate_hash": "af289e1ac935477a575746d95dea1c78156db532"
+          }
+        },
+        {
+          "client_id": "951082036741-5c8vh71vidd27rjihimnemnbdquq1tp2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "951082036741-fj3aoh9q4svfdmjmhj019li0tr6ebco5.apps.googleusercontent.com",
+              "client_id": "951082036741-5c8vh71vidd27rjihimnemnbdquq1tp2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
