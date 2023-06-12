@@ -128,7 +128,7 @@ class AlarmChallengeController extends GetxController {
 
     for (var i = totalIterations; i > 0; i--) {
       if (progress.value <= 0.0) {
-        // Get.offAllNamed('/alarm-ring');
+        Get.until((route) => route.settings.name == '/alarm-ring');
         break;
       }
       await Future.delayed(duration ~/ i);
