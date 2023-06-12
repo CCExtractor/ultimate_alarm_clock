@@ -7,6 +7,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:screen_state/screen_state.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:weather/weather.dart';
@@ -27,9 +28,9 @@ class AlarmHandlerModel extends TaskHandler {
       LatLng location, List<int> weatherTypeInt) async {
     List<WeatherTypes> weatherTypes =
         Utils.getWeatherTypesFromInt(weatherTypeInt);
-    String apiKey = await Utils.retrieveApiKey(ApiKeys.openWeatherMap);
-    WeatherFactory weatherFactory = WeatherFactory(apiKey);
-
+    String? apiKey =
+        await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap);
+    WeatherFactory weatherFactory = WeatherFactory(apiKey!);
     try {
       Weather weatherData = await weatherFactory.currentWeatherByLocation(
           location.latitude, location.longitude);
