@@ -15,6 +15,7 @@ class SettingsView extends GetView<SettingsController> {
         appBar: AppBar(
           title: const Text('Settings'),
           centerTitle: true,
+          elevation: 0.0,
         ),
         body: Center(
           child: Padding(
@@ -82,6 +83,77 @@ class SettingsView extends GetView<SettingsController> {
                       children: [
                         Text(
                           'Open Weather Map API',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    color: kprimaryTextColor,
+                                  ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          color: kprimaryTextColor.withOpacity(0.2),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () async {
+                    bool isSuccessfulLogin = await controller.loginWithGoogle();
+                    Get.defaultDialog(
+                        titlePadding: EdgeInsets.symmetric(vertical: 20),
+                        backgroundColor: ksecondaryBackgroundColor,
+                        title: isSuccessfulLogin ? 'Sucess!' : 'Error!',
+                        titleStyle: Theme.of(context).textTheme.displaySmall,
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              isSuccessfulLogin ? Icons.done : Icons.close,
+                              size: 50,
+                              color:
+                                  isSuccessfulLogin ? Colors.green : Colors.red,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Text(
+                                isSuccessfulLogin
+                                    ? 'Your account is now linked!'
+                                    : "Your account couldn't be linked!",
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            ),
+                            TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        kprimaryColor)),
+                                child: Text(
+                                  'Okay',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(color: ksecondaryTextColor),
+                                ),
+                                onPressed: () {
+                                  Get.back();
+                                }),
+                          ],
+                        ));
+                  },
+                  child: Container(
+                    width: width * 0.91,
+                    height: height * 0.1,
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                        color: ksecondaryBackgroundColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'Sign-In with Google',
                           style:
                               Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     color: kprimaryTextColor,
