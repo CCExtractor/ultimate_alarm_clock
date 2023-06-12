@@ -9,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.d
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -96,10 +97,6 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
     }
   }
 
-  getKey(ApiKeys key) async {
-    return await Utils.retrieveApiKey(key);
-  }
-
   T? _ambiguate<T>(T? value) => value;
 
   restartQRCodeController() {
@@ -157,7 +154,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
       weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
     });
 
-    if (await getKey(ApiKeys.openWeatherMap) != null) {
+    if (await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap) !=
+        null) {
       weatherApiKeyExists.value = true;
     }
   }
