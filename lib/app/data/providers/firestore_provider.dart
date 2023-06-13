@@ -1,23 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class FirestoreDb {
   static final FirebaseFirestore _firebaseFirestore =
       FirebaseFirestore.instance;
-  static final CollectionReference _alarmsCollection =
-      _firebaseFirestore.collection('alarms');
 
-  static addAlarm(AlarmModel alarmRecord) async {
-    await _alarmsCollection
+  static CollectionReference _alarmsCollection(UserModel? user) {
+    if (user == null) {
+      // Hacky fix to prevent stream from not emitting
+      return _firebaseFirestore.collection('alarms');
+    } else {
+      return _firebaseFirestore
+          .collection('users')
+          .doc(user.id)
+          .collection('alarms');
+    }
+  }
+
+  static addAlarm(UserModel? user, AlarmModel alarmRecord) async {
+    if (user == null) return alarmRecord;
+    await _alarmsCollection(user)
         .add(AlarmModel.toMap(alarmRecord))
         .then((value) => alarmRecord.firestoreId = value.id);
     return alarmRecord;
   }
 
-  static getTriggeredAlarm(String time) async {
-    QuerySnapshot snapshot = await _alarmsCollection
+  static Future<AlarmModel> getTriggeredAlarm(
+      UserModel? user, String time) async {
+    if (user == null) return Utils.genFakeAlarmModel();
+    QuerySnapshot snapshot = await _alarmsCollection(user)
         .where('isEnabled', isEqualTo: true)
         .where('alarmTime', isEqualTo: time)
         .get();
@@ -30,7 +44,8 @@ class FirestoreDb {
   }
 
   static Future<AlarmModel> getLatestAlarm(
-      AlarmModel alarmRecord, bool wantNextAlarm) async {
+      UserModel? user, AlarmModel alarmRecord, bool wantNextAlarm) async {
+    if (user == null) return alarmRecord;
     int nowInMinutes = 0;
     if (wantNextAlarm == true) {
       nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
@@ -44,7 +59,7 @@ class FirestoreDb {
 
     // Get all enabled alarms
     QuerySnapshot snapshot =
-        await _alarmsCollection.where('isEnabled', isEqualTo: true).get();
+        await _alarmsCollection(user).where('isEnabled', isEqualTo: true).get();
     alarms = snapshot.docs.map((DocumentSnapshot document) {
       return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
     }).toList();
@@ -99,16 +114,25 @@ class FirestoreDb {
     }
   }
 
-  static updateAlarm(AlarmModel alarmRecord) async => await _alarmsCollection
-      .doc(alarmRecord.firestoreId)
-      .update(AlarmModel.toMap(alarmRecord));
+  static updateAlarm(UserModel? user, AlarmModel alarmRecord) async {
+    if (user == null) return alarmRecord;
+    await _alarmsCollection(user)
+        .doc(alarmRecord.firestoreId)
+        .update(AlarmModel.toMap(alarmRecord));
+  }
 
-  static getAlarm(String id) async => await _alarmsCollection.doc(id).get();
+  static getAlarm(UserModel? user, String id) async {
+    if (user == null) return null;
+    return await _alarmsCollection(user).doc(id).get();
+  }
 
-  static getAlarms() => _alarmsCollection
-      .orderBy('minutesSinceMidnight', descending: false)
-      .snapshots();
+  static Stream<QuerySnapshot<Object?>> getAlarms(UserModel? user) {
+    return _alarmsCollection(user)
+        .orderBy('minutesSinceMidnight', descending: false)
+        .snapshots();
+  }
 
-  static deleteAlarm(String id) async =>
-      await _alarmsCollection.doc(id).delete();
+  static deleteAlarm(UserModel? user, String id) async {
+    await _alarmsCollection(user).doc(id).delete();
+  }
 }
