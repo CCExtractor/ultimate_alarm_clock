@@ -11,7 +11,7 @@ class SecureStorageProvider {
 
   Future<void> storeUserModel(UserModel userModel) async {
     final String key = 'userModel';
-    final String userString = userModel.toJson().toString();
+    final String userString = jsonEncode(userModel.toJson());
 
     await _secureStorage.write(key: key, value: userString);
   }
@@ -21,8 +21,13 @@ class SecureStorageProvider {
     final String? userString = await _secureStorage.read(key: key);
 
     if (userString != null) {
-      final Map<String, dynamic> userMap = jsonDecode(userString);
-      return UserModel.fromJson(userMap);
+      try {
+        final Map<String, dynamic> userMap = jsonDecode(userString);
+        return UserModel.fromJson(userMap);
+      } catch (e) {
+        print('Error parsing user model: $e');
+        return null;
+      }
     }
 
     return null;
