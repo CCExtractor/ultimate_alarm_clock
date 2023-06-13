@@ -405,11 +405,13 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           'Enable Activity',
                           style: TextStyle(color: kprimaryTextColor),
                         ),
-                        trailing: Switch(
-                          onChanged: (value) {
-                            controller.isActivityenabled.value = value;
-                          },
-                          value: controller.isActivityenabled.value,
+                        trailing: Obx(
+                          () => Switch(
+                            onChanged: (value) {
+                              controller.isActivityenabled.value = value;
+                            },
+                            value: controller.isActivityenabled.value,
+                          ),
                         ),
                       ),
                       const Divider(
@@ -819,11 +821,13 @@ class AddAlarmView extends GetView<AddAlarmController> {
                           'Enable Shared Alarm',
                           style: TextStyle(color: kprimaryTextColor),
                         ),
-                        trailing: Switch(
-                          onChanged: (value) {
-                            controller.isSharedAlarmEnabled.value = value;
-                          },
-                          value: controller.isSharedAlarmEnabled.value,
+                        trailing: Obx(
+                          () => Switch(
+                            onChanged: (value) {
+                              controller.isSharedAlarmEnabled.value = value;
+                            },
+                            value: controller.isSharedAlarmEnabled.value,
+                          ),
                         ),
                       ),
                       const Divider(
