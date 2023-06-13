@@ -7,8 +7,10 @@ import 'package:latlong2/latlong.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -73,10 +75,12 @@ class UpdateAlarmController extends GetxController with AlarmHandlerSetupModel {
   }
 
   updateAlarm(AlarmModel alarmData) async {
+    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
+
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
       alarmData.firestoreId = _alarmRecord.firestoreId;
-      await FirestoreDb.updateAlarm(alarmData);
+      await FirestoreDb.updateAlarm(_userModel, alarmData);
     } else {
       alarmData.isarId = _alarmRecord.isarId;
       await IsarDb.updateAlarm(alarmData);
@@ -85,7 +89,7 @@ class UpdateAlarmController extends GetxController with AlarmHandlerSetupModel {
     AlarmModel isarLatestAlarm =
         await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
