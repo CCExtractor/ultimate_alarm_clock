@@ -11,6 +11,7 @@ class AlarmModel {
 
   String? firestoreId;
   late String alarmTime;
+  late String alarmID;
   late bool isEnabled;
   late bool isLocationEnabled;
   late bool isSharedAlarmEnabled;
@@ -21,7 +22,7 @@ class AlarmModel {
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
-  int? activityInterval;
+  late int activityInterval;
   late int minutesSinceMidnight;
   late List<bool> days;
   late List<int> weatherTypes;
@@ -29,9 +30,12 @@ class AlarmModel {
   late int numMathsQuestions;
   late int mathsDifficulty;
   late String qrValue;
+  List<String>? sharedUserIds;
 
   AlarmModel(
       {required this.alarmTime,
+      required this.alarmID,
+      this.sharedUserIds = const [],
       this.isEnabled = true,
       required this.days,
       required this.intervalToAlarm,
@@ -49,11 +53,13 @@ class AlarmModel {
       required this.shakeTimes,
       required this.isQrEnabled,
       required this.qrValue,
-      this.activityInterval = 600000});
+      required this.activityInterval});
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot}) {
     firestoreId = documentSnapshot.id;
+    alarmID = documentSnapshot['alarmID'];
+    sharedUserIds = documentSnapshot['sharedUserIds'];
     days = List<bool>.from(documentSnapshot['days']);
     alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
@@ -77,6 +83,8 @@ class AlarmModel {
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     firestoreId = alarmData['firestoreId'];
+    alarmID = alarmData['alarmID'];
+    sharedUserIds = alarmData['sharedUserIds'];
     alarmTime = alarmData['alarmTime'];
     days = alarmData['days'];
     isEnabled = alarmData['isEnabled'];
@@ -111,6 +119,8 @@ class AlarmModel {
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
     return {
       'firestoreId': alarmRecord.firestoreId,
+      'alarmID': alarmRecord.alarmID,
+      'sharedUserIds': alarmRecord.sharedUserIds,
       'days': alarmRecord.days,
       'alarmTime': alarmRecord.alarmTime,
       'intervalToAlarm': alarmRecord.intervalToAlarm,
