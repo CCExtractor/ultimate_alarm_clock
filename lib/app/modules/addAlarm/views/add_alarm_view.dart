@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
@@ -40,6 +41,9 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 ),
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
+                      alarmID: controller.alarmID,
+                      activityInterval:
+                          controller.activityInterval.value * 60000,
                       days: controller.repeatDays.toList(),
                       alarmTime: Utils.timeOfDayToString(TimeOfDay.fromDateTime(
                           controller.selectedTime.value)),
@@ -359,8 +363,6 @@ class AddAlarmView extends GetView<AddAlarmController> {
                             fontWeight: FontWeight.w500)),
                     trailing: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
-                        // mainAxisSize: MainAxisSize.min,
-                        // mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Obx(
                             () => Text(
@@ -411,9 +413,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                               children: [
                                 Obx(
                                   () => Text(
-                                    controller.activityTimeoutInMinutes.value >
-                                            0
-                                        ? '${controller.activityTimeoutInMinutes.value} min'
+                                    controller.activityInterval.value > 0
+                                        ? '${controller.activityInterval.value} min'
                                         : 'Off',
                                     style: Theme.of(context)
                                         .textTheme
@@ -445,8 +446,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     NumberPicker(
-                                        value: controller
-                                            .activityTimeoutInMinutes.value,
+                                        value:
+                                            controller.activityInterval.value,
                                         minValue: 0,
                                         maxValue: 1440,
                                         onChanged: (value) {
@@ -457,12 +458,10 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                             controller.isActivityenabled.value =
                                                 false;
                                           }
-                                          controller.activityTimeoutInMinutes
-                                              .value = value;
+                                          controller.activityInterval.value =
+                                              value;
                                         }),
-                                    Text(controller.activityTimeoutInMinutes
-                                                .value >
-                                            1
+                                    Text(controller.activityInterval.value > 1
                                         ? 'minutes'
                                         : 'minute')
                                   ],
@@ -963,103 +962,6 @@ class AddAlarmView extends GetView<AddAlarmController> {
                         color: kprimaryDisabledTextColor,
                       ),
                       ListTile(
-                          title: const Text(
-                            'Enable Shared Alarm',
-                            style: TextStyle(color: kprimaryTextColor),
-                          ),
-                          trailing: (controller.homeController.userModel !=
-                                  null)
-                              ? Obx(
-                                  () => Switch(
-                                    onChanged: (value) {
-                                      controller.isSharedAlarmEnabled.value =
-                                          value;
-                                    },
-                                    value:
-                                        controller.isSharedAlarmEnabled.value,
-                                  ),
-                                )
-                              : InkWell(
-                                  onTap: () {
-                                    Get.defaultDialog(
-                                        contentPadding: EdgeInsets.all(10.0),
-                                        titlePadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20),
-                                        backgroundColor:
-                                            ksecondaryBackgroundColor,
-                                        title: 'Disabled!',
-                                        titleStyle: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        content: Column(
-                                          children: [
-                                            const Text(
-                                                "To use this feature, you have link your Google account!"),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 10.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  TextButton(
-                                                    style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(
-                                                                    kprimaryColor)),
-                                                    child: Text(
-                                                      'Go to settings',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .displaySmall!
-                                                          .copyWith(
-                                                              color:
-                                                                  ksecondaryTextColor),
-                                                    ),
-                                                    onPressed: () {
-                                                      Get.back();
-                                                      Get.toNamed('/settings');
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty.all(
-                                                                kprimaryTextColor
-                                                                    .withOpacity(
-                                                                        0.5))),
-                                                    child: Text(
-                                                      'Cancel',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .displaySmall!
-                                                          .copyWith(
-                                                              color:
-                                                                  kprimaryTextColor),
-                                                    ),
-                                                    onPressed: () {
-                                                      Get.back();
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ));
-                                  },
-                                  child: Icon(
-                                    Icons.lock,
-                                    color: kprimaryTextColor.withOpacity(0.7),
-                                  ),
-                                )),
-                      const Divider(
-                        color: kprimaryDisabledTextColor,
-                      ),
-                      ListTile(
                         title: const Text(
                           'Location Based',
                           style: TextStyle(color: kprimaryTextColor),
@@ -1067,8 +969,6 @@ class AddAlarmView extends GetView<AddAlarmController> {
                         trailing: Obx(
                           () => Wrap(
                             crossAxisAlignment: WrapCrossAlignment.center,
-                            // mainAxisSize: MainAxisSize.min,
-                            // mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
                                 controller.isLocationEnabled.value == false
@@ -1611,6 +1511,203 @@ class AddAlarmView extends GetView<AddAlarmController> {
                                     ),
                                   ));
                             })),
+                  ],
+                ),
+              ),
+              Container(
+                color: ksecondaryTextColor,
+                height: 10,
+                width: width,
+              ),
+              Container(
+                color: ksecondaryBackgroundColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Shared Alarm',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        kprimaryTextColor.withOpacity(0.85))),
+                      ),
+                    ),
+                    ListTile(
+                        title: const Text(
+                          'Enable Shared Alarm',
+                          style: TextStyle(color: kprimaryTextColor),
+                        ),
+                        trailing: (controller.homeController.userModel != null)
+                            ? Obx(
+                                () => Switch(
+                                  onChanged: (value) {
+                                    controller.isSharedAlarmEnabled.value =
+                                        value;
+                                  },
+                                  value: controller.isSharedAlarmEnabled.value,
+                                ),
+                              )
+                            : InkWell(
+                                onTap: () {
+                                  Get.defaultDialog(
+                                      contentPadding: EdgeInsets.all(10.0),
+                                      titlePadding: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      backgroundColor:
+                                          ksecondaryBackgroundColor,
+                                      title: 'Disabled!',
+                                      titleStyle: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
+                                      content: Column(
+                                        children: [
+                                          const Text(
+                                              "To use this feature, you have link your Google account!"),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                                  kprimaryColor)),
+                                                  child: Text(
+                                                    'Go to settings',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .copyWith(
+                                                            color:
+                                                                ksecondaryTextColor),
+                                                  ),
+                                                  onPressed: () {
+                                                    Get.back();
+                                                    Get.toNamed('/settings');
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty.all(
+                                                              kprimaryTextColor
+                                                                  .withOpacity(
+                                                                      0.5))),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .copyWith(
+                                                            color:
+                                                                kprimaryTextColor),
+                                                  ),
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ));
+                                },
+                                child: Icon(
+                                  Icons.lock,
+                                  color: kprimaryTextColor.withOpacity(0.7),
+                                ),
+                              )),
+                    const Divider(
+                      color: kprimaryDisabledTextColor,
+                    ),
+                    Obx(
+                      () => ListTile(
+                          title: const Text(
+                            'Alarm ID',
+                            style: TextStyle(color: kprimaryTextColor),
+                          ),
+                          trailing: (controller.isSharedAlarmEnabled.value ==
+                                  true)
+                              ? InkWell(
+                                  onTap: () {
+                                    Clipboard.setData(ClipboardData(
+                                        text: controller.alarmID));
+                                    Get.snackbar(
+                                      'Success!',
+                                      'Alarm ID has been copied!',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green,
+                                      colorText: ksecondaryTextColor,
+                                      maxWidth: width,
+                                      duration: Duration(seconds: 2),
+                                    );
+                                  },
+                                  child: Icon(Icons.copy,
+                                      color:
+                                          kprimaryTextColor.withOpacity(0.7)),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                        titlePadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 20),
+                                        backgroundColor:
+                                            ksecondaryBackgroundColor,
+                                        title: 'Disabled!',
+                                        titleStyle: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall,
+                                        content: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: const Text(
+                                                  "To copy Alarm ID you have enable shared alarm!"),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10.0),
+                                              child: TextButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(
+                                                                kprimaryColor)),
+                                                child: Text(
+                                                  'Okay',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                          color:
+                                                              ksecondaryTextColor),
+                                                ),
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        ));
+                                  },
+                                  child: Icon(
+                                    Icons.lock,
+                                    color: kprimaryTextColor.withOpacity(0.7),
+                                  ),
+                                )),
+                    ),
                   ],
                 ),
               ),
