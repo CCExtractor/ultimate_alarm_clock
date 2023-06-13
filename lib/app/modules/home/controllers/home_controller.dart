@@ -68,15 +68,14 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
   initStream() async {
     await loginWithGoogle();
+
     firestoreStreamAlarms = FirestoreDb.getAlarms(userModel);
     isarStreamAlarms = IsarDb.getAlarms();
 
     streamAlarms =
         StreamGroup.merge([firestoreStreamAlarms!, isarStreamAlarms!])
             .map((data) {
-      print(data.runtimeType);
       if (data is QuerySnapshot) {
-        print('firestore gave');
         List<DocumentSnapshot> firestoreDocuments = data.docs;
         latestFirestoreAlarms = firestoreDocuments
             .map((DocumentSnapshot doc) =>
@@ -87,6 +86,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       }
 
       List<AlarmModel> alarms = [...latestFirestoreAlarms, ...latestIsarAlarms];
+
       alarms.sort((a, b) {
         // First sort by isEnabled
         if (a.isEnabled != b.isEnabled) {
@@ -162,7 +162,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       return;
     }
 
-    delayToSchedule = Timer(const Duration(seconds: 2), () async {
+    delayToSchedule = Timer(const Duration(seconds: 1), () async {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
       // Cancel timer if we have to refresh
       if (refreshTimer == true && _timer.isActive) {
