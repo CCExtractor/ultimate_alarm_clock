@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
@@ -15,6 +16,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
+  late UserModel? _userModel;
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
@@ -91,7 +93,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
 
   createAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
-      _alarmRecord = await FirestoreDb.addAlarm(alarmData);
+      _alarmRecord = await FirestoreDb.addAlarm(_userModel, alarmData);
     } else {
       _alarmRecord = await IsarDb.addAlarm(alarmData);
     }
@@ -111,6 +113,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onInit() async {
     super.onInit();
+    _userModel = await SecureStorageProvider().retrieveUserModel();
+
     _ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) async {
       // You can get the previous ReceivePort without restarting the service.
       if (await FlutterForegroundTask.isRunningService) {
