@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:weather/weather.dart';
@@ -10,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
 
 class SettingsController extends GetxController {
+  var homeController = Get.find<HomeController>();
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;
@@ -34,6 +36,7 @@ class SettingsController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    homeController.userModel = null;
   }
 
   // Logins user using GoogleSignIn
