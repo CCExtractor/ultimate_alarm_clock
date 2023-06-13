@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -126,10 +127,27 @@ class FirestoreDb {
     return await _alarmsCollection(user).doc(id).get();
   }
 
+  // static Stream<QuerySnapshot<Object?>> getAlarms(UserModel? user) {
+  //   return _alarmsCollection(user)
+  //       .orderBy('minutesSinceMidnight', descending: false)
+  //       .snapshots();
+  // }
+
   static Stream<QuerySnapshot<Object?>> getAlarms(UserModel? user) {
-    return _alarmsCollection(user)
-        .orderBy('minutesSinceMidnight', descending: false)
-        .snapshots();
+    if (user != null) {
+      Stream<QuerySnapshot<Object?>> sharedAlarmsStream =
+          _alarmsCollection(user)
+              .where('sharedUserIds', arrayContains: user.id)
+              .snapshots();
+      Stream<QuerySnapshot<Object?>> userAlarmsStream = _alarmsCollection(user)
+          .orderBy('minutesSinceMidnight', descending: false)
+          .snapshots();
+      return StreamGroup.merge([sharedAlarmsStream, userAlarmsStream]);
+    } else {
+      return _alarmsCollection(user)
+          .orderBy('minutesSinceMidnight', descending: false)
+          .snapshots();
+    }
   }
 
   static deleteAlarm(UserModel? user, String id) async {
