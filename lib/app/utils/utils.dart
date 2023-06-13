@@ -268,6 +268,8 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+        alarmID: '',
+        activityInterval: 0,
         isMathsEnabled: false,
         numMathsQuestions: 0,
         mathsDifficulty: 0,
