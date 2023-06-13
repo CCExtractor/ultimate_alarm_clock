@@ -18,6 +18,8 @@ class SettingsController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late GoogleSignInAccount? googleSignInAccount;
   final RxBool isUserLoggedIn = false.obs;
+  final RxBool isWeatherKeyAdded = false.obs;
+  final RxBool didWeatherKeyError = false.obs;
   UserModel? userModel;
   @override
   void onInit() async {
@@ -102,7 +104,6 @@ class SettingsController extends GetxController {
   }
 
   Future<bool> isApiKeyValid(String apiKey) async {
-    print(apiKey);
     final weather = WeatherFactory(apiKey);
     try {
       final currentWeather = await weather.currentWeatherByLocation(
