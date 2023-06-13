@@ -22,6 +22,7 @@ class SettingsController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
     userModel = await SecureStorageProvider().retrieveUserModel();
     if (userModel != null) {
       isUserLoggedIn.value = true;
@@ -36,40 +37,50 @@ class SettingsController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    homeController.userModel = null;
+    homeController.userModel = userModel;
   }
 
   // Logins user using GoogleSignIn
   loginWithGoogle() async {
     try {
       googleSignInAccount = await _googleSignIn.signIn();
-      String fullName = googleSignInAccount!.displayName.toString();
-      List<String> parts = fullName.split(" ");
-      String lastName = " ";
-      if (parts.length == 3) {
-        if (parts[parts.length - 1].length == 1) {
-          lastName = parts[1].toLowerCase().capitalizeFirst.toString();
+
+      if (googleSignInAccount != null) {
+        // Process successful sign-in
+        String fullName = googleSignInAccount!.displayName.toString();
+        List<String> parts = fullName.split(" ");
+        String lastName = " ";
+        if (parts.length == 3) {
+          if (parts[parts.length - 1].length == 1) {
+            lastName = parts[1].toLowerCase().capitalizeFirst.toString();
+          } else {
+            lastName = parts[parts.length - 1]
+                .toLowerCase()
+                .capitalizeFirst
+                .toString();
+          }
         } else {
           lastName =
               parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
         }
-      } else {
-        lastName =
-            parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
-      }
-      String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
+        String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
-      userModel = UserModel(
-        id: googleSignInAccount!.id,
-        fullName: fullName,
-        firstName: firstName,
-        lastName: lastName,
-        email: googleSignInAccount!.email,
-      );
-      await SecureStorageProvider().storeUserModel(userModel!);
-      isUserLoggedIn.value = true;
-      return true;
+        userModel = UserModel(
+          id: googleSignInAccount!.id,
+          fullName: fullName,
+          firstName: firstName,
+          lastName: lastName,
+          email: googleSignInAccount!.email,
+        );
+        await SecureStorageProvider().storeUserModel(userModel!);
+        isUserLoggedIn.value = true;
+        return true;
+      } else {
+        // User canceled sign-in
+        return false;
+      }
     } catch (e) {
+      // Handle any other exceptions that may occur
       print(e);
       return false;
     }
@@ -79,6 +90,7 @@ class SettingsController extends GetxController {
     await _googleSignIn.signOut();
     await SecureStorageProvider().deleteUserModel();
     isUserLoggedIn.value = false;
+    homeController.userModel = null;
   }
 
   addKey(ApiKeys key, String val) async {
