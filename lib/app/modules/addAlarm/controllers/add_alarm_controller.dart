@@ -115,7 +115,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   void onInit() async {
     super.onInit();
     _userModel = await SecureStorageProvider().retrieveUserModel();
-
+    timeToAlarm.value = Utils.timeUntilAlarm(
+        TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
     _ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) async {
       // You can get the previous ReceivePort without restarting the service.
       if (await FlutterForegroundTask.isRunningService) {
