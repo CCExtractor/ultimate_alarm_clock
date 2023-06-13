@@ -20,6 +20,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
+  final activityTimeoutInMinutes = 0.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
   late final isWeatherEnabled = false.obs;
