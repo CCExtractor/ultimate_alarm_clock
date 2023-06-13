@@ -19,6 +19,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
       onTap: () => controller.restartTimer(),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
         ),
         body: Column(
