@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -29,47 +31,170 @@ class SettingsView extends GetView<SettingsController> {
                         backgroundColor: ksecondaryBackgroundColor,
                         title: 'API Key',
                         titleStyle: Theme.of(context).textTheme.displaySmall,
-                        content: Column(
-                          children: [
-                            TextField(
-                              obscureText: false,
-                              controller: controller.apiKey,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: TextButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              kprimaryColor)),
-                                  child: Text(
-                                    'Save',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(color: ksecondaryTextColor),
-                                  ),
-                                  onPressed: () async {
-                                    try {
-                                      await controller.getLocation();
-                                      if (await controller.isApiKeyValid(
-                                          controller.apiKey.text)) {
-                                        await controller.addKey(
-                                            ApiKeys.openWeatherMap,
-                                            controller.apiKey.text);
-                                        Get.snackbar(
-                                            'Success!', "API Key Added!");
-                                      } else {
-                                        Get.snackbar(
-                                            'Error', "Invalid API Key!");
-                                      }
-                                    } catch (e) {
-                                      Get.snackbar(
-                                          'Error', "Failed to save API key!");
-                                    }
-                                  }),
-                            )
-                          ],
+                        content: Obx(
+                          () => Container(
+                              child: (controller.isWeatherKeyAdded.value ==
+                                      false)
+                                  ? (controller.didWeatherKeyError.value ==
+                                          false)
+                                      ? Column(
+                                          children: [
+                                            TextField(
+                                              obscureText: false,
+                                              controller: controller.apiKey,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 20.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  TextButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(
+                                                                      kprimaryColor)),
+                                                      child: Text(
+                                                        'Save',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .displaySmall!
+                                                            .copyWith(
+                                                                color:
+                                                                    ksecondaryTextColor),
+                                                      ),
+                                                      onPressed: () async {
+                                                        await controller
+                                                            .getLocation();
+                                                        if (await controller
+                                                            .isApiKeyValid(
+                                                                controller
+                                                                    .apiKey
+                                                                    .text)) {
+                                                          await controller.addKey(
+                                                              ApiKeys
+                                                                  .openWeatherMap,
+                                                              controller
+                                                                  .apiKey.text);
+                                                          controller
+                                                              .isWeatherKeyAdded
+                                                              .value = true;
+                                                        } else {
+                                                          controller
+                                                              .didWeatherKeyError
+                                                              .value = true;
+                                                        }
+                                                      }),
+                                                  TextButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty.all(
+                                                                  kprimaryTextColor
+                                                                      .withOpacity(
+                                                                          0.7))),
+                                                      child: Text(
+                                                        'Get Key',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .displaySmall!
+                                                            .copyWith(
+                                                                color:
+                                                                    ksecondaryBackgroundColor),
+                                                      ),
+                                                      onPressed: () async {
+                                                        const url =
+                                                            'https://home.openweathermap.org/api_keys';
+                                                        if (await canLaunchUrlString(
+                                                            url)) {
+                                                          await launchUrlString(
+                                                              url);
+                                                        } else {
+                                                          throw 'Could not launch $url';
+                                                        }
+                                                      }),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          children: [
+                                            const Icon(
+                                              Icons.close,
+                                              size: 50,
+                                              color: Colors.red,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 15.0),
+                                              child: Text(
+                                                "Error adding key!",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall,
+                                              ),
+                                            ),
+                                            TextButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(
+                                                                kprimaryColor)),
+                                                child: Text(
+                                                  'Retry',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                          color:
+                                                              ksecondaryTextColor),
+                                                ),
+                                                onPressed: () {
+                                                  controller.didWeatherKeyError
+                                                      .value = false;
+                                                }),
+                                          ],
+                                        )
+                                  : Column(
+                                      children: [
+                                        Icon(
+                                          Icons.done,
+                                          size: 50,
+                                          color: Colors.green,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0),
+                                          child: Text(
+                                            "Your API key is added!",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall,
+                                          ),
+                                        ),
+                                        TextButton(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        kprimaryColor)),
+                                            child: Text(
+                                              'Okay',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall!
+                                                  .copyWith(
+                                                      color:
+                                                          ksecondaryTextColor),
+                                            ),
+                                            onPressed: () {
+                                              Get.back();
+                                            }),
+                                      ],
+                                    )),
                         ));
                   },
                   child: Container(
