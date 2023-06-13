@@ -14,13 +14,15 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:uuid/uuid.dart';
 
 class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   late UserModel? _userModel;
+  final alarmID = Uuid().v4();
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
-  final activityTimeoutInMinutes = 0.obs;
+  final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
   late final isWeatherEnabled = false.obs;
@@ -115,6 +117,7 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   void onInit() async {
     super.onInit();
     _userModel = await SecureStorageProvider().retrieveUserModel();
+
     timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
     _ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) async {
