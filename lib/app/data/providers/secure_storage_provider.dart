@@ -33,6 +33,11 @@ class SecureStorageProvider {
     return null;
   }
 
+  Future<void> deleteUserModel() async {
+    final String key = 'userModel';
+    await _secureStorage.delete(key: key);
+  }
+
   Future<void> storeApiKey(ApiKeys key, String val) async {
     final String apiKey = key.toString();
     await _secureStorage.write(key: apiKey, value: val);
