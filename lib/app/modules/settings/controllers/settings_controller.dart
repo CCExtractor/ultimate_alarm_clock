@@ -15,9 +15,15 @@ class SettingsController extends GetxController {
   final currentPoint = LatLng(0, 0).obs;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late GoogleSignInAccount? googleSignInAccount;
+  final RxBool isUserLoggedIn = false.obs;
+  UserModel? userModel;
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    userModel = await SecureStorageProvider().retrieveUserModel();
+    if (userModel != null) {
+      isUserLoggedIn.value = true;
+    }
   }
 
   @override
@@ -50,14 +56,15 @@ class SettingsController extends GetxController {
       }
       String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
-      UserModel userModel = UserModel(
+      userModel = UserModel(
         id: googleSignInAccount!.id,
         fullName: fullName,
         firstName: firstName,
         lastName: lastName,
         email: googleSignInAccount!.email,
       );
-      await SecureStorageProvider().storeUserModel(userModel);
+      await SecureStorageProvider().storeUserModel(userModel!);
+      isUserLoggedIn.value = true;
       return true;
     } catch (e) {
       print(e);
@@ -67,6 +74,8 @@ class SettingsController extends GetxController {
 
   Future<void> logoutGoogle() async {
     await _googleSignIn.signOut();
+    await SecureStorageProvider().deleteUserModel();
+    isUserLoggedIn.value = false;
   }
 
   addKey(ApiKeys key, String val) async {
