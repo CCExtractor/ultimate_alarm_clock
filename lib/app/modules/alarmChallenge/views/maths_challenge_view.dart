@@ -172,6 +172,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           controller.isMathsOngoing.value = Status.initialized;
           controller.correctAnswer.value = true;
         } else {
+          controller.displayValue.value = '';
           controller.correctAnswer.value = false;
           controller.isMathsOngoing.value = Status.initialized;
         }
