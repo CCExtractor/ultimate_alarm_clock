@@ -104,15 +104,21 @@ class AlarmHandlerSetupModel {
         // Send port has been initialized, let's send it the alarm details
         _sendPort.send(AlarmModel.toMap(alarmRecord));
       }
-      // print('MAIN RECIEVED $message');
+      print('MAIN RECIEVED $message');
 
       if (message is String) {
         if (message == 'onNotificationPressed') {
           Get.toNamed('/home');
         } else if (message == 'alarmRingRoute') {
-          Get.offNamed('/alarm-ring');
+          FlutterForegroundTask.launchApp('/alarm-ring');
+          if (Get.currentRoute != '/alarm-ring') {
+            Get.offNamed('/alarm-ring');
+          }
         } else if (message == 'alarmRingIgnoreRoute') {
-          Get.offNamed('/alarm-ring-ignore');
+          FlutterForegroundTask.launchApp('/alarm-ring-ignore');
+          if (Get.currentRoute != '/alarm-ring') {
+            Get.offNamed('/alarm-ring');
+          }
         }
       }
     });

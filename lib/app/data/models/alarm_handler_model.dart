@@ -175,18 +175,12 @@ class AlarmHandlerModel extends TaskHandler {
           FlutterForegroundTask.wakeUpScreen();
         }
         // Ringing alarm now!
-        if (await FlutterForegroundTask.isAppOnForeground) {
-          _sendPort?.send('alarmRingRoute');
-        } else {
-          FlutterForegroundTask.launchApp('/alarm-ring');
-        }
+        FlutterForegroundTask.launchApp('/alarm-ring');
+        _sendPort?.send('alarmRingRoute');
       } else {
         print("STOPPING ALARM");
-        if (await FlutterForegroundTask.isAppOnForeground) {
-          _sendPort?.send('alarmRingRoute');
-        } else {
-          FlutterForegroundTask.launchApp('/alarm-ring');
-        }
+        _sendPort?.send('alarmRingRoute');
+        FlutterForegroundTask.launchApp('/alarm-ring');
       }
     }
     //  The time will never be before since getMilliSeconds will always adjust it a day forward
