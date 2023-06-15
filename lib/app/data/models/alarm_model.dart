@@ -31,11 +31,15 @@ class AlarmModel {
   late int mathsDifficulty;
   late String qrValue;
   List<String>? sharedUserIds;
+  late String ownerId;
+  late String ownerName;
 
   AlarmModel(
       {required this.alarmTime,
       required this.alarmID,
       this.sharedUserIds = const [],
+      required this.ownerId,
+      required this.ownerName,
       this.isEnabled = true,
       required this.days,
       required this.intervalToAlarm,
@@ -59,7 +63,9 @@ class AlarmModel {
       {required DocumentSnapshot documentSnapshot}) {
     firestoreId = documentSnapshot.id;
     alarmID = documentSnapshot['alarmID'];
-    sharedUserIds = documentSnapshot['sharedUserIds'];
+    sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
+    ownerId = documentSnapshot['ownerId'];
+    ownerName = documentSnapshot['ownerName'];
     days = List<bool>.from(documentSnapshot['days']);
     alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
@@ -85,6 +91,8 @@ class AlarmModel {
     firestoreId = alarmData['firestoreId'];
     alarmID = alarmData['alarmID'];
     sharedUserIds = alarmData['sharedUserIds'];
+    ownerId = alarmData['ownerId'];
+    ownerName = alarmData['ownerName'];
     alarmTime = alarmData['alarmTime'];
     days = alarmData['days'];
     isEnabled = alarmData['isEnabled'];
@@ -120,6 +128,8 @@ class AlarmModel {
     return {
       'firestoreId': alarmRecord.firestoreId,
       'alarmID': alarmRecord.alarmID,
+      'ownerId': alarmRecord.ownerId,
+      'ownerName': alarmRecord.ownerName,
       'sharedUserIds': alarmRecord.sharedUserIds,
       'days': alarmRecord.days,
       'alarmTime': alarmRecord.alarmTime,
@@ -139,7 +149,7 @@ class AlarmModel {
       'isQrEnabled': alarmRecord.isQrEnabled,
       'qrValue': alarmRecord.qrValue,
       'isShakeEnabled': alarmRecord.isShakeEnabled,
-      'shakeTimes': alarmRecord.shakeTimes
+      'shakeTimes': alarmRecord.shakeTimes,
     };
   }
 }

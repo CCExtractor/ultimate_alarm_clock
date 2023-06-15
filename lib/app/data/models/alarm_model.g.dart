@@ -107,23 +107,33 @@ const AlarmModelSchema = CollectionSchema(
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
-    r'qrValue': PropertySchema(
+    r'ownerId': PropertySchema(
       id: 18,
+      name: r'ownerId',
+      type: IsarType.string,
+    ),
+    r'ownerName': PropertySchema(
+      id: 19,
+      name: r'ownerName',
+      type: IsarType.string,
+    ),
+    r'qrValue': PropertySchema(
+      id: 20,
       name: r'qrValue',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 19,
+      id: 21,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 20,
+      id: 22,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'weatherTypes': PropertySchema(
-      id: 21,
+      id: 23,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -158,6 +168,8 @@ int _alarmModelEstimateSize(
     }
   }
   bytesCount += 3 + object.location.length * 3;
+  bytesCount += 3 + object.ownerId.length * 3;
+  bytesCount += 3 + object.ownerName.length * 3;
   bytesCount += 3 + object.qrValue.length * 3;
   {
     final list = object.sharedUserIds;
@@ -199,10 +211,12 @@ void _alarmModelSerialize(
   writer.writeLong(offsets[15], object.mathsDifficulty);
   writer.writeLong(offsets[16], object.minutesSinceMidnight);
   writer.writeLong(offsets[17], object.numMathsQuestions);
-  writer.writeString(offsets[18], object.qrValue);
-  writer.writeLong(offsets[19], object.shakeTimes);
-  writer.writeStringList(offsets[20], object.sharedUserIds);
-  writer.writeLongList(offsets[21], object.weatherTypes);
+  writer.writeString(offsets[18], object.ownerId);
+  writer.writeString(offsets[19], object.ownerName);
+  writer.writeString(offsets[20], object.qrValue);
+  writer.writeLong(offsets[21], object.shakeTimes);
+  writer.writeStringList(offsets[22], object.sharedUserIds);
+  writer.writeLongList(offsets[23], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -229,10 +243,12 @@ AlarmModel _alarmModelDeserialize(
     mathsDifficulty: reader.readLong(offsets[15]),
     minutesSinceMidnight: reader.readLong(offsets[16]),
     numMathsQuestions: reader.readLong(offsets[17]),
-    qrValue: reader.readString(offsets[18]),
-    shakeTimes: reader.readLong(offsets[19]),
-    sharedUserIds: reader.readStringList(offsets[20]),
-    weatherTypes: reader.readLongList(offsets[21]) ?? [],
+    ownerId: reader.readString(offsets[18]),
+    ownerName: reader.readString(offsets[19]),
+    qrValue: reader.readString(offsets[20]),
+    shakeTimes: reader.readLong(offsets[21]),
+    sharedUserIds: reader.readStringList(offsets[22]),
+    weatherTypes: reader.readLongList(offsets[23]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[4]);
   object.isarId = id;
@@ -285,10 +301,14 @@ P _alarmModelDeserializeProp<P>(
     case 18:
       return (reader.readString(offset)) as P;
     case 19:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 20:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 21:
+      return (reader.readLong(offset)) as P;
+    case 22:
+      return (reader.readStringList(offset)) as P;
+    case 23:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1453,6 +1473,272 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ownerId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ownerIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ownerId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ownerId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ownerId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'ownerId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'ownerId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'ownerId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'ownerId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ownerId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ownerIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'ownerId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ownerName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ownerNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ownerName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ownerName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ownerName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ownerNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'ownerName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'ownerName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'ownerName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ownerNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'ownerName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ownerNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ownerName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ownerNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'ownerName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> qrValueEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -2254,6 +2540,30 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByOwnerId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByOwnerIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByOwnerName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByOwnerNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerName', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByQrValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.asc);
@@ -2510,6 +2820,30 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByOwnerId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByOwnerIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByOwnerName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByOwnerNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ownerName', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByQrValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.asc);
@@ -2654,6 +2988,20 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByOwnerId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ownerId', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByOwnerName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ownerName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByQrValue(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2795,6 +3143,18 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, int, QQueryOperations> numMathsQuestionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'numMathsQuestions');
+    });
+  }
+
+  QueryBuilder<AlarmModel, String, QQueryOperations> ownerIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ownerId');
+    });
+  }
+
+  QueryBuilder<AlarmModel, String, QQueryOperations> ownerNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ownerName');
     });
   }
 
