@@ -12,7 +12,6 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
-import '../modules/updateAlarm/views/update_alarm_view.dart';
 
 part 'app_routes.dart';
 
