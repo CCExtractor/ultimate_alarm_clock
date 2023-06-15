@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -29,6 +30,11 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   Timer? delayToSchedule;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   UserModel? userModel;
+  final RxBool isUserSignedIn = false.obs;
+  final floatingButtonKey = GlobalKey<ExpandableFabState>();
+  final floatingButtonKeyLoggedOut = GlobalKey<ExpandableFabState>();
+
+  final alarmIdController = TextEditingController();
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -62,6 +68,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
           email: googleSignInAccount.email,
         );
         await SecureStorageProvider().storeUserModel(userModel!);
+        isUserSignedIn.value = true;
       }
     }
   }
