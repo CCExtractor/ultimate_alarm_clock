@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:isar/isar.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
@@ -19,7 +20,7 @@ import 'package:uuid/uuid.dart';
 class AddOrUpdateAlarmController extends GetxController
     with AlarmHandlerSetupModel {
   late UserModel? _userModel;
-  final alarmID = Uuid().v4();
+  var alarmID = Uuid().v4();
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
@@ -105,8 +106,6 @@ class AddOrUpdateAlarmController extends GetxController
     }
   }
 
-  T? _ambiguate<T>(T? value) => value;
-
   restartQRCodeController() {
     qrController = MobileScannerController(
       autoStart: true,
@@ -116,9 +115,85 @@ class AddOrUpdateAlarmController extends GetxController
     );
   }
 
+  updateAlarm(AlarmModel alarmData) async {
+    // Adding the ID's so it can update depending on the db
+    if (isSharedAlarmEnabled.value == true) {
+      // Making sure the alarm wasn't suddenly updated to be an online (shared) alarm
+      if (await IsarDb.doesAlarmExist(_alarmRecord!.alarmID) == false) {
+        alarmData.firestoreId = _alarmRecord!.firestoreId;
+        await FirestoreDb.updateAlarm(_userModel, alarmData);
+      } else {
+        // Deleting alarm on IsarDB to ensure no duplicate entry
+        await IsarDb.deleteAlarm(_alarmRecord!.isarId);
+        createAlarm(alarmData);
+      }
+    } else {
+      // Making sure the alarm wasn't suddenly updated to be an offline alarm
+      if (await IsarDb.doesAlarmExist(_alarmRecord!.alarmID) == true) {
+        alarmData.isarId = _alarmRecord!.isarId;
+        await IsarDb.updateAlarm(alarmData);
+      } else {
+        // Deleting alarm on firestore to ensure no duplicate entry
+        await FirestoreDb.deleteAlarm(_userModel, _alarmRecord!.firestoreId!);
+        createAlarm(alarmData);
+      }
+    }
+  }
+
   @override
   void onInit() async {
     super.onInit();
+
+    _alarmRecord = Get.arguments;
+
+    if (Get.arguments != null) {
+      // Reinitializing all values here
+      selectedTime.value = Utils.timeOfDayToDateTime(
+          Utils.stringToTimeOfDay(_alarmRecord!.alarmTime));
+      // Shows the "Rings in" time
+      timeToAlarm.value = Utils.timeUntilAlarm(
+          TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
+
+      repeatDays.value = _alarmRecord!.days;
+      // Shows the selected days in UI
+      daysRepeating.value = Utils.getRepeatDays(repeatDays);
+
+      // Setting the old values for all the auto dismissal
+      isActivityenabled.value = _alarmRecord!.isActivityEnabled;
+      activityInterval.value = _alarmRecord!.activityInterval ~/ 60000;
+
+      isLocationEnabled.value = _alarmRecord!.isLocationEnabled;
+      selectedPoint.value = Utils.stringToLatLng(_alarmRecord!.location);
+      // Shows the marker in UI
+      markersList.add(Marker(
+        point: selectedPoint.value,
+        builder: (ctx) => const Icon(
+          Icons.location_on,
+          size: 35,
+        ),
+      ));
+
+      isWeatherEnabled.value = _alarmRecord!.isWeatherEnabled;
+      weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
+
+      isMathsEnabled.value = _alarmRecord!.isMathsEnabled;
+      numMathsQuestions.value = _alarmRecord!.numMathsQuestions;
+      mathsDifficulty.value = Difficulty.values[_alarmRecord!.mathsDifficulty];
+      mathsSliderValue.value = _alarmRecord!.mathsDifficulty.toDouble();
+
+      isShakeEnabled.value = _alarmRecord!.isShakeEnabled;
+      shakeTimes.value = _alarmRecord!.shakeTimes;
+
+      isQrEnabled.value = _alarmRecord!.isQrEnabled;
+      qrValue.value = _alarmRecord!.qrValue;
+
+      alarmID = _alarmRecord!.alarmID;
+      ownerId = _alarmRecord!.ownerId;
+      ownerName = _alarmRecord!.ownerName;
+
+      isSharedAlarmEnabled.value = _alarmRecord!.isSharedAlarmEnabled;
+    }
+
     _userModel = await SecureStorageProvider().retrieveUserModel();
 
     if (_userModel != null) {
@@ -128,14 +203,6 @@ class AddOrUpdateAlarmController extends GetxController
 
     timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
-    _ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) async {
-      // You can get the previous ReceivePort without restarting the service.
-      if (await FlutterForegroundTask.isRunningService) {
-        final newReceivePort = FlutterForegroundTask.receivePort;
-        _alarmRecord = Utils.genFakeAlarmModel();
-        registerReceivePort(newReceivePort, _alarmRecord!);
-      }
-    });
 
     // Adding to markers list, to display on map (MarkersLayer takes only List<Marker>)
     selectedPoint.listen((point) {
@@ -152,6 +219,7 @@ class AddOrUpdateAlarmController extends GetxController
 
     // Updating UI to show time to alarm
     selectedTime.listen((time) {
+      print("CHANGED CHANGED CHANGED CHANGED");
       timeToAlarm.value =
           Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
     });
@@ -175,6 +243,8 @@ class AddOrUpdateAlarmController extends GetxController
         null) {
       weatherApiKeyExists.value = true;
     }
+
+    // If there's an argument sent, we are in update mode
   }
 
   @override
