@@ -268,6 +268,8 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+        ownerName: '',
+        ownerId: '',
         alarmID: '',
         activityInterval: 0,
         isMathsEnabled: false,
@@ -406,6 +408,15 @@ class Utils {
     if (alarmRecord.isMathsEnabled ||
         alarmRecord.isQrEnabled ||
         alarmRecord.isShakeEnabled) {
+      return true;
+    }
+    return false;
+  }
+
+  static bool isAutoDismissalEnabled(AlarmModel alarmRecord) {
+    if (alarmRecord.isWeatherEnabled ||
+        alarmRecord.isActivityEnabled ||
+        alarmRecord.isLocationEnabled) {
       return true;
     }
     return false;

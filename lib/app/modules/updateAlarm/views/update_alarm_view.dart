@@ -38,6 +38,8 @@ class UpdateAlarmView extends GetView<UpdateAlarmController> {
                 ),
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
+                      ownerName: '',
+                      ownerId: '',
                       alarmID: '',
                       activityInterval: 0,
                       isMathsEnabled: false,
