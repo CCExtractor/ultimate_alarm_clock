@@ -9,6 +9,9 @@ class FirestoreDb {
   static final FirebaseFirestore _firebaseFirestore =
       FirebaseFirestore.instance;
 
+  static final CollectionReference _usersCollection =
+      FirebaseFirestore.instance.collection('users');
+
   static CollectionReference _alarmsCollection(UserModel? user) {
     if (user == null) {
       // Hacky fix to prevent stream from not emitting
@@ -21,12 +24,30 @@ class FirestoreDb {
     }
   }
 
+  static Future<void> addUser(UserModel userModel) async {
+    final DocumentReference docRef = _usersCollection.doc(userModel.id);
+    await docRef.set(userModel.toJson());
+  }
+
   static addAlarm(UserModel? user, AlarmModel alarmRecord) async {
     if (user == null) return alarmRecord;
     await _alarmsCollection(user)
         .add(AlarmModel.toMap(alarmRecord))
         .then((value) => alarmRecord.firestoreId = value.id);
     return alarmRecord;
+  }
+
+  static Future<UserModel?> fetchUserDetails(String userId) async {
+    final DocumentSnapshot userSnapshot =
+        await _usersCollection.doc(userId).get();
+
+    if (userSnapshot.exists) {
+      final UserModel user =
+          UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>);
+      return user;
+    }
+
+    return null;
   }
 
   static Future<AlarmModel> getTriggeredAlarm(
