@@ -47,6 +47,15 @@ class IsarDb {
     return alarms.first;
   }
 
+  static Future<bool> doesAlarmExist(String alarmID) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final alarms =
+        await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
+
+    return alarms.isNotEmpty;
+  }
+
   static Future<AlarmModel> getLatestAlarm(
       AlarmModel alarmRecord, bool wantNextAlarm) async {
     int nowInMinutes = 0;
