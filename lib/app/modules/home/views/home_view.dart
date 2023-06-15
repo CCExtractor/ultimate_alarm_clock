@@ -37,7 +37,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                         onPressed: () {
                           controller.floatingButtonKey.currentState!.toggle();
-                          Get.toNamed('/add-alarm');
+                          Get.toNamed('/add-update-alarm');
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -152,7 +152,7 @@ class HomeView extends GetView<HomeController> {
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
-                      Get.toNamed('/add-alarm');
+                      Get.toNamed('/add-update-alarm');
                     },
                   )),
       ),
@@ -268,7 +268,7 @@ class HomeView extends GetView<HomeController> {
                                         // Main card
                                         return InkWell(
                                           onTap: () {
-                                            Get.toNamed('/update-alarm',
+                                            Get.toNamed('/add-update-alarm',
                                                 arguments: alarm);
                                           },
                                           child: Center(
