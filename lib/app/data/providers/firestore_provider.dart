@@ -50,6 +50,15 @@ class FirestoreDb {
     return null;
   }
 
+  static Future<bool> doesAlarmExist(UserModel? user, String alarmID) async {
+    QuerySnapshot snapshot = await _alarmsCollection(user)
+        .where('alarmID', isEqualTo: alarmID)
+        .limit(1)
+        .get();
+
+    return snapshot.docs.isNotEmpty;
+  }
+
   static Future<AlarmModel> getTriggeredAlarm(
       UserModel? user, String time) async {
     if (user == null) return Utils.genFakeAlarmModel();
