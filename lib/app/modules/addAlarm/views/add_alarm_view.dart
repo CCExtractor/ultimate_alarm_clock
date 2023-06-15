@@ -42,6 +42,8 @@ class AddAlarmView extends GetView<AddAlarmController> {
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
                       alarmID: controller.alarmID,
+                      ownerId: controller.ownerId,
+                      ownerName: controller.ownerName,
                       activityInterval:
                           controller.activityInterval.value * 60000,
                       days: controller.repeatDays.toList(),
