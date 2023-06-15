@@ -135,10 +135,14 @@ class FirestoreDb {
 
   static Stream<QuerySnapshot<Object?>> getAlarms(UserModel? user) {
     if (user != null) {
-      Stream<QuerySnapshot<Object?>> sharedAlarmsStream =
-          _alarmsCollection(user)
-              .where('sharedUserIds', arrayContains: user.id)
-              .snapshots();
+      Stream<QuerySnapshot<Object?>> sharedAlarmsStream = _firebaseFirestore
+          .collectionGroup('alarms')
+          .where('sharedUserIds', arrayContains: user.id)
+          .snapshots();
+      // Stream<QuerySnapshot<Object?>> sharedAlarmsStream =
+      //     _alarmsCollection(user)
+      //         .orderBy('minutesSinceMidnight', descending: false)
+      //         .snapshots();
       Stream<QuerySnapshot<Object?>> userAlarmsStream = _alarmsCollection(user)
           .orderBy('minutesSinceMidnight', descending: false)
           .snapshots();
@@ -152,5 +156,28 @@ class FirestoreDb {
 
   static deleteAlarm(UserModel? user, String id) async {
     await _alarmsCollection(user).doc(id).delete();
+  }
+
+  static Future<bool> addUserToAlarmSharedUsers(
+      UserModel? userModel, String alarmID) async {
+    String userModelId = userModel!.id;
+
+    final alarmQuerySnapshot = await _firebaseFirestore
+        .collectionGroup('alarms')
+        .where('alarmID', isEqualTo: alarmID)
+        .get();
+
+    if (alarmQuerySnapshot.size == 0) {
+      return false;
+    }
+    final alarmDoc = alarmQuerySnapshot.docs[0];
+    final sharedUserIds =
+        List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
+
+    if (!sharedUserIds.contains(userModelId)) {
+      sharedUserIds.add(userModelId);
+      await alarmDoc.reference.update({'sharedUserIds': sharedUserIds});
+    }
+    return true;
   }
 }
