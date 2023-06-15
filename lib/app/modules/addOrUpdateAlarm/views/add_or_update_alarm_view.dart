@@ -33,7 +33,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(kprimaryColor)),
                 child: Text(
-                  'Save',
+                  (Get.arguments == null) ? 'Save' : 'Update',
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
@@ -73,7 +73,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       shakeTimes: controller.shakeTimes.value);
 
                   try {
-                    await controller.createAlarm(alarmRecord);
+                    if (Get.arguments == null) {
+                      await controller.createAlarm(alarmRecord);
+                    } else {
+                      await controller.updateAlarm(alarmRecord);
+                    }
                   } catch (e) {
                     print(e);
                   }
