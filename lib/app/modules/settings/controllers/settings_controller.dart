@@ -22,13 +22,10 @@ class SettingsController extends GetxController {
   final RxBool didWeatherKeyError = false.obs;
   UserModel? userModel;
   @override
-  void onInit() async {
+  void onInit() {
+    userModel = homeController.userModel;
+    isUserLoggedIn.value = homeController.isUserSignedIn.value;
     super.onInit();
-
-    userModel = await SecureStorageProvider().retrieveUserModel();
-    if (userModel != null) {
-      isUserLoggedIn.value = true;
-    }
   }
 
   @override
@@ -39,6 +36,7 @@ class SettingsController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    homeController.isUserSignedIn.value = isUserLoggedIn.value;
     homeController.userModel = userModel;
   }
 
@@ -76,6 +74,7 @@ class SettingsController extends GetxController {
         );
         await SecureStorageProvider().storeUserModel(userModel!);
         isUserLoggedIn.value = true;
+
         return true;
       } else {
         // User canceled sign-in
@@ -92,6 +91,7 @@ class SettingsController extends GetxController {
     await _googleSignIn.signOut();
     await SecureStorageProvider().deleteUserModel();
     isUserLoggedIn.value = false;
+    homeController.isUserSignedIn.value = false;
     homeController.userModel = null;
   }
 
