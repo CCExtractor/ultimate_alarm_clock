@@ -30,6 +30,8 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
   final shakeTimes = 0.obs;
+  var ownerId = '';
+  var ownerName = '';
 
   AlarmModel? _alarmRecord;
 
@@ -117,6 +119,11 @@ class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
   void onInit() async {
     super.onInit();
     _userModel = await SecureStorageProvider().retrieveUserModel();
+
+    if (_userModel != null) {
+      ownerId = _userModel!.id;
+      ownerName = _userModel!.fullName;
+    }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
