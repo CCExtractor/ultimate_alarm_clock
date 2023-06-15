@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -17,10 +18,143 @@ class HomeView extends GetView<HomeController> {
     var width = Get.width;
     var height = Get.height;
     return Scaffold(
-      // backgroundColor: kprimaryBackgroundColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed('/add-alarm'),
-        child: Icon(Icons.add),
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: Obx(
+        () => Container(
+            child: (controller.isUserSignedIn.value)
+                ? ExpandableFab(
+                    key: controller.floatingButtonKey,
+                    initialOpen: false,
+                    type: ExpandableFabType.up,
+                    childrenOffset: Offset.zero,
+                    distance: 70,
+                    child: const Icon(Icons.add),
+                    children: [
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        onPressed: () {
+                          controller.floatingButtonKey.currentState!.toggle();
+                          Get.toNamed('/add-alarm');
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.add,
+                              color: ksecondaryTextColor,
+                            ),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Create alarm',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        onPressed: () {
+                          controller.floatingButtonKey.currentState!.toggle();
+                          Get.defaultDialog(
+                            title: "Join an alarm",
+                            titlePadding:
+                                const EdgeInsets.fromLTRB(0, 21, 0, 0),
+                            backgroundColor: ksecondaryBackgroundColor,
+                            titleStyle: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(color: kprimaryTextColor),
+                            contentPadding: const EdgeInsets.all(21),
+                            content: TextField(
+                              controller: controller.alarmIdController,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              cursorColor: kprimaryTextColor.withOpacity(0.75),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kprimaryTextColor
+                                              .withOpacity(0.75),
+                                          width: 1),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12))),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kprimaryTextColor
+                                              .withOpacity(0.75),
+                                          width: 1),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12))),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kprimaryTextColor
+                                              .withOpacity(0.75),
+                                          width: 1),
+                                      borderRadius:
+                                          const BorderRadius.all(Radius.circular(12))),
+                                  hintText: 'Enter Alarm ID',
+                                  hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: kprimaryDisabledTextColor)),
+                            ),
+                            buttonColor: ksecondaryBackgroundColor,
+                            confirm: TextButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(kprimaryColor)),
+                              child: Text(
+                                'Join',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(color: ksecondaryTextColor),
+                              ),
+                              onPressed: () {
+                                FirestoreDb.addUserToAlarmSharedUsers(
+                                    controller.userModel,
+                                    controller.alarmIdController.text);
+                                Get.back();
+                              },
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.alarm,
+                              color: ksecondaryTextColor,
+                            ),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Join alarm',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : ExpandableFab(
+                    initialOpen: false,
+                    child: const Icon(Icons.add),
+                    key: controller.floatingButtonKeyLoggedOut,
+                    children: [],
+                    onOpen: () {
+                      controller.floatingButtonKeyLoggedOut.currentState!
+                          .toggle();
+                      Get.toNamed('/add-alarm');
+                    },
+                  )),
       ),
       body: SafeArea(
           child: Column(
@@ -78,12 +212,17 @@ class HomeView extends GetView<HomeController> {
                           return StreamBuilder(
                               stream: controller.streamAlarms,
                               builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  print(snapshot.error);
+                                }
                                 if (!snapshot.hasData) {
+                                  print("WAITING FOR DATA");
                                   return const Center(
                                       child: CircularProgressIndicator(
                                     color: kprimaryColor,
                                   ));
                                 } else {
+                                  print("HAS DATA");
                                   final alarms = snapshot.data;
 
                                   if (alarms!.isEmpty) {
@@ -118,8 +257,7 @@ class HomeView extends GetView<HomeController> {
                                       itemBuilder: (context, index) {
                                         // Spacing after last card
                                         if (index == alarms.length) {
-                                          return SizedBox(
-                                              height: height * 0.02);
+                                          return SizedBox(height: height * 0.1);
                                         }
                                         final AlarmModel alarm = alarms[index];
                                         final time12 =
@@ -206,8 +344,11 @@ class HomeView extends GetView<HomeController> {
                                                                   ),
                                                                 ],
                                                               ),
-                                                              (Utils.isChallengeEnabled(
-                                                                      alarm))
+                                                              (Utils.isChallengeEnabled(alarm) ||
+                                                                      Utils.isAutoDismissalEnabled(
+                                                                          alarm) ||
+                                                                      alarm
+                                                                          .isSharedAlarmEnabled)
                                                                   ? Row(
                                                                       mainAxisAlignment:
                                                                           MainAxisAlignment
@@ -217,7 +358,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isSharedAlarmEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.share_arrival_time,
@@ -229,7 +370,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isLocationEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.location_pin,
@@ -241,7 +382,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isActivityEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.screen_lock_portrait,
@@ -253,7 +394,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isWeatherEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.sunny_snowing,
@@ -265,7 +406,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isQrEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.qr_code_scanner,
@@ -277,7 +418,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isShakeEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.vibration,
@@ -289,7 +430,7 @@ class HomeView extends GetView<HomeController> {
                                                                             .isMathsEnabled)
                                                                           Padding(
                                                                             padding:
-                                                                                EdgeInsets.symmetric(horizontal: 3.0),
+                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
                                                                             child:
                                                                                 Icon(
                                                                               Icons.calculate,
