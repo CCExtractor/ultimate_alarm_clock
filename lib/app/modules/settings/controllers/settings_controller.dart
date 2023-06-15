@@ -6,7 +6,6 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
-import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:weather/weather.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
@@ -108,6 +107,7 @@ class SettingsController extends GetxController {
   Future<bool> isApiKeyValid(String apiKey) async {
     final weather = WeatherFactory(apiKey);
     try {
+      // ignore: unused_local_variable
       final currentWeather = await weather.currentWeatherByLocation(
           currentPoint.value.latitude, currentPoint.value.longitude);
       return true;

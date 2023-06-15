@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
-import 'dart:math' as math;
 
 import '../controllers/alarm_challenge_controller.dart';
 
@@ -11,6 +10,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     var width = Get.width;
     var height = Get.height;
 

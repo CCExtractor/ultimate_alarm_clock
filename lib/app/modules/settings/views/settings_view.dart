@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/weather_api.dart';
-import 'package:ultimate_alarm_clock/app/utils/constants.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 

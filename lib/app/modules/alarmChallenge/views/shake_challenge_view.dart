@@ -10,6 +10,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     var width = Get.width;
     var height = Get.height;
 

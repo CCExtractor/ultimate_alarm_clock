@@ -205,11 +205,6 @@ class AlarmHandlerModel extends TaskHandler {
   }
 
   @override
-  void onButtonPressed(String id) {
-    print('onButtonPressed >> $id');
-  }
-
-  @override
   void onNotificationPressed() {
     FlutterForegroundTask.launchApp("/home");
     _sendPort?.send('onNotificationPressed');

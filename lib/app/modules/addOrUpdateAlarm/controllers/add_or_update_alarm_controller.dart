@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:isar/isar.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
