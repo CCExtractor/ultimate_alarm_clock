@@ -11,10 +11,10 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:flutter_map/flutter_map.dart';
-import '../controllers/add_alarm_controller.dart';
+import '../controllers/add_or_update_alarm_controller.dart';
 
-class AddAlarmView extends GetView<AddAlarmController> {
-  AddAlarmView({Key? key}) : super(key: key);
+class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
+  AddOrUpdateAlarmView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

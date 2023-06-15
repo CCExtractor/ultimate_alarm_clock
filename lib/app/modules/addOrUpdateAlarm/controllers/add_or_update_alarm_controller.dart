@@ -16,7 +16,8 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 
-class AddAlarmController extends GetxController with AlarmHandlerSetupModel {
+class AddOrUpdateAlarmController extends GetxController
+    with AlarmHandlerSetupModel {
   late UserModel? _userModel;
   final alarmID = Uuid().v4();
   var homeController = Get.find<HomeController>();

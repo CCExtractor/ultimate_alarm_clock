@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../modules/addAlarm/bindings/add_alarm_binding.dart';
-import '../modules/addAlarm/views/add_alarm_view.dart';
+import '../modules/addOrUpdateAlarm/bindings/add_or_update_alarm_binding.dart';
+import '../modules/addOrUpdateAlarm/views/add_or_update_alarm_view.dart';
 import '../modules/alarmChallenge/bindings/alarm_challenge_binding.dart';
 import '../modules/alarmChallenge/views/alarm_challenge_view.dart';
 import '../modules/alarmRing/bindings/alarm_ring_binding.dart';
@@ -29,9 +29,9 @@ class AppPages {
       binding: HomeBinding(),
     ),
     GetPage(
-      name: _Paths.ADD_ALARM,
-      page: () => AddAlarmView(),
-      binding: AddAlarmBinding(),
+      name: _Paths.ADD_OR_UPDATE_ALARM,
+      page: () => AddOrUpdateAlarmView(),
+      binding: AddOrUpdateAlarmBinding(),
     ),
     GetPage(
       name: _Paths.ALARM_RING,

@@ -4,7 +4,7 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
-  static const ADD_ALARM = _Paths.ADD_ALARM;
+  static const ADD_ALARM = _Paths.ADD_OR_UPDATE_ALARM;
   static const ALARM_RING = _Paths.ALARM_RING;
   static const ALARM_RING_IGNORE = _Paths.ALARM_RING_IGNORE;
   static const UPDATE_ALARM = _Paths.UPDATE_ALARM;
@@ -15,7 +15,7 @@ abstract class Routes {
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
-  static const ADD_ALARM = '/add-alarm';
+  static const ADD_OR_UPDATE_ALARM = '/add-update-alarm';
   static const ALARM_RING = '/alarm-ring';
   static const ALARM_RING_IGNORE = '/alarm-ring-ignore';
   static const UPDATE_ALARM = '/update-alarm';
