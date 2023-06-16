@@ -117,7 +117,7 @@ class HomeView extends GetView<HomeController> {
                               ),
                               onPressed: () {
                                 FirestoreDb.addUserToAlarmSharedUsers(
-                                    controller.userModel,
+                                    controller.userModel.value,
                                     controller.alarmIdController.text);
                                 Get.back();
                               },
@@ -206,374 +206,362 @@ class HomeView extends GetView<HomeController> {
                   child: GlowingOverscrollIndicator(
                     color: kprimaryDisabledTextColor,
                     axisDirection: AxisDirection.down,
-                    child: FutureBuilder(
-                        future: controller.initStream(),
-                        builder: (context, snapshot) {
-                          return StreamBuilder(
-                              stream: controller.streamAlarms,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  print(snapshot.error);
-                                }
-                                if (!snapshot.hasData) {
-                                  print("WAITING FOR DATA");
-                                  return const Center(
-                                      child: CircularProgressIndicator(
-                                    color: kprimaryColor,
-                                  ));
-                                } else {
-                                  print("HAS DATA");
-                                  final alarms = snapshot.data;
-
-                                  if (alarms!.isEmpty) {
-                                    return Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/images/empty.svg',
-                                            height: height * 0.3,
-                                            width: width * 0.8,
-                                          ),
-                                          Text(
-                                            'Add an alarm to get started!',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall!
-                                                .copyWith(
-                                                    color:
-                                                        kprimaryDisabledTextColor),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                    child: Obx(
+                      () => FutureBuilder(
+                          future:
+                              controller.initStream(controller.userModel.value),
+                          builder: (context, snapshot) {
+                            return StreamBuilder(
+                                stream: controller.streamAlarms,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    print(snapshot.error);
                                   }
-                                  return ListView.separated(
-                                      separatorBuilder: (context, _) {
-                                        return SizedBox(height: height * 0.02);
-                                      },
-                                      itemCount: alarms.length + 1,
-                                      itemBuilder: (context, index) {
-                                        // Spacing after last card
-                                        if (index == alarms.length) {
-                                          return SizedBox(height: height * 0.1);
-                                        }
-                                        final AlarmModel alarm = alarms[index];
-                                        final time12 =
-                                            Utils.convertTo12HourFormat(
-                                                alarm.alarmTime);
-                                        final repeatDays =
-                                            Utils.getRepeatDays(alarm.days);
-                                        // Main card
-                                        return InkWell(
-                                          onTap: () {
-                                            Get.toNamed('/add-update-alarm',
-                                                arguments: alarm);
-                                          },
-                                          child: Center(
-                                            child: Container(
-                                              width: width * 0.91,
-                                              height: height * 0.135,
-                                              decoration: const BoxDecoration(
-                                                  color:
-                                                      ksecondaryBackgroundColor,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(18))),
-                                              child: Center(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 25.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 3,
-                                                        child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                  repeatDays.replaceAll(
-                                                                      "Never",
-                                                                      "One Time"),
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodySmall!
-                                                                      .copyWith(
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          color: (alarm.isEnabled == true)
-                                                                              ? kprimaryColor
-                                                                              : kprimaryDisabledTextColor)),
-                                                              Row(
-                                                                children: [
-                                                                  Text(
-                                                                    time12[0],
+                                  if (!snapshot.hasData) {
+                                    print("WAITING FOR DATA");
+                                    return const Center(
+                                        child: CircularProgressIndicator(
+                                      color: kprimaryColor,
+                                    ));
+                                  } else {
+                                    print("HAS DATA");
+                                    final alarms = snapshot.data;
+
+                                    if (alarms!.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/images/empty.svg',
+                                              height: height * 0.3,
+                                              width: width * 0.8,
+                                            ),
+                                            Text(
+                                              'Add an alarm to get started!',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall!
+                                                  .copyWith(
+                                                      color:
+                                                          kprimaryDisabledTextColor),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                    return ListView.separated(
+                                        separatorBuilder: (context, _) {
+                                          return SizedBox(
+                                              height: height * 0.02);
+                                        },
+                                        itemCount: alarms.length + 1,
+                                        itemBuilder: (context, index) {
+                                          // Spacing after last card
+                                          if (index == alarms.length) {
+                                            return SizedBox(
+                                                height: height * 0.1);
+                                          }
+                                          final AlarmModel alarm =
+                                              alarms[index];
+                                          final time12 =
+                                              Utils.convertTo12HourFormat(
+                                                  alarm.alarmTime);
+                                          final repeatDays =
+                                              Utils.getRepeatDays(alarm.days);
+                                          // Main card
+                                          return InkWell(
+                                            onTap: () {
+                                              Get.toNamed('/add-update-alarm',
+                                                  arguments: alarm);
+                                            },
+                                            child: Center(
+                                              child: Container(
+                                                width: width * 0.91,
+                                                height: height * 0.135,
+                                                decoration: const BoxDecoration(
+                                                    color:
+                                                        ksecondaryBackgroundColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                18))),
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 25.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 3,
+                                                          child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                    repeatDays.replaceAll(
+                                                                        "Never",
+                                                                        "One Time"),
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
-                                                                        .displayLarge!
+                                                                        .bodySmall!
                                                                         .copyWith(
+                                                                            fontWeight: FontWeight
+                                                                                .w500,
                                                                             color: (alarm.isEnabled == true)
-                                                                                ? kprimaryTextColor
-                                                                                : kprimaryDisabledTextColor),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .symmetric(
-                                                                        horizontal:
-                                                                            3.0),
-                                                                    child: Text(
-                                                                      time12[1],
+                                                                                ? kprimaryColor
+                                                                                : kprimaryDisabledTextColor)),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      time12[0],
                                                                       style: Theme.of(
                                                                               context)
                                                                           .textTheme
-                                                                          .displayMedium!
+                                                                          .displayLarge!
                                                                           .copyWith(
                                                                               color: (alarm.isEnabled == true) ? kprimaryTextColor : kprimaryDisabledTextColor),
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              (Utils.isChallengeEnabled(alarm) ||
-                                                                      Utils.isAutoDismissalEnabled(
-                                                                          alarm) ||
-                                                                      alarm
-                                                                          .isSharedAlarmEnabled)
-                                                                  ? Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        if (alarm
-                                                                            .isSharedAlarmEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.share_arrival_time,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                        if (alarm
-                                                                            .isLocationEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.location_pin,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                        if (alarm
-                                                                            .isActivityEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.screen_lock_portrait,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                        if (alarm
-                                                                            .isWeatherEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.sunny_snowing,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                        if (alarm
-                                                                            .isQrEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.qr_code_scanner,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                        if (alarm
-                                                                            .isShakeEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.vibration,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                        if (alarm
-                                                                            .isMathsEnabled)
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.calculate,
-                                                                              size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
-                                                                            ),
-                                                                          ),
-                                                                      ],
-                                                                    )
-                                                                  : const SizedBox(),
-                                                            ]),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    10.0),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Expanded(
-                                                              flex: 0,
-                                                              child: Switch(
-                                                                  value: alarm
-                                                                      .isEnabled,
-                                                                  onChanged: (bool
-                                                                      value) async {
-                                                                    alarm.isEnabled =
-                                                                        value;
-
-                                                                    if (alarm
-                                                                            .isSharedAlarmEnabled ==
-                                                                        true) {
-                                                                      await FirestoreDb.updateAlarm(
-                                                                          controller
-                                                                              .userModel,
-                                                                          alarm);
-                                                                    } else {
-                                                                      await IsarDb
-                                                                          .updateAlarm(
-                                                                              alarm);
-                                                                    }
-                                                                    controller
-                                                                            .refreshTimer =
-                                                                        true;
-                                                                    controller
-                                                                        .refreshUpcomingAlarms();
-                                                                  }),
-                                                            ),
-                                                            Expanded(
-                                                              flex: 0,
-                                                              child:
-                                                                  PopupMenuButton(
-                                                                onSelected:
-                                                                    (value) async {
-                                                                  if (value ==
-                                                                      0) {
-                                                                    Get.back();
-                                                                    Get.offNamed(
-                                                                        '/alarm-ring',
-                                                                        arguments:
-                                                                            alarm);
-                                                                  } else if (value ==
-                                                                      1) {
-                                                                    print(alarm
-                                                                        .isSharedAlarmEnabled);
-
-                                                                    if (alarm
-                                                                            .isSharedAlarmEnabled ==
-                                                                        true) {
-                                                                      await FirestoreDb.deleteAlarm(
-                                                                          controller
-                                                                              .userModel,
-                                                                          alarm
-                                                                              .firestoreId!);
-                                                                    } else {
-                                                                      await IsarDb
-                                                                          .deleteAlarm(
-                                                                              alarm.isarId);
-                                                                    }
-
-                                                                    controller
-                                                                            .refreshTimer =
-                                                                        true;
-                                                                    controller
-                                                                        .refreshUpcomingAlarms();
-                                                                  }
-                                                                },
-                                                                color:
-                                                                    kprimaryBackgroundColor,
-                                                                icon: Icon(
-                                                                    Icons
-                                                                        .more_vert,
-                                                                    color: (alarm.isEnabled ==
-                                                                            true)
-                                                                        ? kprimaryTextColor
-                                                                        : kprimaryDisabledTextColor),
-                                                                itemBuilder:
-                                                                    (context) {
-                                                                  return [
-                                                                    PopupMenuItem<
-                                                                        int>(
-                                                                      value: 0,
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              3.0),
                                                                       child:
                                                                           Text(
-                                                                        "Preview Alarm",
+                                                                        time12[
+                                                                            1],
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .bodyMedium,
+                                                                            .displayMedium!
+                                                                            .copyWith(color: (alarm.isEnabled == true) ? kprimaryTextColor : kprimaryDisabledTextColor),
                                                                       ),
                                                                     ),
-                                                                    PopupMenuItem<
-                                                                        int>(
-                                                                      value: 1,
-                                                                      child:
-                                                                          Text(
-                                                                        "Delete Alarm",
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .bodyMedium,
-                                                                      ),
-                                                                    )
-                                                                  ];
-                                                                },
-                                                              ),
-                                                            )
-                                                          ],
+                                                                  ],
+                                                                ),
+                                                                (Utils.isChallengeEnabled(alarm) ||
+                                                                        Utils.isAutoDismissalEnabled(
+                                                                            alarm) ||
+                                                                        alarm
+                                                                            .isSharedAlarmEnabled)
+                                                                    ? Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        children: [
+                                                                          if (alarm
+                                                                              .isSharedAlarmEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.share_arrival_time,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isLocationEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.location_pin,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isActivityEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.screen_lock_portrait,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isWeatherEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.sunny_snowing,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isQrEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.qr_code_scanner,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isShakeEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.vibration,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isMathsEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.calculate,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                        ],
+                                                                      )
+                                                                    : const SizedBox(),
+                                                              ]),
                                                         ),
-                                                      ),
-                                                    ],
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10.0),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 0,
+                                                                child: Switch(
+                                                                    value: alarm
+                                                                        .isEnabled,
+                                                                    onChanged: (bool
+                                                                        value) async {
+                                                                      alarm.isEnabled =
+                                                                          value;
+
+                                                                      if (alarm
+                                                                              .isSharedAlarmEnabled ==
+                                                                          true) {
+                                                                        await FirestoreDb.updateAlarm(
+                                                                            alarm.ownerId,
+                                                                            alarm);
+                                                                      } else {
+                                                                        await IsarDb.updateAlarm(
+                                                                            alarm);
+                                                                      }
+                                                                      controller
+                                                                              .refreshTimer =
+                                                                          true;
+                                                                      controller
+                                                                          .refreshUpcomingAlarms();
+                                                                    }),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 0,
+                                                                child:
+                                                                    PopupMenuButton(
+                                                                  onSelected:
+                                                                      (value) async {
+                                                                    if (value ==
+                                                                        0) {
+                                                                      Get.back();
+                                                                      Get.offNamed(
+                                                                          '/alarm-ring',
+                                                                          arguments:
+                                                                              alarm);
+                                                                    } else if (value ==
+                                                                        1) {
+                                                                      print(alarm
+                                                                          .isSharedAlarmEnabled);
+
+                                                                      if (alarm
+                                                                              .isSharedAlarmEnabled ==
+                                                                          true) {
+                                                                        await FirestoreDb.deleteAlarm(
+                                                                            controller.userModel.value,
+                                                                            alarm.firestoreId!);
+                                                                      } else {
+                                                                        await IsarDb.deleteAlarm(
+                                                                            alarm.isarId);
+                                                                      }
+
+                                                                      controller
+                                                                              .refreshTimer =
+                                                                          true;
+                                                                      controller
+                                                                          .refreshUpcomingAlarms();
+                                                                    }
+                                                                  },
+                                                                  color:
+                                                                      kprimaryBackgroundColor,
+                                                                  icon: Icon(
+                                                                      Icons
+                                                                          .more_vert,
+                                                                      color: (alarm.isEnabled ==
+                                                                              true)
+                                                                          ? kprimaryTextColor
+                                                                          : kprimaryDisabledTextColor),
+                                                                  itemBuilder:
+                                                                      (context) {
+                                                                    return [
+                                                                      PopupMenuItem<
+                                                                          int>(
+                                                                        value:
+                                                                            0,
+                                                                        child:
+                                                                            Text(
+                                                                          "Preview Alarm",
+                                                                          style: Theme.of(context)
+                                                                              .textTheme
+                                                                              .bodyMedium,
+                                                                        ),
+                                                                      ),
+                                                                      PopupMenuItem<
+                                                                          int>(
+                                                                        value:
+                                                                            1,
+                                                                        child:
+                                                                            Text(
+                                                                          "Delete Alarm",
+                                                                          style: Theme.of(context)
+                                                                              .textTheme
+                                                                              .bodyMedium,
+                                                                        ),
+                                                                      )
+                                                                    ];
+                                                                  },
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      });
-                                }
-                              });
-                        }),
+                                          );
+                                        });
+                                  }
+                                });
+                          }),
+                    ),
                   ),
                 ),
               ],
