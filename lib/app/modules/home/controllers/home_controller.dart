@@ -29,7 +29,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  UserModel? userModel;
+  final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   final RxBool isUserSignedIn = false.obs;
   final floatingButtonKey = GlobalKey<ExpandableFabState>();
   final floatingButtonKeyLoggedOut = GlobalKey<ExpandableFabState>();
@@ -60,21 +60,21 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
         }
         String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
-        userModel = UserModel(
+        userModel.value = UserModel(
           id: googleSignInAccount.id,
           fullName: fullName,
           firstName: firstName,
           lastName: lastName,
           email: googleSignInAccount.email,
         );
-        await SecureStorageProvider().storeUserModel(userModel!);
+        await SecureStorageProvider().storeUserModel(userModel.value!);
         isUserSignedIn.value = true;
       }
     }
   }
 
-  initStream() async {
-    await loginWithGoogle();
+  initStream(UserModel? userModel) async {
+    if (!isUserSignedIn.value) await loginWithGoogle();
 
     firestoreStreamAlarms = FirestoreDb.getAlarms(userModel);
     isarStreamAlarms = IsarDb.getAlarms();
@@ -149,12 +149,16 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       return alarms;
     });
 
-    refreshUpcomingAlarms();
+    await refreshUpcomingAlarms();
   }
 
   @override
   void onInit() {
     super.onInit();
+
+    userModel.listen((p0) {
+      print("USERMODEL CHANGED $p0");
+    });
   }
 
   refreshUpcomingAlarms() async {
@@ -183,7 +187,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
           await IsarDb.getLatestAlarm(alarmRecord, true);
 
       AlarmModel firestoreLatestAlarm =
-          await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
+          await FirestoreDb.getLatestAlarm(userModel.value, alarmRecord, true);
       AlarmModel latestAlarm =
           Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
