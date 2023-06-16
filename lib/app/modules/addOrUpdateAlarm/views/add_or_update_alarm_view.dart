@@ -43,6 +43,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 ),
                 onPressed: () async {
                   AlarmModel alarmRecord = AlarmModel(
+                      lastEditedUserId: controller.lastEditedUserId,
+                      mutexLock: controller.mutexLock.value,
                       alarmID: controller.alarmID,
                       ownerId: controller.ownerId,
                       ownerName: controller.ownerName,
@@ -1718,179 +1720,189 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 )),
                     ),
                     Obx(
-                      () => (controller.alarmRecord != null &&
-                              controller.isSharedAlarmEnabled.value)
-                          ? const Divider(
-                              color: kprimaryDisabledTextColor,
-                            )
-                          : SizedBox(),
+                      () => Container(
+                        child: (controller.isSharedAlarmEnabled.value &&
+                                controller.alarmRecord != null)
+                            ? const Divider(
+                                color: kprimaryDisabledTextColor,
+                              )
+                            : SizedBox(),
+                      ),
                     ),
-                    Obx(() => (controller.alarmRecord != null &&
-                            controller.isSharedAlarmEnabled.value)
-                        ? (controller.alarmRecord!.ownerId !=
-                                controller.userModel!.id)
-                            ? ListTile(
-                                title: const Text(
-                                  'Alarm Owner',
-                                  style: TextStyle(color: kprimaryTextColor),
-                                ),
-                                trailing: Text(
-                                  controller.alarmRecord!.ownerName,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: kprimaryDisabledTextColor),
-                                ))
-                            : ListTile(
-                                title: const Text(
-                                  'Shared Users',
-                                  style: TextStyle(color: kprimaryTextColor),
-                                ),
-                                trailing: InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: kprimaryBackgroundColor,
-                                      builder: (BuildContext context) {
-                                        final userDetails =
-                                            RxList<UserModel?>([]);
+                    Obx(
+                      () => Container(
+                          child:
+                              (controller.isSharedAlarmEnabled.value &&
+                                      controller.alarmRecord != null)
+                                  ? (controller.alarmRecord!.ownerId !=
+                                          controller.userModel!.id)
+                                      ? ListTile(
+                                          title: const Text(
+                                            'Alarm Owner',
+                                            style: TextStyle(
+                                                color: kprimaryTextColor),
+                                          ),
+                                          trailing: Text(
+                                            controller.alarmRecord!.ownerName,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                    color:
+                                                        kprimaryDisabledTextColor),
+                                          ))
+                                      : ListTile(
+                                          title: const Text(
+                                            'Shared Users',
+                                            style: TextStyle(
+                                                color: kprimaryTextColor),
+                                          ),
+                                          trailing: InkWell(
+                                            onTap: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                backgroundColor:
+                                                    kprimaryBackgroundColor,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  final userDetails =
+                                                      RxList<UserModel?>([]);
 
-                                        return Obx(() {
-                                          if (controller
-                                              .sharedUserIds.isEmpty) {
-                                            return const Center(
-                                                child:
-                                                    Text("No shared users!"));
-                                          }
+                                                  return Obx(() {
+                                                    if (controller.sharedUserIds
+                                                        .isEmpty) {
+                                                      return const Center(
+                                                          child: Text(
+                                                              "No shared users!"));
+                                                    }
 
-                                          return FutureBuilder<
-                                              List<UserModel?>>(
-                                            future: controller
-                                                .fetchUserDetailsForSharedUsers(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<List<UserModel?>>
-                                                    snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return const Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    color: kprimaryColor,
-                                                  ),
-                                                );
-                                              }
-
-                                              userDetails.value =
-                                                  snapshot.data ?? [];
-
-                                              return Center(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Text(
-                                                        'Shared Users',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleMedium,
-                                                      ),
-                                                    ),
-                                                    for (UserModel? user
-                                                        in userDetails.value)
-                                                      Column(
-                                                        children: [
-                                                          ListTile(
-                                                            title: Text(
-                                                              user!.fullName,
-                                                              style: TextStyle(
-                                                                  color:
-                                                                      kprimaryTextColor),
+                                                    return FutureBuilder<
+                                                        List<UserModel?>>(
+                                                      future: controller
+                                                          .fetchUserDetailsForSharedUsers(),
+                                                      builder: (BuildContext
+                                                              context,
+                                                          AsyncSnapshot<
+                                                                  List<
+                                                                      UserModel?>>
+                                                              snapshot) {
+                                                        if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .waiting) {
+                                                          return const Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color:
+                                                                  kprimaryColor,
                                                             ),
-                                                            trailing:
-                                                                TextButton(
-                                                              style:
-                                                                  ButtonStyle(
-                                                                padding: MaterialStateProperty
-                                                                    .all(EdgeInsets
-                                                                        .zero),
-                                                                minimumSize:
-                                                                    MaterialStateProperty.all(
-                                                                        const Size(
-                                                                            80,
-                                                                            30)),
-                                                                maximumSize:
-                                                                    MaterialStateProperty.all(
-                                                                        const Size(
-                                                                            80,
-                                                                            30)),
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(Colors
-                                                                            .red),
+                                                          );
+                                                        }
+
+                                                        userDetails.value =
+                                                            snapshot.data ?? [];
+
+                                                        return Center(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: Text(
+                                                                  'Shared Users',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .titleMedium,
+                                                                ),
                                                               ),
-                                                              child: Text(
-                                                                'Remove',
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodyLarge!
-                                                                    .copyWith(
-                                                                      color: kprimaryTextColor
-                                                                          .withOpacity(
-                                                                              0.9),
+                                                              for (UserModel? user
+                                                                  in userDetails
+                                                                      .value)
+                                                                Column(
+                                                                  children: [
+                                                                    ListTile(
+                                                                      title:
+                                                                          Text(
+                                                                        user!
+                                                                            .fullName,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                kprimaryTextColor),
+                                                                      ),
+                                                                      trailing:
+                                                                          TextButton(
+                                                                        style:
+                                                                            ButtonStyle(
+                                                                          padding:
+                                                                              MaterialStateProperty.all(EdgeInsets.zero),
+                                                                          minimumSize: MaterialStateProperty.all(const Size(
+                                                                              80,
+                                                                              30)),
+                                                                          maximumSize: MaterialStateProperty.all(const Size(
+                                                                              80,
+                                                                              30)),
+                                                                          backgroundColor:
+                                                                              MaterialStateProperty.all(Colors.red),
+                                                                        ),
+                                                                        child:
+                                                                            Text(
+                                                                          'Remove',
+                                                                          style: Theme.of(context)
+                                                                              .textTheme
+                                                                              .bodyLarge!
+                                                                              .copyWith(
+                                                                                color: kprimaryTextColor.withOpacity(0.9),
+                                                                              ),
+                                                                        ),
+                                                                        onPressed:
+                                                                            () async {
+                                                                          await FirestoreDb.removeUserFromAlarmSharedUsers(
+                                                                              user,
+                                                                              controller.alarmID);
+                                                                          // Update sharedUserIds value after removing the user
+                                                                          controller
+                                                                              .sharedUserIds
+                                                                              .remove(user.id);
+
+                                                                          // Remove the user from userDetails list
+                                                                          userDetails
+                                                                              .value
+                                                                              .remove(user);
+
+                                                                          // Update the list
+                                                                          userDetails
+                                                                              .refresh();
+                                                                        },
+                                                                      ),
                                                                     ),
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                await FirestoreDb
-                                                                    .removeUserFromAlarmSharedUsers(
-                                                                        user,
-                                                                        controller
-                                                                            .alarmID);
-                                                                // Update sharedUserIds value after removing the user
-                                                                controller
-                                                                    .sharedUserIds
-                                                                    .remove(user
-                                                                        .id);
-
-                                                                // Remove the user from userDetails list
-                                                                userDetails
-                                                                    .value
-                                                                    .remove(
-                                                                        user);
-
-                                                                // Update the list
-                                                                userDetails
-                                                                    .refresh();
-                                                              },
-                                                            ),
+                                                                    const Divider(
+                                                                      color:
+                                                                          kprimaryDisabledTextColor,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                            ],
                                                           ),
-                                                          const Divider(
-                                                            color:
-                                                                kprimaryDisabledTextColor,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                  ],
-                                                ),
+                                                        );
+                                                      },
+                                                    );
+                                                  });
+                                                },
                                               );
                                             },
-                                          );
-                                        });
-                                      },
-                                    );
-                                  },
-                                  child: Icon(Icons.chevron_right,
-                                      color:
-                                          kprimaryTextColor.withOpacity(0.7)),
-                                ),
-                              )
-                        : const SizedBox()),
+                                            child: Icon(Icons.chevron_right,
+                                                color: kprimaryTextColor
+                                                    .withOpacity(0.7)),
+                                          ),
+                                        )
+                                  : const SizedBox()),
+                    ),
                   ],
                 ),
               ),
