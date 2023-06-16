@@ -33,6 +33,8 @@ class AlarmModel {
   List<String>? sharedUserIds;
   late String ownerId;
   late String ownerName;
+  late String lastEditedUserId;
+  late bool mutexLock;
 
   AlarmModel(
       {required this.alarmTime,
@@ -40,6 +42,8 @@ class AlarmModel {
       this.sharedUserIds = const [],
       required this.ownerId,
       required this.ownerName,
+      required this.lastEditedUserId,
+      required this.mutexLock,
       this.isEnabled = true,
       required this.days,
       required this.intervalToAlarm,
@@ -64,6 +68,8 @@ class AlarmModel {
     firestoreId = documentSnapshot.id;
     alarmID = documentSnapshot['alarmID'];
     sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
+    lastEditedUserId = documentSnapshot['lastEditedUserId'];
+    mutexLock = documentSnapshot['mutexLock'];
     ownerId = documentSnapshot['ownerId'];
     ownerName = documentSnapshot['ownerName'];
     days = List<bool>.from(documentSnapshot['days']);
@@ -91,6 +97,8 @@ class AlarmModel {
     firestoreId = alarmData['firestoreId'];
     alarmID = alarmData['alarmID'];
     sharedUserIds = alarmData['sharedUserIds'];
+    lastEditedUserId = alarmData['lastEditedUserId'];
+    mutexLock = alarmData['mutexLock'];
     ownerId = alarmData['ownerId'];
     ownerName = alarmData['ownerName'];
     alarmTime = alarmData['alarmTime'];
@@ -129,6 +137,8 @@ class AlarmModel {
       'firestoreId': alarmRecord.firestoreId,
       'alarmID': alarmRecord.alarmID,
       'ownerId': alarmRecord.ownerId,
+      'lastEditedUserId': alarmRecord.lastEditedUserId,
+      'mutexLock': alarmRecord.mutexLock,
       'ownerName': alarmRecord.ownerName,
       'sharedUserIds': alarmRecord.sharedUserIds,
       'days': alarmRecord.days,
