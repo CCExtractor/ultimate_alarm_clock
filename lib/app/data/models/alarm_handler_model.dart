@@ -146,8 +146,8 @@ class AlarmHandlerModel extends TaskHandler {
       }
       print("WATCH: ${_stopwatch!.elapsedMilliseconds}");
 
-      // Screen active for one minute?
-      if (_stopwatch!.elapsedMilliseconds >= 6000) {
+      // Screen active for more than activityInterval?
+      if (_stopwatch!.elapsedMilliseconds >= alarmRecord.activityInterval) {
         shouldAlarmRing = false;
       }
     }
