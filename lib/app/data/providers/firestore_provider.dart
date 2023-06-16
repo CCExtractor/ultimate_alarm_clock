@@ -145,9 +145,11 @@ class FirestoreDb {
     }
   }
 
-  static updateAlarm(UserModel? user, AlarmModel alarmRecord) async {
-    if (user == null) return alarmRecord;
-    await _alarmsCollection(user)
+  static updateAlarm(String? userId, AlarmModel alarmRecord) async {
+    await _firebaseFirestore
+        .collection('users')
+        .doc(userId)
+        .collection('alarms')
         .doc(alarmRecord.firestoreId)
         .update(AlarmModel.toMap(alarmRecord));
   }
