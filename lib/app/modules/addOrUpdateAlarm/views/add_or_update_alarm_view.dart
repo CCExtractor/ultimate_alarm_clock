@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -33,7 +35,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(kprimaryColor)),
                 child: Text(
-                  (Get.arguments == null) ? 'Save' : 'Update',
+                  (controller.alarmRecord == null) ? 'Save' : 'Update',
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
@@ -73,7 +75,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       shakeTimes: controller.shakeTimes.value);
 
                   try {
-                    if (Get.arguments == null) {
+                    if (controller.alarmRecord == null) {
                       await controller.createAlarm(alarmRecord);
                     } else {
                       await controller.updateAlarm(alarmRecord);
@@ -397,7 +399,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     children: [
                       Center(
                         child: Padding(
-                          padding: EdgeInsets.only(top: 10.0),
+                          padding: const EdgeInsets.only(top: 10.0),
                           child: Text('Auto Dismissal',
                               style: Theme.of(context)
                                   .textTheme
@@ -882,7 +884,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 : InkWell(
                                     onTap: () {
                                       Get.defaultDialog(
-                                          contentPadding: EdgeInsets.all(10.0),
+                                          contentPadding:
+                                              const EdgeInsets.all(10.0),
                                           titlePadding:
                                               const EdgeInsets.symmetric(
                                                   vertical: 20),
@@ -1155,7 +1158,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   children: [
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 10.0),
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: Text('Challenge',
                             style: Theme.of(context)
                                 .textTheme
@@ -1532,7 +1535,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   children: [
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 10.0),
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: Text('Shared Alarm',
                             style: Theme.of(context)
                                 .textTheme
@@ -1561,7 +1564,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : InkWell(
                                 onTap: () {
                                   Get.defaultDialog(
-                                      contentPadding: EdgeInsets.all(10.0),
+                                      contentPadding:
+                                          const EdgeInsets.all(10.0),
                                       titlePadding: const EdgeInsets.symmetric(
                                           vertical: 20),
                                       backgroundColor:
@@ -1654,7 +1658,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       backgroundColor: Colors.green,
                                       colorText: ksecondaryTextColor,
                                       maxWidth: width,
-                                      duration: Duration(seconds: 2),
+                                      duration: const Duration(seconds: 2),
                                     );
                                   },
                                   child: Icon(Icons.copy,
@@ -1675,10 +1679,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             .displaySmall,
                                         content: Column(
                                           children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: const Text(
+                                            const Padding(
+                                              padding: EdgeInsets.all(20.0),
+                                              child: Text(
                                                   "To copy Alarm ID you have enable shared alarm!"),
                                             ),
                                             Padding(
@@ -1714,6 +1717,180 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   ),
                                 )),
                     ),
+                    Obx(
+                      () => (controller.alarmRecord != null &&
+                              controller.isSharedAlarmEnabled.value)
+                          ? const Divider(
+                              color: kprimaryDisabledTextColor,
+                            )
+                          : SizedBox(),
+                    ),
+                    Obx(() => (controller.alarmRecord != null &&
+                            controller.isSharedAlarmEnabled.value)
+                        ? (controller.alarmRecord!.ownerId !=
+                                controller.userModel!.id)
+                            ? ListTile(
+                                title: const Text(
+                                  'Alarm Owner',
+                                  style: TextStyle(color: kprimaryTextColor),
+                                ),
+                                trailing: Text(
+                                  controller.alarmRecord!.ownerName,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: kprimaryDisabledTextColor),
+                                ))
+                            : ListTile(
+                                title: const Text(
+                                  'Shared Users',
+                                  style: TextStyle(color: kprimaryTextColor),
+                                ),
+                                trailing: InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: kprimaryBackgroundColor,
+                                      builder: (BuildContext context) {
+                                        final userDetails =
+                                            RxList<UserModel?>([]);
+
+                                        return Obx(() {
+                                          if (controller
+                                              .sharedUserIds.isEmpty) {
+                                            return const Center(
+                                                child:
+                                                    Text("No shared users!"));
+                                          }
+
+                                          return FutureBuilder<
+                                              List<UserModel?>>(
+                                            future: controller
+                                                .fetchUserDetailsForSharedUsers(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<List<UserModel?>>
+                                                    snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: kprimaryColor,
+                                                  ),
+                                                );
+                                              }
+
+                                              userDetails.value =
+                                                  snapshot.data ?? [];
+
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        'Shared Users',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleMedium,
+                                                      ),
+                                                    ),
+                                                    for (UserModel? user
+                                                        in userDetails.value)
+                                                      Column(
+                                                        children: [
+                                                          ListTile(
+                                                            title: Text(
+                                                              user!.fullName,
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      kprimaryTextColor),
+                                                            ),
+                                                            trailing:
+                                                                TextButton(
+                                                              style:
+                                                                  ButtonStyle(
+                                                                padding: MaterialStateProperty
+                                                                    .all(EdgeInsets
+                                                                        .zero),
+                                                                minimumSize:
+                                                                    MaterialStateProperty.all(
+                                                                        const Size(
+                                                                            80,
+                                                                            30)),
+                                                                maximumSize:
+                                                                    MaterialStateProperty.all(
+                                                                        const Size(
+                                                                            80,
+                                                                            30)),
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Colors
+                                                                            .red),
+                                                              ),
+                                                              child: Text(
+                                                                'Remove',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodyLarge!
+                                                                    .copyWith(
+                                                                      color: kprimaryTextColor
+                                                                          .withOpacity(
+                                                                              0.9),
+                                                                    ),
+                                                              ),
+                                                              onPressed:
+                                                                  () async {
+                                                                await FirestoreDb
+                                                                    .removeUserFromAlarmSharedUsers(
+                                                                        user,
+                                                                        controller
+                                                                            .alarmID);
+                                                                // Update sharedUserIds value after removing the user
+                                                                controller
+                                                                    .sharedUserIds
+                                                                    .remove(user
+                                                                        .id);
+
+                                                                // Remove the user from userDetails list
+                                                                userDetails
+                                                                    .value
+                                                                    .remove(
+                                                                        user);
+
+                                                                // Update the list
+                                                                userDetails
+                                                                    .refresh();
+                                                              },
+                                                            ),
+                                                          ),
+                                                          const Divider(
+                                                            color:
+                                                                kprimaryDisabledTextColor,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        });
+                                      },
+                                    );
+                                  },
+                                  child: Icon(Icons.chevron_right,
+                                      color:
+                                          kprimaryTextColor.withOpacity(0.7)),
+                                ),
+                              )
+                        : const SizedBox()),
                   ],
                 ),
               ),
