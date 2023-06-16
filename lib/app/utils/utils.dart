@@ -267,6 +267,8 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+        lastEditedUserId: '',
+        mutexLock: false,
         ownerName: '',
         ownerId: '',
         alarmID: '',
