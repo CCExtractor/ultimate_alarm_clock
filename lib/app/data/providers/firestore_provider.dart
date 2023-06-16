@@ -170,14 +170,12 @@ class FirestoreDb {
       Stream<QuerySnapshot<Object?>> sharedAlarmsStream = _firebaseFirestore
           .collectionGroup('alarms')
           .where('sharedUserIds', arrayContains: user.id)
-          .snapshots();
-      // Stream<QuerySnapshot<Object?>> sharedAlarmsStream =
-      //     _alarmsCollection(user)
-      //         .orderBy('minutesSinceMidnight', descending: false)
-      //         .snapshots();
+          .snapshots(includeMetadataChanges: true);
+
       Stream<QuerySnapshot<Object?>> userAlarmsStream = _alarmsCollection(user)
           .orderBy('minutesSinceMidnight', descending: false)
-          .snapshots();
+          .snapshots(includeMetadataChanges: true);
+
       return StreamGroup.merge([sharedAlarmsStream, userAlarmsStream]);
     } else {
       return _alarmsCollection(user)
