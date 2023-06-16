@@ -210,4 +210,29 @@ class FirestoreDb {
     }
     return true;
   }
+
+  static Future<List<String>> removeUserFromAlarmSharedUsers(
+      UserModel? userModel, String alarmID) async {
+    String userModelId = userModel!.id;
+
+    final alarmQuerySnapshot = await _firebaseFirestore
+        .collectionGroup('alarms')
+        .where('alarmID', isEqualTo: alarmID)
+        .get();
+
+    if (alarmQuerySnapshot.size == 0) {
+      return []; // Return an empty list if the alarm is not found
+    }
+
+    final alarmDoc = alarmQuerySnapshot.docs[0];
+    final sharedUserIds =
+        List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
+
+    if (sharedUserIds.contains(userModelId)) {
+      sharedUserIds.remove(userModelId); // Remove the userId from the list
+      await alarmDoc.reference.update({'sharedUserIds': sharedUserIds});
+    }
+
+    return sharedUserIds; // Return the updated sharedUserIds list
+  }
 }
