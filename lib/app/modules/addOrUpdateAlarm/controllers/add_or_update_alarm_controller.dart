@@ -31,6 +31,8 @@ class AddOrUpdateAlarmController extends GetxController
   final timeToAlarm = ''.obs;
   final shakeTimes = 0.obs;
   var ownerId = '';
+  final mutexLock = false.obs;
+  var lastEditedUserId = '';
   var ownerName = '';
   final sharedUserIds = [].obs;
   AlarmModel? alarmRecord = Get.arguments;
@@ -129,7 +131,7 @@ class AddOrUpdateAlarmController extends GetxController
       // Making sure the alarm wasn't suddenly updated to be an online (shared) alarm
       if (await IsarDb.doesAlarmExist(alarmRecord!.alarmID) == false) {
         alarmData.firestoreId = alarmRecord!.firestoreId;
-        await FirestoreDb.updateAlarm(userModel, alarmData);
+        await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmData);
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
         await IsarDb.deleteAlarm(alarmRecord!.isarId);
@@ -157,6 +159,7 @@ class AddOrUpdateAlarmController extends GetxController
     if (userModel != null) {
       ownerId = userModel!.id;
       ownerName = userModel!.fullName;
+      lastEditedUserId = userModel!.id;
     }
 
     if (Get.arguments != null) {
@@ -204,8 +207,17 @@ class AddOrUpdateAlarmController extends GetxController
       alarmID = alarmRecord!.alarmID;
       ownerId = alarmRecord!.ownerId;
       ownerName = alarmRecord!.ownerName;
+      mutexLock.value = alarmRecord!.mutexLock;
 
       isSharedAlarmEnabled.value = alarmRecord!.isSharedAlarmEnabled;
+      // Set lock only if its not locked
+      if (isSharedAlarmEnabled.value == true &&
+          alarmRecord!.mutexLock == false) {
+        alarmRecord!.mutexLock = true;
+        alarmRecord!.lastEditedUserId = userModel!.id;
+        await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmRecord!);
+        alarmRecord!.mutexLock = false;
+      }
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
@@ -260,9 +272,21 @@ class AddOrUpdateAlarmController extends GetxController
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     super.onClose();
     homeController.refreshTimer = true;
     homeController.refreshUpcomingAlarms();
+    if (Get.arguments == null) {
+      // Shared alarm was not suddenly enabled, so we can update doc on firestore
+      // We also make sure the doc was not already locked
+      // If it was suddenly enabled, it will be created newly anyway
+      if (isSharedAlarmEnabled.value == true &&
+          alarmRecord!.isSharedAlarmEnabled == true &&
+          alarmRecord!.mutexLock == false) {
+        alarmRecord!.mutexLock = false;
+        alarmRecord!.lastEditedUserId = userModel!.id;
+        await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmRecord!);
+      }
+    }
   }
 }
