@@ -39,7 +39,7 @@ flutter run
 
 ## Contributing
 
-Help is always appreciated, whether it comes in the form of feature requests or suggestions, code improvements, refactoring, or performance enhancements. The more is done, the better it gets. If you find any bug(s), consider opening an [issue] (https://github.com/CCExtractor/ultimate_alarm_clock/issues/new).
+Help is always appreciated, whether it comes in the form of feature requests or suggestions, code improvements, refactoring, or performance enhancements. The more is done, the better it gets. If you find any bug(s), consider opening an [issue](https://github.com/CCExtractor/ultimate_alarm_clock/issues/new).
 Please make sure you specify the commit type while opening pull requests:
 
 ```
