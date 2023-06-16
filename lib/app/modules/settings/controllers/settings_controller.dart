@@ -23,9 +23,10 @@ class SettingsController extends GetxController {
   UserModel? userModel;
   @override
   void onInit() {
-    userModel = homeController.userModel;
-    isUserLoggedIn.value = homeController.isUserSignedIn.value;
     super.onInit();
+
+    userModel = homeController.userModel.value;
+    isUserLoggedIn.value = homeController.isUserSignedIn.value;
   }
 
   @override
@@ -37,7 +38,7 @@ class SettingsController extends GetxController {
   void onClose() {
     super.onClose();
     homeController.isUserSignedIn.value = isUserLoggedIn.value;
-    homeController.userModel = userModel;
+    homeController.userModel.value = userModel;
   }
 
   // Logins user using GoogleSignIn
@@ -91,9 +92,8 @@ class SettingsController extends GetxController {
   Future<void> logoutGoogle() async {
     await _googleSignIn.signOut();
     await SecureStorageProvider().deleteUserModel();
+    userModel = null;
     isUserLoggedIn.value = false;
-    homeController.isUserSignedIn.value = false;
-    homeController.userModel = null;
   }
 
   addKey(ApiKeys key, String val) async {
