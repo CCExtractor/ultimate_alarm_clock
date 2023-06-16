@@ -17,7 +17,7 @@ import 'package:uuid/uuid.dart';
 
 class AddOrUpdateAlarmController extends GetxController
     with AlarmHandlerSetupModel {
-  late UserModel? _userModel;
+  late UserModel? userModel;
   var alarmID = Uuid().v4();
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
@@ -32,8 +32,8 @@ class AddOrUpdateAlarmController extends GetxController
   final shakeTimes = 0.obs;
   var ownerId = '';
   var ownerName = '';
-
-  AlarmModel? _alarmRecord;
+  final sharedUserIds = [].obs;
+  AlarmModel? alarmRecord = Get.arguments;
 
   var qrController = MobileScannerController(
     autoStart: false,
@@ -56,6 +56,16 @@ class AddOrUpdateAlarmController extends GetxController
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
+
+  Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
+    List<UserModel?> userDetails = [];
+
+    for (String userId in alarmRecord?.sharedUserIds ?? []) {
+      userDetails.add(await FirestoreDb.fetchUserDetails(userId));
+    }
+
+    return userDetails;
+  }
 
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
@@ -98,9 +108,9 @@ class AddOrUpdateAlarmController extends GetxController
 
   createAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
-      _alarmRecord = await FirestoreDb.addAlarm(_userModel, alarmData);
+      alarmRecord = await FirestoreDb.addAlarm(userModel, alarmData);
     } else {
-      _alarmRecord = await IsarDb.addAlarm(alarmData);
+      alarmRecord = await IsarDb.addAlarm(alarmData);
     }
   }
 
@@ -117,22 +127,22 @@ class AddOrUpdateAlarmController extends GetxController
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
       // Making sure the alarm wasn't suddenly updated to be an online (shared) alarm
-      if (await IsarDb.doesAlarmExist(_alarmRecord!.alarmID) == false) {
-        alarmData.firestoreId = _alarmRecord!.firestoreId;
-        await FirestoreDb.updateAlarm(_userModel, alarmData);
+      if (await IsarDb.doesAlarmExist(alarmRecord!.alarmID) == false) {
+        alarmData.firestoreId = alarmRecord!.firestoreId;
+        await FirestoreDb.updateAlarm(userModel, alarmData);
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
-        await IsarDb.deleteAlarm(_alarmRecord!.isarId);
+        await IsarDb.deleteAlarm(alarmRecord!.isarId);
         createAlarm(alarmData);
       }
     } else {
       // Making sure the alarm wasn't suddenly updated to be an offline alarm
-      if (await IsarDb.doesAlarmExist(_alarmRecord!.alarmID) == true) {
-        alarmData.isarId = _alarmRecord!.isarId;
+      if (await IsarDb.doesAlarmExist(alarmRecord!.alarmID) == true) {
+        alarmData.isarId = alarmRecord!.isarId;
         await IsarDb.updateAlarm(alarmData);
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
-        await FirestoreDb.deleteAlarm(_userModel, _alarmRecord!.firestoreId!);
+        await FirestoreDb.deleteAlarm(userModel, alarmRecord!.firestoreId!);
         createAlarm(alarmData);
       }
     }
@@ -142,26 +152,32 @@ class AddOrUpdateAlarmController extends GetxController
   void onInit() async {
     super.onInit();
 
-    _alarmRecord = Get.arguments;
+    userModel = homeController.userModel;
+
+    if (userModel != null) {
+      ownerId = userModel!.id;
+      ownerName = userModel!.fullName;
+    }
 
     if (Get.arguments != null) {
+      sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
-          Utils.stringToTimeOfDay(_alarmRecord!.alarmTime));
+          Utils.stringToTimeOfDay(alarmRecord!.alarmTime));
       // Shows the "Rings in" time
       timeToAlarm.value = Utils.timeUntilAlarm(
           TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
 
-      repeatDays.value = _alarmRecord!.days;
+      repeatDays.value = alarmRecord!.days;
       // Shows the selected days in UI
       daysRepeating.value = Utils.getRepeatDays(repeatDays);
 
       // Setting the old values for all the auto dismissal
-      isActivityenabled.value = _alarmRecord!.isActivityEnabled;
-      activityInterval.value = _alarmRecord!.activityInterval ~/ 60000;
+      isActivityenabled.value = alarmRecord!.isActivityEnabled;
+      activityInterval.value = alarmRecord!.activityInterval ~/ 60000;
 
-      isLocationEnabled.value = _alarmRecord!.isLocationEnabled;
-      selectedPoint.value = Utils.stringToLatLng(_alarmRecord!.location);
+      isLocationEnabled.value = alarmRecord!.isLocationEnabled;
+      selectedPoint.value = Utils.stringToLatLng(alarmRecord!.location);
       // Shows the marker in UI
       markersList.add(Marker(
         point: selectedPoint.value,
@@ -171,32 +187,25 @@ class AddOrUpdateAlarmController extends GetxController
         ),
       ));
 
-      isWeatherEnabled.value = _alarmRecord!.isWeatherEnabled;
+      isWeatherEnabled.value = alarmRecord!.isWeatherEnabled;
       weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
 
-      isMathsEnabled.value = _alarmRecord!.isMathsEnabled;
-      numMathsQuestions.value = _alarmRecord!.numMathsQuestions;
-      mathsDifficulty.value = Difficulty.values[_alarmRecord!.mathsDifficulty];
-      mathsSliderValue.value = _alarmRecord!.mathsDifficulty.toDouble();
+      isMathsEnabled.value = alarmRecord!.isMathsEnabled;
+      numMathsQuestions.value = alarmRecord!.numMathsQuestions;
+      mathsDifficulty.value = Difficulty.values[alarmRecord!.mathsDifficulty];
+      mathsSliderValue.value = alarmRecord!.mathsDifficulty.toDouble();
 
-      isShakeEnabled.value = _alarmRecord!.isShakeEnabled;
-      shakeTimes.value = _alarmRecord!.shakeTimes;
+      isShakeEnabled.value = alarmRecord!.isShakeEnabled;
+      shakeTimes.value = alarmRecord!.shakeTimes;
 
-      isQrEnabled.value = _alarmRecord!.isQrEnabled;
-      qrValue.value = _alarmRecord!.qrValue;
+      isQrEnabled.value = alarmRecord!.isQrEnabled;
+      qrValue.value = alarmRecord!.qrValue;
 
-      alarmID = _alarmRecord!.alarmID;
-      ownerId = _alarmRecord!.ownerId;
-      ownerName = _alarmRecord!.ownerName;
+      alarmID = alarmRecord!.alarmID;
+      ownerId = alarmRecord!.ownerId;
+      ownerName = alarmRecord!.ownerName;
 
-      isSharedAlarmEnabled.value = _alarmRecord!.isSharedAlarmEnabled;
-    }
-
-    _userModel = await SecureStorageProvider().retrieveUserModel();
-
-    if (_userModel != null) {
-      ownerId = _userModel!.id;
-      ownerName = _userModel!.fullName;
+      isSharedAlarmEnabled.value = alarmRecord!.isSharedAlarmEnabled;
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
