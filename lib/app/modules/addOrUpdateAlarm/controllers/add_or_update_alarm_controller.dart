@@ -154,8 +154,7 @@ class AddOrUpdateAlarmController extends GetxController
   void onInit() async {
     super.onInit();
 
-    userModel = homeController.userModel;
-
+    userModel = homeController.userModel.value;
     if (userModel != null) {
       ownerId = userModel!.id;
       ownerName = userModel!.fullName;
