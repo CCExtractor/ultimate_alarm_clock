@@ -575,6 +575,81 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                                 Obx(
                                   () => ListTile(
+                                      onTap: () {
+                                        Get.defaultDialog(
+                                            contentPadding:
+                                            const EdgeInsets
+                                                .all(10.0),
+                                            titlePadding:
+                                            const EdgeInsets
+                                                .symmetric(
+                                                vertical: 20),
+                                            backgroundColor:
+                                            ksecondaryBackgroundColor,
+                                            title: 'Disabled!',
+                                            titleStyle:
+                                            Theme.of(context)
+                                                .textTheme
+                                                .displaySmall,
+                                            content: Column(
+                                              children: [
+                                                const Text(
+                                                    "To use this feature, you have to add an OpenWeatherMap API key!"),
+                                                Padding(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .symmetric(
+                                                      vertical:
+                                                      10.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                    children: [
+                                                      TextButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                            MaterialStateProperty.all(kprimaryColor)),
+                                                        child: Text(
+                                                          'Go to settings',
+                                                          style: Theme.of(
+                                                              context)
+                                                              .textTheme
+                                                              .displaySmall!
+                                                              .copyWith(
+                                                              color: ksecondaryTextColor),
+                                                        ),
+                                                        onPressed:
+                                                            () {
+                                                          Get.back();
+                                                          Get.toNamed(
+                                                              '/settings');
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                            MaterialStateProperty.all(kprimaryTextColor.withOpacity(0.5))),
+                                                        child: Text(
+                                                          'Cancel',
+                                                          style: Theme.of(
+                                                              context)
+                                                              .textTheme
+                                                              .displaySmall!
+                                                              .copyWith(
+                                                              color: kprimaryTextColor),
+                                                        ),
+                                                        onPressed:
+                                                            () {
+                                                          Get.back();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ));
+                                      },
                                       tileColor: ksecondaryBackgroundColor,
                                       title: const Text('Enable Weather',
                                           style: TextStyle(
@@ -584,6 +659,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           (controller.weatherApiKeyExists
                                                       .value ==
                                                   true)
+
                                               ? InkWell(
                                                   onTap: () async {
                                                     await controller
@@ -897,81 +973,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       ]),
                                                 )
                                               : InkWell(
-                                                  onTap: () {
-                                                    Get.defaultDialog(
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .all(10.0),
-                                                        titlePadding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 20),
-                                                        backgroundColor:
-                                                            ksecondaryBackgroundColor,
-                                                        title: 'Disabled!',
-                                                        titleStyle:
-                                                            Theme.of(context)
-                                                                .textTheme
-                                                                .displaySmall,
-                                                        content: Column(
-                                                          children: [
-                                                            const Text(
-                                                                "To use this feature, you have to add an OpenWeatherMap API key!"),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          10.0),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  TextButton(
-                                                                    style: ButtonStyle(
-                                                                        backgroundColor:
-                                                                            MaterialStateProperty.all(kprimaryColor)),
-                                                                    child: Text(
-                                                                      'Go to settings',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .displaySmall!
-                                                                          .copyWith(
-                                                                              color: ksecondaryTextColor),
-                                                                    ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Get.back();
-                                                                      Get.toNamed(
-                                                                          '/settings');
-                                                                    },
-                                                                  ),
-                                                                  TextButton(
-                                                                    style: ButtonStyle(
-                                                                        backgroundColor:
-                                                                            MaterialStateProperty.all(kprimaryTextColor.withOpacity(0.5))),
-                                                                    child: Text(
-                                                                      'Cancel',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .displaySmall!
-                                                                          .copyWith(
-                                                                              color: kprimaryTextColor),
-                                                                    ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Get.back();
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ));
-                                                  },
+
                                                   child: Wrap(
                                                       crossAxisAlignment:
                                                           WrapCrossAlignment
@@ -991,6 +993,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   color: kprimaryDisabledTextColor,
                                 ),
                                 ListTile(
+
                                   title: const Text(
                                     'Location Based',
                                     style: TextStyle(color: kprimaryTextColor),
@@ -1522,6 +1525,80 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                               ),
                               ListTile(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                        contentPadding:
+                                        const EdgeInsets.all(10.0),
+                                        titlePadding:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        backgroundColor:
+                                        ksecondaryBackgroundColor,
+                                        title: 'Disabled!',
+                                        titleStyle: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall,
+                                        content: Column(
+                                          children: [
+                                            const Text(
+                                                "To use this feature, you have link your Google account!"),
+                                            Padding(
+                                              padding: const EdgeInsets
+                                                  .symmetric(
+                                                  vertical: 10.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
+                                                children: [
+                                                  TextButton(
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(
+                                                            kprimaryColor)),
+                                                    child: Text(
+                                                      'Go to settings',
+                                                      style: Theme.of(
+                                                          context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .copyWith(
+                                                          color:
+                                                          ksecondaryTextColor),
+                                                    ),
+                                                    onPressed: () {
+                                                      Get.back();
+                                                      Get.toNamed(
+                                                          '/settings');
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                        MaterialStateProperty.all(
+                                                            kprimaryTextColor
+                                                                .withOpacity(0.5))),
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: Theme.of(
+                                                          context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .copyWith(
+                                                          color:
+                                                          kprimaryTextColor),
+                                                    ),
+                                                    onPressed: () {
+                                                      Get.back();
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ));
+                                  },
                                   title: const Text(
                                     'Enable Shared Alarm',
                                     style: TextStyle(color: kprimaryTextColor),
@@ -1538,80 +1615,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           ),
                                         )
                                       : InkWell(
-                                          onTap: () {
-                                            Get.defaultDialog(
-                                                contentPadding:
-                                                    const EdgeInsets.all(10.0),
-                                                titlePadding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 20),
-                                                backgroundColor:
-                                                    ksecondaryBackgroundColor,
-                                                title: 'Disabled!',
-                                                titleStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .displaySmall,
-                                                content: Column(
-                                                  children: [
-                                                    const Text(
-                                                        "To use this feature, you have link your Google account!"),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 10.0),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(
-                                                                            kprimaryColor)),
-                                                            child: Text(
-                                                              'Go to settings',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          ksecondaryTextColor),
-                                                            ),
-                                                            onPressed: () {
-                                                              Get.back();
-                                                              Get.toNamed(
-                                                                  '/settings');
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all(
-                                                                        kprimaryTextColor
-                                                                            .withOpacity(0.5))),
-                                                            child: Text(
-                                                              'Cancel',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          kprimaryTextColor),
-                                                            ),
-                                                            onPressed: () {
-                                                              Get.back();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ));
-                                          },
+
                                           child: Icon(
                                             Icons.lock,
                                             color: kprimaryTextColor
