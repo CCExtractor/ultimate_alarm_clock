@@ -124,9 +124,11 @@ class FirestoreDb {
       }
 
       // If no latest alarm is found, use the first or last alarm depending on wantNextAlarm
-      latestAlarm ??= wantNextAlarm ? enabledAlarms.first : enabledAlarms.last;
-
-      return latestAlarm ?? alarmRecord;
+      if (latestAlarm == null) {
+        return wantNextAlarm ? enabledAlarms.first : enabledAlarms.last;
+      } else {
+        return latestAlarm;
+      }
     }
   }
 
