@@ -170,10 +170,6 @@ class AlarmHandlerModel extends TaskHandler {
         isNewAlarm == false) {
       // Ring only if necessary
       if (shouldAlarmRing == true) {
-        // One minute since screen was active!
-        if (isScreenActive == false) {
-          FlutterForegroundTask.wakeUpScreen();
-        }
         // Ringing alarm now!
         FlutterForegroundTask.launchApp('/alarm-ring');
         _sendPort?.send('alarmRingRoute');
