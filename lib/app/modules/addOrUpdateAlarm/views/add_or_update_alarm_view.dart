@@ -508,88 +508,68 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     .withOpacity(0.85))),
                                   ),
                                 ),
-                                ListTile(
-                                  title: const Text(
-                                    'Enable Activity',
-                                    style: TextStyle(color: kprimaryTextColor),
-                                  ),
-                                  trailing: InkWell(
-                                    child: Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Obx(
-                                            () => Text(
-                                              controller.activityInterval
-                                                          .value >
-                                                      0
-                                                  ? '${controller.activityInterval.value} min'
-                                                  : 'Off',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(
-                                                      color: (controller
-                                                                  .isActivityenabled
-                                                                  .value ==
-                                                              false)
-                                                          ? kprimaryDisabledTextColor
-                                                          : kprimaryTextColor),
+                                InkWell(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                      titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                      backgroundColor: ksecondaryBackgroundColor,
+                                      title: 'Timeout Duration',
+                                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                                      content: Obx(
+                                            () => Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            NumberPicker(
+                                              value: controller.activityInterval.value,
+                                              minValue: 0,
+                                              maxValue: 1440,
+                                              onChanged: (value) {
+                                                if (value > 0) {
+                                                  controller.isActivityenabled.value = true;
+                                                } else {
+                                                  controller.isActivityenabled.value = false;
+                                                }
+                                                controller.activityInterval.value = value;
+                                              },
+                                            ),
+                                            Text(
+                                              controller.activityInterval.value > 1 ? 'minutes' : 'minute',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    title: const Text(
+                                      'Enable Activity',
+                                      style: TextStyle(color: kprimaryTextColor),
+                                    ),
+                                    trailing: Wrap(
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      children: [
+                                        Obx(
+                                              () => Text(
+                                            controller.activityInterval.value > 0
+                                                ? '${controller.activityInterval.value} min'
+                                                : 'Off',
+                                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                              color: (controller.isActivityenabled.value == false)
+                                                  ? kprimaryDisabledTextColor
+                                                  : kprimaryTextColor,
                                             ),
                                           ),
-                                          const Icon(
-                                            Icons.chevron_right,
-                                            color: kprimaryDisabledTextColor,
-                                          )
-                                        ]),
-                                    onTap: () {
-                                      Get.defaultDialog(
-                                        titlePadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20),
-                                        backgroundColor:
-                                            ksecondaryBackgroundColor,
-                                        title: 'Timeout Duration',
-                                        titleStyle: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        content: Obx(
-                                          () => Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              NumberPicker(
-                                                  value: controller
-                                                      .activityInterval.value,
-                                                  minValue: 0,
-                                                  maxValue: 1440,
-                                                  onChanged: (value) {
-                                                    if (value > 0) {
-                                                      controller
-                                                          .isActivityenabled
-                                                          .value = true;
-                                                    } else {
-                                                      controller
-                                                          .isActivityenabled
-                                                          .value = false;
-                                                    }
-                                                    controller.activityInterval
-                                                        .value = value;
-                                                  }),
-                                              Text(controller.activityInterval
-                                                          .value >
-                                                      1
-                                                  ? 'minutes'
-                                                  : 'minute')
-                                            ],
-                                          ),
                                         ),
-                                      );
-                                    },
+                                        const Icon(
+                                          Icons.chevron_right,
+                                          color: kprimaryDisabledTextColor,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
+
                                 const Divider(
                                   color: kprimaryDisabledTextColor,
                                 ),
@@ -1229,417 +1209,292 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                               ),
                               ListTile(
-                                  title: const Text(
-                                    'Shake to dismiss',
-                                    style: TextStyle(color: kprimaryTextColor),
-                                  ),
-                                  trailing: InkWell(
-                                    child: Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Obx(
-                                            () => Text(
-                                              controller.shakeTimes.value > 0
-                                                  ? controller.shakeTimes
-                                                              .value >
-                                                          1
-                                                      ? '${controller.shakeTimes.value} times'
-                                                      : '${controller.shakeTimes.value} time'
-                                                  : 'Off',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(
-                                                      color: (controller
-                                                                  .isShakeEnabled
-                                                                  .value ==
-                                                              false)
-                                                          ? kprimaryDisabledTextColor
-                                                          : kprimaryTextColor),
-                                            ),
-                                          ),
-                                          const Icon(
-                                            Icons.chevron_right,
-                                            color: kprimaryDisabledTextColor,
-                                          )
-                                        ]),
-                                    onTap: () {
-                                      Get.defaultDialog(
-                                        titlePadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20),
-                                        backgroundColor:
-                                            ksecondaryBackgroundColor,
-                                        title: 'Number of shakes',
-                                        titleStyle: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        content: Obx(
+                                title: const Text(
+                                  'Shake to dismiss',
+                                  style: TextStyle(color: kprimaryTextColor),
+                                ),
+                                onTap: () {
+                                  Get.defaultDialog(
+                                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                    backgroundColor: ksecondaryBackgroundColor,
+                                    title: 'Number of shakes',
+                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                    content: Obx(
                                           () => Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              NumberPicker(
-                                                  value: controller
-                                                      .shakeTimes.value,
-                                                  minValue: 0,
-                                                  maxValue: 100,
-                                                  onChanged: (value) {
-                                                    if (value > 0) {
-                                                      controller.isShakeEnabled
-                                                          .value = true;
-                                                    } else {
-                                                      controller.isShakeEnabled
-                                                          .value = false;
-                                                    }
-                                                    controller.shakeTimes
-                                                        .value = value;
-                                                  }),
-                                              Text(controller.shakeTimes.value >
-                                                      1
-                                                  ? 'times'
-                                                  : 'time')
-                                            ],
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          NumberPicker(
+                                            value: controller.shakeTimes.value,
+                                            minValue: 0,
+                                            maxValue: 100,
+                                            onChanged: (value) {
+                                              if (value > 0) {
+                                                controller.isShakeEnabled.value = true;
+                                              } else {
+                                                controller.isShakeEnabled.value = false;
+                                              }
+                                              controller.shakeTimes.value = value;
+                                            },
+                                          ),
+                                          Text(controller.shakeTimes.value > 1 ? 'times' : 'time')
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                trailing: InkWell(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                            () => Text(
+                                          controller.shakeTimes.value > 0
+                                              ? controller.shakeTimes.value > 1
+                                              ? '${controller.shakeTimes.value} times'
+                                              : '${controller.shakeTimes.value} time'
+                                              : 'Off',
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                            color: (controller.isShakeEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
                                           ),
                                         ),
-                                      );
-                                    },
-                                  )),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: kprimaryDisabledTextColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                               const Divider(
                                 color: kprimaryDisabledTextColor,
                               ),
                               ListTile(
-                                  title: const Text('QR/Bar Code'),
-                                  trailing: InkWell(
-                                      child: Wrap(
-                                          crossAxisAlignment:
-                                              WrapCrossAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () => Text(
-                                                controller.isQrEnabled.value ==
-                                                        true
-                                                    ? 'Enabled'
-                                                    : 'Off',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(
-                                                        color: (controller
-                                                                    .isQrEnabled
-                                                                    .value ==
-                                                                false)
-                                                            ? kprimaryDisabledTextColor
-                                                            : kprimaryTextColor),
-                                              ),
+                                title: const Text('QR/Bar Code'),
+                                onTap: () {
+                                  controller.restartQRCodeController();
+                                  Get.defaultDialog(
+                                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                    backgroundColor: ksecondaryBackgroundColor,
+                                    title: 'Scan a QR/Bar Code',
+                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                    content: Obx(
+                                          () => Column(
+                                        children: [
+                                          controller.isQrEnabled.value == false
+                                              ? SizedBox(
+                                            height: 300,
+                                            width: 300,
+                                            child: MobileScanner(
+                                              controller: controller.qrController,
+                                              fit: BoxFit.cover,
+                                              onDetect: (capture) {
+                                                final List<Barcode> barcodes = capture.barcodes;
+                                                for (final barcode in barcodes) {
+                                                  controller.qrValue.value = barcode.rawValue.toString();
+                                                  print(barcode.rawValue.toString());
+                                                  controller.isQrEnabled.value = true;
+                                                }
+                                              },
                                             ),
-                                            const Icon(
-                                              Icons.chevron_right,
-                                              color: kprimaryDisabledTextColor,
-                                            )
-                                          ]),
-                                      onTap: () {
-                                        controller.restartQRCodeController();
-                                        Get.defaultDialog(
-                                          titlePadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 20),
-                                          backgroundColor:
-                                              ksecondaryBackgroundColor,
-                                          title: 'Scan a QR/Bar Code',
-                                          titleStyle: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall,
-                                          content: Obx(
-                                            () => Column(
+                                          )
+                                              : Padding(
+                                            padding: const EdgeInsets.only(bottom: 15.0),
+                                            child: Text(controller.qrValue.value),
+                                          ),
+                                          controller.isQrEnabled.value == true
+                                              ? Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                  MaterialStateProperty.all(kprimaryColor),
+                                                ),
+                                                child: Text(
+                                                  'Save',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(color: ksecondaryTextColor),
+                                                ),
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                              ),
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                  MaterialStateProperty.all(kprimaryColor),
+                                                ),
+                                                child: Text(
+                                                  'Retake',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(color: ksecondaryTextColor),
+                                                ),
+                                                onPressed: () async {
+                                                  controller.qrController.dispose();
+                                                  controller.restartQRCodeController();
+                                                  controller.isQrEnabled.value = false;
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                trailing: InkWell(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                            () => Text(
+                                          controller.isQrEnabled.value == true ? 'Enabled' : 'Off',
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                            color: (controller.isQrEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: kprimaryDisabledTextColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              const Divider(
+                                color: kprimaryDisabledTextColor,
+                              ),
+                              ListTile(
+                                title: const Text('Maths'),
+                                onTap: () {
+                                  controller.isMathsEnabled.value = true;
+                                  Get.defaultDialog(
+                                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                    backgroundColor: ksecondaryBackgroundColor,
+                                    title: 'Solve Maths questions',
+                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                    content: Obx(
+                                          () => Column(
+                                        children: [
+                                          Text(
+                                            Utils.getDifficultyLabel(controller.mathsDifficulty.value),
+                                            style: Theme.of(context).textTheme.displaySmall,
+                                          ),
+                                          Text(
+                                            Utils.generateMathProblem(controller.mathsDifficulty.value)[0],
+                                            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                              color: kprimaryTextColor.withOpacity(0.78),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                            child: Slider(
+                                              min: 0.0,
+                                              max: 2.0,
+                                              divisions: 2,
+                                              value: controller.mathsSliderValue.value,
+                                              onChanged: (newValue) {
+                                                controller.mathsSliderValue.value = newValue;
+                                                controller.mathsDifficulty.value = Utils.getDifficulty(newValue);
+                                              },
+                                            ),
+                                          ),
+                                          Obx(
+                                                () => Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
-                                                controller.isQrEnabled.value ==
-                                                        false
-                                                    ? SizedBox(
-                                                        height: 300,
-                                                        width: 300,
-                                                        child: MobileScanner(
-                                                          controller: controller
-                                                              .qrController,
-                                                          fit: BoxFit.cover,
-                                                          onDetect: (capture) {
-                                                            final List<Barcode>
-                                                                barcodes =
-                                                                capture
-                                                                    .barcodes;
-                                                            for (final barcode
-                                                                in barcodes) {
-                                                              controller.qrValue
-                                                                      .value =
-                                                                  barcode
-                                                                      .rawValue
-                                                                      .toString();
-                                                              print(barcode
-                                                                  .rawValue
-                                                                  .toString());
-                                                              controller
-                                                                  .isQrEnabled
-                                                                  .value = true;
-                                                            }
-                                                          },
-                                                        ),
-                                                      )
-                                                    : Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 15.0),
-                                                        child: Text(controller
-                                                            .qrValue.value),
-                                                      ),
-                                                controller.isQrEnabled.value ==
-                                                        true
-                                                    ? Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(
-                                                                            kprimaryColor)),
-                                                            child: Text(
-                                                              'Save',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          ksecondaryTextColor),
-                                                            ),
-                                                            onPressed: () {
-                                                              Get.back();
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(
-                                                                            kprimaryColor)),
-                                                            child: Text(
-                                                              'Retake',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          ksecondaryTextColor),
-                                                            ),
-                                                            onPressed:
-                                                                () async {
-                                                              controller
-                                                                  .qrController
-                                                                  .dispose();
-                                                              controller
-                                                                  .restartQRCodeController();
-                                                              controller
-                                                                  .isQrEnabled
-                                                                  .value = false;
-                                                            },
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : const SizedBox()
+                                                NumberPicker(
+                                                  value: controller.numMathsQuestions.value,
+                                                  minValue: 1,
+                                                  maxValue: 100,
+                                                  onChanged: (value) => controller.numMathsQuestions.value = value,
+                                                ),
+                                                Text(controller.numMathsQuestions.value > 1 ? 'questions' : 'question'),
                                               ],
                                             ),
                                           ),
-                                        );
-                                      })),
-                              const Divider(
-                                color: kprimaryDisabledTextColor,
-                              ),
-                              ListTile(
-                                  title: const Text('Maths'),
-                                  trailing: InkWell(
-                                      child: Wrap(
-                                          crossAxisAlignment:
-                                              WrapCrossAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () => Text(
-                                                controller.isMathsEnabled ==
-                                                        true
-                                                    ? Utils.getDifficultyLabel(
-                                                        controller
-                                                            .mathsDifficulty
-                                                            .value)
-                                                    : 'Off',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        color: (controller
-                                                                    .isMathsEnabled
-                                                                    .value ==
-                                                                false)
-                                                            ? kprimaryDisabledTextColor
-                                                            : kprimaryTextColor),
-                                              ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                                                  ),
+                                                  child: Text(
+                                                    'Save',
+                                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                      color: ksecondaryTextColor,
+                                                    ),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Get.back();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                                                  ),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                      color: ksecondaryTextColor,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    controller.isMathsEnabled.value = false;
+                                                    Get.back();
+                                                  },
+                                                ),
+                                              ],
                                             ),
-                                            const Icon(
-                                              Icons.chevron_right,
-                                              color: kprimaryDisabledTextColor,
-                                            )
-                                          ]),
-                                      onTap: () {
-                                        controller.isMathsEnabled.value = true;
-                                        Get.defaultDialog(
-                                            titlePadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 20),
-                                            backgroundColor:
-                                                ksecondaryBackgroundColor,
-                                            title: 'Solve Maths questions',
-                                            titleStyle: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall,
-                                            content: Obx(
-                                              () => Column(
-                                                children: [
-                                                  Text(
-                                                    Utils.getDifficultyLabel(
-                                                        controller
-                                                            .mathsDifficulty
-                                                            .value),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall,
-                                                  ),
-                                                  Text(
-                                                      Utils.generateMathProblem(
-                                                          controller
-                                                              .mathsDifficulty
-                                                              .value)[0],
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .displaySmall!
-                                                          .copyWith(
-                                                              color: kprimaryTextColor
-                                                                  .withOpacity(
-                                                                      0.78))),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 15.0),
-                                                    child: Slider(
-                                                        min: 0.0,
-                                                        max: 2.0,
-                                                        divisions: 2,
-                                                        value: controller
-                                                            .mathsSliderValue
-                                                            .value,
-                                                        onChanged: (newValue) {
-                                                          controller
-                                                              .mathsSliderValue
-                                                              .value = newValue;
-                                                          controller
-                                                                  .mathsDifficulty
-                                                                  .value =
-                                                              Utils
-                                                                  .getDifficulty(
-                                                                      newValue);
-                                                        }),
-                                                  ),
-                                                  Obx(
-                                                    () => Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        NumberPicker(
-                                                            value: controller
-                                                                .numMathsQuestions
-                                                                .value,
-                                                            minValue: 1,
-                                                            maxValue: 100,
-                                                            onChanged: (value) =>
-                                                                controller
-                                                                    .numMathsQuestions
-                                                                    .value = value),
-                                                        Text(controller
-                                                                    .numMathsQuestions
-                                                                    .value >
-                                                                1
-                                                            ? 'questions'
-                                                            : 'question')
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 10.0),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        TextButton(
-                                                          style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                          kprimaryColor)),
-                                                          child: Text(
-                                                            'Save',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .displaySmall!
-                                                                .copyWith(
-                                                                    color:
-                                                                        ksecondaryTextColor),
-                                                          ),
-                                                          onPressed: () async {
-                                                            Get.back();
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                          kprimaryColor)),
-                                                          child: Text(
-                                                            'Cancel',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .displaySmall!
-                                                                .copyWith(
-                                                                    color:
-                                                                        ksecondaryTextColor),
-                                                          ),
-                                                          onPressed: () {
-                                                            controller
-                                                                .isMathsEnabled
-                                                                .value = false;
-                                                            Get.back();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ));
-                                      })),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                trailing: InkWell(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                            () => Text(
+                                          controller.isMathsEnabled == true
+                                              ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                                              : 'Off',
+                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                            color: (controller.isMathsEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: kprimaryDisabledTextColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                             ],
                           ),
                         ),
