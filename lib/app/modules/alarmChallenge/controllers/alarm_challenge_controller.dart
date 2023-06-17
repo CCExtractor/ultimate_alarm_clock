@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shake/shake.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/views/home_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -28,6 +29,9 @@ class AlarmChallengeController extends GetxController {
   final RxString questionText = '0'.obs;
   final RxBool correctAnswer = false.obs;
   int mathsAnswer = 0;
+
+  bool isTimerEnabled = true;
+
   void onButtonPressed(String buttonText) {
     displayValue.value += buttonText;
   }
@@ -127,6 +131,10 @@ class AlarmChallengeController extends GetxController {
     final decrement = 0.000001;
 
     for (var i = totalIterations; i > 0; i--) {
+      if (!isTimerEnabled) {
+        print("THIS IS THE BUG");
+        break;
+      }
       if (progress.value <= 0.0) {
         Get.until((route) => route.settings.name == '/alarm-ring');
         break;
@@ -138,11 +146,12 @@ class AlarmChallengeController extends GetxController {
 
   restartTimer() {
     progress.value = 1.0; // Reset the progress to its initial value
-    _startTimer(); // Start the timer again
+    _startTimer(); // Start a new timer
   }
 
   isChallengesComplete() {
     if (!Utils.isChallengeEnabled(alarmRecord)) {
+      isTimerEnabled = false;
       Get.offAllNamed('/home');
     }
   }
