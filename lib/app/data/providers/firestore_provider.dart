@@ -77,21 +77,10 @@ class FirestoreDb {
   static Future<AlarmModel> getLatestAlarm(
       UserModel? user, AlarmModel alarmRecord, bool wantNextAlarm) async {
     if (user == null) return alarmRecord;
-    int nowInMinutes = 0;
-    if (wantNextAlarm == true) {
-      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
-    } else {
-      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
-    }
 
-    late List<AlarmModel> alarms;
-
-    // Get all enabled alarms
-    QuerySnapshot snapshot =
-        await _alarmsCollection(user).where('isEnabled', isEqualTo: true).get();
-    alarms = snapshot.docs.map((DocumentSnapshot document) {
+    // Get all alarms
+    QuerySnapshot snapshot = await getAlarms(user).first;
+    List<AlarmModel> alarms = snapshot.docs.map((DocumentSnapshot document) {
       return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
     }).toList();
 
@@ -99,49 +88,45 @@ class FirestoreDb {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
-      // Get the closest alarm to the current time
-      AlarmModel closestAlarm = alarms.reduce((a, b) {
-        int aTimeUntilNextAlarm = a.minutesSinceMidnight - nowInMinutes;
-        int bTimeUntilNextAlarm = b.minutesSinceMidnight - nowInMinutes;
+      // Get the current time in minutes
+      int nowInMinutes = Utils.timeOfDayToInt(TimeOfDay.now());
 
-        // Check if alarm repeats on any day
-        bool aRepeats = a.days.any((day) => day);
-        bool bRepeats = b.days.any((day) => day);
+      // Filter out disabled alarms
+      List<AlarmModel> enabledAlarms =
+          alarms.where((alarm) => alarm.isEnabled).toList();
 
-        // If alarm is one-time and has already passed, set time until next alarm to next day
-        if (!aRepeats && aTimeUntilNextAlarm < 0) {
-          aTimeUntilNextAlarm += Duration.minutesPerDay;
-        }
-        if (!bRepeats && bTimeUntilNextAlarm < 0) {
-          bTimeUntilNextAlarm += Duration.minutesPerDay;
-        }
+      if (enabledAlarms.isEmpty) {
+        alarmRecord.minutesSinceMidnight = -1;
+        return alarmRecord;
+      }
 
-        // If alarm repeats on any day, find the next upcoming day
-        if (aRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < a.days.length; i++) {
-            int dayIndex = (currentDay + i) % a.days.length;
-            if (a.days[dayIndex]) {
-              aTimeUntilNextAlarm += i * Duration.minutesPerDay;
-              break;
-            }
+      // Sort alarms by their time
+      enabledAlarms.sort(
+          (a, b) => a.minutesSinceMidnight.compareTo(b.minutesSinceMidnight));
+
+      // Find the latest alarm
+      AlarmModel? latestAlarm;
+
+      if (wantNextAlarm) {
+        for (var alarm in enabledAlarms) {
+          if (alarm.minutesSinceMidnight > nowInMinutes) {
+            latestAlarm = alarm;
+            break;
           }
         }
-
-        if (bRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < b.days.length; i++) {
-            int dayIndex = (currentDay + i) % b.days.length;
-            if (b.days[dayIndex]) {
-              bTimeUntilNextAlarm += i * Duration.minutesPerDay;
-              break;
-            }
+      } else {
+        for (var i = enabledAlarms.length - 1; i >= 0; i--) {
+          if (enabledAlarms[i].minutesSinceMidnight < nowInMinutes) {
+            latestAlarm = enabledAlarms[i];
+            break;
           }
         }
+      }
 
-        return aTimeUntilNextAlarm < bTimeUntilNextAlarm ? a : b;
-      });
-      return closestAlarm;
+      // If no latest alarm is found, use the first or last alarm depending on wantNextAlarm
+      latestAlarm ??= wantNextAlarm ? enabledAlarms.first : enabledAlarms.last;
+
+      return latestAlarm ?? alarmRecord;
     }
   }
 
