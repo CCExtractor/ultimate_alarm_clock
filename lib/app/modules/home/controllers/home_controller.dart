@@ -155,10 +155,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onInit() {
     super.onInit();
-
-    userModel.listen((p0) {
-      print("USERMODEL CHANGED $p0");
-    });
   }
 
   refreshUpcomingAlarms() async {
@@ -247,6 +243,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onClose() {
     super.onClose();
+
     delayToSchedule!.cancel();
   }
 }
