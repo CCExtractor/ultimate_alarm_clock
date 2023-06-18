@@ -91,7 +91,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           if (controller.alarmRecord == null) {
                             await controller.createAlarm(alarmRecord);
                           } else {
-                            await controller.updateAlarm(alarmRecord);
+                            AlarmModel updatedAlarmModel =
+                                controller.updatedAlarmModel();
+                            await controller.updateAlarm(updatedAlarmModel);
                           }
                         } catch (e) {
                           print(e);

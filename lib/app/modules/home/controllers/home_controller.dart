@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:rxdart/rxdart.dart' as rx;
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +17,12 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class HomeController extends GetxController with AlarmHandlerSetupModel {
   Stream<QuerySnapshot>? firestoreStreamAlarms;
+  Stream<QuerySnapshot>? sharedAlarmsStream;
   Stream? isarStreamAlarms;
   Stream? streamAlarms;
   List<AlarmModel> latestFirestoreAlarms = [];
   List<AlarmModel> latestIsarAlarms = [];
+  List<AlarmModel> latestSharedAlarms = [];
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
@@ -73,88 +75,97 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     }
   }
 
-  initStream(UserModel? userModel) async {
-    if (!isUserSignedIn.value) await loginWithGoogle();
-
-    firestoreStreamAlarms = FirestoreDb.getAlarms(userModel);
+  initStream(UserModel? user) async {
+    firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
     isarStreamAlarms = IsarDb.getAlarms();
+    sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
 
-    streamAlarms =
-        StreamGroup.merge([firestoreStreamAlarms!, isarStreamAlarms!])
-            .map((data) {
-      if (data is QuerySnapshot) {
-        List<DocumentSnapshot> firestoreDocuments = data.docs;
-        latestFirestoreAlarms = firestoreDocuments
-            .map((DocumentSnapshot doc) =>
-                AlarmModel.fromDocumentSnapshot(documentSnapshot: doc))
-            .toList();
-      } else {
-        latestIsarAlarms = data as List<AlarmModel>;
-      }
+    Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest3(
+      firestoreStreamAlarms!,
+      sharedAlarmsStream!,
+      isarStreamAlarms!,
+      (firestoreData, sharedData, isarData) {
+        List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
+        latestFirestoreAlarms = firestoreDocuments.map((doc) {
+          return AlarmModel.fromDocumentSnapshot(documentSnapshot: doc);
+        }).toList();
 
-      List<AlarmModel> alarms = [...latestFirestoreAlarms, ...latestIsarAlarms];
+        List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
+        latestSharedAlarms = sharedAlarmDocuments.map((doc) {
+          return AlarmModel.fromDocumentSnapshot(documentSnapshot: doc);
+        }).toList();
 
-      alarms.sort((a, b) {
-        // First sort by isEnabled
-        if (a.isEnabled != b.isEnabled) {
-          return a.isEnabled ? -1 : 1;
-        }
+        latestFirestoreAlarms += latestSharedAlarms;
+        latestIsarAlarms = isarData as List<AlarmModel>;
 
-        // Then sort by upcoming time
-        int aUpcomingTime = a.minutesSinceMidnight;
-        int bUpcomingTime = b.minutesSinceMidnight;
+        List<AlarmModel> alarms = [
+          ...latestFirestoreAlarms,
+          ...latestIsarAlarms
+        ];
 
-        // Check if alarm repeats on any day
-        bool aRepeats = a.days.any((day) => day);
-        bool bRepeats = b.days.any((day) => day);
+        alarms.sort((a, b) {
+          // First sort by isEnabled
+          if (a.isEnabled != b.isEnabled) {
+            return a.isEnabled ? -1 : 1;
+          }
 
-        // If alarm repeats on any day, find the next up+coming day
-        if (aRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < a.days.length; i++) {
-            int dayIndex = (currentDay + i) % a.days.length;
-            if (a.days[dayIndex]) {
-              aUpcomingTime += i * Duration.minutesPerDay;
-              break;
+          // Then sort by upcoming time
+          int aUpcomingTime = a.minutesSinceMidnight;
+          int bUpcomingTime = b.minutesSinceMidnight;
+
+          // Check if alarm repeats on any day
+          bool aRepeats = a.days.any((day) => day);
+          bool bRepeats = b.days.any((day) => day);
+
+          // If alarm repeats on any day, find the next up+coming day
+          if (aRepeats) {
+            int currentDay = DateTime.now().weekday - 1;
+            for (int i = 0; i < a.days.length; i++) {
+              int dayIndex = (currentDay + i) % a.days.length;
+              if (a.days[dayIndex]) {
+                aUpcomingTime += i * Duration.minutesPerDay;
+                break;
+              }
+            }
+          } else {
+            // If alarm is one-time and has already passed, set upcoming time to next day
+            if (aUpcomingTime <=
+                DateTime.now().hour * 60 + DateTime.now().minute) {
+              aUpcomingTime += Duration.minutesPerDay;
             }
           }
-        } else {
-          // If alarm is one-time and has already passed, set upcoming time to next day
-          if (aUpcomingTime <=
-              DateTime.now().hour * 60 + DateTime.now().minute) {
-            aUpcomingTime += Duration.minutesPerDay;
-          }
-        }
 
-        if (bRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < b.days.length; i++) {
-            int dayIndex = (currentDay + i) % b.days.length;
-            if (b.days[dayIndex]) {
-              bUpcomingTime += i * Duration.minutesPerDay;
-              break;
+          if (bRepeats) {
+            int currentDay = DateTime.now().weekday - 1;
+            for (int i = 0; i < b.days.length; i++) {
+              int dayIndex = (currentDay + i) % b.days.length;
+              if (b.days[dayIndex]) {
+                bUpcomingTime += i * Duration.minutesPerDay;
+                break;
+              }
+            }
+          } else {
+            // If alarm is one-time and has already passed, set upcoming time to next day
+            if (bUpcomingTime <=
+                DateTime.now().hour * 60 + DateTime.now().minute) {
+              bUpcomingTime += Duration.minutesPerDay;
             }
           }
-        } else {
-          // If alarm is one-time and has already passed, set upcoming time to next day
-          if (bUpcomingTime <=
-              DateTime.now().hour * 60 + DateTime.now().minute) {
-            bUpcomingTime += Duration.minutesPerDay;
-          }
-        }
 
-        return aUpcomingTime.compareTo(bUpcomingTime);
-      });
+          return aUpcomingTime.compareTo(bUpcomingTime);
+        });
 
-      return alarms;
-    });
+        return alarms;
+      },
+    );
 
-    await refreshUpcomingAlarms();
+    return streamAlarms;
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    if (!isUserSignedIn.value) await loginWithGoogle();
   }
 
   refreshUpcomingAlarms() async {
@@ -169,7 +180,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       return;
     }
 
-    delayToSchedule = Timer(const Duration(seconds: 1), () async {
+    delayToSchedule = Timer(const Duration(seconds: 2), () async {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
       // Cancel timer if we have to refresh
       if (refreshTimer == true && _timer.isActive) {
@@ -195,7 +206,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       alarmTime.value = "Rings in $timeToAlarm";
 
 // This function is necessary when alarms are deleted/enabled
-
       await scheduleNextAlarm(
           alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
 
