@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^6.1.11
   uuid: ^3.0.7
   flutter_expandable_fab: ^1.8.1
+  rxdart: ^0.27.7
   flutter:
     sdk: flutter
 
