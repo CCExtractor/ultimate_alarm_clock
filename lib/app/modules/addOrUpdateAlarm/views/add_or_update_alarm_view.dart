@@ -1524,97 +1524,29 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   .withOpacity(0.85))),
                                 ),
                               ),
-                              ListTile(
-                                  onTap: () {
-                                    Get.defaultDialog(
-                                        contentPadding:
-                                        const EdgeInsets.all(10.0),
-                                        titlePadding:
-                                        const EdgeInsets.symmetric(
-                                            vertical: 20),
-                                        backgroundColor:
-                                        ksecondaryBackgroundColor,
-                                        title: 'Disabled!',
-                                        titleStyle: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        content: Column(
-                                          children: [
-                                            const Text(
-                                                "To use this feature, you have link your Google account!"),
-                                            Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  vertical: 10.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceEvenly,
-                                                children: [
-                                                  TextButton(
-                                                    style: ButtonStyle(
-                                                        backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(
-                                                            kprimaryColor)),
-                                                    child: Text(
-                                                      'Go to settings',
-                                                      style: Theme.of(
-                                                          context)
-                                                          .textTheme
-                                                          .displaySmall!
-                                                          .copyWith(
-                                                          color:
-                                                          ksecondaryTextColor),
-                                                    ),
-                                                    onPressed: () {
-                                                      Get.back();
-                                                      Get.toNamed(
-                                                          '/settings');
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    style: ButtonStyle(
-                                                        backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            kprimaryTextColor
-                                                                .withOpacity(0.5))),
-                                                    child: Text(
-                                                      'Cancel',
-                                                      style: Theme.of(
-                                                          context)
-                                                          .textTheme
-                                                          .displaySmall!
-                                                          .copyWith(
-                                                          color:
-                                                          kprimaryTextColor),
-                                                    ),
-                                                    onPressed: () {
-                                                      Get.back();
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ));
-                                  },
+                              Container(
+                                child: (controller.userModel != null)
+                                ? ListTile(
                                   title: const Text(
                                     'Enable Shared Alarm',
                                     style: TextStyle(color: kprimaryTextColor),
                                   ),
-                                  trailing: (controller.userModel != null)
-                                      ? Obx(
-                                          () => Switch(
-                                            onChanged: (value) {
-                                              controller.isSharedAlarmEnabled
-                                                  .value = value;
-                                            },
-                                            value: controller
-                                                .isSharedAlarmEnabled.value,
-                                          ),
-                                        )
-                                      : InkWell(
+                                  onTap: () {
+                                    // Toggle the value of isSharedAlarmEnabled
+                                    controller.isSharedAlarmEnabled.value = !controller.isSharedAlarmEnabled.value;
+                                  },
+                                  trailing: Obx(
+                                        () => Switch(
+                                      onChanged: (value) {
+                                        // You can optionally add the onChanged callback here as well
+                                        controller.isSharedAlarmEnabled.value = value;
+                                      },
+                                      value: controller.isSharedAlarmEnabled.value,
+                                    ),
+                                  ),
+                                )
+
+                                  :ListTile(
                                     onTap: () {
                                       Get.defaultDialog(
                                           contentPadding:
@@ -1689,267 +1621,284 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             ],
                                           ));
                                     },
+                                    title: const Text(
+                                      'Enable Shared Alarm',
+                                      style: TextStyle(color: kprimaryTextColor),
+                                    ),
+                                    trailing:InkWell(
 
-                                          child: Icon(
-                                            Icons.lock,
-                                            color: kprimaryTextColor
-                                                .withOpacity(0.7),
-                                          ),
-                                        )),
+                                      child: Icon(
+                                        Icons.lock,
+                                        color: kprimaryTextColor
+                                            .withOpacity(0.7),
+                                      ),
+                                    )),
+                              ),
                               const Divider(
                                 color: kprimaryDisabledTextColor,
                               ),
                               Obx(
-                                () => ListTile(
-                                    title: const Text(
-                                      'Alarm ID',
-                                      style:
-                                          TextStyle(color: kprimaryTextColor),
-                                    ),
-                                    trailing: (controller
-                                                .isSharedAlarmEnabled.value ==
-                                            true)
-                                        ? InkWell(
-                                            onTap: () {
-                                              Clipboard.setData(ClipboardData(
-                                                  text: controller.alarmID));
-                                              Get.snackbar(
-                                                'Success!',
-                                                'Alarm ID has been copied!',
-                                                snackPosition:
-                                                    SnackPosition.BOTTOM,
-                                                backgroundColor: Colors.green,
-                                                colorText: ksecondaryTextColor,
-                                                maxWidth: width,
-                                                duration:
-                                                    const Duration(seconds: 2),
-                                              );
-                                            },
+                                    () => Container(
+                                      child: (controller
+                                          .isSharedAlarmEnabled.value ==
+                                          true)
+                                      ?ListTile(
+                                          onTap: () {
+                                            Clipboard.setData(ClipboardData(
+                                                text: controller.alarmID));
+                                            Get.snackbar(
+                                              'Success!',
+                                              'Alarm ID has been copied!',
+                                              snackPosition:
+                                              SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              colorText: ksecondaryTextColor,
+                                              maxWidth: width,
+                                              duration:
+                                              const Duration(seconds: 2),
+                                            );
+                                          },
+                                          title: const Text(
+                                            'Alarm ID',
+                                            style:
+                                            TextStyle(color: kprimaryTextColor),
+                                          ),
+                                          trailing:  InkWell(
+
                                             child: Icon(Icons.copy,
                                                 color: kprimaryTextColor
                                                     .withOpacity(0.7)),
                                           )
-                                        : InkWell(
-                                            onTap: () {
-                                              Get.defaultDialog(
-                                                  titlePadding: const EdgeInsets
-                                                      .symmetric(vertical: 20),
-                                                  backgroundColor:
-                                                      ksecondaryBackgroundColor,
-                                                  title: 'Disabled!',
-                                                  titleStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall,
-                                                  content: Column(
-                                                    children: [
-                                                      const Padding(
-                                                        padding: EdgeInsets.all(
-                                                            20.0),
+                                      )
+                                      : ListTile(
+                                          onTap: () {
+                                            Get.defaultDialog(
+                                                titlePadding: const EdgeInsets
+                                                    .symmetric(vertical: 20),
+                                                backgroundColor:
+                                                ksecondaryBackgroundColor,
+                                                title: 'Disabled!',
+                                                titleStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall,
+                                                content: Column(
+                                                  children: [
+                                                    const Padding(
+                                                      padding: EdgeInsets.all(
+                                                          20.0),
+                                                      child: Text(
+                                                          "To copy Alarm ID you have enable shared alarm!"),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 10.0),
+                                                      child: TextButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(
+                                                                kprimaryColor)),
                                                         child: Text(
-                                                            "To copy Alarm ID you have enable shared alarm!"),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 10.0),
-                                                        child: TextButton(
-                                                          style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                          kprimaryColor)),
-                                                          child: Text(
-                                                            'Okay',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .displaySmall!
-                                                                .copyWith(
-                                                                    color:
-                                                                        ksecondaryTextColor),
-                                                          ),
-                                                          onPressed: () {
-                                                            Get.back();
-                                                          },
+                                                          'Okay',
+                                                          style: Theme.of(
+                                                              context)
+                                                              .textTheme
+                                                              .displaySmall!
+                                                              .copyWith(
+                                                              color:
+                                                              ksecondaryTextColor),
                                                         ),
-                                                      )
-                                                    ],
-                                                  ));
-                                            },
+                                                        onPressed: () {
+                                                          Get.back();
+                                                        },
+                                                      ),
+                                                    )
+                                                  ],
+                                                ));
+                                          },
+                                          title: const Text(
+                                            'Alarm ID',
+                                            style:
+                                            TextStyle(color: kprimaryTextColor),
+                                          ),
+                                          trailing:  InkWell(
+
                                             child: Icon(
                                               Icons.lock,
                                               color: kprimaryTextColor
                                                   .withOpacity(0.7),
                                             ),
                                           )),
+                                    )
                               ),
                               Obx(
-                                () => Container(
+                                    () => Container(
                                   child:
-                                      (controller.isSharedAlarmEnabled.value &&
-                                              controller.alarmRecord != null)
-                                          ? const Divider(
-                                              color: kprimaryDisabledTextColor,
-                                            )
-                                          : SizedBox(),
+                                  (controller.isSharedAlarmEnabled.value &&
+                                      controller.alarmRecord != null)
+                                      ? const Divider(
+                                    color: kprimaryDisabledTextColor,
+                                  )
+                                      : SizedBox(),
                                 ),
                               ),
                               Obx(
-                                () => Container(
+                                    () => Container(
                                     child: (controller
-                                                .isSharedAlarmEnabled.value &&
-                                            controller.alarmRecord != null)
+                                        .isSharedAlarmEnabled.value &&
+                                        controller.alarmRecord != null)
                                         ? (controller.alarmRecord!.ownerId !=
-                                                controller.userModel!.id)
-                                            ? ListTile(
-                                                title: const Text(
-                                                  'Alarm Owner',
-                                                  style: TextStyle(
-                                                      color: kprimaryTextColor),
-                                                ),
-                                                trailing: Text(
-                                                  controller
-                                                      .alarmRecord!.ownerName,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .copyWith(
+                                        controller.userModel!.id)
+                                        ? ListTile(
+                                        title: const Text(
+                                          'Alarm Owner',
+                                          style: TextStyle(
+                                              color: kprimaryTextColor),
+                                        ),
+                                        trailing: Text(
+                                          controller
+                                              .alarmRecord!.ownerName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                              color:
+                                              kprimaryDisabledTextColor),
+                                        ))
+                                        : ListTile(
+                                      title: const Text(
+                                        'Shared Users',
+                                        style: TextStyle(
+                                            color: kprimaryTextColor),
+                                      ),
+                                      trailing: InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            backgroundColor:
+                                            kprimaryBackgroundColor,
+                                            builder: (BuildContext
+                                            context) {
+                                              final userDetails =
+                                              RxList<UserModel?>(
+                                                  []);
+
+                                              return Obx(() {
+                                                if (controller
+                                                    .sharedUserIds
+                                                    .isEmpty) {
+                                                  return const Center(
+                                                      child: Text(
+                                                          "No shared users!"));
+                                                }
+
+                                                return FutureBuilder<
+                                                    List<UserModel?>>(
+                                                  future: controller
+                                                      .fetchUserDetailsForSharedUsers(),
+                                                  builder: (BuildContext
+                                                  context,
+                                                      AsyncSnapshot<
+                                                          List<
+                                                              UserModel?>>
+                                                      snapshot) {
+                                                    if (snapshot
+                                                        .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const Center(
+                                                        child:
+                                                        CircularProgressIndicator(
                                                           color:
-                                                              kprimaryDisabledTextColor),
-                                                ))
-                                            : ListTile(
-                                                title: const Text(
-                                                  'Shared Users',
-                                                  style: TextStyle(
-                                                      color: kprimaryTextColor),
-                                                ),
-                                                trailing: InkWell(
-                                                  onTap: () {
-                                                    showModalBottomSheet(
-                                                      context: context,
-                                                      backgroundColor:
-                                                          kprimaryBackgroundColor,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        final userDetails =
-                                                            RxList<UserModel?>(
-                                                                []);
+                                                          kprimaryColor,
+                                                        ),
+                                                      );
+                                                    }
 
-                                                        return Obx(() {
-                                                          if (controller
-                                                              .sharedUserIds
-                                                              .isEmpty) {
-                                                            return const Center(
-                                                                child: Text(
-                                                                    "No shared users!"));
-                                                          }
+                                                    userDetails
+                                                        .value =
+                                                        snapshot.data ??
+                                                            [];
 
-                                                          return FutureBuilder<
-                                                              List<UserModel?>>(
-                                                            future: controller
-                                                                .fetchUserDetailsForSharedUsers(),
-                                                            builder: (BuildContext
-                                                                    context,
-                                                                AsyncSnapshot<
-                                                                        List<
-                                                                            UserModel?>>
-                                                                    snapshot) {
-                                                              if (snapshot
-                                                                      .connectionState ==
-                                                                  ConnectionState
-                                                                      .waiting) {
-                                                                return const Center(
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    color:
-                                                                        kprimaryColor,
+                                                    return Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                            const EdgeInsets.all(
+                                                                8.0),
+                                                            child:
+                                                            Text(
+                                                              'Shared Users',
+                                                              style: Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleMedium,
+                                                            ),
+                                                          ),
+                                                          for (UserModel? user
+                                                          in userDetails
+                                                              .value)
+                                                            Column(
+                                                              children: [
+                                                                ListTile(
+                                                                  title:
+                                                                  Text(
+                                                                    user!.fullName,
+                                                                    style: TextStyle(color: kprimaryTextColor),
                                                                   ),
-                                                                );
-                                                              }
-
-                                                              userDetails
-                                                                      .value =
-                                                                  snapshot.data ??
-                                                                      [];
-
-                                                              return Center(
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          Text(
-                                                                        'Shared Users',
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .titleMedium,
+                                                                  trailing:
+                                                                  TextButton(
+                                                                    style: ButtonStyle(
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                                                                      minimumSize: MaterialStateProperty.all(const Size(80, 30)),
+                                                                      maximumSize: MaterialStateProperty.all(const Size(80, 30)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                                                                    ),
+                                                                    child: Text(
+                                                                      'Remove',
+                                                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                                                        color: kprimaryTextColor.withOpacity(0.9),
                                                                       ),
                                                                     ),
-                                                                    for (UserModel? user
-                                                                        in userDetails
-                                                                            .value)
-                                                                      Column(
-                                                                        children: [
-                                                                          ListTile(
-                                                                            title:
-                                                                                Text(
-                                                                              user!.fullName,
-                                                                              style: TextStyle(color: kprimaryTextColor),
-                                                                            ),
-                                                                            trailing:
-                                                                                TextButton(
-                                                                              style: ButtonStyle(
-                                                                                padding: MaterialStateProperty.all(EdgeInsets.zero),
-                                                                                minimumSize: MaterialStateProperty.all(const Size(80, 30)),
-                                                                                maximumSize: MaterialStateProperty.all(const Size(80, 30)),
-                                                                                backgroundColor: MaterialStateProperty.all(Colors.red),
-                                                                              ),
-                                                                              child: Text(
-                                                                                'Remove',
-                                                                                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                                                                      color: kprimaryTextColor.withOpacity(0.9),
-                                                                                    ),
-                                                                              ),
-                                                                              onPressed: () async {
-                                                                                await FirestoreDb.removeUserFromAlarmSharedUsers(user, controller.alarmID);
-                                                                                // Update sharedUserIds value after removing the user
-                                                                                controller.sharedUserIds.remove(user.id);
+                                                                    onPressed: () async {
+                                                                      await FirestoreDb.removeUserFromAlarmSharedUsers(user, controller.alarmID);
+                                                                      // Update sharedUserIds value after removing the user
+                                                                      controller.sharedUserIds.remove(user.id);
 
-                                                                                // Remove the user from userDetails list
-                                                                                userDetails.value.remove(user);
+                                                                      // Remove the user from userDetails list
+                                                                      userDetails.value.remove(user);
 
-                                                                                // Update the list
-                                                                                userDetails.refresh();
-                                                                              },
-                                                                            ),
-                                                                          ),
-                                                                          const Divider(
-                                                                            color:
-                                                                                kprimaryDisabledTextColor,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                  ],
+                                                                      // Update the list
+                                                                      userDetails.refresh();
+                                                                    },
+                                                                  ),
                                                                 ),
-                                                              );
-                                                            },
-                                                          );
-                                                        });
-                                                      },
+                                                                const Divider(
+                                                                  color:
+                                                                  kprimaryDisabledTextColor,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                        ],
+                                                      ),
                                                     );
                                                   },
-                                                  child: Icon(
-                                                      Icons.chevron_right,
-                                                      color: kprimaryTextColor
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              )
+                                                );
+                                              });
+                                            },
+                                          );
+                                        },
+                                        child: Icon(
+                                            Icons.chevron_right,
+                                            color: kprimaryTextColor
+                                                .withOpacity(0.7)),
+                                      ),
+                                    )
                                         : const SizedBox()),
                               ),
                             ],
@@ -1959,7 +1908,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           height: height * 0.15,
                         )
                       ],
-                    )),
+              )),
     );
   }
 }
