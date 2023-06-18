@@ -34,7 +34,7 @@ class AddOrUpdateAlarmController extends GetxController
   final mutexLock = false.obs;
   var lastEditedUserId = '';
   var ownerName = '';
-  final sharedUserIds = [].obs;
+  final sharedUserIds = <String>[].obs;
   AlarmModel? alarmRecord = Get.arguments;
 
   var qrController = MobileScannerController(
@@ -216,6 +216,7 @@ class AddOrUpdateAlarmController extends GetxController
         alarmRecord!.lastEditedUserId = userModel!.id;
         await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmRecord!);
         alarmRecord!.mutexLock = false;
+        mutexLock.value = false;
       }
     }
 
@@ -273,8 +274,7 @@ class AddOrUpdateAlarmController extends GetxController
   @override
   void onClose() async {
     super.onClose();
-    homeController.refreshTimer = true;
-    homeController.refreshUpcomingAlarms();
+
     if (Get.arguments == null) {
       // Shared alarm was not suddenly enabled, so we can update doc on firestore
       // We also make sure the doc was not already locked
@@ -282,10 +282,43 @@ class AddOrUpdateAlarmController extends GetxController
       if (isSharedAlarmEnabled.value == true &&
           alarmRecord!.isSharedAlarmEnabled == true &&
           alarmRecord!.mutexLock == false) {
-        alarmRecord!.mutexLock = false;
-        alarmRecord!.lastEditedUserId = userModel!.id;
-        await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmRecord!);
+        AlarmModel updatedModel = updatedAlarmModel();
+        updatedModel.firestoreId = alarmRecord!.firestoreId;
+        await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
       }
     }
+  }
+
+  AlarmModel updatedAlarmModel() {
+    return AlarmModel(
+        sharedUserIds: sharedUserIds,
+        lastEditedUserId: lastEditedUserId,
+        mutexLock: mutexLock.value,
+        alarmID: alarmID,
+        ownerId: alarmRecord!.ownerId,
+        ownerName: ownerName,
+        activityInterval: activityInterval.value * 60000,
+        days: repeatDays.toList(),
+        alarmTime:
+            Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
+        intervalToAlarm:
+            Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value),
+        isActivityEnabled: isActivityenabled.value,
+        minutesSinceMidnight:
+            Utils.timeOfDayToInt(TimeOfDay.fromDateTime(selectedTime.value)),
+        isLocationEnabled: isLocationEnabled.value,
+        weatherTypes: Utils.getIntFromWeatherTypes(selectedWeather.toList()),
+        isWeatherEnabled: isWeatherEnabled.value,
+        location: Utils.geoPointToString(
+          Utils.latLngToGeoPoint(selectedPoint.value),
+        ),
+        isSharedAlarmEnabled: isSharedAlarmEnabled.value,
+        isQrEnabled: isQrEnabled.value,
+        qrValue: qrValue.value,
+        isMathsEnabled: isMathsEnabled.value,
+        numMathsQuestions: numMathsQuestions.value,
+        mathsDifficulty: mathsDifficulty.value.index,
+        isShakeEnabled: isShakeEnabled.value,
+        shakeTimes: shakeTimes.value);
   }
 }
