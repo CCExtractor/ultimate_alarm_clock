@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import 'package:isar/isar.dart';
+import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 part 'alarm_model.g.dart';
 
 @collection
@@ -35,6 +38,9 @@ class AlarmModel {
   late String ownerName;
   late String lastEditedUserId;
   late bool mutexLock;
+  String? mainAlarmTime;
+  @ignore
+  Map? offsetDetails;
 
   AlarmModel(
       {required this.alarmTime,
@@ -61,10 +67,25 @@ class AlarmModel {
       required this.shakeTimes,
       required this.isQrEnabled,
       required this.qrValue,
-      required this.activityInterval});
+      required this.activityInterval,
+      this.offsetDetails = const {},
+      required this.mainAlarmTime});
 
   AlarmModel.fromDocumentSnapshot(
-      {required DocumentSnapshot documentSnapshot}) {
+      {required DocumentSnapshot documentSnapshot, required UserModel? user}) {
+    // Making sure the alarms work with the offsets
+    isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
+    offsetDetails = documentSnapshot['offsetDetails'];
+
+    if (isSharedAlarmEnabled && user != null) {
+      mainAlarmTime = documentSnapshot['alarmTime'];
+      alarmTime = offsetDetails![user.id]['offsettedTime'];
+      minutesSinceMidnight = Utils.timeOfDayToInt(
+          Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']));
+    } else {
+      alarmTime = documentSnapshot['alarmTime'];
+      minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
+    }
     firestoreId = documentSnapshot.id;
     alarmID = documentSnapshot['alarmID'];
     sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
@@ -73,14 +94,12 @@ class AlarmModel {
     ownerId = documentSnapshot['ownerId'];
     ownerName = documentSnapshot['ownerName'];
     days = List<bool>.from(documentSnapshot['days']);
-    alarmTime = documentSnapshot['alarmTime'];
     isEnabled = documentSnapshot['isEnabled'];
     intervalToAlarm = documentSnapshot['intervalToAlarm'];
     isActivityEnabled = documentSnapshot['isActivityEnabled'];
     activityInterval = documentSnapshot['activityInterval'];
-    minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
+
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
-    isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
     isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
     weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
     location = documentSnapshot['location'];
@@ -94,6 +113,10 @@ class AlarmModel {
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
+    // Making sure the alarms work with the offsets
+    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
+    minutesSinceMidnight = alarmData['minutesSinceMidnight'];
+    alarmTime = alarmData['alarmTime'];
     firestoreId = alarmData['firestoreId'];
     alarmID = alarmData['alarmID'];
     sharedUserIds = alarmData['sharedUserIds'];
@@ -101,7 +124,6 @@ class AlarmModel {
     mutexLock = alarmData['mutexLock'];
     ownerId = alarmData['ownerId'];
     ownerName = alarmData['ownerName'];
-    alarmTime = alarmData['alarmTime'];
     days = alarmData['days'];
     isEnabled = alarmData['isEnabled'];
     intervalToAlarm = alarmData['intervalToAlarm'];
@@ -110,7 +132,6 @@ class AlarmModel {
     weatherTypes = alarmData['weatherTypes'];
 
     activityInterval = alarmData['activityInterval'];
-    minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     isLocationEnabled = alarmData['isLocationEnabled'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     location = alarmData['location'];
@@ -124,7 +145,7 @@ class AlarmModel {
     shakeTimes = alarmData['shakeTimes'];
   }
 
-  AlarmModel.fromJson(String alarmData) {
+  AlarmModel.fromJson(String alarmData, UserModel? user) {
     AlarmModel.fromMap(jsonDecode(alarmData));
   }
 
@@ -133,7 +154,7 @@ class AlarmModel {
   }
 
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
-    return {
+    final alarmMap = <String, dynamic>{
       'firestoreId': alarmRecord.firestoreId,
       'alarmID': alarmRecord.alarmID,
       'ownerId': alarmRecord.ownerId,
@@ -161,5 +182,11 @@ class AlarmModel {
       'isShakeEnabled': alarmRecord.isShakeEnabled,
       'shakeTimes': alarmRecord.shakeTimes,
     };
+
+    if (alarmRecord.isSharedAlarmEnabled) {
+      alarmMap['mainAlarmTime'] = alarmRecord.mainAlarmTime;
+      alarmMap['offsetDetails'] = alarmRecord.offsetDetails;
+    }
+    return alarmMap;
   }
 }
