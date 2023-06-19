@@ -531,701 +531,735 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     .withOpacity(0.85))),
                                   ),
                                 ),
-                                ListTile(
-                                  title: const Text(
-                                    'Enable Activity',
-                                    style: TextStyle(color: kprimaryTextColor),
-                                  ),
-                                  trailing: InkWell(
-                                    child: Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Obx(
-                                            () => Text(
-                                              controller.activityInterval
-                                                          .value >
-                                                      0
-                                                  ? '${controller.activityInterval.value} min'
-                                                  : 'Off',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(
-                                                      color: (controller
-                                                                  .isActivityenabled
-                                                                  .value ==
-                                                              false)
-                                                          ? kprimaryDisabledTextColor
-                                                          : kprimaryTextColor),
+                                InkWell(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                      titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                      backgroundColor: ksecondaryBackgroundColor,
+                                      title: 'Timeout Duration',
+                                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                                      content: Obx(
+                                            () => Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            NumberPicker(
+                                              value: controller.activityInterval.value,
+                                              minValue: 0,
+                                              maxValue: 1440,
+                                              onChanged: (value) {
+                                                if (value > 0) {
+                                                  controller.isActivityenabled.value = true;
+                                                } else {
+                                                  controller.isActivityenabled.value = false;
+                                                }
+                                                controller.activityInterval.value = value;
+                                              },
+                                            ),
+                                            Text(
+                                              controller.activityInterval.value > 1 ? 'minutes' : 'minute',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    title: const Text(
+                                      'Enable Activity',
+                                      style: TextStyle(color: kprimaryTextColor),
+                                    ),
+                                    trailing: Wrap(
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      children: [
+                                        Obx(
+                                              () => Text(
+                                            controller.activityInterval.value > 0
+                                                ? '${controller.activityInterval.value} min'
+                                                : 'Off',
+                                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                              color: (controller.isActivityenabled.value == false)
+                                                  ? kprimaryDisabledTextColor
+                                                  : kprimaryTextColor,
                                             ),
                                           ),
-                                          const Icon(
-                                            Icons.chevron_right,
-                                            color: kprimaryDisabledTextColor,
-                                          )
-                                        ]),
-                                    onTap: () {
-                                      Get.defaultDialog(
-                                        titlePadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20),
-                                        backgroundColor:
-                                            ksecondaryBackgroundColor,
-                                        title: 'Timeout Duration',
-                                        titleStyle: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        content: Obx(
-                                          () => Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              NumberPicker(
-                                                  value: controller
-                                                      .activityInterval.value,
-                                                  minValue: 0,
-                                                  maxValue: 1440,
-                                                  onChanged: (value) {
-                                                    if (value > 0) {
-                                                      controller
-                                                          .isActivityenabled
-                                                          .value = true;
-                                                    } else {
-                                                      controller
-                                                          .isActivityenabled
-                                                          .value = false;
-                                                    }
-                                                    controller.activityInterval
-                                                        .value = value;
-                                                  }),
-                                              Text(controller.activityInterval
-                                                          .value >
-                                                      1
-                                                  ? 'minutes'
-                                                  : 'minute')
-                                            ],
-                                          ),
                                         ),
-                                      );
-                                    },
+                                        const Icon(
+                                          Icons.chevron_right,
+                                          color: kprimaryDisabledTextColor,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
+
                                 const Divider(
                                   color: kprimaryDisabledTextColor,
                                 ),
                                 Obx(
-                                  () => ListTile(
+                                  () => Container(
+                                    child: (controller.weatherApiKeyExists.value ==
+                                        true)
+                                     ? ListTile(
+                                      onTap: () async {
+                                        await controller.getLocation();
+                                        Get.defaultDialog(
+                                            titlePadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 20),
+                                            backgroundColor:
+                                            ksecondaryBackgroundColor,
+                                            title: 'Select weather types',
+                                            titleStyle: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall,
+                                            content: Obx(
+                                                  () => Column(
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      if (controller
+                                                          .selectedWeather
+                                                          .contains(WeatherTypes
+                                                          .sunny)) {
+                                                        controller.selectedWeather
+                                                            .remove(WeatherTypes
+                                                            .sunny);
+                                                      } else {
+                                                        controller.selectedWeather
+                                                            .add(WeatherTypes
+                                                            .sunny);
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Checkbox(
+                                                                side: BorderSide(
+                                                                    width: 1.5,
+                                                                    color: kprimaryTextColor
+                                                                        .withOpacity(
+                                                                        0.5)),
+                                                                value: controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                    WeatherTypes
+                                                                        .sunny),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (controller
+                                                                      .selectedWeather
+                                                                      .contains(
+                                                                      WeatherTypes
+                                                                          .sunny)) {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .remove(WeatherTypes
+                                                                        .sunny);
+                                                                  } else {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .add(WeatherTypes
+                                                                        .sunny);
+                                                                  }
+                                                                }),
+                                                            Text(
+                                                              'Sunny',
+                                                              style: Theme.of(
+                                                                  context)
+                                                                  .textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontSize:
+                                                                  15),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      if (controller
+                                                          .selectedWeather
+                                                          .contains(WeatherTypes
+                                                          .cloudy)) {
+                                                        controller.selectedWeather
+                                                            .remove(WeatherTypes
+                                                            .cloudy);
+                                                      } else {
+                                                        controller.selectedWeather
+                                                            .add(WeatherTypes
+                                                            .cloudy);
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Checkbox(
+                                                                side: BorderSide(
+                                                                    width: 1.5,
+                                                                    color: kprimaryTextColor
+                                                                        .withOpacity(
+                                                                        0.5)),
+                                                                value: controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                    WeatherTypes
+                                                                        .cloudy),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (controller
+                                                                      .selectedWeather
+                                                                      .contains(
+                                                                      WeatherTypes
+                                                                          .cloudy)) {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .remove(WeatherTypes
+                                                                        .cloudy);
+                                                                  } else {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .add(WeatherTypes
+                                                                        .cloudy);
+                                                                  }
+                                                                }),
+                                                            Text(
+                                                              'Cloudy',
+                                                              style: Theme.of(
+                                                                  context)
+                                                                  .textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontSize:
+                                                                  15),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      if (controller
+                                                          .selectedWeather
+                                                          .contains(WeatherTypes
+                                                          .rainy)) {
+                                                        controller.selectedWeather
+                                                            .remove(WeatherTypes
+                                                            .rainy);
+                                                      } else {
+                                                        controller.selectedWeather
+                                                            .add(WeatherTypes
+                                                            .rainy);
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Checkbox(
+                                                                side: BorderSide(
+                                                                    width: 1.5,
+                                                                    color: kprimaryTextColor
+                                                                        .withOpacity(
+                                                                        0.5)),
+                                                                value: controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                    WeatherTypes
+                                                                        .rainy),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (controller
+                                                                      .selectedWeather
+                                                                      .contains(
+                                                                      WeatherTypes
+                                                                          .rainy)) {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .remove(WeatherTypes
+                                                                        .rainy);
+                                                                  } else {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .add(WeatherTypes
+                                                                        .rainy);
+                                                                  }
+                                                                }),
+                                                            Text(
+                                                              'Rainy',
+                                                              style: Theme.of(
+                                                                  context)
+                                                                  .textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontSize:
+                                                                  15),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      if (controller
+                                                          .selectedWeather
+                                                          .contains(WeatherTypes
+                                                          .windy)) {
+                                                        controller.selectedWeather
+                                                            .remove(WeatherTypes
+                                                            .windy);
+                                                      } else {
+                                                        controller.selectedWeather
+                                                            .add(WeatherTypes
+                                                            .windy);
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Checkbox(
+                                                                side: BorderSide(
+                                                                    width: 1.5,
+                                                                    color: kprimaryTextColor
+                                                                        .withOpacity(
+                                                                        0.5)),
+                                                                value: controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                    WeatherTypes
+                                                                        .windy),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (controller
+                                                                      .selectedWeather
+                                                                      .contains(
+                                                                      WeatherTypes
+                                                                          .windy)) {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .remove(WeatherTypes
+                                                                        .windy);
+                                                                  } else {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .add(WeatherTypes
+                                                                        .windy);
+                                                                  }
+                                                                }),
+                                                            Text(
+                                                              'Windy',
+                                                              style: Theme.of(
+                                                                  context)
+                                                                  .textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontSize:
+                                                                  15),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      if (controller
+                                                          .selectedWeather
+                                                          .contains(WeatherTypes
+                                                          .stormy)) {
+                                                        controller.selectedWeather
+                                                            .remove(WeatherTypes
+                                                            .stormy);
+                                                      } else {
+                                                        controller.selectedWeather
+                                                            .add(WeatherTypes
+                                                            .stormy);
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Checkbox(
+                                                                side: BorderSide(
+                                                                    width: 1.5,
+                                                                    color: kprimaryTextColor
+                                                                        .withOpacity(
+                                                                        0.5)),
+                                                                value: controller
+                                                                    .selectedWeather
+                                                                    .contains(
+                                                                    WeatherTypes
+                                                                        .stormy),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (controller
+                                                                      .selectedWeather
+                                                                      .contains(
+                                                                      WeatherTypes
+                                                                          .stormy)) {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .remove(WeatherTypes
+                                                                        .stormy);
+                                                                  } else {
+                                                                    controller
+                                                                        .selectedWeather
+                                                                        .add(WeatherTypes
+                                                                        .stormy);
+                                                                  }
+                                                                }),
+                                                            Text(
+                                                              'Stormy',
+                                                              style: Theme.of(
+                                                                  context)
+                                                                  .textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontSize:
+                                                                  15),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ));
+                                      },
                                       tileColor: ksecondaryBackgroundColor,
                                       title: const Text('Enable Weather',
                                           style: TextStyle(
                                               color: kprimaryTextColor,
                                               fontWeight: FontWeight.w500)),
-                                      trailing:
-                                          (controller.weatherApiKeyExists
-                                                      .value ==
-                                                  true)
-                                              ? InkWell(
-                                                  onTap: () async {
-                                                    await controller
-                                                        .getLocation();
-                                                    Get.defaultDialog(
-                                                        titlePadding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 20),
-                                                        backgroundColor:
-                                                            ksecondaryBackgroundColor,
-                                                        title:
-                                                            'Select weather types',
-                                                        titleStyle:
-                                                            Theme.of(context)
-                                                                .textTheme
-                                                                .displaySmall,
-                                                        content: Obx(
-                                                          () => Column(
-                                                            children: [
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  if (controller
-                                                                      .selectedWeather
-                                                                      .contains(
-                                                                          WeatherTypes
-                                                                              .sunny)) {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .remove(
-                                                                            WeatherTypes.sunny);
-                                                                  } else {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .add(WeatherTypes
-                                                                            .sunny);
-                                                                  }
-                                                                },
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          10.0),
-                                                                  child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Checkbox(
-                                                                            side:
-                                                                                BorderSide(width: 1.5, color: kprimaryTextColor.withOpacity(0.5)),
-                                                                            value: controller.selectedWeather.contains(WeatherTypes.sunny),
-                                                                            onChanged: (value) {
-                                                                              if (controller.selectedWeather.contains(WeatherTypes.sunny)) {
-                                                                                controller.selectedWeather.remove(WeatherTypes.sunny);
-                                                                              } else {
-                                                                                controller.selectedWeather.add(WeatherTypes.sunny);
-                                                                              }
-                                                                            }),
-                                                                        Text(
-                                                                          'Sunny',
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodySmall!
-                                                                              .copyWith(fontSize: 15),
-                                                                        ),
-                                                                      ]),
-                                                                ),
-                                                              ),
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  if (controller
-                                                                      .selectedWeather
-                                                                      .contains(
-                                                                          WeatherTypes
-                                                                              .cloudy)) {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .remove(
-                                                                            WeatherTypes.cloudy);
-                                                                  } else {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .add(WeatherTypes
-                                                                            .cloudy);
-                                                                  }
-                                                                },
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          10.0),
-                                                                  child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Checkbox(
-                                                                            side:
-                                                                                BorderSide(width: 1.5, color: kprimaryTextColor.withOpacity(0.5)),
-                                                                            value: controller.selectedWeather.contains(WeatherTypes.cloudy),
-                                                                            onChanged: (value) {
-                                                                              if (controller.selectedWeather.contains(WeatherTypes.cloudy)) {
-                                                                                controller.selectedWeather.remove(WeatherTypes.cloudy);
-                                                                              } else {
-                                                                                controller.selectedWeather.add(WeatherTypes.cloudy);
-                                                                              }
-                                                                            }),
-                                                                        Text(
-                                                                          'Cloudy',
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodySmall!
-                                                                              .copyWith(fontSize: 15),
-                                                                        ),
-                                                                      ]),
-                                                                ),
-                                                              ),
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  if (controller
-                                                                      .selectedWeather
-                                                                      .contains(
-                                                                          WeatherTypes
-                                                                              .rainy)) {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .remove(
-                                                                            WeatherTypes.rainy);
-                                                                  } else {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .add(WeatherTypes
-                                                                            .rainy);
-                                                                  }
-                                                                },
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          10.0),
-                                                                  child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Checkbox(
-                                                                            side:
-                                                                                BorderSide(width: 1.5, color: kprimaryTextColor.withOpacity(0.5)),
-                                                                            value: controller.selectedWeather.contains(WeatherTypes.rainy),
-                                                                            onChanged: (value) {
-                                                                              if (controller.selectedWeather.contains(WeatherTypes.rainy)) {
-                                                                                controller.selectedWeather.remove(WeatherTypes.rainy);
-                                                                              } else {
-                                                                                controller.selectedWeather.add(WeatherTypes.rainy);
-                                                                              }
-                                                                            }),
-                                                                        Text(
-                                                                          'Rainy',
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodySmall!
-                                                                              .copyWith(fontSize: 15),
-                                                                        ),
-                                                                      ]),
-                                                                ),
-                                                              ),
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  if (controller
-                                                                      .selectedWeather
-                                                                      .contains(
-                                                                          WeatherTypes
-                                                                              .windy)) {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .remove(
-                                                                            WeatherTypes.windy);
-                                                                  } else {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .add(WeatherTypes
-                                                                            .windy);
-                                                                  }
-                                                                },
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          10.0),
-                                                                  child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Checkbox(
-                                                                            side:
-                                                                                BorderSide(width: 1.5, color: kprimaryTextColor.withOpacity(0.5)),
-                                                                            value: controller.selectedWeather.contains(WeatherTypes.windy),
-                                                                            onChanged: (value) {
-                                                                              if (controller.selectedWeather.contains(WeatherTypes.windy)) {
-                                                                                controller.selectedWeather.remove(WeatherTypes.windy);
-                                                                              } else {
-                                                                                controller.selectedWeather.add(WeatherTypes.windy);
-                                                                              }
-                                                                            }),
-                                                                        Text(
-                                                                          'Windy',
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodySmall!
-                                                                              .copyWith(fontSize: 15),
-                                                                        ),
-                                                                      ]),
-                                                                ),
-                                                              ),
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  if (controller
-                                                                      .selectedWeather
-                                                                      .contains(
-                                                                          WeatherTypes
-                                                                              .stormy)) {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .remove(
-                                                                            WeatherTypes.stormy);
-                                                                  } else {
-                                                                    controller
-                                                                        .selectedWeather
-                                                                        .add(WeatherTypes
-                                                                            .stormy);
-                                                                  }
-                                                                },
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          10.0),
-                                                                  child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Checkbox(
-                                                                            side:
-                                                                                BorderSide(width: 1.5, color: kprimaryTextColor.withOpacity(0.5)),
-                                                                            value: controller.selectedWeather.contains(WeatherTypes.stormy),
-                                                                            onChanged: (value) {
-                                                                              if (controller.selectedWeather.contains(WeatherTypes.stormy)) {
-                                                                                controller.selectedWeather.remove(WeatherTypes.stormy);
-                                                                              } else {
-                                                                                controller.selectedWeather.add(WeatherTypes.stormy);
-                                                                              }
-                                                                            }),
-                                                                        Text(
-                                                                          'Stormy',
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodySmall!
-                                                                              .copyWith(fontSize: 15),
-                                                                        ),
-                                                                      ]),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ));
-                                                  },
-                                                  child: Wrap(
-                                                      crossAxisAlignment:
-                                                          WrapCrossAlignment
-                                                              .center,
+                                      trailing: InkWell(
+
+                                        child: Wrap(
+                                            crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                            children: [
+                                              Obx(
+                                                    () => Text(
+                                                  controller.weatherTypes.value,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                      color: (controller
+                                                          .isWeatherEnabled
+                                                          .value ==
+                                                          false)
+                                                          ? kprimaryDisabledTextColor
+                                                          : kprimaryTextColor),
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.chevron_right,
+                                                color: kprimaryDisabledTextColor,
+                                              )
+                                            ]),
+                                      ),
+                                  )
+                                        : ListTile(
+                                        onTap: () {
+                                          Get.defaultDialog(
+                                              contentPadding: EdgeInsets.all(10.0),
+                                              titlePadding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 20),
+                                              backgroundColor:
+                                              ksecondaryBackgroundColor,
+                                              title: 'Disabled!',
+                                              titleStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall,
+                                              content: Column(
+                                                children: [
+                                                  const Text(
+                                                      "To use this feature, you have to add an OpenWeatherMap API key!"),
+                                                  Padding(
+                                                    padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
                                                       children: [
-                                                        Obx(
-                                                          () => Text(
-                                                            controller
-                                                                .weatherTypes
-                                                                .value,
-                                                            style: Theme.of(
-                                                                    context)
+                                                        TextButton(
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(
+                                                                  kprimaryColor)),
+                                                          child: Text(
+                                                            'Go to settings',
+                                                            style: Theme.of(context)
                                                                 .textTheme
-                                                                .bodyMedium!
+                                                                .displaySmall!
                                                                 .copyWith(
-                                                                    color: (controller.isWeatherEnabled.value ==
-                                                                            false)
-                                                                        ? kprimaryDisabledTextColor
-                                                                        : kprimaryTextColor),
+                                                                color:
+                                                                ksecondaryTextColor),
                                                           ),
+                                                          onPressed: () {
+                                                            Get.back();
+                                                            Get.toNamed(
+                                                                '/settings');
+                                                          },
                                                         ),
-                                                        const Icon(
-                                                          Icons.chevron_right,
-                                                          color:
-                                                              kprimaryDisabledTextColor,
-                                                        )
-                                                      ]),
-                                                )
-                                              : InkWell(
-                                                  onTap: () {
-                                                    Get.defaultDialog(
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .all(10.0),
-                                                        titlePadding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 20),
-                                                        backgroundColor:
-                                                            ksecondaryBackgroundColor,
-                                                        title: 'Disabled!',
-                                                        titleStyle:
-                                                            Theme.of(context)
+                                                        TextButton(
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                              MaterialStateProperty.all(
+                                                                  kprimaryTextColor
+                                                                      .withOpacity(
+                                                                      0.5))),
+                                                          child: Text(
+                                                            'Cancel',
+                                                            style: Theme.of(context)
                                                                 .textTheme
-                                                                .displaySmall,
-                                                        content: Column(
-                                                          children: [
-                                                            const Text(
-                                                                "To use this feature, you have to add an OpenWeatherMap API key!"),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          10.0),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  TextButton(
-                                                                    style: ButtonStyle(
-                                                                        backgroundColor:
-                                                                            MaterialStateProperty.all(kprimaryColor)),
-                                                                    child: Text(
-                                                                      'Go to settings',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .displaySmall!
-                                                                          .copyWith(
-                                                                              color: ksecondaryTextColor),
-                                                                    ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Get.back();
-                                                                      Get.toNamed(
-                                                                          '/settings');
-                                                                    },
-                                                                  ),
-                                                                  TextButton(
-                                                                    style: ButtonStyle(
-                                                                        backgroundColor:
-                                                                            MaterialStateProperty.all(kprimaryTextColor.withOpacity(0.5))),
-                                                                    child: Text(
-                                                                      'Cancel',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .displaySmall!
-                                                                          .copyWith(
-                                                                              color: kprimaryTextColor),
-                                                                    ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Get.back();
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ));
-                                                  },
-                                                  child: Wrap(
-                                                      crossAxisAlignment:
-                                                          WrapCrossAlignment
-                                                              .start,
-                                                      children: [
-                                                        Icon(
-                                                          Icons.lock,
-                                                          color:
-                                                              kprimaryTextColor
-                                                                  .withOpacity(
-                                                                      0.7),
-                                                        )
-                                                      ]),
-                                                )),
-                                ),
+                                                                .displaySmall!
+                                                                .copyWith(
+                                                                color:
+                                                                kprimaryTextColor),
+                                                          ),
+                                                          onPressed: () {
+                                                            Get.back();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ));
+                                        },
+                                        tileColor: ksecondaryBackgroundColor,
+                                        title: const Text('Enable Weather',
+                                            style: TextStyle(
+                                                color: kprimaryTextColor,
+                                                fontWeight: FontWeight.w500)),
+                                        trailing: InkWell(
+
+                                          child: Wrap(
+                                              crossAxisAlignment:
+                                              WrapCrossAlignment.start,
+                                              children: [
+                                                Icon(
+                                                  Icons.lock,
+                                                  color: kprimaryTextColor
+                                                      .withOpacity(0.7),
+                                                )
+                                              ]),
+                                        )),
+                                ),),
                                 const Divider(
                                   color: kprimaryDisabledTextColor,
                                 ),
-                                ListTile(
-                                  title: const Text(
-                                    'Location Based',
-                                    style: TextStyle(color: kprimaryTextColor),
-                                  ),
-                                  trailing: Obx(
-                                    () => Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      children: [
-                                        Text(
-                                          controller.isLocationEnabled.value ==
-                                                  false
-                                              ? 'Off'
-                                              : 'Enabled',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: (controller
-                                                              .isLocationEnabled
-                                                              .value ==
-                                                          false)
-                                                      ? kprimaryDisabledTextColor
-                                                      : kprimaryTextColor),
-                                        ),
-                                        PopupMenuButton(
-                                          onSelected: (value) async {
-                                            if (value == 0) {
-                                              controller.isLocationEnabled
-                                                  .value = false;
-                                            } else if (value == 1) {
-                                              // Get.back();
-                                              if (controller.isLocationEnabled
-                                                      .value ==
-                                                  false)
-                                                await controller.getLocation();
-                                              controller.isLocationEnabled
-                                                  .value = true;
+                                GestureDetector(
+                                  onTapDown: (TapDownDetails details) async {
+                                    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
-                                              Get.defaultDialog(
-                                                backgroundColor:
-                                                    ksecondaryBackgroundColor,
-                                                title:
-                                                    'Set location to automatically cancel alarm!',
-                                                titleStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                                content: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: height * 0.65,
-                                                      width: width * 0.92,
-                                                      child: FlutterMap(
-                                                        mapController:
-                                                            controller
-                                                                .mapController,
-                                                        options: MapOptions(
-                                                          onTap: (tapPosition,
-                                                              point) {
-                                                            controller
-                                                                .selectedPoint
-                                                                .value = point;
-                                                          },
-                                                          screenSize: Size(
-                                                              width * 0.3,
-                                                              height * 0.8),
-                                                          center: controller
-                                                              .selectedPoint
-                                                              .value,
-                                                          zoom: 15,
-                                                        ),
-                                                        children: [
-                                                          TileLayer(
-                                                            urlTemplate:
-                                                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                                          ),
-                                                          MarkerLayer(
-                                                              markers: controller
-                                                                  .markersList),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    TextButton(
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(
-                                                                      kprimaryColor)),
-                                                      child: Text(
-                                                        'Save',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .displaySmall!
-                                                            .copyWith(
-                                                                color:
-                                                                    ksecondaryTextColor),
-                                                      ),
-                                                      onPressed: () =>
-                                                          Get.back(),
-                                                    ),
-                                                  ],
+                                    final RelativeRect position = RelativeRect.fromRect(
+                                      Rect.fromPoints(
+                                        details.globalPosition,
+                                        details.globalPosition,
+                                      ),
+                                      Offset.zero & overlay.size,
+                                    );
+
+                                    await showMenu(
+                                      color: ksecondaryBackgroundColor,
+                                      context: context,
+                                      position: position,
+                                      items: [
+                                        PopupMenuItem<int>(
+                                          value: 0,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                "Off",
+                                                style: TextStyle(
+                                                  color: (controller.isLocationEnabled.value == true)
+                                                      ? kprimaryDisabledTextColor
+                                                      : kprimaryTextColor,
                                                 ),
-                                              );
-                                            }
-                                          },
-                                          color: kprimaryBackgroundColor,
-                                          icon: Icon(
-                                            Icons.chevron_right,
-                                            color: (controller.isLocationEnabled
-                                                        .value ==
-                                                    false)
-                                                ? kprimaryDisabledTextColor
-                                                : kprimaryTextColor,
+                                              ),
+                                              Radio(
+                                                fillColor: MaterialStateProperty.all(
+                                                  (controller.isLocationEnabled.value == true)
+                                                      ? kprimaryDisabledTextColor
+                                                      : kprimaryColor,
+                                                ),
+                                                value: !controller.isLocationEnabled.value,
+                                                groupValue: true,
+                                                onChanged: (value) {},
+                                              ),
+                                            ],
                                           ),
-                                          itemBuilder: (context) {
-                                            return [
-                                              PopupMenuItem<int>(
-                                                value: 0,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
+                                        ),
+                                        PopupMenuItem<int>(
+                                          value: 1,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                "Choose location",
+                                                style: TextStyle(
+                                                  color: (controller.isLocationEnabled.value == false)
+                                                      ? kprimaryDisabledTextColor
+                                                      : kprimaryTextColor,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.chevron_right,
+                                                color: (controller.isLocationEnabled.value == false)
+                                                    ? kprimaryDisabledTextColor
+                                                    : kprimaryTextColor,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ).then((value) async {
+                                      // Handle menu item selection
+                                      if (value == 0) {
+                                        controller.isLocationEnabled.value = false;
+                                      } else if (value == 1) {
+                                        if (controller.isLocationEnabled.value == false) {
+                                          await controller.getLocation();
+                                        }
+                                        controller.isLocationEnabled.value = true;
+
+                                        Get.defaultDialog(
+                                          backgroundColor:
+                                          ksecondaryBackgroundColor,
+                                          title:
+                                          'Set location to automatically cancel alarm!',
+                                          titleStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                          content: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: height * 0.65,
+                                                width: width * 0.92,
+                                                child: FlutterMap(
+                                                  mapController:
+                                                  controller.mapController,
+                                                  options: MapOptions(
+                                                    onTap: (tapPosition, point) {
+                                                      controller.selectedPoint
+                                                          .value = point;
+                                                    },
+                                                    screenSize: Size(
+                                                        width * 0.3, height * 0.8),
+                                                    center: controller
+                                                        .selectedPoint.value,
+                                                    zoom: 15,
+                                                  ),
                                                   children: [
-                                                    Text(
-                                                      "Off",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                              color: (controller
-                                                                          .isLocationEnabled
-                                                                          .value ==
-                                                                      true)
-                                                                  ? kprimaryDisabledTextColor
-                                                                  : kprimaryTextColor),
+                                                    TileLayer(
+                                                      urlTemplate:
+                                                      'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
                                                     ),
-                                                    Radio(
-                                                        fillColor: MaterialStateProperty
-                                                            .all((controller
-                                                                        .isLocationEnabled
-                                                                        .value ==
-                                                                    true)
-                                                                ? kprimaryDisabledTextColor
-                                                                : kprimaryColor),
-                                                        value: !controller
-                                                            .isLocationEnabled
-                                                            .value,
-                                                        groupValue: true,
-                                                        onChanged: (value) {}),
+                                                    MarkerLayer(
+                                                        markers:
+                                                        controller.markersList),
                                                   ],
                                                 ),
                                               ),
-                                              PopupMenuItem<int>(
-                                                value: 1,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Text(
-                                                      "Choose location",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                              color: (controller
-                                                                          .isLocationEnabled
-                                                                          .value ==
-                                                                      false)
-                                                                  ? kprimaryDisabledTextColor
-                                                                  : kprimaryTextColor),
-                                                    ),
-                                                    Icon(
-                                                      Icons.chevron_right,
-                                                      color: (controller
-                                                                  .isLocationEnabled
-                                                                  .value ==
-                                                              false)
-                                                          ? kprimaryDisabledTextColor
-                                                          : kprimaryTextColor,
-                                                    ),
-                                                  ],
+                                              const SizedBox(height: 10),
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        kprimaryColor)),
+                                                child: Text(
+                                                  'Save',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                      color:
+                                                      ksecondaryTextColor),
                                                 ),
-                                              )
-                                            ];
-                                          },
-                                        )
-                                      ],
+                                                onPressed: () => Get.back(),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                  child: ListTile(
+                                    title: const Text(
+                                      'Location Based',
+                                      style: TextStyle(color: kprimaryTextColor),
+                                    ),
+                                    trailing: Obx(
+                                          () => Wrap(
+                                        crossAxisAlignment: WrapCrossAlignment.center,
+                                        children: [
+                                          Text(
+                                            controller.isLocationEnabled.value == false ? 'Off' : 'Enabled',
+                                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                              color: (controller.isLocationEnabled.value == false)
+                                                  ? kprimaryDisabledTextColor
+                                                  : kprimaryTextColor,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.chevron_right,
+                                            color: (controller.isLocationEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 )
+
+
                               ]),
                         ),
                         Container(
@@ -1252,417 +1286,292 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                               ),
                               ListTile(
-                                  title: const Text(
-                                    'Shake to dismiss',
-                                    style: TextStyle(color: kprimaryTextColor),
-                                  ),
-                                  trailing: InkWell(
-                                    child: Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Obx(
-                                            () => Text(
-                                              controller.shakeTimes.value > 0
-                                                  ? controller.shakeTimes
-                                                              .value >
-                                                          1
-                                                      ? '${controller.shakeTimes.value} times'
-                                                      : '${controller.shakeTimes.value} time'
-                                                  : 'Off',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(
-                                                      color: (controller
-                                                                  .isShakeEnabled
-                                                                  .value ==
-                                                              false)
-                                                          ? kprimaryDisabledTextColor
-                                                          : kprimaryTextColor),
-                                            ),
-                                          ),
-                                          const Icon(
-                                            Icons.chevron_right,
-                                            color: kprimaryDisabledTextColor,
-                                          )
-                                        ]),
-                                    onTap: () {
-                                      Get.defaultDialog(
-                                        titlePadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20),
-                                        backgroundColor:
-                                            ksecondaryBackgroundColor,
-                                        title: 'Number of shakes',
-                                        titleStyle: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        content: Obx(
+                                title: const Text(
+                                  'Shake to dismiss',
+                                  style: TextStyle(color: kprimaryTextColor),
+                                ),
+                                onTap: () {
+                                  Get.defaultDialog(
+                                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                    backgroundColor: ksecondaryBackgroundColor,
+                                    title: 'Number of shakes',
+                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                    content: Obx(
                                           () => Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              NumberPicker(
-                                                  value: controller
-                                                      .shakeTimes.value,
-                                                  minValue: 0,
-                                                  maxValue: 100,
-                                                  onChanged: (value) {
-                                                    if (value > 0) {
-                                                      controller.isShakeEnabled
-                                                          .value = true;
-                                                    } else {
-                                                      controller.isShakeEnabled
-                                                          .value = false;
-                                                    }
-                                                    controller.shakeTimes
-                                                        .value = value;
-                                                  }),
-                                              Text(controller.shakeTimes.value >
-                                                      1
-                                                  ? 'times'
-                                                  : 'time')
-                                            ],
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          NumberPicker(
+                                            value: controller.shakeTimes.value,
+                                            minValue: 0,
+                                            maxValue: 100,
+                                            onChanged: (value) {
+                                              if (value > 0) {
+                                                controller.isShakeEnabled.value = true;
+                                              } else {
+                                                controller.isShakeEnabled.value = false;
+                                              }
+                                              controller.shakeTimes.value = value;
+                                            },
+                                          ),
+                                          Text(controller.shakeTimes.value > 1 ? 'times' : 'time')
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                trailing: InkWell(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                            () => Text(
+                                          controller.shakeTimes.value > 0
+                                              ? controller.shakeTimes.value > 1
+                                              ? '${controller.shakeTimes.value} times'
+                                              : '${controller.shakeTimes.value} time'
+                                              : 'Off',
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                            color: (controller.isShakeEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
                                           ),
                                         ),
-                                      );
-                                    },
-                                  )),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: kprimaryDisabledTextColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                               const Divider(
                                 color: kprimaryDisabledTextColor,
                               ),
                               ListTile(
-                                  title: const Text('QR/Bar Code'),
-                                  trailing: InkWell(
-                                      child: Wrap(
-                                          crossAxisAlignment:
-                                              WrapCrossAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () => Text(
-                                                controller.isQrEnabled.value ==
-                                                        true
-                                                    ? 'Enabled'
-                                                    : 'Off',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(
-                                                        color: (controller
-                                                                    .isQrEnabled
-                                                                    .value ==
-                                                                false)
-                                                            ? kprimaryDisabledTextColor
-                                                            : kprimaryTextColor),
-                                              ),
+                                title: const Text('QR/Bar Code'),
+                                onTap: () {
+                                  controller.restartQRCodeController();
+                                  Get.defaultDialog(
+                                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                    backgroundColor: ksecondaryBackgroundColor,
+                                    title: 'Scan a QR/Bar Code',
+                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                    content: Obx(
+                                          () => Column(
+                                        children: [
+                                          controller.isQrEnabled.value == false
+                                              ? SizedBox(
+                                            height: 300,
+                                            width: 300,
+                                            child: MobileScanner(
+                                              controller: controller.qrController,
+                                              fit: BoxFit.cover,
+                                              onDetect: (capture) {
+                                                final List<Barcode> barcodes = capture.barcodes;
+                                                for (final barcode in barcodes) {
+                                                  controller.qrValue.value = barcode.rawValue.toString();
+                                                  print(barcode.rawValue.toString());
+                                                  controller.isQrEnabled.value = true;
+                                                }
+                                              },
                                             ),
-                                            const Icon(
-                                              Icons.chevron_right,
-                                              color: kprimaryDisabledTextColor,
-                                            )
-                                          ]),
-                                      onTap: () {
-                                        controller.restartQRCodeController();
-                                        Get.defaultDialog(
-                                          titlePadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 20),
-                                          backgroundColor:
-                                              ksecondaryBackgroundColor,
-                                          title: 'Scan a QR/Bar Code',
-                                          titleStyle: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall,
-                                          content: Obx(
-                                            () => Column(
+                                          )
+                                              : Padding(
+                                            padding: const EdgeInsets.only(bottom: 15.0),
+                                            child: Text(controller.qrValue.value),
+                                          ),
+                                          controller.isQrEnabled.value == true
+                                              ? Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                  MaterialStateProperty.all(kprimaryColor),
+                                                ),
+                                                child: Text(
+                                                  'Save',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(color: ksecondaryTextColor),
+                                                ),
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                              ),
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                  MaterialStateProperty.all(kprimaryColor),
+                                                ),
+                                                child: Text(
+                                                  'Retake',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(color: ksecondaryTextColor),
+                                                ),
+                                                onPressed: () async {
+                                                  controller.qrController.dispose();
+                                                  controller.restartQRCodeController();
+                                                  controller.isQrEnabled.value = false;
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                trailing: InkWell(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                            () => Text(
+                                          controller.isQrEnabled.value == true ? 'Enabled' : 'Off',
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                            color: (controller.isQrEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: kprimaryDisabledTextColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              const Divider(
+                                color: kprimaryDisabledTextColor,
+                              ),
+                              ListTile(
+                                title: const Text('Maths'),
+                                onTap: () {
+                                  controller.isMathsEnabled.value = true;
+                                  Get.defaultDialog(
+                                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                                    backgroundColor: ksecondaryBackgroundColor,
+                                    title: 'Solve Maths questions',
+                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                    content: Obx(
+                                          () => Column(
+                                        children: [
+                                          Text(
+                                            Utils.getDifficultyLabel(controller.mathsDifficulty.value),
+                                            style: Theme.of(context).textTheme.displaySmall,
+                                          ),
+                                          Text(
+                                            Utils.generateMathProblem(controller.mathsDifficulty.value)[0],
+                                            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                              color: kprimaryTextColor.withOpacity(0.78),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                            child: Slider(
+                                              min: 0.0,
+                                              max: 2.0,
+                                              divisions: 2,
+                                              value: controller.mathsSliderValue.value,
+                                              onChanged: (newValue) {
+                                                controller.mathsSliderValue.value = newValue;
+                                                controller.mathsDifficulty.value = Utils.getDifficulty(newValue);
+                                              },
+                                            ),
+                                          ),
+                                          Obx(
+                                                () => Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
-                                                controller.isQrEnabled.value ==
-                                                        false
-                                                    ? SizedBox(
-                                                        height: 300,
-                                                        width: 300,
-                                                        child: MobileScanner(
-                                                          controller: controller
-                                                              .qrController,
-                                                          fit: BoxFit.cover,
-                                                          onDetect: (capture) {
-                                                            final List<Barcode>
-                                                                barcodes =
-                                                                capture
-                                                                    .barcodes;
-                                                            for (final barcode
-                                                                in barcodes) {
-                                                              controller.qrValue
-                                                                      .value =
-                                                                  barcode
-                                                                      .rawValue
-                                                                      .toString();
-                                                              print(barcode
-                                                                  .rawValue
-                                                                  .toString());
-                                                              controller
-                                                                  .isQrEnabled
-                                                                  .value = true;
-                                                            }
-                                                          },
-                                                        ),
-                                                      )
-                                                    : Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 15.0),
-                                                        child: Text(controller
-                                                            .qrValue.value),
-                                                      ),
-                                                controller.isQrEnabled.value ==
-                                                        true
-                                                    ? Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(
-                                                                            kprimaryColor)),
-                                                            child: Text(
-                                                              'Save',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          ksecondaryTextColor),
-                                                            ),
-                                                            onPressed: () {
-                                                              Get.back();
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(
-                                                                            kprimaryColor)),
-                                                            child: Text(
-                                                              'Retake',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          ksecondaryTextColor),
-                                                            ),
-                                                            onPressed:
-                                                                () async {
-                                                              controller
-                                                                  .qrController
-                                                                  .dispose();
-                                                              controller
-                                                                  .restartQRCodeController();
-                                                              controller
-                                                                  .isQrEnabled
-                                                                  .value = false;
-                                                            },
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : const SizedBox()
+                                                NumberPicker(
+                                                  value: controller.numMathsQuestions.value,
+                                                  minValue: 1,
+                                                  maxValue: 100,
+                                                  onChanged: (value) => controller.numMathsQuestions.value = value,
+                                                ),
+                                                Text(controller.numMathsQuestions.value > 1 ? 'questions' : 'question'),
                                               ],
                                             ),
                                           ),
-                                        );
-                                      })),
-                              const Divider(
-                                color: kprimaryDisabledTextColor,
-                              ),
-                              ListTile(
-                                  title: const Text('Maths'),
-                                  trailing: InkWell(
-                                      child: Wrap(
-                                          crossAxisAlignment:
-                                              WrapCrossAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () => Text(
-                                                controller.isMathsEnabled ==
-                                                        true
-                                                    ? Utils.getDifficultyLabel(
-                                                        controller
-                                                            .mathsDifficulty
-                                                            .value)
-                                                    : 'Off',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        color: (controller
-                                                                    .isMathsEnabled
-                                                                    .value ==
-                                                                false)
-                                                            ? kprimaryDisabledTextColor
-                                                            : kprimaryTextColor),
-                                              ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                                                  ),
+                                                  child: Text(
+                                                    'Save',
+                                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                      color: ksecondaryTextColor,
+                                                    ),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Get.back();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                                                  ),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                      color: ksecondaryTextColor,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    controller.isMathsEnabled.value = false;
+                                                    Get.back();
+                                                  },
+                                                ),
+                                              ],
                                             ),
-                                            const Icon(
-                                              Icons.chevron_right,
-                                              color: kprimaryDisabledTextColor,
-                                            )
-                                          ]),
-                                      onTap: () {
-                                        controller.isMathsEnabled.value = true;
-                                        Get.defaultDialog(
-                                            titlePadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 20),
-                                            backgroundColor:
-                                                ksecondaryBackgroundColor,
-                                            title: 'Solve Maths questions',
-                                            titleStyle: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall,
-                                            content: Obx(
-                                              () => Column(
-                                                children: [
-                                                  Text(
-                                                    Utils.getDifficultyLabel(
-                                                        controller
-                                                            .mathsDifficulty
-                                                            .value),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall,
-                                                  ),
-                                                  Text(
-                                                      Utils.generateMathProblem(
-                                                          controller
-                                                              .mathsDifficulty
-                                                              .value)[0],
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .displaySmall!
-                                                          .copyWith(
-                                                              color: kprimaryTextColor
-                                                                  .withOpacity(
-                                                                      0.78))),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 15.0),
-                                                    child: Slider(
-                                                        min: 0.0,
-                                                        max: 2.0,
-                                                        divisions: 2,
-                                                        value: controller
-                                                            .mathsSliderValue
-                                                            .value,
-                                                        onChanged: (newValue) {
-                                                          controller
-                                                              .mathsSliderValue
-                                                              .value = newValue;
-                                                          controller
-                                                                  .mathsDifficulty
-                                                                  .value =
-                                                              Utils
-                                                                  .getDifficulty(
-                                                                      newValue);
-                                                        }),
-                                                  ),
-                                                  Obx(
-                                                    () => Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        NumberPicker(
-                                                            value: controller
-                                                                .numMathsQuestions
-                                                                .value,
-                                                            minValue: 1,
-                                                            maxValue: 100,
-                                                            onChanged: (value) =>
-                                                                controller
-                                                                    .numMathsQuestions
-                                                                    .value = value),
-                                                        Text(controller
-                                                                    .numMathsQuestions
-                                                                    .value >
-                                                                1
-                                                            ? 'questions'
-                                                            : 'question')
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 10.0),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        TextButton(
-                                                          style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                          kprimaryColor)),
-                                                          child: Text(
-                                                            'Save',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .displaySmall!
-                                                                .copyWith(
-                                                                    color:
-                                                                        ksecondaryTextColor),
-                                                          ),
-                                                          onPressed: () async {
-                                                            Get.back();
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                          kprimaryColor)),
-                                                          child: Text(
-                                                            'Cancel',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .displaySmall!
-                                                                .copyWith(
-                                                                    color:
-                                                                        ksecondaryTextColor),
-                                                          ),
-                                                          onPressed: () {
-                                                            controller
-                                                                .isMathsEnabled
-                                                                .value = false;
-                                                            Get.back();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ));
-                                      })),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                trailing: InkWell(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                            () => Text(
+                                          controller.isMathsEnabled == true
+                                              ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                                              : 'Off',
+                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                            color: (controller.isMathsEnabled.value == false)
+                                                ? kprimaryDisabledTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: kprimaryDisabledTextColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                             ],
                           ),
                         ),
@@ -1689,192 +1598,217 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   .withOpacity(0.85))),
                                 ),
                               ),
-                              ListTile(
+                              Container(
+                                child: (controller.userModel != null)
+                                ? ListTile(
                                   title: const Text(
                                     'Enable Shared Alarm',
                                     style: TextStyle(color: kprimaryTextColor),
                                   ),
-                                  trailing: (controller.userModel != null)
-                                      ? Obx(
-                                          () => Switch(
-                                            onChanged: (value) {
-                                              controller.isSharedAlarmEnabled
-                                                  .value = value;
-                                            },
-                                            value: controller
-                                                .isSharedAlarmEnabled.value,
+                                  onTap: () {
+                                    // Toggle the value of isSharedAlarmEnabled
+                                    controller.isSharedAlarmEnabled.value = !controller.isSharedAlarmEnabled.value;
+                                  },
+                                  trailing: Obx(
+                                        () => Switch(
+                                      onChanged: (value) {
+                                        // You can optionally add the onChanged callback here as well
+                                        controller.isSharedAlarmEnabled.value = value;
+                                      },
+                                      value: controller.isSharedAlarmEnabled.value,
+                                    ),
+                                  ),
+                                )
+
+                                  :ListTile(
+                                    onTap: () {
+                                      Get.defaultDialog(
+                                          contentPadding:
+                                          const EdgeInsets.all(10.0),
+                                          titlePadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 20),
+                                          backgroundColor:
+                                          ksecondaryBackgroundColor,
+                                          title: 'Disabled!',
+                                          titleStyle: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall,
+                                          content: Column(
+                                            children: [
+                                              const Text(
+                                                  "To use this feature, you have link your Google account!"),
+                                              Padding(
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    vertical: 10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceEvenly,
+                                                  children: [
+                                                    TextButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                              kprimaryColor)),
+                                                      child: Text(
+                                                        'Go to settings',
+                                                        style: Theme.of(
+                                                            context)
+                                                            .textTheme
+                                                            .displaySmall!
+                                                            .copyWith(
+                                                            color:
+                                                            ksecondaryTextColor),
+                                                      ),
+                                                      onPressed: () {
+                                                        Get.back();
+                                                        Get.toNamed(
+                                                            '/settings');
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                          MaterialStateProperty.all(
+                                                              kprimaryTextColor
+                                                                  .withOpacity(0.5))),
+                                                      child: Text(
+                                                        'Cancel',
+                                                        style: Theme.of(
+                                                            context)
+                                                            .textTheme
+                                                            .displaySmall!
+                                                            .copyWith(
+                                                            color:
+                                                            kprimaryTextColor),
+                                                      ),
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ));
+                                    },
+                                    title: const Text(
+                                      'Enable Shared Alarm',
+                                      style: TextStyle(color: kprimaryTextColor),
+                                    ),
+                                    trailing:InkWell(
+
+                                      child: Icon(
+                                        Icons.lock,
+                                        color: kprimaryTextColor
+                                            .withOpacity(0.7),
+                                      ),
+                                    )),
+                              ),
+                              const Divider(
+                                color: kprimaryDisabledTextColor,
+                              ),
+                              Obx(
+                                    () => Container(
+                                      child: (controller
+                                          .isSharedAlarmEnabled.value ==
+                                          true)
+                                      ?ListTile(
+                                          onTap: () {
+                                            Clipboard.setData(ClipboardData(
+                                                text: controller.alarmID));
+                                            Get.snackbar(
+                                              'Success!',
+                                              'Alarm ID has been copied!',
+                                              snackPosition:
+                                              SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              colorText: ksecondaryTextColor,
+                                              maxWidth: width,
+                                              duration:
+                                              const Duration(seconds: 2),
+                                            );
+                                          },
+                                          title: const Text(
+                                            'Alarm ID',
+                                            style:
+                                            TextStyle(color: kprimaryTextColor),
                                           ),
-                                        )
-                                      : InkWell(
+                                          trailing:  InkWell(
+
+                                            child: Icon(Icons.copy,
+                                                color: kprimaryTextColor
+                                                    .withOpacity(0.7)),
+                                          )
+                                      )
+                                      : ListTile(
                                           onTap: () {
                                             Get.defaultDialog(
-                                                contentPadding:
-                                                    const EdgeInsets.all(10.0),
-                                                titlePadding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 20),
+                                                titlePadding: const EdgeInsets
+                                                    .symmetric(vertical: 20),
                                                 backgroundColor:
-                                                    ksecondaryBackgroundColor,
+                                                ksecondaryBackgroundColor,
                                                 title: 'Disabled!',
                                                 titleStyle: Theme.of(context)
                                                     .textTheme
                                                     .displaySmall,
                                                 content: Column(
                                                   children: [
-                                                    const Text(
-                                                        "To use this feature, you have link your Google account!"),
+                                                    const Padding(
+                                                      padding: EdgeInsets.all(
+                                                          20.0),
+                                                      child: Text(
+                                                          "To copy Alarm ID you have enable shared alarm!"),
+                                                    ),
                                                     Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
+                                                      padding:
+                                                      const EdgeInsets
+                                                          .symmetric(
                                                           vertical: 10.0),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(
-                                                                            kprimaryColor)),
-                                                            child: Text(
-                                                              'Go to settings',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          ksecondaryTextColor),
-                                                            ),
-                                                            onPressed: () {
-                                                              Get.back();
-                                                              Get.toNamed(
-                                                                  '/settings');
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all(
-                                                                        kprimaryTextColor
-                                                                            .withOpacity(0.5))),
-                                                            child: Text(
-                                                              'Cancel',
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                      color:
-                                                                          kprimaryTextColor),
-                                                            ),
-                                                            onPressed: () {
-                                                              Get.back();
-                                                            },
-                                                          ),
-                                                        ],
+                                                      child: TextButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(
+                                                                kprimaryColor)),
+                                                        child: Text(
+                                                          'Okay',
+                                                          style: Theme.of(
+                                                              context)
+                                                              .textTheme
+                                                              .displaySmall!
+                                                              .copyWith(
+                                                              color:
+                                                              ksecondaryTextColor),
+                                                        ),
+                                                        onPressed: () {
+                                                          Get.back();
+                                                        },
                                                       ),
                                                     )
                                                   ],
                                                 ));
                                           },
-                                          child: Icon(
-                                            Icons.lock,
-                                            color: kprimaryTextColor
-                                                .withOpacity(0.7),
+                                          title: const Text(
+                                            'Alarm ID',
+                                            style:
+                                            TextStyle(color: kprimaryTextColor),
                                           ),
-                                        )),
-                              const Divider(
-                                color: kprimaryDisabledTextColor,
-                              ),
-                              Obx(
-                                () => ListTile(
-                                    title: const Text(
-                                      'Alarm ID',
-                                      style:
-                                          TextStyle(color: kprimaryTextColor),
-                                    ),
-                                    trailing: (controller
-                                                .isSharedAlarmEnabled.value ==
-                                            true)
-                                        ? InkWell(
-                                            onTap: () {
-                                              Clipboard.setData(ClipboardData(
-                                                  text: controller.alarmID));
-                                              Get.snackbar(
-                                                'Success!',
-                                                'Alarm ID has been copied!',
-                                                snackPosition:
-                                                    SnackPosition.BOTTOM,
-                                                backgroundColor: Colors.green,
-                                                colorText: ksecondaryTextColor,
-                                                maxWidth: width,
-                                                duration:
-                                                    const Duration(seconds: 2),
-                                              );
-                                            },
-                                            child: Icon(Icons.copy,
-                                                color: kprimaryTextColor
-                                                    .withOpacity(0.7)),
-                                          )
-                                        : InkWell(
-                                            onTap: () {
-                                              Get.defaultDialog(
-                                                  titlePadding: const EdgeInsets
-                                                      .symmetric(vertical: 20),
-                                                  backgroundColor:
-                                                      ksecondaryBackgroundColor,
-                                                  title: 'Disabled!',
-                                                  titleStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall,
-                                                  content: Column(
-                                                    children: [
-                                                      const Padding(
-                                                        padding: EdgeInsets.all(
-                                                            20.0),
-                                                        child: Text(
-                                                            "To copy Alarm ID you have enable shared alarm!"),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 10.0),
-                                                        child: TextButton(
-                                                          style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                          kprimaryColor)),
-                                                          child: Text(
-                                                            'Okay',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .displaySmall!
-                                                                .copyWith(
-                                                                    color:
-                                                                        ksecondaryTextColor),
-                                                          ),
-                                                          onPressed: () {
-                                                            Get.back();
-                                                          },
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ));
-                                            },
+                                          trailing:  InkWell(
+
                                             child: Icon(
                                               Icons.lock,
                                               color: kprimaryTextColor
                                                   .withOpacity(0.7),
                                             ),
                                           )),
+                                    )
                               ),
                               Obx(
+
                                 () => Container(
                                   child: (controller.isSharedAlarmEnabled.value)
                                       ? const Divider(
@@ -2043,101 +1977,127 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                               ),
                               Obx(
-                                () => Container(
+                                    () => Container(
                                     child: (controller
-                                                .isSharedAlarmEnabled.value &&
-                                            controller.alarmRecord != null)
+                                        .isSharedAlarmEnabled.value &&
+                                        controller.alarmRecord != null)
                                         ? (controller.alarmRecord!.ownerId !=
-                                                controller.userModel!.id)
-                                            ? ListTile(
-                                                title: const Text(
-                                                  'Alarm Owner',
-                                                  style: TextStyle(
-                                                      color: kprimaryTextColor),
-                                                ),
-                                                trailing: Text(
-                                                  controller
-                                                      .alarmRecord!.ownerName,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .copyWith(
+                                        controller.userModel!.id)
+                                        ? ListTile(
+                                        title: const Text(
+                                          'Alarm Owner',
+                                          style: TextStyle(
+                                              color: kprimaryTextColor),
+                                        ),
+                                        trailing: Text(
+                                          controller
+                                              .alarmRecord!.ownerName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                              color:
+                                              kprimaryDisabledTextColor),
+                                        ))
+                                        : ListTile(
+                                      title: const Text(
+                                        'Shared Users',
+                                        style: TextStyle(
+                                            color: kprimaryTextColor),
+                                      ),
+                                      trailing: InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            backgroundColor:
+                                            kprimaryBackgroundColor,
+                                            builder: (BuildContext
+                                            context) {
+                                              final userDetails =
+                                              RxList<UserModel?>(
+                                                  []);
+
+                                              return Obx(() {
+                                                if (controller
+                                                    .sharedUserIds
+                                                    .isEmpty) {
+                                                  return const Center(
+                                                      child: Text(
+                                                          "No shared users!"));
+                                                }
+
+                                                return FutureBuilder<
+                                                    List<UserModel?>>(
+                                                  future: controller
+                                                      .fetchUserDetailsForSharedUsers(),
+                                                  builder: (BuildContext
+                                                  context,
+                                                      AsyncSnapshot<
+                                                          List<
+                                                              UserModel?>>
+                                                      snapshot) {
+                                                    if (snapshot
+                                                        .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const Center(
+                                                        child:
+                                                        CircularProgressIndicator(
                                                           color:
-                                                              kprimaryDisabledTextColor),
-                                                ))
-                                            : ListTile(
-                                                title: const Text(
-                                                  'Shared Users',
-                                                  style: TextStyle(
-                                                      color: kprimaryTextColor),
-                                                ),
-                                                trailing: InkWell(
-                                                  onTap: () {
-                                                    showModalBottomSheet(
-                                                      context: context,
-                                                      backgroundColor:
-                                                          kprimaryBackgroundColor,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        final userDetails =
-                                                            RxList<UserModel?>(
-                                                                []);
+                                                          kprimaryColor,
+                                                        ),
+                                                      );
+                                                    }
 
-                                                        return Obx(() {
-                                                          if (controller
-                                                              .sharedUserIds
-                                                              .isEmpty) {
-                                                            return const Center(
-                                                                child: Text(
-                                                                    "No shared users!"));
-                                                          }
+                                                    userDetails
+                                                        .value =
+                                                        snapshot.data ??
+                                                            [];
 
-                                                          return FutureBuilder<
-                                                              List<UserModel?>>(
-                                                            future: controller
-                                                                .fetchUserDetailsForSharedUsers(),
-                                                            builder: (BuildContext
-                                                                    context,
-                                                                AsyncSnapshot<
-                                                                        List<
-                                                                            UserModel?>>
-                                                                    snapshot) {
-                                                              if (snapshot
-                                                                      .connectionState ==
-                                                                  ConnectionState
-                                                                      .waiting) {
-                                                                return const Center(
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    color:
-                                                                        kprimaryColor,
+                                                    return Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                            const EdgeInsets.all(
+                                                                8.0),
+                                                            child:
+                                                            Text(
+                                                              'Shared Users',
+                                                              style: Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleMedium,
+                                                            ),
+                                                          ),
+                                                          for (UserModel? user
+                                                          in userDetails
+                                                              .value)
+                                                            Column(
+                                                              children: [
+                                                                ListTile(
+                                                                  title:
+                                                                  Text(
+                                                                    user!.fullName,
+                                                                    style: TextStyle(color: kprimaryTextColor),
                                                                   ),
-                                                                );
-                                                              }
-
-                                                              userDetails
-                                                                      .value =
-                                                                  snapshot.data ??
-                                                                      [];
-
-                                                              return Center(
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          Text(
-                                                                        'Shared Users',
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .titleMedium,
+                                                                  trailing:
+                                                                  TextButton(
+                                                                    style: ButtonStyle(
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                                                                      minimumSize: MaterialStateProperty.all(const Size(80, 30)),
+                                                                      maximumSize: MaterialStateProperty.all(const Size(80, 30)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                                                                    ),
+                                                                    child: Text(
+                                                                      'Remove',
+                                                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                                                        color: kprimaryTextColor.withOpacity(0.9),
                                                                       ),
                                                                     ),
+
                                                                     for (UserModel? user
                                                                         in userDetails)
                                                                       Column(
@@ -2170,32 +2130,32 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                                 // Remove the user from userDetails list
                                                                                 userDetails.remove(user);
 
-                                                                                // Update the list
-                                                                                userDetails.refresh();
-                                                                              },
-                                                                            ),
-                                                                          ),
-                                                                          const Divider(
-                                                                            color:
-                                                                                kprimaryDisabledTextColor,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                  ],
+                                                                      // Update the list
+                                                                      userDetails.refresh();
+                                                                    },
+                                                                  ),
                                                                 ),
-                                                              );
-                                                            },
-                                                          );
-                                                        });
-                                                      },
+                                                                const Divider(
+                                                                  color:
+                                                                  kprimaryDisabledTextColor,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                        ],
+                                                      ),
                                                     );
                                                   },
-                                                  child: Icon(
-                                                      Icons.chevron_right,
-                                                      color: kprimaryTextColor
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              )
+                                                );
+                                              });
+                                            },
+                                          );
+                                        },
+                                        child: Icon(
+                                            Icons.chevron_right,
+                                            color: kprimaryTextColor
+                                                .withOpacity(0.7)),
+                                      ),
+                                    )
                                         : const SizedBox()),
                               ),
                             ],
@@ -2205,7 +2165,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           height: height * 0.15,
                         )
                       ],
-                    )),
+              )),
     );
   }
 }
