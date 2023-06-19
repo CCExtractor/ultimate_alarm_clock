@@ -21,6 +21,7 @@ class AddOrUpdateAlarmController extends GetxController
   var alarmID = Uuid().v4();
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
+  final mainAlarmTime = DateTime.now().add(Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
   final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
@@ -36,7 +37,9 @@ class AddOrUpdateAlarmController extends GetxController
   var ownerName = '';
   final sharedUserIds = <String>[].obs;
   AlarmModel? alarmRecord = Get.arguments;
-
+  final RxMap offsetDetails = {}.obs;
+  final offsetDuration = 0.obs;
+  final isOffsetBefore = true.obs;
   var qrController = MobileScannerController(
     autoStart: false,
     detectionSpeed: DetectionSpeed.noDuplicates,
@@ -209,6 +212,20 @@ class AddOrUpdateAlarmController extends GetxController
       mutexLock.value = alarmRecord!.mutexLock;
 
       isSharedAlarmEnabled.value = alarmRecord!.isSharedAlarmEnabled;
+
+      if (isSharedAlarmEnabled.value) {
+        selectedTime.value = Utils.timeOfDayToDateTime(
+            Utils.stringToTimeOfDay(alarmRecord!.mainAlarmTime!));
+
+        mainAlarmTime.value = Utils.timeOfDayToDateTime(
+            Utils.stringToTimeOfDay(alarmRecord!.mainAlarmTime!));
+        offsetDetails.value = alarmRecord!.offsetDetails!;
+        offsetDuration.value =
+            alarmRecord!.offsetDetails![userModel!.id]['offsetDuration'];
+        isOffsetBefore.value =
+            alarmRecord!.offsetDetails![userModel!.id]['isOffsetBefore'];
+      }
+
       // Set lock only if its not locked
       if (isSharedAlarmEnabled.value == true &&
           alarmRecord!.mutexLock == false) {
@@ -237,6 +254,7 @@ class AddOrUpdateAlarmController extends GetxController
     });
 
     // Updating UI to show time to alarm
+
     selectedTime.listen((time) {
       print("CHANGED CHANGED CHANGED CHANGED");
       timeToAlarm.value =
@@ -291,6 +309,9 @@ class AddOrUpdateAlarmController extends GetxController
 
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
+        mainAlarmTime:
+            Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
+        offsetDetails: offsetDetails,
         sharedUserIds: sharedUserIds,
         lastEditedUserId: lastEditedUserId,
         mutexLock: mutexLock.value,
