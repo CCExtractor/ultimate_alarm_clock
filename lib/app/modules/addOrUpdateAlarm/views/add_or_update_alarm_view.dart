@@ -234,7 +234,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 10.0),
-                                child: Text('Auto Dismissal',
+                                child: Text('Automatic Cancellation',
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!
