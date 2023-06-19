@@ -116,8 +116,8 @@ class AlarmHandlerSetupModel {
           }
         } else if (message == 'alarmRingIgnoreRoute') {
           FlutterForegroundTask.launchApp('/alarm-ring-ignore');
-          if (Get.currentRoute != '/alarm-ring') {
-            Get.offNamed('/alarm-ring');
+          if (Get.currentRoute != '/alarm-ring-ignore') {
+            Get.offNamed('/alarm-ring-ignore');
           }
         }
       }
