@@ -87,12 +87,14 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       (firestoreData, sharedData, isarData) {
         List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
         latestFirestoreAlarms = firestoreDocuments.map((doc) {
-          return AlarmModel.fromDocumentSnapshot(documentSnapshot: doc);
+          return AlarmModel.fromDocumentSnapshot(
+              documentSnapshot: doc, user: user);
         }).toList();
 
         List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
         latestSharedAlarms = sharedAlarmDocuments.map((doc) {
-          return AlarmModel.fromDocumentSnapshot(documentSnapshot: doc);
+          return AlarmModel.fromDocumentSnapshot(
+              documentSnapshot: doc, user: user);
         }).toList();
 
         latestFirestoreAlarms += latestSharedAlarms;
