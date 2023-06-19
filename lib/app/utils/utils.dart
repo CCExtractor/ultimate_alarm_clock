@@ -31,6 +31,15 @@ class Utils {
     return time.hour * 60 + time.minute;
   }
 
+  static DateTime calculateOffsetAlarmTime(
+      DateTime eventTime, bool isOffsetBefore, int offsetDuration) {
+    if (isOffsetBefore) {
+      return eventTime.subtract(Duration(minutes: offsetDuration));
+    } else {
+      return eventTime.add(Duration(minutes: offsetDuration));
+    }
+  }
+
 // Adding an extra day since this function is used for scheduling service
   static int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
     if (alarmTime.isBefore(now)) {
@@ -267,6 +276,8 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+        offsetDetails: {},
+        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
         lastEditedUserId: '',
         mutexLock: false,
         ownerName: '',

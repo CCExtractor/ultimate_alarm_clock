@@ -68,7 +68,8 @@ class FirestoreDb {
         .get();
 
     List list = snapshot.docs.map((DocumentSnapshot document) {
-      return AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
+      return AlarmModel.fromDocumentSnapshot(
+          documentSnapshot: document, user: user);
     }).toList();
 
     return list[0];
@@ -98,20 +99,21 @@ class FirestoreDb {
 
     QuerySnapshot snapshotSharedAlarms = await _firebaseFirestore
         .collectionGroup('alarms')
-        .where('sharedUserIds', arrayContains: user!.id)
+        .where('isEnabled', isEqualTo: true)
+        .where('sharedUserIds', arrayContains: user.id)
         .get();
 
     snapshot.docs.addAll(snapshotSharedAlarms.docs);
 
     var z = snapshotSharedAlarms.docs.map((DocumentSnapshot document) {
-      AlarmModel x =
-          AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
+      AlarmModel x = AlarmModel.fromDocumentSnapshot(
+          documentSnapshot: document, user: user);
       return x;
     }).toList();
 
     alarms = snapshot.docs.map((DocumentSnapshot document) {
-      AlarmModel x =
-          AlarmModel.fromDocumentSnapshot(documentSnapshot: document);
+      AlarmModel x = AlarmModel.fromDocumentSnapshot(
+          documentSnapshot: document, user: user);
       return x;
     }).toList();
 

@@ -7,6 +7,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:screen_state/screen_state.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -175,8 +176,8 @@ class AlarmHandlerModel extends TaskHandler {
         _sendPort?.send('alarmRingRoute');
       } else {
         print("STOPPING ALARM");
-        _sendPort?.send('alarmRingRoute');
-        FlutterForegroundTask.launchApp('/alarm-ring');
+        _sendPort?.send('alarmRingIgnoreRoute');
+        FlutterForegroundTask.launchApp('/alarm-ring-ignore');
       }
     }
     //  The time will never be before since getMilliSeconds will always adjust it a day forward

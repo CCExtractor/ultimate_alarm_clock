@@ -29,7 +29,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: (controller.alarmRecord != null &&
                   controller.mutexLock.value == true)
-              ? SizedBox()
+              ? const SizedBox()
               : Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: SizedBox(
@@ -47,7 +47,22 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () async {
+                        if (controller.userModel != null) {
+                          controller.offsetDetails[controller.userModel!.id] = {
+                            'offsettedTime': Utils.timeOfDayToString(
+                                TimeOfDay.fromDateTime(
+                                    Utils.calculateOffsetAlarmTime(
+                                        controller.selectedTime.value,
+                                        controller.isOffsetBefore.value,
+                                        controller.offsetDuration.value))),
+                            'offsetDuration': controller.offsetDuration.value,
+                            'isOffsetBefore': controller.isOffsetBefore.value,
+                          };
+                        } else {
+                          controller.offsetDetails.value = {};
+                        }
                         AlarmModel alarmRecord = AlarmModel(
+                            offsetDetails: controller.offsetDetails,
                             lastEditedUserId: controller.lastEditedUserId,
                             mutexLock: controller.mutexLock.value,
                             alarmID: controller.alarmID,
@@ -59,6 +74,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             alarmTime: Utils.timeOfDayToString(
                                 TimeOfDay.fromDateTime(
                                     controller.selectedTime.value)),
+                            mainAlarmTime: Utils.timeOfDayToString(
+                                TimeOfDay.fromDateTime(
+                                    controller.selectedTime.value)),
                             intervalToAlarm: Utils.getMillisecondsToAlarm(
                                 DateTime.now(), controller.selectedTime.value),
                             isActivityEnabled:
@@ -66,26 +84,29 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             minutesSinceMidnight: Utils.timeOfDayToInt(
                                 TimeOfDay.fromDateTime(
                                     controller.selectedTime.value)),
-                            isLocationEnabled:
-                                controller.isLocationEnabled.value,
-                            weatherTypes: Utils.getIntFromWeatherTypes(
-                                controller.selectedWeather.toList()),
+                            isLocationEnabled: controller.isLocationEnabled.value,
+                            weatherTypes: Utils.getIntFromWeatherTypes(controller.selectedWeather.toList()),
                             isWeatherEnabled: controller.isWeatherEnabled.value,
                             location: Utils.geoPointToString(
                               Utils.latLngToGeoPoint(
                                   controller.selectedPoint.value),
                             ),
-                            isSharedAlarmEnabled:
-                                controller.isSharedAlarmEnabled.value,
+                            isSharedAlarmEnabled: controller.isSharedAlarmEnabled.value,
                             isQrEnabled: controller.isQrEnabled.value,
                             qrValue: controller.qrValue.value,
                             isMathsEnabled: controller.isMathsEnabled.value,
-                            numMathsQuestions:
-                                controller.numMathsQuestions.value,
-                            mathsDifficulty:
-                                controller.mathsDifficulty.value.index,
+                            numMathsQuestions: controller.numMathsQuestions.value,
+                            mathsDifficulty: controller.mathsDifficulty.value.index,
                             isShakeEnabled: controller.isShakeEnabled.value,
                             shakeTimes: controller.shakeTimes.value);
+
+                        // Adding offset details to the database if its a shared alarm
+                        if (controller.isSharedAlarmEnabled.value) {
+                          alarmRecord.offsetDetails = controller.offsetDetails;
+                          alarmRecord.mainAlarmTime = Utils.timeOfDayToString(
+                              TimeOfDay.fromDateTime(
+                                  controller.selectedTime.value));
+                        }
 
                         try {
                           if (controller.alarmRecord == null) {
@@ -113,7 +134,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
             centerTitle: true,
             title: (controller.alarmRecord != null &&
                     controller.mutexLock.value == true)
-                ? Text('')
+                ? const Text('')
                 : Obx(
                     () => Text(
                       "Rings in ${controller.timeToAlarm.value}",
@@ -1787,14 +1808,172 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     )
                               ),
                               Obx(
-                                    () => Container(
-                                  child:
-                                  (controller.isSharedAlarmEnabled.value &&
-                                      controller.alarmRecord != null)
+
+                                () => Container(
+                                  child: (controller.isSharedAlarmEnabled.value)
                                       ? const Divider(
-                                    color: kprimaryDisabledTextColor,
-                                  )
-                                      : SizedBox(),
+                                          color: kprimaryDisabledTextColor,
+                                        )
+                                      : const SizedBox(),
+                                ),
+                              ),
+                              Obx(
+                                () => (controller.isSharedAlarmEnabled.value)
+                                    ? InkWell(
+                                        onTap: () {
+                                          Get.defaultDialog(
+                                            titlePadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 20),
+                                            backgroundColor:
+                                                ksecondaryBackgroundColor,
+                                            title: 'Offset Duration',
+                                            titleStyle: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall,
+                                            content: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Obx(
+                                                  () => Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      NumberPicker(
+                                                          value: controller
+                                                              .offsetDuration
+                                                              .value,
+                                                          minValue: 0,
+                                                          maxValue: 1440,
+                                                          onChanged: (value) {
+                                                            controller
+                                                                .offsetDuration
+                                                                .value = value;
+                                                          }),
+                                                      Text(controller
+                                                                  .offsetDuration
+                                                                  .value >
+                                                              1
+                                                          ? 'minutes'
+                                                          : 'minute')
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Obx(
+                                                      () => ElevatedButton(
+                                                        onPressed: () {
+                                                          controller
+                                                              .isOffsetBefore
+                                                              .value = true;
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor: (controller
+                                                                  .isOffsetBefore
+                                                                  .value)
+                                                              ? kprimaryColor
+                                                              : kprimaryTextColor
+                                                                  .withOpacity(
+                                                                      0.08),
+                                                          foregroundColor: (controller
+                                                                  .isOffsetBefore
+                                                                  .value)
+                                                              ? ksecondaryTextColor
+                                                              : kprimaryTextColor,
+                                                        ),
+                                                        child: const Text(
+                                                            "Before",
+                                                            style: TextStyle(
+                                                                fontSize: 14)),
+                                                      ),
+                                                    ),
+                                                    Obx(
+                                                      () => ElevatedButton(
+                                                        onPressed: () {
+                                                          controller
+                                                              .isOffsetBefore
+                                                              .value = false;
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor: (!controller
+                                                                  .isOffsetBefore
+                                                                  .value)
+                                                              ? kprimaryColor
+                                                              : kprimaryTextColor
+                                                                  .withOpacity(
+                                                                      0.08),
+                                                          foregroundColor: (!controller
+                                                                  .isOffsetBefore
+                                                                  .value)
+                                                              ? ksecondaryTextColor
+                                                              : kprimaryTextColor,
+                                                        ),
+                                                        child: const Text(
+                                                            "After",
+                                                            style: TextStyle(
+                                                                fontSize: 14)),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        child: ListTile(
+                                            title: const Text('Alarm Offset'),
+                                            trailing: Wrap(
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
+                                                children: [
+                                                  Obx(
+                                                    () => Text(
+                                                      controller.offsetDuration
+                                                                  .value >
+                                                              0
+                                                          ? 'Enabled'
+                                                          : 'Off',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .copyWith(
+                                                              color: (controller
+                                                                          .offsetDuration
+                                                                          .value >
+                                                                      0)
+                                                                  ? kprimaryTextColor
+                                                                  : kprimaryDisabledTextColor),
+                                                    ),
+                                                  ),
+                                                  const Icon(
+                                                    Icons.chevron_right,
+                                                    color:
+                                                        kprimaryDisabledTextColor,
+                                                  )
+                                                ])),
+                                      )
+                                    : SizedBox(),
+                              ),
+                              Obx(
+                                () => Container(
+                                  child:
+                                      (controller.isSharedAlarmEnabled.value &&
+                                              controller.alarmRecord != null)
+                                          ? const Divider(
+                                              color: kprimaryDisabledTextColor,
+                                            )
+                                          : const SizedBox(),
                                 ),
                               ),
                               Obx(
@@ -1918,13 +2097,38 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         color: kprimaryTextColor.withOpacity(0.9),
                                                                       ),
                                                                     ),
-                                                                    onPressed: () async {
-                                                                      await FirestoreDb.removeUserFromAlarmSharedUsers(user, controller.alarmID);
-                                                                      // Update sharedUserIds value after removing the user
-                                                                      controller.sharedUserIds.remove(user.id);
 
-                                                                      // Remove the user from userDetails list
-                                                                      userDetails.value.remove(user);
+                                                                    for (UserModel? user
+                                                                        in userDetails)
+                                                                      Column(
+                                                                        children: [
+                                                                          ListTile(
+                                                                            title:
+                                                                                Text(
+                                                                              user!.fullName,
+                                                                              style: const TextStyle(color: kprimaryTextColor),
+                                                                            ),
+                                                                            trailing:
+                                                                                TextButton(
+                                                                              style: ButtonStyle(
+                                                                                padding: MaterialStateProperty.all(EdgeInsets.zero),
+                                                                                minimumSize: MaterialStateProperty.all(const Size(80, 30)),
+                                                                                maximumSize: MaterialStateProperty.all(const Size(80, 30)),
+                                                                                backgroundColor: MaterialStateProperty.all(Colors.red),
+                                                                              ),
+                                                                              child: Text(
+                                                                                'Remove',
+                                                                                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                                                                      color: kprimaryTextColor.withOpacity(0.9),
+                                                                                    ),
+                                                                              ),
+                                                                              onPressed: () async {
+                                                                                await FirestoreDb.removeUserFromAlarmSharedUsers(user, controller.alarmID);
+                                                                                // Update sharedUserIds value after removing the user
+                                                                                controller.sharedUserIds.remove(user.id);
+
+                                                                                // Remove the user from userDetails list
+                                                                                userDetails.remove(user);
 
                                                                       // Update the list
                                                                       userDetails.refresh();
