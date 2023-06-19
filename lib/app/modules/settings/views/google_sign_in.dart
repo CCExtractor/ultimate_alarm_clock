@@ -21,45 +21,46 @@ class GoogleSignIn extends StatelessWidget {
     return InkWell(
       onTap: () async {
         if (controller.isUserLoggedIn.value == false) {
-          bool isSuccessfulLogin = await controller.loginWithGoogle();
-          Get.defaultDialog(
-              titlePadding: EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: ksecondaryBackgroundColor,
-              title: isSuccessfulLogin ? 'Sucess!' : 'Error!',
-              titleStyle: Theme.of(context).textTheme.displaySmall,
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Icon(
-                    isSuccessfulLogin ? Icons.done : Icons.close,
-                    size: 50,
-                    color: isSuccessfulLogin ? Colors.green : Colors.red,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text(
-                      isSuccessfulLogin
-                          ? 'Your account is now linked!'
-                          : "Your account couldn't be linked!",
-                      style: Theme.of(context).textTheme.displaySmall,
+          bool? isSuccessfulLogin = await controller.loginWithGoogle();
+
+          if (isSuccessfulLogin != null) {
+            Get.defaultDialog(
+                titlePadding: EdgeInsets.symmetric(vertical: 20),
+                backgroundColor: ksecondaryBackgroundColor,
+                title: 'Success!',
+                titleStyle: Theme.of(context).textTheme.displaySmall,
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      isSuccessfulLogin ? Icons.done : Icons.close,
+                      size: 50,
+                      color: Colors.green,
                     ),
-                  ),
-                  TextButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
-                        'Okay',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: ksecondaryTextColor),
+                        'Your account is now linked!',
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      onPressed: () {
-                        Get.back();
-                      }),
-                ],
-              ));
+                    ),
+                    TextButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor)),
+                        child: Text(
+                          'Okay',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(color: ksecondaryTextColor),
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        }),
+                  ],
+                ));
+          }
         } else {
           Get.defaultDialog(
               contentPadding: EdgeInsets.all(10.0),

@@ -79,8 +79,7 @@ class SettingsController extends GetxController {
 
         return true;
       } else {
-        // User canceled sign-in
-        return false;
+        return null;
       }
     } catch (e) {
       // Handle any other exceptions that may occur
