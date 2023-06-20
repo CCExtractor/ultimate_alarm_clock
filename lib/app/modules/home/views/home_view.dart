@@ -37,33 +37,6 @@ class HomeView extends GetView<HomeController> {
                         ),
                         onPressed: () {
                           controller.floatingButtonKey.currentState!.toggle();
-                          Get.toNamed('/add-update-alarm');
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.add,
-                              color: ksecondaryTextColor,
-                            ),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              'Create alarm',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        onPressed: () {
-                          controller.floatingButtonKey.currentState!.toggle();
                           Get.defaultDialog(
                             title: "Join an alarm",
                             titlePadding:
@@ -134,6 +107,33 @@ class HomeView extends GetView<HomeController> {
                             const SizedBox(width: 8.0),
                             Text(
                               'Join alarm',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        onPressed: () {
+                          controller.floatingButtonKey.currentState!.toggle();
+                          Get.toNamed('/add-update-alarm');
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.add,
+                              color: ksecondaryTextColor,
+                            ),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Create alarm',
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
