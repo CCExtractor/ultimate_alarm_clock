@@ -14,10 +14,79 @@ class ShakeToDismiss extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = Get.width;
+    var height = Get.height;
     return ListTile(
-      title: const Text(
-        'Shake to dismiss',
-        style: TextStyle(color: kprimaryTextColor),
+      title: Row(
+        children: [
+          const Text(
+            'Shake to dismiss',
+            style: TextStyle(color: kprimaryTextColor),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.info_sharp,
+              size: 21,
+              color: kprimaryTextColor.withOpacity(0.3),
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  backgroundColor: ksecondaryBackgroundColor,
+                  builder: (context) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Transform.rotate(
+                              angle: 15,
+                              child: Icon(
+                                Icons.vibration,
+                                color: kprimaryTextColor,
+                                size: height * 0.1,
+                              ),
+                            ),
+                            Text("Shake to dismiss",
+                                textAlign: TextAlign.center,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: Text(
+                                "You will have to shake your phone a set number of times to dismiss the alarm - no more lazy snoozing :)",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(
+                              width: width,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(kprimaryColor),
+                                ),
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Understood',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(color: ksecondaryTextColor),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            },
+          ),
+        ],
       ),
       onTap: () {
         Get.defaultDialog(
