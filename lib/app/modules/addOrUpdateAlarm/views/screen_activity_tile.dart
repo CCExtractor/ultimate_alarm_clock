@@ -78,7 +78,8 @@ class ScreenActivityTile extends StatelessWidget {
                                 color: kprimaryTextColor,
                                 size: height * 0.1,
                               ),
-                              Text("Screen activity cancellation",
+                              Text("Screen activity based cancellation",
+                                  textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium),
