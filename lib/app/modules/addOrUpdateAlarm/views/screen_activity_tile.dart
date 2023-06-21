@@ -14,6 +14,8 @@ class ScreenActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = Get.height;
+    var width = Get.width;
     return InkWell(
       onTap: () {
         Get.defaultDialog(
@@ -48,9 +50,57 @@ class ScreenActivityTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        title: const Text(
-          'Enable Activity',
-          style: TextStyle(color: kprimaryTextColor),
+        title: Row(
+          children: [
+            const Text(
+              'Enable Activity',
+              style: TextStyle(color: kprimaryTextColor),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.info_sharp,
+                size: 21,
+                color: kprimaryTextColor.withOpacity(0.3),
+              ),
+              onPressed: () {
+                Get.bottomSheet(BottomSheet(
+                    backgroundColor: ksecondaryBackgroundColor,
+                    onClosing: () {},
+                    builder: (context) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.2,
+                                width: width,
+                                child: Icon(
+                                  Icons.screen_lock_portrait_outlined,
+                                  color: kprimaryTextColor,
+                                  size: height * 0.1,
+                                ),
+                              ),
+                              Text(
+                                "Screen activity cancellation",
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  "This feature will automatically cancel the alarm if you've been using your device for a set number of minutes.",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }));
+              },
+            ),
+          ],
         ),
         trailing: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
