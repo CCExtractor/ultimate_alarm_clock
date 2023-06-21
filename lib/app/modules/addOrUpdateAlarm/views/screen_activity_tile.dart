@@ -53,7 +53,7 @@ class ScreenActivityTile extends StatelessWidget {
         title: Row(
           children: [
             const Text(
-              'Enable Activity',
+              'Screen Activity',
               style: TextStyle(color: kprimaryTextColor),
             ),
             IconButton(
@@ -63,28 +63,25 @@ class ScreenActivityTile extends StatelessWidget {
                 color: kprimaryTextColor.withOpacity(0.3),
               ),
               onPressed: () {
-                Get.bottomSheet(BottomSheet(
+                showModalBottomSheet(
+                    context: context,
                     backgroundColor: ksecondaryBackgroundColor,
-                    onClosing: () {},
                     builder: (context) {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.all(25.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              SizedBox(
-                                height: height * 0.2,
-                                width: width,
-                                child: Icon(
-                                  Icons.screen_lock_portrait_outlined,
-                                  color: kprimaryTextColor,
-                                  size: height * 0.1,
-                                ),
+                              Icon(
+                                Icons.screen_lock_portrait_outlined,
+                                color: kprimaryTextColor,
+                                size: height * 0.1,
                               ),
-                              Text(
-                                "Screen activity cancellation",
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
+                              Text("Screen activity cancellation",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium),
                               Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Text(
@@ -92,12 +89,31 @@ class ScreenActivityTile extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyMedium,
                                   textAlign: TextAlign.center,
                                 ),
+                              ),
+                              SizedBox(
+                                width: width,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        kprimaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Understood',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(color: ksecondaryTextColor),
+                                  ),
+                                ),
                               )
                             ],
                           ),
                         ),
                       );
-                    }));
+                    });
               },
             ),
           ],
