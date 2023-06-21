@@ -12,6 +12,8 @@ class WeatherTile extends StatelessWidget {
   final AddOrUpdateAlarmController controller;
   @override
   Widget build(BuildContext context) {
+    var width = Get.width;
+    var height = Get.height;
     return Obx(
       () => Container(
         child: (controller.weatherApiKeyExists.value == true)
@@ -258,9 +260,81 @@ class WeatherTile extends StatelessWidget {
                       ));
                 },
                 tileColor: ksecondaryBackgroundColor,
-                title: const Text('Enable Weather',
-                    style: TextStyle(
-                        color: kprimaryTextColor, fontWeight: FontWeight.w500)),
+                title: Row(
+                  children: [
+                    const Text('Weather Condition',
+                        style: TextStyle(
+                            color: kprimaryTextColor,
+                            fontWeight: FontWeight.w500)),
+                    IconButton(
+                      icon: Icon(
+                        Icons.info_sharp,
+                        size: 21,
+                        color: kprimaryTextColor.withOpacity(0.3),
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            backgroundColor: ksecondaryBackgroundColor,
+                            builder: (context) {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(25.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.cloudy_snowing,
+                                        color: kprimaryTextColor,
+                                        size: height * 0.1,
+                                      ),
+                                      Text("Weather based cancellation",
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 15.0),
+                                        child: Text(
+                                          "This feature will automatically cancel the alarm if the current weather matches your chosen weather conditions, allowing you to sleep better!",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width,
+                                        child: TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    kprimaryColor),
+                                          ),
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: Text(
+                                            'Understood',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                                    color: ksecondaryTextColor),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                    ),
+                  ],
+                ),
                 trailing: InkWell(
                   child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -343,9 +417,81 @@ class WeatherTile extends StatelessWidget {
                       ));
                 },
                 tileColor: ksecondaryBackgroundColor,
-                title: const Text('Enable Weather',
-                    style: TextStyle(
-                        color: kprimaryTextColor, fontWeight: FontWeight.w500)),
+                title: Row(
+                  children: [
+                    const Text('Weather Condition',
+                        style: TextStyle(
+                            color: kprimaryTextColor,
+                            fontWeight: FontWeight.w500)),
+                    IconButton(
+                      icon: Icon(
+                        Icons.info_sharp,
+                        size: 21,
+                        color: kprimaryTextColor.withOpacity(0.3),
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            backgroundColor: ksecondaryBackgroundColor,
+                            builder: (context) {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(25.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.cloudy_snowing,
+                                        color: kprimaryTextColor,
+                                        size: height * 0.1,
+                                      ),
+                                      Text("Weather based cancellation",
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 15.0),
+                                        child: Text(
+                                          "This feature will automatically cancel the alarm if the current weather matches your chosen weather conditions, allowing you to sleep better!",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width,
+                                        child: TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    kprimaryColor),
+                                          ),
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: Text(
+                                            'Understood',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                                    color: ksecondaryTextColor),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                    ),
+                  ],
+                ),
                 trailing: InkWell(
                   child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.start,
