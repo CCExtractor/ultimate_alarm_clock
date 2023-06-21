@@ -25,15 +25,15 @@ class GoogleSignIn extends StatelessWidget {
 
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(
-                titlePadding: EdgeInsets.symmetric(vertical: 20),
+                titlePadding: const EdgeInsets.symmetric(vertical: 20),
                 backgroundColor: ksecondaryBackgroundColor,
                 title: 'Success!',
                 titleStyle: Theme.of(context).textTheme.displaySmall,
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Icon(
-                      isSuccessfulLogin ? Icons.done : Icons.close,
+                    const Icon(
+                      Icons.done,
                       size: 50,
                       color: Colors.green,
                     ),
@@ -63,7 +63,7 @@ class GoogleSignIn extends StatelessWidget {
           }
         } else {
           Get.defaultDialog(
-              contentPadding: EdgeInsets.all(10.0),
+              contentPadding: const EdgeInsets.all(10.0),
               titlePadding: const EdgeInsets.symmetric(vertical: 20),
               backgroundColor: ksecondaryBackgroundColor,
               title: 'Are you sure?',
