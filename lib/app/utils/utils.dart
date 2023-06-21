@@ -276,6 +276,8 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+        label: '',
+        isOneTime: false,
         offsetDetails: {},
         mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
         lastEditedUserId: '',
