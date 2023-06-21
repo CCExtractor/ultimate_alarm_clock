@@ -14,8 +14,74 @@ class MathsChallenge extends StatelessWidget {
   final AddOrUpdateAlarmController controller;
   @override
   Widget build(BuildContext context) {
+    var width = Get.width;
+    var height = Get.height;
     return ListTile(
-      title: const Text('Maths'),
+      title: Row(
+        children: [
+          const Text('Maths'),
+          IconButton(
+            icon: Icon(
+              Icons.info_sharp,
+              size: 21,
+              color: kprimaryTextColor.withOpacity(0.3),
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  backgroundColor: ksecondaryBackgroundColor,
+                  builder: (context) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.calculate,
+                              color: kprimaryTextColor,
+                              size: height * 0.1,
+                            ),
+                            Text("Math problems",
+                                textAlign: TextAlign.center,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: Text(
+                                "You will have to solve simple math problems of the chosen difficulty level to dismiss the alarm.",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(
+                              width: width,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(kprimaryColor),
+                                ),
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Understood',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(color: ksecondaryTextColor),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            },
+          ),
+        ],
+      ),
       onTap: () {
         controller.isMathsEnabled.value = true;
         Get.defaultDialog(
