@@ -61,6 +61,8 @@ class AddOrUpdateAlarmController extends GetxController
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
+  final RxBool isOneTime = false.obs;
+  final RxString label = "".obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -165,6 +167,9 @@ class AddOrUpdateAlarmController extends GetxController
     }
 
     if (Get.arguments != null) {
+      isOneTime.value = alarmRecord!.isOneTime;
+      label.value = alarmRecord!.label;
+
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
@@ -309,6 +314,8 @@ class AddOrUpdateAlarmController extends GetxController
 
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
+        label: label.value,
+        isOneTime: isOneTime.value,
         mainAlarmTime:
             Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
         offsetDetails: offsetDetails,

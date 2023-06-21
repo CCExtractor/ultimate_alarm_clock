@@ -69,6 +69,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         }
                         AlarmModel alarmRecord = AlarmModel(
                             offsetDetails: controller.offsetDetails,
+                            label: controller.label.value,
+                            isOneTime: controller.isOneTime.value,
                             lastEditedUserId: controller.lastEditedUserId,
                             mutexLock: controller.mutexLock.value,
                             alarmID: controller.alarmID,
