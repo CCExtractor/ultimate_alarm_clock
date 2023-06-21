@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
@@ -223,6 +224,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                     ),
                     RepeatTile(controller: controller),
+                    Container(
+                      color: ksecondaryBackgroundColor,
+                      child: const Divider(
+                        color: kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    LabelTile(controller: controller),
                     Container(
                       color: ksecondaryTextColor,
                       height: 10,

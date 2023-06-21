@@ -17,6 +17,8 @@ import 'package:uuid/uuid.dart';
 
 class AddOrUpdateAlarmController extends GetxController
     with AlarmHandlerSetupModel {
+  final labelController = TextEditingController();
+
   late UserModel? userModel;
   var alarmID = Uuid().v4();
   var homeController = Get.find<HomeController>();
