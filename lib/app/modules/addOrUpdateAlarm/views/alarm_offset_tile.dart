@@ -21,7 +21,7 @@ class AlarmOffset extends StatelessWidget {
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
                   backgroundColor: ksecondaryBackgroundColor,
-                  title: 'Offset Duration',
+                  title: 'Choose duration',
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,7 +92,7 @@ class AlarmOffset extends StatelessWidget {
                 );
               },
               child: ListTile(
-                  title: const Text('Alarm Offset'),
+                  title: const Text('Ring before / after '),
                   trailing: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
