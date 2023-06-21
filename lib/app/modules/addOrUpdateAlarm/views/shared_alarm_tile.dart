@@ -13,12 +13,85 @@ class SharedAlarm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = Get.width;
+    var height = Get.height;
+
     return Container(
       child: (controller.userModel != null)
           ? ListTile(
-              title: const Text(
-                'Enable Shared Alarm',
-                style: TextStyle(color: kprimaryTextColor),
+              title: Row(
+                children: [
+                  const Text(
+                    'Shared Alarm',
+                    style: TextStyle(color: kprimaryTextColor),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.info_sharp,
+                      size: 21,
+                      color: kprimaryTextColor.withOpacity(0.3),
+                    ),
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          backgroundColor: ksecondaryBackgroundColor,
+                          builder: (context) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(25.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      Icons.share_arrival_time,
+                                      color: kprimaryTextColor,
+                                      size: height * 0.1,
+                                    ),
+                                    Text("Shared alarms",
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 15.0),
+                                      child: Text(
+                                        "Share alarms with others using the Alarm ID. Each shared user can choose to have their alarm ring before or after the set time.",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width,
+                                      child: TextButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  kprimaryColor),
+                                        ),
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        child: Text(
+                                          'Understood',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(
+                                                  color: ksecondaryTextColor),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                ],
               ),
               onTap: () {
                 // Toggle the value of isSharedAlarmEnabled
