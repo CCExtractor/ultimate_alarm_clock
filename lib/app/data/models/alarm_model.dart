@@ -39,6 +39,8 @@ class AlarmModel {
   late String lastEditedUserId;
   late bool mutexLock;
   String? mainAlarmTime;
+  late String label;
+  late bool isOneTime;
   @ignore
   Map? offsetDetails;
 
@@ -69,7 +71,9 @@ class AlarmModel {
       required this.qrValue,
       required this.activityInterval,
       this.offsetDetails = const {},
-      required this.mainAlarmTime});
+      required this.mainAlarmTime,
+      required this.label,
+      required this.isOneTime});
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot, required UserModel? user}) {
@@ -86,6 +90,8 @@ class AlarmModel {
       alarmTime = documentSnapshot['alarmTime'];
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
+    label = documentSnapshot['label'];
+    isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
     alarmID = documentSnapshot['alarmID'];
     sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
@@ -143,6 +149,8 @@ class AlarmModel {
     qrValue = alarmData['qrValue'];
     isShakeEnabled = alarmData['isShakeEnabled'];
     shakeTimes = alarmData['shakeTimes'];
+    label = alarmData['label'];
+    isOneTime = alarmData['isOneTime'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -160,6 +168,8 @@ class AlarmModel {
       'ownerId': alarmRecord.ownerId,
       'lastEditedUserId': alarmRecord.lastEditedUserId,
       'mutexLock': alarmRecord.mutexLock,
+      'isOneTime': alarmRecord.isOneTime,
+      'label': alarmRecord.label,
       'ownerName': alarmRecord.ownerName,
       'sharedUserIds': alarmRecord.sharedUserIds,
       'days': alarmRecord.days,
