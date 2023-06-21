@@ -144,9 +144,74 @@ class LocationTile extends StatelessWidget {
         });
       },
       child: ListTile(
-        title: const Text(
-          'Location Based',
-          style: TextStyle(color: kprimaryTextColor),
+        title: Row(
+          children: [
+            const Text(
+              'Location Based',
+              style: TextStyle(color: kprimaryTextColor),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.info_sharp,
+                size: 21,
+                color: kprimaryTextColor.withOpacity(0.3),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    backgroundColor: ksecondaryBackgroundColor,
+                    builder: (context) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(
+                                Icons.location_pin,
+                                color: kprimaryTextColor,
+                                size: height * 0.1,
+                              ),
+                              Text("Location based cancellation",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  "This feature will automatically cancel the alarm if you are within 500m of the chosen location!",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        kprimaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Understood',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(color: ksecondaryTextColor),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              },
+            ),
+          ],
         ),
         trailing: Obx(
           () => Wrap(
