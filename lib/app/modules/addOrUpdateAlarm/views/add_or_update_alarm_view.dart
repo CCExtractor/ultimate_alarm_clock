@@ -288,7 +288,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           Center(
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
-                              child: Text('Challenge',
+                              child: Text('Challenges',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
