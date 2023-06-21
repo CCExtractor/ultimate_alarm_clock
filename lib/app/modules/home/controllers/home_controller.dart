@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart' as rx;
-import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -26,7 +25,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
-  Timer _timer = Timer.periodic(Duration(milliseconds: 1), (timer) {});
+  Timer _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
