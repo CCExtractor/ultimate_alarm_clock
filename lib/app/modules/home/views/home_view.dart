@@ -88,11 +88,64 @@ class HomeView extends GetView<HomeController> {
                                     .displaySmall!
                                     .copyWith(color: ksecondaryTextColor),
                               ),
-                              onPressed: () {
-                                FirestoreDb.addUserToAlarmSharedUsers(
-                                    controller.userModel.value,
-                                    controller.alarmIdController.text);
-                                Get.back();
+                              onPressed: () async {
+                                bool result =
+                                    await FirestoreDb.addUserToAlarmSharedUsers(
+                                        controller.userModel.value,
+                                        controller.alarmIdController.text);
+
+                                if (!result) {
+                                  Get.defaultDialog(
+                                      titlePadding:
+                                          EdgeInsets.symmetric(vertical: 20),
+                                      backgroundColor:
+                                          ksecondaryBackgroundColor,
+                                      title: 'Error!',
+                                      titleStyle: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
+                                      content: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Icon(
+                                            Icons.close,
+                                            size: 50,
+                                            color: Colors.red,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: Text(
+                                              "An alarm with this ID doesn't exist!",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          TextButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          kprimaryColor)),
+                                              child: Text(
+                                                'Okay',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall!
+                                                    .copyWith(
+                                                        color:
+                                                            ksecondaryTextColor),
+                                              ),
+                                              onPressed: () {
+                                                Get.back();
+                                              }),
+                                        ],
+                                      ));
+                                } else {
+                                  Get.back();
+                                }
                               },
                             ),
                           );
