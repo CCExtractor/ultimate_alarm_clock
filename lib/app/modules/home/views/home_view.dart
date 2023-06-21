@@ -434,7 +434,7 @@ class HomeView extends GetView<HomeController> {
                                                                               Padding(
                                                                                 padding: const EdgeInsets.symmetric(horizontal: 3.0),
                                                                                 child: Icon(
-                                                                                  Icons.sunny_snowing,
+                                                                                  Icons.cloudy_snowing,
                                                                                   size: 24,
                                                                                   color: kprimaryTextColor.withOpacity(0.5),
                                                                                 ),
