@@ -24,25 +24,58 @@ class ScreenActivityTile extends StatelessWidget {
           title: 'Timeout Duration',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            () => Column(
               children: [
-                NumberPicker(
-                  value: controller.activityInterval.value,
-                  minValue: 0,
-                  maxValue: 1440,
-                  onChanged: (value) {
-                    if (value > 0) {
-                      controller.isActivityenabled.value = true;
-                    } else {
-                      controller.isActivityenabled.value = false;
-                    }
-                    controller.activityInterval.value = value;
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    NumberPicker(
+                      value: controller.activityInterval.value,
+                      minValue: 0,
+                      maxValue: 1440,
+                      onChanged: (value) {
+                        if (value > 0) {
+                          controller.isActivityenabled.value = true;
+                        } else {
+                          controller.isActivityenabled.value = false;
+                        }
+                        controller.activityInterval.value = value;
+                      },
+                    ),
+                    Text(
+                      controller.activityInterval.value > 1
+                          ? 'minutes'
+                          : 'minute',
+                    ),
+                  ],
                 ),
-                Text(
-                  controller.activityInterval.value > 1 ? 'minutes' : 'minute',
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  kprimaryColor // Set the desired background color
+                              ),
+                          child: Text(
+                            'Done',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(color: ksecondaryTextColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

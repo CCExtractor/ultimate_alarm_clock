@@ -226,6 +226,33 @@ class RepeatTile extends StatelessWidget {
                           ]),
                     ),
                   ),
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: kprimaryColor
+                                // Set the desired background color
+                                ),
+                            child: Text(
+                              'Done',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ));
