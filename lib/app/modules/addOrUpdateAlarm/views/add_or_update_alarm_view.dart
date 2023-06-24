@@ -18,6 +18,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to_dismiss_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_alarm_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -69,6 +70,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           controller.offsetDetails.value = {};
                         }
                         AlarmModel alarmRecord = AlarmModel(
+                            snoozeDuration: controller.snoozeDuration.value,
                             offsetDetails: controller.offsetDetails,
                             label: controller.label.value,
                             isOneTime: controller.isOneTime.value,
@@ -227,6 +229,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                     ),
                     RepeatTile(controller: controller),
+                    Container(
+                      color: ksecondaryBackgroundColor,
+                      child: const Divider(
+                        color: kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    SnoozeDurationTile(controller: controller),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
