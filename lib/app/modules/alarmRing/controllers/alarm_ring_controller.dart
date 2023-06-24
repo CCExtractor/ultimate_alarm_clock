@@ -17,10 +17,15 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class AlarmControlController extends GetxController
     with AlarmHandlerSetupModel {
   late StreamSubscription<FGBGType> _subscription;
+  TimeOfDay currentTime = TimeOfDay.now();
+  late RxBool isSnoozing = false.obs;
+  RxInt minutes = 1.obs;
+  RxInt seconds = 0.obs;
   final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
+  Timer? _currentTimeTimer;
 
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -49,12 +54,45 @@ class AlarmControlController extends GetxController
     return latestAlarm;
   }
 
+  void startSnooze() {
+    isSnoozing.value = true;
+    FlutterRingtonePlayer.stop();
+
+    if (_currentTimeTimer!.isActive) {
+      _currentTimeTimer?.cancel();
+    }
+
+    _currentTimeTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (minutes.value == 0 && seconds.value == 0) {
+        timer.cancel();
+        FlutterRingtonePlayer.playAlarm();
+        startTimer();
+      } else if (seconds.value == 0) {
+        minutes.value--;
+        seconds.value = 59;
+      } else {
+        seconds.value--;
+      }
+    });
+  }
+
+  void startTimer() {
+    isSnoozing.value = false;
+    _currentTimeTimer = Timer.periodic(
+        Duration(
+            milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
+                DateTime.now().add(const Duration(minutes: 1)))), (timer) {
+      formattedDate.value = Utils.getFormattedDate(DateTime.now());
+      timeNow.value =
+          Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
+    });
+  }
+
   @override
   void onInit() async {
     super.onInit();
 
     FlutterRingtonePlayer.playAlarm();
-    TimeOfDay currentTime = TimeOfDay.now();
 
     // Preventing app from being minimized!
     _subscription = FGBGEvents.stream.listen((event) {
@@ -63,15 +101,7 @@ class AlarmControlController extends GetxController
       }
     });
 
-    Timer.periodic(
-        Duration(
-            milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
-                DateTime.now().add(const Duration(minutes: 1)))), (timer) {
-      formattedDate.value = Utils.getFormattedDate(DateTime.now());
-      timeNow.value =
-          Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
-    });
-
+    startTimer();
     // If it's preview mode, no need to schedule alarms again
     if (Get.arguments == null) {
       currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
@@ -109,5 +139,6 @@ class AlarmControlController extends GetxController
     super.onClose();
     await FlutterRingtonePlayer.stop();
     _subscription.cancel();
+    dismissAlarm();
   }
 }
