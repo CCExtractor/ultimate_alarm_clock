@@ -40,6 +40,7 @@ class AlarmModel {
   String? mainAlarmTime;
   late String label;
   late bool isOneTime;
+  late int snoozeDuration;
   @ignore
   Map? offsetDetails;
 
@@ -72,7 +73,8 @@ class AlarmModel {
       this.offsetDetails = const {},
       required this.mainAlarmTime,
       required this.label,
-      required this.isOneTime});
+      required this.isOneTime,
+      required this.snoozeDuration});
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot, required UserModel? user}) {
@@ -89,6 +91,7 @@ class AlarmModel {
       alarmTime = documentSnapshot['alarmTime'];
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
+    snoozeDuration = documentSnapshot['snoozeDuration'];
     label = documentSnapshot['label'];
     isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
@@ -119,6 +122,7 @@ class AlarmModel {
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
+    snoozeDuration = alarmData['snoozeDuration'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     alarmTime = alarmData['alarmTime'];
@@ -190,6 +194,7 @@ class AlarmModel {
       'qrValue': alarmRecord.qrValue,
       'isShakeEnabled': alarmRecord.isShakeEnabled,
       'shakeTimes': alarmRecord.shakeTimes,
+      'snoozeDuration': alarmRecord.snoozeDuration,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
