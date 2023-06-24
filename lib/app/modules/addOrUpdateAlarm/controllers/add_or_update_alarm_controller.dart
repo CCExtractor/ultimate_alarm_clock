@@ -65,7 +65,7 @@ class AddOrUpdateAlarmController extends GetxController
       <bool>[false, false, false, false, false, false, false].obs;
   final RxBool isOneTime = false.obs;
   final RxString label = "".obs;
-
+  final RxInt snoozeDuration = 1.obs;
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
@@ -169,6 +169,7 @@ class AddOrUpdateAlarmController extends GetxController
     }
 
     if (Get.arguments != null) {
+      snoozeDuration.value = alarmRecord!.snoozeDuration;
       isOneTime.value = alarmRecord!.isOneTime;
       label.value = alarmRecord!.label;
 
@@ -316,6 +317,7 @@ class AddOrUpdateAlarmController extends GetxController
 
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
+        snoozeDuration: snoozeDuration.value,
         label: label.value,
         isOneTime: isOneTime.value,
         mainAlarmTime:
