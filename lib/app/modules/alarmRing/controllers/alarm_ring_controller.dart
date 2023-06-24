@@ -37,6 +37,7 @@ class AlarmControlController extends GetxController
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     print("CURRENT RINGING : ${latestAlarm.alarmTime}");
+
     return latestAlarm;
   }
 
@@ -77,6 +78,7 @@ class AlarmControlController extends GetxController
   }
 
   void startTimer() {
+    minutes.value = currentlyRingingAlarm.value.snoozeDuration;
     isSnoozing.value = false;
     _currentTimeTimer = Timer.periodic(
         Duration(
@@ -84,7 +86,7 @@ class AlarmControlController extends GetxController
                 DateTime.now().add(const Duration(minutes: 1)))), (timer) {
       formattedDate.value = Utils.getFormattedDate(DateTime.now());
       timeNow.value =
-          Utils.convertTo12HourFormat(Utils.timeOfDayToString(currentTime));
+          Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
     });
   }
 
@@ -127,6 +129,9 @@ class AlarmControlController extends GetxController
     } else {
       currentlyRingingAlarm.value = Get.arguments;
     }
+
+    // Setting snooze duration
+    minutes.value = currentlyRingingAlarm.value.snoozeDuration;
   }
 
   @override
@@ -139,6 +144,7 @@ class AlarmControlController extends GetxController
     super.onClose();
     await FlutterRingtonePlayer.stop();
     _subscription.cancel();
+    _currentTimeTimer?.cancel();
     dismissAlarm();
   }
 }
