@@ -95,7 +95,9 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         width: 0,
                       ),
                       Text(
-                        "${controller.timeNow[0]} ${controller.timeNow[1]}",
+                        (controller.isSnoozing.value)
+                            ? "${controller.minutes.toString().padLeft(2, '0')}:${controller.seconds.toString().padLeft(2, '0')}"
+                            : "${controller.timeNow[0]} ${controller.timeNow[1]}",
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge!
@@ -117,7 +119,9 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           color: kprimaryTextColor,
                           fontWeight: FontWeight.w600),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.startSnooze();
+                    },
                   ),
                 )
               ],
