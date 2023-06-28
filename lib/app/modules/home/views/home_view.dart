@@ -355,119 +355,148 @@ class HomeView extends GetView<HomeController> {
                                                             Expanded(
                                                               flex: 3,
                                                               child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                        repeatDays.replaceAll(
-                                                                            "Never",
-                                                                            "One Time"),
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    repeatDays.replaceAll(
+                                                                        "Never",
+                                                                        "One Time"),
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .bodySmall!
+                                                                        .copyWith(
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          color: (alarm.isEnabled == true)
+                                                                              ? kprimaryColor
+                                                                              : kprimaryDisabledTextColor,
+                                                                        ),
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        time12[
+                                                                            0],
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .bodySmall!
+                                                                            .displayLarge!
                                                                             .copyWith(
-                                                                                fontWeight: FontWeight.w500,
-                                                                                color: (alarm.isEnabled == true) ? kprimaryColor : kprimaryDisabledTextColor)),
-                                                                    Row(
-                                                                      children: [
-                                                                        Text(
+                                                                              color: (alarm.isEnabled == true) ? kprimaryTextColor : kprimaryDisabledTextColor,
+                                                                            ),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                        child:
+                                                                            Text(
                                                                           time12[
-                                                                              0],
+                                                                              1],
                                                                           style: Theme.of(context)
                                                                               .textTheme
-                                                                              .displayLarge!
-                                                                              .copyWith(color: (alarm.isEnabled == true) ? kprimaryTextColor : kprimaryDisabledTextColor),
+                                                                              .displayMedium!
+                                                                              .copyWith(
+                                                                                color: (alarm.isEnabled == true) ? kprimaryTextColor : kprimaryDisabledTextColor,
+                                                                              ),
                                                                         ),
-                                                                        Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                          child:
-                                                                              Text(
-                                                                            time12[1],
-                                                                            style:
-                                                                                Theme.of(context).textTheme.displayMedium!.copyWith(color: (alarm.isEnabled == true) ? kprimaryTextColor : kprimaryDisabledTextColor),
-                                                                          ),
-                                                                        ),
-                                                                      ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  if (Utils.isChallengeEnabled(alarm) ||
+                                                                      Utils.isAutoDismissalEnabled(
+                                                                          alarm) ||
+                                                                      alarm
+                                                                          .isSharedAlarmEnabled)
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          vertical:
+                                                                              8.0),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        children: [
+                                                                          if (alarm
+                                                                              .isSharedAlarmEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.share_arrival_time,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isLocationEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.location_pin,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isActivityEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.screen_lock_portrait,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isWeatherEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.cloudy_snowing,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isQrEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.qr_code_scanner,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isShakeEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.vibration,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
+                                                                              .isMathsEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                              child: Icon(
+                                                                                Icons.calculate,
+                                                                                size: 24,
+                                                                                color: kprimaryTextColor.withOpacity(0.5),
+                                                                              ),
+                                                                            ),
+                                                                        ],
+                                                                      ),
                                                                     ),
-                                                                    (Utils.isChallengeEnabled(alarm) ||
-                                                                            Utils.isAutoDismissalEnabled(alarm) ||
-                                                                            alarm.isSharedAlarmEnabled)
-                                                                        ? Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              if (alarm.isSharedAlarmEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.share_arrival_time,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                              if (alarm.isLocationEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.location_pin,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                              if (alarm.isActivityEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.screen_lock_portrait,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                              if (alarm.isWeatherEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.cloudy_snowing,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                              if (alarm.isQrEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.qr_code_scanner,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                              if (alarm.isShakeEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.vibration,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                              if (alarm.isMathsEnabled)
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                  child: Icon(
-                                                                                    Icons.calculate,
-                                                                                    size: 24,
-                                                                                    color: kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                            ],
-                                                                          )
-                                                                        : const SizedBox(),
-                                                                  ]),
+                                                                ],
+                                                              ),
                                                             ),
                                                             Padding(
                                                               padding: const EdgeInsets
@@ -481,24 +510,31 @@ class HomeView extends GetView<HomeController> {
                                                                 children: [
                                                                   Expanded(
                                                                     flex: 0,
-                                                                    child: Switch(
-                                                                        value: alarm.isEnabled,
-                                                                        onChanged: (bool value) async {
-                                                                          alarm.isEnabled =
-                                                                              value;
+                                                                    child:
+                                                                        Switch(
+                                                                      value: alarm
+                                                                          .isEnabled,
+                                                                      onChanged:
+                                                                          (bool
+                                                                              value) async {
+                                                                        alarm.isEnabled =
+                                                                            value;
 
-                                                                          if (alarm.isSharedAlarmEnabled ==
-                                                                              true) {
-                                                                            await FirestoreDb.updateAlarm(alarm.ownerId,
-                                                                                alarm);
-                                                                          } else {
-                                                                            await IsarDb.updateAlarm(alarm);
-                                                                          }
-                                                                          controller.refreshTimer =
-                                                                              true;
-                                                                          controller
-                                                                              .refreshUpcomingAlarms();
-                                                                        }),
+                                                                        if (alarm.isSharedAlarmEnabled ==
+                                                                            true) {
+                                                                          await FirestoreDb.updateAlarm(
+                                                                              alarm.ownerId,
+                                                                              alarm);
+                                                                        } else {
+                                                                          await IsarDb.updateAlarm(
+                                                                              alarm);
+                                                                        }
+                                                                        controller.refreshTimer =
+                                                                            true;
+                                                                        controller
+                                                                            .refreshUpcomingAlarms();
+                                                                      },
+                                                                    ),
                                                                   ),
                                                                   Expanded(
                                                                     flex: 0,
@@ -519,8 +555,10 @@ class HomeView extends GetView<HomeController> {
 
                                                                           if (alarm.isSharedAlarmEnabled ==
                                                                               true) {
-                                                                            await FirestoreDb.deleteAlarm(controller.userModel.value,
-                                                                                alarm.firestoreId!);
+                                                                            await FirestoreDb.deleteAlarm(
+                                                                              controller.userModel.value,
+                                                                              alarm.firestoreId!,
+                                                                            );
                                                                           } else {
                                                                             await IsarDb.deleteAlarm(alarm.isarId);
                                                                           }
@@ -533,12 +571,15 @@ class HomeView extends GetView<HomeController> {
                                                                       },
                                                                       color:
                                                                           kprimaryBackgroundColor,
-                                                                      icon: Icon(
-                                                                          Icons
-                                                                              .more_vert,
-                                                                          color: (alarm.isEnabled == true)
-                                                                              ? kprimaryTextColor
-                                                                              : kprimaryDisabledTextColor),
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .more_vert,
+                                                                        color: (alarm.isEnabled ==
+                                                                                true)
+                                                                            ? kprimaryTextColor
+                                                                            : kprimaryDisabledTextColor,
+                                                                      ),
                                                                       itemBuilder:
                                                                           (context) {
                                                                         return [
@@ -561,11 +602,11 @@ class HomeView extends GetView<HomeController> {
                                                                               "Delete Alarm",
                                                                               style: Theme.of(context).textTheme.bodyMedium,
                                                                             ),
-                                                                          )
+                                                                          ),
                                                                         ];
                                                                       },
                                                                     ),
-                                                                  )
+                                                                  ),
                                                                 ],
                                                               ),
                                                             ),
