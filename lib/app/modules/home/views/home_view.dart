@@ -622,7 +622,7 @@ class HomeView extends GetView<HomeController> {
                                     }
                                   });
                             } else {
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
                             }
                           });
                     }),
