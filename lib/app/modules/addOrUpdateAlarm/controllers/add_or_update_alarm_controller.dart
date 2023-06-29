@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
@@ -100,18 +101,63 @@ class AddOrUpdateAlarmController extends GetxController
       // Cannot request runtime permission because location permission is denied forever.
       return false;
     } else if (locationPermission == LocationPermission.denied) {
+      // Show an alert box to the user before asking for location permission.
+      bool? shouldAskPermission = await showDialog<bool>(
+        context: Get.context!,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+
+            backgroundColor: ksecondaryBackgroundColor,
+            title: Text('Location Permission',style: TextStyle(
+              color: Colors.white
+            ),),
+            content: Text('This app needs access to your location.'),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: kprimaryColor,
+                ),
+                child: Text('Cancel',style: TextStyle(color: Colors.black),),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: kprimaryColor,
+                ),
+                child: Text('Allow',style: TextStyle(color: Colors.black),),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+      if (shouldAskPermission == false) {
+        // User declined the permission request.
+        return false;
+      }
+
       // Ask the user for location permission.
       locationPermission = await FlLocation.requestLocationPermission();
       if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) return false;
+          locationPermission == LocationPermission.deniedForever) {
+        return false;
+      }
     }
 
     // Location permission must always be allowed (LocationPermission.always)
     // to collect location data in the background.
     if (background == true &&
-        locationPermission == LocationPermission.whileInUse) return false;
+        locationPermission == LocationPermission.whileInUse) {
+      return false;
+    }
 
-    // Location services has been enabled and permission have been granted.
+    // Location services have been enabled and permission has been granted.
     return true;
   }
 
@@ -123,13 +169,60 @@ class AddOrUpdateAlarmController extends GetxController
     }
   }
 
-  restartQRCodeController() {
-    qrController = MobileScannerController(
-      autoStart: true,
-      detectionSpeed: DetectionSpeed.noDuplicates,
-      facing: CameraFacing.back,
-      torchEnabled: false,
-    );
+
+  restartQRCodeController() async {
+    PermissionStatus cameraStatus = await Permission.camera.status;
+
+    if (!cameraStatus.isGranted) {
+      showDialog(
+        context: Get.context!,
+        builder: (BuildContext context) => AlertDialog(
+          backgroundColor: ksecondaryBackgroundColor,
+          title: Text('Camera Permission',style: TextStyle(
+              color: Colors.white
+          ),  ),
+          content: Text('Please allow camera access to scan QR codes.'),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child: Text('OK',style: TextStyle(color: Colors.black),),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the alert box
+                PermissionStatus permissionStatus = await Permission.camera.request();
+                if (permissionStatus.isGranted) {
+                  // Permission granted, proceed with QR code scanning
+                  qrController = MobileScannerController(
+                    autoStart: true,
+                    detectionSpeed: DetectionSpeed.noDuplicates,
+                    facing: CameraFacing.back,
+                    torchEnabled: false,
+                  );
+                }
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child: Text('Cancel',style: TextStyle(color: Colors.black),),
+              onPressed: ()  {
+                Navigator.of(context).pop(); // Close the alert box
+              },
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Camera permission already granted, proceed with QR code scanning
+      qrController = MobileScannerController(
+        autoStart: true,
+        detectionSpeed: DetectionSpeed.noDuplicates,
+        facing: CameraFacing.back,
+        torchEnabled: false,
+      );
+    }
   }
 
   updateAlarm(AlarmModel alarmData) async {

@@ -35,6 +35,7 @@ dependencies:
   uuid: ^3.0.7
   flutter_expandable_fab: ^1.8.1
   rxdart: ^0.27.7
+  permission_handler: ^10.3.0
   flutter:
     sdk: flutter
 

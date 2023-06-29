@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -175,7 +177,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                         onPressed: () {
                           controller.floatingButtonKey.currentState!.toggle();
-                          Get.toNamed('/add-update-alarm');
+                          checkOverlayPermissionAndNavigate(context);
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -205,7 +207,7 @@ class HomeView extends GetView<HomeController> {
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
-                      Get.toNamed('/add-update-alarm');
+                      checkOverlayPermissionAndNavigate(context);
                     },
                   )),
       ),
@@ -607,4 +609,72 @@ class HomeView extends GetView<HomeController> {
       )),
     );
   }
+}
+
+
+
+// ...
+
+Future<void> checkOverlayPermissionAndNavigate(BuildContext context) async {
+  if (!(await FlutterForegroundTask.canDrawOverlays) || !(await Permission.notification.isGranted)) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: ksecondaryBackgroundColor,
+          title: Text('Permission Required', style: TextStyle(color: Colors.white)),
+          content: Text('This app requires permission to draw overlays and send notifications.'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child: Text('Cancel', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                navigateToNamedRoute();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child: Text('Grant Permission', style: TextStyle(color: Colors.black)),
+              onPressed: () async {
+                Navigator.of(context).pop();
+
+                // Request overlay permission
+                if (!(await FlutterForegroundTask.canDrawOverlays)) {
+                  final isOverlayPermissionGranted =
+                  await FlutterForegroundTask.openSystemAlertWindowSettings();
+                  if (!isOverlayPermissionGranted) {
+                    print('SYSTEM_ALERT_WINDOW permission denied!');
+                    return;
+                  }
+                }
+
+                // Request notification permission
+                if (!(await Permission.notification.isGranted)) {
+                  final status = await Permission.notification.request();
+                  if (status != PermissionStatus.granted) {
+                    print('Notification permission denied!');
+                    return;
+                  }
+                }
+
+                navigateToNamedRoute();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } else {
+    navigateToNamedRoute();
+  }
+
+}
+
+void navigateToNamedRoute() {
+  Get.toNamed('/add-update-alarm');
 }

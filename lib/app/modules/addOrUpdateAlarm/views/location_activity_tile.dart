@@ -93,7 +93,7 @@ class LocationTile extends StatelessWidget {
             if (controller.isLocationEnabled.value == false) {
               await controller.getLocation();
             }
-            controller.isLocationEnabled.value = true;
+
 
             Get.defaultDialog(
               backgroundColor: ksecondaryBackgroundColor,
@@ -135,7 +135,10 @@ class LocationTile extends StatelessWidget {
                           .displaySmall!
                           .copyWith(color: ksecondaryTextColor),
                     ),
-                    onPressed: () => Get.back(),
+                    onPressed: () {
+                      Get.back();
+controller.isLocationEnabled.value = true;
+                      },
                   ),
                 ],
               ),
