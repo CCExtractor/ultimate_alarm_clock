@@ -94,28 +94,57 @@ class ShakeToDismiss extends StatelessWidget {
           backgroundColor: ksecondaryBackgroundColor,
           title: 'Number of shakes',
           titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                NumberPicker(
-                  value: controller.shakeTimes.value,
-                  minValue: 0,
-                  maxValue: 100,
-                  onChanged: (value) {
-                    if (value > 0) {
-                      controller.isShakeEnabled.value = true;
-                    } else {
-                      controller.isShakeEnabled.value = false;
-                    }
-                    controller.shakeTimes.value = value;
-                  },
-                ),
-                Text(controller.shakeTimes.value > 1 ? 'times' : 'time')
-              ],
-            ),
-          ),
+          content: Obx(() => Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        value: controller.shakeTimes.value,
+                        minValue: 0,
+                        maxValue: 100,
+                        onChanged: (value) {
+                          if (value > 0) {
+                            controller.isShakeEnabled.value = true;
+                          } else {
+                            controller.isShakeEnabled.value = false;
+                          }
+                          controller.shakeTimes.value = value;
+                        },
+                      ),
+                      Text(controller.shakeTimes.value > 1 ? 'times' : 'time'),
+                    ],
+                  ),
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: kprimaryColor
+                                // Set the desired background color
+                                ),
+                            child: Text(
+                              'Done',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )),
         );
       },
       trailing: InkWell(
