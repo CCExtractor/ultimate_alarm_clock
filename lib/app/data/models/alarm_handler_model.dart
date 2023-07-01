@@ -20,6 +20,7 @@ class AlarmHandlerModel extends TaskHandler {
   late AlarmModel alarmRecord;
   SendPort? _sendPort;
   Stopwatch? _stopwatch;
+  bool shouldAlarmRing = true;
   late ReceivePort _uiReceivePort;
 
   bool isScreenActive = true;
@@ -77,7 +78,6 @@ class AlarmHandlerModel extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
     isNewAlarm = true;
-
     _sendPort = sendPort;
     _uiReceivePort = ReceivePort();
 
@@ -115,8 +115,7 @@ class AlarmHandlerModel extends TaskHandler {
   @override
   Future<void> onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
     print('CHANGING TO LATEST ALARM VIA EVENT! at ${TimeOfDay.now()}');
-    bool shouldAlarmRing = true;
-
+    shouldAlarmRing = true;
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
 
@@ -169,14 +168,14 @@ class AlarmHandlerModel extends TaskHandler {
         Utils.isCurrentDayinList(alarmRecord.days) == true &&
         isNewAlarm == false) {
       // Ring only if necessary
-      if (shouldAlarmRing == true) {
+      if (shouldAlarmRing == false) {
         // Ringing alarm now!
-        FlutterForegroundTask.launchApp('/alarm-ring');
-        _sendPort?.send('alarmRingRoute');
-      } else {
         print("STOPPING ALARM");
         _sendPort?.send('alarmRingIgnoreRoute');
         FlutterForegroundTask.launchApp('/alarm-ring-ignore');
+      } else {
+        FlutterForegroundTask.launchApp('/alarm-ring');
+        _sendPort?.send('alarmRingRoute');
       }
     }
     //  The time will never be before since getMilliSeconds will always adjust it a day forward
@@ -190,6 +189,7 @@ class AlarmHandlerModel extends TaskHandler {
         notificationText: 'Rings at ${alarmRecord.alarmTime}',
       );
       isNewAlarm = false;
+      shouldAlarmRing = false;
     }
   }
 
@@ -202,7 +202,13 @@ class AlarmHandlerModel extends TaskHandler {
 
   @override
   void onNotificationPressed() {
-    FlutterForegroundTask.launchApp("/home");
-    _sendPort?.send('onNotificationPressed');
+    if (shouldAlarmRing == true) {
+      print("CORRECT SCREEN ${shouldAlarmRing}");
+      FlutterForegroundTask.launchApp('/alarm-ring');
+      _sendPort?.send('alarmRingRoute');
+    } else {
+      FlutterForegroundTask.launchApp('/home');
+      _sendPort?.send('onNotificationPressed');
+    }
   }
 }

@@ -108,7 +108,9 @@ class AlarmHandlerSetupModel {
 
       if (message is String) {
         if (message == 'onNotificationPressed') {
-          Get.toNamed('/home');
+          if (Get.currentRoute != '/home') {
+            Get.offNamed('/home');
+          }
         } else if (message == 'alarmRingRoute') {
           FlutterForegroundTask.launchApp('/alarm-ring');
           if (Get.currentRoute != '/alarm-ring') {
