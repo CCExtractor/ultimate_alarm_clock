@@ -173,7 +173,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     // Check if 2 seconds have passed since the last call
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
-    if (currentTime - lastRefreshTime < 1000) {
+    if (currentTime - lastRefreshTime < 2000) {
       delayToSchedule?.cancel();
     }
 
@@ -181,7 +181,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       return;
     }
 
-    delayToSchedule = Timer(const Duration(seconds: 1), () async {
+    delayToSchedule = Timer(const Duration(seconds: 2), () async {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
       // Cancel timer if we have to refresh
       if (refreshTimer == true && _timer.isActive) {
