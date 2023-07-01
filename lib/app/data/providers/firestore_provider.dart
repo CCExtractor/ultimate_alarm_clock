@@ -220,8 +220,7 @@ class FirestoreDb {
     await _alarmsCollection(user).doc(id).delete();
   }
 
-  static Future<bool> addUserToAlarmSharedUsers(
-      UserModel? userModel, String alarmID) async {
+  static addUserToAlarmSharedUsers(UserModel? userModel, String alarmID) async {
     String userModelId = userModel!.id;
 
     final alarmQuerySnapshot = await _firebaseFirestore
@@ -233,12 +232,26 @@ class FirestoreDb {
       return false;
     }
     final alarmDoc = alarmQuerySnapshot.docs[0];
+
+    if (alarmDoc.data()['ownerId'] == userModelId) {
+      return null;
+    }
+
     final sharedUserIds =
         List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
+    final offsetDetails =
+        Map<String, dynamic>.from(alarmDoc.data()['offsetDetails'] ?? {});
+
+    offsetDetails[userModelId] = {
+      'isOffsetBefore': true,
+      'offsetDuration': 0,
+      'offsettedTime': alarmDoc.data()['alarmTime']
+    };
 
     if (!sharedUserIds.contains(userModelId)) {
       sharedUserIds.add(userModelId);
-      await alarmDoc.reference.update({'sharedUserIds': sharedUserIds});
+      await alarmDoc.reference.update(
+          {'sharedUserIds': sharedUserIds, 'offsetDetails': offsetDetails});
     }
     return true;
   }

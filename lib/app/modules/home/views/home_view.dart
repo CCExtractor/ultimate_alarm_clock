@@ -88,12 +88,12 @@ class HomeView extends GetView<HomeController> {
                                     .copyWith(color: ksecondaryTextColor),
                               ),
                               onPressed: () async {
-                                bool result =
+                                var result =
                                     await FirestoreDb.addUserToAlarmSharedUsers(
                                         controller.userModel.value,
                                         controller.alarmIdController.text);
 
-                                if (!result) {
+                                if (result != true) {
                                   Get.defaultDialog(
                                       titlePadding:
                                           EdgeInsets.symmetric(vertical: 20),
@@ -116,7 +116,9 @@ class HomeView extends GetView<HomeController> {
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 10.0),
                                             child: Text(
-                                              "An alarm with this ID doesn't exist!",
+                                              result == null
+                                                  ? "You cannot join your own alarm!"
+                                                  : "An alarm with this ID doesn't exist!",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .displaySmall,
