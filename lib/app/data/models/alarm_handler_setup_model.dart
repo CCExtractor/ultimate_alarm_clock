@@ -31,7 +31,7 @@ class AlarmHandlerSetupModel {
         iconData: const NotificationIconData(
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
-          name: 'launcher',
+          name: 'launcher_foreground',
         ),
         buttons: [],
       ),
