@@ -50,14 +50,14 @@ class AlarmHandlerSetupModel {
   }
 
   Future<bool> startForegroundTask(AlarmModel alarmRecord) async {
-    if (!await FlutterForegroundTask.canDrawOverlays) {
-      final isGranted =
-          await FlutterForegroundTask.openSystemAlertWindowSettings();
-      if (!isGranted) {
-        print('SYSTEM_ALERT_WINDOW permission denied!');
-        return false;
-      }
-    }
+    // if (!await FlutterForegroundTask.canDrawOverlays) {
+    //   final isGranted =
+    //       await FlutterForegroundTask.openSystemAlertWindowSettings();
+    //   if (!isGranted) {
+    //     print('SYSTEM_ALERT_WINDOW permission denied!');
+    //     return false;
+    //   }
+    // }
     // print('Setting alarm for time: ${alarmRecord.alarmTime}');
     // await FlutterForegroundTask.saveData(
     //     key: 'alarmData', value: AlarmModel.toJson(alarmRecord));
