@@ -224,7 +224,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
         // Update the value of timeToAlarm only once till it settles it's time with the upcoming alarm
         // Doing this because of an bug :
-        // If we are not doing the below three lines of code the time is not updating for 2 sec and runnin
+        // If we are not doing the below three lines of code the time is not updating for 2 min after running
+        // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE MISCALCULATION FOR INITIAL MINUTES
         // This is just to make sure that our calculated time-to-alarm is upto date with the real time for next alarm
         timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
