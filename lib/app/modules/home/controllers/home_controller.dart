@@ -206,7 +206,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
           Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
       alarmTime.value = "Rings in $timeToAlarm";
 
-// This function is necessary when alarms are deleted/enabled
+      // This function is necessary when alarms are deleted/enabled
       await scheduleNextAlarm(
           alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
 
@@ -221,9 +221,16 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
         // Adding a delay till that difference between seconds upto the next minute
         await Future.delayed(delay);
+
+        // Update the value of timeToAlarm only once till it settles it's time with the upcoming alarm
+        // Doing this because of an bug :
+        // If we are not doing the below three lines of code the time is not updating for initial 2 minutes and running fine after it
+
         timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
         alarmTime.value = "Rings in $timeToAlarm";
+
+        // Running a timer of periodic one minute as it is now in sync with the current time
         _timer = Timer.periodic(
             Duration(
                 milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
