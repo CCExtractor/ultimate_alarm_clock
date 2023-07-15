@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -96,7 +98,7 @@ class HomeView extends GetView<HomeController> {
                                 if (result != true) {
                                   Get.defaultDialog(
                                       titlePadding:
-                                          EdgeInsets.symmetric(vertical: 20),
+                                          const EdgeInsets.symmetric(vertical: 20),
                                       backgroundColor:
                                           ksecondaryBackgroundColor,
                                       title: 'Error!',
@@ -202,12 +204,12 @@ class HomeView extends GetView<HomeController> {
                     initialOpen: false,
                     child: const Icon(Icons.add),
                     key: controller.floatingButtonKeyLoggedOut,
-                    children: [],
+                    children: const [],
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
-                      Get.toNamed('/add-update-alarm');
-                    },
+                      checkOverlayPermissionAndNavigate(context);
+                      },
                   )),
       ),
       body: SafeArea(
@@ -656,4 +658,79 @@ class HomeView extends GetView<HomeController> {
       )),
     );
   }
+}
+Future<void> checkOverlayPermissionAndNavigate(BuildContext context) async {
+  if (!(await FlutterForegroundTask.canDrawOverlays) || !(await FlutterForegroundTask.isIgnoringBatteryOptimizations)
+  || !(await FlutterForegroundTask.canDrawOverlays)) {
+
+    Get.defaultDialog(
+      backgroundColor: ksecondaryBackgroundColor,
+      title: 'Permission Required',
+      titleStyle: const TextStyle(color: Colors.white),
+      contentPadding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+      titlePadding: const EdgeInsets.only(top:30,right: 40),
+      content: const Text('This app requires permission to draw overlays,send notifications and Ignore batter optimization.'),
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: kprimaryColor,
+          ),
+          child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+          onPressed: () {
+            Get.back();
+            navigateToNamedRoute();
+          },
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: kprimaryColor,
+          ),
+          child: const Text('Grant Permission', style: TextStyle(color: Colors.black)),
+          onPressed: () async {
+            Get.back();
+
+            // Request overlay permission
+            if (!(await FlutterForegroundTask.canDrawOverlays)) {
+              final isOverlayPermissionGranted =
+              await FlutterForegroundTask.openSystemAlertWindowSettings();
+              if (!isOverlayPermissionGranted) {
+                print('SYSTEM_ALERT_WINDOW permission denied!');
+                return;
+              }
+            }
+            if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
+              // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
+              await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+              if (!await (FlutterForegroundTask.isIgnoringBatteryOptimizations)) {
+                print('IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                return;
+              }
+            }
+            // Request notification permission
+            if (!await Permission.notification.isGranted){
+              final status = await Permission.notification.request();
+              if (status != PermissionStatus.granted) {
+                print('Notification permission denied!');
+                return;
+              }
+            }
+
+            navigateToNamedRoute();
+          },
+        ),
+      ],
+    );
+
+
+  } else {
+    navigateToNamedRoute();
+  }
+
+}
+
+void navigateToNamedRoute() {
+  Get.toNamed('/add-update-alarm');
 }
