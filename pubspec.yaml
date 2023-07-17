@@ -30,6 +30,7 @@ dependencies:
   shake: ^2.2.0
   numberpicker: ^2.1.2
   mobile_scanner: ^3.2.0
+  permission_handler: ^10.3.0
   google_sign_in: ^6.0.2
   url_launcher: ^6.1.11
   uuid: ^3.0.7
