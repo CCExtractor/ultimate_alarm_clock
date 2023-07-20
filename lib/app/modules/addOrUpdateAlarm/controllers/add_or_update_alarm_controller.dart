@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
@@ -77,6 +78,78 @@ class AddOrUpdateAlarmController extends GetxController
     return userDetails;
   }
 
+  checkOverlayPermissionAndNavigate() async {
+    if (!(await FlutterForegroundTask.canDrawOverlays) ||
+        !(await FlutterForegroundTask.isIgnoringBatteryOptimizations) ||
+        !(await FlutterForegroundTask.canDrawOverlays)) {
+      Get.defaultDialog(
+        backgroundColor: ksecondaryBackgroundColor,
+        title: 'Permission Required',
+        titleStyle: const TextStyle(color: Colors.white),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        titlePadding: const EdgeInsets.only(top: 30, right: 40),
+        content: const Text(
+            'This app requires permission to draw overlays,send notifications and Ignore batter optimization.'),
+        actions: [
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: kprimaryColor,
+            ),
+            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: kprimaryColor,
+            ),
+            child: const Text('Grant Permission',
+                style: TextStyle(color: Colors.black)),
+            onPressed: () async {
+              Get.back();
+
+              // Request overlay permission
+              if (!(await FlutterForegroundTask.canDrawOverlays)) {
+                final isOverlayPermissionGranted =
+                    await FlutterForegroundTask.openSystemAlertWindowSettings();
+                if (!isOverlayPermissionGranted) {
+                  print('SYSTEM_ALERT_WINDOW permission denied!');
+                  return;
+                }
+              }
+              if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
+                // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
+                await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+                if (!await (FlutterForegroundTask
+                    .isIgnoringBatteryOptimizations)) {
+                  print('IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                  return;
+                }
+              }
+              // Request notification permission
+              if (!await Permission.notification.isGranted) {
+                final status = await Permission.notification.request();
+                if (status != PermissionStatus.granted) {
+                  print('Notification permission denied!');
+                  return;
+                }
+              }
+
+              Get.back();
+            },
+          ),
+        ],
+      );
+    } else {
+      Get.back();
+    }
+  }
+
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
       final timeLimit = const Duration(seconds: 10);
@@ -105,8 +178,8 @@ class AddOrUpdateAlarmController extends GetxController
         backgroundColor: ksecondaryBackgroundColor,
         barrierDismissible: false,
         title: 'Location Permission',
-        contentPadding: EdgeInsets.symmetric(vertical: 20,horizontal: 20),
-        titlePadding: EdgeInsets.only(top:30,right: 40),
+        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        titlePadding: EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(color: Colors.white),
         content: Text('This app needs access to your location.'),
         actions: [
@@ -134,9 +207,7 @@ class AddOrUpdateAlarmController extends GetxController
         ],
         cancelTextColor: Colors.black,
         confirmTextColor: Colors.black,
-
       );
-
 
       if (shouldAskPermission == false) {
         // User declined the permission request.
@@ -165,19 +236,97 @@ class AddOrUpdateAlarmController extends GetxController
     }
   }
 
-  restartQRCodeController() async {
-    PermissionStatus cameraStatus = await Permission.camera.status;
+  showQRDialog() {
+    restartQRCodeController();
+    Get.defaultDialog(
+      titlePadding: const EdgeInsets.symmetric(vertical: 20),
+      backgroundColor: ksecondaryBackgroundColor,
+      title: 'Scan a QR/Bar Code',
+      titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
+      content: Obx(
+        () => Column(
+          children: [
+            isQrEnabled.value == false
+                ? SizedBox(
+                    height: 300,
+                    width: 300,
+                    child: MobileScanner(
+                      controller: qrController,
+                      fit: BoxFit.cover,
+                      onDetect: (capture) {
+                        final List<Barcode> barcodes = capture.barcodes;
+                        for (final barcode in barcodes) {
+                          qrValue.value = barcode.rawValue.toString();
+                          print(barcode.rawValue.toString());
+                          isQrEnabled.value = true;
+                        }
+                      },
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Text(qrValue.value),
+                  ),
+            isQrEnabled.value == true
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        child: Text(
+                          'Save',
+                          style: Theme.of(Get.context!)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(color: ksecondaryTextColor),
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        child: Text(
+                          'Retake',
+                          style: Theme.of(Get.context!)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(color: ksecondaryTextColor),
+                        ),
+                        onPressed: () async {
+                          qrController.dispose();
+                          restartQRCodeController();
+                          isQrEnabled.value = false;
+                        },
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
+          ],
+        ),
+      ),
+    );
+  }
 
+  requestQrPermission() async {
+    PermissionStatus cameraStatus = await Permission.camera.status;
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
         backgroundColor: ksecondaryBackgroundColor,
         title: 'Camera Permission',
         titleStyle: TextStyle(color: Colors.white),
-        titlePadding: EdgeInsets.only(top: 25,left: 10,),
-        contentPadding: EdgeInsets.only(top: 20,left: 20,bottom:23 ),
-
+        titlePadding: EdgeInsets.only(
+          top: 25,
+          left: 10,
+        ),
+        contentPadding: EdgeInsets.only(top: 20, left: 20, bottom: 23),
         content: Text('Please allow camera access to scan QR codes.'),
-
         onCancel: () {
           Get.back(); // Close the alert box
         },
@@ -186,19 +335,17 @@ class AddOrUpdateAlarmController extends GetxController
           PermissionStatus permissionStatus = await Permission.camera.request();
           if (permissionStatus.isGranted) {
             // Permission granted, proceed with QR code scanning
-            qrController = MobileScannerController(
-              autoStart: true,
-              detectionSpeed: DetectionSpeed.noDuplicates,
-              facing: CameraFacing.back,
-              torchEnabled: false,
-            );
+            showQRDialog();
           }
         },
         cancel: TextButton(
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: Text('Cancel',style: TextStyle(color: Colors.black),),
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: Colors.black),
+          ),
           onPressed: () {
             Get.back(); // Close the alert box
           },
@@ -207,32 +354,34 @@ class AddOrUpdateAlarmController extends GetxController
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: Text('OK',style: TextStyle(color: Colors.black),),
+          child: Text(
+            'OK',
+            style: TextStyle(color: Colors.black),
+          ),
           onPressed: () async {
             Get.back(); // Close the alert box
-            PermissionStatus permissionStatus = await Permission.camera.request();
+            PermissionStatus permissionStatus =
+                await Permission.camera.request();
             if (permissionStatus.isGranted) {
               // Permission granted, proceed with QR code scanning
-              qrController = MobileScannerController(
-                autoStart: true,
-                detectionSpeed: DetectionSpeed.noDuplicates,
-                facing: CameraFacing.back,
-                torchEnabled: false,
-              );
+              showQRDialog();
             }
           },
         ),
       );
-
     } else {
-      // Camera permission already granted, proceed with QR code scanning
-      qrController = MobileScannerController(
-        autoStart: true,
-        detectionSpeed: DetectionSpeed.noDuplicates,
-        facing: CameraFacing.back,
-        torchEnabled: false,
-      );
+      showQRDialog();
     }
+  }
+
+  restartQRCodeController() async {
+    // Camera permission already granted, proceed with QR code scanning
+    qrController = MobileScannerController(
+      autoStart: true,
+      detectionSpeed: DetectionSpeed.noDuplicates,
+      facing: CameraFacing.back,
+      torchEnabled: false,
+    );
   }
 
   updateAlarm(AlarmModel alarmData) async {
