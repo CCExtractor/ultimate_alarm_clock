@@ -1,0 +1,28 @@
+name: Flutter Build
+
+on:
+  push:
+    branches:
+      - main
+      - next
+
+jobs:
+  build-android:
+    name: Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@master
+        with:
+          channel: stable
+
+      - name: Build Flutter app for Android
+        run: flutter build apk
