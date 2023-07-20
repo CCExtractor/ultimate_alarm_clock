@@ -131,7 +131,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           print(e);
                         }
 
-                        Get.back();
+                        await controller.checkOverlayPermissionAndNavigate();
                       },
                     ),
                   ),
@@ -207,25 +207,22 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       color: ksecondaryBackgroundColor,
                       height: height * 0.32,
                       width: width,
-                      child: Transform.scale(
-                        scale: 1.12,
-                        child: TimePickerSpinner(
-                          time: controller.selectedTime.value,
-                          isForce2Digits: true,
-                          alignment: Alignment.center,
-                          is24HourMode: false,
-                          normalTextStyle: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                  fontWeight: FontWeight.normal,
-                                  color: kprimaryDisabledTextColor),
-                          highlightedTextStyle:
-                              Theme.of(context).textTheme.displayMedium,
-                          onTimeChange: (dateTime) {
-                            controller.selectedTime.value = dateTime;
-                          },
-                        ),
+                      child: TimePickerSpinner(
+                        time: controller.selectedTime.value,
+                        isForce2Digits: true,
+                        alignment: Alignment.center,
+                        is24HourMode: false,
+                        normalTextStyle: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(
+                                fontWeight: FontWeight.normal,
+                                color: kprimaryDisabledTextColor),
+                        highlightedTextStyle:
+                            Theme.of(context).textTheme.displayMedium,
+                        onTimeChange: (dateTime) {
+                          controller.selectedTime.value = dateTime;
+                        },
                       ),
                     ),
                     RepeatTile(controller: controller),
