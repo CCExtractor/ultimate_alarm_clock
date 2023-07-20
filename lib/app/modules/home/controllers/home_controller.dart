@@ -206,12 +206,32 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
           Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
       alarmTime.value = "Rings in $timeToAlarm";
 
-// This function is necessary when alarms are deleted/enabled
+      // This function is necessary when alarms are deleted/enabled
       await scheduleNextAlarm(
           alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
 
       if (latestAlarm.minutesSinceMidnight > -1) {
-        // Starting timer for live refresh
+        // To account for difference between seconds upto the next minute
+        DateTime now = DateTime.now();
+        DateTime nextMinute =
+            DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
+        Duration delay = nextMinute.difference(now).inMilliseconds > 0
+            ? nextMinute.difference(now)
+            : Duration.zero;
+
+        // Adding a delay till that difference between seconds upto the next minute
+        await Future.delayed(delay);
+
+        // Update the value of timeToAlarm only once till it settles it's time with the upcoming alarm
+        // Doing this because of an bug :
+        // If we are not doing the below three lines of code the time is not updating for 2 min after running
+        // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE MISCALCULATION FOR INITIAL MINUTES
+        // This is just to make sure that our calculated time-to-alarm is upto date with the real time for next alarm
+        timeToAlarm = Utils.timeUntilAlarm(
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
+        alarmTime.value = "Rings in $timeToAlarm";
+
+        // Running a timer of periodic one minute as it is now in sync with the current time
         _timer = Timer.periodic(
             Duration(
                 milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
