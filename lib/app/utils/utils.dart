@@ -169,7 +169,7 @@ class Utils {
       }
     }
 
-    if (duration.inMinutes <= 1) {
+    if (duration.inMinutes < 1) {
       return 'less than 1 minute';
     } else if (duration.inHours < 24) {
       final hours = duration.inHours;
