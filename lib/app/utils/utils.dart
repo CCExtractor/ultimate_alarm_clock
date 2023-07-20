@@ -169,17 +169,21 @@ class Utils {
       }
     }
 
-    if (duration.inMinutes <= 1) {
+    if (duration.inMinutes < 1) {
       return 'less than 1 minute';
     } else if (duration.inHours < 24) {
       final hours = duration.inHours;
       final minutes = duration.inMinutes % 60;
       if (hours == 0) {
-        return '$minutes minutes';
+        return minutes == 1 ? '$minutes minute' : '$minutes minutes';
       } else if (minutes == 0) {
-        return '$hours hours';
+        return hours == 1 ? '$hours hour' : '$hours hours';
+      } else if (hours == 1) {
+        return minutes == 1
+            ? '$hours hour $minutes minute'
+            : '$hours hour $minutes minutes';
       } else {
-        return '$hours hours $minutes minutes';
+        return '$hours hour $minutes minutes';
       }
     } else if (duration.inDays == 1) {
       return '1 day';
