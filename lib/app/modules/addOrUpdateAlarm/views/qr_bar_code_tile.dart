@@ -82,83 +82,8 @@ class QrBarCode extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () {
-        controller.restartQRCodeController();
-        Get.defaultDialog(
-          titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: ksecondaryBackgroundColor,
-          title: 'Scan a QR/Bar Code',
-          titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Obx(
-            () => Column(
-              children: [
-                controller.isQrEnabled.value == false
-                    ? SizedBox(
-                        height: 300,
-                        width: 300,
-                        child: MobileScanner(
-                          controller: controller.qrController,
-                          fit: BoxFit.cover,
-                          onDetect: (capture) {
-                            final List<Barcode> barcodes = capture.barcodes;
-                            for (final barcode in barcodes) {
-                              controller.qrValue.value =
-                                  barcode.rawValue.toString();
-                              print(barcode.rawValue.toString());
-                              controller.isQrEnabled.value = true;
-                            }
-                          },
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Text(controller.qrValue.value),
-                      ),
-                controller.isQrEnabled.value == true
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TextButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(kprimaryColor),
-                            ),
-                            child: Text(
-                              'Save',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
-                            ),
-                            onPressed: () {
-                              Get.back();
-                            },
-                          ),
-                          TextButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(kprimaryColor),
-                            ),
-                            child: Text(
-                              'Retake',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
-                            ),
-                            onPressed: () async {
-                              controller.qrController.dispose();
-                              controller.restartQRCodeController();
-                              controller.isQrEnabled.value = false;
-                            },
-                          ),
-                        ],
-                      )
-                    : const SizedBox(),
-              ],
-            ),
-          ),
-        );
+      onTap: () async {
+        await controller.requestQrPermission();
       },
       trailing: InkWell(
         child: Wrap(
