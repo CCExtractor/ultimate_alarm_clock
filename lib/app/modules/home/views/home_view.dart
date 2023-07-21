@@ -616,16 +616,15 @@ class HomeView extends GetView<HomeController> {
                                                                               style: Theme.of(context).textTheme.bodyMedium,
                                                                             ),
                                                                           ),
-                                                                          PopupMenuItem<
-                                                                              int>(
-                                                                            value:
-                                                                                1,
-                                                                            child:
-                                                                                Text(
-                                                                              "Delete Alarm",
-                                                                              style: Theme.of(context).textTheme.bodyMedium,
+                                                                          if (alarm.isSharedAlarmEnabled &&
+                                                                              alarm.ownerId == controller.userModel.value!.id)
+                                                                            PopupMenuItem<int>(
+                                                                              value: 1,
+                                                                              child: Text(
+                                                                                "Delete Alarm",
+                                                                                style: Theme.of(context).textTheme.bodyMedium,
+                                                                              ),
                                                                             ),
-                                                                          ),
                                                                         ];
                                                                       },
                                                                     ),
