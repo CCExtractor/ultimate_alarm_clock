@@ -84,7 +84,11 @@ class AlarmModel {
 
     if (isSharedAlarmEnabled && user != null) {
       mainAlarmTime = documentSnapshot['alarmTime'];
-      alarmTime = offsetDetails![user.id]['offsettedTime'];
+      // Using offsetted time only if it is enabled
+
+      alarmTime = (offsetDetails![user.id]['offsetDuration'] != 0)
+          ? offsetDetails![user.id]['offsettedTime']
+          : documentSnapshot['alarmTime'];
       minutesSinceMidnight = Utils.timeOfDayToInt(
           Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']));
     } else {
