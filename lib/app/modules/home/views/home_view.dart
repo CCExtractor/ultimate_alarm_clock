@@ -616,8 +616,8 @@ class HomeView extends GetView<HomeController> {
                                                                               style: Theme.of(context).textTheme.bodyMedium,
                                                                             ),
                                                                           ),
-                                                                          if (alarm.isSharedAlarmEnabled &&
-                                                                              alarm.ownerId == controller.userModel.value!.id)
+                                                                          if (alarm.isSharedAlarmEnabled == false || (alarm.isSharedAlarmEnabled == true &&
+                                                                              alarm.ownerId == controller.userModel.value!.id))
                                                                             PopupMenuItem<int>(
                                                                               value: 1,
                                                                               child: Text(
