@@ -13,9 +13,11 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:vibration/vibration.dart';
 
 class AlarmControlController extends GetxController
     with AlarmHandlerSetupModel {
+  Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
   late RxBool isSnoozing = false.obs;
@@ -56,6 +58,8 @@ class AlarmControlController extends GetxController
   }
 
   void startSnooze() {
+    Vibration.cancel();
+    vibrationTimer!.cancel();
     isSnoozing.value = true;
     FlutterRingtonePlayer.stop();
 
@@ -66,6 +70,10 @@ class AlarmControlController extends GetxController
     _currentTimeTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (minutes.value == 0 && seconds.value == 0) {
         timer.cancel();
+        vibrationTimer =
+            Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+          Vibration.vibrate(pattern: [500, 3000]);
+        });
         FlutterRingtonePlayer.playAlarm();
         startTimer();
       } else if (seconds.value == 0) {
@@ -96,6 +104,11 @@ class AlarmControlController extends GetxController
 
     FlutterRingtonePlayer.playAlarm();
 
+    vibrationTimer =
+        Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+      Vibration.vibrate(pattern: [500, 3000]);
+    });
+
     // Preventing app from being minimized!
     _subscription = FGBGEvents.stream.listen((event) {
       if (event == FGBGType.background) {
@@ -122,6 +135,9 @@ class AlarmControlController extends GetxController
   @override
   void onClose() async {
     super.onClose();
+
+    Vibration.cancel();
+    vibrationTimer!.cancel();
     // Scheduling next alarm if it's not in preview mode
 //     if (Get.arguments == null) {
 //       AlarmModel latestAlarm = await getNextAlarm();
@@ -145,6 +161,7 @@ class AlarmControlController extends GetxController
 //       }
 //     }
     await FlutterRingtonePlayer.stop();
+
     _subscription.cancel();
     _currentTimeTimer?.cancel();
   }
