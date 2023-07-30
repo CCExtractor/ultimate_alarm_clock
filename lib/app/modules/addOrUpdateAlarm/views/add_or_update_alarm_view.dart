@@ -13,6 +13,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_ti
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to_dismiss_tile.dart';
@@ -226,6 +227,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                     ),
                     RepeatTile(controller: controller),
+                    Container(
+                      color: ksecondaryBackgroundColor,
+                      child: const Divider(
+                        color: kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    RepeatOnceTile(controller: controller),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
