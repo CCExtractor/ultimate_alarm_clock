@@ -124,13 +124,19 @@ class GoogleSignIn extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Obx(
-              () => Text(
-                (controller.isUserLoggedIn.value)
-                    ? 'Unlink Google Account'
-                    : 'Sign-In with Google',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: kprimaryTextColor,
-                    ),
+              () => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    (controller.isUserLoggedIn.value)
+                        ? 'Unlink ${controller.userModel!.email}'
+                        : 'Sign-In with Google',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: kprimaryTextColor,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ],
               ),
             ),
             Obx(
