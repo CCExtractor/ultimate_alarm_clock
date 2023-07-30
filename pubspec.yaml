@@ -38,6 +38,7 @@ dependencies:
   rxdart: ^0.27.7
   flutter:
     sdk: flutter
+  vibration: ^1.8.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

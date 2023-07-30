@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:vibration/vibration.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
 class AlarmControlView extends GetView<AlarmControlController> {
   const AlarmControlView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
