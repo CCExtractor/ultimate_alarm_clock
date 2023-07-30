@@ -19,7 +19,7 @@ class RepeatTile extends StatelessWidget {
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
             backgroundColor: ksecondaryBackgroundColor,
             title: 'Repeat',
-            titleStyle: Theme.of(context).textTheme.displayMedium,
+            titleStyle: TextStyle(color: kprimaryTextColor),
             content: Obx(
               () => Column(
                 children: [

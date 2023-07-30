@@ -21,6 +21,7 @@ class AlarmControlController extends GetxController
   late RxBool isSnoozing = false.obs;
   RxInt minutes = 1.obs;
   RxInt seconds = 0.obs;
+  RxBool showButton = false.obs;
   final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
@@ -106,12 +107,66 @@ class AlarmControlController extends GetxController
     startTimer();
     if (Get.arguments == null) {
       currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+      showButton.value = true;
+      // If the alarm is set to NEVER repeat, then it will be chosen as the next alarm to ring by default as it would ring the next day
+      if (currentlyRingingAlarm.value.days
+          .every((element) => element == false)) {
+        currentlyRingingAlarm.value.isEnabled = false;
+
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+          IsarDb.updateAlarm(currentlyRingingAlarm.value);
+        } else {
+          FirestoreDb.updateAlarm(
+              currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+        }
+      } else if (currentlyRingingAlarm.value.isOneTime == true) {
+        // If the alarm has to repeat on one day, but ring just once, we will keep seting its days to false until it will never ring
+        int currentDay = DateTime.now().weekday - 1;
+        currentlyRingingAlarm.value.days[currentDay] = false;
+
+        if (currentlyRingingAlarm.value.days
+            .every((element) => element == false)) {
+          currentlyRingingAlarm.value.isEnabled = false;
+        }
+
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+          IsarDb.updateAlarm(currentlyRingingAlarm.value);
+        } else {
+          FirestoreDb.updateAlarm(
+              currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+        }
+      }
     } else {
       currentlyRingingAlarm.value = Get.arguments;
     }
 
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
+
+    // Scheduling next alarm if it's not in preview mode
+    if (Get.arguments == null) {
+      // Finding the next alarm to ring
+      AlarmModel latestAlarm = await getNextAlarm();
+      TimeOfDay latestAlarmTimeOfDay =
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+
+      // }
+      // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
+      if (latestAlarm.isEnabled == false) {
+        print(
+            "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current = ${currentTime.toString()}");
+        await stopForegroundTask();
+      } else {
+        int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+            DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+        if (await FlutterForegroundTask.isRunningService == false) {
+          createForegroundTask(intervaltoAlarm);
+          await startForegroundTask(latestAlarm);
+        } else {
+          await restartForegroundTask(latestAlarm, intervaltoAlarm);
+        }
+      }
+    }
   }
 
   @override
@@ -122,28 +177,6 @@ class AlarmControlController extends GetxController
   @override
   void onClose() async {
     super.onClose();
-    // Scheduling next alarm if it's not in preview mode
-//     if (Get.arguments == null) {
-//       AlarmModel latestAlarm = await getNextAlarm();
-
-//       TimeOfDay latestAlarmTimeOfDay =
-//           Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-// // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
-//       if (latestAlarm.isEnabled == false) {
-//         print(
-//             "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current = ${currentTime.toString()}");
-//         await stopForegroundTask();
-//       } else {
-//         int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-//             DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
-//         if (await FlutterForegroundTask.isRunningService == false) {
-//           createForegroundTask(intervaltoAlarm);
-//           await startForegroundTask(latestAlarm);
-//         } else {
-//           await restartForegroundTask(latestAlarm, intervaltoAlarm);
-//         }
-//       }
-//     }
     await FlutterRingtonePlayer.stop();
     _subscription.cancel();
     _currentTimeTimer?.cancel();

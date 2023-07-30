@@ -25,7 +25,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                     () => SizedBox(
                       height: height * 0.06,
                       width: width * 0.8,
-                      child: controller.currentlyRingingAlarm.value.isEnabled
+                      child: controller.showButton.value
                           ? TextButton(
                               style: ButtonStyle(
                                   backgroundColor:
