@@ -15,6 +15,20 @@ class AlarmControlIgnoreController extends GetxController
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
+  final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
+  getCurrentlyRingingAlarm() async {
+    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm =
+        await IsarDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    print("CURRENT RINGING : ${latestAlarm.alarmTime}");
+
+    return latestAlarm;
+  }
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -34,7 +48,37 @@ class AlarmControlIgnoreController extends GetxController
   void onInit() async {
     super.onInit();
 
+    currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+    // If the alarm is set to NEVER repeat, then it will be chosen as the next alarm to ring by default as it would ring the next day
+    if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+      currentlyRingingAlarm.value.isEnabled = false;
+
+      if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+        IsarDb.updateAlarm(currentlyRingingAlarm.value);
+      } else {
+        FirestoreDb.updateAlarm(
+            currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+      }
+    } else if (currentlyRingingAlarm.value.isOneTime == true) {
+      // If the alarm has to repeat on one day, but ring just once, we will keep seting its days to false until it will never ring
+      int currentDay = DateTime.now().weekday - 1;
+      currentlyRingingAlarm.value.days[currentDay] = false;
+
+      if (currentlyRingingAlarm.value.days
+          .every((element) => element == false)) {
+        currentlyRingingAlarm.value.isEnabled = false;
+      }
+
+      if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+        IsarDb.updateAlarm(currentlyRingingAlarm.value);
+      } else {
+        FirestoreDb.updateAlarm(
+            currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+      }
+    }
+
     AlarmModel latestAlarm = await getNextAlarm();
+
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
