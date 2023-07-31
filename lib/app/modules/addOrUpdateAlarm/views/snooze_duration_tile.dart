@@ -21,25 +21,54 @@ class SnoozeDurationTile extends StatelessWidget {
           backgroundColor: ksecondaryBackgroundColor,
           title: 'Select duration',
           titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                NumberPicker(
-                  value: controller.snoozeDuration.value,
-                  minValue: 1,
-                  maxValue: 1440,
-                  onChanged: (value) {
-                    controller.snoozeDuration.value = value;
-                  },
-                ),
-                Text(
-                  controller.snoozeDuration.value > 1 ? 'minutes' : 'minute',
-                ),
-              ],
-            ),
-          ),
+          content: Obx(() => Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        value: controller.snoozeDuration.value,
+                        minValue: 1,
+                        maxValue: 1440,
+                        onChanged: (value) {
+                          controller.snoozeDuration.value = value;
+                        },
+                      ),
+                      Text(
+                        controller.snoozeDuration.value > 1
+                            ? 'minutes'
+                            : 'minute',
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: kprimaryColor),
+                            child: Text(
+                              'Done',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: ksecondaryTextColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )),
         );
       },
       child: ListTile(
