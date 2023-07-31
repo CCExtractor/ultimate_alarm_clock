@@ -30,6 +30,7 @@ class LabelTile extends StatelessWidget {
               .copyWith(color: kprimaryTextColor),
           contentPadding: const EdgeInsets.all(21),
           content: TextField(
+            autofocus: true,
             controller: controller.labelController,
             style: Theme.of(context).textTheme.bodyLarge,
             cursorColor: kprimaryTextColor.withOpacity(0.75),
