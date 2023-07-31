@@ -31,9 +31,9 @@ class RepeatOnceTile extends StatelessWidget {
             Obx(() {
               if (controller.repeatDays.every((element) => element == false)) {
                 return Switch(
-                    value: true,
+                    value: false,
                     onChanged: (value) {
-                      controller.isOneTime.value = true;
+                      controller.isOneTime.value = false;
                     });
               }
               return Switch(
