@@ -16,254 +16,64 @@ class RepeatTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         Get.defaultDialog(
-            titlePadding: const EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: ksecondaryBackgroundColor,
-            title: 'Repeat',
-            titleStyle: TextStyle(color: kprimaryTextColor),
-            content: Obx(
-              () => Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[0] = !controller.repeatDays[0];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[0],
-                                onChanged: (value) {
-                                  controller.repeatDays[0] =
-                                      !controller.repeatDays[0];
-                                }),
-                            Text(
-                              'Monday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[1] = !controller.repeatDays[1];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[1],
-                                onChanged: (value) {
-                                  controller.repeatDays[1] =
-                                      !controller.repeatDays[1];
-                                }),
-                            Text(
-                              'Tuesday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[2] = !controller.repeatDays[2];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[2],
-                                onChanged: (value) {
-                                  controller.repeatDays[2] =
-                                      !controller.repeatDays[2];
-                                }),
-                            Text(
-                              'Wednesday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[3] = !controller.repeatDays[3];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[3],
-                                onChanged: (value) {
-                                  controller.repeatDays[3] =
-                                      !controller.repeatDays[3];
-                                }),
-                            Text(
-                              'Thursday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[4] = !controller.repeatDays[4];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[4],
-                                onChanged: (value) {
-                                  controller.repeatDays[4] =
-                                      !controller.repeatDays[4];
-                                }),
-                            Text(
-                              'Friday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[5] = !controller.repeatDays[5];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[5],
-                                onChanged: (value) {
-                                  controller.repeatDays[5] =
-                                      !controller.repeatDays[5];
-                                }),
-                            Text(
-                              'Saturday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      controller.repeatDays[6] = !controller.repeatDays[6];
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                                side: BorderSide(
-                                    width: 1.5,
-                                    color: kprimaryTextColor.withOpacity(0.5)),
-                                value: controller.repeatDays[6],
-                                onChanged: (value) {
-                                  controller.repeatDays[6] =
-                                      !controller.repeatDays[6];
-                                }),
-                            Text(
-                              'Sunday',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 15),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Get.back();
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: kprimaryColor
-                                // Set the desired background color
-                                ),
-                            child: Text(
-                              'Done',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
-                            ),
+          titlePadding: const EdgeInsets.symmetric(vertical: 20),
+          backgroundColor: ksecondaryBackgroundColor,
+          title: 'Repeat',
+          titleStyle: const TextStyle(color: kprimaryTextColor),
+          content: Obx(
+            () => Column(
+              children: [
+                dayTile(dayIndex: 0, dayName: 'Monday', context: context),
+                dayTile(dayIndex: 1, dayName: 'Tuesday', context: context),
+                dayTile(dayIndex: 2, dayName: 'Wednesday', context: context),
+                dayTile(dayIndex: 3, dayName: 'Thursday', context: context),
+                dayTile(dayIndex: 4, dayName: 'Friday', context: context),
+                dayTile(dayIndex: 5, dayName: 'Saturday', context: context),
+                dayTile(dayIndex: 6, dayName: 'Sunday', context: context),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: kprimaryColor
+                              // Set the desired background color
+                              ),
+                          child: Text(
+                            'Done',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(color: ksecondaryTextColor),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ));
+                ),
+              ],
+            ),
+          ),
+        );
       },
       child: ListTile(
-          tileColor: ksecondaryBackgroundColor,
-          title: const Text('Repeat',
-              style: TextStyle(
-                  color: kprimaryTextColor, fontWeight: FontWeight.w500)),
-          trailing:
-              Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
+        tileColor: ksecondaryBackgroundColor,
+        title: const Text(
+          'Repeat',
+          style: TextStyle(
+            color: kprimaryTextColor,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        trailing: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
             Obx(
               () => Text(
                 controller.daysRepeating.value,
@@ -276,8 +86,47 @@ class RepeatTile extends StatelessWidget {
             const Icon(
               Icons.chevron_right,
               color: kprimaryDisabledTextColor,
-            )
-          ])),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget dayTile({
+    required int dayIndex,
+    required String dayName,
+    required BuildContext context,
+  }) {
+    return InkWell(
+      onTap: () {
+        controller.repeatDays[dayIndex] = !controller.repeatDays[dayIndex];
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Checkbox(
+              side: BorderSide(
+                width: 1.5,
+                color: kprimaryTextColor.withOpacity(0.5),
+              ),
+              value: controller.repeatDays[dayIndex],
+              onChanged: (value) {
+                controller.repeatDays[dayIndex] =
+                    !controller.repeatDays[dayIndex];
+              },
+            ),
+            Text(
+              dayName,
+              style:
+                  Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 15),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
