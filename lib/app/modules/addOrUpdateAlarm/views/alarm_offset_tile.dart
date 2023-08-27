@@ -32,15 +32,18 @@ class AlarmOffset extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             NumberPicker(
-                                value: controller.offsetDuration.value,
-                                minValue: 0,
-                                maxValue: 1440,
-                                onChanged: (value) {
-                                  controller.offsetDuration.value = value;
-                                }),
-                            Text(controller.offsetDuration.value > 1
-                                ? 'minutes'
-                                : 'minute')
+                              value: controller.offsetDuration.value,
+                              minValue: 0,
+                              maxValue: 1440,
+                              onChanged: (value) {
+                                controller.offsetDuration.value = value;
+                              },
+                            ),
+                            Text(
+                              controller.offsetDuration.value > 1
+                                  ? 'minutes'
+                                  : 'minute',
+                            )
                           ],
                         ),
                       ),
@@ -62,8 +65,10 @@ class AlarmOffset extends StatelessWidget {
                                         ? ksecondaryTextColor
                                         : kprimaryTextColor,
                               ),
-                              child: const Text("Before",
-                                  style: TextStyle(fontSize: 14)),
+                              child: const Text(
+                                "Before",
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
                           ),
                           Obx(
@@ -81,42 +86,42 @@ class AlarmOffset extends StatelessWidget {
                                         ? ksecondaryTextColor
                                         : kprimaryTextColor,
                               ),
-                              child: const Text("After",
-                                  style: TextStyle(fontSize: 14)),
+                              child: const Text(
+                                "After",
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 );
               },
               child: ListTile(
-                  title: const Text('Ring before / after '),
-                  trailing: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Obx(
-                          () => Text(
-                            controller.offsetDuration.value > 0
-                                ? 'Enabled'
-                                : 'Off',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    color: (controller.offsetDuration.value > 0)
-                                        ? kprimaryTextColor
-                                        : kprimaryDisabledTextColor),
-                          ),
-                        ),
-                        const Icon(
-                          Icons.chevron_right,
-                          color: kprimaryDisabledTextColor,
-                        )
-                      ])),
+                title: const Text('Ring before / after '),
+                trailing: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Obx(
+                      () => Text(
+                        controller.offsetDuration.value > 0 ? 'Enabled' : 'Off',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: (controller.offsetDuration.value > 0)
+                                  ? kprimaryTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      color: kprimaryDisabledTextColor,
+                    ),
+                  ],
+                ),
+              ),
             )
-          : SizedBox(),
+          : const SizedBox(),
     );
   }
 }

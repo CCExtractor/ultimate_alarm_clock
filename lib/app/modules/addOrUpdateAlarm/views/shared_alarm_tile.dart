@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/information_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
@@ -25,71 +26,13 @@ class SharedAlarm extends StatelessWidget {
                     'Shared Alarm',
                     style: TextStyle(color: kprimaryTextColor),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.info_sharp,
-                      size: 21,
-                      color: kprimaryTextColor.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      showModalBottomSheet(
-                          context: context,
-                          backgroundColor: ksecondaryBackgroundColor,
-                          builder: (context) {
-                            return Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(25.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.share_arrival_time,
-                                      color: kprimaryTextColor,
-                                      size: height * 0.1,
-                                    ),
-                                    Text("Shared alarms",
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
-                                      child: Text(
-                                        "Share alarms with others using the Alarm ID. Each shared user can choose to have their alarm ring before or after the set time.",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: width,
-                                      child: TextButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  kprimaryColor),
-                                        ),
-                                        onPressed: () {
-                                          Get.back();
-                                        },
-                                        child: Text(
-                                          'Understood',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall!
-                                              .copyWith(
-                                                  color: ksecondaryTextColor),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          });
-                    },
+                  InformationButton(
+                    infoIconData: Icons.share_arrival_time,
+                    height: height,
+                    width: width,
+                    infoTitle: "Shared alarms",
+                    infoDescription:
+                        "Share alarms with others using the Alarm ID. Each shared user can choose to have their alarm ring before or after the set time.",
                   ),
                 ],
               ),
@@ -111,56 +54,61 @@ class SharedAlarm extends StatelessWidget {
           : ListTile(
               onTap: () {
                 Get.defaultDialog(
-                    contentPadding: const EdgeInsets.all(10.0),
-                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                    backgroundColor: ksecondaryBackgroundColor,
-                    title: 'Disabled!',
-                    titleStyle: Theme.of(context).textTheme.displaySmall,
-                    content: Column(
-                      children: [
-                        const Text(
-                            "To use this feature, you have link your Google account!"),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor)),
-                                child: Text(
-                                  'Go to settings',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
-                                ),
-                                onPressed: () {
-                                  Get.back();
-                                  Get.toNamed('/settings');
-                                },
+                  contentPadding: const EdgeInsets.all(10.0),
+                  titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                  backgroundColor: ksecondaryBackgroundColor,
+                  title: 'Disabled!',
+                  titleStyle: Theme.of(context).textTheme.displaySmall,
+                  content: Column(
+                    children: [
+                      const Text(
+                        "To use this feature, you have to link your Google account!",
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(kprimaryColor),
                               ),
-                              TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        kprimaryTextColor.withOpacity(0.5))),
-                                child: Text(
-                                  'Cancel',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(color: kprimaryTextColor),
-                                ),
-                                onPressed: () {
-                                  Get.back();
-                                },
+                              child: Text(
+                                'Go to settings',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(color: ksecondaryTextColor),
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ));
+                              onPressed: () {
+                                Get.back();
+                                Get.toNamed('/settings');
+                              },
+                            ),
+                            TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  kprimaryTextColor.withOpacity(0.5),
+                                ),
+                              ),
+                              child: Text(
+                                'Cancel',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(color: kprimaryTextColor),
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
               title: const Text(
                 'Enable Shared Alarm',
@@ -171,7 +119,8 @@ class SharedAlarm extends StatelessWidget {
                   Icons.lock,
                   color: kprimaryTextColor.withOpacity(0.7),
                 ),
-              )),
+              ),
+            ),
     );
   }
 }

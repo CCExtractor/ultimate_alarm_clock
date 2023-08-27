@@ -54,13 +54,13 @@ class SnoozeDurationTile extends StatelessWidget {
                               Get.back();
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: kprimaryColor),
+                                backgroundColor: kprimaryColor,),
                             child: Text(
                               'Done',
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
+                                  .copyWith(color: ksecondaryTextColor,),
                             ),
                           ),
                         ],
@@ -68,14 +68,14 @@ class SnoozeDurationTile extends StatelessWidget {
                     ),
                   ),
                 ],
-              )),
+              ),),
         );
       },
       child: ListTile(
         tileColor: ksecondaryBackgroundColor,
         title: const Text(
           'Snooze Duration',
-          style: TextStyle(color: kprimaryTextColor),
+          style: TextStyle(color: kprimaryTextColor,),
         ),
         trailing: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,

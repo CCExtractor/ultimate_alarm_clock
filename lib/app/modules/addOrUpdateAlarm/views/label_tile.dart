@@ -35,28 +35,45 @@ class LabelTile extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
             cursorColor: kprimaryTextColor.withOpacity(0.75),
             decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: kprimaryTextColor.withOpacity(0.75), width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(12))),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: kprimaryTextColor.withOpacity(0.75), width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(12))),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: kprimaryTextColor.withOpacity(0.75), width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(12))),
-                hintText: 'Enter a name',
-                hintStyle: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: kprimaryDisabledTextColor)),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: kprimaryTextColor.withOpacity(0.75),
+                  width: 1,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: kprimaryTextColor.withOpacity(0.75),
+                  width: 1,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: kprimaryTextColor.withOpacity(0.75),
+                  width: 1,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
+              ),
+              hintText: 'Enter a name',
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(color: kprimaryDisabledTextColor),
+            ),
           ),
           buttonColor: ksecondaryBackgroundColor,
           confirm: TextButton(
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(kprimaryColor)),
+              backgroundColor: MaterialStateProperty.all(kprimaryColor),
+            ),
             child: Text(
               'Save',
               style: Theme.of(context)
@@ -92,7 +109,7 @@ class LabelTile extends StatelessWidget {
               color: (controller.label.value.isEmpty)
                   ? kprimaryDisabledTextColor
                   : kprimaryTextColor,
-            )
+            ),
           ],
         ),
       ),

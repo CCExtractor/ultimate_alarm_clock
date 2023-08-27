@@ -28,20 +28,25 @@ class RepeatOnceTile extends StatelessWidget {
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Obx(() {
-              if (controller.repeatDays.every((element) => element == false)) {
-                return Switch(
+            Obx(
+              () {
+                if (controller.repeatDays
+                    .every((element) => element == false)) {
+                  return Switch(
                     value: false,
                     onChanged: (value) {
                       controller.isOneTime.value = false;
-                    });
-              }
-              return Switch(
+                    },
+                  );
+                }
+                return Switch(
                   value: controller.isOneTime.value,
                   onChanged: (value) {
                     controller.isOneTime.value = value;
-                  });
-            }),
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
