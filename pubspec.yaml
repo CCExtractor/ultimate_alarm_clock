@@ -39,6 +39,7 @@ dependencies:
   flutter:
     sdk: flutter
   vibration: ^1.8.1
+  shared_preferences: ^2.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

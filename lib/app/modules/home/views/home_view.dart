@@ -7,13 +7,21 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
+
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -37,6 +45,7 @@ class HomeView extends GetView<HomeController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         onPressed: () {
+                          _hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
                           Get.defaultDialog(
                             title: "Join an alarm",
@@ -90,6 +99,7 @@ class HomeView extends GetView<HomeController> {
                                     .copyWith(color: ksecondaryTextColor),
                               ),
                               onPressed: () async {
+                                _hapticFeedback();
                                 var result =
                                     await FirestoreDb.addUserToAlarmSharedUsers(
                                         controller.userModel.value,
@@ -142,6 +152,7 @@ class HomeView extends GetView<HomeController> {
                                                             ksecondaryTextColor),
                                               ),
                                               onPressed: () {
+                                                _hapticFeedback();
                                                 Get.back();
                                               }),
                                         ],
@@ -177,6 +188,7 @@ class HomeView extends GetView<HomeController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         onPressed: () {
+                          _hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
                           Get.toNamed('/add-update-alarm');
                         },
@@ -208,6 +220,7 @@ class HomeView extends GetView<HomeController> {
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
+                      _hapticFeedback();
                       Get.toNamed('/add-update-alarm');
                     },
                   )),
@@ -245,6 +258,7 @@ class HomeView extends GetView<HomeController> {
                   )),
               IconButton(
                 onPressed: () {
+                  _hapticFeedback();
                   Get.toNamed('/settings');
                 },
                 icon: const Icon(Icons.settings),
@@ -327,6 +341,7 @@ class HomeView extends GetView<HomeController> {
                                             // Main card
                                             return InkWell(
                                               onTap: () {
+                                                _hapticFeedback();
                                                 Get.toNamed('/add-update-alarm',
                                                     arguments: alarm);
                                               },
@@ -542,6 +557,7 @@ class HomeView extends GetView<HomeController> {
                                                                       onChanged:
                                                                           (bool
                                                                               value) async {
+                                                                                _hapticFeedback();
                                                                         alarm.isEnabled =
                                                                             value;
 
@@ -567,6 +583,7 @@ class HomeView extends GetView<HomeController> {
                                                                         PopupMenuButton(
                                                                       onSelected:
                                                                           (value) async {
+                                                                            _hapticFeedback();
                                                                         if (value ==
                                                                             0) {
                                                                           Get.back();

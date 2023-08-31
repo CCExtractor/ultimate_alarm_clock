@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class WeatherApi extends StatelessWidget {
-  const WeatherApi({
+  WeatherApi({
     super.key,
     required this.controller,
     required this.height,
@@ -16,10 +17,17 @@ class WeatherApi extends StatelessWidget {
   final double width;
   final double height;
 
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
+        _hapticFeedback();
         Get.defaultDialog(
             titlePadding: EdgeInsets.symmetric(vertical: 20),
             backgroundColor: ksecondaryBackgroundColor,
@@ -55,6 +63,7 @@ class WeatherApi extends StatelessWidget {
                                                     color: ksecondaryTextColor),
                                           ),
                                           onPressed: () async {
+                                            _hapticFeedback();
                                             await controller.getLocation();
                                             if (await controller.isApiKeyValid(
                                                 controller.apiKey.text)) {
@@ -84,6 +93,7 @@ class WeatherApi extends StatelessWidget {
                                                         ksecondaryBackgroundColor),
                                           ),
                                           onPressed: () async {
+                                            _hapticFeedback();
                                             const url =
                                                 'https://home.openweathermap.org/api_keys';
                                             if (await canLaunchUrlString(url)) {
@@ -127,6 +137,7 @@ class WeatherApi extends StatelessWidget {
                                           .copyWith(color: ksecondaryTextColor),
                                     ),
                                     onPressed: () {
+                                      _hapticFeedback();
                                       controller.didWeatherKeyError.value =
                                           false;
                                     }),
@@ -159,6 +170,7 @@ class WeatherApi extends StatelessWidget {
                                       .copyWith(color: ksecondaryTextColor),
                                 ),
                                 onPressed: () {
+                                  _hapticFeedback();
                                   Get.back();
                                 }),
                           ],

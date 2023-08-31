@@ -3,15 +3,22 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class SharedUsers extends StatelessWidget {
-  const SharedUsers({
+  SharedUsers({
     super.key,
     required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
+
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +46,7 @@ class SharedUsers extends StatelessWidget {
                       ),
                       trailing: InkWell(
                         onTap: () {
+                          _hapticFeedback();
                           showModalBottomSheet(
                             context: context,
                             backgroundColor: kprimaryBackgroundColor,
@@ -123,6 +131,7 @@ class SharedUsers extends StatelessWidget {
                                                           ),
                                                     ),
                                                     onPressed: () async {
+                                                      _hapticFeedback();
                                                       await FirestoreDb
                                                           .removeUserFromAlarmSharedUsers(
                                                               user,

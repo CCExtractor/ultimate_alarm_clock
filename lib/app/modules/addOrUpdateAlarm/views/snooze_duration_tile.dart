@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class SnoozeDurationTile extends StatelessWidget {
-  const SnoozeDurationTile({
+  SnoozeDurationTile({
     super.key,
     required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
 
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        _hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: ksecondaryBackgroundColor,
@@ -32,6 +40,7 @@ class SnoozeDurationTile extends StatelessWidget {
                         minValue: 1,
                         maxValue: 1440,
                         onChanged: (value) {
+                          _hapticFeedback();
                           controller.snoozeDuration.value = value;
                         },
                       ),
@@ -51,6 +60,7 @@ class SnoozeDurationTile extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () {
+                              _hapticFeedback();
                               Get.back();
                             },
                             style: ElevatedButton.styleFrom(

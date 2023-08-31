@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class AlarmOffset extends StatelessWidget {
-  const AlarmOffset({
+  AlarmOffset({
     super.key,
     required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
+
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +25,7 @@ class AlarmOffset extends StatelessWidget {
       () => (controller.isSharedAlarmEnabled.value)
           ? InkWell(
               onTap: () {
+                _hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
                   backgroundColor: ksecondaryBackgroundColor,
@@ -36,6 +44,7 @@ class AlarmOffset extends StatelessWidget {
                                 minValue: 0,
                                 maxValue: 1440,
                                 onChanged: (value) {
+                                  _hapticFeedback();
                                   controller.offsetDuration.value = value;
                                 }),
                             Text(controller.offsetDuration.value > 1
@@ -50,6 +59,7 @@ class AlarmOffset extends StatelessWidget {
                           Obx(
                             () => ElevatedButton(
                               onPressed: () {
+                                _hapticFeedback();
                                 controller.isOffsetBefore.value = true;
                               },
                               style: ElevatedButton.styleFrom(
@@ -69,6 +79,7 @@ class AlarmOffset extends StatelessWidget {
                           Obx(
                             () => ElevatedButton(
                               onPressed: () {
+                                _hapticFeedback();
                                 controller.isOffsetBefore.value = false;
                               },
                               style: ElevatedButton.styleFrom(

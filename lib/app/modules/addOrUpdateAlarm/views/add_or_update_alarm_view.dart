@@ -21,12 +21,19 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
+
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +63,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () async {
+                        _hapticFeedback();
                         if (controller.userModel != null) {
                           controller.offsetDetails[controller.userModel!.id] = {
                             'offsettedTime': Utils.timeOfDayToString(
@@ -197,6 +205,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () {
+                        _hapticFeedback();
                         Get.back();
                       },
                     )
@@ -222,6 +231,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         highlightedTextStyle:
                             Theme.of(context).textTheme.displayMedium,
                         onTimeChange: (dateTime) {
+                          _hapticFeedback();
                           controller.selectedTime.value = dateTime;
                         },
                       ),

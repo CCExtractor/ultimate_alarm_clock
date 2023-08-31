@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class GoogleSignIn extends StatelessWidget {
-  const GoogleSignIn({
+  GoogleSignIn({
     super.key,
     required this.controller,
     required this.width,
@@ -16,10 +17,17 @@ class GoogleSignIn extends StatelessWidget {
   final double width;
   final double height;
 
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
+        _hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
           bool? isSuccessfulLogin = await controller.loginWithGoogle();
 
@@ -56,6 +64,7 @@ class GoogleSignIn extends StatelessWidget {
                               .copyWith(color: ksecondaryTextColor),
                         ),
                         onPressed: () {
+                          _hapticFeedback();
                           Get.back();
                         }),
                   ],
@@ -88,6 +97,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: ksecondaryTextColor),
                           ),
                           onPressed: () async {
+                            _hapticFeedback();
                             await controller.logoutGoogle();
                             Get.back();
                           },
@@ -104,6 +114,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: kprimaryTextColor),
                           ),
                           onPressed: () {
+                            _hapticFeedback();
                             Get.back();
                           },
                         ),
