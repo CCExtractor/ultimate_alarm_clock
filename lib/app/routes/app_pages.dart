@@ -60,7 +60,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ALARM_CHALLENGE,
-      page: () => const AlarmChallengeView(),
+      page: () => AlarmChallengeView(),
       binding: AlarmChallengeBinding(),
     ),
   ];
