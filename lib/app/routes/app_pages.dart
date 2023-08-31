@@ -40,12 +40,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ALARM_RING,
-      page: () => const AlarmControlView(),
+      page: () => AlarmControlView(),
       binding: AlarmControlBinding(),
     ),
     GetPage(
       name: _Paths.ALARM_RING_IGNORE,
-      page: () => const AlarmControlIgnoreView(),
+      page: () => AlarmControlIgnoreView(),
       binding: AlarmControlIgnoreBinding(),
     ),
     GetPage(
