@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/controllers/alarm_challenge_controller.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class MathsChallengeView extends GetView<AlarmChallengeController> {
-  const MathsChallengeView({Key? key}) : super(key: key);
+  MathsChallengeView({Key? key}) : super(key: key);
+
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +19,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     var width = Get.width;
     return GestureDetector(
       onTap: () {
+        _hapticFeedback();
         controller.restartTimer();
       },
       child: Scaffold(
@@ -132,6 +140,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   Widget _buildNumberButton(String number) {
     return ElevatedButton(
       onPressed: () {
+        _hapticFeedback();
         controller.onButtonPressed(number);
       },
       style: ElevatedButton.styleFrom(
@@ -147,6 +156,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   Widget _buildClearButton() {
     return ElevatedButton(
       onPressed: () {
+        _hapticFeedback();
         controller.displayValue.value = '';
       },
       style: ElevatedButton.styleFrom(
@@ -166,6 +176,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   Widget _buildDoneButton() {
     return ElevatedButton(
       onPressed: () {
+        _hapticFeedback();
         if (controller.mathsAnswer.toString() ==
             controller.displayValue.value) {
           controller.numMathsQuestions.value -= 1;

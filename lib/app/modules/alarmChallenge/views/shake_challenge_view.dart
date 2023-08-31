@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'dart:math' as math;
 
 import '../controllers/alarm_challenge_controller.dart';
 
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
-  const ShakeChallengeView({Key? key}) : super(key: key);
+  ShakeChallengeView({Key? key}) : super(key: key);
+
+  final HapticFeebackService _hapticFeebackService = Get.find();
+
+  void _hapticFeedback() {
+    _hapticFeebackService.hapticFeedback();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +27,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
         ),
         body: GestureDetector(
           onTap: () {
+            _hapticFeedback();
             controller.restartTimer();
           },
           child: Column(
