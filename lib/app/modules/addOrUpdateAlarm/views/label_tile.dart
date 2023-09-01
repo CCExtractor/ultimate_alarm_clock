@@ -78,7 +78,9 @@ class LabelTile extends StatelessWidget {
             Obx(
               () => Text(
                 controller.label.value.isNotEmpty
-                    ? 'Tap to view'
+                    ? controller.label.value.length <= 10
+                    ? controller.label.value
+                    : "${controller.label.value.substring(0, 10)}..."
                     : 'Off',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.label.value.isEmpty)
