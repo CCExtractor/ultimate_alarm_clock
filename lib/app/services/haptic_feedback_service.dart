@@ -1,10 +1,12 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HapticFeebackService extends GetxService {
-  final _prefKey = 'haptic_feedback';
+  final _hapticFeedbackKey = 'haptic_feedback';
   bool _isHapticFeedbackEnabled = true;
+
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   bool get isHapticFeedbackEnabled => _isHapticFeedbackEnabled;
 
@@ -13,13 +15,15 @@ class HapticFeebackService extends GetxService {
   }
 
   Future<void> _loadPreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _isHapticFeedbackEnabled = prefs.getBool(_prefKey) ?? true;
+    _isHapticFeedbackEnabled =
+        await _secureStorage.read(key: _hapticFeedbackKey) == 'true';
   }
 
   void _savePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefKey, _isHapticFeedbackEnabled);
+    await _secureStorage.write(
+      key: _hapticFeedbackKey,
+      value: _isHapticFeedbackEnabled.toString(),
+    );
   }
 
   void toggleHapticFeedback(bool enabled) {
