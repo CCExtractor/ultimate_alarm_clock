@@ -78,7 +78,7 @@ class LabelTile extends StatelessWidget {
             Obx(
               () => Text(
                 controller.label.value.isNotEmpty
-                    ? controller.label.value
+                    ? 'Tap to view'
                     : 'Off',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.label.value.isEmpty)
