@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class SharedAlarm extends StatelessWidget {
-  SharedAlarm({
+  const SharedAlarm({
     super.key,
-    required this.controller,
+    required this.controller, required this.hapticFeedbackController,
   });
 
   final AddOrUpdateAlarmController controller;
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class SharedAlarm extends StatelessWidget {
                       color: kprimaryTextColor.withOpacity(0.3),
                     ),
                     onPressed: () {
-                      _hapticFeedback();
+                      hapticFeedbackController.hapticFeedback();
                       showModalBottomSheet(
                           context: context,
                           backgroundColor: ksecondaryBackgroundColor,
@@ -80,7 +76,7 @@ class SharedAlarm extends StatelessWidget {
                                                   kprimaryColor),
                                         ),
                                         onPressed: () {
-                                          _hapticFeedback();
+                                          hapticFeedbackController.hapticFeedback();
                                           Get.back();
                                         },
                                         child: Text(
@@ -103,7 +99,7 @@ class SharedAlarm extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                _hapticFeedback();
+                hapticFeedbackController.hapticFeedback();
                 // Toggle the value of isSharedAlarmEnabled
                 controller.isSharedAlarmEnabled.value =
                     !controller.isSharedAlarmEnabled.value;
@@ -111,7 +107,7 @@ class SharedAlarm extends StatelessWidget {
               trailing: Obx(
                 () => Switch(
                   onChanged: (value) {
-                    _hapticFeedback();
+                    hapticFeedbackController.hapticFeedback();
                     // You can optionally add the onChanged callback here as well
                     controller.isSharedAlarmEnabled.value = value;
                   },
@@ -121,7 +117,7 @@ class SharedAlarm extends StatelessWidget {
             )
           : ListTile(
               onTap: () {
-                _hapticFeedback();
+                hapticFeedbackController.hapticFeedback();
                 Get.defaultDialog(
                     contentPadding: const EdgeInsets.all(10.0),
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -149,7 +145,7 @@ class SharedAlarm extends StatelessWidget {
                                       .copyWith(color: ksecondaryTextColor),
                                 ),
                                 onPressed: () {
-                                  _hapticFeedback();
+                                  hapticFeedbackController.hapticFeedback();
                                   Get.back();
                                   Get.toNamed('/settings');
                                 },
@@ -166,7 +162,7 @@ class SharedAlarm extends StatelessWidget {
                                       .copyWith(color: kprimaryTextColor),
                                 ),
                                 onPressed: () {
-                                  _hapticFeedback();
+                                  hapticFeedbackController.hapticFeedback();
                                   Get.back();
                                 },
                               ),

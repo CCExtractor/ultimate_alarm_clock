@@ -2,23 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class MathsChallenge extends StatelessWidget {
-  MathsChallenge({
+  const MathsChallenge({
     super.key,
-    required this.controller,
+    required this.controller, required this.hapticFeedbackController,
   });
 
   final AddOrUpdateAlarmController controller;
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController;
   
   @override
   Widget build(BuildContext context) {
@@ -35,7 +31,7 @@ class MathsChallenge extends StatelessWidget {
               color: kprimaryTextColor.withOpacity(0.3),
             ),
             onPressed: () {
-              _hapticFeedback();
+              hapticFeedbackController.hapticFeedback();
               showModalBottomSheet(
                   context: context,
                   backgroundColor: ksecondaryBackgroundColor,
@@ -71,7 +67,7 @@ class MathsChallenge extends StatelessWidget {
                                       MaterialStateProperty.all(kprimaryColor),
                                 ),
                                 onPressed: () {
-                                  _hapticFeedback();
+                                  hapticFeedbackController.hapticFeedback();
                                   Get.back();
                                 },
                                 child: Text(
@@ -93,7 +89,7 @@ class MathsChallenge extends StatelessWidget {
         ],
       ),
       onTap: () {
-        _hapticFeedback();
+        hapticFeedbackController.hapticFeedback();
         controller.isMathsEnabled.value = true;
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -122,7 +118,7 @@ class MathsChallenge extends StatelessWidget {
                     divisions: 2,
                     value: controller.mathsSliderValue.value,
                     onChanged: (newValue) {
-                      _hapticFeedback();
+                      hapticFeedbackController.hapticFeedback();
                       controller.mathsSliderValue.value = newValue;
                       controller.mathsDifficulty.value =
                           Utils.getDifficulty(newValue);
@@ -139,7 +135,7 @@ class MathsChallenge extends StatelessWidget {
                         minValue: 1,
                         maxValue: 100,
                         onChanged: (value) {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           controller.numMathsQuestions.value = value;
                         }
                       ),
@@ -169,7 +165,7 @@ class MathsChallenge extends StatelessWidget {
                               ),
                         ),
                         onPressed: () async {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           Get.back();
                         },
                       ),
@@ -188,7 +184,7 @@ class MathsChallenge extends StatelessWidget {
                               ),
                         ),
                         onPressed: () {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           controller.isMathsEnabled.value = false;
                           Get.back();
                         },

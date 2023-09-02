@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 import '../controllers/alarm_ring_ignore_controller.dart';
@@ -9,11 +9,8 @@ import '../controllers/alarm_ring_ignore_controller.dart';
 class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
   AlarmControlIgnoreView({Key? key}) : super(key: key);
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController =
+      Get.find<HapticFeedbackController>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +36,7 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
                       .copyWith(color: ksecondaryTextColor),
                 ),
                 onPressed: () {
-                  _hapticFeedback();
+                  hapticFeedbackController.hapticFeedback();
                   Get.offNamed('/home');
                 },
               ),
@@ -84,7 +81,7 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
                           fontWeight: FontWeight.w600),
                     ),
                     onPressed: () {
-                      _hapticFeedback();
+                      hapticFeedbackController.hapticFeedback();
                     },
                   ),
                 )

@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   setUp(() {
-    Get.put<HapticFeebackService>(
-      HapticFeebackService(),
+    Get.put<HapticFeedbackController>(
+      HapticFeedbackController(),
     );
   });
 
@@ -16,14 +16,14 @@ void main() {
   });
 
   test('Toggling Haptic Feedback', () {
-    final HapticFeebackService _hapticFeedbackService = Get.find<HapticFeebackService>();
+    final HapticFeedbackController hapticFeedbackController = HapticFeedbackController();
 
-    expect(_hapticFeedbackService.isHapticFeedbackEnabled, true);
+    expect(hapticFeedbackController.isHapticFeedbackEnabled.value, true);
 
-    _hapticFeedbackService.toggleHapticFeedback(false);
-    expect(_hapticFeedbackService.isHapticFeedbackEnabled, false);
+    hapticFeedbackController.toggleHapticFeedback(false);
+    expect(hapticFeedbackController.isHapticFeedbackEnabled.value, false);
 
-    _hapticFeedbackService.toggleHapticFeedback(true);
-    expect(_hapticFeedbackService.isHapticFeedbackEnabled, true);
+    hapticFeedbackController.toggleHapticFeedback(true);
+    expect(hapticFeedbackController.isHapticFeedbackEnabled.value, true);
   });
 }

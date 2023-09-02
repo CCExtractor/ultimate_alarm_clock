@@ -2,22 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class ShakeToDismiss extends StatelessWidget {
-  ShakeToDismiss({
+  const ShakeToDismiss({
     super.key,
-    required this.controller,
+    required this.controller, required this.hapticFeedbackController,
   });
 
   final AddOrUpdateAlarmController controller;
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +33,7 @@ class ShakeToDismiss extends StatelessWidget {
               color: kprimaryTextColor.withOpacity(0.3),
             ),
             onPressed: () {
-              _hapticFeedback();
+              hapticFeedbackController.hapticFeedback();
               showModalBottomSheet(
                   context: context,
                   backgroundColor: ksecondaryBackgroundColor,
@@ -76,7 +72,7 @@ class ShakeToDismiss extends StatelessWidget {
                                       MaterialStateProperty.all(kprimaryColor),
                                 ),
                                 onPressed: () {
-                                  _hapticFeedback();
+                                  hapticFeedbackController.hapticFeedback();
                                   Get.back();
                                 },
                                 child: Text(
@@ -98,7 +94,7 @@ class ShakeToDismiss extends StatelessWidget {
         ],
       ),
       onTap: () {
-        _hapticFeedback();
+        hapticFeedbackController.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: ksecondaryBackgroundColor,
@@ -115,7 +111,7 @@ class ShakeToDismiss extends StatelessWidget {
                         minValue: 0,
                         maxValue: 100,
                         onChanged: (value) {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           if (value > 0) {
                             controller.isShakeEnabled.value = true;
                           } else {
@@ -136,7 +132,7 @@ class ShakeToDismiss extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              _hapticFeedback();
+                              hapticFeedbackController.hapticFeedback();
                               Get.back();
                             },
                             style: ElevatedButton.styleFrom(

@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class GoogleSignIn extends StatelessWidget {
-  GoogleSignIn({
+  const GoogleSignIn({
     super.key,
     required this.controller,
+    required this.hapticFeedbackController,
     required this.width,
     required this.height,
   });
 
   final SettingsController controller;
+  final HapticFeedbackController hapticFeedbackController;
 
   final double width;
   final double height;
-
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        _hapticFeedback();
+        hapticFeedbackController.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
           bool? isSuccessfulLogin = await controller.loginWithGoogle();
 
@@ -64,7 +60,7 @@ class GoogleSignIn extends StatelessWidget {
                               .copyWith(color: ksecondaryTextColor),
                         ),
                         onPressed: () {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           Get.back();
                         }),
                   ],
@@ -97,7 +93,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: ksecondaryTextColor),
                           ),
                           onPressed: () async {
-                            _hapticFeedback();
+                            hapticFeedbackController.hapticFeedback();
                             await controller.logoutGoogle();
                             Get.back();
                           },
@@ -114,7 +110,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: kprimaryTextColor),
                           ),
                           onPressed: () {
-                            _hapticFeedback();
+                            hapticFeedbackController.hapticFeedback();
                             Get.back();
                           },
                         ),

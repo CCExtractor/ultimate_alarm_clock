@@ -2,37 +2,39 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
-class HapticFeebackService extends GetxService {
+class HapticFeedbackController extends GetxController {
+
+  var isHapticFeedbackEnabled = true.obs;
+
   final _hapticFeedbackKey = 'haptic_feedback';
-  bool _isHapticFeedbackEnabled = true;
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
-  bool get isHapticFeedbackEnabled => _isHapticFeedbackEnabled;
-
-  HapticFeebackService() {
-    _loadPreference();
+  Future<void> _loadPreference() async {
+    isHapticFeedbackEnabled.value =
+        await _secureStorage.read(key: _hapticFeedbackKey) == 'true';
   }
 
-  Future<void> _loadPreference() async {
-    _isHapticFeedbackEnabled =
-        await _secureStorage.read(key: _hapticFeedbackKey) == 'true';
+  @override
+  void onInit() {
+    super.onInit();
+    _loadPreference();
   }
 
   void _savePreference() async {
     await _secureStorage.write(
       key: _hapticFeedbackKey,
-      value: _isHapticFeedbackEnabled.toString(),
+      value: isHapticFeedbackEnabled.toString(),
     );
   }
 
   void toggleHapticFeedback(bool enabled) {
-    _isHapticFeedbackEnabled = enabled;
+    isHapticFeedbackEnabled.value = enabled;
     _savePreference();
   }
 
   Future<void> hapticFeedback() async {
-    if (_isHapticFeedbackEnabled) {
+    if (isHapticFeedbackEnabled.value) {
       await SystemChannels.platform.invokeMethod<void>(
         'HapticFeedback.vibrate',
         'HapticFeedbackType.selectionClick',

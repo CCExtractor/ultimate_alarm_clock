@@ -3,22 +3,18 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class SharedUsers extends StatelessWidget {
-  SharedUsers({
+  const SharedUsers({
     super.key,
-    required this.controller,
+    required this.controller, required this.hapticFeedbackController,
   });
 
   final AddOrUpdateAlarmController controller;
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +42,7 @@ class SharedUsers extends StatelessWidget {
                       ),
                       trailing: InkWell(
                         onTap: () {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           showModalBottomSheet(
                             context: context,
                             backgroundColor: kprimaryBackgroundColor,
@@ -131,7 +127,7 @@ class SharedUsers extends StatelessWidget {
                                                           ),
                                                     ),
                                                     onPressed: () async {
-                                                      _hapticFeedback();
+                                                      hapticFeedbackController.hapticFeedback();
                                                       await FirestoreDb
                                                           .removeUserFromAlarmSharedUsers(
                                                               user,

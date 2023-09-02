@@ -2,24 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class AlarmIDTile extends StatelessWidget {
-  AlarmIDTile({
+  const AlarmIDTile({
     super.key,
     required this.controller,
-    required this.width,
+    required this.width, required this.hapticFeedbackController,
   });
 
   final AddOrUpdateAlarmController controller;
   final double width;
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +23,7 @@ class AlarmIDTile extends StatelessWidget {
           child: (controller.isSharedAlarmEnabled.value == true)
               ? ListTile(
                   onTap: () {
-                    _hapticFeedback();
+                    hapticFeedbackController.hapticFeedback();
                     Clipboard.setData(ClipboardData(text: controller.alarmID));
                     Get.snackbar(
                       'Success!',
@@ -49,7 +45,7 @@ class AlarmIDTile extends StatelessWidget {
                   ))
               : ListTile(
                   onTap: () {
-                    _hapticFeedback();
+                    hapticFeedbackController.hapticFeedback();
                     Get.defaultDialog(
                         titlePadding: const EdgeInsets.symmetric(vertical: 20),
                         backgroundColor: ksecondaryBackgroundColor,
@@ -77,7 +73,7 @@ class AlarmIDTile extends StatelessWidget {
                                       .copyWith(color: ksecondaryTextColor),
                                 ),
                                 onPressed: () {
-                                  _hapticFeedback();
+                                  hapticFeedbackController.hapticFeedback();
                                   Get.back();
                                 },
                               ),

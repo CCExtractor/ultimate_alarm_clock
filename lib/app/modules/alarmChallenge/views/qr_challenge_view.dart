@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
@@ -9,11 +9,8 @@ import '../controllers/alarm_challenge_controller.dart';
 class QRChallengeView extends GetView<AlarmChallengeController> {
   QRChallengeView({Key? key}) : super(key: key);
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController =
+      Get.find<HapticFeedbackController>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
         ),
         body: GestureDetector(
           onTap: () {
-            _hapticFeedback();
+            hapticFeedbackController.hapticFeedback();
             controller.restartTimer();
           },
           child: Column(
@@ -151,7 +148,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                                         ksecondaryTextColor),
                                                           ),
                                                           onPressed: () async {
-                                                            _hapticFeedback();
+                                                            hapticFeedbackController.hapticFeedback();
                                                             controller
                                                                 .qrController!
                                                                 .dispose();

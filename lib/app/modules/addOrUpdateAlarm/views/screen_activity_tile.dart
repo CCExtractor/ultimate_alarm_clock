@@ -2,22 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class ScreenActivityTile extends StatelessWidget {
-  ScreenActivityTile({
+  const ScreenActivityTile({
     super.key,
-    required this.controller,
+    required this.controller, required this.hapticFeedbackController,
   });
 
   final AddOrUpdateAlarmController controller;
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +21,7 @@ class ScreenActivityTile extends StatelessWidget {
     var width = Get.width;
     return InkWell(
       onTap: () {
-        _hapticFeedback();
+        hapticFeedbackController.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: ksecondaryBackgroundColor,
@@ -43,7 +39,7 @@ class ScreenActivityTile extends StatelessWidget {
                       minValue: 0,
                       maxValue: 1440,
                       onChanged: (value) {
-                        _hapticFeedback();
+                        hapticFeedbackController.hapticFeedback();
                         if (value > 0) {
                           controller.isActivityenabled.value = true;
                         } else {
@@ -68,7 +64,7 @@ class ScreenActivityTile extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            _hapticFeedback();
+                            hapticFeedbackController.hapticFeedback();
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
@@ -106,7 +102,7 @@ class ScreenActivityTile extends StatelessWidget {
                 color: kprimaryTextColor.withOpacity(0.3),
               ),
               onPressed: () {
-                _hapticFeedback();
+                hapticFeedbackController.hapticFeedback();
                 showModalBottomSheet(
                     context: context,
                     backgroundColor: ksecondaryBackgroundColor,
@@ -143,7 +139,7 @@ class ScreenActivityTile extends StatelessWidget {
                                         kprimaryColor),
                                   ),
                                   onPressed: () {
-                                    _hapticFeedback();
+                                    hapticFeedbackController.hapticFeedback();
                                     Get.back();
                                   },
                                   child: Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/services/haptic_feedback_service.dart';
+import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
@@ -11,11 +11,8 @@ import '../controllers/alarm_ring_controller.dart';
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
-  final HapticFeebackService _hapticFeebackService = Get.find();
-
-  void _hapticFeedback() {
-    _hapticFeebackService.hapticFeedback();
-  }
+  final HapticFeedbackController hapticFeedbackController =
+      Get.find<HapticFeedbackController>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +49,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                         .copyWith(color: ksecondaryTextColor),
                                   ),
                                   onPressed: () {
-                                    _hapticFeedback();
+                                    hapticFeedbackController.hapticFeedback();
                                     if (Utils.isChallengeEnabled(controller
                                         .currentlyRingingAlarm.value)) {
                                       Get.toNamed('/alarm-challenge',
@@ -84,7 +81,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       .copyWith(color: ksecondaryTextColor),
                                 ),
                                 onPressed: () {
-                                  _hapticFeedback();
+                                  hapticFeedbackController.hapticFeedback();
                                   Get.offNamed('/home');
                                 },
                               )),
@@ -136,7 +133,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   fontWeight: FontWeight.w600),
                         ),
                         onPressed: () {
-                          _hapticFeedback();
+                          hapticFeedbackController.hapticFeedback();
                           controller.startSnooze();
                         },
                       ),
