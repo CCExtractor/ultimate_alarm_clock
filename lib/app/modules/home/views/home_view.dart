@@ -395,7 +395,7 @@ class HomeView extends GetView<HomeController> {
                                                                               .isNotEmpty)
                                                                             VerticalDivider(
                                                                               color: alarm.isEnabled == true ? kprimaryColor : kprimaryDisabledTextColor,
-                                                                              thickness: 1,
+                                                                              thickness: 1.4,
                                                                               width: 6,
                                                                               indent: 3.1,
                                                                               endIndent: 3.1,
