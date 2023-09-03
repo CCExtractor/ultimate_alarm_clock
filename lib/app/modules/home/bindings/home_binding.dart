@@ -9,8 +9,8 @@ class HomeBinding extends Bindings {
     Get.put<HomeController>(
       HomeController(),
     );
-    Get.put<SettingsController>(
-      SettingsController(),
+    Get.lazyPut<SettingsController>(
+      () => SettingsController(),
     );
   }
 }
