@@ -520,6 +520,16 @@ class HomeView extends GetView<HomeController> {
                                                                           ),
                                                                       ],
                                                                     ),
+                                                                  Row(
+                                                                    children: [Text(alarm.label,style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .bodySmall!
+                                                                        .copyWith(fontWeight: FontWeight.w500,
+                                                                      color: alarm.isEnabled == true ? kprimaryTextColor : kprimaryDisabledTextColor,))
+
+                                                                    ],
+                                                                  ),
+
                                                                 ],
                                                               ),
                                                             ),
