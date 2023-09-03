@@ -21,16 +21,12 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  AddOrUpdateAlarmView({Key? key}) : super(key: key);
-
-  final HapticFeedbackController hapticFeedbackController =
-      Get.find<HapticFeedbackController>();
+  const AddOrUpdateAlarmView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +56,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () async {
-                        hapticFeedbackController.hapticFeedback();
+                        Utils.hapticFeedback();
                         if (controller.userModel != null) {
                           controller.offsetDetails[controller.userModel!.id] = {
                             'offsettedTime': Utils.timeOfDayToString(
@@ -202,7 +198,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () {
-                        hapticFeedbackController.hapticFeedback();
+                        Utils.hapticFeedback();
                         Get.back();
                       },
                     )
@@ -228,33 +224,41 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         highlightedTextStyle:
                             Theme.of(context).textTheme.displayMedium,
                         onTimeChange: (dateTime) {
-                          hapticFeedbackController.hapticFeedback();
+                          Utils.hapticFeedback();
                           controller.selectedTime.value = dateTime;
                         },
                       ),
                     ),
-                    RepeatTile(controller: controller, hapticFeedbackController: hapticFeedbackController,),
+                    RepeatTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
                         color: kprimaryDisabledTextColor,
                       ),
                     ),
-                    RepeatOnceTile(controller: controller, hapticFeedbackController: hapticFeedbackController,),
+                    RepeatOnceTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
                         color: kprimaryDisabledTextColor,
                       ),
                     ),
-                    SnoozeDurationTile(controller: controller, hapticFeedbackController: hapticFeedbackController,),
+                    SnoozeDurationTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
                         color: kprimaryDisabledTextColor,
                       ),
                     ),
-                    LabelTile(controller: controller, hapticFeedbackController: hapticFeedbackController,),
+                    LabelTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryTextColor,
                       height: 10,
@@ -279,21 +283,22 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               ),
                             ),
                             ScreenActivityTile(
-                              controller: controller, hapticFeedbackController: hapticFeedbackController,
+                              controller: controller,
                             ),
                             const Divider(
                               color: kprimaryDisabledTextColor,
                             ),
                             WeatherTile(
-                              controller: controller, hapticFeedbackController: hapticFeedbackController,
+                              controller: controller,
                             ),
                             const Divider(
                               color: kprimaryDisabledTextColor,
                             ),
                             LocationTile(
-                                controller: controller,
-                                height: height,
-                                width: width, hapticFeedbackController: hapticFeedbackController,)
+                              controller: controller,
+                              height: height,
+                              width: width,
+                            ),
                           ]),
                     ),
                     Container(
@@ -320,17 +325,19 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ),
                           ),
                           ShakeToDismiss(
-                            controller: controller, hapticFeedbackController: hapticFeedbackController,
+                            controller: controller,
                           ),
                           const Divider(
                             color: kprimaryDisabledTextColor,
                           ),
-                          QrBarCode(controller: controller, hapticFeedbackController: hapticFeedbackController,),
+                          QrBarCode(
+                            controller: controller,
+                          ),
                           const Divider(
                             color: kprimaryDisabledTextColor,
                           ),
                           MathsChallenge(
-                            controller: controller, hapticFeedbackController: hapticFeedbackController,
+                            controller: controller,
                           ),
                         ],
                       ),
@@ -359,12 +366,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ),
                           ),
                           SharedAlarm(
-                            controller: controller, hapticFeedbackController: hapticFeedbackController,
+                            controller: controller,
                           ),
                           const Divider(
                             color: kprimaryDisabledTextColor,
                           ),
-                          AlarmIDTile(controller: controller, width: width, hapticFeedbackController: hapticFeedbackController,),
+                          AlarmIDTile(
+                            controller: controller,
+                            width: width,
+                          ),
                           Obx(
                             () => Container(
                               child: (controller.isSharedAlarmEnabled.value)
@@ -375,7 +385,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ),
                           ),
                           AlarmOffset(
-                            controller: controller, hapticFeedbackController: hapticFeedbackController,
+                            controller: controller,
                           ),
                           Obx(
                             () => Container(
@@ -387,7 +397,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   : const SizedBox(),
                             ),
                           ),
-                          SharedUsers(controller: controller, hapticFeedbackController: hapticFeedbackController,),
+                          SharedUsers(
+                            controller: controller,
+                          ),
                         ],
                       ),
                     ),

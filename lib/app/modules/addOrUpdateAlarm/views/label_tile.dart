@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class LabelTile extends StatelessWidget {
   const LabelTile({
     super.key,
-    required this.controller, required this.hapticFeedbackController,
+    required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
-
-  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class LabelTile extends StatelessWidget {
         style: TextStyle(color: kprimaryTextColor),
       ),
       onTap: () {
-       hapticFeedbackController.hapticFeedback();
+       Utils.hapticFeedback();
         Get.defaultDialog(
           title: "Enter a name",
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
@@ -69,7 +67,7 @@ class LabelTile extends StatelessWidget {
                   .copyWith(color: ksecondaryTextColor),
             ),
             onPressed: () {
-              hapticFeedbackController.hapticFeedback();
+              Utils.hapticFeedback();
               controller.label.value = controller.labelController.text;
               Get.back();
             },

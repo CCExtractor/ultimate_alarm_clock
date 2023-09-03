@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/controllers/alarm_challenge_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class MathsChallengeView extends GetView<AlarmChallengeController> {
-  MathsChallengeView({Key? key}) : super(key: key);
-
-  final HapticFeedbackController hapticFeedbackController =
-      Get.find<HapticFeedbackController>();
+  const MathsChallengeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +13,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     var width = Get.width;
     return GestureDetector(
       onTap: () {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         controller.restartTimer();
       },
       child: Scaffold(
@@ -137,7 +134,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   Widget _buildNumberButton(String number) {
     return ElevatedButton(
       onPressed: () {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         controller.onButtonPressed(number);
       },
       style: ElevatedButton.styleFrom(
@@ -153,7 +150,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   Widget _buildClearButton() {
     return ElevatedButton(
       onPressed: () {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         controller.displayValue.value = '';
       },
       style: ElevatedButton.styleFrom(
@@ -173,7 +170,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   Widget _buildDoneButton() {
     return ElevatedButton(
       onPressed: () {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         if (controller.mathsAnswer.toString() ==
             controller.displayValue.value) {
           controller.numMathsQuestions.value -= 1;

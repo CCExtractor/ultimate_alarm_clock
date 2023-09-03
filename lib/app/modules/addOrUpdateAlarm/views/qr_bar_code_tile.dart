@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class QrBarCode extends StatelessWidget {
   const QrBarCode({
     super.key,
-    required this.controller, required this.hapticFeedbackController,
+    required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
-
-  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,7 @@ class QrBarCode extends StatelessWidget {
               color: kprimaryTextColor.withOpacity(0.3),
             ),
             onPressed: () {
-              hapticFeedbackController.hapticFeedback();
+              Utils.hapticFeedback();
               showModalBottomSheet(
                   context: context,
                   backgroundColor: ksecondaryBackgroundColor,
@@ -66,7 +64,7 @@ class QrBarCode extends StatelessWidget {
                                       MaterialStateProperty.all(kprimaryColor),
                                 ),
                                 onPressed: () {
-                                  hapticFeedbackController.hapticFeedback();
+                                  Utils.hapticFeedback();
                                   Get.back();
                                 },
                                 child: Text(
@@ -88,7 +86,7 @@ class QrBarCode extends StatelessWidget {
         ],
       ),
       onTap: () async {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         await controller.requestQrPermission();
       },
       trailing: InkWell(

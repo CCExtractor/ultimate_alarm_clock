@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 import 'constants.dart';
 
@@ -439,5 +442,15 @@ class Utils {
       return true;
     }
     return false;
+  }
+
+  static void hapticFeedback() {
+    if (Get.find<SettingsController>().isHapticFeedbackEnabled.value) {
+      // Trigger haptic feedback if it's enabled in settings
+      SystemChannels.platform.invokeMethod<void>(
+        'HapticFeedback.vibrate',
+        'HapticFeedbackType.selectionClick',
+      );
+    }
   }
 }

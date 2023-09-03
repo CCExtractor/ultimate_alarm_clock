@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class RepeatOnceTile extends StatelessWidget {
   const RepeatOnceTile({
     super.key,
-    required this.controller, required this.hapticFeedbackController,
+    required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
 
-  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class RepeatOnceTile extends StatelessWidget {
         style: TextStyle(color: kprimaryTextColor),
       ),
       onTap: () {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         if (!controller.repeatDays.every((element) => element == false)) {
           controller.isOneTime.value = !controller.isOneTime.value;
         }
@@ -37,14 +36,14 @@ class RepeatOnceTile extends StatelessWidget {
                 return Switch(
                     value: false,
                     onChanged: (value) {
-                      hapticFeedbackController.hapticFeedback();
+                      Utils.hapticFeedback();
                       controller.isOneTime.value = false;
                     });
               }
               return Switch(
                   value: controller.isOneTime.value,
                   onChanged: (value) {
-                    hapticFeedbackController.hapticFeedback();
+                    Utils.hapticFeedback();
                     controller.isOneTime.value = value;
                   });
             }),

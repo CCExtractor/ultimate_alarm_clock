@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmIDTile extends StatelessWidget {
   const AlarmIDTile({
     super.key,
     required this.controller,
-    required this.width, required this.hapticFeedbackController,
+    required this.width,
   });
 
   final AddOrUpdateAlarmController controller;
   final double width;
-
-  final HapticFeedbackController hapticFeedbackController;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class AlarmIDTile extends StatelessWidget {
           child: (controller.isSharedAlarmEnabled.value == true)
               ? ListTile(
                   onTap: () {
-                    hapticFeedbackController.hapticFeedback();
+                    Utils.hapticFeedback();
                     Clipboard.setData(ClipboardData(text: controller.alarmID));
                     Get.snackbar(
                       'Success!',
@@ -45,7 +43,7 @@ class AlarmIDTile extends StatelessWidget {
                   ))
               : ListTile(
                   onTap: () {
-                    hapticFeedbackController.hapticFeedback();
+                    Utils.hapticFeedback();
                     Get.defaultDialog(
                         titlePadding: const EdgeInsets.symmetric(vertical: 20),
                         backgroundColor: ksecondaryBackgroundColor,
@@ -73,7 +71,7 @@ class AlarmIDTile extends StatelessWidget {
                                       .copyWith(color: ksecondaryTextColor),
                                 ),
                                 onPressed: () {
-                                  hapticFeedbackController.hapticFeedback();
+                                  Utils.hapticFeedback();
                                   Get.back();
                                 },
                               ),

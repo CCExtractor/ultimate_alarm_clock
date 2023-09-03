@@ -3,16 +3,13 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/maths_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/qr_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/shake_challenge_view.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
 
 class AlarmChallengeView extends GetView<AlarmChallengeController> {
-  AlarmChallengeView({Key? key}) : super(key: key);
-
-  final HapticFeedbackController hapticFeedbackController =
-      Get.find<HapticFeedbackController>();
+  const AlarmChallengeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +18,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
 
     return GestureDetector(
       onTap: () {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         controller.restartTimer();
       },
       child: Scaffold(
@@ -52,7 +49,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           if (controller.alarmRecord.isShakeEnabled)
                             InkWell(
                               onTap: () {
-                                hapticFeedbackController.hapticFeedback();
+                                Utils.hapticFeedback();
                                 if (controller.isShakeOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isShakeEnabled) {
@@ -110,7 +107,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           if (controller.alarmRecord.isMathsEnabled)
                             InkWell(
                               onTap: () {
-                                hapticFeedbackController.hapticFeedback();
+                                Utils.hapticFeedback();
                                 if (controller.isMathsOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isMathsEnabled) {
@@ -166,7 +163,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           if (controller.alarmRecord.isQrEnabled)
                             InkWell(
                               onTap: () {
-                                hapticFeedbackController.hapticFeedback();
+                                Utils.hapticFeedback();
                                 if (controller.isQrOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isQrEnabled) {

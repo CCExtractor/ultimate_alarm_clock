@@ -2,28 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class LocationTile extends StatelessWidget {
   const LocationTile({
     super.key,
     required this.controller,
     required this.height,
-    required this.width, required this.hapticFeedbackController,
+    required this.width,
   });
 
   final AddOrUpdateAlarmController controller;
   final double height;
   final double width;
 
-  final HapticFeedbackController hapticFeedbackController;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (TapDownDetails details) async {
-        hapticFeedbackController.hapticFeedback();
+        Utils.hapticFeedback();
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -62,7 +60,7 @@ class LocationTile extends StatelessWidget {
                     value: !controller.isLocationEnabled.value,
                     groupValue: true,
                     onChanged: (value) {
-                      hapticFeedbackController.hapticFeedback();
+                      Utils.hapticFeedback();
                     },
                   ),
                 ],
@@ -141,7 +139,7 @@ class LocationTile extends StatelessWidget {
                           .displaySmall!
                           .copyWith(color: ksecondaryTextColor),
                     ),
-                    onPressed: () {hapticFeedbackController.hapticFeedback(); Get.back();
+                    onPressed: () {Utils.hapticFeedback(); Get.back();
                     controller.isLocationEnabled.value = true;},
                   ),
                 ],
@@ -164,7 +162,7 @@ class LocationTile extends StatelessWidget {
                 color: kprimaryTextColor.withOpacity(0.3),
               ),
               onPressed: () {
-                hapticFeedbackController.hapticFeedback();
+                Utils.hapticFeedback();
                 showModalBottomSheet(
                     context: context,
                     backgroundColor: ksecondaryBackgroundColor,
@@ -201,7 +199,7 @@ class LocationTile extends StatelessWidget {
                                         kprimaryColor),
                                   ),
                                   onPressed: () {
-                                    hapticFeedbackController.hapticFeedback();
+                                    Utils.hapticFeedback();
                                     Get.back();
                                   },
                                   child: Text(

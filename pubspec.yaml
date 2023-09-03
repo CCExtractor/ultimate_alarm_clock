@@ -39,6 +39,7 @@ dependencies:
   flutter:
     sdk: flutter
   vibration: ^1.8.1
+  mockito: ^5.4.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0

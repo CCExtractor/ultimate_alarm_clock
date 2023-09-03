@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/hapticFeedback/controllers/haptic_feedback_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class EnableHapticFeedback extends StatefulWidget {
   const EnableHapticFeedback({
@@ -11,7 +12,7 @@ class EnableHapticFeedback extends StatefulWidget {
     required this.width,
   });
 
-  final HapticFeedbackController controller;
+  final SettingsController controller;
 
   final double height;
   final double width;
@@ -46,7 +47,7 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
               value: widget.controller.isHapticFeedbackEnabled.value,
               onChanged: (bool value) async {
                 widget.controller.toggleHapticFeedback(value);
-                widget.controller.hapticFeedback();
+                Utils.hapticFeedback();
               },
             ),
           ),
