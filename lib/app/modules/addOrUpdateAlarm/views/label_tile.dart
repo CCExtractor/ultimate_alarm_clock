@@ -77,8 +77,11 @@ class LabelTile extends StatelessWidget {
           children: [
             Obx(() => Container(
                   width: 100,
+                  alignment: Alignment.centerRight,
                   child: Text(
-                    controller.label.value,
+                    (controller.label.value.length > 0)
+                        ? controller.label.value
+                        : 'Off',
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: (controller.label.value.isEmpty)
