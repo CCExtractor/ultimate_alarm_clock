@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 import 'constants.dart';
@@ -444,8 +445,11 @@ class Utils {
     return false;
   }
 
-  static void hapticFeedback() {
-    if (Get.find<SettingsController>().isHapticFeedbackEnabled.value) {
+  static void hapticFeedback() async {
+
+    bool hapticFeedbackValue = await SecureStorageProvider().readHapticFeedbackValue(key: 'haptic_feedback');
+
+    if (hapticFeedbackValue) {
       // Trigger haptic feedback if it's enabled in settings
       SystemChannels.platform.invokeMethod<void>(
         'HapticFeedback.vibrate',
