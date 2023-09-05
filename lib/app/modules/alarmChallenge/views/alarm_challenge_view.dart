@@ -4,6 +4,7 @@ import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/maths_chal
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/qr_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/shake_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
 
@@ -16,7 +17,10 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
     var height = Get.height;
 
     return GestureDetector(
-      onTap: () => controller.restartTimer(),
+      onTap: () {
+        Utils.hapticFeedback();
+        controller.restartTimer();
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -45,6 +49,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           if (controller.alarmRecord.isShakeEnabled)
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.isShakeOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isShakeEnabled) {
@@ -102,6 +107,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           if (controller.alarmRecord.isMathsEnabled)
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.isMathsOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isMathsEnabled) {
@@ -157,6 +163,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                           if (controller.alarmRecord.isQrEnabled)
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.isQrOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isQrEnabled) {

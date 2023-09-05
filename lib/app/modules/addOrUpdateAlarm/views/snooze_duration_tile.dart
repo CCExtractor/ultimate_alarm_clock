@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class SnoozeDurationTile extends StatelessWidget {
   const SnoozeDurationTile({
@@ -16,6 +17,7 @@ class SnoozeDurationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: ksecondaryBackgroundColor,
@@ -32,6 +34,7 @@ class SnoozeDurationTile extends StatelessWidget {
                         minValue: 1,
                         maxValue: 1440,
                         onChanged: (value) {
+                          Utils.hapticFeedback();
                           controller.snoozeDuration.value = value;
                         },
                       ),
@@ -51,6 +54,7 @@ class SnoozeDurationTile extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () {
+                              Utils.hapticFeedback();
                               Get.back();
                             },
                             style: ElevatedButton.styleFrom(

@@ -12,6 +12,8 @@ import 'package:fl_location/fl_location.dart';
 
 class SettingsController extends GetxController {
   var homeController = Get.find<HomeController>();
+  var isHapticFeedbackEnabled = true.obs;
+  final _hapticFeedbackKey = 'haptic_feedback';
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;
@@ -27,6 +29,7 @@ class SettingsController extends GetxController {
 
     userModel = homeController.userModel.value;
     isUserLoggedIn.value = homeController.isUserSignedIn.value;
+    _loadPreference();
   }
 
   @override
@@ -152,5 +155,22 @@ class SettingsController extends GetxController {
 
     // Location services has been enabled and permission have been granted.
     return true;
+  }
+
+  void _loadPreference() async {
+    isHapticFeedbackEnabled.value = await _secureStorageProvider
+        .readHapticFeedbackValue(key: _hapticFeedbackKey);
+  }
+
+  void _savePreference() async {
+    await _secureStorageProvider.writeHapticFeedbackValue(
+      key: _hapticFeedbackKey,
+      isHapticFeedbackEnabled: isHapticFeedbackEnabled.value,
+    );
+  }
+
+  void toggleHapticFeedback(bool enabled) {
+    isHapticFeedbackEnabled.value = enabled;
+    _savePreference();
   }
 }

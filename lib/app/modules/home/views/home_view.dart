@@ -13,7 +13,8 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -37,6 +38,7 @@ class HomeView extends GetView<HomeController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         onPressed: () {
+                          Utils.hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
                           Get.defaultDialog(
                             title: "Join an alarm",
@@ -90,6 +92,7 @@ class HomeView extends GetView<HomeController> {
                                     .copyWith(color: ksecondaryTextColor),
                               ),
                               onPressed: () async {
+                                Utils.hapticFeedback();
                                 var result =
                                     await FirestoreDb.addUserToAlarmSharedUsers(
                                         controller.userModel.value,
@@ -142,6 +145,7 @@ class HomeView extends GetView<HomeController> {
                                                             ksecondaryTextColor),
                                               ),
                                               onPressed: () {
+                                                Utils.hapticFeedback();
                                                 Get.back();
                                               }),
                                         ],
@@ -177,6 +181,7 @@ class HomeView extends GetView<HomeController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         onPressed: () {
+                          Utils.hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
                           Get.toNamed('/add-update-alarm');
                         },
@@ -208,6 +213,7 @@ class HomeView extends GetView<HomeController> {
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
+                      Utils.hapticFeedback();
                       Get.toNamed('/add-update-alarm');
                     },
                   )),
@@ -245,6 +251,7 @@ class HomeView extends GetView<HomeController> {
                   )),
               IconButton(
                 onPressed: () {
+                  Utils.hapticFeedback();
                   Get.toNamed('/settings');
                 },
                 icon: const Icon(Icons.settings),
@@ -327,6 +334,7 @@ class HomeView extends GetView<HomeController> {
                                             // Main card
                                             return InkWell(
                                               onTap: () {
+                                                Utils.hapticFeedback();
                                                 Get.toNamed('/add-update-alarm',
                                                     arguments: alarm);
                                               },
@@ -542,6 +550,7 @@ class HomeView extends GetView<HomeController> {
                                                                       onChanged:
                                                                           (bool
                                                                               value) async {
+                                                                                Utils.hapticFeedback();
                                                                         alarm.isEnabled =
                                                                             value;
 
@@ -567,6 +576,7 @@ class HomeView extends GetView<HomeController> {
                                                                         PopupMenuButton(
                                                                       onSelected:
                                                                           (value) async {
+                                                                            Utils.hapticFeedback();
                                                                         if (value ==
                                                                             0) {
                                                                           Get.back();

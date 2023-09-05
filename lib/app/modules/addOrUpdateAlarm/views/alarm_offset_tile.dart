@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AlarmOffset extends StatelessWidget {
   const AlarmOffset({
@@ -18,6 +19,7 @@ class AlarmOffset extends StatelessWidget {
       () => (controller.isSharedAlarmEnabled.value)
           ? InkWell(
               onTap: () {
+                Utils.hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
                   backgroundColor: ksecondaryBackgroundColor,
@@ -36,6 +38,7 @@ class AlarmOffset extends StatelessWidget {
                                 minValue: 0,
                                 maxValue: 1440,
                                 onChanged: (value) {
+                                  Utils.hapticFeedback();
                                   controller.offsetDuration.value = value;
                                 }),
                             Text(controller.offsetDuration.value > 1
@@ -50,6 +53,7 @@ class AlarmOffset extends StatelessWidget {
                           Obx(
                             () => ElevatedButton(
                               onPressed: () {
+                                Utils.hapticFeedback();
                                 controller.isOffsetBefore.value = true;
                               },
                               style: ElevatedButton.styleFrom(
@@ -69,6 +73,7 @@ class AlarmOffset extends StatelessWidget {
                           Obx(
                             () => ElevatedButton(
                               onPressed: () {
+                                Utils.hapticFeedback();
                                 controller.isOffsetBefore.value = false;
                               },
                               style: ElevatedButton.styleFrom(

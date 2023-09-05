@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class SharedAlarm extends StatelessWidget {
   const SharedAlarm({
@@ -32,6 +33,7 @@ class SharedAlarm extends StatelessWidget {
                       color: kprimaryTextColor.withOpacity(0.3),
                     ),
                     onPressed: () {
+                      Utils.hapticFeedback();
                       showModalBottomSheet(
                           context: context,
                           backgroundColor: ksecondaryBackgroundColor,
@@ -72,6 +74,7 @@ class SharedAlarm extends StatelessWidget {
                                                   kprimaryColor),
                                         ),
                                         onPressed: () {
+                                          Utils.hapticFeedback();
                                           Get.back();
                                         },
                                         child: Text(
@@ -94,6 +97,7 @@ class SharedAlarm extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Utils.hapticFeedback();
                 // Toggle the value of isSharedAlarmEnabled
                 controller.isSharedAlarmEnabled.value =
                     !controller.isSharedAlarmEnabled.value;
@@ -101,6 +105,7 @@ class SharedAlarm extends StatelessWidget {
               trailing: Obx(
                 () => Switch(
                   onChanged: (value) {
+                    Utils.hapticFeedback();
                     // You can optionally add the onChanged callback here as well
                     controller.isSharedAlarmEnabled.value = value;
                   },
@@ -110,6 +115,7 @@ class SharedAlarm extends StatelessWidget {
             )
           : ListTile(
               onTap: () {
+                Utils.hapticFeedback();
                 Get.defaultDialog(
                     contentPadding: const EdgeInsets.all(10.0),
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -137,6 +143,7 @@ class SharedAlarm extends StatelessWidget {
                                       .copyWith(color: ksecondaryTextColor),
                                 ),
                                 onPressed: () {
+                                  Utils.hapticFeedback();
                                   Get.back();
                                   Get.toNamed('/settings');
                                 },
@@ -153,6 +160,7 @@ class SharedAlarm extends StatelessWidget {
                                       .copyWith(color: kprimaryTextColor),
                                 ),
                                 onPressed: () {
+                                  Utils.hapticFeedback();
                                   Get.back();
                                 },
                               ),
