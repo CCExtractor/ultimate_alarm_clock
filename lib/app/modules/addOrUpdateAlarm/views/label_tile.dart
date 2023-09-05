@@ -78,18 +78,21 @@ class LabelTile extends StatelessWidget {
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Obx(
-              () => Text(
-                controller.label.value.isNotEmpty
-                    ? controller.label.value
-                    : 'Off',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: (controller.label.value.isEmpty)
-                          ? kprimaryDisabledTextColor
-                          : kprimaryTextColor,
-                    ),
-              ),
-            ),
+            Obx(() => Container(
+                  width: 100,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    (controller.label.value.length > 0)
+                        ? controller.label.value
+                        : 'Off',
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: (controller.label.value.isEmpty)
+                              ? kprimaryDisabledTextColor
+                              : kprimaryTextColor,
+                        ),
+                  ),
+                )),
             Icon(
               Icons.chevron_right,
               color: (controller.label.value.isEmpty)

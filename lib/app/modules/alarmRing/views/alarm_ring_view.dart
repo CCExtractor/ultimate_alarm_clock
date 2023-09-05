@@ -111,26 +111,35 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.055,
-                      width: width * 0.25,
-                      child: TextButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                ksecondaryBackgroundColor)),
-                        child: Text(
-                          'Snooze',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                  color: kprimaryTextColor,
-                                  fontWeight: FontWeight.w600),
+                    Obx(
+                      () => Visibility(
+                        visible: !controller.isSnoozing.value,
+                        child: SizedBox(
+                          height: height * 0.055,
+                          width: width * 0.25,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    ksecondaryBackgroundColor)),
+                            child: Text(
+                              'Snooze',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: kprimaryTextColor,
+                                      fontWeight: FontWeight.w600),
+                            ),
+                            onPressed: () {
+                            Utils.hapticFeedback();
+                              controller.startSnooze();
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.startSnooze();
-                        },
+
+
+
+
                       ),
                     )
                   ],
