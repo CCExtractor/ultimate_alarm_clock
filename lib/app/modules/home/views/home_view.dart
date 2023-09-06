@@ -341,7 +341,7 @@ class HomeView extends GetView<HomeController> {
                                               child: Center(
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 10.0),
                                                   child: Card(
                                                     color:
@@ -387,21 +387,34 @@ class HomeView extends GetView<HomeController> {
                                                                     CrossAxisAlignment
                                                                         .start,
                                                                 children: [
-                                                                  Text(
-                                                                    repeatDays.replaceAll(
-                                                                        "Never",
-                                                                        "One Time"),
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodySmall!
-                                                                        .copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          color: alarm.isEnabled == true
-                                                                              ? kprimaryColor
-                                                                              : kprimaryDisabledTextColor,
-                                                                        ),
+                                                                  IntrinsicHeight(
+                                                                    child: Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            repeatDays.replaceAll("Never",
+                                                                                "One Time"),
+                                                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  color: alarm.isEnabled == true ? kprimaryColor : kprimaryDisabledTextColor,
+                                                                                ),
+                                                                          ),
+                                                                          if (alarm
+                                                                              .label!
+                                                                              .isNotEmpty)
+                                                                            VerticalDivider(
+                                                                              color: alarm.isEnabled == true ? kprimaryColor : kprimaryDisabledTextColor,
+                                                                              thickness: 1.4,
+                                                                              width: 6,
+                                                                              indent: 3.1,
+                                                                              endIndent: 3.1,
+                                                                            ),
+                                                                          Text(
+                                                                              alarm.label,
+                                                                              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                    color: alarm.isEnabled == true ? kprimaryColor : kprimaryDisabledTextColor,
+                                                                                  )),
+                                                                        ]),
                                                                   ),
                                                                   Row(
                                                                     children: [
@@ -416,8 +429,10 @@ class HomeView extends GetView<HomeController> {
                                                                             ),
                                                                       ),
                                                                       Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                        padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                                3.0),
                                                                         child:
                                                                             Text(
                                                                           time12[
@@ -532,10 +547,11 @@ class HomeView extends GetView<HomeController> {
                                                               ),
                                                             ),
                                                             Padding(
-                                                              padding: const EdgeInsets
+                                                              padding:
+                                                                  const EdgeInsets
                                                                       .symmetric(
-                                                                  horizontal:
-                                                                      10.0),
+                                                                      horizontal:
+                                                                          10.0),
                                                               child: Column(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
