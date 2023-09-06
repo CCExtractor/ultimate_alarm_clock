@@ -26,7 +26,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  AddOrUpdateAlarmView({Key? key}) : super(key: key);
+  const AddOrUpdateAlarmView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +56,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () async {
+                        Utils.hapticFeedback();
                         if (controller.userModel != null) {
                           controller.offsetDetails[controller.userModel!.id] = {
                             'offsettedTime': Utils.timeOfDayToString(
@@ -197,6 +198,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .copyWith(color: ksecondaryTextColor),
                       ),
                       onPressed: () {
+                        Utils.hapticFeedback();
                         Get.back();
                       },
                     )
@@ -222,32 +224,41 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         highlightedTextStyle:
                             Theme.of(context).textTheme.displayMedium,
                         onTimeChange: (dateTime) {
+                          Utils.hapticFeedback();
                           controller.selectedTime.value = dateTime;
                         },
                       ),
                     ),
-                    RepeatTile(controller: controller),
+                    RepeatTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
                         color: kprimaryDisabledTextColor,
                       ),
                     ),
-                    RepeatOnceTile(controller: controller),
+                    RepeatOnceTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
                         color: kprimaryDisabledTextColor,
                       ),
                     ),
-                    SnoozeDurationTile(controller: controller),
+                    SnoozeDurationTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryBackgroundColor,
                       child: const Divider(
                         color: kprimaryDisabledTextColor,
                       ),
                     ),
-                    LabelTile(controller: controller),
+                    LabelTile(
+                      controller: controller,
+                    ),
                     Container(
                       color: ksecondaryTextColor,
                       height: 10,
@@ -284,9 +295,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               color: kprimaryDisabledTextColor,
                             ),
                             LocationTile(
-                                controller: controller,
-                                height: height,
-                                width: width)
+                              controller: controller,
+                              height: height,
+                              width: width,
+                            ),
                           ]),
                     ),
                     Container(
@@ -318,7 +330,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           const Divider(
                             color: kprimaryDisabledTextColor,
                           ),
-                          QrBarCode(controller: controller),
+                          QrBarCode(
+                            controller: controller,
+                          ),
                           const Divider(
                             color: kprimaryDisabledTextColor,
                           ),
@@ -357,7 +371,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           const Divider(
                             color: kprimaryDisabledTextColor,
                           ),
-                          AlarmIDTile(controller: controller, width: width),
+                          AlarmIDTile(
+                            controller: controller,
+                            width: width,
+                          ),
                           Obx(
                             () => Container(
                               child: (controller.isSharedAlarmEnabled.value)
@@ -380,7 +397,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   : const SizedBox(),
                             ),
                           ),
-                          SharedUsers(controller: controller),
+                          SharedUsers(
+                            controller: controller,
+                          ),
                         ],
                       ),
                     ),

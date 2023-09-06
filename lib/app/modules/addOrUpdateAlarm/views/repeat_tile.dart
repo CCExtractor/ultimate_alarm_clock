@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class RepeatTile extends StatelessWidget {
   const RepeatTile({
@@ -15,6 +16,7 @@ class RepeatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: ksecondaryBackgroundColor,
@@ -39,6 +41,7 @@ class RepeatTile extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
+                            Utils.hapticFeedback();
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
@@ -100,6 +103,7 @@ class RepeatTile extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
+        Utils.hapticFeedback();
         controller.repeatDays[dayIndex] = !controller.repeatDays[dayIndex];
       },
       child: Padding(
@@ -115,6 +119,7 @@ class RepeatTile extends StatelessWidget {
               ),
               value: controller.repeatDays[dayIndex],
               onChanged: (value) {
+                Utils.hapticFeedback();
                 controller.repeatDays[dayIndex] =
                     !controller.repeatDays[dayIndex];
               },

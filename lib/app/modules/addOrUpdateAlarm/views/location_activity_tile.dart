@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class LocationTile extends StatelessWidget {
   const LocationTile({
@@ -20,6 +21,7 @@ class LocationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (TapDownDetails details) async {
+        Utils.hapticFeedback();
         final RenderBox overlay =
             Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -57,7 +59,9 @@ class LocationTile extends StatelessWidget {
                     ),
                     value: !controller.isLocationEnabled.value,
                     groupValue: true,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      Utils.hapticFeedback();
+                    },
                   ),
                 ],
               ),
@@ -135,7 +139,7 @@ class LocationTile extends StatelessWidget {
                           .displaySmall!
                           .copyWith(color: ksecondaryTextColor),
                     ),
-                    onPressed: () {Get.back();
+                    onPressed: () {Utils.hapticFeedback(); Get.back();
                     controller.isLocationEnabled.value = true;},
                   ),
                 ],
@@ -158,6 +162,7 @@ class LocationTile extends StatelessWidget {
                 color: kprimaryTextColor.withOpacity(0.3),
               ),
               onPressed: () {
+                Utils.hapticFeedback();
                 showModalBottomSheet(
                     context: context,
                     backgroundColor: ksecondaryBackgroundColor,
@@ -194,6 +199,7 @@ class LocationTile extends StatelessWidget {
                                         kprimaryColor),
                                   ),
                                   onPressed: () {
+                                    Utils.hapticFeedback();
                                     Get.back();
                                   },
                                   child: Text(

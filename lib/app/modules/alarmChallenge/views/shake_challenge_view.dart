@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'dart:math' as math;
 
 import '../controllers/alarm_challenge_controller.dart';
@@ -20,6 +21,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
         ),
         body: GestureDetector(
           onTap: () {
+            Utils.hapticFeedback();
             controller.restartTimer();
           },
           child: Column(

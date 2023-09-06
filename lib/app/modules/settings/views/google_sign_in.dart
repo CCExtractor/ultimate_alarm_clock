@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class GoogleSignIn extends StatelessWidget {
   const GoogleSignIn({
@@ -20,6 +21,7 @@ class GoogleSignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
+        Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
           bool? isSuccessfulLogin = await controller.loginWithGoogle();
 
@@ -56,6 +58,7 @@ class GoogleSignIn extends StatelessWidget {
                               .copyWith(color: ksecondaryTextColor),
                         ),
                         onPressed: () {
+                          Utils.hapticFeedback();
                           Get.back();
                         }),
                   ],
@@ -88,6 +91,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: ksecondaryTextColor),
                           ),
                           onPressed: () async {
+                            Utils.hapticFeedback();
                             await controller.logoutGoogle();
                             Get.back();
                           },
@@ -104,6 +108,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: kprimaryTextColor),
                           ),
                           onPressed: () {
+                            Utils.hapticFeedback();
                             Get.back();
                           },
                         ),

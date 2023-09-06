@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
 
@@ -20,6 +21,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
         ),
         body: GestureDetector(
           onTap: () {
+            Utils.hapticFeedback();
             controller.restartTimer();
           },
           child: Column(
@@ -143,6 +145,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                                         ksecondaryTextColor),
                                                           ),
                                                           onPressed: () async {
+                                                            Utils.hapticFeedback();
                                                             controller
                                                                 .qrController!
                                                                 .dispose();

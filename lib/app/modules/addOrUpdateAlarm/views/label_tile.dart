@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class LabelTile extends StatelessWidget {
   const LabelTile({
@@ -20,6 +21,7 @@ class LabelTile extends StatelessWidget {
         style: TextStyle(color: kprimaryTextColor),
       ),
       onTap: () {
+       Utils.hapticFeedback();
         Get.defaultDialog(
           title: "Enter a name",
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
@@ -65,6 +67,7 @@ class LabelTile extends StatelessWidget {
                   .copyWith(color: ksecondaryTextColor),
             ),
             onPressed: () {
+              Utils.hapticFeedback();
               controller.label.value = controller.labelController.text;
               Get.back();
             },
@@ -77,8 +80,11 @@ class LabelTile extends StatelessWidget {
           children: [
             Obx(() => Container(
                   width: 100,
+                  alignment: Alignment.centerRight,
                   child: Text(
-                    controller.label.value,
+                    (controller.label.value.length > 0)
+                        ? controller.label.value
+                        : 'Off',
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: (controller.label.value.isEmpty)
