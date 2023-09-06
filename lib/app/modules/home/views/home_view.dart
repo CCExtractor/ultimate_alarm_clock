@@ -451,7 +451,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.share_arrival_time,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                         if (alarm
@@ -463,7 +463,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.location_pin,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                         if (alarm
@@ -475,7 +475,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.screen_lock_portrait,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                         if (alarm
@@ -487,7 +487,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.cloudy_snowing,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                         if (alarm
@@ -499,7 +499,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.qr_code_scanner,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                         if (alarm
@@ -511,7 +511,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.vibration,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                         if (alarm
@@ -523,7 +523,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icon(
                                                                               Icons.calculate,
                                                                               size: 24,
-                                                                              color: kprimaryTextColor.withOpacity(0.5),
+                                                                              color: alarm.isEnabled == true ? kprimaryTextColor.withOpacity(0.5) : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
                                                                       ],
@@ -550,7 +550,8 @@ class HomeView extends GetView<HomeController> {
                                                                       onChanged:
                                                                           (bool
                                                                               value) async {
-                                                                                Utils.hapticFeedback();
+                                                                        Utils
+                                                                            .hapticFeedback();
                                                                         alarm.isEnabled =
                                                                             value;
 
@@ -576,7 +577,8 @@ class HomeView extends GetView<HomeController> {
                                                                         PopupMenuButton(
                                                                       onSelected:
                                                                           (value) async {
-                                                                            Utils.hapticFeedback();
+                                                                        Utils
+                                                                            .hapticFeedback();
                                                                         if (value ==
                                                                             0) {
                                                                           Get.back();
@@ -626,8 +628,8 @@ class HomeView extends GetView<HomeController> {
                                                                               style: Theme.of(context).textTheme.bodyMedium,
                                                                             ),
                                                                           ),
-                                                                          if (alarm.isSharedAlarmEnabled == false || (alarm.isSharedAlarmEnabled == true &&
-                                                                              alarm.ownerId == controller.userModel.value!.id))
+                                                                          if (alarm.isSharedAlarmEnabled == false ||
+                                                                              (alarm.isSharedAlarmEnabled == true && alarm.ownerId == controller.userModel.value!.id))
                                                                             PopupMenuItem<int>(
                                                                               value: 1,
                                                                               child: Text(
