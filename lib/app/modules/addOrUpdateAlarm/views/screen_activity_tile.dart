@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class ScreenActivityTile extends StatelessWidget {
   const ScreenActivityTile({
@@ -18,6 +19,7 @@ class ScreenActivityTile extends StatelessWidget {
     var width = Get.width;
     return InkWell(
       onTap: () {
+        Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: ksecondaryBackgroundColor,
@@ -35,6 +37,7 @@ class ScreenActivityTile extends StatelessWidget {
                       minValue: 0,
                       maxValue: 1440,
                       onChanged: (value) {
+                        Utils.hapticFeedback();
                         if (value > 0) {
                           controller.isActivityenabled.value = true;
                         } else {
@@ -59,6 +62,7 @@ class ScreenActivityTile extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
+                            Utils.hapticFeedback();
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
@@ -96,6 +100,7 @@ class ScreenActivityTile extends StatelessWidget {
                 color: kprimaryTextColor.withOpacity(0.3),
               ),
               onPressed: () {
+                Utils.hapticFeedback();
                 showModalBottomSheet(
                     context: context,
                     backgroundColor: ksecondaryBackgroundColor,
@@ -132,6 +137,7 @@ class ScreenActivityTile extends StatelessWidget {
                                         kprimaryColor),
                                   ),
                                   onPressed: () {
+                                    Utils.hapticFeedback();
                                     Get.back();
                                   },
                                   child: Text(

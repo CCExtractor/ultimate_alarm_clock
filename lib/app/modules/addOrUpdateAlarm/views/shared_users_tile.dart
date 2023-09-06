@@ -4,6 +4,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class SharedUsers extends StatelessWidget {
   const SharedUsers({
@@ -39,6 +40,7 @@ class SharedUsers extends StatelessWidget {
                       ),
                       trailing: InkWell(
                         onTap: () {
+                          Utils.hapticFeedback();
                           showModalBottomSheet(
                             context: context,
                             backgroundColor: kprimaryBackgroundColor,
@@ -123,6 +125,7 @@ class SharedUsers extends StatelessWidget {
                                                           ),
                                                     ),
                                                     onPressed: () async {
+                                                      Utils.hapticFeedback();
                                                       await FirestoreDb
                                                           .removeUserFromAlarmSharedUsers(
                                                               user,

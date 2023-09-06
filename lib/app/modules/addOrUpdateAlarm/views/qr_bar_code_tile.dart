@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class QrBarCode extends StatelessWidget {
   const QrBarCode({
@@ -27,6 +28,7 @@ class QrBarCode extends StatelessWidget {
               color: kprimaryTextColor.withOpacity(0.3),
             ),
             onPressed: () {
+              Utils.hapticFeedback();
               showModalBottomSheet(
                   context: context,
                   backgroundColor: ksecondaryBackgroundColor,
@@ -62,6 +64,7 @@ class QrBarCode extends StatelessWidget {
                                       MaterialStateProperty.all(kprimaryColor),
                                 ),
                                 onPressed: () {
+                                  Utils.hapticFeedback();
                                   Get.back();
                                 },
                                 child: Text(
@@ -83,6 +86,7 @@ class QrBarCode extends StatelessWidget {
         ],
       ),
       onTap: () async {
+        Utils.hapticFeedback();
         await controller.requestQrPermission();
       },
       trailing: InkWell(

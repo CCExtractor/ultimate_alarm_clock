@@ -47,4 +47,18 @@ class SecureStorageProvider {
     final String apiKey = key.toString();
     return await _secureStorage.read(key: apiKey);
   }
+
+  Future<bool> readHapticFeedbackValue({required String key}) async {
+    return await _secureStorage.read(key: key) == 'true';
+  }
+
+  Future<void> writeHapticFeedbackValue({
+    required String key,
+    required bool isHapticFeedbackEnabled,
+  }) async {
+    await _secureStorage.write(
+      key: key,
+      value: isHapticFeedbackEnabled.toString(),
+    );
+  }
 }

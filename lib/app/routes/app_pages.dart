@@ -25,12 +25,12 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.SPLASH_SCREEN,
-      page: () => SplashScreenView(),
+      page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => const HomeView(),
+      page: () => HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(
@@ -40,27 +40,27 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ALARM_RING,
-      page: () => const AlarmControlView(),
+      page: () => AlarmControlView(),
       binding: AlarmControlBinding(),
     ),
     GetPage(
       name: _Paths.ALARM_RING_IGNORE,
-      page: () => const AlarmControlIgnoreView(),
+      page: () => AlarmControlIgnoreView(),
       binding: AlarmControlIgnoreBinding(),
     ),
     GetPage(
       name: _Paths.SETTINGS,
-      page: () => const SettingsView(),
+      page: () => SettingsView(),
       binding: SettingsBinding(),
     ),
     GetPage(
       name: _Paths.SETTINGS,
-      page: () => const SettingsView(),
+      page: () => SettingsView(),
       binding: SettingsBinding(),
     ),
     GetPage(
       name: _Paths.ALARM_CHALLENGE,
-      page: () => const AlarmChallengeView(),
+      page: () => AlarmChallengeView(),
       binding: AlarmChallengeBinding(),
     ),
   ];

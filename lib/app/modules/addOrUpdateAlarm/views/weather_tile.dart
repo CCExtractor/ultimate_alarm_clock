@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class WeatherTile extends StatelessWidget {
   const WeatherTile({
@@ -10,6 +11,7 @@ class WeatherTile extends StatelessWidget {
   });
 
   final AddOrUpdateAlarmController controller;
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -19,6 +21,7 @@ class WeatherTile extends StatelessWidget {
         child: (controller.weatherApiKeyExists.value == true)
             ? ListTile(
                 onTap: () async {
+                  Utils.hapticFeedback();
                   await controller.getLocation();
                   Get.defaultDialog(
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -30,6 +33,7 @@ class WeatherTile extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.selectedWeather
                                     .contains(WeatherTypes.sunny)) {
                                   controller.selectedWeather
@@ -54,6 +58,7 @@ class WeatherTile extends StatelessWidget {
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.sunny),
                                           onChanged: (value) {
+                                            Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(WeatherTypes.sunny)) {
                                               controller.selectedWeather
@@ -75,6 +80,7 @@ class WeatherTile extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.selectedWeather
                                     .contains(WeatherTypes.cloudy)) {
                                   controller.selectedWeather
@@ -99,6 +105,7 @@ class WeatherTile extends StatelessWidget {
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.cloudy),
                                           onChanged: (value) {
+                                            Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(
                                                     WeatherTypes.cloudy)) {
@@ -121,6 +128,7 @@ class WeatherTile extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.selectedWeather
                                     .contains(WeatherTypes.rainy)) {
                                   controller.selectedWeather
@@ -145,6 +153,7 @@ class WeatherTile extends StatelessWidget {
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.rainy),
                                           onChanged: (value) {
+                                            Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(WeatherTypes.rainy)) {
                                               controller.selectedWeather
@@ -166,6 +175,7 @@ class WeatherTile extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.selectedWeather
                                     .contains(WeatherTypes.windy)) {
                                   controller.selectedWeather
@@ -190,6 +200,7 @@ class WeatherTile extends StatelessWidget {
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.windy),
                                           onChanged: (value) {
+                                            Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(WeatherTypes.windy)) {
                                               controller.selectedWeather
@@ -211,6 +222,7 @@ class WeatherTile extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                Utils.hapticFeedback();
                                 if (controller.selectedWeather
                                     .contains(WeatherTypes.stormy)) {
                                   controller.selectedWeather
@@ -235,6 +247,7 @@ class WeatherTile extends StatelessWidget {
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.stormy),
                                           onChanged: (value) {
+                                            Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(
                                                     WeatherTypes.stormy)) {
@@ -273,6 +286,7 @@ class WeatherTile extends StatelessWidget {
                         color: kprimaryTextColor.withOpacity(0.3),
                       ),
                       onPressed: () {
+                        Utils.hapticFeedback();
                         showModalBottomSheet(
                             context: context,
                             backgroundColor: ksecondaryBackgroundColor,
@@ -314,6 +328,7 @@ class WeatherTile extends StatelessWidget {
                                                     kprimaryColor),
                                           ),
                                           onPressed: () {
+                                            Utils.hapticFeedback();
                                             Get.back();
                                           },
                                           child: Text(
@@ -361,6 +376,7 @@ class WeatherTile extends StatelessWidget {
               )
             : ListTile(
                 onTap: () {
+                  Utils.hapticFeedback();
                   Get.defaultDialog(
                       contentPadding: EdgeInsets.all(10.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -389,6 +405,7 @@ class WeatherTile extends StatelessWidget {
                                         .copyWith(color: ksecondaryTextColor),
                                   ),
                                   onPressed: () {
+                                    Utils.hapticFeedback();
                                     Get.back();
                                     Get.toNamed('/settings');
                                   },
@@ -407,6 +424,7 @@ class WeatherTile extends StatelessWidget {
                                         .copyWith(color: kprimaryTextColor),
                                   ),
                                   onPressed: () {
+                                    Utils.hapticFeedback();
                                     Get.back();
                                   },
                                 ),
@@ -430,6 +448,7 @@ class WeatherTile extends StatelessWidget {
                         color: kprimaryTextColor.withOpacity(0.3),
                       ),
                       onPressed: () {
+                        Utils.hapticFeedback();
                         showModalBottomSheet(
                             context: context,
                             backgroundColor: ksecondaryBackgroundColor,
@@ -471,6 +490,7 @@ class WeatherTile extends StatelessWidget {
                                                     kprimaryColor),
                                           ),
                                           onPressed: () {
+                                            Utils.hapticFeedback();
                                             Get.back();
                                           },
                                           child: Text(
