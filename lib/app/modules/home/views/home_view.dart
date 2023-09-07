@@ -654,7 +654,9 @@ class HomeView extends GetView<HomeController> {
                                                                               value: 1,
                                                                               child: Text(
                                                                                 "Delete Alarm",
-                                                                                style: Theme.of(context).textTheme.bodyMedium,
+                                                                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                                                                  color: Colors.red,
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                         ];
