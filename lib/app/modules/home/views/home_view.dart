@@ -20,248 +20,285 @@ class HomeView extends GetView<HomeController> {
     var width = Get.width;
     var height = Get.height;
     return Scaffold(
-      floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: Obx(
-        () => Container(
-            child: (controller.isUserSignedIn.value)
-                ? ExpandableFab(
-                    key: controller.floatingButtonKey,
-                    initialOpen: false,
-                    type: ExpandableFabType.up,
-                    childrenOffset: Offset.zero,
-                    distance: 70,
-                    child: const Icon(Icons.add),
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.floatingButtonKey.currentState!.toggle();
-                          Get.defaultDialog(
-                            title: "Join an alarm",
-                            titlePadding:
-                                const EdgeInsets.fromLTRB(0, 21, 0, 0),
-                            backgroundColor: ksecondaryBackgroundColor,
-                            titleStyle: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(color: kprimaryTextColor),
-                            contentPadding: const EdgeInsets.all(21),
-                            content: TextField(
-                              controller: controller.alarmIdController,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              cursorColor: kprimaryTextColor.withOpacity(0.75),
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: kprimaryTextColor
-                                              .withOpacity(0.75),
-                                          width: 1),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(12))),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: kprimaryTextColor
-                                              .withOpacity(0.75),
-                                          width: 1),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(12))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: kprimaryTextColor
-                                              .withOpacity(0.75),
-                                          width: 1),
-                                      borderRadius:
-                                          const BorderRadius.all(Radius.circular(12))),
-                                  hintText: 'Enter Alarm ID',
-                                  hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: kprimaryDisabledTextColor)),
-                            ),
-                            buttonColor: ksecondaryBackgroundColor,
-                            confirm: TextButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(kprimaryColor)),
-                              child: Text(
-                                'Join',
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: Obx(
+          () => Container(
+              child: (controller.isUserSignedIn.value)
+                  ? ExpandableFab(
+                      key: controller.floatingButtonKey,
+                      initialOpen: false,
+                      type: ExpandableFabType.up,
+                      childrenOffset: Offset.zero,
+                      distance: 70,
+                      child: const Icon(Icons.add),
+                      children: [
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor),
+                          ),
+                          onPressed: () {
+                            Utils.hapticFeedback();
+                            controller.floatingButtonKey.currentState!.toggle();
+                            Get.defaultDialog(
+                              title: "Join an alarm",
+                              titlePadding:
+                                  const EdgeInsets.fromLTRB(0, 21, 0, 0),
+                              backgroundColor: ksecondaryBackgroundColor,
+                              titleStyle: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(color: kprimaryTextColor),
+                              contentPadding: const EdgeInsets.all(21),
+                              content: TextField(
+                                controller: controller.alarmIdController,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                cursorColor:
+                                    kprimaryTextColor.withOpacity(0.75),
+                                decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: kprimaryTextColor
+                                                .withOpacity(0.75),
+                                            width: 1),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(12))),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: kprimaryTextColor
+                                                .withOpacity(0.75),
+                                            width: 1),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(12))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: kprimaryTextColor
+                                                .withOpacity(0.75),
+                                            width: 1),
+                                        borderRadius: const BorderRadius.all(Radius.circular(12))),
+                                    hintText: 'Enter Alarm ID',
+                                    hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: kprimaryDisabledTextColor)),
+                              ),
+                              buttonColor: ksecondaryBackgroundColor,
+                              confirm: TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        kprimaryColor)),
+                                child: Text(
+                                  'Join',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(color: ksecondaryTextColor),
+                                ),
+                                onPressed: () async {
+                                  Utils.hapticFeedback();
+                                  var result = await FirestoreDb
+                                      .addUserToAlarmSharedUsers(
+                                          controller.userModel.value,
+                                          controller.alarmIdController.text);
+
+                                  if (result != true) {
+                                    Get.defaultDialog(
+                                        titlePadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 20),
+                                        backgroundColor:
+                                            ksecondaryBackgroundColor,
+                                        title: 'Error!',
+                                        titleStyle: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall,
+                                        content: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            const Icon(
+                                              Icons.close,
+                                              size: 50,
+                                              color: Colors.red,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10.0),
+                                              child: Text(
+                                                result == null
+                                                    ? "You cannot join your own alarm!"
+                                                    : "An alarm with this ID doesn't exist!",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            TextButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(
+                                                                kprimaryColor)),
+                                                child: Text(
+                                                  'Okay',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                          color:
+                                                              ksecondaryTextColor),
+                                                ),
+                                                onPressed: () {
+                                                  Utils.hapticFeedback();
+                                                  Get.back();
+                                                }),
+                                          ],
+                                        ));
+                                  } else {
+                                    Get.back();
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.alarm,
+                                color: ksecondaryTextColor,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Join alarm',
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall!
                                     .copyWith(color: ksecondaryTextColor),
                               ),
-                              onPressed: () async {
-                                Utils.hapticFeedback();
-                                var result =
-                                    await FirestoreDb.addUserToAlarmSharedUsers(
-                                        controller.userModel.value,
-                                        controller.alarmIdController.text);
-
-                                if (result != true) {
-                                  Get.defaultDialog(
-                                      titlePadding: const EdgeInsets.symmetric(
-                                          vertical: 20),
-                                      backgroundColor:
-                                          ksecondaryBackgroundColor,
-                                      title: 'Error!',
-                                      titleStyle: Theme.of(context)
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor),
+                          ),
+                          onPressed: () {
+                            Utils.hapticFeedback();
+                            controller.floatingButtonKey.currentState!.toggle();
+                            Get.toNamed('/add-update-alarm');
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.add,
+                                color: ksecondaryTextColor,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Create alarm',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(color: ksecondaryTextColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : ExpandableFab(
+                      initialOpen: false,
+                      child: const Icon(Icons.add),
+                      key: controller.floatingButtonKeyLoggedOut,
+                      children: const [],
+                      onOpen: () {
+                        controller.floatingButtonKeyLoggedOut.currentState!
+                            .toggle();
+                        Utils.hapticFeedback();
+                        Get.toNamed('/add-update-alarm');
+                      },
+                    )),
+        ),
+        body: SafeArea(
+          child: NestedScrollView(
+            controller: controller.scrollController,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverAppBar(
+                expandedHeight: height / 7.9,
+                floating: true,
+                pinned: true,
+                snap: false,
+                centerTitle: true,
+                flexibleSpace: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment
+                            .center, // Center everything vertically
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        25 * controller.scalingFactor.value),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Next alarm',
+                                      style: Theme.of(context)
                                           .textTheme
-                                          .displaySmall,
-                                      content: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          const Icon(
-                                            Icons.close,
-                                            size: 50,
-                                            color: Colors.red,
+                                          .displaySmall!
+                                          .copyWith(
+                                            color: kprimaryDisabledTextColor,
+                                            fontSize: 16 *
+                                                controller.scalingFactor.value,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Text(
-                                              result == null
-                                                  ? "You cannot join your own alarm!"
-                                                  : "An alarm with this ID doesn't exist!",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displaySmall,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                          TextButton(
-                                              style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          kprimaryColor)),
-                                              child: Text(
-                                                'Okay',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .displaySmall!
-                                                    .copyWith(
-                                                        color:
-                                                            ksecondaryTextColor),
-                                              ),
-                                              onPressed: () {
-                                                Utils.hapticFeedback();
-                                                Get.back();
-                                              }),
-                                        ],
-                                      ));
-                                } else {
-                                  Get.back();
-                                }
-                              },
-                            ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.alarm,
-                              color: ksecondaryTextColor,
-                            ),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              'Join alarm',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
-                            ),
-                          ],
-                        ),
+                                    ),
+                                    Obx(
+                                      () => Text(controller.alarmTime.value,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(
+                                                color: kprimaryTextColor
+                                                    .withOpacity(0.75),
+                                                fontSize: 14 *
+                                                    controller
+                                                        .scalingFactor.value,
+                                              )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.scalingFactor < 0.95
+                                    ? false
+                                    : true,
+                                child: IconButton(
+                                  onPressed: () {
+                                    Utils.hapticFeedback();
+                                    Get.toNamed('/settings');
+                                  },
+                                  icon: const Icon(Icons.settings),
+                                  color: kprimaryTextColor.withOpacity(0.75),
+                                  iconSize: 27 * controller.scalingFactor.value,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.floatingButtonKey.currentState!.toggle();
-                          Get.toNamed('/add-update-alarm');
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.add,
-                              color: ksecondaryTextColor,
-                            ),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              'Create alarm',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : ExpandableFab(
-                    initialOpen: false,
-                    child: const Icon(Icons.add),
-                    key: controller.floatingButtonKeyLoggedOut,
-                    children: const [],
-                    onOpen: () {
-                      controller.floatingButtonKeyLoggedOut.currentState!
-                          .toggle();
-                      Utils.hapticFeedback();
-                      Get.toNamed('/add-update-alarm');
-                    },
-                  )),
-      ),
-      body: SafeArea(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                  padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Next alarm',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: kprimaryDisabledTextColor),
-                      ),
-                      Obx(
-                        () => Text(controller.alarmTime.value,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                    color:
-                                        kprimaryTextColor.withOpacity(0.75))),
-                      )
-                    ],
-                  )),
-              IconButton(
-                onPressed: () {
-                  Utils.hapticFeedback();
-                  Get.toNamed('/settings');
-                },
-                icon: const Icon(Icons.settings),
-                color: kprimaryTextColor.withOpacity(0.75),
-                iconSize: 27,
-              )
+                    );
+                  },
+                ),
+              ),
             ],
-          ),
-          Expanded(
-            child: Column(
+            body: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -687,8 +724,6 @@ class HomeView extends GetView<HomeController> {
               ],
             ),
           ),
-        ],
-      )),
-    );
+        ));
   }
 }
