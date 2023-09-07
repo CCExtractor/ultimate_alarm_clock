@@ -444,16 +444,21 @@ class HomeView extends GetView<HomeController> {
                                                                           endIndent:
                                                                               3.1,
                                                                         ),
-                                                                      Text(
-                                                                          alarm
-                                                                              .label,
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodySmall!
-                                                                              .copyWith(
-                                                                                fontWeight: FontWeight.w500,
-                                                                                color: alarm.isEnabled == true ? kprimaryColor : kprimaryDisabledTextColor,
-                                                                              )),
+                                                                      Expanded(
+                                                                        child:
+                                                                            Container(
+                                                                          child:
+                                                                              Text(
+                                                                            alarm.label,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis, // Set overflow property here
+                                                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  color: alarm.isEnabled == true ? kprimaryColor : kprimaryDisabledTextColor,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      )
                                                                     ]),
                                                               ),
                                                               Row(
