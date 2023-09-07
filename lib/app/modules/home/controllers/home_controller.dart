@@ -37,6 +37,9 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
   final alarmIdController = TextEditingController();
 
+  ScrollController scrollController = ScrollController();
+  RxDouble scalingFactor = 1.0.obs;
+
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
     if (await SecureStorageProvider().retrieveUserModel() != null) {
@@ -167,6 +170,16 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   void onInit() async {
     super.onInit();
     if (!isUserSignedIn.value) await loginWithGoogle();
+
+    scrollController.addListener(() {
+      final offset = scrollController.offset;
+      const maxOffset = 100.0;
+      const minFactor = 0.8;
+      const maxFactor = 1.0;
+
+      final newFactor = 1.0 - (offset / maxOffset).clamp(0.0, 1.0);
+      scalingFactor.value = (minFactor + (maxFactor - minFactor) * newFactor);
+    });
   }
 
   refreshUpcomingAlarms() async {
