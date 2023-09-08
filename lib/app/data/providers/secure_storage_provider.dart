@@ -61,4 +61,18 @@ class SecureStorageProvider {
       value: isHapticFeedbackEnabled.toString(),
     );
   }
+
+  Future<bool> readSortedAlarmListValue({required String key}) async {
+    return await _secureStorage.read(key: key) == 'true';
+  }
+
+  Future<void> writeSortedAlarmListValue({
+    required String key,
+    required bool isSortedAlarmListEnabled,
+  }) async {
+    await _secureStorage.write(
+      key: key,
+      value: isSortedAlarmListEnabled.toString(),
+    );
+  }
 }
