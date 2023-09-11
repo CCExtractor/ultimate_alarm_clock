@@ -21,7 +21,7 @@ class LabelTile extends StatelessWidget {
         style: TextStyle(color: kprimaryTextColor),
       ),
       onTap: () {
-       Utils.hapticFeedback();
+        Utils.hapticFeedback();
         Get.defaultDialog(
           title: "Enter a name",
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
@@ -54,6 +54,11 @@ class LabelTile extends StatelessWidget {
                     .textTheme
                     .bodyLarge!
                     .copyWith(color: kprimaryDisabledTextColor)),
+            onChanged: (text) {
+              if (text.trim().isEmpty) {
+                controller.labelController.text = "";
+              }
+            },
           ),
           buttonColor: ksecondaryBackgroundColor,
           confirm: TextButton(
