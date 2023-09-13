@@ -10,7 +10,9 @@ import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  const SettingsView({Key? key}) : super(key: key);
+  SettingsView({Key? key}) : super(key: key);
+
+  HomeController homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +23,6 @@ class SettingsView extends GetView<SettingsController> {
           title: const Text('Settings'),
           centerTitle: true,
           elevation: 0.0,
-          leading: IconButton(
-            onPressed: () async {
-              var homeController = Get.find<HomeController>();
-              homeController.isSortedAlarmListEnabled.value = await SecureStorageProvider().readSortedAlarmListValue(key: 'sorted_alarm_list');
-              print("---------------------------${homeController.isSortedAlarmListEnabled.value}");
-              Get.back();
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
         ),
         body: Center(
           child: Padding(

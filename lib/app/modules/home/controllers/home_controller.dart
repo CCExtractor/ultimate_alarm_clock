@@ -189,6 +189,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     super.onInit();
     if (!isUserSignedIn.value) await loginWithGoogle();
 
+    isSortedAlarmListEnabled.value = await SecureStorageProvider().readSortedAlarmListValue(key: 'sorted_alarm_list');
+
     scrollController.addListener(() {
       final offset = scrollController.offset;
       const maxOffset = 100.0;

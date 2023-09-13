@@ -14,7 +14,7 @@ class SettingsController extends GetxController {
   var homeController = Get.find<HomeController>();
   var isHapticFeedbackEnabled = true.obs;
   final _hapticFeedbackKey = 'haptic_feedback';
-  var isSortedAlarmListEnabled = false.obs;
+  var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
@@ -188,6 +188,7 @@ class SettingsController extends GetxController {
 
   void toggleSortedAlarmList(bool enabled) {
     isSortedAlarmListEnabled.value = enabled;
+    homeController.isSortedAlarmListEnabled.value = enabled;
     _saveSortedAlarmListPreference(); 
   }
 }
