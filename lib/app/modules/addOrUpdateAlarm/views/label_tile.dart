@@ -1,195 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
-class WeatherApi extends StatelessWidget {
-  const WeatherApi({
+class LabelTile extends StatelessWidget {
+  const LabelTile({
     super.key,
     required this.controller,
-    required this.height,
-    required this.width,
   });
 
-  final SettingsController controller;
-  final double width;
-  final double height;
+  final AddOrUpdateAlarmController controller;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
+    return ListTile(
+      tileColor: ksecondaryBackgroundColor,
+      title: const Text(
+        'Label',
+        style: TextStyle(color: kprimaryTextColor),
+      ),
+      onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-            titlePadding: EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: ksecondaryBackgroundColor,
-            title: 'API Key',
-            titleStyle: Theme.of(context).textTheme.displaySmall,
-            content: Obx(
-              () => Container(
-                  child: (controller.isWeatherKeyAdded.value == false)
-                      ? (controller.didWeatherKeyError.value == false)
-                          ? Column(
-                              children: [
-                                TextField(
-                                  obscureText: false,
-                                  controller: controller.apiKey,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 20.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      TextButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      kprimaryColor)),
-                                          child: Text(
-                                            'Save',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall!
-                                                .copyWith(
-                                                    color: ksecondaryTextColor),
-                                          ),
-                                          onPressed: () async {
-                                            Utils.hapticFeedback();
-                                            await controller.getLocation();
-                                            if (await controller.isApiKeyValid(
-                                                controller.apiKey.text)) {
-                                              await controller.addKey(
-                                                  ApiKeys.openWeatherMap,
-                                                  controller.apiKey.text);
-                                              controller.isWeatherKeyAdded
-                                                  .value = true;
-                                            } else {
-                                              controller.didWeatherKeyError
-                                                  .value = true;
-                                            }
-                                          }),
-                                      OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(
-                                              color: kprimaryColor,
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'Get Key',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall!
-                                                .copyWith(
-                                                  color: kprimaryColor,
-                                                ),
-                                          ),
-                                          onPressed: () async {
-                                            Utils.hapticFeedback();
-                                            const url =
-                                                'https://home.openweathermap.org/api_keys';
-                                            if (await canLaunchUrlString(url)) {
-                                              await launchUrlString(url);
-                                            } else {
-                                              throw 'Could not launch $url';
-                                            }
-                                          }),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                const Icon(
-                                  Icons.close,
-                                  size: 50,
-                                  color: Colors.red,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 15.0),
-                                  child: Text(
-                                    "Error adding key!",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall,
-                                  ),
-                                ),
-                                TextButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                kprimaryColor)),
-                                    child: Text(
-                                      'Retry',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .copyWith(color: ksecondaryTextColor),
-                                    ),
-                                    onPressed: () {
-                                      Utils.hapticFeedback();
-                                      controller.didWeatherKeyError.value =
-                                          false;
-                                    }),
-                              ],
-                            )
-                      : Column(
-                          children: [
-                            Icon(
-                              Icons.done,
-                              size: 50,
-                              color: Colors.green,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
-                              child: Text(
-                                "Your API key is added!",
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
-                            ),
-                            TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor)),
-                                child: Text(
-                                  'Okay',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                }),
-                          ],
-                        )),
-            ));
-      },
-      child: Container(
-        width: width * 0.91,
-        height: height * 0.1,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(18)),
-            color: ksecondaryBackgroundColor),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              'Open Weather Map API',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: kprimaryTextColor,
-                  ),
+          title: "Enter a name",
+          titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
+          backgroundColor: ksecondaryBackgroundColor,
+          titleStyle: Theme.of(context)
+              .textTheme
+              .displaySmall!
+              .copyWith(color: kprimaryTextColor),
+          contentPadding: const EdgeInsets.all(21),
+          content: TextField(
+            autofocus: true,
+            controller: controller.labelController,
+            style: Theme.of(context).textTheme.bodyLarge,
+            cursorColor: kprimaryTextColor.withOpacity(0.75),
+            decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: kprimaryTextColor.withOpacity(0.75), width: 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(12))),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: kprimaryTextColor.withOpacity(0.75), width: 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(12))),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: kprimaryTextColor.withOpacity(0.75), width: 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(12))),
+                hintText: 'Enter a name',
+                hintStyle: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: kprimaryDisabledTextColor)),
+            onChanged: (text) {
+              if (text.trim().isEmpty) {
+                controller.labelController.text = "";
+              }
+            },
+          ),
+          buttonColor: ksecondaryBackgroundColor,
+          confirm: TextButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(kprimaryColor)),
+            child: Text(
+              'Save',
+              style: Theme.of(context)
+                  .textTheme
+                  .displaySmall!
+                  .copyWith(color: ksecondaryTextColor),
             ),
+            onPressed: () {
+              Utils.hapticFeedback();
+              controller.label.value = controller.labelController.text;
+              Get.back();
+            },
+          ),
+        );
+      },
+      trailing: InkWell(
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Obx(() => Container(
+                  width: 100,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    (controller.label.value.trim().isNotEmpty)
+                        ? controller.label.value
+                        : 'Off',
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: (controller.label.value.trim().isEmpty)
+                              ? kprimaryDisabledTextColor
+                              : kprimaryTextColor,
+                        ),
+                  ),
+                )),
             Icon(
-              Icons.arrow_forward_ios_sharp,
-              color: kprimaryTextColor.withOpacity(0.2),
+              Icons.chevron_right,
+              color: (controller.label.value.trim().isEmpty)
+                  ? kprimaryDisabledTextColor
+                  : kprimaryTextColor,
             )
           ],
         ),
