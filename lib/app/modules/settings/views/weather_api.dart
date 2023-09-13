@@ -17,7 +17,6 @@ class WeatherApi extends StatelessWidget {
   final double width;
   final double height;
 
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -72,20 +71,21 @@ class WeatherApi extends StatelessWidget {
                                                   .value = true;
                                             }
                                           }),
-                                      TextButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      kprimaryTextColor
-                                                          .withOpacity(0.7))),
+                                      OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(
+                                              color: kprimaryColor,
+                                              width: 1,
+                                            ),
+                                          ),
                                           child: Text(
                                             'Get Key',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
                                                 .copyWith(
-                                                    color:
-                                                        ksecondaryBackgroundColor),
+                                                  color: kprimaryColor,
+                                                ),
                                           ),
                                           onPressed: () async {
                                             Utils.hapticFeedback();
