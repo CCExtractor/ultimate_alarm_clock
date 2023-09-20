@@ -319,8 +319,6 @@ class HomeView extends GetView<HomeController> {
                             if (snapshot.hasData) {
                               final Stream streamAlarms = snapshot.data;
 
-                              print("DKNDNVKDVNDKDVND");
-
                               return StreamBuilder(
                                   stream: streamAlarms,
                                   builder: (context, snapshot) {
