@@ -61,7 +61,7 @@ class LabelTile extends StatelessWidget {
                 if (text.isNotEmpty) {
                   Flushbar(
                     messageText: Text(
-                      "Please enter valid characters",
+                      "Please don't enter whitespace as first character!",
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall!
