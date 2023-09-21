@@ -3,10 +3,12 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -308,8 +310,11 @@ class HomeView extends GetView<HomeController> {
                     axisDirection: AxisDirection.down,
                     child: Obx(() {
                       return FutureBuilder(
-                          future:
-                              controller.initStream(controller.userModel.value),
+                          future: controller.isSortedAlarmListEnabled.value
+                              ? controller
+                                  .initStream(controller.userModel.value)
+                              : controller
+                                  .initStream(controller.userModel.value),
                           builder: (context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
                               final Stream streamAlarms = snapshot.data;
@@ -323,7 +328,9 @@ class HomeView extends GetView<HomeController> {
                                         color: kprimaryColor,
                                       ));
                                     } else {
-                                      final alarms = snapshot.data;
+                                      final List<AlarmModel> alarms =
+                                          snapshot.data;
+
                                       controller.refreshUpcomingAlarms();
                                       if (alarms!.isEmpty) {
                                         return Center(
@@ -692,8 +699,8 @@ class HomeView extends GetView<HomeController> {
                                                                               child: Text(
                                                                                 "Delete Alarm",
                                                                                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                                                                  color: Colors.red,
-                                                                                ),
+                                                                                      color: Colors.red,
+                                                                                    ),
                                                                               ),
                                                                             ),
                                                                         ];

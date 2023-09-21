@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_feedback.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/weather_api.dart';
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  const SettingsView({Key? key}) : super(key: key);
+  SettingsView({Key? key}) : super(key: key);
+
+  HomeController homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,14 @@ class SettingsView extends GetView<SettingsController> {
                   height: height,
                   width: width,
                   controller: controller,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                EnableSortedAlarmList(
+                  controller: controller,
+                  height: height,
+                  width: width,
                 ),
               ],
             ),
