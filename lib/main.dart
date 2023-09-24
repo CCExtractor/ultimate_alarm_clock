@@ -11,7 +11,9 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     GetMaterialApp(
-      theme: kThemeData,
+      theme: kLightThemeData,
+      darkTheme: kThemeData,
+      themeMode: ThemeMode.system,
       title: "UltiClock",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,

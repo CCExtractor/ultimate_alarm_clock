@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+
+class ThemeValueTile extends StatefulWidget {
+  const ThemeValueTile({
+    super.key,
+    required this.controller,
+    required this.height,
+    required this.width, required this.themeController,
+  });
+
+  final SettingsController controller;
+  final ThemeController themeController;
+
+  final double height;
+  final double width;
+
+  @override
+  State<ThemeValueTile> createState() => _ThemeValueTileState();
+}
+
+class _ThemeValueTileState extends State<ThemeValueTile> {
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => Container(
+        width: widget.width * 0.91,
+        height: widget.height * 0.1,
+        decoration: Utils.getCustomTileBoxDecoration(isLightMode: widget.themeController.isLightMode.value), 
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              'Enable Light Mode',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Obx(
+              () => Switch(
+                value: widget.themeController.isLightMode.value,
+                onChanged: (bool value) async {
+                  widget.themeController.toggleThemeValue(value);
+                  Get.changeThemeMode(widget.themeController.isLightMode.value
+                      ? ThemeMode.light
+                      : ThemeMode.dark);
+                  Utils.hapticFeedback();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

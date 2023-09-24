@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'dart:math' as math;
@@ -7,7 +8,9 @@ import 'dart:math' as math;
 import '../controllers/alarm_challenge_controller.dart';
 
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
-  const ShakeChallengeView({Key? key}) : super(key: key);
+  ShakeChallengeView({Key? key}) : super(key: key);
+
+  ThemeController themeController = Get.find<ThemeController>(); 
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          iconTheme: Theme.of(context).iconTheme,
         ),
         body: GestureDetector(
           onTap: () {
@@ -51,7 +55,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color:
-                                          kprimaryTextColor.withOpacity(0.7)),
+                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7)),
                             ),
                             SizedBox(
                               height: height * 0.08,
@@ -61,7 +65,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                               child: Icon(
                                 Icons.vibration,
                                 size: height * 0.2,
-                                color: kprimaryTextColor.withOpacity(0.7),
+                                color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),
                               ),
                             ),
                             SizedBox(

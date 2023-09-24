@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
 import '../controllers/add_or_update_alarm_controller.dart';
 
@@ -16,6 +17,9 @@ class AddOrUpdateAlarmBinding extends Bindings {
     );
     Get.lazyPut<SettingsController>(
       () => SettingsController(),
+    );
+    Get.put<ThemeController>(
+      ThemeController(),
     );
   }
 }

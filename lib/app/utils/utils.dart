@@ -446,8 +446,8 @@ class Utils {
   }
 
   static void hapticFeedback() async {
-
-    bool hapticFeedbackValue = await SecureStorageProvider().readHapticFeedbackValue(key: 'haptic_feedback');
+    bool hapticFeedbackValue = await SecureStorageProvider()
+        .readHapticFeedbackValue(key: 'haptic_feedback');
 
     if (hapticFeedbackValue) {
       // Trigger haptic feedback if it's enabled in settings
@@ -456,5 +456,16 @@ class Utils {
         'HapticFeedbackType.selectionClick',
       );
     }
+  }
+
+  static BoxDecoration getCustomTileBoxDecoration({required bool isLightMode}) {
+    return BoxDecoration(
+      borderRadius: const BorderRadius.all(
+        Radius.circular(18),
+      ),
+      color: isLightMode
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
+    );
   }
 }

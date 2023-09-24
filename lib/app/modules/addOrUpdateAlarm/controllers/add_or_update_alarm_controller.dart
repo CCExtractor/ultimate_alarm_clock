@@ -13,6 +13,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
@@ -20,6 +21,7 @@ import 'package:uuid/uuid.dart';
 class AddOrUpdateAlarmController extends GetxController
     with AlarmHandlerSetupModel {
   final labelController = TextEditingController();
+  ThemeController themeController = Get.find<ThemeController>();
 
   late UserModel? userModel;
   var alarmID = Uuid().v4();
@@ -83,9 +85,15 @@ class AddOrUpdateAlarmController extends GetxController
         !(await FlutterForegroundTask.isIgnoringBatteryOptimizations) ||
         !(await FlutterForegroundTask.canDrawOverlays)) {
       Get.defaultDialog(
-        backgroundColor: ksecondaryBackgroundColor,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
         title: 'Permission Required',
-        titleStyle: const TextStyle(color: Colors.white),
+        titleStyle: TextStyle(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : Colors.white,
+        ),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
@@ -175,12 +183,18 @@ class AddOrUpdateAlarmController extends GetxController
       return false;
     } else if (locationPermission == LocationPermission.denied) {
       bool? shouldAskPermission = await Get.defaultDialog<bool>(
-        backgroundColor: ksecondaryBackgroundColor,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
         barrierDismissible: false,
         title: 'Location Permission',
         contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: EdgeInsets.only(top: 30, right: 40),
-        titleStyle: TextStyle(color: Colors.white),
+        titleStyle: TextStyle(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : Colors.white,
+        ),
         content: Text('This app needs access to your location.'),
         actions: [
           TextButton(
@@ -240,7 +254,9 @@ class AddOrUpdateAlarmController extends GetxController
     restartQRCodeController();
     Get.defaultDialog(
       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-      backgroundColor: ksecondaryBackgroundColor,
+      backgroundColor: themeController.isLightMode.value
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
       title: 'Scan a QR/Bar Code',
       titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
       content: Obx(
@@ -281,7 +297,7 @@ class AddOrUpdateAlarmController extends GetxController
                           style: Theme.of(Get.context!)
                               .textTheme
                               .displaySmall!
-                              .copyWith(color: ksecondaryTextColor),
+                              .copyWith(color: themeController.isLightMode.value ? kLightPrimaryTextColor : ksecondaryTextColor,),
                         ),
                         onPressed: () {
                           Get.back();
@@ -297,7 +313,7 @@ class AddOrUpdateAlarmController extends GetxController
                           style: Theme.of(Get.context!)
                               .textTheme
                               .displaySmall!
-                              .copyWith(color: ksecondaryTextColor),
+                              .copyWith(color: themeController.isLightMode.value ? kLightPrimaryTextColor : ksecondaryTextColor,),
                         ),
                         onPressed: () async {
                           qrController.dispose();
@@ -318,9 +334,13 @@ class AddOrUpdateAlarmController extends GetxController
     PermissionStatus cameraStatus = await Permission.camera.status;
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-        backgroundColor: ksecondaryBackgroundColor,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
         title: 'Camera Permission',
-        titleStyle: TextStyle(color: Colors.white),
+        titleStyle: TextStyle(color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : Colors.white,),
         titlePadding: EdgeInsets.only(
           top: 25,
           left: 10,

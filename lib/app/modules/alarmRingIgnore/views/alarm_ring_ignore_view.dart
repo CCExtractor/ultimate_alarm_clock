@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_ring_ignore_controller.dart';
 
 class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
-  const AlarmControlIgnoreView({Key? key}) : super(key: key);
+  AlarmControlIgnoreView({Key? key}) : super(key: key);
 
+  ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,10 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
                     backgroundColor: MaterialStateProperty.all(kprimaryColor)),
                 child: Text(
                   'Dismiss',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: ksecondaryTextColor),
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor
+                          : ksecondaryTextColor),
                 ),
                 onPressed: () {
                   Utils.hapticFeedback();
@@ -71,11 +73,11 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
                   child: TextButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            ksecondaryBackgroundColor)),
+                            themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor)),
                     child: Text(
                       'Snooze',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: kprimaryTextColor,
+                          color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                           fontWeight: FontWeight.w600),
                     ),
                     onPressed: () {
