@@ -131,15 +131,11 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       fontWeight: FontWeight.w600),
                             ),
                             onPressed: () {
-                            Utils.hapticFeedback();
+                              Utils.hapticFeedback();
                               controller.startSnooze();
                             },
                           ),
                         ),
-
-
-
-
                       ),
                     )
                   ],
@@ -147,7 +143,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
               )),
         ),
         onWillPop: () async {
-          Get.snackbar("Note", "You can't go back while the alarm is ringing");
+          Get.snackbar("Note", "You can't go back while the alarm is ringing",
+              backgroundColor: Colors.red, colorText: Colors.white);
           return false;
         });
   }
