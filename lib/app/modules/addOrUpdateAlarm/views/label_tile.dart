@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
@@ -59,25 +58,12 @@ class LabelTile extends StatelessWidget {
               if (text.trim().isEmpty) {
                 controller.labelController.text = "";
                 if (text.isNotEmpty) {
-                  Flushbar(
-                    messageText: Text(
-                      "Please don't enter whitespace as first character!",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: kprimaryColor),
-                    ),
-                    icon: const Icon(
-                      Icons.warning,
-                      color: kprimaryColor,
-                      size: 20,
-                    ),
-                    backgroundColor: ksecondaryBackgroundColor,
-                    duration: const Duration(seconds: 2),
-                    margin: const EdgeInsets.all(7),
-                    borderRadius: BorderRadius.circular(7),
-                    flushbarPosition: FlushbarPosition.TOP,
-                  ).show(context);
+                  Get.snackbar(
+                    "Note",
+                    "Please don't enter whitespace as first character!",
+                    backgroundColor: Colors.white,
+                    colorText: Colors.black,
+                  );
                 }
               }
             },
