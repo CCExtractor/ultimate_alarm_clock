@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class ThemeValueTile extends StatefulWidget {
@@ -38,8 +39,9 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Obx(
-              () => Switch(
+              () => Switch.adaptive(
                 value: widget.themeController.isLightMode.value,
+                activeColor: ksecondaryColor,
                 onChanged: (bool value) async {
                   widget.themeController.toggleThemeValue(value);
                   Get.changeThemeMode(widget.themeController.isLightMode.value
