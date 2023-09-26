@@ -103,13 +103,14 @@ class SharedAlarm extends StatelessWidget {
                     !controller.isSharedAlarmEnabled.value;
               },
               trailing: Obx(
-                () => Switch(
+                () => Switch.adaptive(
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     // You can optionally add the onChanged callback here as well
                     controller.isSharedAlarmEnabled.value = value;
                   },
                   value: controller.isSharedAlarmEnabled.value,
+                  activeColor: ksecondaryColor,
                 ),
               ),
             )

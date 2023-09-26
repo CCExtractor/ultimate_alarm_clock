@@ -612,8 +612,10 @@ class HomeView extends GetView<HomeController> {
                                                                 children: [
                                                                   Expanded(
                                                                     flex: 0,
-                                                                    child:
-                                                                        Switch(
+                                                                    child: Switch
+                                                                        .adaptive(
+                                                                      activeColor:
+                                                                          ksecondaryColor,
                                                                       value: alarm
                                                                           .isEnabled,
                                                                       onChanged:
