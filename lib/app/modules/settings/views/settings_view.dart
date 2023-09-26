@@ -9,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_al
 import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/weather_api.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
@@ -28,9 +29,10 @@ class SettingsView extends GetView<SettingsController> {
           centerTitle: true,
           elevation: 0.0,
           leading: IconButton(
-            icon: Icon(Icons.adaptive.arrow_back, color:  themeController.isLightMode.value
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor),
+            icon: Icon(Icons.adaptive.arrow_back,
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor),
             onPressed: () {
               Utils.hapticFeedback();
               Navigator.of(context).pop();
@@ -77,7 +79,7 @@ class SettingsView extends GetView<SettingsController> {
                 ),
                 const SizedBox(
                   height: 20,
-                ), 
+                ),
                 ThemeValueTile(
                   controller: controller,
                   height: height,
