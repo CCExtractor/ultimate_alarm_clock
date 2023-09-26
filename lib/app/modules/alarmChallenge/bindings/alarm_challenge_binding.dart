@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
 
@@ -11,6 +12,9 @@ class AlarmChallengeBinding extends Bindings {
     );
     Get.lazyPut<SettingsController>(
       () => SettingsController(),
+    );
+    Get.put<ThemeController>(
+      ThemeController(),
     );
   }
 }

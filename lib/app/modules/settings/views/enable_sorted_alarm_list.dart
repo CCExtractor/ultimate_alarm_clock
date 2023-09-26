@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -11,9 +12,11 @@ class EnableSortedAlarmList extends StatefulWidget {
     required this.controller,
     required this.height,
     required this.width,
+    required this.themeController,
   });
 
   final SettingsController controller;
+  final ThemeController themeController;
 
   final double height;
   final double width;
@@ -28,11 +31,13 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
     return Container(
       width: widget.width * 0.91,
       height: widget.height * 0.1,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
           Radius.circular(18),
         ),
-        color: ksecondaryBackgroundColor,
+        color: widget.themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -40,7 +45,9 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
           Text(
             'Enable Sorted Alarm List',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: kprimaryTextColor,
+                  color: widget.themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
                 ),
           ),
           Obx(

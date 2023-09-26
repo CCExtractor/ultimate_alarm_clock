@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -11,6 +13,9 @@ class SettingsBinding extends Bindings {
     );
     Get.put<HomeController>(
       HomeController(),
+    );
+    Get.put<ThemeController>(
+      ThemeController(),
     );
   }
 }

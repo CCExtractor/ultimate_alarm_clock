@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -9,9 +10,11 @@ class MathsChallenge extends StatelessWidget {
   const MathsChallenge({
     super.key,
     required this.controller,
+    required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +28,17 @@ class MathsChallenge extends StatelessWidget {
             icon: Icon(
               Icons.info_sharp,
               size: 21,
-              color: kprimaryTextColor.withOpacity(0.3),
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.45)
+                  : kprimaryTextColor.withOpacity(0.3),
             ),
             onPressed: () {
               Utils.hapticFeedback();
               showModalBottomSheet(
                   context: context,
-                  backgroundColor: ksecondaryBackgroundColor,
+                  backgroundColor: themeController.isLightMode.value
+                      ? kLightSecondaryBackgroundColor
+                      : ksecondaryBackgroundColor,
                   builder: (context) {
                     return Center(
                       child: Padding(
@@ -41,7 +48,9 @@ class MathsChallenge extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.calculate,
-                              color: kprimaryTextColor,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryTextColor
+                                  : kprimaryTextColor,
                               size: height * 0.1,
                             ),
                             Text("Math problems",
@@ -72,7 +81,11 @@ class MathsChallenge extends StatelessWidget {
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
+                                      .copyWith(
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : ksecondaryTextColor),
                                 ),
                               ),
                             )
@@ -90,7 +103,9 @@ class MathsChallenge extends StatelessWidget {
         controller.isMathsEnabled.value = true;
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: ksecondaryBackgroundColor,
+          backgroundColor: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
           title: 'Solve Maths questions',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
@@ -104,7 +119,9 @@ class MathsChallenge extends StatelessWidget {
                   Utils.generateMathProblem(
                       controller.mathsDifficulty.value)[0],
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                        color: kprimaryTextColor.withOpacity(0.78),
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor.withOpacity(0.78)
+                            : kprimaryTextColor.withOpacity(0.78),
                       ),
                 ),
                 Padding(
@@ -159,7 +176,9 @@ class MathsChallenge extends StatelessWidget {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: ksecondaryTextColor,
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor
+                                    : ksecondaryTextColor,
                               ),
                         ),
                         onPressed: () async {
@@ -178,7 +197,9 @@ class MathsChallenge extends StatelessWidget {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: ksecondaryTextColor,
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor
+                                    : ksecondaryTextColor,
                               ),
                         ),
                         onPressed: () {
@@ -206,14 +227,20 @@ class MathsChallenge extends StatelessWidget {
                     : 'Off',
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: (controller.isMathsEnabled.value == false)
-                          ? kprimaryDisabledTextColor
-                          : kprimaryTextColor,
+                          ? themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor
+                          : themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : kprimaryTextColor,
                     ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: kprimaryDisabledTextColor,
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryDisabledTextColor
+                  : kprimaryDisabledTextColor,
             ),
           ],
         ),

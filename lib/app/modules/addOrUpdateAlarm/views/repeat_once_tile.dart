@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class RepeatOnceTile extends StatelessWidget {
   const RepeatOnceTile({
     super.key,
-    required this.controller,
+    required this.controller, required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
-
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: ksecondaryBackgroundColor,
-      title: const Text(
+      tileColor: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
+      title: Text(
         'Repeat once',
-        style: TextStyle(color: kprimaryTextColor),
+        style: TextStyle(color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor),
       ),
       onTap: () {
         Utils.hapticFeedback();

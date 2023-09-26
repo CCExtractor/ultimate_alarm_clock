@@ -308,6 +308,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   void onClose() {
     super.onClose();
 
-    delayToSchedule!.cancel();
+    if (delayToSchedule != null) {
+      delayToSchedule!.cancel();
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -9,10 +10,11 @@ class AlarmIDTile extends StatelessWidget {
   const AlarmIDTile({
     super.key,
     required this.controller,
-    required this.width,
+    required this.width, required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
+  final ThemeController themeController;
   final double width;
 
   @override
@@ -28,25 +30,25 @@ class AlarmIDTile extends StatelessWidget {
                       'Alarm ID has been copied!',
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.green,
-                      colorText: ksecondaryTextColor,
+                      colorText: themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor,
                       maxWidth: width,
                       duration: const Duration(seconds: 2),
                     );
                   },
-                  title: const Text(
+                  title: Text(
                     'Alarm ID',
-                    style: TextStyle(color: kprimaryTextColor),
+                    style: TextStyle(color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor),
                   ),
                   trailing: InkWell(
                     child: Icon(Icons.copy,
-                        color: kprimaryTextColor.withOpacity(0.7)),
+                        color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7)),
                   ))
               : ListTile(
                   onTap: () {
                     Utils.hapticFeedback();
                     Get.defaultDialog(
                         titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                        backgroundColor: ksecondaryBackgroundColor,
+                        backgroundColor: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
                         title: 'Disabled!',
                         titleStyle: Theme.of(context).textTheme.displaySmall,
                         content: Column(
@@ -68,7 +70,7 @@ class AlarmIDTile extends StatelessWidget {
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
+                                      .copyWith(color: themeController.isLightMode.value ? kLightPrimaryTextColor : ksecondaryTextColor),
                                 ),
                                 onPressed: () {
                                   Utils.hapticFeedback();
@@ -79,14 +81,14 @@ class AlarmIDTile extends StatelessWidget {
                           ],
                         ));
                   },
-                  title: const Text(
+                  title: Text(
                     'Alarm ID',
-                    style: TextStyle(color: kprimaryTextColor),
+                    style: TextStyle(color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor),
                   ),
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: kprimaryTextColor.withOpacity(0.7),
+                      color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),
                     ),
                   )),
         ));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -9,9 +10,11 @@ class AlarmOffset extends StatelessWidget {
   const AlarmOffset({
     super.key,
     required this.controller,
+    required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class AlarmOffset extends StatelessWidget {
                 Utils.hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                  backgroundColor: ksecondaryBackgroundColor,
+                  backgroundColor: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
                   title: 'Choose duration',
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
@@ -60,11 +63,11 @@ class AlarmOffset extends StatelessWidget {
                                 backgroundColor:
                                     (controller.isOffsetBefore.value)
                                         ? kprimaryColor
-                                        : kprimaryTextColor.withOpacity(0.08),
+                                        : themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.10) : kprimaryTextColor.withOpacity(0.08),
                                 foregroundColor:
                                     (controller.isOffsetBefore.value)
-                                        ? ksecondaryTextColor
-                                        : kprimaryTextColor,
+                                        ? themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor
+                                        : themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                               ),
                               child: const Text("Before",
                                   style: TextStyle(fontSize: 14)),
@@ -80,11 +83,11 @@ class AlarmOffset extends StatelessWidget {
                                 backgroundColor:
                                     (!controller.isOffsetBefore.value)
                                         ? kprimaryColor
-                                        : kprimaryTextColor.withOpacity(0.08),
+                                        : themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.10) : kprimaryTextColor.withOpacity(0.08),
                                 foregroundColor:
                                     (!controller.isOffsetBefore.value)
-                                        ? ksecondaryTextColor
-                                        : kprimaryTextColor,
+                                        ? themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor
+                                        : themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                               ),
                               child: const Text("After",
                                   style: TextStyle(fontSize: 14)),
@@ -111,13 +114,13 @@ class AlarmOffset extends StatelessWidget {
                                 .bodyMedium!
                                 .copyWith(
                                     color: (controller.offsetDuration.value > 0)
-                                        ? kprimaryTextColor
-                                        : kprimaryDisabledTextColor),
+                                        ? themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor
+                                        : themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor),
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.chevron_right,
-                          color: kprimaryDisabledTextColor,
+                          color: themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor,
                         )
                       ])),
             )
