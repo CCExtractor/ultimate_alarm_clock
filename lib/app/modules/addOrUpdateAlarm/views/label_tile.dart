@@ -78,6 +78,14 @@ class LabelTile extends StatelessWidget {
             onChanged: (text) {
               if (text.trim().isEmpty) {
                 controller.labelController.text = "";
+                if (text.isNotEmpty) {
+                  Get.snackbar(
+                    "Note",
+                    "Please don't enter whitespace as first character!",
+                    backgroundColor: Colors.white,
+                    colorText: Colors.black,
+                  );
+                }
               }
             },
           ),

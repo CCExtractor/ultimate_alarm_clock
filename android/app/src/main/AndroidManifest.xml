@@ -17,7 +17,7 @@
         tools:replace="android:label"
         android:label="ultimate_alarm_clock"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />
