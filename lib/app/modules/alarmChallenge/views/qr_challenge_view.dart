@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
 
 class QRChallengeView extends GetView<AlarmChallengeController> {
-  const QRChallengeView({Key? key}) : super(key: key);
+  QRChallengeView({Key? key}) : super(key: key);
+
+  ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          iconTheme: Theme.of(context).iconTheme,
         ),
         body: GestureDetector(
           onTap: () {
@@ -51,7 +55,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color:
-                                          kprimaryTextColor.withOpacity(0.7)),
+                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7)),
                             ),
                             SizedBox(
                               height: height * 0.08,
@@ -98,7 +102,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                   ? Icon(
                                                       Icons.done,
                                                       size: height * 0.2,
-                                                      color: kprimaryTextColor
+                                                      color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor
                                                           .withOpacity(0.7),
                                                     )
                                                   : Column(
@@ -110,7 +114,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           Icons.close,
                                                           size: height * 0.2,
                                                           color:
-                                                              kprimaryTextColor
+                                                              themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor
                                                                   .withOpacity(
                                                                       0.7),
                                                         ),
@@ -124,7 +128,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
-                                                                  color: kprimaryTextColor
+                                                                  color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor
                                                                       .withOpacity(
                                                                           0.7)),
                                                         ),
@@ -142,7 +146,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                                 .displaySmall!
                                                                 .copyWith(
                                                                     color:
-                                                                        ksecondaryTextColor),
+                                                                        themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor),
                                                           ),
                                                           onPressed: () async {
                                                             Utils.hapticFeedback();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -11,9 +12,11 @@ class WeatherApi extends StatelessWidget {
     required this.controller,
     required this.height,
     required this.width,
+    required this.themeController,
   });
 
   final SettingsController controller;
+  final ThemeController themeController;
   final double width;
   final double height;
 
@@ -24,7 +27,9 @@ class WeatherApi extends StatelessWidget {
         Utils.hapticFeedback();
         Get.defaultDialog(
             titlePadding: EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: ksecondaryBackgroundColor,
+            backgroundColor: themeController.isLightMode.value
+                ? kLightSecondaryBackgroundColor
+                : ksecondaryBackgroundColor,
             title: 'API Key',
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Obx(
@@ -45,16 +50,20 @@ class WeatherApi extends StatelessWidget {
                                     children: [
                                       TextButton(
                                           style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      kprimaryColor)),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    kprimaryColor),
+                                          ),
                                           child: Text(
                                             'Save',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
                                                 .copyWith(
-                                                    color: ksecondaryTextColor),
+                                                    color: themeController
+                                                            .isLightMode.value
+                                                        ? kLightPrimaryTextColor
+                                                        : ksecondaryTextColor),
                                           ),
                                           onPressed: () async {
                                             Utils.hapticFeedback();
@@ -129,7 +138,11 @@ class WeatherApi extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .displaySmall!
-                                          .copyWith(color: ksecondaryTextColor),
+                                          .copyWith(
+                                              color: themeController
+                                                      .isLightMode.value
+                                                  ? kLightSecondaryTextColor
+                                                  : ksecondaryTextColor),
                                     ),
                                     onPressed: () {
                                       Utils.hapticFeedback();
@@ -140,7 +153,7 @@ class WeatherApi extends StatelessWidget {
                             )
                       : Column(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.done,
                               size: 50,
                               color: Colors.green,
@@ -162,7 +175,11 @@ class WeatherApi extends StatelessWidget {
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
+                                      .copyWith(
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightSecondaryTextColor
+                                                  : ksecondaryTextColor),
                                 ),
                                 onPressed: () {
                                   Utils.hapticFeedback();
@@ -175,22 +192,19 @@ class WeatherApi extends StatelessWidget {
       child: Container(
         width: width * 0.91,
         height: height * 0.1,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(18)),
-            color: ksecondaryBackgroundColor),
+        decoration: Utils.getCustomTileBoxDecoration(
+            isLightMode: themeController.isLightMode.value),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              'Open Weather Map API',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: kprimaryTextColor,
-                  ),
-            ),
+            Text('Open Weather Map API',
+                style: Theme.of(context).textTheme.bodyLarge),
             Icon(
               Icons.arrow_forward_ios_sharp,
-              color: kprimaryTextColor.withOpacity(0.2),
-            )
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.4)
+                  : kprimaryTextColor.withOpacity(0.2),
+            ),
           ],
         ),
       ),

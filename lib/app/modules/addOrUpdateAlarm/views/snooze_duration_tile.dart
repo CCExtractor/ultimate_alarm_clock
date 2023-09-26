@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -9,9 +10,11 @@ class SnoozeDurationTile extends StatelessWidget {
   const SnoozeDurationTile({
     super.key,
     required this.controller,
+    required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,9 @@ class SnoozeDurationTile extends StatelessWidget {
         Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: ksecondaryBackgroundColor,
+          backgroundColor: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
           title: 'Select duration',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(() => Column(
@@ -64,7 +69,10 @@ class SnoozeDurationTile extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
+                                  .copyWith(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                          : ksecondaryTextColor),
                             ),
                           ),
                         ],
@@ -76,10 +84,15 @@ class SnoozeDurationTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: ksecondaryBackgroundColor,
-        title: const Text(
+        tileColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: Text(
           'Snooze Duration',
-          style: TextStyle(color: kprimaryTextColor),
+          style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor),
         ),
         trailing: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -91,14 +104,20 @@ class SnoozeDurationTile extends StatelessWidget {
                     : 'Off',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.snoozeDuration.value <= 0)
-                          ? kprimaryDisabledTextColor
-                          : kprimaryTextColor,
+                          ? themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor
+                          : themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : kprimaryTextColor,
                     ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: kprimaryDisabledTextColor,
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryDisabledTextColor
+                  : kprimaryDisabledTextColor,
             ),
           ],
         ),

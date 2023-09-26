@@ -75,4 +75,19 @@ class SecureStorageProvider {
       value: isSortedAlarmListEnabled.toString(),
     );
   }
+
+  Future<AppTheme> readThemeValue() async {
+    String themeValue =
+        await _secureStorage.read(key: 'theme_value') ?? 'AppTheme.dark';
+    return themeValue == 'AppTheme.dark' ? AppTheme.dark : AppTheme.light;
+  }
+
+  Future<void> writeThemeValue({
+    required AppTheme theme,
+  }) async {
+    await _secureStorage.write(
+      key: 'theme_value',
+      value: theme.toString(),
+    );
+  }
 }

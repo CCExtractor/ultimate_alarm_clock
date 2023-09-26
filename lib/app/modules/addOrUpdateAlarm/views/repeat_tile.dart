@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -8,9 +9,11 @@ class RepeatTile extends StatelessWidget {
   const RepeatTile({
     super.key,
     required this.controller,
+    required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +22,14 @@ class RepeatTile extends StatelessWidget {
         Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: ksecondaryBackgroundColor,
+          backgroundColor: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
           title: 'Repeat',
-          titleStyle: const TextStyle(color: kprimaryTextColor),
+          titleStyle: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor),
           content: Obx(
             () => Column(
               children: [
@@ -53,7 +61,10 @@ class RepeatTile extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
-                                .copyWith(color: ksecondaryTextColor),
+                                .copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : ksecondaryTextColor),
                           ),
                         ),
                       ],
@@ -66,11 +77,15 @@ class RepeatTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: ksecondaryBackgroundColor,
-        title: const Text(
+        tileColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: Text(
           'Repeat',
           style: TextStyle(
-            color: kprimaryTextColor,
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -80,15 +95,17 @@ class RepeatTile extends StatelessWidget {
             Obx(
               () => Text(
                 controller.daysRepeating.value,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: kprimaryTextColor),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: themeController.isLightMode.value
+                        ? kLightPrimaryTextColor
+                        : kprimaryTextColor),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: kprimaryDisabledTextColor,
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryDisabledTextColor
+                  : kprimaryDisabledTextColor,
             ),
           ],
         ),
@@ -115,7 +132,9 @@ class RepeatTile extends StatelessWidget {
             Checkbox(
               side: BorderSide(
                 width: 1.5,
-                color: kprimaryTextColor.withOpacity(0.5),
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor.withOpacity(0.5)
+                    : kprimaryTextColor.withOpacity(0.5),
               ),
               value: controller.repeatDays[dayIndex],
               onChanged: (value) {

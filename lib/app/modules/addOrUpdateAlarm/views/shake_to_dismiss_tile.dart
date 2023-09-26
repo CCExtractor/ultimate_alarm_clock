@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -9,9 +10,11 @@ class ShakeToDismiss extends StatelessWidget {
   const ShakeToDismiss({
     super.key,
     required this.controller,
+    required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +23,28 @@ class ShakeToDismiss extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          const Text(
+          Text(
             'Shake to dismiss',
-            style: TextStyle(color: kprimaryTextColor),
+            style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor),
           ),
           IconButton(
             icon: Icon(
               Icons.info_sharp,
               size: 21,
-              color: kprimaryTextColor.withOpacity(0.3),
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.45)
+                  : kprimaryTextColor.withOpacity(0.3),
             ),
             onPressed: () {
               Utils.hapticFeedback();
               showModalBottomSheet(
                   context: context,
-                  backgroundColor: ksecondaryBackgroundColor,
+                  backgroundColor: themeController.isLightMode.value
+                      ? kLightSecondaryBackgroundColor
+                      : ksecondaryBackgroundColor,
                   builder: (context) {
                     return Center(
                       child: Padding(
@@ -46,7 +56,9 @@ class ShakeToDismiss extends StatelessWidget {
                               angle: 15,
                               child: Icon(
                                 Icons.vibration,
-                                color: kprimaryTextColor,
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor
+                                    : kprimaryTextColor,
                                 size: height * 0.1,
                               ),
                             ),
@@ -78,7 +90,11 @@ class ShakeToDismiss extends StatelessWidget {
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
+                                      .copyWith(
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : ksecondaryTextColor),
                                 ),
                               ),
                             )
@@ -95,7 +111,9 @@ class ShakeToDismiss extends StatelessWidget {
         Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: ksecondaryBackgroundColor,
+          backgroundColor: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
           title: 'Number of shakes',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(() => Column(
@@ -142,7 +160,10 @@ class ShakeToDismiss extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
-                                  .copyWith(color: ksecondaryTextColor),
+                                  .copyWith(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                          : ksecondaryTextColor),
                             ),
                           ),
                         ],
@@ -166,14 +187,20 @@ class ShakeToDismiss extends StatelessWidget {
                     : 'Off',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isShakeEnabled.value == false)
-                          ? kprimaryDisabledTextColor
-                          : kprimaryTextColor,
+                          ? themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor
+                          : themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : kprimaryTextColor,
                     ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: kprimaryDisabledTextColor,
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryDisabledTextColor
+                  : kprimaryDisabledTextColor,
             )
           ],
         ),

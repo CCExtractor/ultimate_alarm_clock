@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -9,10 +10,11 @@ class GoogleSignIn extends StatelessWidget {
     super.key,
     required this.controller,
     required this.width,
-    required this.height,
+    required this.height, required this.themeController,
   });
 
   final SettingsController controller;
+  final ThemeController themeController;
 
   final double width;
   final double height;
@@ -28,7 +30,9 @@ class GoogleSignIn extends StatelessWidget {
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(
                 titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                backgroundColor: ksecondaryBackgroundColor,
+                backgroundColor: themeController.isLightMode.value
+                ? kLightSecondaryBackgroundColor
+                : ksecondaryBackgroundColor,
                 title: 'Success!',
                 titleStyle: Theme.of(context).textTheme.displaySmall,
                 content: Column(
@@ -55,7 +59,10 @@ class GoogleSignIn extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
-                              .copyWith(color: ksecondaryTextColor),
+                              .copyWith(color: themeController
+                                                            .isLightMode.value
+                                                        ? kLightPrimaryTextColor
+                                                        : ksecondaryTextColor),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
@@ -68,7 +75,9 @@ class GoogleSignIn extends StatelessWidget {
           Get.defaultDialog(
               contentPadding: const EdgeInsets.all(10.0),
               titlePadding: const EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: ksecondaryBackgroundColor,
+              backgroundColor: themeController.isLightMode.value
+                ? kLightSecondaryBackgroundColor
+                : ksecondaryBackgroundColor,
               title: 'Are you sure?',
               titleStyle: Theme.of(context).textTheme.displaySmall,
               content: Column(
@@ -88,7 +97,10 @@ class GoogleSignIn extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
-                                .copyWith(color: ksecondaryTextColor),
+                                .copyWith(color: themeController
+                                                            .isLightMode.value
+                                                        ? kLightPrimaryTextColor
+                                                        : ksecondaryTextColor),
                           ),
                           onPressed: () async {
                             Utils.hapticFeedback();
@@ -105,7 +117,6 @@ class GoogleSignIn extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
-                                .copyWith(color: kprimaryTextColor),
                           ),
                           onPressed: () {
                             Utils.hapticFeedback();
@@ -122,9 +133,7 @@ class GoogleSignIn extends StatelessWidget {
       child: Container(
         width: width * 0.91,
         height: height * 0.1,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(18)),
-            color: ksecondaryBackgroundColor),
+        decoration: Utils.getCustomTileBoxDecoration(isLightMode: themeController.isLightMode.value),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -138,8 +147,7 @@ class GoogleSignIn extends StatelessWidget {
                         ? 'Unlink ${controller.userModel!.email}'
                         : 'Sign-In with Google',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: kprimaryTextColor,
-                        overflow: TextOverflow.ellipsis),
+                        overflow: TextOverflow.ellipsis,),
                   ),
                 ],
               ),
@@ -149,7 +157,9 @@ class GoogleSignIn extends StatelessWidget {
                 (controller.isUserLoggedIn.value)
                     ? Icons.close
                     : Icons.arrow_forward_ios_sharp,
-                color: kprimaryTextColor.withOpacity(0.2),
+                color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.4)
+                  : kprimaryTextColor.withOpacity(0.2),
               ),
             )
           ],

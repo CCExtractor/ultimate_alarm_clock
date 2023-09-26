@@ -21,12 +21,15 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  const AddOrUpdateAlarmView({Key? key}) : super(key: key);
+  AddOrUpdateAlarmView({Key? key}) : super(key: key);
+
+  ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall!
-                            .copyWith(color: ksecondaryTextColor),
+                            .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor
+                                    : ksecondaryTextColor),
                       ),
                       onPressed: () async {
                         Utils.hapticFeedback();
@@ -141,10 +147,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
           appBar: AppBar(
             backgroundColor: (controller.alarmRecord != null &&
                     controller.mutexLock.value == true)
-                ? kprimaryBackgroundColor
-                : ksecondaryBackgroundColor,
+                ? themeController.isLightMode.value
+                    ? kLightPrimaryBackgroundColor
+                    : kprimaryBackgroundColor
+                : themeController.isLightMode.value
+                    ? kLightSecondaryBackgroundColor
+                    : ksecondaryBackgroundColor,
             elevation: 0.0,
             centerTitle: true,
+            iconTheme: Theme.of(context).iconTheme,
             title: (controller.alarmRecord != null &&
                     controller.mutexLock.value == true)
                 ? const Text('')
@@ -168,7 +179,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         style: Theme.of(context)
                             .textTheme
                             .displayMedium!
-                            .copyWith(color: kprimaryDisabledTextColor),
+                            .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor),
                       ),
                     ),
                     SvgPicture.asset(
@@ -183,7 +197,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall!
-                            .copyWith(color: kprimaryDisabledTextColor),
+                            .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor),
                       ),
                     ),
                     TextButton(
@@ -195,7 +212,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall!
-                            .copyWith(color: ksecondaryTextColor),
+                            .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightSecondaryTextColor
+                                    : ksecondaryTextColor),
                       ),
                       onPressed: () {
                         Utils.hapticFeedback();
@@ -207,7 +227,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               : ListView(
                   children: [
                     Container(
-                      color: ksecondaryBackgroundColor,
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
                       height: height * 0.32,
                       width: width,
                       child: TimePickerSpinner(
@@ -220,7 +242,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .displayMedium!
                             .copyWith(
                                 fontWeight: FontWeight.normal,
-                                color: kprimaryDisabledTextColor),
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor),
                         highlightedTextStyle:
                             Theme.of(context).textTheme.displayMedium,
                         onTimeChange: (dateTime) {
@@ -231,41 +255,58 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                     RepeatTile(
                       controller: controller,
+                      themeController: themeController,
                     ),
                     Container(
-                      color: ksecondaryBackgroundColor,
-                      child: const Divider(
-                        color: kprimaryDisabledTextColor,
-                      ),
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor),
                     ),
                     RepeatOnceTile(
                       controller: controller,
+                      themeController: themeController,
                     ),
                     Container(
-                      color: ksecondaryBackgroundColor,
-                      child: const Divider(
-                        color: kprimaryDisabledTextColor,
-                      ),
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor),
                     ),
                     SnoozeDurationTile(
                       controller: controller,
+                      themeController: themeController,
                     ),
                     Container(
-                      color: ksecondaryBackgroundColor,
-                      child: const Divider(
-                        color: kprimaryDisabledTextColor,
-                      ),
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor),
                     ),
                     LabelTile(
                       controller: controller,
+                      themeController: themeController,
                     ),
                     Container(
-                      color: ksecondaryTextColor,
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryBackgroundColor
+                          : ksecondaryTextColor,
                       height: 10,
                       width: width,
                     ),
                     Container(
-                      color: ksecondaryBackgroundColor,
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -273,41 +314,55 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 10.0),
                                 child: Text('Automatic Cancellation',
-                                    style: Theme.of(context)
+                                    style: Theme.of(
+                                            context)
                                         .textTheme
                                         .titleMedium!
                                         .copyWith(
                                             fontWeight: FontWeight.w500,
-                                            color: kprimaryTextColor
-                                                .withOpacity(0.85))),
+                                            color: themeController
+                                                    .isLightMode.value
+                                                ? kLightPrimaryTextColor
+                                                    .withOpacity(0.85)
+                                                : kprimaryTextColor
+                                                    .withOpacity(0.85))),
                               ),
                             ),
                             ScreenActivityTile(
                               controller: controller,
+                              themeController: themeController,
                             ),
-                            const Divider(
-                              color: kprimaryDisabledTextColor,
-                            ),
+                            Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor),
                             WeatherTile(
                               controller: controller,
+                              themeController: themeController,
                             ),
-                            const Divider(
-                              color: kprimaryDisabledTextColor,
-                            ),
+                            Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor),
                             LocationTile(
                               controller: controller,
                               height: height,
                               width: width,
+                              themeController: themeController,
                             ),
                           ]),
                     ),
                     Container(
-                      color: ksecondaryTextColor,
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryBackgroundColor
+                          : ksecondaryTextColor,
                       height: 10,
                       width: width,
                     ),
                     Container(
-                      color: ksecondaryBackgroundColor,
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -320,35 +375,48 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       .titleMedium!
                                       .copyWith(
                                           fontWeight: FontWeight.w500,
-                                          color: kprimaryTextColor
-                                              .withOpacity(0.85))),
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                      .withOpacity(0.85)
+                                                  : kprimaryTextColor
+                                                      .withOpacity(0.85))),
                             ),
                           ),
                           ShakeToDismiss(
                             controller: controller,
+                            themeController: themeController,
                           ),
-                          const Divider(
-                            color: kprimaryDisabledTextColor,
-                          ),
+                          Divider(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor),
                           QrBarCode(
                             controller: controller,
+                            themeController: themeController,
                           ),
-                          const Divider(
-                            color: kprimaryDisabledTextColor,
-                          ),
+                          Divider(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor),
                           MathsChallenge(
                             controller: controller,
+                            themeController: themeController,
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      color: ksecondaryTextColor,
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryBackgroundColor
+                          : ksecondaryTextColor,
                       height: 10,
                       width: width,
                     ),
                     Container(
-                      color: ksecondaryBackgroundColor,
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -361,44 +429,55 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       .titleMedium!
                                       .copyWith(
                                           fontWeight: FontWeight.w500,
-                                          color: kprimaryTextColor
-                                              .withOpacity(0.85))),
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                      .withOpacity(0.85)
+                                                  : kprimaryTextColor
+                                                      .withOpacity(0.85))),
                             ),
                           ),
                           SharedAlarm(
                             controller: controller,
+                            themeController: themeController,
                           ),
-                          const Divider(
-                            color: kprimaryDisabledTextColor,
-                          ),
+                          Divider(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor),
                           AlarmIDTile(
                             controller: controller,
                             width: width,
+                            themeController: themeController,
                           ),
                           Obx(
                             () => Container(
                               child: (controller.isSharedAlarmEnabled.value)
-                                  ? const Divider(
-                                      color: kprimaryDisabledTextColor,
-                                    )
+                                  ? Divider(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor)
                                   : const SizedBox(),
                             ),
                           ),
                           AlarmOffset(
                             controller: controller,
+                            themeController: themeController,
                           ),
                           Obx(
                             () => Container(
                               child: (controller.isSharedAlarmEnabled.value &&
                                       controller.alarmRecord != null)
-                                  ? const Divider(
-                                      color: kprimaryDisabledTextColor,
-                                    )
+                                  ? Divider(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor)
                                   : const SizedBox(),
                             ),
                           ),
                           SharedUsers(
                             controller: controller,
+                            themeController: themeController,
                           ),
                         ],
                       ),

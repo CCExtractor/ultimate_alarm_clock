@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
 class AlarmControlView extends GetView<AlarmControlController> {
-  const AlarmControlView({Key? key}) : super(key: key);
+  AlarmControlView({Key? key}) : super(key: key);
+
+  ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .displaySmall!
-                                        .copyWith(color: ksecondaryTextColor),
+                                        .copyWith(color: themeController.isLightMode.value ? kLightPrimaryTextColor : ksecondaryTextColor),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
@@ -67,13 +70,13 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               child: TextButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        kprimaryTextColor.withOpacity(0.7))),
+                                        themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7))),
                                 child: Text(
                                   'Exit Preview',
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
-                                      .copyWith(color: ksecondaryTextColor),
+                                      .copyWith(color: themeController.isLightMode.value ? kLightPrimaryTextColor : ksecondaryTextColor),
                                 ),
                                 onPressed: () {
                                   Utils.hapticFeedback();
@@ -120,14 +123,14 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                    ksecondaryBackgroundColor)),
+                                    themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor)),
                             child: Text(
                               'Snooze',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(
-                                      color: kprimaryTextColor,
+                                      color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                                       fontWeight: FontWeight.w600),
                             ),
                             onPressed: () {
