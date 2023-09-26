@@ -25,7 +25,7 @@ class SettingsView extends GetView<SettingsController> {
           centerTitle: true,
           elevation: 0.0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.adaptive.arrow_back),
             onPressed: () {
               Utils.hapticFeedback();
               Navigator.of(context).pop();
