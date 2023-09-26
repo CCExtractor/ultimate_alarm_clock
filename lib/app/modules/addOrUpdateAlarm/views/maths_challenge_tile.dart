@@ -8,11 +8,11 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class MathsChallenge extends StatelessWidget {
   const MathsChallenge({
     super.key,
-    required this.controller, 
+    required this.controller,
   });
 
   final AddOrUpdateAlarmController controller;
-  
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -109,9 +109,11 @@ class MathsChallenge extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: Slider(
+                  child: Slider.adaptive(
                     min: 0.0,
                     max: 2.0,
+                    thumbColor: kprimaryColor,
+                    activeColor: kprimaryColor,
                     divisions: 2,
                     value: controller.mathsSliderValue.value,
                     onChanged: (newValue) {
@@ -128,14 +130,13 @@ class MathsChallenge extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       NumberPicker(
-                        value: controller.numMathsQuestions.value,
-                        minValue: 1,
-                        maxValue: 100,
-                        onChanged: (value) {
-                          Utils.hapticFeedback();
-                          controller.numMathsQuestions.value = value;
-                        }
-                      ),
+                          value: controller.numMathsQuestions.value,
+                          minValue: 1,
+                          maxValue: 100,
+                          onChanged: (value) {
+                            Utils.hapticFeedback();
+                            controller.numMathsQuestions.value = value;
+                          }),
                       Text(controller.numMathsQuestions.value > 1
                           ? 'questions'
                           : 'question'),
