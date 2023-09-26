@@ -324,9 +324,14 @@ class HomeView extends GetView<HomeController> {
                                   builder: (context, snapshot) {
                                     if (!snapshot.hasData) {
                                       return const Center(
-                                          child: CircularProgressIndicator(
-                                        color: kprimaryColor,
-                                      ));
+                                        child:
+                                            CircularProgressIndicator.adaptive(
+                                          backgroundColor: kprimaryColor,
+                                          valueColor: AlwaysStoppedAnimation(
+                                            kprimaryColor,
+                                          ),
+                                        ),
+                                      );
                                     } else {
                                       final List<AlarmModel> alarms =
                                           snapshot.data;
@@ -722,7 +727,7 @@ class HomeView extends GetView<HomeController> {
                                     }
                                   });
                             } else {
-                              return const CircularProgressIndicator();
+                              return const CircularProgressIndicator.adaptive();
                             }
                           });
                     }),
