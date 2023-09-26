@@ -51,8 +51,9 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
                 ),
           ),
           Obx(
-            () => Switch(
+            () => Switch.adaptive(
               value: widget.controller.isSortedAlarmListEnabled.value,
+              activeColor: ksecondaryColor,
               onChanged: (bool value) async {
                 widget.controller.toggleSortedAlarmList(value);
                 Utils.hapticFeedback();

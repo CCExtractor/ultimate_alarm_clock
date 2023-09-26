@@ -129,13 +129,14 @@ class RepeatTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Checkbox(
+            Checkbox.adaptive(
               side: BorderSide(
                 width: 1.5,
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor.withOpacity(0.5)
                     : kprimaryTextColor.withOpacity(0.5),
               ),
+              activeColor: kprimaryColor.withOpacity(0.8),
               value: controller.repeatDays[dayIndex],
               onChanged: (value) {
                 Utils.hapticFeedback();

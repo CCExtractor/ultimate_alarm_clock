@@ -126,9 +126,11 @@ class MathsChallenge extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: Slider(
+                  child: Slider.adaptive(
                     min: 0.0,
                     max: 2.0,
+                    thumbColor: kprimaryColor,
+                    activeColor: kprimaryColor,
                     divisions: 2,
                     value: controller.mathsSliderValue.value,
                     onChanged: (newValue) {

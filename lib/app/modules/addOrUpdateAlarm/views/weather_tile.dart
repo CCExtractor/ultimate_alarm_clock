@@ -55,7 +55,7 @@ class WeatherTile extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Checkbox(
+                                      Checkbox.adaptive(
                                           side: BorderSide(
                                               width: 1.5,
                                               color: themeController
@@ -66,6 +66,8 @@ class WeatherTile extends StatelessWidget {
                                                       .withOpacity(0.5)),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.sunny),
+                                          activeColor:
+                                              kprimaryColor.withOpacity(0.8),
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather
@@ -106,7 +108,7 @@ class WeatherTile extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Checkbox(
+                                      Checkbox.adaptive(
                                           side: BorderSide(
                                               width: 1.5,
                                               color: themeController
@@ -117,6 +119,8 @@ class WeatherTile extends StatelessWidget {
                                                       .withOpacity(0.5)),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.cloudy),
+                                          activeColor:
+                                              kprimaryColor.withOpacity(0.8),
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather
@@ -158,7 +162,7 @@ class WeatherTile extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Checkbox(
+                                      Checkbox.adaptive(
                                           side: BorderSide(
                                               width: 1.5,
                                               color: themeController
@@ -169,6 +173,8 @@ class WeatherTile extends StatelessWidget {
                                                       .withOpacity(0.5)),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.rainy),
+                                          activeColor:
+                                              kprimaryColor.withOpacity(0.8),
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather
@@ -209,7 +215,7 @@ class WeatherTile extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Checkbox(
+                                      Checkbox.adaptive(
                                           side: BorderSide(
                                               width: 1.5,
                                               color: themeController
@@ -220,6 +226,8 @@ class WeatherTile extends StatelessWidget {
                                                       .withOpacity(0.5)),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.windy),
+                                          activeColor:
+                                              kprimaryColor.withOpacity(0.8),
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather
@@ -260,7 +268,7 @@ class WeatherTile extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Checkbox(
+                                      Checkbox.adaptive(
                                           side: BorderSide(
                                               width: 1.5,
                                               color: themeController
@@ -271,6 +279,8 @@ class WeatherTile extends StatelessWidget {
                                                       .withOpacity(0.5)),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.stormy),
+                                          activeColor:
+                                              kprimaryColor.withOpacity(0.8),
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather

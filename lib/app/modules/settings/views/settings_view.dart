@@ -28,7 +28,7 @@ class SettingsView extends GetView<SettingsController> {
           centerTitle: true,
           elevation: 0.0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color:  themeController.isLightMode.value
+            icon: Icon(Icons.adaptive.arrow_back, color:  themeController.isLightMode.value
             ? kLightPrimaryTextColor
             : kprimaryTextColor),
             onPressed: () {

@@ -34,15 +34,17 @@ class RepeatOnceTile extends StatelessWidget {
           children: [
             Obx(() {
               if (controller.repeatDays.every((element) => element == false)) {
-                return Switch(
+                return Switch.adaptive(
                     value: false,
+                    activeColor: ksecondaryColor,
                     onChanged: (value) {
                       Utils.hapticFeedback();
                       controller.isOneTime.value = false;
                     });
               }
-              return Switch(
+              return Switch.adaptive(
                   value: controller.isOneTime.value,
+                  activeColor: ksecondaryColor,
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     controller.isOneTime.value = value;
