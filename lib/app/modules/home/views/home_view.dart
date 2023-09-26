@@ -705,67 +705,62 @@ class HomeView extends GetView<HomeController> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      10.0),
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Expanded(
-                                                                    flex: 0,
-                                                                    child: Switch
-                                                                        .adaptive(
-                                                                      activeColor:
-                                                                          ksecondaryColor,
-                                                                      value: alarm
-                                                                          .isEnabled,
-                                                                      onChanged:
-                                                                          (bool
-                                                                              value) async {
-                                                                        Utils
-                                                                            .hapticFeedback();
-                                                                        alarm.isEnabled =
-                                                                            value;
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10.0),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      flex: 0,
+                                                                      child: Switch
+                                                                          .adaptive(
+                                                                        activeColor:
+                                                                            ksecondaryColor,
+                                                                        value: alarm
+                                                                            .isEnabled,
+                                                                        onChanged:
+                                                                            (bool
+                                                                                value) async {
+                                                                          Utils
+                                                                              .hapticFeedback();
+                                                                          alarm.isEnabled =
+                                                                              value;
 
-                                                                        if (alarm.isSharedAlarmEnabled ==
-                                                                            true) {
-                                                                          await FirestoreDb.updateAlarm(
-                                                                              alarm.ownerId,
-                                                                              alarm);
-                                                                        } else {
-                                                                          await IsarDb.updateAlarm(
-                                                                              alarm);
-                                                                        }
-                                                                        controller.refreshTimer =
-                                                                            true;
-                                                                        controller
-                                                                            .refreshUpcomingAlarms();
-                                                                      },
+                                                                          if (alarm.isSharedAlarmEnabled ==
+                                                                              true) {
+                                                                            await FirestoreDb.updateAlarm(alarm.ownerId,
+                                                                                alarm);
+                                                                          } else {
+                                                                            await IsarDb.updateAlarm(alarm);
+                                                                          }
+                                                                          controller.refreshTimer =
+                                                                              true;
+                                                                          controller
+                                                                              .refreshUpcomingAlarms();
+                                                                        },
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                  Expanded(
-                                                                    flex: 0,
-                                                                    child:
-                                                                        PopupMenuButton(
-                                                                      onSelected:
-                                                                          (value) async {
-                                                                        Utils
-                                                                            .hapticFeedback();
-                                                                        if (value ==
-                                                                            0) {
-                                                                          Get.back();
-                                                                          Get.offNamed(
-                                                                              '/alarm-ring',
-                                                                              arguments: alarm);
-                                                                        } else if (value ==
-                                                                            1) {
-                                                                          print(
-                                                                              alarm.isSharedAlarmEnabled);
+                                                                    Expanded(
+                                                                      flex: 0,
+                                                                      child:
+                                                                          PopupMenuButton(
+                                                                        onSelected:
+                                                                            (value) async {
+                                                                          Utils
+                                                                              .hapticFeedback();
+                                                                          if (value ==
+                                                                              0) {
+                                                                            Get.back();
+                                                                            Get.offNamed('/alarm-ring',
+                                                                                arguments: alarm);
+                                                                          } else if (value ==
+                                                                              1) {
+                                                                            print(alarm.isSharedAlarmEnabled);
 
                                                                             if (alarm.isSharedAlarmEnabled ==
                                                                                 true) {
