@@ -49,54 +49,56 @@ class SettingsView extends GetView<SettingsController> {
             },
           ),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25.0),
-            child: Column(
-              children: [
-                WeatherApi(
-                  controller: controller,
-                  width: width,
-                  height: height,
-                  themeController: themeController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GoogleSignIn(
-                  controller: controller,
-                  width: width,
-                  height: height,
-                  themeController: themeController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                EnableHapticFeedback(
-                  height: height,
-                  width: width,
-                  controller: controller,
-                  themeController: themeController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                EnableSortedAlarmList(
-                  controller: controller,
-                  height: height,
-                  width: width,
-                  themeController: themeController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ThemeValueTile(
-                  controller: controller,
-                  height: height,
-                  width: width,
-                  themeController: themeController,
-                ),
-              ],
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25.0),
+              child: Column(
+                children: [
+                  WeatherApi(
+                    controller: controller,
+                    width: width,
+                    height: height,
+                    themeController: themeController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GoogleSignIn(
+                    controller: controller,
+                    width: width,
+                    height: height,
+                    themeController: themeController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  EnableHapticFeedback(
+                    height: height,
+                    width: width,
+                    controller: controller,
+                    themeController: themeController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  EnableSortedAlarmList(
+                    controller: controller,
+                    height: height,
+                    width: width,
+                    themeController: themeController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ThemeValueTile(
+                    controller: controller,
+                    height: height,
+                    width: width,
+                    themeController: themeController,
+                  ),
+                ],
+              ),
             ),
           ),
         ));
