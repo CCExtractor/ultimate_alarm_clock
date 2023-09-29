@@ -26,7 +26,7 @@ class WeatherApi extends StatelessWidget {
       onTap: () async {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          titlePadding: EdgeInsets.symmetric(vertical: 20),
+          titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
@@ -34,7 +34,7 @@ class WeatherApi extends StatelessWidget {
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Container(
-              child: (controller.weatherKeyState.value != WeatherKeyState.save)
+              child: (controller.weatherKeyState.value != WeatherKeyState.saveAdded && controller.weatherKeyState.value != WeatherKeyState.saveUpdated)
                   ? (controller.didWeatherKeyError.value == false)
                       ? Column(
                           children: [
@@ -76,8 +76,11 @@ class WeatherApi extends StatelessWidget {
                                           await controller.addKey(
                                               ApiKeys.openWeatherMap,
                                               controller.apiKey.text);
-                                          controller.weatherKeyState.value =
-                                              WeatherKeyState.save;
+                                          if(controller.weatherKeyState.value == WeatherKeyState.add){
+                                            controller.weatherKeyState.value = WeatherKeyState.saveAdded;
+                                          } else  {
+                                            controller.weatherKeyState.value = WeatherKeyState.saveUpdated;
+                                          }
                                         } else {
                                           controller.didWeatherKeyError.value =
                                               true;
@@ -160,7 +163,10 @@ class WeatherApi extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: Text(
-                            "Your API key is added!",
+                            controller.weatherKeyState.value ==
+                                    WeatherKeyState.saveAdded
+                                ? 'Your API Key is added!'
+                                : 'Your API Key is updated!',
                             style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ),

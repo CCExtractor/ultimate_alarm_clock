@@ -12,7 +12,7 @@ enum WeatherTypes { sunny, cloudy, rainy, windy, stormy }
 
 enum Difficulty { Easy, Medium, Hard }
 
-enum WeatherKeyState { add, save, update }
+enum WeatherKeyState { add, update, saveAdded, saveUpdated }
 
 const Color kprimaryColor = Color(0xffAFFC41);
 
