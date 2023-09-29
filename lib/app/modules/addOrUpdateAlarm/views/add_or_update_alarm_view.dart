@@ -542,8 +542,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: themeController.isLightMode.value
-                              ? kLightSecondaryColor.withOpacity(0.6)
-                              : kprimaryColor,
+                              ? Colors.red.withOpacity(0.9)
+                              : Colors.red,
                           width: 1,
                         ),
                       ),
@@ -552,8 +552,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
-                                      ? kLightSecondaryColor.withOpacity(0.6)
-                                      : kprimaryColor,
+                                      ? Colors.red.withOpacity(0.9)
+                                      : Colors.red,
                                 ),
                       ),
                     ),
