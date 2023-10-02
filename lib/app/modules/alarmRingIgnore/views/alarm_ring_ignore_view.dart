@@ -21,7 +21,7 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
-            padding: EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(18.0),
             child: SizedBox(
               height: height * 0.06,
               width: width * 0.8,

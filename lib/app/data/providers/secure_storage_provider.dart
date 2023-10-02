@@ -7,17 +7,17 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 class SecureStorageProvider {
   final FlutterSecureStorage _secureStorage;
 
-  SecureStorageProvider() : _secureStorage = FlutterSecureStorage();
+  SecureStorageProvider() : _secureStorage = const FlutterSecureStorage();
 
   Future<void> storeUserModel(UserModel userModel) async {
-    final String key = 'userModel';
+    const String key = 'userModel';
     final String userString = jsonEncode(userModel.toJson());
 
     await _secureStorage.write(key: key, value: userString);
   }
 
   Future<UserModel?> retrieveUserModel() async {
-    final String key = 'userModel';
+    const String key = 'userModel';
     final String? userString = await _secureStorage.read(key: key);
 
     if (userString != null) {
@@ -34,7 +34,7 @@ class SecureStorageProvider {
   }
 
   Future<void> deleteUserModel() async {
-    final String key = 'userModel';
+    const String key = 'userModel';
     await _secureStorage.delete(key: key);
   }
 

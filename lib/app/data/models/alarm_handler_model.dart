@@ -95,11 +95,11 @@ class AlarmHandlerModel extends TaskHandler {
               _screen!.screenStateStream!.listen((ScreenStateEvent event) {
             // // Starting stopwatch since screen will initially be unlocked obviously
             if (event == ScreenStateEvent.SCREEN_UNLOCKED) {
-              print("STATE: ${event}");
+              print("STATE: $event");
               _stopwatch!.start();
               isScreenActive = true;
             } else if (event == ScreenStateEvent.SCREEN_OFF) {
-              print("STATE: ${event}");
+              print("STATE: $event");
 
               // Stop the stopwatch and update _unlockedDuration when the screen is turned off
               isScreenActive = false;
@@ -203,7 +203,7 @@ class AlarmHandlerModel extends TaskHandler {
   @override
   void onNotificationPressed() {
     if (shouldAlarmRing == true) {
-      print("CORRECT SCREEN ${shouldAlarmRing}");
+      print("CORRECT SCREEN $shouldAlarmRing");
       FlutterForegroundTask.launchApp('/alarm-ring');
       _sendPort?.send('alarmRingRoute');
     } else {

@@ -17,12 +17,12 @@ class AlarmControlIgnoreController extends GetxController
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
   final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
   getCurrentlyRingingAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+        await IsarDb.getLatestAlarm(alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, false);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     print("CURRENT RINGING : ${latestAlarm.alarmTime}");
@@ -31,12 +31,12 @@ class AlarmControlIgnoreController extends GetxController
   }
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     print("LATEST : ${latestAlarm.alarmTime}");
@@ -100,13 +100,5 @@ class AlarmControlIgnoreController extends GetxController
     FlutterAppMinimizer.minimize();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

@@ -25,7 +25,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                      padding: EdgeInsets.all(18.0),
+                      padding: const EdgeInsets.all(18.0),
                       child: Obx(
                         () => SizedBox(
                           height: height * 0.06,
@@ -58,7 +58,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                     }
                                   },
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                         ),
                       )),
                   (Get.arguments != null)
@@ -84,7 +84,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                 },
                               )),
                         )
-                      : SizedBox()
+                      : const SizedBox()
                 ],
               ),
               body: Center(

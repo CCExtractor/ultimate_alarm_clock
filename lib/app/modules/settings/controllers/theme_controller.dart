@@ -13,10 +13,6 @@ class ThemeController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   void _loadThemeValue() async {
     isLightMode.value = await _secureStorageProvider.readThemeValue() == AppTheme.light;

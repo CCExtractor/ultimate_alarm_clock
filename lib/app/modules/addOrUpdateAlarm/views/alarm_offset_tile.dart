@@ -124,7 +124,7 @@ class AlarmOffset extends StatelessWidget {
                         )
                       ])),
             )
-          : SizedBox(),
+          : const SizedBox(),
     );
   }
 }

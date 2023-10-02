@@ -24,10 +24,10 @@ class AddOrUpdateAlarmController extends GetxController
   ThemeController themeController = Get.find<ThemeController>();
 
   late UserModel? userModel;
-  var alarmID = Uuid().v4();
+  var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
-  final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
-  final mainAlarmTime = DateTime.now().add(Duration(minutes: 1)).obs;
+  final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
+  final mainAlarmTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
   final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
@@ -160,7 +160,7 @@ class AddOrUpdateAlarmController extends GetxController
 
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
-      final timeLimit = const Duration(seconds: 10);
+      const timeLimit = Duration(seconds: 10);
       await FlLocation.getLocation(
               timeLimit: timeLimit, accuracy: LocationAccuracy.best)
           .then((location) {
@@ -188,32 +188,32 @@ class AddOrUpdateAlarmController extends GetxController
             : ksecondaryBackgroundColor,
         barrierDismissible: false,
         title: 'Location Permission',
-        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        titlePadding: EdgeInsets.only(top: 30, right: 40),
+        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        titlePadding: const EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
-        content: Text('This app needs access to your location.'),
+        content: const Text('This app needs access to your location.'),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
               backgroundColor: kprimaryColor,
             ),
-            child: Text('Cancel', style: TextStyle(color: Colors.black)),
+            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
             onPressed: () {
               Get.back(result: false);
             },
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           TextButton(
             style: TextButton.styleFrom(
               backgroundColor: kprimaryColor,
             ),
-            child: Text('Allow', style: TextStyle(color: Colors.black)),
+            child: const Text('Allow', style: TextStyle(color: Colors.black)),
             onPressed: () {
               Get.back(result: true);
             },
@@ -341,12 +341,12 @@ class AddOrUpdateAlarmController extends GetxController
         titleStyle: TextStyle(color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
               : Colors.white,),
-        titlePadding: EdgeInsets.only(
+        titlePadding: const EdgeInsets.only(
           top: 25,
           left: 10,
         ),
-        contentPadding: EdgeInsets.only(top: 20, left: 20, bottom: 23),
-        content: Text('Please allow camera access to scan QR codes.'),
+        contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
+        content: const Text('Please allow camera access to scan QR codes.'),
         onCancel: () {
           Get.back(); // Close the alert box
         },
@@ -362,7 +362,7 @@ class AddOrUpdateAlarmController extends GetxController
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(color: Colors.black),
           ),
@@ -374,7 +374,7 @@ class AddOrUpdateAlarmController extends GetxController
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: Text(
+          child: const Text(
             'OK',
             style: TextStyle(color: Colors.black),
           ),
@@ -564,10 +564,6 @@ class AddOrUpdateAlarmController extends GetxController
     // If there's an argument sent, we are in update mode
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() async {

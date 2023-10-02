@@ -34,10 +34,6 @@ class SettingsController extends GetxController {
     _loadPreference();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
@@ -122,7 +118,7 @@ class SettingsController extends GetxController {
 
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
-      final timeLimit = const Duration(seconds: 10);
+      const timeLimit = Duration(seconds: 10);
       await FlLocation.getLocation(
               timeLimit: timeLimit, accuracy: LocationAccuracy.best)
           .then((location) {

@@ -38,7 +38,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                 minHeight: 2,
                 value: controller.progress.value,
                 backgroundColor: Colors.grey,
-                valueColor: AlwaysStoppedAnimation<Color>(kprimaryColor),
+                valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
               ),
             ),
             Expanded(
@@ -69,7 +69,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                 height: height * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(18)),
+                                      const BorderRadius.all(Radius.circular(18)),
                                   color: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
                                 ),
                                 child: Row(
@@ -179,7 +179,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                 height: height * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius:
-                                      BorderRadius.all(const Radius.circular(18)),
+                                      const BorderRadius.all(Radius.circular(18)),
                                   color: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
                                 ),
                                 child: Row(

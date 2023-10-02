@@ -13,7 +13,6 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class HomeController extends GetxController with AlarmHandlerSetupModel {
@@ -299,10 +298,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     }
   }
 
-  @override
-  void onReady() async {
-    super.onReady();
-  }
 
   @override
   void onClose() {

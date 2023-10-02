@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 import 'constants.dart';
 
@@ -320,7 +318,7 @@ class Utils {
       return 'Off';
     }
 
-    final allWeatherTypes = WeatherTypes.values;
+    const allWeatherTypes = WeatherTypes.values;
     final hasAllTypes =
         allWeatherTypes.every((type) => weatherTypes.contains(type));
 

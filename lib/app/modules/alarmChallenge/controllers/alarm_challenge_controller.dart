@@ -125,9 +125,9 @@ class AlarmChallengeController extends GetxController {
   }
 
   void _startTimer() async {
-    final duration = const Duration(seconds: 15);
-    final totalIterations = 1500000;
-    final decrement = 0.000001;
+    const duration = Duration(seconds: 15);
+    const totalIterations = 1500000;
+    const decrement = 0.000001;
 
     for (var i = totalIterations; i > 0; i--) {
       if (!isTimerEnabled) {
@@ -155,10 +155,6 @@ class AlarmChallengeController extends GetxController {
     }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() async {

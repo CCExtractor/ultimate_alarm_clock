@@ -35,7 +35,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                   minHeight: 2,
                   value: controller.progress.value,
                   backgroundColor: Colors.grey,
-                  valueColor: AlwaysStoppedAnimation<Color>(kprimaryColor),
+                  valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
                 ),
               ),
               Expanded(

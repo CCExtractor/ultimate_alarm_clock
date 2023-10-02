@@ -428,7 +428,7 @@ class WeatherTile extends StatelessWidget {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.defaultDialog(
-                      contentPadding: EdgeInsets.all(10.0),
+                      contentPadding: const EdgeInsets.all(10.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: themeController.isLightMode.value
                           ? kLightSecondaryBackgroundColor

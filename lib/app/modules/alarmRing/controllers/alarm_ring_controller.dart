@@ -31,12 +31,12 @@ class AlarmControlController extends GetxController
   Timer? _currentTimeTimer;
 
   getCurrentlyRingingAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+        await IsarDb.getLatestAlarm(alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, false);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     print("CURRENT RINGING : ${latestAlarm.alarmTime}");
@@ -45,12 +45,12 @@ class AlarmControlController extends GetxController
   }
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     print("LATEST : ${latestAlarm.alarmTime}");
@@ -68,7 +68,7 @@ class AlarmControlController extends GetxController
       _currentTimeTimer?.cancel();
     }
 
-    _currentTimeTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _currentTimeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (minutes.value == 0 && seconds.value == 0) {
         timer.cancel();
         vibrationTimer =
@@ -182,10 +182,6 @@ class AlarmControlController extends GetxController
     }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() async {

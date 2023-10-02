@@ -26,7 +26,7 @@ class WeatherApi extends StatelessWidget {
       onTap: () async {
         Utils.hapticFeedback();
         Get.defaultDialog(
-            titlePadding: EdgeInsets.symmetric(vertical: 20),
+            titlePadding: const EdgeInsets.symmetric(vertical: 20),
             backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
