@@ -16,6 +16,13 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+class Pair<T, U> {
+  final T first;
+  final U second;
+
+  Pair(this.first, this.second);
+}
+
 class HomeController extends GetxController with AlarmHandlerSetupModel {
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
@@ -43,6 +50,9 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   RxDouble scalingFactor = 1.0.obs;
 
   RxBool isSortedAlarmListEnabled = true.obs;
+  RxBool inMultipleSelectMode = false.obs;
+
+  Set<Pair<dynamic, bool>> selectedAlarmSet = {};
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -189,7 +199,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     super.onInit();
     if (!isUserSignedIn.value) await loginWithGoogle();
 
-    isSortedAlarmListEnabled.value = await SecureStorageProvider().readSortedAlarmListValue(key: 'sorted_alarm_list');
+    isSortedAlarmListEnabled.value = await SecureStorageProvider()
+        .readSortedAlarmListValue(key: 'sorted_alarm_list');
 
     scrollController.addListener(() {
       final offset = scrollController.offset;

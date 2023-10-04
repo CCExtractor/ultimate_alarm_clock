@@ -41,40 +41,45 @@ class AlarmModel {
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
+  late bool isHolded;
+  late bool isSelected;
   @ignore
   Map? offsetDetails;
 
-  AlarmModel(
-      {required this.alarmTime,
-      required this.alarmID,
-      this.sharedUserIds = const [],
-      required this.ownerId,
-      required this.ownerName,
-      required this.lastEditedUserId,
-      required this.mutexLock,
-      this.isEnabled = true,
-      required this.days,
-      required this.intervalToAlarm,
-      required this.isActivityEnabled,
-      required this.minutesSinceMidnight,
-      required this.isLocationEnabled,
-      required this.isSharedAlarmEnabled,
-      required this.isWeatherEnabled,
-      required this.location,
-      required this.weatherTypes,
-      required this.isMathsEnabled,
-      required this.mathsDifficulty,
-      required this.numMathsQuestions,
-      required this.isShakeEnabled,
-      required this.shakeTimes,
-      required this.isQrEnabled,
-      required this.qrValue,
-      required this.activityInterval,
-      this.offsetDetails = const {},
-      required this.mainAlarmTime,
-      required this.label,
-      required this.isOneTime,
-      required this.snoozeDuration});
+  AlarmModel({
+    required this.alarmTime,
+    required this.alarmID,
+    this.sharedUserIds = const [],
+    required this.ownerId,
+    required this.ownerName,
+    required this.lastEditedUserId,
+    required this.mutexLock,
+    this.isEnabled = true,
+    required this.days,
+    required this.intervalToAlarm,
+    required this.isActivityEnabled,
+    required this.minutesSinceMidnight,
+    required this.isLocationEnabled,
+    required this.isSharedAlarmEnabled,
+    required this.isWeatherEnabled,
+    required this.location,
+    required this.weatherTypes,
+    required this.isMathsEnabled,
+    required this.mathsDifficulty,
+    required this.numMathsQuestions,
+    required this.isShakeEnabled,
+    required this.shakeTimes,
+    required this.isQrEnabled,
+    required this.qrValue,
+    required this.activityInterval,
+    this.offsetDetails = const {},
+    required this.mainAlarmTime,
+    required this.label,
+    required this.isOneTime,
+    required this.snoozeDuration,
+    this.isHolded = false,
+    this.isSelected = false,
+  });
 
   AlarmModel.fromDocumentSnapshot(
       {required DocumentSnapshot documentSnapshot, required UserModel? user}) {
