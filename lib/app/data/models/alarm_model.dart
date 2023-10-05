@@ -41,8 +41,6 @@ class AlarmModel {
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
-  late bool isHolded;
-  late bool isSelected;
   @ignore
   Map? offsetDetails;
 
@@ -77,8 +75,6 @@ class AlarmModel {
     required this.label,
     required this.isOneTime,
     required this.snoozeDuration,
-    this.isHolded = false,
-    this.isSelected = false,
   });
 
   AlarmModel.fromDocumentSnapshot(
