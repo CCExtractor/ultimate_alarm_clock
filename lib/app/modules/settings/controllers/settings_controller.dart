@@ -22,7 +22,7 @@ class SettingsController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late GoogleSignInAccount? googleSignInAccount;
   final RxBool isUserLoggedIn = false.obs;
-  final RxBool isWeatherKeyAdded = false.obs;
+  final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs; 
   final RxBool didWeatherKeyError = false.obs;
   UserModel? userModel;
   @override

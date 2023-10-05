@@ -39,7 +39,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Obx(
-              () => Switch(
+              () => Switch.adaptive(
                 value: widget.themeController.isLightMode.value,
                 activeColor: ksecondaryColor,
                 onChanged: (bool value) async {
