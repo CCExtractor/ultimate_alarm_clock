@@ -173,6 +173,18 @@ class SettingsController extends GetxController {
 
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
+
+    String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap); 
+
+    if(retrievedAPIKey != null) {
+      apiKey.text = retrievedAPIKey;
+    }
+
+    String? retrievedWeatherState = await getWeatherState(); 
+
+    if(retrievedWeatherState != null) {
+      weatherKeyState.value = retrievedWeatherState as WeatherKeyState;
+    }
   }
 
   void _savePreference() async {
