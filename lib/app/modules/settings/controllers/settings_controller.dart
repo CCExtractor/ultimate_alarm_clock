@@ -22,7 +22,7 @@ class SettingsController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late GoogleSignInAccount? googleSignInAccount;
   final RxBool isUserLoggedIn = false.obs;
-  final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs; 
+  final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
   final RxBool didWeatherKeyError = false.obs;
   UserModel? userModel;
   @override
@@ -108,12 +108,12 @@ class SettingsController extends GetxController {
     return await _secureStorageProvider.retrieveApiKey(key);
   }
 
-  addWeatherState(WeatherKeyState weatherState) async {
-    await _secureStorageProvider.storeWeatherState(weatherState); 
-  } 
+  addWeatherState(String weatherState) async {
+    await _secureStorageProvider.storeWeatherState(weatherState);
+  }
 
   getWeatherState() async {
-    return await _secureStorageProvider.retrieveWeatherState(); 
+    return await _secureStorageProvider.retrieveWeatherState();
   }
 
   Future<bool> isApiKeyValid(String apiKey) async {
@@ -174,17 +174,23 @@ class SettingsController extends GetxController {
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
-    String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap); 
+    String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
 
-    if(retrievedAPIKey != null) {
+    if (retrievedAPIKey != null) {
       apiKey.text = retrievedAPIKey;
     }
 
-    String? retrievedWeatherState = await getWeatherState(); 
+    String? retrievedWeatherState = await getWeatherState();
 
-    if(retrievedWeatherState != null) {
-      weatherKeyState.value = retrievedWeatherState as WeatherKeyState;
+    print(retrievedWeatherState);
+
+    if (retrievedWeatherState != null) {
+      weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
+              (weatherState) => weatherState.name == retrievedWeatherState) ??
+          WeatherKeyState.add;
     }
+
+    print(weatherKeyState.value);
   }
 
   void _savePreference() async {
@@ -209,6 +215,6 @@ class SettingsController extends GetxController {
   void toggleSortedAlarmList(bool enabled) {
     isSortedAlarmListEnabled.value = enabled;
     homeController.isSortedAlarmListEnabled.value = enabled;
-    _saveSortedAlarmListPreference(); 
+    _saveSortedAlarmListPreference();
   }
 }

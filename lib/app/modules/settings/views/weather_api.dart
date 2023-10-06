@@ -78,8 +78,10 @@ class WeatherApi extends StatelessWidget {
                                               controller.apiKey.text);
                                           if(controller.weatherKeyState.value == WeatherKeyState.add){
                                             controller.weatherKeyState.value = WeatherKeyState.saveAdded;
+                                            controller.addWeatherState('saveAdded');
                                           } else  {
                                             controller.weatherKeyState.value = WeatherKeyState.saveUpdated;
+                                            controller.addWeatherState('saveUpdated');
                                           }
                                         } else {
                                           controller.didWeatherKeyError.value =
@@ -188,6 +190,7 @@ class WeatherApi extends StatelessWidget {
                               Utils.hapticFeedback();
                               controller.weatherKeyState.value =
                                   WeatherKeyState.update;
+                              controller.addWeatherState('update');
                               Get.back();
                             }),
                       ],

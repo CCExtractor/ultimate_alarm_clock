@@ -48,9 +48,8 @@ class SecureStorageProvider {
     return await _secureStorage.read(key: apiKey);
   }
 
-  Future<void> storeWeatherState(WeatherKeyState val) async {
+  Future<void> storeWeatherState(String weatherState) async {
     const String key = 'weather_state';
-    final String weatherState = val.toString();
     await _secureStorage.write(
       key: key,
       value: weatherState,
@@ -58,8 +57,8 @@ class SecureStorageProvider {
   }
 
   Future<String?> retrieveWeatherState() async {
-    const String key = 'weather_state'; 
-    return await _secureStorage.read(key: key); 
+    const String key = 'weather_state';
+    return await _secureStorage.read(key: key);
   }
 
   Future<bool> readHapticFeedbackValue({required String key}) async {
