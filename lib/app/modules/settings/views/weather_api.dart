@@ -35,7 +35,10 @@ class WeatherApi extends StatelessWidget {
           content: Obx(
             () => Container(
               // If the user hasn't clicked on the 'Save' or 'Update' button of the dialog, or there is no error in the weather key, then show the dialog
-              child: (controller.weatherKeyState.value != WeatherKeyState.saveAdded && controller.weatherKeyState.value != WeatherKeyState.saveUpdated)
+              child: (controller.weatherKeyState.value !=
+                          WeatherKeyState.saveAdded &&
+                      controller.weatherKeyState.value !=
+                          WeatherKeyState.saveUpdated)
                   ? (controller.didWeatherKeyError.value == false)
                       ? Column(
                           children: [
@@ -79,20 +82,25 @@ class WeatherApi extends StatelessWidget {
                                         // If the API key is valid
                                         if (await controller.isApiKeyValid(
                                             controller.apiKey.text)) {
-                                          
                                           // Add the key to the storage
                                           await controller.addKey(
                                               ApiKeys.openWeatherMap,
                                               controller.apiKey.text);
 
                                           // If it is added for the first time
-                                          if(controller.weatherKeyState.value == WeatherKeyState.add){
-                                            controller.weatherKeyState.value = WeatherKeyState.saveAdded;
-                                            controller.addWeatherState('saveAdded');
-                                          } else  {
+                                          if (controller
+                                                  .weatherKeyState.value ==
+                                              WeatherKeyState.add) {
+                                            controller.weatherKeyState.value =
+                                                WeatherKeyState.saveAdded;
+                                            controller
+                                                .addWeatherState('saveAdded');
+                                          } else {
                                             // If it is updated
-                                            controller.weatherKeyState.value = WeatherKeyState.saveUpdated;
-                                            controller.addWeatherState('saveUpdated');
+                                            controller.weatherKeyState.value =
+                                                WeatherKeyState.saveUpdated;
+                                            controller
+                                                .addWeatherState('saveUpdated');
                                           }
                                         } else {
                                           // If the API key is not valid
