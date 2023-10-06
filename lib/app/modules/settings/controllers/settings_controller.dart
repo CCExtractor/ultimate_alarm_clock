@@ -108,6 +108,14 @@ class SettingsController extends GetxController {
     return await _secureStorageProvider.retrieveApiKey(key);
   }
 
+  addWeatherState(WeatherKeyState weatherState) async {
+    await _secureStorageProvider.storeWeatherState(weatherState); 
+  } 
+
+  getWeatherState() async {
+    return await _secureStorageProvider.retrieveWeatherState(); 
+  }
+
   Future<bool> isApiKeyValid(String apiKey) async {
     final weather = WeatherFactory(apiKey);
     try {
