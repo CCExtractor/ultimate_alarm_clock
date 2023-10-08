@@ -82,8 +82,8 @@ class LabelTile extends StatelessWidget {
                   Get.snackbar(
                     "Note",
                     "Please don't enter whitespace as first character!",
-                    backgroundColor: Colors.white,
-                    colorText: Colors.black,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
                   );
                 }
               }
