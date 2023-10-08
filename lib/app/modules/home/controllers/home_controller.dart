@@ -13,8 +13,14 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+
+class Pair<T, U> {
+  final T first;
+  final U second;
+
+  Pair(this.first, this.second);
+}
 
 class HomeController extends GetxController with AlarmHandlerSetupModel {
   Stream<QuerySnapshot>? firestoreStreamAlarms;
@@ -43,6 +49,13 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   RxDouble scalingFactor = 1.0.obs;
 
   RxBool isSortedAlarmListEnabled = true.obs;
+  RxBool inMultipleSelectMode = false.obs;
+  RxBool isAnyAlarmHolded = false.obs;
+  RxBool isAllAlarmsSelected = false.obs;
+  RxInt numberOfAlarmsSelected = 0.obs;
+  Pair<List<AlarmModel>, List<RxBool>> alarmListPairs = Pair([], []);
+
+  Set<Pair<dynamic, bool>> selectedAlarmSet = {};
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -189,7 +202,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     super.onInit();
     if (!isUserSignedIn.value) await loginWithGoogle();
 
-    isSortedAlarmListEnabled.value = await SecureStorageProvider().readSortedAlarmListValue(key: 'sorted_alarm_list');
+    isSortedAlarmListEnabled.value = await SecureStorageProvider()
+        .readSortedAlarmListValue(key: 'sorted_alarm_list');
 
     scrollController.addListener(() {
       final offset = scrollController.offset;
@@ -310,6 +324,48 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
     if (delayToSchedule != null) {
       delayToSchedule!.cancel();
+    }
+  }
+
+  // Add all alarms to seleted alarm set
+  void addAllAlarmsToSelectedAlarmSet() {
+    for (int index = 0; index < alarmListPairs.first.length; index++) {
+      AlarmModel alarm = alarmListPairs.first[index];
+      alarmListPairs.second[index].value = true;
+      selectedAlarmSet.add(
+        alarm.isSharedAlarmEnabled
+            ? Pair(
+                alarm.firestoreId,
+                true,
+              )
+            : Pair(
+                alarm.isarId,
+                false,
+              ),
+      );
+    }
+  }
+
+  // Remove all alarms from the selected alarm set
+  void removeAllAlarmsFromSelectedAlarmSet() {
+    for (int index = 0; index < alarmListPairs.first.length; index++) {
+      alarmListPairs.second[index].value = false;
+      selectedAlarmSet.clear();
+    }
+  }
+
+  // Delete alarms mentioned in the selected alarm set
+  Future<void> deleteAlarms() async {
+    for (var alarm in selectedAlarmSet) {
+      var alarmId = alarm.first;
+      var isSharedAlarmEnabled = alarm.second;
+
+      isSharedAlarmEnabled
+          ? await FirestoreDb.deleteAlarm(
+              userModel.value,
+              alarmId,
+            )
+          : await IsarDb.deleteAlarm(alarmId);
     }
   }
 }
