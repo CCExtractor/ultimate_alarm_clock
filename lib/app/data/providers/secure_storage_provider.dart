@@ -48,6 +48,21 @@ class SecureStorageProvider {
     return await _secureStorage.read(key: apiKey);
   }
 
+  // Store the weather state in the flutter secure storage
+  Future<void> storeWeatherState(String weatherState) async {
+    const String key = 'weather_state';
+    await _secureStorage.write(
+      key: key,
+      value: weatherState,
+    );
+  }
+
+  // Get the weather state from the flutter secure storage
+  Future<String?> retrieveWeatherState() async {
+    const String key = 'weather_state';
+    return await _secureStorage.read(key: key);
+  }
+
   Future<bool> readHapticFeedbackValue({required String key}) async {
     return await _secureStorage.read(key: key) == 'true';
   }

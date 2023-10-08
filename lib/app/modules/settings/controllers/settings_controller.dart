@@ -22,7 +22,7 @@ class SettingsController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late GoogleSignInAccount? googleSignInAccount;
   final RxBool isUserLoggedIn = false.obs;
-  final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs; 
+  final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
   final RxBool didWeatherKeyError = false.obs;
   UserModel? userModel;
   @override
@@ -108,6 +108,16 @@ class SettingsController extends GetxController {
     return await _secureStorageProvider.retrieveApiKey(key);
   }
 
+  // Add weather state to the flutter secure storage
+  addWeatherState(String weatherState) async {
+    await _secureStorageProvider.storeWeatherState(weatherState);
+  }
+
+  // Get weather state from the flutter secure storage
+  getWeatherState() async {
+    return await _secureStorageProvider.retrieveWeatherState();
+  }
+
   Future<bool> isApiKeyValid(String apiKey) async {
     final weather = WeatherFactory(apiKey);
     try {
@@ -165,6 +175,26 @@ class SettingsController extends GetxController {
 
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
+
+    // Store the retrieved API key from the flutter secure storage
+    String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
+
+    // If the API key has been previously stored there
+    if (retrievedAPIKey != null) {
+      // Assign the controller's text to the retrieved API key so that when the user comes to update their API key, they're able to see the previously added API key
+      apiKey.text = retrievedAPIKey;
+    }
+
+    // Store the retrieved weather state from the flutter secure storage
+    String? retrievedWeatherState = await getWeatherState();
+
+    // If the weather state has been previously stored there
+    if (retrievedWeatherState != null) {
+      // Assign the weatherKeyState to the previously stored weather state, but first convert the stored string to the WeatherKeyState enum
+      weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
+              (weatherState) => weatherState.name == retrievedWeatherState) ??
+          WeatherKeyState.add;
+    }
   }
 
   void _savePreference() async {
@@ -189,6 +219,6 @@ class SettingsController extends GetxController {
   void toggleSortedAlarmList(bool enabled) {
     isSortedAlarmListEnabled.value = enabled;
     homeController.isSortedAlarmListEnabled.value = enabled;
-    _saveSortedAlarmListPreference(); 
+    _saveSortedAlarmListPreference();
   }
 }
