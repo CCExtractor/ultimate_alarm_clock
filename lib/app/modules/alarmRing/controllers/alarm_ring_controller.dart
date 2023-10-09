@@ -75,7 +75,7 @@ class AlarmControlController extends GetxController
             Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
         });
-        FlutterRingtonePlayer.playAlarm();
+        FlutterRingtonePlayer.playRingtone();
         startTimer();
       } else if (seconds.value == 0) {
         minutes.value--;
@@ -103,7 +103,7 @@ class AlarmControlController extends GetxController
   void onInit() async {
     super.onInit();
 
-    FlutterRingtonePlayer.playAlarm();
+    FlutterRingtonePlayer.playRingtone();
 
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
