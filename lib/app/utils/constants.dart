@@ -42,7 +42,7 @@ ThemeData kThemeData = ThemeData(
   fontFamily: 'poppins',
   checkboxTheme: CheckboxThemeData(
     checkColor: MaterialStateProperty.all(kprimaryTextColor),
-    fillColor: MaterialStateProperty.all(kprimaryColor.withOpacity(0.8)),
+    fillColor: MaterialStateProperty.all(kprimaryBackgroundColor),
   ),
   textTheme: const TextTheme(
       titleSmall: TextStyle(color: kprimaryTextColor, letterSpacing: 0.15),
@@ -108,7 +108,7 @@ ThemeData kLightThemeData = ThemeData(
   fontFamily: 'poppins',
   checkboxTheme: CheckboxThemeData(
     checkColor: MaterialStateProperty.all(kprimaryTextColor),
-    fillColor: MaterialStateProperty.all(kLightSecondaryColor.withOpacity(0.8)),
+    fillColor: MaterialStateProperty.all(kLightPrimaryBackgroundColor),
   ),
   textTheme: const TextTheme(
       titleSmall: TextStyle(color: kLightPrimaryTextColor, letterSpacing: 0.15),
