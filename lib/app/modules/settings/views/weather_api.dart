@@ -33,124 +33,175 @@ class WeatherApi extends StatelessWidget {
           title: 'API Key',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
-            () => Container(
-              // If the user hasn't clicked on the 'Save' or 'Update' button of the dialog, or there is no error in the weather key, then show the dialog
-              child: (controller.weatherKeyState.value !=
-                          WeatherKeyState.saveAdded &&
-                      controller.weatherKeyState.value !=
-                          WeatherKeyState.saveUpdated)
-                  ? (controller.didWeatherKeyError.value == false)
-                      ? Column(
-                          children: [
-                            TextField(
-                              obscureText: false,
-                              controller: controller.apiKey,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  TextButton(
-                                      style: ButtonStyle(
+            () => Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  // If the user hasn't clicked on the 'Save' or 'Update' button of the dialog, or there is no error in the weather key, then show the dialog
+                  child: (controller.weatherKeyState.value !=
+                              WeatherKeyState.saveAdded &&
+                          controller.weatherKeyState.value !=
+                              WeatherKeyState.saveUpdated)
+                      ? (controller.didWeatherKeyError.value == false)
+                          ? Column(
+                              children: [
+                                TextField(
+                                  obscureText: false,
+                                  controller: controller.apiKey,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    kprimaryColor),
+                                          ),
+                                          child: Text(
+                                            // If the weather state is add, then show 'Save' else show 'Update' text on the button
+                                            controller.weatherKeyState.value ==
+                                                    WeatherKeyState.add
+                                                ? 'Save'
+                                                : 'Update',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                                    color: themeController
+                                                            .isLightMode.value
+                                                        ? kLightPrimaryTextColor
+                                                        : ksecondaryTextColor),
+                                          ),
+                                          onPressed: () async {
+                                            Utils.hapticFeedback();
+                                            controller.showingCircularProgressIndicator.value = true;
+
+                                            // Get the user's location
+                                            await controller.getLocation();
+
+                                            // If the API key is valid
+                                            if (await controller.isApiKeyValid(
+                                                controller.apiKey.text)) {
+                                              // Add the key to the storage
+                                              await controller.addKey(
+                                                  ApiKeys.openWeatherMap,
+                                                  controller.apiKey.text);
+
+                                              // If it is added for the first time
+                                              if (controller
+                                                      .weatherKeyState.value ==
+                                                  WeatherKeyState.add) {
+                                                controller
+                                                        .weatherKeyState.value =
+                                                    WeatherKeyState.saveAdded;
+                                                controller.addWeatherState(
+                                                    'saveAdded');
+                                              } else {
+                                                // If it is updated
+                                                controller
+                                                        .weatherKeyState.value =
+                                                    WeatherKeyState.saveUpdated;
+                                                controller.addWeatherState(
+                                                    'saveUpdated');
+                                              }
+                                            } else {
+                                              // If the API key is not valid
+                                              controller.didWeatherKeyError
+                                                  .value = true;
+                                            }
+                                            controller.showingCircularProgressIndicator.value = false;
+                                          }),
+                                      OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(
+                                              color: kprimaryColor,
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Get Key',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                                  color: kprimaryColor,
+                                                ),
+                                          ),
+                                          onPressed: () async {
+                                            Utils.hapticFeedback();
+                                            const url =
+                                                'https://home.openweathermap.org/api_keys';
+                                            if (await canLaunchUrlString(url)) {
+                                              await launchUrlString(url);
+                                            } else {
+                                              throw 'Could not launch $url';
+                                            }
+                                          }),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                const Icon(
+                                  Icons.close,
+                                  size: 50,
+                                  color: Colors.red,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 15.0),
+                                  child: Text(
+                                    "Error adding key!",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall,
+                                  ),
+                                ),
+                                TextButton(
+                                    style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                kprimaryColor),
-                                      ),
-                                      child: Text(
-                                        // If the weather state is add, then show 'Save' else show 'Update' text on the button
-                                        controller.weatherKeyState.value ==
-                                                WeatherKeyState.add
-                                            ? 'Save'
-                                            : 'Update',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .copyWith(
-                                                color: themeController
-                                                        .isLightMode.value
-                                                    ? kLightPrimaryTextColor
-                                                    : ksecondaryTextColor),
-                                      ),
-                                      onPressed: () async {
-                                        Utils.hapticFeedback();
-
-                                        // Get the user's location
-                                        await controller.getLocation();
-
-                                        // If the API key is valid
-                                        if (await controller.isApiKeyValid(
-                                            controller.apiKey.text)) {
-                                          // Add the key to the storage
-                                          await controller.addKey(
-                                              ApiKeys.openWeatherMap,
-                                              controller.apiKey.text);
-
-                                          // If it is added for the first time
-                                          if (controller
-                                                  .weatherKeyState.value ==
-                                              WeatherKeyState.add) {
-                                            controller.weatherKeyState.value =
-                                                WeatherKeyState.saveAdded;
-                                            controller
-                                                .addWeatherState('saveAdded');
-                                          } else {
-                                            // If it is updated
-                                            controller.weatherKeyState.value =
-                                                WeatherKeyState.saveUpdated;
-                                            controller
-                                                .addWeatherState('saveUpdated');
-                                          }
-                                        } else {
-                                          // If the API key is not valid
-                                          controller.didWeatherKeyError.value =
-                                              true;
-                                        }
-                                      }),
-                                  OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                          color: kprimaryColor,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        'Get Key',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .copyWith(
-                                              color: kprimaryColor,
-                                            ),
-                                      ),
-                                      onPressed: () async {
-                                        Utils.hapticFeedback();
-                                        const url =
-                                            'https://home.openweathermap.org/api_keys';
-                                        if (await canLaunchUrlString(url)) {
-                                          await launchUrlString(url);
-                                        } else {
-                                          throw 'Could not launch $url';
-                                        }
-                                      }),
-                                ],
-                              ),
+                                                kprimaryColor)),
+                                    child: Text(
+                                      'Retry',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
+                                              color: themeController
+                                                      .isLightMode.value
+                                                  ? kLightSecondaryTextColor
+                                                  : ksecondaryTextColor),
+                                    ),
+                                    onPressed: () {
+                                      Utils.hapticFeedback();
+                                      controller.didWeatherKeyError.value =
+                                          false;
+                                    }),
+                              ],
                             )
-                          ],
-                        )
                       : Column(
                           children: [
                             const Icon(
-                              Icons.close,
+                              Icons.done,
                               size: 50,
-                              color: Colors.red,
+                              color: Colors.green,
                             ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 15.0),
                               child: Text(
-                                "Error adding key!",
+                                // If the user clicked on the 'Save' button, then
+                                controller.weatherKeyState.value ==
+                                        WeatherKeyState.saveAdded
+                                    ? 'Your API Key is added!' // show this message
+                                    : 'Your API Key is updated!', // else this message
                                 style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
@@ -159,7 +210,7 @@ class WeatherApi extends StatelessWidget {
                                     backgroundColor: MaterialStateProperty.all(
                                         kprimaryColor)),
                                 child: Text(
-                                  'Retry',
+                                  'Okay',
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
@@ -171,53 +222,26 @@ class WeatherApi extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   Utils.hapticFeedback();
-                                  controller.didWeatherKeyError.value = false;
+
+                                  // Assign the weather state to update, and save it in the local storage
+                                  controller.weatherKeyState.value =
+                                      WeatherKeyState.update;
+                                  controller.addWeatherState('update');
+                                  Get.back();
                                 }),
                           ],
-                        )
-                  : Column(
-                      children: [
-                        const Icon(
-                          Icons.done,
-                          size: 50,
-                          color: Colors.green,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text(
-                            // If the user clicked on the 'Save' button, then
-                            controller.weatherKeyState.value ==
-                                    WeatherKeyState.saveAdded
-                                ? 'Your API Key is added!' // show this message
-                                : 'Your API Key is updated!', // else this message
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
-                        ),
-                        TextButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(kprimaryColor)),
-                            child: Text(
-                              'Okay',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightSecondaryTextColor
-                                          : ksecondaryTextColor),
-                            ),
-                            onPressed: () {
-                              Utils.hapticFeedback();
-
-                              // Assign the weather state to update, and save it in the local storage
-                              controller.weatherKeyState.value =
-                                  WeatherKeyState.update;
-                              controller.addWeatherState('update');
-                              Get.back();
-                            }),
-                      ],
+                ),
+                if (controller.showingCircularProgressIndicator.value)
+                  Center(
+                    child: CircularProgressIndicator.adaptive(
+                      backgroundColor: kprimaryColor.withOpacity(0.5),
+                      valueColor: const AlwaysStoppedAnimation(
+                        kprimaryColor,
+                      ),
                     ),
+                  ),
+              ],
             ),
           ),
         );
