@@ -76,7 +76,7 @@ ThemeData kThemeData = ThemeData(
       background: kprimaryBackgroundColor,
       onPrimaryContainer: ksecondaryBackgroundColor),
   inputDecorationTheme: InputDecorationTheme(
-      hintStyle: const TextStyle(color: kprimaryTextColor),
+      hintStyle: TextStyle(color: kprimaryTextColor.withOpacity(0.5)),
       labelStyle: const TextStyle(color: kprimaryTextColor),
       focusColor: kprimaryTextColor,
       enabledBorder: OutlineInputBorder(
@@ -143,7 +143,7 @@ ThemeData kLightThemeData = ThemeData(
       background: kLightPrimaryBackgroundColor,
       onPrimaryContainer: kLightSecondaryBackgroundColor),
   inputDecorationTheme: InputDecorationTheme(
-      hintStyle: const TextStyle(color: kLightPrimaryTextColor),
+      hintStyle: TextStyle(color: kLightPrimaryTextColor.withOpacity(0.5)),
       labelStyle: const TextStyle(color: kLightPrimaryTextColor),
       focusColor: kLightPrimaryTextColor,
       enabledBorder: OutlineInputBorder(

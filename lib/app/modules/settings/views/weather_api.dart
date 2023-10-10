@@ -43,8 +43,12 @@ class WeatherApi extends StatelessWidget {
                       ? Column(
                           children: [
                             TextField(
+                              autofocus: true,
                               obscureText: false,
                               controller: controller.apiKey,
+                              decoration: const InputDecoration(
+                                hintText: 'Enter API Key...',
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 20.0),
