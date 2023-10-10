@@ -383,7 +383,7 @@ class HomeView extends GetView<HomeController> {
                                       return const Center(
                                         child:
                                             CircularProgressIndicator.adaptive(
-                                          backgroundColor: kprimaryColor,
+                                          backgroundColor: Colors.transparent,
                                           valueColor: AlwaysStoppedAnimation(
                                             kprimaryColor,
                                           ),
@@ -452,7 +452,7 @@ class HomeView extends GetView<HomeController> {
                                                 child: Center(
                                                   child: Padding(
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 10.0),
                                                     child: Card(
                                                       color: themeController
@@ -561,8 +561,9 @@ class HomeView extends GetView<HomeController> {
                                                                               ),
                                                                         ),
                                                                         Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.symmetric(horizontal: 3.0),
+                                                                          padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                              horizontal: 3.0),
                                                                           child:
                                                                               Text(
                                                                             time12[1],
@@ -707,7 +708,7 @@ class HomeView extends GetView<HomeController> {
                                                               ),
                                                               Padding(
                                                                 padding: const EdgeInsets
-                                                                        .symmetric(
+                                                                    .symmetric(
                                                                     horizontal:
                                                                         10.0),
                                                                 child: Column(
