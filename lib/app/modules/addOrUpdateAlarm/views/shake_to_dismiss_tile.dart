@@ -28,7 +28,7 @@ class ShakeToDismiss extends StatelessWidget {
             style: TextStyle(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor
-                    : kprimaryTextColor),
+                    : kprimaryTextColor,),
           ),
           IconButton(
             icon: Icon(
@@ -62,14 +62,14 @@ class ShakeToDismiss extends StatelessWidget {
                                 size: height * 0.1,
                               ),
                             ),
-                            Text("Shake to dismiss",
+                            Text('Shake to dismiss',
                                 textAlign: TextAlign.center,
                                 style:
-                                    Theme.of(context).textTheme.displayMedium),
+                                    Theme.of(context).textTheme.displayMedium,),
                             Padding(
                               padding: const EdgeInsets.only(top: 15.0),
                               child: Text(
-                                "You will have to shake your phone a set number of times to dismiss the alarm - no more lazy snoozing :)",
+                                'You will have to shake your phone a set number of times to dismiss the alarm - no more lazy snoozing :)',
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
@@ -94,15 +94,15 @@ class ShakeToDismiss extends StatelessWidget {
                                           color:
                                               themeController.isLightMode.value
                                                   ? kLightPrimaryTextColor
-                                                  : ksecondaryTextColor),
+                                                  : ksecondaryTextColor,),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     );
-                  });
+                  },);
             },
           ),
         ],
@@ -152,7 +152,7 @@ class ShakeToDismiss extends StatelessWidget {
                               Get.back();
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: kprimaryColor
+                                backgroundColor: kprimaryColor,
                                 // Set the desired background color
                                 ),
                             child: Text(
@@ -163,7 +163,7 @@ class ShakeToDismiss extends StatelessWidget {
                                   .copyWith(
                                       color: themeController.isLightMode.value
                                           ? kLightPrimaryTextColor
-                                          : ksecondaryTextColor),
+                                          : ksecondaryTextColor,),
                             ),
                           ),
                         ],
@@ -171,7 +171,7 @@ class ShakeToDismiss extends StatelessWidget {
                     ),
                   ),
                 ],
-              )),
+              ),),
         );
       },
       trailing: InkWell(
@@ -201,7 +201,7 @@ class ShakeToDismiss extends StatelessWidget {
               color: themeController.isLightMode.value
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
-            )
+            ),
           ],
         ),
       ),

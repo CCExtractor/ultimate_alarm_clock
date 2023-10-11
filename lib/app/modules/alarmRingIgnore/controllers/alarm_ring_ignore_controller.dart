@@ -25,7 +25,7 @@ class AlarmControlIgnoreController extends GetxController
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-    print("CURRENT RINGING : ${latestAlarm.alarmTime}");
+    debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
   }
@@ -39,7 +39,7 @@ class AlarmControlIgnoreController extends GetxController
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-    print("LATEST : ${latestAlarm.alarmTime}");
+    debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
   }
@@ -57,7 +57,7 @@ class AlarmControlIgnoreController extends GetxController
         IsarDb.updateAlarm(currentlyRingingAlarm.value);
       } else {
         FirestoreDb.updateAlarm(
-            currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+            currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value,);
       }
     } else if (currentlyRingingAlarm.value.isOneTime == true) {
       // If the alarm has to repeat on one day, but ring just once, we will keep seting its days to false until it will never ring
@@ -73,7 +73,7 @@ class AlarmControlIgnoreController extends GetxController
         IsarDb.updateAlarm(currentlyRingingAlarm.value);
       } else {
         FirestoreDb.updateAlarm(
-            currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+            currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value,);
       }
     }
 
@@ -83,12 +83,12 @@ class AlarmControlIgnoreController extends GetxController
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
     if (latestAlarm.isEnabled == false) {
-      print(
-          "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} ");
+      debugPrint(
+          'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} ',);
       await stopForegroundTask();
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),);
       if (await FlutterForegroundTask.isRunningService == false) {
         createForegroundTask(intervaltoAlarm);
         await startForegroundTask(latestAlarm);
@@ -100,13 +100,5 @@ class AlarmControlIgnoreController extends GetxController
     FlutterAppMinimizer.minimize();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

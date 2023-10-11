@@ -60,7 +60,7 @@ class WeatherApi extends StatelessWidget {
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                kprimaryColor),
+                                                kprimaryColor,),
                                       ),
                                       child: Text(
                                         // If the weather state is add, then show 'Save' else show 'Update' text on the button
@@ -75,7 +75,7 @@ class WeatherApi extends StatelessWidget {
                                                 color: themeController
                                                         .isLightMode.value
                                                     ? kLightPrimaryTextColor
-                                                    : ksecondaryTextColor),
+                                                    : ksecondaryTextColor,),
                                       ),
                                       onPressed: () async {
                                         Utils.hapticFeedback();
@@ -85,11 +85,11 @@ class WeatherApi extends StatelessWidget {
 
                                         // If the API key is valid
                                         if (await controller.isApiKeyValid(
-                                            controller.apiKey.text)) {
+                                            controller.apiKey.text,)) {
                                           // Add the key to the storage
                                           await controller.addKey(
                                               ApiKeys.openWeatherMap,
-                                              controller.apiKey.text);
+                                              controller.apiKey.text,);
 
                                           // If it is added for the first time
                                           if (controller
@@ -111,7 +111,7 @@ class WeatherApi extends StatelessWidget {
                                           controller.didWeatherKeyError.value =
                                               true;
                                         }
-                                      }),
+                                      },),
                                   OutlinedButton(
                                       style: OutlinedButton.styleFrom(
                                         side: const BorderSide(
@@ -137,10 +137,10 @@ class WeatherApi extends StatelessWidget {
                                         } else {
                                           throw 'Could not launch $url';
                                         }
-                                      }),
+                                      },),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         )
                       : Column(
@@ -154,14 +154,14 @@ class WeatherApi extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 15.0),
                               child: Text(
-                                "Error adding key!",
+                                'Error adding key!',
                                 style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
                             TextButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor)),
+                                        kprimaryColor,),),
                                 child: Text(
                                   'Retry',
                                   style: Theme.of(context)
@@ -171,12 +171,12 @@ class WeatherApi extends StatelessWidget {
                                           color:
                                               themeController.isLightMode.value
                                                   ? kLightSecondaryTextColor
-                                                  : ksecondaryTextColor),
+                                                  : ksecondaryTextColor,),
                                 ),
                                 onPressed: () {
                                   Utils.hapticFeedback();
                                   controller.didWeatherKeyError.value = false;
-                                }),
+                                },),
                           ],
                         )
                   : Column(
@@ -200,7 +200,7 @@ class WeatherApi extends StatelessWidget {
                         TextButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all(kprimaryColor)),
+                                    MaterialStateProperty.all(kprimaryColor),),
                             child: Text(
                               'Okay',
                               style: Theme.of(context)
@@ -209,7 +209,7 @@ class WeatherApi extends StatelessWidget {
                                   .copyWith(
                                       color: themeController.isLightMode.value
                                           ? kLightSecondaryTextColor
-                                          : ksecondaryTextColor),
+                                          : ksecondaryTextColor,),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
@@ -219,7 +219,7 @@ class WeatherApi extends StatelessWidget {
                                   WeatherKeyState.update;
                               controller.addWeatherState('update');
                               Get.back();
-                            }),
+                            },),
                       ],
                     ),
             ),
@@ -230,12 +230,12 @@ class WeatherApi extends StatelessWidget {
         width: width * 0.91,
         height: height * 0.1,
         decoration: Utils.getCustomTileBoxDecoration(
-            isLightMode: themeController.isLightMode.value),
+            isLightMode: themeController.isLightMode.value,),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text('Open Weather Map API',
-                style: Theme.of(context).textTheme.bodyLarge),
+                style: Theme.of(context).textTheme.bodyLarge,),
             Icon(
               Icons.arrow_forward_ios_sharp,
               color: themeController.isLightMode.value

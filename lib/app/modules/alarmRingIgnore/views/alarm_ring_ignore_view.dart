@@ -21,19 +21,19 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
-            padding: EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(18.0),
             child: SizedBox(
               height: height * 0.06,
               width: width * 0.8,
               child: TextButton(
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor)),
+                    backgroundColor: MaterialStateProperty.all(kprimaryColor),),
                 child: Text(
                   'Dismiss',
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       color: themeController.isLightMode.value
                           ? kLightPrimaryTextColor
-                          : ksecondaryTextColor),
+                          : ksecondaryTextColor,),
                 ),
                 onPressed: () {
                   Utils.hapticFeedback();
@@ -58,7 +58,7 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
                         width: 0,
                       ),
                       Text(
-                        "${controller.timeNow[0]} ${controller.timeNow[1]}",
+                        '${controller.timeNow[0]} ${controller.timeNow[1]}',
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge!
@@ -73,21 +73,21 @@ class AlarmControlIgnoreView extends GetView<AlarmControlIgnoreController> {
                   child: TextButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor)),
+                            themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,),),
                     child: Text(
                       'Snooze',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
-                          fontWeight: FontWeight.w600),
+                          fontWeight: FontWeight.w600,),
                     ),
                     onPressed: () {
                       Utils.hapticFeedback();
                     },
                   ),
-                )
+                ),
               ],
             ),
-          )),
+          ),),
     );
   }
 }

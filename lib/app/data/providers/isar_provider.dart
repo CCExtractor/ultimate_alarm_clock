@@ -20,7 +20,7 @@ class IsarDb {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open([AlarmModelSchema],
-          directory: dir.path, inspector: true);
+          directory: dir.path, inspector: true,);
     }
     return Future.value(Isar.getInstance());
   }
@@ -57,7 +57,7 @@ class IsarDb {
   }
 
   static Future<AlarmModel> getLatestAlarm(
-      AlarmModel alarmRecord, bool wantNextAlarm) async {
+      AlarmModel alarmRecord, bool wantNextAlarm,) async {
     int nowInMinutes = 0;
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
@@ -66,10 +66,10 @@ class IsarDb {
 // Logically, alarms at current time will ring in the future ;-;
     if (wantNextAlarm == true) {
       nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1,),);
     } else {
       nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute));
+          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute,),);
     }
 
     // Get all enabled alarms
@@ -146,7 +146,7 @@ class IsarDb {
       final db = await isarProvider.db;
       yield* db.alarmModels.where().watch(fireImmediately: true);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       throw e;
     }
   }

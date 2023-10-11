@@ -63,7 +63,7 @@ class WeatherTile extends StatelessWidget {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.5)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.5)),
+                                                      .withOpacity(0.5),),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.sunny),
                                           activeColor:
@@ -78,7 +78,7 @@ class WeatherTile extends StatelessWidget {
                                               controller.selectedWeather
                                                   .add(WeatherTypes.sunny);
                                             }
-                                          }),
+                                          },),
                                       Text(
                                         'Sunny',
                                         style: Theme.of(context)
@@ -86,7 +86,7 @@ class WeatherTile extends StatelessWidget {
                                             .bodySmall!
                                             .copyWith(fontSize: 15),
                                       ),
-                                    ]),
+                                    ],),
                               ),
                             ),
                             InkWell(
@@ -116,7 +116,7 @@ class WeatherTile extends StatelessWidget {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.5)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.5)),
+                                                      .withOpacity(0.5),),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.cloudy),
                                           activeColor:
@@ -125,14 +125,14 @@ class WeatherTile extends StatelessWidget {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(
-                                                    WeatherTypes.cloudy)) {
+                                                    WeatherTypes.cloudy,)) {
                                               controller.selectedWeather
                                                   .remove(WeatherTypes.cloudy);
                                             } else {
                                               controller.selectedWeather
                                                   .add(WeatherTypes.cloudy);
                                             }
-                                          }),
+                                          },),
                                       Text(
                                         'Cloudy',
                                         style: Theme.of(context)
@@ -140,7 +140,7 @@ class WeatherTile extends StatelessWidget {
                                             .bodySmall!
                                             .copyWith(fontSize: 15),
                                       ),
-                                    ]),
+                                    ],),
                               ),
                             ),
                             InkWell(
@@ -170,7 +170,7 @@ class WeatherTile extends StatelessWidget {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.5)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.5)),
+                                                      .withOpacity(0.5),),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.rainy),
                                           activeColor:
@@ -185,7 +185,7 @@ class WeatherTile extends StatelessWidget {
                                               controller.selectedWeather
                                                   .add(WeatherTypes.rainy);
                                             }
-                                          }),
+                                          },),
                                       Text(
                                         'Rainy',
                                         style: Theme.of(context)
@@ -193,7 +193,7 @@ class WeatherTile extends StatelessWidget {
                                             .bodySmall!
                                             .copyWith(fontSize: 15),
                                       ),
-                                    ]),
+                                    ],),
                               ),
                             ),
                             InkWell(
@@ -223,7 +223,7 @@ class WeatherTile extends StatelessWidget {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.5)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.5)),
+                                                      .withOpacity(0.5),),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.windy),
                                           activeColor:
@@ -238,7 +238,7 @@ class WeatherTile extends StatelessWidget {
                                               controller.selectedWeather
                                                   .add(WeatherTypes.windy);
                                             }
-                                          }),
+                                          },),
                                       Text(
                                         'Windy',
                                         style: Theme.of(context)
@@ -246,7 +246,7 @@ class WeatherTile extends StatelessWidget {
                                             .bodySmall!
                                             .copyWith(fontSize: 15),
                                       ),
-                                    ]),
+                                    ],),
                               ),
                             ),
                             InkWell(
@@ -276,7 +276,7 @@ class WeatherTile extends StatelessWidget {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.5)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.5)),
+                                                      .withOpacity(0.5),),
                                           value: controller.selectedWeather
                                               .contains(WeatherTypes.stormy),
                                           activeColor:
@@ -285,14 +285,14 @@ class WeatherTile extends StatelessWidget {
                                             Utils.hapticFeedback();
                                             if (controller.selectedWeather
                                                 .contains(
-                                                    WeatherTypes.stormy)) {
+                                                    WeatherTypes.stormy,)) {
                                               controller.selectedWeather
                                                   .remove(WeatherTypes.stormy);
                                             } else {
                                               controller.selectedWeather
                                                   .add(WeatherTypes.stormy);
                                             }
-                                          }),
+                                          },),
                                       Text(
                                         'Stormy',
                                         style: Theme.of(context)
@@ -300,12 +300,12 @@ class WeatherTile extends StatelessWidget {
                                             .bodySmall!
                                             .copyWith(fontSize: 15),
                                       ),
-                                    ]),
+                                    ],),
                               ),
                             ),
                           ],
                         ),
-                      ));
+                      ),);
                 },
                 tileColor: themeController.isLightMode.value
                     ? kLightSecondaryBackgroundColor
@@ -317,7 +317,7 @@ class WeatherTile extends StatelessWidget {
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor
                                 : kprimaryTextColor,
-                            fontWeight: FontWeight.w500)),
+                            fontWeight: FontWeight.w500,),),
                     IconButton(
                       icon: Icon(
                         Icons.info_sharp,
@@ -348,16 +348,16 @@ class WeatherTile extends StatelessWidget {
                                             : kprimaryTextColor,
                                         size: height * 0.1,
                                       ),
-                                      Text("Weather based cancellation",
+                                      Text('Weather based cancellation',
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displayMedium),
+                                              .displayMedium,),
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(top: 15.0),
                                         child: Text(
-                                          "This feature will automatically cancel the alarm if the current weather matches your chosen weather conditions, allowing you to sleep better!",
+                                          'This feature will automatically cancel the alarm if the current weather matches your chosen weather conditions, allowing you to sleep better!',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium,
@@ -370,7 +370,7 @@ class WeatherTile extends StatelessWidget {
                                           style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                                    kprimaryColor),
+                                                    kprimaryColor,),
                                           ),
                                           onPressed: () {
                                             Utils.hapticFeedback();
@@ -385,15 +385,15 @@ class WeatherTile extends StatelessWidget {
                                                     color: themeController
                                                             .isLightMode.value
                                                         ? kLightPrimaryTextColor
-                                                        : ksecondaryTextColor),
+                                                        : ksecondaryTextColor,),
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
                               );
-                            });
+                            },);
                       },
                     ),
                   ],
@@ -414,21 +414,21 @@ class WeatherTile extends StatelessWidget {
                                         ? kprimaryDisabledTextColor
                                         : themeController.isLightMode.value
                                             ? kLightPrimaryTextColor
-                                            : kprimaryTextColor),
+                                            : kprimaryTextColor,),
                           ),
                         ),
                         const Icon(
                           Icons.chevron_right,
                           color: kprimaryDisabledTextColor,
-                        )
-                      ]),
+                        ),
+                      ],),
                 ),
               )
             : ListTile(
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.defaultDialog(
-                      contentPadding: EdgeInsets.all(10.0),
+                      contentPadding: const EdgeInsets.all(10.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: themeController.isLightMode.value
                           ? kLightSecondaryBackgroundColor
@@ -438,7 +438,7 @@ class WeatherTile extends StatelessWidget {
                       content: Column(
                         children: [
                           const Text(
-                              "To use this feature, you have to add an OpenWeatherMap API key!"),
+                              'To use this feature, you have to add an OpenWeatherMap API key!',),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Row(
@@ -448,7 +448,7 @@ class WeatherTile extends StatelessWidget {
                                   style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                              kprimaryColor)),
+                                              kprimaryColor,),),
                                   child: Text(
                                     'Go to settings',
                                     style: Theme.of(context)
@@ -458,7 +458,7 @@ class WeatherTile extends StatelessWidget {
                                             color: themeController
                                                     .isLightMode.value
                                                 ? kLightPrimaryTextColor
-                                                : ksecondaryTextColor),
+                                                : ksecondaryTextColor,),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
@@ -475,7 +475,7 @@ class WeatherTile extends StatelessWidget {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.5)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.5))),
+                                                      .withOpacity(0.5),),),
                                   child: Text(
                                     'Cancel',
                                     style: Theme.of(context)
@@ -485,7 +485,7 @@ class WeatherTile extends StatelessWidget {
                                             color: themeController
                                                     .isLightMode.value
                                                 ? kLightPrimaryTextColor
-                                                : kprimaryTextColor),
+                                                : kprimaryTextColor,),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
@@ -494,9 +494,9 @@ class WeatherTile extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
-                      ));
+                      ),);
                 },
                 tileColor: themeController.isLightMode.value
                     ? kLightSecondaryBackgroundColor
@@ -508,7 +508,7 @@ class WeatherTile extends StatelessWidget {
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor
                                 : kprimaryTextColor,
-                            fontWeight: FontWeight.w500)),
+                            fontWeight: FontWeight.w500,),),
                     IconButton(
                       icon: Icon(
                         Icons.info_sharp,
@@ -539,16 +539,16 @@ class WeatherTile extends StatelessWidget {
                                             : kprimaryTextColor,
                                         size: height * 0.1,
                                       ),
-                                      Text("Weather based cancellation",
+                                      Text('Weather based cancellation',
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displayMedium),
+                                              .displayMedium,),
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(top: 15.0),
                                         child: Text(
-                                          "This feature will automatically cancel the alarm if the current weather matches your chosen weather conditions, allowing you to sleep better!",
+                                          'This feature will automatically cancel the alarm if the current weather matches your chosen weather conditions, allowing you to sleep better!',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium,
@@ -561,7 +561,7 @@ class WeatherTile extends StatelessWidget {
                                           style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                                    kprimaryColor),
+                                                    kprimaryColor,),
                                           ),
                                           onPressed: () {
                                             Utils.hapticFeedback();
@@ -576,15 +576,15 @@ class WeatherTile extends StatelessWidget {
                                                     color: themeController
                                                             .isLightMode.value
                                                         ? kLightSecondaryTextColor
-                                                        : ksecondaryTextColor),
+                                                        : ksecondaryTextColor,),
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
                               );
-                            });
+                            },);
                       },
                     ),
                   ],
@@ -598,9 +598,9 @@ class WeatherTile extends StatelessWidget {
                           color: themeController.isLightMode.value
                               ? kLightPrimaryTextColor.withOpacity(0.7)
                               : kprimaryTextColor.withOpacity(0.7),
-                        )
-                      ]),
-                )),
+                        ),
+                      ],),
+                ),),
       ),
     );
   }

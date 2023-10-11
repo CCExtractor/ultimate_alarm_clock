@@ -53,14 +53,14 @@ class MathsChallenge extends StatelessWidget {
                                   : kprimaryTextColor,
                               size: height * 0.1,
                             ),
-                            Text("Math problems",
+                            Text('Math problems',
                                 textAlign: TextAlign.center,
                                 style:
-                                    Theme.of(context).textTheme.displayMedium),
+                                    Theme.of(context).textTheme.displayMedium,),
                             Padding(
                               padding: const EdgeInsets.only(top: 15.0),
                               child: Text(
-                                "You will have to solve simple math problems of the chosen difficulty level to dismiss the alarm.",
+                                'You will have to solve simple math problems of the chosen difficulty level to dismiss the alarm.',
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
@@ -85,15 +85,15 @@ class MathsChallenge extends StatelessWidget {
                                           color:
                                               themeController.isLightMode.value
                                                   ? kLightPrimaryTextColor
-                                                  : ksecondaryTextColor),
+                                                  : ksecondaryTextColor,),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     );
-                  });
+                  },);
             },
           ),
         ],
@@ -117,7 +117,7 @@ class MathsChallenge extends StatelessWidget {
                 ),
                 Text(
                   Utils.generateMathProblem(
-                      controller.mathsDifficulty.value)[0],
+                      controller.mathsDifficulty.value,)[0],
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor.withOpacity(0.78)
@@ -153,10 +153,10 @@ class MathsChallenge extends StatelessWidget {
                           onChanged: (value) {
                             Utils.hapticFeedback();
                             controller.numMathsQuestions.value = value;
-                          }),
+                          },),
                       Text(controller.numMathsQuestions.value > 1
                           ? 'questions'
-                          : 'question'),
+                          : 'question',),
                     ],
                   ),
                 ),

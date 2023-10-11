@@ -10,15 +10,15 @@ class UserModel {
       required this.firstName,
       required this.lastName,
       required this.email,
-      required this.id});
+      required this.id,});
 
   Map<String, dynamic> toJson() {
     return {
-      "fullName": fullName,
-      "firstName": firstName,
-      "lastName": lastName,
-      "email": email,
-      "id": id,
+      'fullName': fullName,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'id': id,
     };
   }
 

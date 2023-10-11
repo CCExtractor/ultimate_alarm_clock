@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
@@ -51,7 +49,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       child: TextButton(
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor)),
+                                MaterialStateProperty.all(kprimaryColor),),
                         child: Text(
                           (controller.alarmRecord == null) ? 'Save' : 'Update',
                           style: Theme.of(context)
@@ -60,7 +58,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor),
+                                      : ksecondaryTextColor,),
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
@@ -72,7 +70,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       Utils.calculateOffsetAlarmTime(
                                           controller.selectedTime.value,
                                           controller.isOffsetBefore.value,
-                                          controller.offsetDuration.value))),
+                                          controller.offsetDuration.value,),),),
                               'offsetDuration': controller.offsetDuration.value,
                               'isOffsetBefore': controller.isOffsetBefore.value,
                             };
@@ -94,23 +92,23 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               days: controller.repeatDays.toList(),
                               alarmTime: Utils.timeOfDayToString(
                                   TimeOfDay.fromDateTime(
-                                      controller.selectedTime.value)),
+                                      controller.selectedTime.value,),),
                               mainAlarmTime: Utils.timeOfDayToString(
                                   TimeOfDay.fromDateTime(
-                                      controller.selectedTime.value)),
+                                      controller.selectedTime.value,),),
                               intervalToAlarm: Utils.getMillisecondsToAlarm(
                                   DateTime.now(),
-                                  controller.selectedTime.value),
+                                  controller.selectedTime.value,),
                               isActivityEnabled:
                                   controller.isActivityenabled.value,
                               minutesSinceMidnight: Utils.timeOfDayToInt(
-                                  TimeOfDay.fromDateTime(controller.selectedTime.value)),
+                                  TimeOfDay.fromDateTime(controller.selectedTime.value),),
                               isLocationEnabled: controller.isLocationEnabled.value,
                               weatherTypes: Utils.getIntFromWeatherTypes(controller.selectedWeather.toList()),
                               isWeatherEnabled: controller.isWeatherEnabled.value,
                               location: Utils.geoPointToString(
                                 Utils.latLngToGeoPoint(
-                                    controller.selectedPoint.value),
+                                    controller.selectedPoint.value,),
                               ),
                               isSharedAlarmEnabled: controller.isSharedAlarmEnabled.value,
                               isQrEnabled: controller.isQrEnabled.value,
@@ -119,7 +117,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               numMathsQuestions: controller.numMathsQuestions.value,
                               mathsDifficulty: controller.mathsDifficulty.value.index,
                               isShakeEnabled: controller.isShakeEnabled.value,
-                              shakeTimes: controller.shakeTimes.value);
+                              shakeTimes: controller.shakeTimes.value,);
 
                           // Adding offset details to the database if its a shared alarm
                           if (controller.isSharedAlarmEnabled.value) {
@@ -127,7 +125,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 controller.offsetDetails;
                             alarmRecord.mainAlarmTime = Utils.timeOfDayToString(
                                 TimeOfDay.fromDateTime(
-                                    controller.selectedTime.value));
+                                    controller.selectedTime.value,),);
                           }
 
                           try {
@@ -139,7 +137,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               await controller.updateAlarm(updatedAlarmModel);
                             }
                           } catch (e) {
-                            print(e);
+                            debugPrint(e.toString());
                           }
 
                           await controller.checkOverlayPermissionAndNavigate();
@@ -164,7 +162,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   ? const Text('')
                   : Obx(
                       () => Text(
-                        "Rings in ${controller.timeToAlarm.value}",
+                        'Rings in ${controller.timeToAlarm.value}',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
@@ -185,7 +183,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor),
+                                      : kprimaryDisabledTextColor,),
                         ),
                       ),
                       SvgPicture.asset(
@@ -203,13 +201,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor),
+                                      : kprimaryDisabledTextColor,),
                         ),
                       ),
                       TextButton(
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor)),
+                                MaterialStateProperty.all(kprimaryColor),),
                         child: Text(
                           'Go back',
                           style: Theme.of(context)
@@ -218,15 +216,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightSecondaryTextColor
-                                      : ksecondaryTextColor),
+                                      : ksecondaryTextColor,),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
                           Get.back();
                         },
-                      )
+                      ),
                     ],
-                  ))
+                  ),)
                 : ListView(
                     children: [
                       Container(
@@ -247,7 +245,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   fontWeight: FontWeight.normal,
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor),
+                                      : kprimaryDisabledTextColor,),
                           highlightedTextStyle:
                               Theme.of(context).textTheme.displayMedium,
                           onTimeChange: (dateTime) {
@@ -267,7 +265,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         child: Divider(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor),
+                                : kprimaryDisabledTextColor,),
                       ),
                       RepeatOnceTile(
                         controller: controller,
@@ -280,7 +278,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         child: Divider(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor),
+                                : kprimaryDisabledTextColor,),
                       ),
                       SnoozeDurationTile(
                         controller: controller,
@@ -293,7 +291,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         child: Divider(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor),
+                                : kprimaryDisabledTextColor,),
                       ),
                       LabelTile(
                         controller: controller,
@@ -327,7 +325,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   ? kLightPrimaryTextColor
                                                       .withOpacity(0.85)
                                                   : kprimaryTextColor
-                                                      .withOpacity(0.85))),
+                                                      .withOpacity(0.85),),),
                                 ),
                               ),
                               ScreenActivityTile(
@@ -337,7 +335,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               Divider(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor),
+                                      : kprimaryDisabledTextColor,),
                               WeatherTile(
                                 controller: controller,
                                 themeController: themeController,
@@ -345,14 +343,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               Divider(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor),
+                                      : kprimaryDisabledTextColor,),
                               LocationTile(
                                 controller: controller,
                                 height: height,
                                 width: width,
                                 themeController: themeController,
                               ),
-                            ]),
+                            ],),
                       ),
                       Container(
                         color: themeController.isLightMode.value
@@ -373,7 +371,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 padding: const EdgeInsets.only(top: 10.0),
                                 child: Text('Challenges',
                                     style: Theme.of(
-                                            context)
+                                            context,)
                                         .textTheme
                                         .titleMedium!
                                         .copyWith(
@@ -383,7 +381,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 ? kLightPrimaryTextColor
                                                     .withOpacity(0.85)
                                                 : kprimaryTextColor
-                                                    .withOpacity(0.85))),
+                                                    .withOpacity(0.85),),),
                               ),
                             ),
                             ShakeToDismiss(
@@ -393,7 +391,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
-                                    : kprimaryDisabledTextColor),
+                                    : kprimaryDisabledTextColor,),
                             QrBarCode(
                               controller: controller,
                               themeController: themeController,
@@ -401,7 +399,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
-                                    : kprimaryDisabledTextColor),
+                                    : kprimaryDisabledTextColor,),
                             MathsChallenge(
                               controller: controller,
                               themeController: themeController,
@@ -428,7 +426,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 padding: const EdgeInsets.only(top: 10.0),
                                 child: Text('Shared Alarm',
                                     style: Theme.of(
-                                            context)
+                                            context,)
                                         .textTheme
                                         .titleMedium!
                                         .copyWith(
@@ -438,7 +436,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 ? kLightPrimaryTextColor
                                                     .withOpacity(0.85)
                                                 : kprimaryTextColor
-                                                    .withOpacity(0.85))),
+                                                    .withOpacity(0.85),),),
                               ),
                             ),
                             SharedAlarm(
@@ -448,7 +446,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
-                                    : kprimaryDisabledTextColor),
+                                    : kprimaryDisabledTextColor,),
                             AlarmIDTile(
                               controller: controller,
                               width: width,
@@ -460,7 +458,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     ? Divider(
                                         color: themeController.isLightMode.value
                                             ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor)
+                                            : kprimaryDisabledTextColor,)
                                     : const SizedBox(),
                               ),
                             ),
@@ -475,7 +473,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     ? Divider(
                                         color: themeController.isLightMode.value
                                             ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor)
+                                            : kprimaryDisabledTextColor,)
                                     : const SizedBox(),
                               ),
                             ),
@@ -488,9 +486,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                       SizedBox(
                         height: height * 0.15,
-                      )
+                      ),
                     ],
-                  )),
+                  ),),
       ),
       onWillPop: () async {
         Get.defaultDialog(

@@ -45,7 +45,7 @@ class HomeView extends GetView<HomeController> {
                             Utils.hapticFeedback();
                             controller.floatingButtonKey.currentState!.toggle();
                             Get.defaultDialog(
-                              title: "Join an alarm",
+                              title: 'Join an alarm',
                               titlePadding:
                                   const EdgeInsets.fromLTRB(0, 21, 0, 0),
                               backgroundColor: themeController.isLightMode.value
@@ -75,9 +75,9 @@ class HomeView extends GetView<HomeController> {
                                                         .withOpacity(0.75)
                                                     : kprimaryTextColor
                                                         .withOpacity(0.75),
-                                            width: 1),
+                                            width: 1,),
                                         borderRadius: const BorderRadius.all(
-                                            Radius.circular(12))),
+                                            Radius.circular(12),),),
                                     border: OutlineInputBorder(
                                         borderSide: BorderSide(
                                             color: themeController.isLightMode.value
@@ -85,9 +85,9 @@ class HomeView extends GetView<HomeController> {
                                                     .withOpacity(0.75)
                                                 : kprimaryTextColor
                                                     .withOpacity(0.75),
-                                            width: 1),
+                                            width: 1,),
                                         borderRadius: const BorderRadius.all(
-                                            Radius.circular(12))),
+                                            Radius.circular(12),),),
                                     focusedBorder:
                                         OutlineInputBorder(borderSide: BorderSide(color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.75) : kprimaryTextColor.withOpacity(0.75), width: 1), borderRadius: const BorderRadius.all(Radius.circular(12))),
                                     hintText: 'Enter Alarm ID',
@@ -96,7 +96,7 @@ class HomeView extends GetView<HomeController> {
                                                   .isLightMode.value
                                               ? kLightPrimaryDisabledTextColor
                                               : kprimaryDisabledTextColor,
-                                        )),
+                                        ),),
                               ),
                               buttonColor: themeController.isLightMode.value
                                   ? kLightSecondaryBackgroundColor
@@ -104,7 +104,7 @@ class HomeView extends GetView<HomeController> {
                               confirm: TextButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor)),
+                                        kprimaryColor,),),
                                 child: Text(
                                   'Join',
                                   style: Theme.of(context)
@@ -121,13 +121,13 @@ class HomeView extends GetView<HomeController> {
                                   var result = await FirestoreDb
                                       .addUserToAlarmSharedUsers(
                                           controller.userModel.value,
-                                          controller.alarmIdController.text);
+                                          controller.alarmIdController.text,);
 
                                   if (result != true) {
                                     Get.defaultDialog(
                                         titlePadding:
                                             const EdgeInsets.symmetric(
-                                                vertical: 20),
+                                                vertical: 20,),
                                         backgroundColor:
                                             themeController.isLightMode.value
                                                 ? kLightSecondaryBackgroundColor
@@ -148,10 +148,10 @@ class HomeView extends GetView<HomeController> {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      vertical: 10.0),
+                                                      vertical: 10.0,),
                                               child: Text(
                                                 result == null
-                                                    ? "You cannot join your own alarm!"
+                                                    ? 'You cannot join your own alarm!'
                                                     : "An alarm with this ID doesn't exist!",
                                                 style: Theme.of(context)
                                                     .textTheme
@@ -164,7 +164,7 @@ class HomeView extends GetView<HomeController> {
                                                     backgroundColor:
                                                         MaterialStateProperty
                                                             .all(
-                                                                kprimaryColor)),
+                                                                kprimaryColor,),),
                                                 child: Text(
                                                   'Okay',
                                                   style: Theme.of(context)
@@ -181,9 +181,9 @@ class HomeView extends GetView<HomeController> {
                                                 onPressed: () {
                                                   Utils.hapticFeedback();
                                                   Get.back();
-                                                }),
+                                                },),
                                           ],
-                                        ));
+                                        ),);
                                   } else {
                                     Get.back();
                                   }
@@ -262,7 +262,7 @@ class HomeView extends GetView<HomeController> {
                         Utils.hapticFeedback();
                         Get.toNamed('/add-update-alarm');
                       },
-                    )),
+                    ),),
         ),
       ),
       body: SafeArea(
@@ -293,7 +293,7 @@ class HomeView extends GetView<HomeController> {
                                       Container(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 25 *
-                                                controller.scalingFactor.value),
+                                                controller.scalingFactor.value,),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -325,15 +325,15 @@ class HomeView extends GetView<HomeController> {
                                                                 .value
                                                             ? kLightPrimaryTextColor
                                                                 .withOpacity(
-                                                                    0.75)
+                                                                    0.75,)
                                                             : kprimaryTextColor
                                                                 .withOpacity(
-                                                                    0.75),
+                                                                    0.75,),
                                                         fontSize: 14 *
                                                             controller
                                                                 .scalingFactor
                                                                 .value,
-                                                      )),
+                                                      ),),
                                             ),
                                           ],
                                         ),
@@ -368,7 +368,7 @@ class HomeView extends GetView<HomeController> {
                             );
                           },
                         ),
-                      )
+                      ),
                     ]
                 : (context, innerBoxIsScrolled) => [
                       // Else show the multiple select mode app bar
@@ -419,7 +419,7 @@ class HomeView extends GetView<HomeController> {
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 25 *
                                                     controller
-                                                        .scalingFactor.value),
+                                                        .scalingFactor.value,),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -463,10 +463,10 @@ class HomeView extends GetView<HomeController> {
                                                                   .value
                                                               ? kLightPrimaryTextColor
                                                                   .withOpacity(
-                                                                      0.75)
+                                                                      0.75,)
                                                               : kprimaryTextColor
                                                                   .withOpacity(
-                                                                      0.75),
+                                                                      0.75,),
                                                           fontSize: 14 *
                                                               controller
                                                                   .scalingFactor
@@ -527,7 +527,7 @@ class HomeView extends GetView<HomeController> {
                             );
                           },
                         ),
-                      )
+                      ),
                     ],
             body: Column(
               mainAxisSize: MainAxisSize.min,
@@ -568,7 +568,7 @@ class HomeView extends GetView<HomeController> {
                                           snapshot.data;
 
                                       controller.refreshUpcomingAlarms();
-                                      if (alarms!.isEmpty) {
+                                      if (alarms.isEmpty) {
                                         return Center(
                                           child: Column(
                                             mainAxisAlignment:
@@ -598,20 +598,20 @@ class HomeView extends GetView<HomeController> {
                                       return ListView.separated(
                                           separatorBuilder: (context, _) {
                                             return SizedBox(
-                                                height: height * 0.02);
+                                                height: height * 0.02,);
                                           },
                                           itemCount: alarms.length + 1,
                                           itemBuilder: (context, index) {
                                             // Spacing after last card
                                             if (index == alarms.length) {
                                               return SizedBox(
-                                                  height: height * 0.1);
+                                                  height: height * 0.1,);
                                             }
                                             final AlarmModel alarm =
                                                 alarms[index];
                                             final time12 =
                                                 Utils.convertTo12HourFormat(
-                                                    alarm.alarmTime);
+                                                    alarm.alarmTime,);
                                             final repeatDays =
                                                 Utils.getRepeatDays(alarm.days);
                                             // Main card
@@ -626,7 +626,7 @@ class HomeView extends GetView<HomeController> {
                                                       .value) {
                                                     Get.toNamed(
                                                         '/add-update-alarm',
-                                                        arguments: alarm);
+                                                        arguments: alarm,);
                                                   }
                                                 },
                                                 onLongPress: () {
@@ -642,7 +642,7 @@ class HomeView extends GetView<HomeController> {
                                                       Pair(
                                                     alarms,
                                                     List.generate(alarms.length,
-                                                        (index) => false.obs),
+                                                        (index) => false.obs,),
                                                   );
 
                                                   Utils.hapticFeedback();
@@ -666,7 +666,7 @@ class HomeView extends GetView<HomeController> {
                                                     child: Padding(
                                                       padding: const EdgeInsets
                                                           .symmetric(
-                                                          horizontal: 10.0),
+                                                          horizontal: 10.0,),
                                                       child: Card(
                                                         color: themeController
                                                                 .isLightMode
@@ -693,30 +693,30 @@ class HomeView extends GetView<HomeController> {
                                                                       .inMultipleSelectMode
                                                                       .value
                                                                   ? Utils.isChallengeEnabled(
-                                                                              alarm) ||
+                                                                              alarm,) ||
                                                                           Utils.isAutoDismissalEnabled(
-                                                                              alarm)
+                                                                              alarm,)
                                                                       ? 15.0
                                                                       : 18.0
                                                                   : Utils.isChallengeEnabled(
-                                                                              alarm) ||
+                                                                              alarm,) ||
                                                                           Utils.isAutoDismissalEnabled(
-                                                                              alarm)
+                                                                              alarm,)
                                                                       ? 8.0
                                                                       : 0.0,
                                                               bottom: controller
                                                                       .inMultipleSelectMode
                                                                       .value
                                                                   ? Utils.isChallengeEnabled(
-                                                                              alarm) ||
+                                                                              alarm,) ||
                                                                           Utils.isAutoDismissalEnabled(
-                                                                              alarm)
+                                                                              alarm,)
                                                                       ? 15.0
                                                                       : 18.0
                                                                   : Utils.isChallengeEnabled(
-                                                                              alarm) ||
+                                                                              alarm,) ||
                                                                           Utils.isAutoDismissalEnabled(
-                                                                              alarm)
+                                                                              alarm,)
                                                                       ? 8.0
                                                                       : 0.0,
                                                             ),
@@ -739,7 +739,7 @@ class HomeView extends GetView<HomeController> {
                                                                         child: Row(
                                                                             children: [
                                                                               Text(
-                                                                                repeatDays.replaceAll("Never", "One Time"),
+                                                                                repeatDays.replaceAll('Never', 'One Time'),
                                                                                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                                                                       fontWeight: FontWeight.w500,
                                                                                       color: alarm.isEnabled == true
@@ -749,7 +749,7 @@ class HomeView extends GetView<HomeController> {
                                                                                               : kprimaryDisabledTextColor,
                                                                                     ),
                                                                               ),
-                                                                              if (alarm.label!.isNotEmpty)
+                                                                              if (alarm.label.isNotEmpty)
                                                                                 VerticalDivider(
                                                                                   color: alarm.isEnabled == true
                                                                                       ? kprimaryColor
@@ -776,8 +776,8 @@ class HomeView extends GetView<HomeController> {
                                                                                         ),
                                                                                   ),
                                                                                 ),
-                                                                              )
-                                                                            ]),
+                                                                              ),
+                                                                            ],),
                                                                       ),
                                                                       Row(
                                                                         children: [
@@ -814,7 +814,7 @@ class HomeView extends GetView<HomeController> {
                                                                       ),
                                                                       if (Utils.isChallengeEnabled(alarm) ||
                                                                           Utils.isAutoDismissalEnabled(
-                                                                              alarm) ||
+                                                                              alarm,) ||
                                                                           alarm
                                                                               .isSharedAlarmEnabled)
                                                                         Row(
@@ -935,7 +935,7 @@ class HomeView extends GetView<HomeController> {
                                                                   padding: const EdgeInsets
                                                                       .symmetric(
                                                                       horizontal:
-                                                                          10.0),
+                                                                          10.0,),
                                                                   child: controller
                                                                           .inMultipleSelectMode
                                                                           .value
@@ -984,7 +984,7 @@ class HomeView extends GetView<HomeController> {
                                                                                     Get.back();
                                                                                     Get.offNamed('/alarm-ring', arguments: alarm);
                                                                                   } else if (value == 1) {
-                                                                                    print(alarm.isSharedAlarmEnabled);
+                                                                                    debugPrint(alarm.isSharedAlarmEnabled.toString());
 
                                                                                     if (alarm.isSharedAlarmEnabled == true) {
                                                                                       await FirestoreDb.deleteAlarm(controller.userModel.value, alarm.firestoreId!);
@@ -1012,7 +1012,7 @@ class HomeView extends GetView<HomeController> {
                                                                                     PopupMenuItem<int>(
                                                                                       value: 0,
                                                                                       child: Text(
-                                                                                        "Preview Alarm",
+                                                                                        'Preview Alarm',
                                                                                         style: Theme.of(context).textTheme.bodyMedium,
                                                                                       ),
                                                                                     ),
@@ -1020,7 +1020,7 @@ class HomeView extends GetView<HomeController> {
                                                                                       PopupMenuItem<int>(
                                                                                         value: 1,
                                                                                         child: Text(
-                                                                                          "Delete Alarm",
+                                                                                          'Delete Alarm',
                                                                                           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                                                                                 color: Colors.red,
                                                                                               ),
@@ -1043,13 +1043,13 @@ class HomeView extends GetView<HomeController> {
                                                 ),
                                               ),
                                             );
-                                          });
+                                          },);
                                     }
-                                  });
+                                  },);
                             } else {
                               return const CircularProgressIndicator.adaptive();
                             }
-                          });
+                          },);
                     }),
                   ),
                 ),

@@ -72,7 +72,7 @@ class ScreenActivityTile extends StatelessWidget {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  kprimaryColor // Set the desired background color
+                                  kprimaryColor, // Set the desired background color
                               ),
                           child: Text(
                             'Done',
@@ -82,7 +82,7 @@ class ScreenActivityTile extends StatelessWidget {
                                 .copyWith(
                                     color: themeController.isLightMode.value
                                         ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor),
+                                        : ksecondaryTextColor,),
                           ),
                         ),
                       ],
@@ -102,7 +102,7 @@ class ScreenActivityTile extends StatelessWidget {
               style: TextStyle(
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor
-                      : kprimaryTextColor),
+                      : kprimaryTextColor,),
             ),
             IconButton(
               icon: Icon(
@@ -133,11 +133,11 @@ class ScreenActivityTile extends StatelessWidget {
                                     : kprimaryTextColor,
                                 size: height * 0.1,
                               ),
-                              Text("Screen activity based cancellation",
+                              Text('Screen activity based cancellation',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .displayMedium),
+                                      .displayMedium,),
                               Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Text(
@@ -151,7 +151,7 @@ class ScreenActivityTile extends StatelessWidget {
                                 child: TextButton(
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor),
+                                        kprimaryColor,),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
@@ -166,15 +166,15 @@ class ScreenActivityTile extends StatelessWidget {
                                             color: themeController
                                                     .isLightMode.value
                                                 ? kLightPrimaryTextColor
-                                                : ksecondaryTextColor),
+                                                : ksecondaryTextColor,),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
                       );
-                    });
+                    },);
               },
             ),
           ],

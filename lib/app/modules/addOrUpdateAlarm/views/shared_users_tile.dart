@@ -30,22 +30,22 @@ class SharedUsers extends StatelessWidget {
                         style: TextStyle(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor
-                                : kprimaryTextColor),
+                                : kprimaryTextColor,),
                       ),
                       trailing: Text(
                         controller.alarmRecord!.ownerName,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor),
-                      ))
+                                : kprimaryDisabledTextColor,),
+                      ),)
                   : ListTile(
                       title: Text(
                         'Shared Users',
                         style: TextStyle(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor
-                                : kprimaryTextColor),
+                                : kprimaryTextColor,),
                       ),
                       trailing: InkWell(
                         onTap: () {
@@ -61,7 +61,7 @@ class SharedUsers extends StatelessWidget {
                               return Obx(() {
                                 if (controller.sharedUserIds.isEmpty) {
                                   return const Center(
-                                      child: Text("No shared users!"));
+                                      child: Text('No shared users!'),);
                                 }
 
                                 return FutureBuilder<List<UserModel?>>(
@@ -69,7 +69,7 @@ class SharedUsers extends StatelessWidget {
                                       .fetchUserDetailsForSharedUsers(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<List<UserModel?>>
-                                          snapshot) {
+                                          snapshot,) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return const Center(
@@ -110,22 +110,22 @@ class SharedUsers extends StatelessWidget {
                                                                 .isLightMode
                                                                 .value
                                                             ? kLightPrimaryTextColor
-                                                            : kprimaryTextColor),
+                                                            : kprimaryTextColor,),
                                                   ),
                                                   trailing: TextButton(
                                                     style: ButtonStyle(
                                                       padding:
                                                           MaterialStateProperty
                                                               .all(EdgeInsets
-                                                                  .zero),
+                                                                  .zero,),
                                                       minimumSize:
                                                           MaterialStateProperty
                                                               .all(const Size(
-                                                                  80, 30)),
+                                                                  80, 30,),),
                                                       maximumSize:
                                                           MaterialStateProperty
                                                               .all(const Size(
-                                                                  80, 30)),
+                                                                  80, 30,),),
                                                       backgroundColor:
                                                           MaterialStateProperty
                                                               .all(Colors.red),
@@ -141,10 +141,10 @@ class SharedUsers extends StatelessWidget {
                                                                     .value
                                                                 ? kLightPrimaryTextColor
                                                                     .withOpacity(
-                                                                        0.9)
+                                                                        0.9,)
                                                                 : kprimaryTextColor
                                                                     .withOpacity(
-                                                                        0.9),
+                                                                        0.9,),
                                                           ),
                                                     ),
                                                     onPressed: () async {
@@ -153,7 +153,7 @@ class SharedUsers extends StatelessWidget {
                                                           .removeUserFromAlarmSharedUsers(
                                                               user,
                                                               controller
-                                                                  .alarmID);
+                                                                  .alarmID,);
                                                       // Update sharedUserIds value after removing the user
                                                       controller.sharedUserIds
                                                           .remove(user.id);
@@ -186,10 +186,10 @@ class SharedUsers extends StatelessWidget {
                         child: Icon(Icons.chevron_right,
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor.withOpacity(0.7)
-                                : kprimaryTextColor.withOpacity(0.7)),
+                                : kprimaryTextColor.withOpacity(0.7),),
                       ),
                     )
-              : const SizedBox()),
+              : const SizedBox(),),
     );
   }
 }

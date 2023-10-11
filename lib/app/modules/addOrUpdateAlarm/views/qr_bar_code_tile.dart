@@ -52,14 +52,14 @@ class QrBarCode extends StatelessWidget {
                                   : kprimaryTextColor,
                               size: height * 0.1,
                             ),
-                            Text("QR / Bar code",
+                            Text('QR / Bar code',
                                 textAlign: TextAlign.center,
                                 style:
-                                    Theme.of(context).textTheme.displayMedium),
+                                    Theme.of(context).textTheme.displayMedium,),
                             Padding(
                               padding: const EdgeInsets.only(top: 15.0),
                               child: Text(
-                                "Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.",
+                                'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
@@ -84,15 +84,15 @@ class QrBarCode extends StatelessWidget {
                                           color:
                                               themeController.isLightMode.value
                                                   ? kLightPrimaryTextColor
-                                                  : ksecondaryTextColor),
+                                                  : ksecondaryTextColor,),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     );
-                  });
+                  },);
             },
           ),
         ],
@@ -124,7 +124,7 @@ class QrBarCode extends StatelessWidget {
               color: themeController.isLightMode.value
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
-            )
+            ),
           ],
         ),
       ),

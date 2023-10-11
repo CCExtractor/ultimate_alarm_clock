@@ -26,7 +26,7 @@ class AlarmHandlerModel extends TaskHandler {
   bool isScreenActive = true;
 
   Future<bool> checkWeatherCondition(
-      LatLng location, List<int> weatherTypeInt) async {
+      LatLng location, List<int> weatherTypeInt,) async {
     List<WeatherTypes> weatherTypes =
         Utils.getWeatherTypesFromInt(weatherTypeInt);
     String? apiKey =
@@ -34,7 +34,7 @@ class AlarmHandlerModel extends TaskHandler {
     WeatherFactory weatherFactory = WeatherFactory(apiKey!);
     try {
       Weather weatherData = await weatherFactory.currentWeatherByLocation(
-          location.latitude, location.longitude);
+          location.latitude, location.longitude,);
       for (var weatherType in weatherTypes) {
         bool isConditionMet = false;
         switch (weatherType) {
@@ -69,7 +69,7 @@ class AlarmHandlerModel extends TaskHandler {
         }
       }
     } catch (e) {
-      print('An error occurred while fetching the weather: $e');
+      debugPrint('An error occurred while fetching the weather: $e');
     }
 
     return false;
@@ -86,7 +86,7 @@ class AlarmHandlerModel extends TaskHandler {
     _uiReceivePort.listen((message) async {
       if (message is Map<String, dynamic>) {
         alarmRecord = AlarmModel.fromMap(message);
-        print("Event says : ${alarmRecord.alarmTime}");
+        debugPrint('Event says : ${alarmRecord.alarmTime}');
 
         if (alarmRecord.isActivityEnabled == true) {
           _screen = Screen();
@@ -95,11 +95,11 @@ class AlarmHandlerModel extends TaskHandler {
               _screen!.screenStateStream!.listen((ScreenStateEvent event) {
             // // Starting stopwatch since screen will initially be unlocked obviously
             if (event == ScreenStateEvent.SCREEN_UNLOCKED) {
-              print("STATE: ${event}");
+              debugPrint('STATE: $event');
               _stopwatch!.start();
               isScreenActive = true;
             } else if (event == ScreenStateEvent.SCREEN_OFF) {
-              print("STATE: ${event}");
+              debugPrint('STATE: $event');
 
               // Stop the stopwatch and update _unlockedDuration when the screen is turned off
               isScreenActive = false;
@@ -114,7 +114,7 @@ class AlarmHandlerModel extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
-    print('CHANGING TO LATEST ALARM VIA EVENT! at ${TimeOfDay.now()}');
+    debugPrint('CHANGING TO LATEST ALARM VIA EVENT! at ${TimeOfDay.now()}');
     shouldAlarmRing = true;
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
@@ -130,20 +130,20 @@ class AlarmHandlerModel extends TaskHandler {
 
       currentLocation = await FlLocation.getLocationStream().first.then(
           (value) =>
-              Utils.stringToLatLng("${value.latitude}, ${value.longitude}"));
+              Utils.stringToLatLng('${value.latitude}, ${value.longitude}'),);
       bool isWeatherTypeMatching = await checkWeatherCondition(
-          currentLocation, alarmRecord.weatherTypes);
+          currentLocation, alarmRecord.weatherTypes,);
       if (isWeatherTypeMatching == true) {
         shouldAlarmRing = false;
       }
     }
 
     if (alarmRecord.isActivityEnabled == true) {
-      print("STOPPING WATCH");
+      debugPrint('STOPPING WATCH');
       if (_stopwatch!.isRunning) {
         _stopwatch!.stop();
       }
-      print("WATCH: ${_stopwatch!.elapsedMilliseconds}");
+      debugPrint('WATCH: ${_stopwatch!.elapsedMilliseconds}');
 
       // Screen active for more than activityInterval?
       if (_stopwatch!.elapsedMilliseconds >= alarmRecord.activityInterval) {
@@ -156,7 +156,7 @@ class AlarmHandlerModel extends TaskHandler {
       LatLng destination = LatLng(0, 0);
       LatLng source = Utils.stringToLatLng(alarmRecord.location);
       destination = await FlLocation.getLocationStream().first.then((value) =>
-          Utils.stringToLatLng("${value.latitude}, ${value.longitude}"));
+          Utils.stringToLatLng('${value.latitude}, ${value.longitude}'),);
 
       if (Utils.isWithinRadius(source, destination, 500)) {
         shouldAlarmRing = false;
@@ -170,7 +170,7 @@ class AlarmHandlerModel extends TaskHandler {
       // Ring only if necessary
       if (shouldAlarmRing == false) {
         // Ringing alarm now!
-        print("STOPPING ALARM");
+        debugPrint('STOPPING ALARM');
         _sendPort?.send('alarmRingIgnoreRoute');
         FlutterForegroundTask.launchApp('/alarm-ring-ignore');
       } else {
@@ -183,7 +183,7 @@ class AlarmHandlerModel extends TaskHandler {
       // We need this part as onEvent is called mandatorily once when the task is created
       int ms = Utils.getMillisecondsToAlarm(DateTime.now(), dateTime);
 
-      print("Event set for: ${alarmRecord.alarmTime} : $ms");
+      debugPrint('Event set for: ${alarmRecord.alarmTime} : $ms');
       FlutterForegroundTask.updateService(
         notificationTitle: 'Alarm set!',
         notificationText: 'Rings at ${alarmRecord.alarmTime}',
@@ -203,7 +203,7 @@ class AlarmHandlerModel extends TaskHandler {
   @override
   void onNotificationPressed() {
     if (shouldAlarmRing == true) {
-      print("CORRECT SCREEN ${shouldAlarmRing}");
+      debugPrint('CORRECT SCREEN $shouldAlarmRing');
       FlutterForegroundTask.launchApp('/alarm-ring');
       _sendPort?.send('alarmRingRoute');
     } else {

@@ -41,8 +41,8 @@ class AlarmIDTile extends StatelessWidget {
                   ),
                   trailing: InkWell(
                     child: Icon(Icons.copy,
-                        color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7)),
-                  ))
+                        color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),),
+                  ),)
               : ListTile(
                   onTap: () {
                     Utils.hapticFeedback();
@@ -56,7 +56,7 @@ class AlarmIDTile extends StatelessWidget {
                             const Padding(
                               padding: EdgeInsets.all(20.0),
                               child: Text(
-                                  "To copy Alarm ID you have enable shared alarm!"),
+                                  'To copy Alarm ID you have enable shared alarm!',),
                             ),
                             Padding(
                               padding:
@@ -64,7 +64,7 @@ class AlarmIDTile extends StatelessWidget {
                               child: TextButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor)),
+                                        kprimaryColor,),),
                                 child: Text(
                                   'Okay',
                                   style: Theme.of(context)
@@ -77,9 +77,9 @@ class AlarmIDTile extends StatelessWidget {
                                   Get.back();
                                 },
                               ),
-                            )
+                            ),
                           ],
-                        ));
+                        ),);
                   },
                   title: Text(
                     'Alarm ID',
@@ -90,7 +90,7 @@ class AlarmIDTile extends StatelessWidget {
                       Icons.lock,
                       color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),
                     ),
-                  )),
-        ));
+                  ),),
+        ),);
   }
 }

@@ -53,7 +53,7 @@ class GoogleSignIn extends StatelessWidget {
                     TextButton(
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor)),
+                                MaterialStateProperty.all(kprimaryColor),),
                         child: Text(
                           'Okay',
                           style: Theme.of(context)
@@ -62,14 +62,14 @@ class GoogleSignIn extends StatelessWidget {
                               .copyWith(color: themeController
                                                             .isLightMode.value
                                                         ? kLightPrimaryTextColor
-                                                        : ksecondaryTextColor),
+                                                        : ksecondaryTextColor,),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
                           Get.back();
-                        }),
+                        },),
                   ],
-                ));
+                ),);
           }
         } else {
           Get.defaultDialog(
@@ -82,7 +82,7 @@ class GoogleSignIn extends StatelessWidget {
               titleStyle: Theme.of(context).textTheme.displaySmall,
               content: Column(
                 children: [
-                  const Text("Do you want to unlink your Google account?"),
+                  const Text('Do you want to unlink your Google account?'),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Row(
@@ -91,7 +91,7 @@ class GoogleSignIn extends StatelessWidget {
                         TextButton(
                           style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.all(kprimaryColor)),
+                                  MaterialStateProperty.all(kprimaryColor),),
                           child: Text(
                             'Unlink',
                             style: Theme.of(context)
@@ -100,7 +100,7 @@ class GoogleSignIn extends StatelessWidget {
                                 .copyWith(color: themeController
                                                             .isLightMode.value
                                                         ? kLightPrimaryTextColor
-                                                        : ksecondaryTextColor),
+                                                        : ksecondaryTextColor,),
                           ),
                           onPressed: () async {
                             Utils.hapticFeedback();
@@ -111,12 +111,12 @@ class GoogleSignIn extends StatelessWidget {
                         TextButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  kprimaryTextColor.withOpacity(0.5))),
+                                  kprimaryTextColor.withOpacity(0.5),),),
                           child: Text(
                             'Cancel',
                             style: Theme.of(context)
                                 .textTheme
-                                .displaySmall!
+                                .displaySmall!,
                           ),
                           onPressed: () {
                             Utils.hapticFeedback();
@@ -125,9 +125,9 @@ class GoogleSignIn extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
-              ));
+              ),);
         }
       },
       child: Container(
@@ -161,7 +161,7 @@ class GoogleSignIn extends StatelessWidget {
                   ? kLightPrimaryTextColor.withOpacity(0.4)
                   : kprimaryTextColor.withOpacity(0.2),
               ),
-            )
+            ),
           ],
         ),
       ),

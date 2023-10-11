@@ -31,12 +31,12 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
       width: widget.width * 0.91,
       height: widget.height * 0.1,
       decoration: Utils.getCustomTileBoxDecoration(
-          isLightMode: widget.themeController.isLightMode.value),
+          isLightMode: widget.themeController.isLightMode.value,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text('Enable Haptic Feedback',
-              style: Theme.of(context).textTheme.bodyLarge),
+              style: Theme.of(context).textTheme.bodyLarge,),
           Obx(
             () => Switch.adaptive(
               value: widget.controller.isHapticFeedbackEnabled.value,

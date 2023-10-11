@@ -24,10 +24,10 @@ class AddOrUpdateAlarmController extends GetxController
   ThemeController themeController = Get.find<ThemeController>();
 
   late UserModel? userModel;
-  var alarmID = Uuid().v4();
+  var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
-  final selectedTime = DateTime.now().add(Duration(minutes: 1)).obs;
-  final mainAlarmTime = DateTime.now().add(Duration(minutes: 1)).obs;
+  final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
+  final mainAlarmTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
   final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
@@ -52,7 +52,7 @@ class AddOrUpdateAlarmController extends GetxController
     facing: CameraFacing.back,
     torchEnabled: false,
   );
-  final qrValue = "".obs;
+  final qrValue = ''.obs;
   final isQrEnabled = false.obs;
 
   final mathsSliderValue = 0.0.obs;
@@ -62,13 +62,13 @@ class AddOrUpdateAlarmController extends GetxController
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final List<Marker> markersList = [];
-  final daysRepeating = "Never".obs;
-  final weatherTypes = "Off".obs;
+  final daysRepeating = 'Never'.obs;
+  final weatherTypes = 'Off'.obs;
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
   final RxBool isOneTime = false.obs;
-  final RxString label = "".obs;
+  final RxString label = ''.obs;
   final RxInt snoozeDuration = 1.obs;
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -98,7 +98,7 @@ class AddOrUpdateAlarmController extends GetxController
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         content: const Text(
-            'This app requires permission to draw overlays,send notifications and Ignore batter optimization.'),
+            'This app requires permission to draw overlays,send notifications and Ignore batter optimization.',),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
@@ -117,7 +117,7 @@ class AddOrUpdateAlarmController extends GetxController
               backgroundColor: kprimaryColor,
             ),
             child: const Text('Grant Permission',
-                style: TextStyle(color: Colors.black)),
+                style: TextStyle(color: Colors.black),),
             onPressed: () async {
               Get.back();
 
@@ -126,7 +126,7 @@ class AddOrUpdateAlarmController extends GetxController
                 final isOverlayPermissionGranted =
                     await FlutterForegroundTask.openSystemAlertWindowSettings();
                 if (!isOverlayPermissionGranted) {
-                  print('SYSTEM_ALERT_WINDOW permission denied!');
+                  debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
                   return;
                 }
               }
@@ -135,7 +135,7 @@ class AddOrUpdateAlarmController extends GetxController
                 await FlutterForegroundTask.requestIgnoreBatteryOptimization();
                 if (!await (FlutterForegroundTask
                     .isIgnoringBatteryOptimizations)) {
-                  print('IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                  debugPrint('IGNORE_BATTERY_OPTIMIZATION permission denied!');
                   return;
                 }
               }
@@ -143,7 +143,7 @@ class AddOrUpdateAlarmController extends GetxController
               if (!await Permission.notification.isGranted) {
                 final status = await Permission.notification.request();
                 if (status != PermissionStatus.granted) {
-                  print('Notification permission denied!');
+                  debugPrint('Notification permission denied!');
                   return;
                 }
               }
@@ -160,13 +160,13 @@ class AddOrUpdateAlarmController extends GetxController
 
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
-      final timeLimit = const Duration(seconds: 10);
+      const timeLimit = Duration(seconds: 10);
       await FlLocation.getLocation(
-              timeLimit: timeLimit, accuracy: LocationAccuracy.best)
+              timeLimit: timeLimit, accuracy: LocationAccuracy.best,)
           .then((location) {
         selectedPoint.value = LatLng(location.latitude, location.longitude);
       }).onError((error, stackTrace) {
-        print('error: ${error.toString()}');
+        debugPrint('error: ${error.toString()}');
       });
     }
   }
@@ -188,32 +188,32 @@ class AddOrUpdateAlarmController extends GetxController
             : ksecondaryBackgroundColor,
         barrierDismissible: false,
         title: 'Location Permission',
-        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        titlePadding: EdgeInsets.only(top: 30, right: 40),
+        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        titlePadding: const EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
-        content: Text('This app needs access to your location.'),
+        content: const Text('This app needs access to your location.'),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
               backgroundColor: kprimaryColor,
             ),
-            child: Text('Cancel', style: TextStyle(color: Colors.black)),
+            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
             onPressed: () {
               Get.back(result: false);
             },
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           TextButton(
             style: TextButton.styleFrom(
               backgroundColor: kprimaryColor,
             ),
-            child: Text('Allow', style: TextStyle(color: Colors.black)),
+            child: const Text('Allow', style: TextStyle(color: Colors.black)),
             onPressed: () {
               Get.back(result: true);
             },
@@ -273,7 +273,7 @@ class AddOrUpdateAlarmController extends GetxController
                         final List<Barcode> barcodes = capture.barcodes;
                         for (final barcode in barcodes) {
                           qrValue.value = barcode.rawValue.toString();
-                          print(barcode.rawValue.toString());
+                          debugPrint(barcode.rawValue.toString());
                           isQrEnabled.value = true;
                         }
                       },
@@ -341,12 +341,12 @@ class AddOrUpdateAlarmController extends GetxController
         titleStyle: TextStyle(color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
               : Colors.white,),
-        titlePadding: EdgeInsets.only(
+        titlePadding: const EdgeInsets.only(
           top: 25,
           left: 10,
         ),
-        contentPadding: EdgeInsets.only(top: 20, left: 20, bottom: 23),
-        content: Text('Please allow camera access to scan QR codes.'),
+        contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
+        content: const Text('Please allow camera access to scan QR codes.'),
         onCancel: () {
           Get.back(); // Close the alert box
         },
@@ -362,7 +362,7 @@ class AddOrUpdateAlarmController extends GetxController
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(color: Colors.black),
           ),
@@ -374,7 +374,7 @@ class AddOrUpdateAlarmController extends GetxController
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: Text(
+          child: const Text(
             'OK',
             style: TextStyle(color: Colors.black),
           ),
@@ -448,10 +448,10 @@ class AddOrUpdateAlarmController extends GetxController
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
-          Utils.stringToTimeOfDay(alarmRecord!.alarmTime));
+          Utils.stringToTimeOfDay(alarmRecord!.alarmTime),);
       // Shows the "Rings in" time
       timeToAlarm.value = Utils.timeUntilAlarm(
-          TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
+          TimeOfDay.fromDateTime(selectedTime.value), repeatDays,);
 
       repeatDays.value = alarmRecord!.days;
       // Shows the selected days in UI
@@ -470,7 +470,7 @@ class AddOrUpdateAlarmController extends GetxController
           Icons.location_on,
           size: 35,
         ),
-      ));
+      ),);
 
       isWeatherEnabled.value = alarmRecord!.isWeatherEnabled;
       weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
@@ -495,10 +495,10 @@ class AddOrUpdateAlarmController extends GetxController
 
       if (isSharedAlarmEnabled.value) {
         selectedTime.value = Utils.timeOfDayToDateTime(
-            Utils.stringToTimeOfDay(alarmRecord!.mainAlarmTime!));
+            Utils.stringToTimeOfDay(alarmRecord!.mainAlarmTime!),);
 
         mainAlarmTime.value = Utils.timeOfDayToDateTime(
-            Utils.stringToTimeOfDay(alarmRecord!.mainAlarmTime!));
+            Utils.stringToTimeOfDay(alarmRecord!.mainAlarmTime!),);
         offsetDetails.value = alarmRecord!.offsetDetails!;
         offsetDuration.value =
             alarmRecord!.offsetDetails![userModel!.id]['offsetDuration'];
@@ -518,7 +518,7 @@ class AddOrUpdateAlarmController extends GetxController
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
-        TimeOfDay.fromDateTime(selectedTime.value), repeatDays);
+        TimeOfDay.fromDateTime(selectedTime.value), repeatDays,);
 
     // Adding to markers list, to display on map (MarkersLayer takes only List<Marker>)
     selectedPoint.listen((point) {
@@ -530,13 +530,13 @@ class AddOrUpdateAlarmController extends GetxController
           Icons.location_on,
           size: 35,
         ),
-      ));
+      ),);
     });
 
     // Updating UI to show time to alarm
 
     selectedTime.listen((time) {
-      print("CHANGED CHANGED CHANGED CHANGED");
+      debugPrint('CHANGED CHANGED CHANGED CHANGED');
       timeToAlarm.value =
           Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
     });
@@ -564,10 +564,6 @@ class AddOrUpdateAlarmController extends GetxController
     // If there's an argument sent, we are in update mode
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() async {
@@ -623,6 +619,6 @@ class AddOrUpdateAlarmController extends GetxController
         numMathsQuestions: numMathsQuestions.value,
         mathsDifficulty: mathsDifficulty.value.index,
         isShakeEnabled: isShakeEnabled.value,
-        shakeTimes: shakeTimes.value);
+        shakeTimes: shakeTimes.value,);
   }
 }

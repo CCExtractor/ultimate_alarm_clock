@@ -5,7 +5,7 @@ import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controlle
 
 class ToggleButton extends StatefulWidget {
   const ToggleButton(
-      {super.key, required this.controller, this.alarmIndex, this.isSelected});
+      {super.key, required this.controller, this.alarmIndex, this.isSelected,});
   final HomeController controller;
   final int? alarmIndex;
   final RxBool? isSelected;

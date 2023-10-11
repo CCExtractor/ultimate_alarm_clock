@@ -40,7 +40,7 @@ class RepeatOnceTile extends StatelessWidget {
                     onChanged: (value) {
                       Utils.hapticFeedback();
                       controller.isOneTime.value = false;
-                    });
+                    },);
               }
               return Switch.adaptive(
                   value: controller.isOneTime.value,
@@ -48,7 +48,7 @@ class RepeatOnceTile extends StatelessWidget {
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     controller.isOneTime.value = value;
-                  });
+                  },);
             }),
           ],
         ),

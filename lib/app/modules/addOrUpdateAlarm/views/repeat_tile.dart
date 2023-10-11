@@ -29,7 +29,7 @@ class RepeatTile extends StatelessWidget {
           titleStyle: TextStyle(
               color: themeController.isLightMode.value
                   ? kLightPrimaryTextColor
-                  : kprimaryTextColor),
+                  : kprimaryTextColor,),
           content: Obx(
             () => Column(
               children: [
@@ -53,7 +53,7 @@ class RepeatTile extends StatelessWidget {
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: kprimaryColor
+                              backgroundColor: kprimaryColor,
                               // Set the desired background color
                               ),
                           child: Text(
@@ -64,7 +64,7 @@ class RepeatTile extends StatelessWidget {
                                 .copyWith(
                                     color: themeController.isLightMode.value
                                         ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor),
+                                        : ksecondaryTextColor,),
                           ),
                         ),
                       ],
@@ -98,7 +98,7 @@ class RepeatTile extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryTextColor
-                        : kprimaryTextColor),
+                        : kprimaryTextColor,),
               ),
             ),
             Icon(

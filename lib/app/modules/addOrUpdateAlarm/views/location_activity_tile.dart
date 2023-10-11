@@ -49,7 +49,7 @@ class LocationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "Off",
+                    'Off',
                     style: TextStyle(
                       color: (controller.isLocationEnabled.value == true)
                           ? themeController.isLightMode.value
@@ -83,7 +83,7 @@ class LocationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "Choose location",
+                    'Choose location',
                     style: TextStyle(
                       color: (controller.isLocationEnabled.value == false)
                           ? themeController.isLightMode.value
@@ -151,13 +151,13 @@ class LocationTile extends StatelessWidget {
                   TextButton(
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(kprimaryColor)),
+                            MaterialStateProperty.all(kprimaryColor),),
                     child: Text(
                       'Save',
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                           color: themeController.isLightMode.value
                               ? kLightSecondaryTextColor
-                              : ksecondaryTextColor),
+                              : ksecondaryTextColor,),
                     ),
                     onPressed: () {
                       Utils.hapticFeedback();
@@ -179,7 +179,7 @@ class LocationTile extends StatelessWidget {
               style: TextStyle(
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor
-                      : kprimaryTextColor),
+                      : kprimaryTextColor,),
             ),
             IconButton(
               icon: Icon(
@@ -210,15 +210,15 @@ class LocationTile extends StatelessWidget {
                                     : kprimaryTextColor,
                                 size: height * 0.1,
                               ),
-                              Text("Location based cancellation",
+                              Text('Location based cancellation',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .displayMedium),
+                                      .displayMedium,),
                               Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Text(
-                                  "This feature will automatically cancel the alarm if you are within 500m of the chosen location!",
+                                  'This feature will automatically cancel the alarm if you are within 500m of the chosen location!',
                                   style: Theme.of(context).textTheme.bodyMedium,
                                   textAlign: TextAlign.center,
                                 ),
@@ -228,7 +228,7 @@ class LocationTile extends StatelessWidget {
                                 child: TextButton(
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor),
+                                        kprimaryColor,),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
@@ -243,15 +243,15 @@ class LocationTile extends StatelessWidget {
                                             color: themeController
                                                     .isLightMode.value
                                                 ? kLightPrimaryTextColor
-                                                : ksecondaryTextColor),
+                                                : ksecondaryTextColor,),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
                       );
-                    });
+                    },);
               },
             ),
           ],

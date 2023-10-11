@@ -1,5 +1,6 @@
 import 'dart:isolate';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_model.dart';
@@ -65,7 +66,7 @@ class AlarmHandlerSetupModel {
     final ReceivePort? receivePort = FlutterForegroundTask.receivePort;
     final bool isRegistered = registerReceivePort(receivePort, alarmRecord);
     if (!isRegistered) {
-      print('Failed to register receivePort!');
+      debugPrint('Failed to register receivePort!');
       return false;
     }
 
@@ -90,7 +91,7 @@ class AlarmHandlerSetupModel {
   }
 
   bool registerReceivePort(
-      ReceivePort? newReceivePort, AlarmModel alarmRecord) {
+      ReceivePort? newReceivePort, AlarmModel alarmRecord,) {
     if (newReceivePort == null) {
       return false;
     }
@@ -104,7 +105,7 @@ class AlarmHandlerSetupModel {
         // Send port has been initialized, let's send it the alarm details
         _sendPort.send(AlarmModel.toMap(alarmRecord));
       }
-      print('MAIN RECIEVED $message');
+      debugPrint('MAIN RECIEVED $message');
 
       if (message is String) {
         if (message == 'onNotificationPressed') {

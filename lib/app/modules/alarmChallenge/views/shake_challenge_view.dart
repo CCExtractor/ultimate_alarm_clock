@@ -35,7 +35,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                   minHeight: 2,
                   value: controller.progress.value,
                   backgroundColor: Colors.grey,
-                  valueColor: AlwaysStoppedAnimation<Color>(kprimaryColor),
+                  valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
                 ),
               ),
               Expanded(
@@ -55,7 +55,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color:
-                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7)),
+                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),),
                             ),
                             SizedBox(
                               height: height * 0.08,
@@ -74,9 +74,9 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                             Obx(
                               () => Text(
                                 controller.shakedCount.value.toString(),
-                                style: TextStyle(fontSize: 35),
+                                style: const TextStyle(fontSize: 35),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -86,6 +86,6 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
               ),
             ],
           ),
-        ));
+        ),);
   }
 }

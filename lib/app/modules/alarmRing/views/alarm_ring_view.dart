@@ -25,7 +25,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                      padding: EdgeInsets.all(18.0),
+                      padding: const EdgeInsets.all(18.0),
                       child: Obx(
                         () => SizedBox(
                           height: height * 0.06,
@@ -35,10 +35,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                              kprimaryColor)),
+                                              kprimaryColor,),),
                                   child: Text(
                                     Utils.isChallengeEnabled(controller
-                                            .currentlyRingingAlarm.value)
+                                            .currentlyRingingAlarm.value,)
                                         ? 'Start Challenge'
                                         : 'Dismiss',
                                     style: Theme.of(context)
@@ -49,18 +49,18 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   onPressed: () {
                                     Utils.hapticFeedback();
                                     if (Utils.isChallengeEnabled(controller
-                                        .currentlyRingingAlarm.value)) {
+                                        .currentlyRingingAlarm.value,)) {
                                       Get.toNamed('/alarm-challenge',
                                           arguments: controller
-                                              .currentlyRingingAlarm.value);
+                                              .currentlyRingingAlarm.value,);
                                     } else {
                                       Get.offNamed('/home');
                                     }
                                   },
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                         ),
-                      )),
+                      ),),
                   (Get.arguments != null)
                       ? Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -70,7 +70,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               child: TextButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7))),
+                                        themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),),),
                                 child: Text(
                                   'Exit Preview',
                                   style: Theme.of(context)
@@ -82,9 +82,9 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   Utils.hapticFeedback();
                                   Get.offNamed('/home');
                                 },
-                              )),
+                              ),),
                         )
-                      : SizedBox()
+                      : const SizedBox(),
                 ],
               ),
               body: Center(
@@ -105,7 +105,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           Text(
                             (controller.isSnoozing.value)
                                 ? "${controller.minutes.toString().padLeft(2, '0')}:${controller.seconds.toString().padLeft(2, '0')}"
-                                : "${controller.timeNow[0]} ${controller.timeNow[1]}",
+                                : '${controller.timeNow[0]} ${controller.timeNow[1]}',
                             style: Theme.of(context)
                                 .textTheme
                                 .displayLarge!
@@ -123,7 +123,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                    themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor)),
+                                    themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,),),
                             child: Text(
                               'Snooze',
                               style: Theme.of(context)
@@ -131,7 +131,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .bodyMedium!
                                   .copyWith(
                                       color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w600,),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
@@ -140,15 +140,15 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )),
+              ),),
         ),
         onWillPop: () async {
-          Get.snackbar("Note", "You can't go back while the alarm is ringing",
-              backgroundColor: Colors.red, colorText: Colors.white);
+          Get.snackbar('Note', "You can't go back while the alarm is ringing",
+              backgroundColor: Colors.red, colorText: Colors.white,);
           return false;
-        });
+        },);
   }
 }

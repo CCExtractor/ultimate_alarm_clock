@@ -43,10 +43,10 @@ class AlarmOffset extends StatelessWidget {
                                 onChanged: (value) {
                                   Utils.hapticFeedback();
                                   controller.offsetDuration.value = value;
-                                }),
+                                },),
                             Text(controller.offsetDuration.value > 1
                                 ? 'minutes'
-                                : 'minute')
+                                : 'minute',),
                           ],
                         ),
                       ),
@@ -69,8 +69,8 @@ class AlarmOffset extends StatelessWidget {
                                         ? themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor
                                         : themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                               ),
-                              child: const Text("Before",
-                                  style: TextStyle(fontSize: 14)),
+                              child: const Text('Before',
+                                  style: TextStyle(fontSize: 14),),
                             ),
                           ),
                           Obx(
@@ -89,12 +89,12 @@ class AlarmOffset extends StatelessWidget {
                                         ? themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor
                                         : themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                               ),
-                              child: const Text("After",
-                                  style: TextStyle(fontSize: 14)),
+                              child: const Text('After',
+                                  style: TextStyle(fontSize: 14),),
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 );
@@ -115,16 +115,16 @@ class AlarmOffset extends StatelessWidget {
                                 .copyWith(
                                     color: (controller.offsetDuration.value > 0)
                                         ? themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor
-                                        : themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor),
+                                        : themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor,),
                           ),
                         ),
                         Icon(
                           Icons.chevron_right,
                           color: themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor,
-                        )
-                      ])),
+                        ),
+                      ],),),
             )
-          : SizedBox(),
+          : const SizedBox(),
     );
   }
 }

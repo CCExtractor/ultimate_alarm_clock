@@ -64,8 +64,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
         GoogleSignInAccount? googleSignInAccount =
             await _googleSignIn.signInSilently();
         String fullName = googleSignInAccount!.displayName.toString();
-        List<String> parts = fullName.split(" ");
-        String lastName = " ";
+        List<String> parts = fullName.split(' ');
+        String lastName = ' ';
         if (parts.length == 3) {
           if (parts[parts.length - 1].length == 1) {
             lastName = parts[1].toLowerCase().capitalizeFirst.toString();
@@ -107,13 +107,13 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
         List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
         latestFirestoreAlarms = firestoreDocuments.map((doc) {
           return AlarmModel.fromDocumentSnapshot(
-              documentSnapshot: doc, user: user);
+              documentSnapshot: doc, user: user,);
         }).toList();
 
         List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
         latestSharedAlarms = sharedAlarmDocuments.map((doc) {
           return AlarmModel.fromDocumentSnapshot(
-              documentSnapshot: doc, user: user);
+              documentSnapshot: doc, user: user,);
         }).toList();
 
         latestFirestoreAlarms += latestSharedAlarms;
@@ -121,7 +121,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
 
         List<AlarmModel> alarms = [
           ...latestFirestoreAlarms,
-          ...latestIsarAlarms
+          ...latestIsarAlarms,
         ];
 
         if (isSortedAlarmListEnabled.value) {
@@ -130,8 +130,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
             final String timeB = b.alarmTime;
 
             // Convert the alarm time strings to DateTime objects for comparison
-            DateTime dateTimeA = DateFormat("HH:mm").parse(timeA);
-            DateTime dateTimeB = DateFormat("HH:mm").parse(timeB);
+            DateTime dateTimeA = DateFormat('HH:mm').parse(timeA);
+            DateTime dateTimeB = DateFormat('HH:mm').parse(timeB);
 
             // Compare the DateTime objects to sort in ascending order
             return dateTimeA.compareTo(dateTimeB);
@@ -246,16 +246,16 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       AlarmModel latestAlarm =
           Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
-      print("ISAR: ${isarLatestAlarm.alarmTime}");
-      print("Fire: ${firestoreLatestAlarm.alarmTime}");
+      debugPrint('ISAR: ${isarLatestAlarm.alarmTime}');
+      debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
 
       String timeToAlarm = Utils.timeUntilAlarm(
-          Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
-      alarmTime.value = "Rings in $timeToAlarm";
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days,);
+      alarmTime.value = 'Rings in $timeToAlarm';
 
       // This function is necessary when alarms are deleted/enabled
       await scheduleNextAlarm(
-          alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm);
+          alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm,);
 
       if (latestAlarm.minutesSinceMidnight > -1) {
         // To account for difference between seconds upto the next minute
@@ -275,17 +275,17 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
         // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE MISCALCULATION FOR INITIAL MINUTES
         // This is just to make sure that our calculated time-to-alarm is upto date with the real time for next alarm
         timeToAlarm = Utils.timeUntilAlarm(
-            Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
-        alarmTime.value = "Rings in $timeToAlarm";
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days,);
+        alarmTime.value = 'Rings in $timeToAlarm';
 
         // Running a timer of periodic one minute as it is now in sync with the current time
         _timer = Timer.periodic(
             Duration(
                 milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
-                    DateTime.now().add(const Duration(minutes: 1)))), (timer) {
+                    DateTime.now().add(const Duration(minutes: 1)),),), (timer) {
           timeToAlarm = Utils.timeUntilAlarm(
-              Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days);
-          alarmTime.value = "Rings in $timeToAlarm";
+              Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days,);
+          alarmTime.value = 'Rings in $timeToAlarm';
         });
       } else {
         alarmTime.value = 'No upcoming alarms!';
@@ -294,16 +294,16 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   }
 
   scheduleNextAlarm(AlarmModel alarmRecord, AlarmModel isarLatestAlarm,
-      AlarmModel firestoreLatestAlarm, AlarmModel latestAlarm) async {
+      AlarmModel firestoreLatestAlarm, AlarmModel latestAlarm,) async {
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
     if (latestAlarm.isEnabled == false) {
-      print(
-          "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}");
+      debugPrint(
+          'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',);
       await stopForegroundTask();
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),);
       if (await FlutterForegroundTask.isRunningService == false) {
         createForegroundTask(intervaltoAlarm);
         await startForegroundTask(latestAlarm);
@@ -313,10 +313,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     }
   }
 
-  @override
-  void onReady() async {
-    super.onReady();
-  }
 
   @override
   void onClose() {

@@ -34,10 +34,6 @@ class SettingsController extends GetxController {
     _loadPreference();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
@@ -54,8 +50,8 @@ class SettingsController extends GetxController {
       if (googleSignInAccount != null) {
         // Process successful sign-in
         String fullName = googleSignInAccount!.displayName.toString();
-        List<String> parts = fullName.split(" ");
-        String lastName = " ";
+        List<String> parts = fullName.split(' ');
+        String lastName = ' ';
         if (parts.length == 3) {
           if (parts[parts.length - 1].length == 1) {
             lastName = parts[1].toLowerCase().capitalizeFirst.toString();
@@ -88,7 +84,7 @@ class SettingsController extends GetxController {
       }
     } catch (e) {
       // Handle any other exceptions that may occur
-      print(e);
+      debugPrint(e.toString());
       return false;
     }
   }
@@ -123,7 +119,7 @@ class SettingsController extends GetxController {
     try {
       // ignore: unused_local_variable
       final currentWeather = await weather.currentWeatherByLocation(
-          currentPoint.value.latitude, currentPoint.value.longitude);
+          currentPoint.value.latitude, currentPoint.value.longitude,);
       return true;
     } catch (e) {
       return false;
@@ -132,13 +128,13 @@ class SettingsController extends GetxController {
 
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
-      final timeLimit = const Duration(seconds: 10);
+      const timeLimit = Duration(seconds: 10);
       await FlLocation.getLocation(
-              timeLimit: timeLimit, accuracy: LocationAccuracy.best)
+              timeLimit: timeLimit, accuracy: LocationAccuracy.best,)
           .then((location) {
         currentPoint.value = LatLng(location.latitude, location.longitude);
       }).onError((error, stackTrace) {
-        print('error: ${error.toString()}');
+        debugPrint('error: ${error.toString()}');
       });
     }
   }
@@ -192,7 +188,7 @@ class SettingsController extends GetxController {
     if (retrievedWeatherState != null) {
       // Assign the weatherKeyState to the previously stored weather state, but first convert the stored string to the WeatherKeyState enum
       weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
-              (weatherState) => weatherState.name == retrievedWeatherState) ??
+              (weatherState) => weatherState.name == retrievedWeatherState,) ??
           WeatherKeyState.add;
     }
   }

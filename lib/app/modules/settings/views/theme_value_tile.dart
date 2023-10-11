@@ -46,7 +46,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
                   widget.themeController.toggleThemeValue(value);
                   Get.changeThemeMode(widget.themeController.isLightMode.value
                       ? ThemeMode.light
-                      : ThemeMode.dark);
+                      : ThemeMode.dark,);
                   Utils.hapticFeedback();
                 },
               ),

@@ -35,7 +35,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                   minHeight: 2,
                   value: controller.progress.value,
                   backgroundColor: Colors.grey,
-                  valueColor: AlwaysStoppedAnimation<Color>(kprimaryColor),
+                  valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
                 ),
               ),
               Expanded(
@@ -55,7 +55,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color:
-                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7)),
+                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),),
                             ),
                             SizedBox(
                               height: height * 0.08,
@@ -116,12 +116,12 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           color:
                                                               themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor
                                                                   .withOpacity(
-                                                                      0.7),
+                                                                      0.7,),
                                                         ),
                                                         Text(
                                                           'Wrong Code Scanned!',
                                                           style: Theme.of(
-                                                                  context)
+                                                                  context,)
                                                               .textTheme
                                                               .bodyMedium!
                                                               .copyWith(
@@ -130,23 +130,23 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                                           .w500,
                                                                   color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor
                                                                       .withOpacity(
-                                                                          0.7)),
+                                                                          0.7,),),
                                                         ),
                                                         TextButton(
                                                           style: ButtonStyle(
                                                               backgroundColor:
                                                                   MaterialStateProperty
                                                                       .all(
-                                                                          kprimaryColor)),
+                                                                          kprimaryColor,),),
                                                           child: Text(
                                                             'Retake',
                                                             style: Theme.of(
-                                                                    context)
+                                                                    context,)
                                                                 .textTheme
                                                                 .displaySmall!
                                                                 .copyWith(
                                                                     color:
-                                                                        themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor),
+                                                                        themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor,),
                                                           ),
                                                           onPressed: () async {
                                                             Utils.hapticFeedback();
@@ -163,7 +163,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           },
                                                         ),
                                                       ],
-                                                    )),
+                                                    ),),
                                         ),
                                 ],
                               ),
@@ -177,6 +177,6 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
               ),
             ],
           ),
-        ));
+        ),);
   }
 }

@@ -35,7 +35,7 @@ const Color kLightPrimaryDisabledTextColor = Color(0xffACACAB);
 // Dark ThemeData
 ThemeData kThemeData = ThemeData(
   textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(foregroundColor: ksecondaryColor)),
+      style: TextButton.styleFrom(foregroundColor: ksecondaryColor),),
   iconTheme: const IconThemeData(
     color: kprimaryTextColor,
   ),
@@ -55,26 +55,26 @@ ThemeData kThemeData = ThemeData(
           fontSize: 16,
           color: kprimaryTextColor,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.15),
+          letterSpacing: 0.15,),
       displayLarge: TextStyle(
           fontSize: 28,
           color: kprimaryTextColor,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.15),
+          letterSpacing: 0.15,),
       displayMedium: TextStyle(
           fontSize: 23,
           color: kprimaryTextColor,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.15)),
+          letterSpacing: 0.15,),),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      foregroundColor: Colors.black, backgroundColor: kprimaryColor),
+      foregroundColor: Colors.black, backgroundColor: kprimaryColor,),
   primaryColor: kprimaryColor,
   scaffoldBackgroundColor: kprimaryBackgroundColor,
   appBarTheme: const AppBarTheme(backgroundColor: kprimaryBackgroundColor),
   colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: ksecondaryColor,
       background: kprimaryBackgroundColor,
-      onPrimaryContainer: ksecondaryBackgroundColor),
+      onPrimaryContainer: ksecondaryBackgroundColor,),
   inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: kprimaryTextColor.withOpacity(0.5)),
       labelStyle: const TextStyle(color: kprimaryTextColor),
@@ -86,7 +86,7 @@ ThemeData kThemeData = ThemeData(
       focusedBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: kprimaryColor),
         borderRadius: BorderRadius.circular(12),
-      )),
+      ),),
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: kprimaryColor,
     selectionColor: kprimaryColor,
@@ -95,13 +95,13 @@ ThemeData kThemeData = ThemeData(
   sliderTheme: SliderThemeData(
       thumbColor: kprimaryColor,
       activeTrackColor: kprimaryColor,
-      inactiveTrackColor: kprimaryTextColor.withOpacity(0.3)),
+      inactiveTrackColor: kprimaryTextColor.withOpacity(0.3),),
 );
 
 // Light ThemeData
 ThemeData kLightThemeData = ThemeData(
   textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(foregroundColor: kprimaryColor)),
+      style: TextButton.styleFrom(foregroundColor: kprimaryColor),),
   iconTheme: const IconThemeData(
     color: kLightPrimaryTextColor,
   ),
@@ -122,26 +122,26 @@ ThemeData kLightThemeData = ThemeData(
           fontSize: 16,
           color: kLightPrimaryTextColor,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.15),
+          letterSpacing: 0.15,),
       displayLarge: TextStyle(
           fontSize: 28,
           color: kLightPrimaryTextColor,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.15),
+          letterSpacing: 0.15,),
       displayMedium: TextStyle(
           fontSize: 23,
           color: kLightPrimaryTextColor,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.15)),
+          letterSpacing: 0.15,),),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      foregroundColor: Colors.black, backgroundColor: kprimaryColor),
+      foregroundColor: Colors.black, backgroundColor: kprimaryColor,),
   primaryColor: kprimaryColor,
   scaffoldBackgroundColor: kLightPrimaryBackgroundColor,
   appBarTheme: const AppBarTheme(backgroundColor: kLightPrimaryBackgroundColor),
   colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: kLightSecondaryColor,
       background: kLightPrimaryBackgroundColor,
-      onPrimaryContainer: kLightSecondaryBackgroundColor),
+      onPrimaryContainer: kLightSecondaryBackgroundColor,),
   inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: kLightPrimaryTextColor.withOpacity(0.5)),
       labelStyle: const TextStyle(color: kLightPrimaryTextColor),
@@ -153,7 +153,7 @@ ThemeData kLightThemeData = ThemeData(
       focusedBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: kprimaryColor),
         borderRadius: BorderRadius.circular(12),
-      )),
+      ),),
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: kprimaryColor,
     selectionColor: kprimaryColor,
@@ -162,5 +162,5 @@ ThemeData kLightThemeData = ThemeData(
   sliderTheme: SliderThemeData(
       thumbColor: kprimaryColor,
       activeTrackColor: kprimaryColor,
-      inactiveTrackColor: kLightPrimaryTextColor.withOpacity(0.3)),
+      inactiveTrackColor: kLightPrimaryTextColor.withOpacity(0.3),),
 );
