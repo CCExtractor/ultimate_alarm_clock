@@ -548,7 +548,7 @@ class AddOrUpdateAlarmController extends GetxController
       repeatDays,
     );
 
-    // Adding to markers list, to display on map 
+    // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
     selectedPoint.listen((point) {
       selectedPoint.value = point;

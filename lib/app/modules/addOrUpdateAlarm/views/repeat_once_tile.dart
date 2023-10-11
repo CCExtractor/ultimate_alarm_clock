@@ -24,9 +24,10 @@ class RepeatOnceTile extends StatelessWidget {
       title: Text(
         'Repeat once',
         style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,),
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : kprimaryTextColor,
+        ),
       ),
       onTap: () {
         Utils.hapticFeedback();

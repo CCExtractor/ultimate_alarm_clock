@@ -34,65 +34,67 @@ class QrBarCode extends StatelessWidget {
             onPressed: () {
               Utils.hapticFeedback();
               showModalBottomSheet(
-                  context: context,
-                  backgroundColor: themeController.isLightMode.value
-                      ? kLightSecondaryBackgroundColor
-                      : ksecondaryBackgroundColor,
-                  builder: (context) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(
-                              Icons.qr_code_scanner,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryTextColor
-                                  : kprimaryTextColor,
-                              size: height * 0.1,
+                context: context,
+                backgroundColor: themeController.isLightMode.value
+                    ? kLightSecondaryBackgroundColor
+                    : ksecondaryBackgroundColor,
+                builder: (context) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.qr_code_scanner,
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : kprimaryTextColor,
+                            size: height * 0.1,
+                          ),
+                          Text(
+                            'QR / Bar code',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
                             ),
-                            Text('QR / Bar code',
-                                textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
+                          ),
+                          SizedBox(
+                            width: width,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(kprimaryColor),
+                              ),
+                              onPressed: () {
+                                Utils.hapticFeedback();
+                                Get.back();
+                              },
                               child: Text(
-                                'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center,
+                                'Understood',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                          : ksecondaryTextColor,
+                                    ),
                               ),
                             ),
-                            SizedBox(
-                              width: width,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(kprimaryColor),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                },
-                                child: Text(
-                                  'Understood',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                          color:
-                                              themeController.isLightMode.value
-                                                  ? kLightPrimaryTextColor
-                                                  : ksecondaryTextColor,),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    );
-                  },);
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],

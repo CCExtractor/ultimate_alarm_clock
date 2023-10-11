@@ -5,12 +5,13 @@ class UserModel {
   final String email;
   final String id;
 
-  UserModel(
-      {required this.fullName,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.id,});
+  UserModel({
+    required this.fullName,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.id,
+  });
 
   Map<String, dynamic> toJson() {
     return {

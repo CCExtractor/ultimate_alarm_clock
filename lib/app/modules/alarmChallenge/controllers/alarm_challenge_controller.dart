@@ -48,7 +48,8 @@ class AlarmChallengeController extends GetxController {
   newMathsQuestion() {
     numMathsQuestions.value = alarmRecord.numMathsQuestions;
     List mathsProblemDetails = Utils.generateMathProblem(
-        Difficulty.values[alarmRecord.mathsDifficulty],);
+      Difficulty.values[alarmRecord.mathsDifficulty],
+    );
     questionText.value = mathsProblemDetails[0];
     displayValue.value = '';
     mathsAnswer = mathsProblemDetails[1];
@@ -63,10 +64,12 @@ class AlarmChallengeController extends GetxController {
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
-          _shakeDetector = ShakeDetector.autoStart(onPhoneShake: () {
-            shakedCount.value -= 1;
-            restartTimer();
-          },);
+          _shakeDetector = ShakeDetector.autoStart(
+            onPhoneShake: () {
+              shakedCount.value -= 1;
+              restartTimer();
+            },
+          );
         }
       });
 
@@ -155,7 +158,6 @@ class AlarmChallengeController extends GetxController {
       Get.offAllNamed('/home');
     }
   }
-
 
   @override
   void onClose() async {

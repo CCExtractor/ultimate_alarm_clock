@@ -123,9 +123,9 @@ class _ToggleButtonState extends State<ToggleButton> {
           ),
           child: widget.isSelected == null // If single toggle button is changed
               ? widget.controller.alarmListPairs.second[widget.alarmIndex!]
-                      .value 
-                      // If it is selected, show a circle at the middle
-                      // with an animation
+                      .value
+                  // If it is selected, show a circle at the middle
+                  // with an animation
                   ? _animatedCircle()
                   : const SizedBox()
               : widget.isSelected!

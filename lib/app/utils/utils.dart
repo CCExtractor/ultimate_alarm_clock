@@ -34,7 +34,10 @@ class Utils {
   }
 
   static DateTime calculateOffsetAlarmTime(
-      DateTime eventTime, bool isOffsetBefore, int offsetDuration,) {
+    DateTime eventTime,
+    bool isOffsetBefore,
+    int offsetDuration,
+  ) {
     if (isOffsetBefore) {
       return eventTime.subtract(Duration(minutes: offsetDuration));
     } else {
@@ -133,7 +136,12 @@ class Utils {
   static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
     final now = DateTime.now();
     final todayAlarm = DateTime(
-        now.year, now.month, now.day, alarmTime.hour, alarmTime.minute,);
+      now.year,
+      now.month,
+      now.day,
+      alarmTime.hour,
+      alarmTime.minute,
+    );
 
     Duration duration;
 
@@ -158,8 +166,13 @@ class Utils {
         if (days[nextDayIndex]) {
           if (i < daysUntilNextAlarm) {
             daysUntilNextAlarm = i;
-            nextAlarm = DateTime(now.year, now.month, now.day + i,
-                alarmTime.hour, alarmTime.minute,);
+            nextAlarm = DateTime(
+              now.year,
+              now.month,
+              now.day + i,
+              alarmTime.hour,
+              alarmTime.minute,
+            );
           }
         }
       }
@@ -225,7 +238,9 @@ class Utils {
   }
 
   static AlarmModel getFirstScheduledAlarm(
-      AlarmModel alarm1, AlarmModel alarm2,) {
+    AlarmModel alarm1,
+    AlarmModel alarm2,
+  ) {
     // Compare the isEnabled property for each alarm
     if (alarm1.isEnabled != alarm2.isEnabled) {
       return alarm1.isEnabled ? alarm1 : alarm2;
@@ -282,35 +297,36 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
-        snoozeDuration: 0,
-        label: '',
-        isOneTime: false,
-        offsetDetails: {},
-        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        lastEditedUserId: '',
-        mutexLock: false,
-        ownerName: '',
-        ownerId: '',
-        alarmID: '',
-        activityInterval: 0,
-        isMathsEnabled: false,
-        numMathsQuestions: 0,
-        mathsDifficulty: 0,
-        qrValue: '',
-        isQrEnabled: false,
-        isShakeEnabled: false,
-        shakeTimes: 0,
-        days: [false, false, false, false, false, false, false],
-        weatherTypes: [],
-        isWeatherEnabled: false,
-        isEnabled: false,
-        isActivityEnabled: false,
-        isLocationEnabled: false,
-        isSharedAlarmEnabled: false,
-        intervalToAlarm: 0,
-        location: '',
-        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),);
+      snoozeDuration: 0,
+      label: '',
+      isOneTime: false,
+      offsetDetails: {},
+      mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      lastEditedUserId: '',
+      mutexLock: false,
+      ownerName: '',
+      ownerId: '',
+      alarmID: '',
+      activityInterval: 0,
+      isMathsEnabled: false,
+      numMathsQuestions: 0,
+      mathsDifficulty: 0,
+      qrValue: '',
+      isQrEnabled: false,
+      isShakeEnabled: false,
+      shakeTimes: 0,
+      days: [false, false, false, false, false, false, false],
+      weatherTypes: [],
+      isWeatherEnabled: false,
+      isEnabled: false,
+      isActivityEnabled: false,
+      isLocationEnabled: false,
+      isSharedAlarmEnabled: false,
+      intervalToAlarm: 0,
+      location: '',
+      alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+    );
   }
 
   static String getFormattedWeatherTypes(List weatherTypes) {

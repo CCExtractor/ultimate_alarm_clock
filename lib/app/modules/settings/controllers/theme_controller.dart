@@ -21,7 +21,8 @@ class ThemeController extends GetxController {
 
   void _saveThemeValuePreference() async {
     await _secureStorageProvider.writeThemeValue(
-        theme: isLightMode.value ? AppTheme.light : AppTheme.dark,);
+      theme: isLightMode.value ? AppTheme.light : AppTheme.dark,
+    );
   }
 
   void toggleThemeValue(bool enabled) {

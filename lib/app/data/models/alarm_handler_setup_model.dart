@@ -91,7 +91,9 @@ class AlarmHandlerSetupModel {
   }
 
   bool registerReceivePort(
-      ReceivePort? newReceivePort, AlarmModel alarmRecord,) {
+    ReceivePort? newReceivePort,
+    AlarmModel alarmRecord,
+  ) {
     if (newReceivePort == null) {
       return false;
     }

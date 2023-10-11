@@ -23,83 +23,84 @@ class SettingsView extends GetView<SettingsController> {
     var width = Get.width;
     var height = Get.height;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Settings',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
-                  fontWeight: FontWeight.w500,
-                ),
+      appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+                fontWeight: FontWeight.w500,
+              ),
+        ),
+        centerTitle: true,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.adaptive.arrow_back,
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
           ),
-          centerTitle: true,
-          elevation: 0.0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.adaptive.arrow_back,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+          onPressed: () {
+            Utils.hapticFeedback();
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 25.0),
+            child: Column(
+              children: [
+                WeatherApi(
+                  controller: controller,
+                  width: width,
+                  height: height,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                GoogleSignIn(
+                  controller: controller,
+                  width: width,
+                  height: height,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                EnableHapticFeedback(
+                  height: height,
+                  width: width,
+                  controller: controller,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                EnableSortedAlarmList(
+                  controller: controller,
+                  height: height,
+                  width: width,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ThemeValueTile(
+                  controller: controller,
+                  height: height,
+                  width: width,
+                  themeController: themeController,
+                ),
+              ],
             ),
-            onPressed: () {
-              Utils.hapticFeedback();
-              Navigator.of(context).pop();
-            },
           ),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25.0),
-              child: Column(
-                children: [
-                  WeatherApi(
-                    controller: controller,
-                    width: width,
-                    height: height,
-                    themeController: themeController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  GoogleSignIn(
-                    controller: controller,
-                    width: width,
-                    height: height,
-                    themeController: themeController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  EnableHapticFeedback(
-                    height: height,
-                    width: width,
-                    controller: controller,
-                    themeController: themeController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  EnableSortedAlarmList(
-                    controller: controller,
-                    height: height,
-                    width: width,
-                    themeController: themeController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ThemeValueTile(
-                    controller: controller,
-                    height: height,
-                    width: width,
-                    themeController: themeController,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),);
+      ),
+    );
   }
 }

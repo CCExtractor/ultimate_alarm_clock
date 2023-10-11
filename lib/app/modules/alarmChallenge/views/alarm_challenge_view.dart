@@ -69,7 +69,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                 height: height * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
-                                      Radius.circular(18),),
+                                    Radius.circular(18),
+                                  ),
                                   color: themeController.isLightMode.value
                                       ? kLightSecondaryBackgroundColor
                                       : ksecondaryBackgroundColor,
@@ -136,7 +137,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                 height: height * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
-                                      Radius.circular(18),),
+                                    Radius.circular(18),
+                                  ),
                                   color: themeController.isLightMode.value
                                       ? kLightSecondaryBackgroundColor
                                       : ksecondaryBackgroundColor,
@@ -201,7 +203,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                 height: height * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
-                                      Radius.circular(18),),
+                                    Radius.circular(18),
+                                  ),
                                   color: themeController.isLightMode.value
                                       ? kLightSecondaryBackgroundColor
                                       : ksecondaryBackgroundColor,

@@ -77,8 +77,10 @@ class AlarmModel {
     required this.snoozeDuration,
   });
 
-  AlarmModel.fromDocumentSnapshot(
-      {required DocumentSnapshot documentSnapshot, required UserModel? user,}) {
+  AlarmModel.fromDocumentSnapshot({
+    required DocumentSnapshot documentSnapshot,
+    required UserModel? user,
+  }) {
     // Making sure the alarms work with the offsets
     isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
     offsetDetails = documentSnapshot['offsetDetails'];
@@ -91,7 +93,8 @@ class AlarmModel {
           ? offsetDetails![user.id]['offsettedTime']
           : documentSnapshot['alarmTime'];
       minutesSinceMidnight = Utils.timeOfDayToInt(
-          Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']),);
+        Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']),
+      );
     } else {
       alarmTime = documentSnapshot['alarmTime'];
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];

@@ -34,7 +34,6 @@ class SettingsController extends GetxController {
     _loadPreference();
   }
 
-
   @override
   void onClose() {
     super.onClose();
@@ -119,7 +118,9 @@ class SettingsController extends GetxController {
     try {
       // ignore: unused_local_variable
       final currentWeather = await weather.currentWeatherByLocation(
-          currentPoint.value.latitude, currentPoint.value.longitude,);
+        currentPoint.value.latitude,
+        currentPoint.value.longitude,
+      );
       return true;
     } catch (e) {
       return false;
@@ -130,8 +131,9 @@ class SettingsController extends GetxController {
     if (await _checkAndRequestPermission()) {
       const timeLimit = Duration(seconds: 10);
       await FlLocation.getLocation(
-              timeLimit: timeLimit, accuracy: LocationAccuracy.best,)
-          .then((location) {
+        timeLimit: timeLimit,
+        accuracy: LocationAccuracy.best,
+      ).then((location) {
         currentPoint.value = LatLng(location.latitude, location.longitude);
       }).onError((error, stackTrace) {
         debugPrint('error: ${error.toString()}');
@@ -192,7 +194,8 @@ class SettingsController extends GetxController {
       // Assign the weatherKeyState to the previously stored weather state,
       // but first convert the stored string to the WeatherKeyState enum
       weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
-              (weatherState) => weatherState.name == retrievedWeatherState,) ??
+            (weatherState) => weatherState.name == retrievedWeatherState,
+          ) ??
           WeatherKeyState.add;
     }
   }
