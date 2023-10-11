@@ -25,7 +25,9 @@ class AlarmOffset extends StatelessWidget {
                 Utils.hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                  backgroundColor: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
+                  backgroundColor: themeController.isLightMode.value
+                      ? kLightSecondaryBackgroundColor
+                      : ksecondaryBackgroundColor,
                   title: 'Choose duration',
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
@@ -37,16 +39,19 @@ class AlarmOffset extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             NumberPicker(
-                                value: controller.offsetDuration.value,
-                                minValue: 0,
-                                maxValue: 1440,
-                                onChanged: (value) {
-                                  Utils.hapticFeedback();
-                                  controller.offsetDuration.value = value;
-                                },),
-                            Text(controller.offsetDuration.value > 1
-                                ? 'minutes'
-                                : 'minute',),
+                              value: controller.offsetDuration.value,
+                              minValue: 0,
+                              maxValue: 1440,
+                              onChanged: (value) {
+                                Utils.hapticFeedback();
+                                controller.offsetDuration.value = value;
+                              },
+                            ),
+                            Text(
+                              controller.offsetDuration.value > 1
+                                  ? 'minutes'
+                                  : 'minute',
+                            ),
                           ],
                         ),
                       ),
@@ -60,17 +65,26 @@ class AlarmOffset extends StatelessWidget {
                                 controller.isOffsetBefore.value = true;
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    (controller.isOffsetBefore.value)
-                                        ? kprimaryColor
-                                        : themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.10) : kprimaryTextColor.withOpacity(0.08),
+                                backgroundColor: (controller
+                                        .isOffsetBefore.value)
+                                    ? kprimaryColor
+                                    : themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                            .withOpacity(0.10)
+                                        : kprimaryTextColor.withOpacity(0.08),
                                 foregroundColor:
                                     (controller.isOffsetBefore.value)
-                                        ? themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor
-                                        : themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
+                                        ? themeController.isLightMode.value
+                                            ? kLightSecondaryTextColor
+                                            : ksecondaryTextColor
+                                        : themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : kprimaryTextColor,
                               ),
-                              child: const Text('Before',
-                                  style: TextStyle(fontSize: 14),),
+                              child: const Text(
+                                'Before',
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
                           ),
                           Obx(
@@ -80,17 +94,26 @@ class AlarmOffset extends StatelessWidget {
                                 controller.isOffsetBefore.value = false;
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    (!controller.isOffsetBefore.value)
-                                        ? kprimaryColor
-                                        : themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.10) : kprimaryTextColor.withOpacity(0.08),
+                                backgroundColor: (!controller
+                                        .isOffsetBefore.value)
+                                    ? kprimaryColor
+                                    : themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                            .withOpacity(0.10)
+                                        : kprimaryTextColor.withOpacity(0.08),
                                 foregroundColor:
                                     (!controller.isOffsetBefore.value)
-                                        ? themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor
-                                        : themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
+                                        ? themeController.isLightMode.value
+                                            ? kLightSecondaryTextColor
+                                            : ksecondaryTextColor
+                                        : themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : kprimaryTextColor,
                               ),
-                              child: const Text('After',
-                                  style: TextStyle(fontSize: 14),),
+                              child: const Text(
+                                'After',
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
                           ),
                         ],
@@ -100,29 +123,33 @@ class AlarmOffset extends StatelessWidget {
                 );
               },
               child: ListTile(
-                  title: const Text('Ring before / after '),
-                  trailing: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Obx(
-                          () => Text(
-                            controller.offsetDuration.value > 0
-                                ? 'Enabled'
-                                : 'Off',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    color: (controller.offsetDuration.value > 0)
-                                        ? themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor
-                                        : themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor,),
-                          ),
-                        ),
-                        Icon(
-                          Icons.chevron_right,
-                          color: themeController.isLightMode.value ? kLightPrimaryDisabledTextColor : kprimaryDisabledTextColor,
-                        ),
-                      ],),),
+                title: const Text('Ring before / after '),
+                trailing: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Obx(
+                      () => Text(
+                        controller.offsetDuration.value > 0 ? 'Enabled' : 'Off',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: (controller.offsetDuration.value > 0)
+                                  ? themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : kprimaryTextColor
+                                  : themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                            ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryDisabledTextColor
+                          : kprimaryDisabledTextColor,
+                    ),
+                  ],
+                ),
+              ),
             )
           : const SizedBox(),
     );

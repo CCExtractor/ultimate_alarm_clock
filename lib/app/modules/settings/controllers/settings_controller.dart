@@ -147,7 +147,8 @@ class SettingsController extends GetxController {
 
     var locationPermission = await FlLocation.checkLocationPermission();
     if (locationPermission == LocationPermission.deniedForever) {
-      // Cannot request runtime permission because location permission is denied forever.
+      // Cannot request runtime permission because location permission is
+      // denied forever.
       return false;
     } else if (locationPermission == LocationPermission.denied) {
       // Ask the user for location permission.
@@ -177,7 +178,9 @@ class SettingsController extends GetxController {
 
     // If the API key has been previously stored there
     if (retrievedAPIKey != null) {
-      // Assign the controller's text to the retrieved API key so that when the user comes to update their API key, they're able to see the previously added API key
+      // Assign the controller's text to the retrieved API key so that
+      // when the user comes to update their API key, they're able
+      // to see the previously added API key
       apiKey.text = retrievedAPIKey;
     }
 
@@ -186,7 +189,8 @@ class SettingsController extends GetxController {
 
     // If the weather state has been previously stored there
     if (retrievedWeatherState != null) {
-      // Assign the weatherKeyState to the previously stored weather state, but first convert the stored string to the WeatherKeyState enum
+      // Assign the weatherKeyState to the previously stored weather state,
+      // but first convert the stored string to the WeatherKeyState enum
       weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
               (weatherState) => weatherState.name == retrievedWeatherState,) ??
           WeatherKeyState.add;

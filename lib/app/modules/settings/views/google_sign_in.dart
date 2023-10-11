@@ -10,7 +10,8 @@ class GoogleSignIn extends StatelessWidget {
     super.key,
     required this.controller,
     required this.width,
-    required this.height, required this.themeController,
+    required this.height,
+    required this.themeController,
   });
 
   final SettingsController controller;
@@ -29,111 +30,116 @@ class GoogleSignIn extends StatelessWidget {
 
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(
-                titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                backgroundColor: themeController.isLightMode.value
+              titlePadding: const EdgeInsets.symmetric(vertical: 20),
+              backgroundColor: themeController.isLightMode.value
+                  ? kLightSecondaryBackgroundColor
+                  : ksecondaryBackgroundColor,
+              title: 'Success!',
+              titleStyle: Theme.of(context).textTheme.displaySmall,
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Icon(
+                    Icons.done,
+                    size: 50,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      'Your account is now linked!',
+                      style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                  ),
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      'Okay',
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : ksecondaryTextColor,
+                          ),
+                    ),
+                    onPressed: () {
+                      Utils.hapticFeedback();
+                      Get.back();
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        } else {
+          Get.defaultDialog(
+            contentPadding: const EdgeInsets.all(10.0),
+            titlePadding: const EdgeInsets.symmetric(vertical: 20),
+            backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-                title: 'Success!',
-                titleStyle: Theme.of(context).textTheme.displaySmall,
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Icon(
-                      Icons.done,
-                      size: 50,
-                      color: Colors.green,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Text(
-                        'Your account is now linked!',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                    ),
-                    TextButton(
+            title: 'Are you sure?',
+            titleStyle: Theme.of(context).textTheme.displaySmall,
+            content: Column(
+              children: [
+                const Text('Do you want to unlink your Google account?'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),),
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
                         child: Text(
-                          'Okay',
+                          'Unlink',
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
-                              .copyWith(color: themeController
-                                                            .isLightMode.value
-                                                        ? kLightPrimaryTextColor
-                                                        : ksecondaryTextColor,),
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor
+                                    : ksecondaryTextColor,
+                              ),
+                        ),
+                        onPressed: () async {
+                          Utils.hapticFeedback();
+                          await controller.logoutGoogle();
+                          Get.back();
+                        },
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            kprimaryTextColor.withOpacity(0.5),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: Theme.of(context).textTheme.displaySmall!,
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
                           Get.back();
-                        },),
-                  ],
-                ),);
-          }
-        } else {
-          Get.defaultDialog(
-              contentPadding: const EdgeInsets.all(10.0),
-              titlePadding: const EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: themeController.isLightMode.value
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
-              title: 'Are you sure?',
-              titleStyle: Theme.of(context).textTheme.displaySmall,
-              content: Column(
-                children: [
-                  const Text('Do you want to unlink your Google account?'),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(kprimaryColor),),
-                          child: Text(
-                            'Unlink',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(color: themeController
-                                                            .isLightMode.value
-                                                        ? kLightPrimaryTextColor
-                                                        : ksecondaryTextColor,),
-                          ),
-                          onPressed: () async {
-                            Utils.hapticFeedback();
-                            await controller.logoutGoogle();
-                            Get.back();
-                          },
-                        ),
-                        TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  kprimaryTextColor.withOpacity(0.5),),),
-                          child: Text(
-                            'Cancel',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!,
-                          ),
-                          onPressed: () {
-                            Utils.hapticFeedback();
-                            Get.back();
-                          },
-                        ),
-                      ],
-                    ),
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),);
+                ),
+              ],
+            ),
+          );
         }
       },
       child: Container(
         width: width * 0.91,
         height: height * 0.1,
-        decoration: Utils.getCustomTileBoxDecoration(isLightMode: themeController.isLightMode.value),
+        decoration: Utils.getCustomTileBoxDecoration(
+          isLightMode: themeController.isLightMode.value,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -147,7 +153,8 @@ class GoogleSignIn extends StatelessWidget {
                         ? 'Unlink ${controller.userModel!.email}'
                         : 'Sign-In with Google',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        overflow: TextOverflow.ellipsis,),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                   ),
                 ],
               ),
@@ -158,8 +165,8 @@ class GoogleSignIn extends StatelessWidget {
                     ? Icons.close
                     : Icons.arrow_forward_ios_sharp,
                 color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor.withOpacity(0.4)
-                  : kprimaryTextColor.withOpacity(0.2),
+                    ? kLightPrimaryTextColor.withOpacity(0.4)
+                    : kprimaryTextColor.withOpacity(0.2),
               ),
             ),
           ],

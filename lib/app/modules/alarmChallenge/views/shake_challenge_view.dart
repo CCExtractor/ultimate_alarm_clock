@@ -10,7 +10,7 @@ import '../controllers/alarm_challenge_controller.dart';
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
   ShakeChallengeView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>(); 
+  ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,73 +19,78 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
     var height = Get.height;
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          iconTheme: Theme.of(context).iconTheme,
-        ),
-        body: GestureDetector(
-          onTap: () {
-            Utils.hapticFeedback();
-            controller.restartTimer();
-          },
-          child: Column(
-            children: [
-              Obx(
-                () => LinearProgressIndicator(
-                  minHeight: 2,
-                  value: controller.progress.value,
-                  backgroundColor: Colors.grey,
-                  valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
-                ),
+      appBar: AppBar(
+        centerTitle: true,
+        iconTheme: Theme.of(context).iconTheme,
+      ),
+      body: GestureDetector(
+        onTap: () {
+          Utils.hapticFeedback();
+          controller.restartTimer();
+        },
+        child: Column(
+          children: [
+            Obx(
+              () => LinearProgressIndicator(
+                minHeight: 2,
+                value: controller.progress.value,
+                backgroundColor: Colors.grey,
+                valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
               ),
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 25.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Shake your phone!',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),),
+            ),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 25.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Shake your phone!',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor.withOpacity(0.7)
+                                      : kprimaryTextColor.withOpacity(0.7),
+                                ),
+                          ),
+                          SizedBox(
+                            height: height * 0.08,
+                          ),
+                          Transform.rotate(
+                            angle: -10 * math.pi / 180,
+                            child: Icon(
+                              Icons.vibration,
+                              size: height * 0.2,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryTextColor.withOpacity(0.7)
+                                  : kprimaryTextColor.withOpacity(0.7),
                             ),
-                            SizedBox(
-                              height: height * 0.08,
+                          ),
+                          SizedBox(
+                            height: height * 0.08,
+                          ),
+                          Obx(
+                            () => Text(
+                              controller.shakedCount.value.toString(),
+                              style: const TextStyle(fontSize: 35),
                             ),
-                            Transform.rotate(
-                              angle: -10 * math.pi / 180,
-                              child: Icon(
-                                Icons.vibration,
-                                size: height * 0.2,
-                                color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),
-                              ),
-                            ),
-                            SizedBox(
-                              height: height * 0.08,
-                            ),
-                            Obx(
-                              () => Text(
-                                controller.shakedCount.value.toString(),
-                                style: const TextStyle(fontSize: 35),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),);
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

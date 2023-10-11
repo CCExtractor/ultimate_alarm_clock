@@ -107,13 +107,17 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
         List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
         latestFirestoreAlarms = firestoreDocuments.map((doc) {
           return AlarmModel.fromDocumentSnapshot(
-              documentSnapshot: doc, user: user,);
+            documentSnapshot: doc,
+            user: user,
+          );
         }).toList();
 
         List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
         latestSharedAlarms = sharedAlarmDocuments.map((doc) {
           return AlarmModel.fromDocumentSnapshot(
-              documentSnapshot: doc, user: user,);
+            documentSnapshot: doc,
+            user: user,
+          );
         }).toList();
 
         latestFirestoreAlarms += latestSharedAlarms;
@@ -162,7 +166,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
                 }
               }
             } else {
-              // If alarm is one-time and has already passed, set upcoming time to next day
+              // If alarm is one-time and has already passed, set upcoming time
+              // to next day
               if (aUpcomingTime <=
                   DateTime.now().hour * 60 + DateTime.now().minute) {
                 aUpcomingTime += Duration.minutesPerDay;
@@ -179,7 +184,8 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
                 }
               }
             } else {
-              // If alarm is one-time and has already passed, set upcoming time to next day
+              // If alarm is one-time and has already passed, set upcoming time
+              // to next day
               if (bUpcomingTime <=
                   DateTime.now().hour * 60 + DateTime.now().minute) {
                 bUpcomingTime += Duration.minutesPerDay;
@@ -250,12 +256,18 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
 
       String timeToAlarm = Utils.timeUntilAlarm(
-          Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days,);
+        Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+        latestAlarm.days,
+      );
       alarmTime.value = 'Rings in $timeToAlarm';
 
       // This function is necessary when alarms are deleted/enabled
       await scheduleNextAlarm(
-          alarmRecord, isarLatestAlarm, firestoreLatestAlarm, latestAlarm,);
+        alarmRecord,
+        isarLatestAlarm,
+        firestoreLatestAlarm,
+        latestAlarm,
+      );
 
       if (latestAlarm.minutesSinceMidnight > -1) {
         // To account for difference between seconds upto the next minute
@@ -266,25 +278,39 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
             ? nextMinute.difference(now)
             : Duration.zero;
 
-        // Adding a delay till that difference between seconds upto the next minute
+        // Adding a delay till that difference between seconds upto the next
+        // minute
         await Future.delayed(delay);
 
-        // Update the value of timeToAlarm only once till it settles it's time with the upcoming alarm
+        // Update the value of timeToAlarm only once till it settles it's time
+        // with the upcoming alarm
         // Doing this because of an bug :
-        // If we are not doing the below three lines of code the time is not updating for 2 min after running
-        // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE MISCALCULATION FOR INITIAL MINUTES
-        // This is just to make sure that our calculated time-to-alarm is upto date with the real time for next alarm
+        // If we are not doing the below three lines of code the
+        // time is not updating for 2 min after running
+        // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
+        // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE MISCALCULATION
+        // FOR INITIAL MINUTES
+        // This is just to make sure that our calculated time-to-alarm is
+        // upto date with the real time for next alarm
         timeToAlarm = Utils.timeUntilAlarm(
-            Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days,);
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+          latestAlarm.days,
+        );
         alarmTime.value = 'Rings in $timeToAlarm';
 
-        // Running a timer of periodic one minute as it is now in sync with the current time
+        // Running a timer of periodic one minute as it is now in sync with
+        // the current time
         _timer = Timer.periodic(
             Duration(
-                milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
-                    DateTime.now().add(const Duration(minutes: 1)),),), (timer) {
+              milliseconds: Utils.getMillisecondsToAlarm(
+                DateTime.now(),
+                DateTime.now().add(const Duration(minutes: 1)),
+              ),
+            ), (timer) {
           timeToAlarm = Utils.timeUntilAlarm(
-              Utils.stringToTimeOfDay(latestAlarm.alarmTime), latestAlarm.days,);
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+            latestAlarm.days,
+          );
           alarmTime.value = 'Rings in $timeToAlarm';
         });
       } else {
@@ -293,17 +319,24 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     });
   }
 
-  scheduleNextAlarm(AlarmModel alarmRecord, AlarmModel isarLatestAlarm,
-      AlarmModel firestoreLatestAlarm, AlarmModel latestAlarm,) async {
+  scheduleNextAlarm(
+    AlarmModel alarmRecord,
+    AlarmModel isarLatestAlarm,
+    AlarmModel firestoreLatestAlarm,
+    AlarmModel latestAlarm,
+  ) async {
     TimeOfDay latestAlarmTimeOfDay =
         Utils.stringToTimeOfDay(latestAlarm.alarmTime);
     if (latestAlarm.isEnabled == false) {
       debugPrint(
-          'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',);
+        'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
+      );
       await stopForegroundTask();
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-          DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),);
+        DateTime.now(),
+        Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+      );
       if (await FlutterForegroundTask.isRunningService == false) {
         createForegroundTask(intervaltoAlarm);
         await startForegroundTask(latestAlarm);
@@ -312,7 +345,6 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       }
     }
   }
-
 
   @override
   void onClose() {

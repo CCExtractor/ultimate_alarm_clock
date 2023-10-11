@@ -31,7 +31,8 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                   minHeight: 2,
                   value: controller.progress.value,
                   backgroundColor: Colors.grey,
-                  valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(kprimaryColor),
                 ),
               ),
               Expanded(
@@ -44,21 +45,25 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Obx(() => Text(
-                                        controller.questionText.value,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayLarge,
-                                      ),),
+                                  child: Obx(
+                                    () => Text(
+                                      controller.questionText.value,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge,
+                                    ),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Obx(() => Text(
-                                        controller.displayValue.value,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium,
-                                      ),),
+                                  child: Obx(
+                                    () => Text(
+                                      controller.displayValue.value,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium,
+                                    ),
+                                  ),
                                 ),
                               ],
                             )
@@ -74,7 +79,8 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                                       Icons.close,
                                       size: height * 0.08,
                                       color: Colors.red,
-                                    ),),
+                                    ),
+                            ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
@@ -143,8 +149,12 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         controller.onButtonPressed(number);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.10) : kprimaryTextColor.withOpacity(0.08),
-        foregroundColor: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightPrimaryTextColor.withOpacity(0.10)
+            : kprimaryTextColor.withOpacity(0.08),
+        foregroundColor: themeController.isLightMode.value
+            ? kLightPrimaryTextColor
+            : kprimaryTextColor,
         padding: const EdgeInsets.all(16),
         minimumSize: const Size(64, 64),
       ),
@@ -159,7 +169,9 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         controller.displayValue.value = '';
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.40) : kprimaryTextColor.withOpacity(0.5),
+        backgroundColor: themeController.isLightMode.value
+            ? kLightPrimaryTextColor.withOpacity(0.40)
+            : kprimaryTextColor.withOpacity(0.5),
         foregroundColor: Colors.black,
         padding: const EdgeInsets.all(16),
         minimumSize: const Size(64, 64),
@@ -167,7 +179,9 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
       child: Icon(
         Icons.backspace,
         size: 32,
-        color: themeController.isLightMode.value ? kLightPrimaryTextColor.withOpacity(0.7) : kprimaryTextColor.withOpacity(0.7),
+        color: themeController.isLightMode.value
+            ? kLightPrimaryTextColor.withOpacity(0.7)
+            : kprimaryTextColor.withOpacity(0.7),
       ),
     );
   }
@@ -189,7 +203,9 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: kprimaryColor.withOpacity(0.8),
-        foregroundColor: themeController.isLightMode.value ? kLightSecondaryTextColor : ksecondaryTextColor,
+        foregroundColor: themeController.isLightMode.value
+            ? kLightSecondaryTextColor
+            : ksecondaryTextColor,
         padding: const EdgeInsets.all(16),
         minimumSize: const Size(64, 64),
       ),

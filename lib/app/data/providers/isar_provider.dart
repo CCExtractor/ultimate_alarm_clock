@@ -89,7 +89,8 @@ class IsarDb {
         bool aRepeats = a.days.any((day) => day);
         bool bRepeats = b.days.any((day) => day);
 
-        // If alarm is one-time and has already passed or is happening now, set time until next alarm to next day
+        // If alarm is one-time and has already passed or is happening now,
+        // set time until next alarm to next day
         if (!aRepeats && aTimeUntilNextAlarm < 0) {
           aTimeUntilNextAlarm += Duration.minutesPerDay;
         }

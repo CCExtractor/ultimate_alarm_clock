@@ -26,7 +26,9 @@ class AlarmHandlerModel extends TaskHandler {
   bool isScreenActive = true;
 
   Future<bool> checkWeatherCondition(
-      LatLng location, List<int> weatherTypeInt,) async {
+    LatLng location,
+    List<int> weatherTypeInt,
+  ) async {
     List<WeatherTypes> weatherTypes =
         Utils.getWeatherTypesFromInt(weatherTypeInt);
     String? apiKey =
@@ -34,7 +36,9 @@ class AlarmHandlerModel extends TaskHandler {
     WeatherFactory weatherFactory = WeatherFactory(apiKey!);
     try {
       Weather weatherData = await weatherFactory.currentWeatherByLocation(
-          location.latitude, location.longitude,);
+        location.latitude,
+        location.longitude,
+      );
       for (var weatherType in weatherTypes) {
         bool isConditionMet = false;
         switch (weatherType) {
@@ -101,7 +105,8 @@ class AlarmHandlerModel extends TaskHandler {
             } else if (event == ScreenStateEvent.SCREEN_OFF) {
               debugPrint('STATE: $event');
 
-              // Stop the stopwatch and update _unlockedDuration when the screen is turned off
+              // Stop the stopwatch and update _unlockedDuration when the screen
+              // is turned off
               isScreenActive = false;
               _stopwatch!.stop();
               _stopwatch!.reset();
@@ -129,10 +134,13 @@ class AlarmHandlerModel extends TaskHandler {
       LatLng currentLocation = LatLng(0, 0);
 
       currentLocation = await FlLocation.getLocationStream().first.then(
-          (value) =>
-              Utils.stringToLatLng('${value.latitude}, ${value.longitude}'),);
+            (value) =>
+                Utils.stringToLatLng('${value.latitude}, ${value.longitude}'),
+          );
       bool isWeatherTypeMatching = await checkWeatherCondition(
-          currentLocation, alarmRecord.weatherTypes,);
+        currentLocation,
+        alarmRecord.weatherTypes,
+      );
       if (isWeatherTypeMatching == true) {
         shouldAlarmRing = false;
       }
@@ -155,8 +163,10 @@ class AlarmHandlerModel extends TaskHandler {
     if (alarmRecord.isLocationEnabled == true) {
       LatLng destination = LatLng(0, 0);
       LatLng source = Utils.stringToLatLng(alarmRecord.location);
-      destination = await FlLocation.getLocationStream().first.then((value) =>
-          Utils.stringToLatLng('${value.latitude}, ${value.longitude}'),);
+      destination = await FlLocation.getLocationStream().first.then(
+            (value) =>
+                Utils.stringToLatLng('${value.latitude}, ${value.longitude}'),
+          );
 
       if (Utils.isWithinRadius(source, destination, 500)) {
         shouldAlarmRing = false;
@@ -178,9 +188,11 @@ class AlarmHandlerModel extends TaskHandler {
         _sendPort?.send('alarmRingRoute');
       }
     }
-    //  The time will never be before since getMilliSeconds will always adjust it a day forward
+    //  The time will never be before since getMilliSeconds will always adjust
+    // it a day forward
     else {
-      // We need this part as onEvent is called mandatorily once when the task is created
+      // We need this part as onEvent is called mandatorily once when the task
+      // is created
       int ms = Utils.getMillisecondsToAlarm(DateTime.now(), dateTime);
 
       debugPrint('Event set for: ${alarmRecord.alarmTime} : $ms');

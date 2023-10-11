@@ -131,7 +131,8 @@ class FirestoreDb {
         bool aRepeats = a.days.any((day) => day);
         bool bRepeats = b.days.any((day) => day);
 
-        // If alarm is one-time and has already passed, set time until next alarm to next day
+        // If alarm is one-time and has already passed, set time until
+        // next alarm to next day
         if (!aRepeats && aTimeUntilNextAlarm < 0) {
           aTimeUntilNextAlarm += Duration.minutesPerDay;
         }

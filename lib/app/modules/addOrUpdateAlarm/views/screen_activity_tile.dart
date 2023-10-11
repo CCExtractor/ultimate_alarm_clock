@@ -71,18 +71,19 @@ class ScreenActivityTile extends StatelessWidget {
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  kprimaryColor, // Set the desired background color
-                              ),
+                            backgroundColor: kprimaryColor,
+                            // Set the desired background color
+                          ),
                           child: Text(
                             'Done',
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,),
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
                           ),
                         ),
                       ],
@@ -100,9 +101,10 @@ class ScreenActivityTile extends StatelessWidget {
             Text(
               'Screen Activity',
               style: TextStyle(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,),
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
             ),
             IconButton(
               icon: Icon(
@@ -115,66 +117,70 @@ class ScreenActivityTile extends StatelessWidget {
               onPressed: () {
                 Utils.hapticFeedback();
                 showModalBottomSheet(
-                    context: context,
-                    backgroundColor: themeController.isLightMode.value
-                        ? kLightSecondaryBackgroundColor
-                        : ksecondaryBackgroundColor,
-                    builder: (context) {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                Icons.screen_lock_portrait_outlined,
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : kprimaryTextColor,
-                                size: height * 0.1,
+                  context: context,
+                  backgroundColor: themeController.isLightMode.value
+                      ? kLightSecondaryBackgroundColor
+                      : ksecondaryBackgroundColor,
+                  builder: (context) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.screen_lock_portrait_outlined,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryTextColor
+                                  : kprimaryTextColor,
+                              size: height * 0.1,
+                            ),
+                            Text(
+                              'Screen activity based cancellation',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: Text(
+                                'This feature will automatically cancel'
+                                " the alarm if you've been using your device"
+                                ' for a set number of minutes.',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.center,
                               ),
-                              Text('Screen activity based cancellation',
-                                  textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              width: width,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    kprimaryColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Understood',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .displayMedium,),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Text(
-                                  "This feature will automatically cancel the alarm if you've been using your device for a set number of minutes.",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  textAlign: TextAlign.center,
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : ksecondaryTextColor,
+                                      ),
                                 ),
                               ),
-                              SizedBox(
-                                width: width,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        kprimaryColor,),
-                                  ),
-                                  onPressed: () {
-                                    Utils.hapticFeedback();
-                                    Get.back();
-                                  },
-                                  child: Text(
-                                    'Understood',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : ksecondaryTextColor,),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    },);
+                      ),
+                    );
+                  },
+                );
               },
             ),
           ],
