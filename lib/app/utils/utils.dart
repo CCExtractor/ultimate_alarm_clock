@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 import 'constants.dart';
 
@@ -36,7 +34,10 @@ class Utils {
   }
 
   static DateTime calculateOffsetAlarmTime(
-      DateTime eventTime, bool isOffsetBefore, int offsetDuration) {
+    DateTime eventTime,
+    bool isOffsetBefore,
+    int offsetDuration,
+  ) {
     if (isOffsetBefore) {
       return eventTime.subtract(Duration(minutes: offsetDuration));
     } else {
@@ -67,27 +68,27 @@ class Utils {
   }
 
   static String getFormattedDate(DateTime now) {
-    final formattedDate = DateFormat("EEE, MMMM d").format(now);
+    final formattedDate = DateFormat('EEE, MMMM d').format(now);
     int day = now.day;
-    String daySuffix = "";
+    String daySuffix = '';
     if (day >= 11 && day <= 13) {
-      daySuffix = "th";
+      daySuffix = 'th';
     }
     switch (day % 10) {
       case 1:
-        daySuffix = "st";
+        daySuffix = 'st';
         break;
       case 2:
-        daySuffix = "nd";
+        daySuffix = 'nd';
         break;
       case 3:
-        daySuffix = "rd";
+        daySuffix = 'rd';
         break;
       default:
-        daySuffix = "th";
+        daySuffix = 'th';
     }
 
-    return "$formattedDate$daySuffix";
+    return '$formattedDate$daySuffix';
   }
 
   static GeoPoint latLngToGeoPoint(LatLng latLng) {
@@ -135,7 +136,12 @@ class Utils {
   static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
     final now = DateTime.now();
     final todayAlarm = DateTime(
-        now.year, now.month, now.day, alarmTime.hour, alarmTime.minute);
+      now.year,
+      now.month,
+      now.day,
+      alarmTime.hour,
+      alarmTime.minute,
+    );
 
     Duration duration;
 
@@ -160,8 +166,13 @@ class Utils {
         if (days[nextDayIndex]) {
           if (i < daysUntilNextAlarm) {
             daysUntilNextAlarm = i;
-            nextAlarm = DateTime(now.year, now.month, now.day + i,
-                alarmTime.hour, alarmTime.minute);
+            nextAlarm = DateTime(
+              now.year,
+              now.month,
+              now.day + i,
+              alarmTime.hour,
+              alarmTime.minute,
+            );
           }
         }
       }
@@ -227,7 +238,9 @@ class Utils {
   }
 
   static AlarmModel getFirstScheduledAlarm(
-      AlarmModel alarm1, AlarmModel alarm2) {
+    AlarmModel alarm1,
+    AlarmModel alarm2,
+  ) {
     // Compare the isEnabled property for each alarm
     if (alarm1.isEnabled != alarm2.isEnabled) {
       return alarm1.isEnabled ? alarm1 : alarm2;
@@ -284,35 +297,36 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
-        snoozeDuration: 0,
-        label: '',
-        isOneTime: false,
-        offsetDetails: {},
-        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        lastEditedUserId: '',
-        mutexLock: false,
-        ownerName: '',
-        ownerId: '',
-        alarmID: '',
-        activityInterval: 0,
-        isMathsEnabled: false,
-        numMathsQuestions: 0,
-        mathsDifficulty: 0,
-        qrValue: "",
-        isQrEnabled: false,
-        isShakeEnabled: false,
-        shakeTimes: 0,
-        days: [false, false, false, false, false, false, false],
-        weatherTypes: [],
-        isWeatherEnabled: false,
-        isEnabled: false,
-        isActivityEnabled: false,
-        isLocationEnabled: false,
-        isSharedAlarmEnabled: false,
-        intervalToAlarm: 0,
-        location: '',
-        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()));
+      snoozeDuration: 0,
+      label: '',
+      isOneTime: false,
+      offsetDetails: {},
+      mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      lastEditedUserId: '',
+      mutexLock: false,
+      ownerName: '',
+      ownerId: '',
+      alarmID: '',
+      activityInterval: 0,
+      isMathsEnabled: false,
+      numMathsQuestions: 0,
+      mathsDifficulty: 0,
+      qrValue: '',
+      isQrEnabled: false,
+      isShakeEnabled: false,
+      shakeTimes: 0,
+      days: [false, false, false, false, false, false, false],
+      weatherTypes: [],
+      isWeatherEnabled: false,
+      isEnabled: false,
+      isActivityEnabled: false,
+      isLocationEnabled: false,
+      isSharedAlarmEnabled: false,
+      intervalToAlarm: 0,
+      location: '',
+      alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+    );
   }
 
   static String getFormattedWeatherTypes(List weatherTypes) {
@@ -320,7 +334,7 @@ class Utils {
       return 'Off';
     }
 
-    final allWeatherTypes = WeatherTypes.values;
+    const allWeatherTypes = WeatherTypes.values;
     final hasAllTypes =
         allWeatherTypes.every((type) => weatherTypes.contains(type));
 

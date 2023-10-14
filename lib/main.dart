@@ -23,7 +23,7 @@ void main() async {
       theme: kLightThemeData,
       darkTheme: kThemeData,
       themeMode: ThemeMode.system,
-      title: "UltiClock",
+      title: 'UltiClock',
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),

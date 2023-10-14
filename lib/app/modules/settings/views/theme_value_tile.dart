@@ -10,7 +10,8 @@ class ThemeValueTile extends StatefulWidget {
     super.key,
     required this.controller,
     required this.height,
-    required this.width, required this.themeController,
+    required this.width,
+    required this.themeController,
   });
 
   final SettingsController controller;
@@ -30,7 +31,9 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
       () => Container(
         width: widget.width * 0.91,
         height: widget.height * 0.1,
-        decoration: Utils.getCustomTileBoxDecoration(isLightMode: widget.themeController.isLightMode.value), 
+        decoration: Utils.getCustomTileBoxDecoration(
+          isLightMode: widget.themeController.isLightMode.value,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -44,9 +47,11 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
                 activeColor: ksecondaryColor,
                 onChanged: (bool value) async {
                   widget.themeController.toggleThemeValue(value);
-                  Get.changeThemeMode(widget.themeController.isLightMode.value
-                      ? ThemeMode.light
-                      : ThemeMode.dark);
+                  Get.changeThemeMode(
+                    widget.themeController.isLightMode.value
+                        ? ThemeMode.light
+                        : ThemeMode.dark,
+                  );
                   Utils.hapticFeedback();
                 },
               ),

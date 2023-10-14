@@ -13,18 +13,16 @@ class ThemeController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
   void _loadThemeValue() async {
-    isLightMode.value = await _secureStorageProvider.readThemeValue() == AppTheme.light;
-    Get.changeThemeMode(isLightMode.value ? ThemeMode.light : ThemeMode.dark); 
+    isLightMode.value =
+        await _secureStorageProvider.readThemeValue() == AppTheme.light;
+    Get.changeThemeMode(isLightMode.value ? ThemeMode.light : ThemeMode.dark);
   }
 
   void _saveThemeValuePreference() async {
-    await _secureStorageProvider.writeThemeValue(theme: isLightMode.value ? AppTheme.light : AppTheme.dark); 
+    await _secureStorageProvider.writeThemeValue(
+      theme: isLightMode.value ? AppTheme.light : AppTheme.dark,
+    );
   }
 
   void toggleThemeValue(bool enabled) {

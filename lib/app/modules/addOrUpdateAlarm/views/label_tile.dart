@@ -24,22 +24,24 @@ class LabelTile extends StatelessWidget {
       title: Text(
         'Label',
         style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor),
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : kprimaryTextColor,
+        ),
       ),
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          title: "Enter a name",
+          title: 'Enter a name',
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           titleStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor),
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
           contentPadding: const EdgeInsets.all(21),
           content: TextField(
             autofocus: true,
@@ -49,38 +51,46 @@ class LabelTile extends StatelessWidget {
                 ? kLightPrimaryTextColor.withOpacity(0.75)
                 : kprimaryTextColor.withOpacity(0.75),
             decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor.withOpacity(0.75)
-                            : kprimaryTextColor.withOpacity(0.75),
-                        width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(12))),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor.withOpacity(0.75)
-                            : kprimaryTextColor.withOpacity(0.75),
-                        width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(12))),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor.withOpacity(0.75)
-                            : kprimaryTextColor.withOpacity(0.75),
-                        width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(12))),
-                hintText: 'Enter a name',
-                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.75)
+                      : kprimaryTextColor.withOpacity(0.75),
+                  width: 1,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.75)
+                      : kprimaryTextColor.withOpacity(0.75),
+                  width: 1,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.75)
+                      : kprimaryTextColor.withOpacity(0.75),
+                  width: 1,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+              hintText: 'Enter a name',
+              hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor)),
+                        : kprimaryDisabledTextColor,
+                  ),
+            ),
             onChanged: (text) {
               if (text.trim().isEmpty) {
-                controller.labelController.text = "";
+                controller.labelController.text = '';
                 if (text.isNotEmpty) {
                   Get.snackbar(
-                    "Note",
+                    'Note',
                     "Please don't enter whitespace as first character!",
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
@@ -94,13 +104,15 @@ class LabelTile extends StatelessWidget {
               : ksecondaryBackgroundColor,
           confirm: TextButton(
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(kprimaryColor)),
+              backgroundColor: MaterialStateProperty.all(kprimaryColor),
+            ),
             child: Text(
               'Save',
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : ksecondaryTextColor),
+                    color: themeController.isLightMode.value
+                        ? kLightPrimaryTextColor
+                        : ksecondaryTextColor,
+                  ),
             ),
             onPressed: () {
               Utils.hapticFeedback();
@@ -114,25 +126,27 @@ class LabelTile extends StatelessWidget {
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Obx(() => Container(
-                  width: 100,
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    (controller.label.value.trim().isNotEmpty)
-                        ? controller.label.value
-                        : 'Off',
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: (controller.label.value.trim().isEmpty)
-                              ? themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor
-                              : themeController.isLightMode.value
-                                  ? kLightPrimaryTextColor
-                                  : kprimaryTextColor,
-                        ),
-                  ),
-                )),
+            Obx(
+              () => Container(
+                width: 100,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  (controller.label.value.trim().isNotEmpty)
+                      ? controller.label.value
+                      : 'Off',
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: (controller.label.value.trim().isEmpty)
+                            ? themeController.isLightMode.value
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor
+                            : themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : kprimaryTextColor,
+                      ),
+                ),
+              ),
+            ),
             Icon(
               Icons.chevron_right,
               color: (controller.label.value.trim().isEmpty)
@@ -142,7 +156,7 @@ class LabelTile extends StatelessWidget {
                   : themeController.isLightMode.value
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
-            )
+            ),
           ],
         ),
       ),

@@ -39,7 +39,7 @@ class AlarmControlController extends GetxController
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-    print("CURRENT RINGING : ${latestAlarm.alarmTime}");
+    debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
   }
@@ -53,7 +53,7 @@ class AlarmControlController extends GetxController
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-    print("LATEST : ${latestAlarm.alarmTime}");
+    debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
   }
@@ -68,7 +68,7 @@ class AlarmControlController extends GetxController
       _currentTimeTimer?.cancel();
     }
 
-    _currentTimeTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _currentTimeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (minutes.value == 0 && seconds.value == 0) {
         timer.cancel();
         vibrationTimer =
@@ -91,8 +91,11 @@ class AlarmControlController extends GetxController
     isSnoozing.value = false;
     _currentTimeTimer = Timer.periodic(
         Duration(
-            milliseconds: Utils.getMillisecondsToAlarm(DateTime.now(),
-                DateTime.now().add(const Duration(minutes: 1)))), (timer) {
+          milliseconds: Utils.getMillisecondsToAlarm(
+            DateTime.now(),
+            DateTime.now().add(const Duration(minutes: 1)),
+          ),
+        ), (timer) {
       formattedDate.value = Utils.getFormattedDate(DateTime.now());
       timeNow.value =
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
@@ -121,7 +124,9 @@ class AlarmControlController extends GetxController
     if (Get.arguments == null) {
       currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
       showButton.value = true;
-      // If the alarm is set to NEVER repeat, then it will be chosen as the next alarm to ring by default as it would ring the next day
+      // If the alarm is set to NEVER repeat, then it will
+      // be chosen as the next alarm to ring by default as
+      // it would ring the next day
       if (currentlyRingingAlarm.value.days
           .every((element) => element == false)) {
         currentlyRingingAlarm.value.isEnabled = false;
@@ -130,10 +135,13 @@ class AlarmControlController extends GetxController
           IsarDb.updateAlarm(currentlyRingingAlarm.value);
         } else {
           FirestoreDb.updateAlarm(
-              currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+            currentlyRingingAlarm.value.ownerId,
+            currentlyRingingAlarm.value,
+          );
         }
       } else if (currentlyRingingAlarm.value.isOneTime == true) {
-        // If the alarm has to repeat on one day, but ring just once, we will keep seting its days to false until it will never ring
+        // If the alarm has to repeat on one day, but ring just once, we will
+        // keep seting its days to false until it will never ring
         int currentDay = DateTime.now().weekday - 1;
         currentlyRingingAlarm.value.days[currentDay] = false;
 
@@ -146,7 +154,9 @@ class AlarmControlController extends GetxController
           IsarDb.updateAlarm(currentlyRingingAlarm.value);
         } else {
           FirestoreDb.updateAlarm(
-              currentlyRingingAlarm.value.ownerId, currentlyRingingAlarm.value);
+            currentlyRingingAlarm.value.ownerId,
+            currentlyRingingAlarm.value,
+          );
         }
       }
     } else {
@@ -164,14 +174,20 @@ class AlarmControlController extends GetxController
           Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 
       // }
-      // This condition will never satisfy because this will only occur if fake model is returned as latest alarm
+      // This condition will never satisfy because this will only
+      // occur if fake model is returned as latest alarm
       if (latestAlarm.isEnabled == false) {
-        print(
-            "STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()} and current = ${currentTime.toString()}");
+        debugPrint(
+          'STOPPED IF CONDITION with latest = '
+          '${latestAlarmTimeOfDay.toString()} and '
+          'current = ${currentTime.toString()}',
+        );
         await stopForegroundTask();
       } else {
         int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-            DateTime.now(), Utils.timeOfDayToDateTime(latestAlarmTimeOfDay));
+          DateTime.now(),
+          Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+        );
         if (await FlutterForegroundTask.isRunningService == false) {
           createForegroundTask(intervaltoAlarm);
           await startForegroundTask(latestAlarm);
@@ -180,11 +196,6 @@ class AlarmControlController extends GetxController
         }
       }
     }
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override
