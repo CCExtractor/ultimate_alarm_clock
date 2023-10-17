@@ -8,7 +8,8 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class RepeatOnceTile extends StatelessWidget {
   const RepeatOnceTile({
     super.key,
-    required this.controller, required this.themeController,
+    required this.controller,
+    required this.themeController,
   });
 
   final AddOrUpdateAlarmController controller;
@@ -17,10 +18,16 @@ class RepeatOnceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
+      tileColor: themeController.isLightMode.value
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
       title: Text(
         'Repeat once',
-        style: TextStyle(color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor),
+        style: TextStyle(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : kprimaryTextColor,
+        ),
       ),
       onTap: () {
         Utils.hapticFeedback();
@@ -35,20 +42,22 @@ class RepeatOnceTile extends StatelessWidget {
             Obx(() {
               if (controller.repeatDays.every((element) => element == false)) {
                 return Switch.adaptive(
-                    value: false,
-                    activeColor: ksecondaryColor,
-                    onChanged: (value) {
-                      Utils.hapticFeedback();
-                      controller.isOneTime.value = false;
-                    });
-              }
-              return Switch.adaptive(
-                  value: controller.isOneTime.value,
+                  value: false,
                   activeColor: ksecondaryColor,
                   onChanged: (value) {
                     Utils.hapticFeedback();
-                    controller.isOneTime.value = value;
-                  });
+                    controller.isOneTime.value = false;
+                  },
+                );
+              }
+              return Switch.adaptive(
+                value: controller.isOneTime.value,
+                activeColor: ksecondaryColor,
+                onChanged: (value) {
+                  Utils.hapticFeedback();
+                  controller.isOneTime.value = value;
+                },
+              );
             }),
           ],
         ),

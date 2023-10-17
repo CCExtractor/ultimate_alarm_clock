@@ -59,7 +59,9 @@ class FirestoreDb {
   }
 
   static Future<AlarmModel> getTriggeredAlarm(
-      UserModel? user, String time) async {
+    UserModel? user,
+    String time,
+  ) async {
     if (user == null) return Utils.genFakeAlarmModel();
     QuerySnapshot snapshot = await _alarmsCollection(user)
         .where('isEnabled', isEqualTo: true)
@@ -68,14 +70,19 @@ class FirestoreDb {
 
     List list = snapshot.docs.map((DocumentSnapshot document) {
       return AlarmModel.fromDocumentSnapshot(
-          documentSnapshot: document, user: user);
+        documentSnapshot: document,
+        user: user,
+      );
     }).toList();
 
     return list[0];
   }
 
   static Future<AlarmModel> getLatestAlarm(
-      UserModel? user, AlarmModel alarmRecord, bool wantNextAlarm) async {
+    UserModel? user,
+    AlarmModel alarmRecord,
+    bool wantNextAlarm,
+  ) async {
     if (user == null) {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
@@ -83,11 +90,19 @@ class FirestoreDb {
 
     int nowInMinutes = 0;
     if (wantNextAlarm == true) {
-      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+      nowInMinutes = Utils.timeOfDayToInt(
+        TimeOfDay(
+          hour: TimeOfDay.now().hour,
+          minute: TimeOfDay.now().minute + 1,
+        ),
+      );
     } else {
-      nowInMinutes = Utils.timeOfDayToInt(TimeOfDay(
-          hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1));
+      nowInMinutes = Utils.timeOfDayToInt(
+        TimeOfDay(
+          hour: TimeOfDay.now().hour,
+          minute: TimeOfDay.now().minute + 1,
+        ),
+      );
     }
 
     late List<AlarmModel> alarms;
@@ -106,13 +121,17 @@ class FirestoreDb {
 
     var z = snapshotSharedAlarms.docs.map((DocumentSnapshot document) {
       AlarmModel x = AlarmModel.fromDocumentSnapshot(
-          documentSnapshot: document, user: user);
+        documentSnapshot: document,
+        user: user,
+      );
       return x;
     }).toList();
 
     alarms = snapshot.docs.map((DocumentSnapshot document) {
       AlarmModel x = AlarmModel.fromDocumentSnapshot(
-          documentSnapshot: document, user: user);
+        documentSnapshot: document,
+        user: user,
+      );
       return x;
     }).toList();
 
@@ -131,7 +150,8 @@ class FirestoreDb {
         bool aRepeats = a.days.any((day) => day);
         bool bRepeats = b.days.any((day) => day);
 
-        // If alarm is one-time and has already passed, set time until next alarm to next day
+        // If alarm is one-time and has already passed, set time until
+        // next alarm to next day
         if (!aRepeats && aTimeUntilNextAlarm < 0) {
           aTimeUntilNextAlarm += Duration.minutesPerDay;
         }
@@ -245,19 +265,22 @@ class FirestoreDb {
     offsetDetails[userModelId] = {
       'isOffsetBefore': true,
       'offsetDuration': 0,
-      'offsettedTime': alarmDoc.data()['alarmTime']
+      'offsettedTime': alarmDoc.data()['alarmTime'],
     };
 
     if (!sharedUserIds.contains(userModelId)) {
       sharedUserIds.add(userModelId);
       await alarmDoc.reference.update(
-          {'sharedUserIds': sharedUserIds, 'offsetDetails': offsetDetails});
+        {'sharedUserIds': sharedUserIds, 'offsetDetails': offsetDetails},
+      );
     }
     return true;
   }
 
   static Future<List<String>> removeUserFromAlarmSharedUsers(
-      UserModel? userModel, String alarmID) async {
+    UserModel? userModel,
+    String alarmID,
+  ) async {
     String userModelId = userModel!.id;
 
     final alarmQuerySnapshot = await _firebaseFirestore

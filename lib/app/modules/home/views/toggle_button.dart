@@ -4,8 +4,12 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 
 class ToggleButton extends StatefulWidget {
-  const ToggleButton(
-      {super.key, required this.controller, this.alarmIndex, this.isSelected});
+  const ToggleButton({
+    super.key,
+    required this.controller,
+    this.alarmIndex,
+    this.isSelected,
+  });
   final HomeController controller;
   final int? alarmIndex;
   final RxBool? isSelected;
@@ -22,7 +26,6 @@ class _ToggleButtonState extends State<ToggleButton> {
         onTap: () async {
           // If individual toggle button is pressed
           if (widget.isSelected == null) {
-
             // Toggle the value of that particular alarm
             widget.controller.alarmListPairs.second[widget.alarmIndex!].value =
                 !widget
@@ -32,20 +35,20 @@ class _ToggleButtonState extends State<ToggleButton> {
             var buttonValue = widget
                 .controller.alarmListPairs.second[widget.alarmIndex!].value;
 
-            // Storing the alarm model 
+            // Storing the alarm model
             AlarmModel alarm =
                 widget.controller.alarmListPairs.first[widget.alarmIndex!];
 
             // If the alarm is selected
             if (buttonValue) {
-
               // Increase the number of alarms selected
               widget.controller.numberOfAlarmsSelected.value++;
 
               // Add this alarm to selected alarm set
               widget.controller.selectedAlarmSet.add(
-
-                // If the isSharedAlarmEnabled is true, then add firestore id and isSharedAlarmEnabled, else add isar id and isSharedAlarmEnabled
+                // If the isSharedAlarmEnabled is true, then add firestore id
+                // and isSharedAlarmEnabled, else add isar id
+                // and isSharedAlarmEnabled
                 alarm.isSharedAlarmEnabled
                     ? Pair(
                         alarm.firestoreId,
@@ -58,14 +61,16 @@ class _ToggleButtonState extends State<ToggleButton> {
               );
 
               // If all the alarms are selected
-              if(widget.controller.numberOfAlarmsSelected.value == widget.controller.alarmListPairs.first.length) {
+              if (widget.controller.numberOfAlarmsSelected.value ==
+                  widget.controller.alarmListPairs.first.length) {
                 widget.controller.isAllAlarmsSelected.value = true;
-              } 
+              }
             } else {
               // Reduce the number of alarms selected
               widget.controller.numberOfAlarmsSelected.value--;
 
-              // If isSharedAlarmEnabled is true, then remove the alarm with the firestore id, else with the isar id
+              // If isSharedAlarmEnabled is true, then remove the alarm with
+              // the firestore id, else with the isar id
               alarm.isSharedAlarmEnabled
                   ? widget.controller.selectedAlarmSet.removeWhere(
                       (element) => alarm.firestoreId == element.first,
@@ -74,8 +79,10 @@ class _ToggleButtonState extends State<ToggleButton> {
                       (element) => alarm.isarId == element.first,
                     );
 
-              // If all alarms are not selected, then set all alarm select button at the top to false
-              if(widget.controller.numberOfAlarmsSelected.value < widget.controller.alarmListPairs.first.length) {
+              // If all alarms are not selected, then set all alarm
+              // select button at the top to false
+              if (widget.controller.numberOfAlarmsSelected.value <
+                  widget.controller.alarmListPairs.first.length) {
                 widget.controller.isAllAlarmsSelected.value = false;
               }
             }
@@ -93,7 +100,8 @@ class _ToggleButtonState extends State<ToggleButton> {
               widget.controller.addAllAlarmsToSelectedAlarmSet();
 
               // Set the number of alarms selected to number of alarms
-              widget.controller.numberOfAlarmsSelected.value = widget.controller.alarmListPairs.first.length;
+              widget.controller.numberOfAlarmsSelected.value =
+                  widget.controller.alarmListPairs.first.length;
             } else {
               // Remove all alarms from the selected alarm set
               widget.controller.removeAllAlarmsFromSelectedAlarmSet();
@@ -115,10 +123,13 @@ class _ToggleButtonState extends State<ToggleButton> {
           ),
           child: widget.isSelected == null // If single toggle button is changed
               ? widget.controller.alarmListPairs.second[widget.alarmIndex!]
-                      .value // If it is selected, show a circle at the middle with an animation
+                      .value
+                  // If it is selected, show a circle at the middle
+                  // with an animation
                   ? _animatedCircle()
                   : const SizedBox()
-              : widget.isSelected!.value // If all alarm select button is selected
+              : widget.isSelected!
+                      .value // If all alarm select button is selected
                   ? _animatedCircle()
                   : const SizedBox(),
         ),

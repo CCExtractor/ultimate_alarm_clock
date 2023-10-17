@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -18,7 +19,7 @@ class AlarmChallengeController extends GetxController {
   ShakeDetector? _shakeDetector;
   MobileScannerController? qrController;
 
-  final qrValue = "".obs;
+  final qrValue = ''.obs;
   final isQrOngoing = Status.initialized.obs;
 
   final isMathsOngoing = Status.initialized.obs;
@@ -47,7 +48,8 @@ class AlarmChallengeController extends GetxController {
   newMathsQuestion() {
     numMathsQuestions.value = alarmRecord.numMathsQuestions;
     List mathsProblemDetails = Utils.generateMathProblem(
-        Difficulty.values[alarmRecord.mathsDifficulty]);
+      Difficulty.values[alarmRecord.mathsDifficulty],
+    );
     questionText.value = mathsProblemDetails[0];
     displayValue.value = '';
     mathsAnswer = mathsProblemDetails[1];
@@ -62,10 +64,12 @@ class AlarmChallengeController extends GetxController {
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
-          _shakeDetector = ShakeDetector.autoStart(onPhoneShake: () {
-            shakedCount.value -= 1;
-            restartTimer();
-          });
+          _shakeDetector = ShakeDetector.autoStart(
+            onPhoneShake: () {
+              shakedCount.value -= 1;
+              restartTimer();
+            },
+          );
         }
       });
 
@@ -125,13 +129,13 @@ class AlarmChallengeController extends GetxController {
   }
 
   void _startTimer() async {
-    final duration = const Duration(seconds: 15);
-    final totalIterations = 1500000;
-    final decrement = 0.000001;
+    const duration = Duration(seconds: 15);
+    const totalIterations = 1500000;
+    const decrement = 0.000001;
 
     for (var i = totalIterations; i > 0; i--) {
       if (!isTimerEnabled) {
-        print("THIS IS THE BUG");
+        debugPrint('THIS IS THE BUG');
         break;
       }
       if (progress.value <= 0.0) {
@@ -153,11 +157,6 @@ class AlarmChallengeController extends GetxController {
       isTimerEnabled = false;
       Get.offAllNamed('/home');
     }
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override

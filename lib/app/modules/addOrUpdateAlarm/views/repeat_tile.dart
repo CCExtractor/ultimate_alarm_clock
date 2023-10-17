@@ -27,9 +27,10 @@ class RepeatTile extends StatelessWidget {
               : ksecondaryBackgroundColor,
           title: 'Repeat',
           titleStyle: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor),
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
+          ),
           content: Obx(
             () => Column(
               children: [
@@ -53,18 +54,19 @@ class RepeatTile extends StatelessWidget {
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: kprimaryColor
-                              // Set the desired background color
-                              ),
+                            backgroundColor: kprimaryColor,
+                            // Set the desired background color
+                          ),
                           child: Text(
                             'Done',
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor),
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
                           ),
                         ),
                       ],
@@ -96,9 +98,10 @@ class RepeatTile extends StatelessWidget {
               () => Text(
                 controller.daysRepeating.value,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: themeController.isLightMode.value
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor),
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor
+                          : kprimaryTextColor,
+                    ),
               ),
             ),
             Icon(

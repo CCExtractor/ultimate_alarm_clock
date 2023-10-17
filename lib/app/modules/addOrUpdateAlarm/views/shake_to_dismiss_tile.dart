@@ -26,9 +26,10 @@ class ShakeToDismiss extends StatelessWidget {
           Text(
             'Shake to dismiss',
             style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor),
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+            ),
           ),
           IconButton(
             icon: Icon(
@@ -41,68 +42,72 @@ class ShakeToDismiss extends StatelessWidget {
             onPressed: () {
               Utils.hapticFeedback();
               showModalBottomSheet(
-                  context: context,
-                  backgroundColor: themeController.isLightMode.value
-                      ? kLightSecondaryBackgroundColor
-                      : ksecondaryBackgroundColor,
-                  builder: (context) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Transform.rotate(
-                              angle: 15,
-                              child: Icon(
-                                Icons.vibration,
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : kprimaryTextColor,
-                                size: height * 0.1,
-                              ),
+                context: context,
+                backgroundColor: themeController.isLightMode.value
+                    ? kLightSecondaryBackgroundColor
+                    : ksecondaryBackgroundColor,
+                builder: (context) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Transform.rotate(
+                            angle: 15,
+                            child: Icon(
+                              Icons.vibration,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryTextColor
+                                  : kprimaryTextColor,
+                              size: height * 0.1,
                             ),
-                            Text("Shake to dismiss",
-                                textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.displayMedium),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
+                          ),
+                          Text(
+                            'Shake to dismiss',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              'You will have to shake your phone a set number'
+                              ' of times to dismiss the alarm'
+                              ' - no more lazy snoozing :)',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(
+                            width: width,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(kprimaryColor),
+                              ),
+                              onPressed: () {
+                                Utils.hapticFeedback();
+                                Get.back();
+                              },
                               child: Text(
-                                "You will have to shake your phone a set number of times to dismiss the alarm - no more lazy snoozing :)",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center,
+                                'Understood',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                          : ksecondaryTextColor,
+                                    ),
                               ),
                             ),
-                            SizedBox(
-                              width: width,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(kprimaryColor),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                },
-                                child: Text(
-                                  'Understood',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                          color:
-                                              themeController.isLightMode.value
-                                                  ? kLightPrimaryTextColor
-                                                  : ksecondaryTextColor),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    );
-                  });
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],
@@ -116,62 +121,65 @@ class ShakeToDismiss extends StatelessWidget {
               : ksecondaryBackgroundColor,
           title: 'Number of shakes',
           titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Obx(() => Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      NumberPicker(
-                        value: controller.shakeTimes.value,
-                        minValue: 0,
-                        maxValue: 100,
-                        onChanged: (value) {
-                          Utils.hapticFeedback();
-                          if (value > 0) {
-                            controller.isShakeEnabled.value = true;
-                          } else {
-                            controller.isShakeEnabled.value = false;
-                          }
-                          controller.shakeTimes.value = value;
-                        },
-                      ),
-                      Text(controller.shakeTimes.value > 1 ? 'times' : 'time'),
-                    ],
-                  ),
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Utils.hapticFeedback();
-                              Get.back();
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: kprimaryColor
-                                // Set the desired background color
-                                ),
-                            child: Text(
-                              'Done',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : ksecondaryTextColor),
-                            ),
+          content: Obx(
+            () => Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    NumberPicker(
+                      value: controller.shakeTimes.value,
+                      minValue: 0,
+                      maxValue: 100,
+                      onChanged: (value) {
+                        Utils.hapticFeedback();
+                        if (value > 0) {
+                          controller.isShakeEnabled.value = true;
+                        } else {
+                          controller.isShakeEnabled.value = false;
+                        }
+                        controller.shakeTimes.value = value;
+                      },
+                    ),
+                    Text(controller.shakeTimes.value > 1 ? 'times' : 'time'),
+                  ],
+                ),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Utils.hapticFeedback();
+                            Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: kprimaryColor,
+                            // Set the desired background color
                           ),
-                        ],
-                      ),
+                          child: Text(
+                            'Done',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         );
       },
       trailing: InkWell(
@@ -201,7 +209,7 @@ class ShakeToDismiss extends StatelessWidget {
               color: themeController.isLightMode.value
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
-            )
+            ),
           ],
         ),
       ),
