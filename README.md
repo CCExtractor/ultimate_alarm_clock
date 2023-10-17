@@ -1,3 +1,4 @@
+
 # Ultimate Alarm Clock
 
 This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather and  more! It also includes challenges to ensure you completely wake up and an option to set shared alarms! This is the ULTIMATE alarm clock :)
@@ -7,14 +8,14 @@ This project aims to build a non-conventional alarm clock with smart features su
 [GSoC page](https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf)
 
 ## Table of Contents
-* [GetX Pattern](#getx_pattern)
-* [Database Schema](#database_schema)
-* [Installation & Setup](#installation_setup)
-* [User Interface & Features](#user_interface_features)
-* [Contribution Guidelines](#contribution_guidelines)
-* [Future Plans](#future_plans)
-* [Community](#community)
-* [Flutter](#flutter)
+- [GetX Pattern](#getx-pattern)
+- [Database Schema](#database-schema)
+- [Installation & Setup](#installation-setup)
+- [User Interface & Features](#user-interface-features)
+- [Contribution Guidelines](#contribution-guidelines)
+- [Future Plans](#future-plans)
+- [Community](#community)
+- [Flutter](#flutter)
 
 ## GetX Pattern
 
