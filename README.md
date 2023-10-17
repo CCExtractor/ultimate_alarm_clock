@@ -6,6 +6,16 @@ This project aims to build a non-conventional alarm clock with smart features su
 
 [GSoC page](https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf)
 
+## Table of Contents
+* [GetX Pattern](#getx_pattern)
+* [Database Schema](#database_schema)
+* [Installation & Setup](#installation_setup)
+* [User Interface & Features](#user_interface_features)
+* [Contribution Guidelines](#contribution_guidelines)
+* [Future Plans](#future_plans)
+* [Community](#community)
+* [Flutter](#flutter)
+
 ## GetX Pattern
 
 The "Ultimate Alarm Clock" project employs the GetX pattern for state management. The GetX pattern is a popular state management solution in the Flutter ecosystem, known for its simplicity, efficiency, and developer-friendly approach. It simplifies the process of managing the state of a Flutter application and helps in building reactive and performant user interfaces.
