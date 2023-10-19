@@ -586,7 +586,7 @@ class HomeView extends GetView<HomeController> {
                                 if (!snapshot.hasData) {
                                   return const Center(
                                     child: CircularProgressIndicator.adaptive(
-                                      backgroundColor: kprimaryColor,
+                                      backgroundColor: Colors.transparent,
                                       valueColor: AlwaysStoppedAnimation(
                                         kprimaryColor,
                                       ),
@@ -1194,7 +1194,12 @@ class HomeView extends GetView<HomeController> {
                               },
                             );
                           } else {
-                            return const CircularProgressIndicator.adaptive();
+                            return const CircularProgressIndicator.adaptive(
+                              backgroundColor: Colors.transparent,
+                              valueColor: AlwaysStoppedAnimation(
+                                kprimaryColor,
+                              ),
+                            );
                           }
                         },
                       );
