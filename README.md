@@ -57,7 +57,15 @@ The "Ultimate Alarm Clock" project utilizes multiple databases for different pur
 
 ### Firebase Firestore
 
-Firebase Firestore is used for real-time data synchronization and storage of user-related data. The schema for Firebase Firestore consists of collections and documents, and here is a summary of its structure. 
+Firebase Firestore is used for real-time data synchronization and storage of user-related data. It plays a pivotal role in enabling features like shared alarms and seamless collaboration among users. Here's why Firestore is a necessary component:
+
+- **Shared Alarms**: Firestore allows users to share alarms with one another in real-time. Users can collaborate on alarm settings, making it convenient for multiple individuals to set alarms for a common purpose.
+
+- **Real-time Updates**: Firestore enables instant updates and synchronization of alarm data across devices and users. This means that any changes made to shared alarms are immediately reflected on all connected devices.
+
+
+The schema for Firebase Firestore consists of collections and documents, and here is a summary of its structure. 
+
 
 #### Users Collection
 - **Attributes**:
@@ -135,7 +143,15 @@ Firebase Firestore is used for real-time data synchronization and storage of use
 
 ### ISAR 
 
-ISAR is the go-to solution for local storage of alarm-related data. It facilitates the efficient and structured management of alarm settings and preferences, ensuring that alarms function smoothly even in offline scenarios. ISAR optimizes data retrieval, enabling quick access to triggered alarms and user-specific configurations. Its performance efficiency and data integrity make it an essential component, ensuring that alarms trigger accurately and promptly. ISAR complements Firestore's real-time data synchronization, offering a responsive local data store to enhance the overall user experience. The schema for this data is already described above.
+ISAR is the go-to solution for local storage of alarm-related data. It facilitates the efficient and structured management of alarm settings and preferences, ensuring that alarms function smoothly even in offline scenarios. ISAR optimizes data retrieval, enabling quick access to triggered alarms and user-specific configurations. Its performance efficiency and data integrity make it an essential component, ensuring that alarms trigger accurately and promptly. ISAR complements Firestore's real-time data synchronization, offering a responsive local data store to enhance the overall user experience. 
+
+The key reasons for utilizing IsarDb are as follows:
+
+- **Offline Functionality**: IsarDb ensures that alarms function seamlessly even in offline scenarios. Users can trust that their alarms will trigger as expected, regardless of their internet connection status.
+
+- **Performance Optimization**: IsarDb optimizes data retrieval, allowing for quick access to triggered alarms and user-specific configurations. It enhances the overall performance and responsiveness of the application.
+
+The schema for this data is already described above.
 
 ### Flutter Secure Storage
 
@@ -247,6 +263,66 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Define automatic cancellation conditions based on screen activity, weather, and location.
   - Choose from challenges, including shake to dismiss, QR code, and math challenges.
   - Manage shared alarms.
+
+### Shared Alarms
+
+The "Ultimate Alarm Clock" project introduces the feature of shared alarms, allowing users to collaborate with friends, family members, or colleagues to ensure they wake up on time.
+
+#### Creating and Joining Shared Alarms
+
+1. **Google Sign-In**: To create or join a shared alarm, users must first sign in with their Google account. This authentication step ensures that only registered users can access this feature and maintains the security of shared alarms.
+
+2. **Creating a Shared Alarm**:
+
+   - From the Home View, users can create a new alarm by tapping the "Create Alarm" button.
+   - During the alarm creation process, users have the option to make it a "shared alarm."
+
+3. **Joining an Existing Shared Alarm**:
+
+   - Users can join an existing shared alarm by entering a unique shared alarm ID or accepting an invitation from the owner.
+   - The shared alarm ID is a unique code that the owner shares with potential collaborators.
+
+
+#### Implementation of Shared Alarms
+
+##### `addUserToAlarmSharedUsers`
+
+The `addUserToAlarmSharedUsers` function enables users to add new collaborators to a shared alarm. Here's how it works:
+
+- When a user initiates the process to join a shared alarm, this function is called.
+- It begins by checking whether the provided alarm ID exists in the database.
+- If the alarm ID is not found, the function returns `false`, indicating that the addition process failed.
+- If the alarm ID is found, the function proceeds to add the user as a collaborator.
+- If the user is the owner of the alarm, the function returns `null`, preventing the owner from being added as a collaborator.
+- The function then updates the list of shared user IDs and offset details for the alarm. It sets `isOffsetBefore` to `true`, `offsetDuration` to `0`, and `offsettedTime` to the alarm's original time.
+- The user is added to the list of shared user IDs, and the changes are instantly synchronized with all collaborators.
+
+##### `removeUserFromAlarmSharedUsers`
+
+The `removeUserFromAlarmSharedUsers` function allows the owner of a shared alarm, to remove a collaborator from the shared alarm. Here's how it works:
+
+- When the owner initiates the removal process, this function is called.
+- Similar to the previous function, it begins by checking whether the provided alarm ID exists in the database.
+- If the alarm ID is not found, the function returns an empty list, indicating that the removal process failed due to the alarm's non-existence.
+- If the alarm ID is found, the function proceeds to remove the specified user from the list of shared user IDs.
+- After the removal, the function updates the shared user IDs for the alarm, and the changes are immediately synchronized with all collaborators.
+
+##### `streamAlarms`
+
+1. **Data Sources**: It combines data from three primary data sources:
+   - **Firestore**: Alarms stored in the Firestore database.
+   - **Shared Alarms**: Alarms shared with the user through collaboration.
+   - **IsarDB**: Alarms stored locally for offline use.
+
+2. **Data Transformation**: The function processes the data retrieved from these sources. This transformation includes converting the raw document snapshots into `AlarmModel` objects, a data structure that represents alarm records.
+
+3. **Sorting**: Depending on user preferences, the alarms are sorted. Users have the option to enable or disable sorting, and two different sorting methods are applied based on this preference:
+   - **Time-Based Sorting**: If the sorting preference is enabled, the alarms are sorted in ascending order based on their scheduled time.
+   - **Priority Sorting**: If the sorting preference is disabled, the alarms are organized based on priority:
+     - First, the enabled alarms are listed ahead of disabled ones.
+     - Then, alarms are sorted by their upcoming time, factoring in repetition patterns and immediate execution for one-time alarms.
+
+4. **Returned Stream**: After these processes, the function returns a stream (`streamAlarms`) that represents the list of alarms. This stream reflects the real-time status of alarms and is used to update the user interface whenever alarms are added, modified, or removed.
 
 The "Ultimate Alarm Clock" offers an intuitive and feature-rich user interface, making it easy to set, manage, and customize your alarms while providing a seamless experience.
 
