@@ -21,6 +21,34 @@ This project aims to build a non-conventional alarm clock with smart features su
 
 The "Ultimate Alarm Clock" project employs the GetX pattern for state management. The GetX pattern is a popular state management solution in the Flutter ecosystem, known for its simplicity, efficiency, and developer-friendly approach. It simplifies the process of managing the state of a Flutter application and helps in building reactive and performant user interfaces.
 
+### Using `get_cli` for Project Development
+
+The "Ultimate Alarm Clock" project uses `get_cli`, a powerful Flutter package that simplifies various aspects of project development, such as generating new pages, routes, and more. Below, we'll briefly explain how to use `get_cli` for creating new pages and touch upon the purpose of different files in a GetX-based Flutter project.
+
+#### Installing `get_cli`
+
+To get started with `get_cli`, you need to install it. Run the following command in your project directory:
+
+```bash
+flutter pub global activate get_cli
+```
+
+#### Creating a New Page
+
+With `get_cli`, you can quickly generate the necessary files for a new page. Here's how you can do it:
+
+```bash
+get create page:/your_page_name
+```
+
+Replace `/your_page_name` with the desired name for your new page. This command will create several files and folders for your page, including a controller, view, and binding.
+
+### Purpose of Different Files
+
+- **Controller**: The controller is responsible for handling the business logic and state management of a page. It connects the UI (View) with the underlying data and functions. 
+- **View**: The view represents the UI of the page. It defines how the page should look and interact with users. It focuses on the presentation of data.
+- **Binding**: The binding connects the controller and view, ensuring that they work together seamlessly. It sets up dependencies, routes, and other configurations required for the page.
+
 To learn more about the GetX, you can read the documentation [_here_](https://chornthorn.github.io/getx-docs/).
 
 ## Database Schema
@@ -309,4 +337,3 @@ We would love to hear from you! You may join the CCExtractor community through S
 For help in getting started with Flutter, view
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-
