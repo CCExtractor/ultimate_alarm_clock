@@ -161,6 +161,7 @@ class AlarmControlController extends GetxController
       }
     } else {
       currentlyRingingAlarm.value = Get.arguments;
+      showButton.value = true;
     }
 
     // Setting snooze duration
