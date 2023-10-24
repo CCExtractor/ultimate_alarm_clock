@@ -38,7 +38,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              'Enable Light Mode',
+              '${widget.themeController.isLightMode.value?'Disable':'Enable'} Light Mode',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Obx(
