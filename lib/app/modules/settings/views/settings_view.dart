@@ -66,7 +66,7 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 GoogleSignIn(
-                  controller: controller,
+                  controller: settingsController,
                   width: width,
                   height: height,
                   themeController: themeController,
@@ -77,14 +77,14 @@ class SettingsView extends GetView<SettingsController> {
                 EnableHapticFeedback(
                   height: height,
                   width: width,
-                  controller: controller,
+                  controller: settingsController,
                   themeController: themeController,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 EnableSortedAlarmList(
-                  controller: controller,
+                  controller: settingsController,
                   height: height,
                   width: width,
                   themeController: themeController,
@@ -93,7 +93,7 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 ThemeValueTile(
-                  controller: controller,
+                  controller: settingsController,
                   height: height,
                   width: width,
                   themeController: themeController,
