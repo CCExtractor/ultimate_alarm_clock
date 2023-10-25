@@ -74,32 +74,34 @@ class AlarmControlView extends GetView<AlarmControlController> {
               (Get.arguments != null)
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: height * 0.06,
-                        width: width,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              themeController.isLightMode.value
-                                  ? kLightPrimaryTextColor.withOpacity(0.7)
-                                  : kprimaryTextColor.withOpacity(0.7),
+                      child: Obx(
+                        () => SizedBox(
+                          height: height * 0.06,
+                          width: width,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor.withOpacity(0.7)
+                                    : kprimaryTextColor.withOpacity(0.7),
+                              ),
                             ),
+                            child: Text(
+                              'Exit Preview',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : ksecondaryTextColor,
+                                  ),
+                            ),
+                            onPressed: () {
+                              Utils.hapticFeedback();
+                              Get.offNamed('/home');
+                            },
                           ),
-                          child: Text(
-                            'Exit Preview',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
-                                ),
-                          ),
-                          onPressed: () {
-                            Utils.hapticFeedback();
-                            Get.offNamed('/home');
-                          },
                         ),
                       ),
                     )
