@@ -9,12 +9,15 @@ class SettingsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<SettingsController>(
       () => SettingsController(),
+      fenix: true
     );
     Get.put<HomeController>(
       HomeController(),
+      permanent: true,
     );
     Get.put<ThemeController>(
       ThemeController(),
+      permanent: true,
     );
   }
 }
