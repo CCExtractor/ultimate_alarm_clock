@@ -514,3 +514,9 @@ We would love to hear from you! You may join the CCExtractor community through S
 For help in getting started with Flutter, view
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+
+## CHANGES MADE
+1. Fix the issue of changing theme.Issue No: #119
+2. Add theme check on Radio button on Alarm tile. Issue No: #125
