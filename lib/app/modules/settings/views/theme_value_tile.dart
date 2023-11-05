@@ -34,29 +34,32 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
         decoration: Utils.getCustomTileBoxDecoration(
           isLightMode: widget.themeController.isLightMode.value,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              'Enable Light Mode',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            Obx(
-              () => Switch.adaptive(
-                value: widget.themeController.isLightMode.value,
-                activeColor: ksecondaryColor,
-                onChanged: (bool value) async {
-                  widget.themeController.toggleThemeValue(value);
-                  Get.changeThemeMode(
-                    widget.themeController.isLightMode.value
-                        ? ThemeMode.light
-                        : ThemeMode.dark,
-                  );
-                  Utils.hapticFeedback();
-                },
+        child: Padding(
+          padding: EdgeInsets.only(left: 30, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Enable Light Mode',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-            ),
-          ],
+              Obx(
+                () => Switch.adaptive(
+                  value: widget.themeController.isLightMode.value,
+                  activeColor: ksecondaryColor,
+                  onChanged: (bool value) async {
+                    widget.themeController.toggleThemeValue(value);
+                    Get.changeThemeMode(
+                      widget.themeController.isLightMode.value
+                          ? ThemeMode.light
+                          : ThemeMode.dark,
+                    );
+                    Utils.hapticFeedback();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
