@@ -18,7 +18,9 @@ class SettingsView extends GetView<SettingsController> {
 
   HomeController homeController = Get.find<HomeController>();
   ThemeController themeController = Get.find<ThemeController>();
-  SettingsController settingsController=Get.find<SettingsController>();
+  SettingsController settingsController=Get.put(SettingsController());
+
+
 
   @override
   Widget build(BuildContext context) {
