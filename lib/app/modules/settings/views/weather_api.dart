@@ -270,20 +270,23 @@ class WeatherApi extends StatelessWidget {
         decoration: Utils.getCustomTileBoxDecoration(
           isLightMode: themeController.isLightMode.value,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              'Open Weather Map API',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            Icon(
-              Icons.arrow_forward_ios_sharp,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor.withOpacity(0.4)
-                  : kprimaryTextColor.withOpacity(0.2),
-            ),
-          ],
+        child: Padding(
+          padding: EdgeInsets.only(left: 30, right: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Open Weather Map API',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              Icon(
+                Icons.arrow_forward_ios_sharp,
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor.withOpacity(0.4)
+                    : kprimaryTextColor.withOpacity(0.2),
+              ),
+            ],
+          ),
         ),
       ),
     );

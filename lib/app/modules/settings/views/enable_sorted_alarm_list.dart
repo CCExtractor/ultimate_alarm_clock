@@ -38,28 +38,31 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text(
-            'Enable Sorted Alarm List',
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: widget.themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
-                ),
-          ),
-          Obx(
-            () => Switch.adaptive(
-              value: widget.controller.isSortedAlarmListEnabled.value,
-              activeColor: ksecondaryColor,
-              onChanged: (bool value) async {
-                widget.controller.toggleSortedAlarmList(value);
-                Utils.hapticFeedback();
-              },
+      child: Padding(
+        padding: EdgeInsets.only(left: 30, right: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Enable Sorted Alarm List',
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: widget.themeController.isLightMode.value
+                        ? kLightPrimaryTextColor
+                        : kprimaryTextColor,
+                  ),
             ),
-          ),
-        ],
+            Obx(
+              () => Switch.adaptive(
+                value: widget.controller.isSortedAlarmListEnabled.value,
+                activeColor: ksecondaryColor,
+                onChanged: (bool value) async {
+                  widget.controller.toggleSortedAlarmList(value);
+                  Utils.hapticFeedback();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

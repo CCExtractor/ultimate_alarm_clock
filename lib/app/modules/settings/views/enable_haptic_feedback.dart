@@ -33,24 +33,27 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
       decoration: Utils.getCustomTileBoxDecoration(
         isLightMode: widget.themeController.isLightMode.value,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text(
-            'Enable Haptic Feedback',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          Obx(
-            () => Switch.adaptive(
-              value: widget.controller.isHapticFeedbackEnabled.value,
-              activeColor: ksecondaryColor,
-              onChanged: (bool value) async {
-                widget.controller.toggleHapticFeedback(value);
-                Utils.hapticFeedback();
-              },
+      child: Padding(
+        padding: EdgeInsets.only(left: 30, right: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Enable Haptic Feedback',
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-          ),
-        ],
+            Obx(
+              () => Switch.adaptive(
+                value: widget.controller.isHapticFeedbackEnabled.value,
+                activeColor: ksecondaryColor,
+                onChanged: (bool value) async {
+                  widget.controller.toggleHapticFeedback(value);
+                  Utils.hapticFeedback();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

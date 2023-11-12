@@ -140,36 +140,39 @@ class GoogleSignIn extends StatelessWidget {
         decoration: Utils.getCustomTileBoxDecoration(
           isLightMode: themeController.isLightMode.value,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Obx(
-              () => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    (controller.isUserLoggedIn.value)
-                        ? 'Unlink ${controller.userModel!.email}'
-                        : 'Sign-In with Google',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                  ),
-                ],
+        child: Padding(
+          padding: EdgeInsets.only(left: 30, right: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      (controller.isUserLoggedIn.value)
+                          ? 'Unlink ${controller.userModel!.email}'
+                          : 'Sign-In with Google',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Obx(
-              () => Icon(
-                (controller.isUserLoggedIn.value)
-                    ? Icons.close
-                    : Icons.arrow_forward_ios_sharp,
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor.withOpacity(0.4)
-                    : kprimaryTextColor.withOpacity(0.2),
+              Obx(
+                () => Icon(
+                  (controller.isUserLoggedIn.value)
+                      ? Icons.close
+                      : Icons.arrow_forward_ios_sharp,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.4)
+                      : kprimaryTextColor.withOpacity(0.2),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
