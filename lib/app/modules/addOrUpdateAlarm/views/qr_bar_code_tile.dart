@@ -22,7 +22,14 @@ class QrBarCode extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          const Text('QR/Bar Code'),
+          Text(
+            'QR/Bar Code',
+            style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+            ),
+          ),
           IconButton(
             icon: Icon(
               Icons.info_sharp,
