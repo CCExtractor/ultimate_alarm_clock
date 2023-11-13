@@ -8,5 +8,5 @@ updates:
     schedule:
       interval: "monthly"
     # # default reviewers
-    # reviewers:
-    #   - "MarkisDev"
+    reviewers:
+      - "MarkisDev"
