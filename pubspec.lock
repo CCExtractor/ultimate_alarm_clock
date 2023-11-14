@@ -354,10 +354,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_fgbg
-      sha256: d37511eef6afb7e2e3f2278ec6498bb12c650ed517c81bcd09452d910e8b9174
+      sha256: "08c4d2fd229e3df26083d5aecc3dea9ff4f2d188f8cd57aaf2b3f047bd08a047"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "0.3.0"
   flutter_foreground_task:
     dependency: "direct main"
     description:
