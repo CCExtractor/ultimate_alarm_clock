@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/bindings/about_binding.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/views/about_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/About/bindings/about_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/About/views/about_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
 

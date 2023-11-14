@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/About/controller/about_controller.dart';
 
 class AboutView extends StatelessWidget {
+  final AboutController aboutController = Get.find<AboutController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +23,7 @@ class AboutView extends StatelessWidget {
                 child: Image.asset('assets/images/ic_launcher-playstore.png'),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Text(
               'Ultimate Alarm Clock',
               style: TextStyle(
@@ -28,7 +31,7 @@ class AboutView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-             SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
               'Version: 1.0.0',
               style: TextStyle(
@@ -36,11 +39,11 @@ class AboutView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-                SizedBox(height: 10),
+            SizedBox(height: 10),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather and more!',
+                'This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather, and more!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -62,11 +65,8 @@ class AboutView extends StatelessWidget {
                       ), backgroundColor: Colors.white,
                     ),
                     onPressed: () async {
-                      // GitHub URL.
-                      String url =
-                          "https://github.com/CCExtractor/ultimate_alarm_clock";
-                      if (!await launchUrl(Uri.parse(url))) {
-                        throw Exception('Could not launch $url');
+                      if (!await aboutController.launchUrl(Uri.parse(AboutController.githubUrl))) {
+                        throw Exception('Could not launch ${AboutController.githubUrl}');
                       }
                     },
                     icon: SvgPicture.asset(
@@ -74,10 +74,10 @@ class AboutView extends StatelessWidget {
                       width: 30,
                       height: 30,
                     ),
-                     label: Text(
+                    label: Text(
                       "GitHub",
                       style: TextStyle(
-                        color: Colors.black, 
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
                       ),
@@ -94,10 +94,8 @@ class AboutView extends StatelessWidget {
                       ), backgroundColor: Colors.white,
                     ),
                     onPressed: () async {
-                      // Wensite Url
-                      String url = "https://ccextractor.org/";
-                      if (!await launchUrl(Uri.parse(url))) {
-                        throw Exception('Could not launch $url');
+                      if (!await aboutController.launchUrl(Uri.parse(AboutController.ccExtractorUrl))) {
+                        throw Exception('Could not launch ${AboutController.ccExtractorUrl}');
                       }
                     },
                     icon: SvgPicture.asset(
@@ -105,7 +103,7 @@ class AboutView extends StatelessWidget {
                       width: 30,
                       height: 30,
                     ),
-                   label: Text(
+                    label: Text(
                       "CCExtractor",
                       style: TextStyle(
                         color: Colors.black,
@@ -121,13 +119,5 @@ class AboutView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<bool> launchUrl(Uri uri) async {
-    if (await canLaunch(uri.toString())) {
-      return await launch(uri.toString());
-    } else {
-      return false;
-    }
   }
 }
