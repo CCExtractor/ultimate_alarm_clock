@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class ToggleButton extends StatefulWidget {
   const ToggleButton({
@@ -19,6 +21,9 @@ class ToggleButton extends StatefulWidget {
 }
 
 class _ToggleButtonState extends State<ToggleButton> {
+
+  ThemeController themeController = Get.find<ThemeController>();
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -117,7 +122,9 @@ class _ToggleButtonState extends State<ToggleButton> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: Colors.white,
+              color: themeController.isLightMode.value
+                  ? kLightSecondaryTextColor
+                  : kprimaryTextColor,
               width: 1,
             ),
           ),
@@ -146,9 +153,11 @@ class _ToggleButtonState extends State<ToggleButton> {
         curve: Curves.bounceIn,
         height: 10 * widget.controller.scalingFactor.value,
         width: 10 * widget.controller.scalingFactor.value,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : kprimaryTextColor,
         ),
       ),
     );
