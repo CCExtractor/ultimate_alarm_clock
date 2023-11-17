@@ -18,7 +18,7 @@ class SettingsView extends GetView<SettingsController> {
 
   HomeController homeController = Get.find<HomeController>();
   ThemeController themeController = Get.find<ThemeController>();
-  SettingsController settingsController=Get.put(SettingsController());
+  SettingsController settingsController=Get.find<SettingsController>();
 
 
 
@@ -68,7 +68,7 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 GoogleSignIn(
-                  controller: settingsController,
+                  controller: controller,
                   width: width,
                   height: height,
                   themeController: themeController,
@@ -79,14 +79,14 @@ class SettingsView extends GetView<SettingsController> {
                 EnableHapticFeedback(
                   height: height,
                   width: width,
-                  controller: settingsController,
+                  controller: controller,
                   themeController: themeController,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 EnableSortedAlarmList(
-                  controller: settingsController,
+                  controller: controller,
                   height: height,
                   width: width,
                   themeController: themeController,
@@ -95,7 +95,7 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 ThemeValueTile(
-                  controller: settingsController,
+                  controller: controller,
                   height: height,
                   width: width,
                   themeController: themeController,
