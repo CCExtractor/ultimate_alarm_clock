@@ -44,6 +44,8 @@ class RepeatOnceTile extends StatelessWidget {
                 return Switch.adaptive(
                   value: false,
                   activeColor: ksecondaryColor,
+                  inactiveThumbColor: ksecondaryColor,
+                  inactiveTrackColor: kDefaultIconDarkColor,
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     controller.isOneTime.value = false;

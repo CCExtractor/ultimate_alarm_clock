@@ -46,6 +46,8 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
               () => Switch.adaptive(
                 value: widget.controller.isHapticFeedbackEnabled.value,
                 activeColor: ksecondaryColor,
+                inactiveThumbColor: ksecondaryColor,
+                inactiveTrackColor: kDefaultIconDarkColor,
                 onChanged: (bool value) async {
                   widget.controller.toggleHapticFeedback(value);
                   Utils.hapticFeedback();
