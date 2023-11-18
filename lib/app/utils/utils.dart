@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
@@ -482,4 +483,74 @@ class Utils {
           : ksecondaryBackgroundColor,
     );
   }
+
+  static void showModal({
+  required BuildContext context,
+  required String title,
+  required String description,
+  required IconData iconData,
+  required bool isLightMode,
+}) {
+  Utils.hapticFeedback();
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: isLightMode
+        ? kLightSecondaryBackgroundColor
+        : ksecondaryBackgroundColor,
+    builder: (context) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                iconData,
+                color: isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
+                size: MediaQuery.of(context).size.height * 0.1,
+              ),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Text(
+                  description,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      kprimaryColor,
+                    ),
+                  ),
+                  onPressed: () {
+                    Utils.hapticFeedback();
+                    Get.back();
+                  },
+                  child: Text(
+                    'Understood',
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(
+                          color: isLightMode ? kLightPrimaryTextColor : ksecondaryTextColor,
+                        ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 }
