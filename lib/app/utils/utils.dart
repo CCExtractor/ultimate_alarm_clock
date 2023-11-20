@@ -1,17 +1,23 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 
 import 'constants.dart';
 
 class Utils {
+  static final audioPlayer = AudioPlayer();
+
   static String timeOfDayToString(TimeOfDay time) {
     final hours = time.hour.toString().padLeft(2, '0');
     final minutes = time.minute.toString().padLeft(2, '0');
@@ -485,72 +491,104 @@ class Utils {
   }
 
   static void showModal({
-  required BuildContext context,
-  required String title,
-  required String description,
-  required IconData iconData,
-  required bool isLightMode,
-}) {
-  Utils.hapticFeedback();
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: isLightMode
-        ? kLightSecondaryBackgroundColor
-        : ksecondaryBackgroundColor,
-    builder: (context) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(
-                iconData,
-                color: isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
-                size: MediaQuery.of(context).size.height * 0.1,
-              ),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0),
-                child: Text(
-                  description,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
+    required BuildContext context,
+    required String title,
+    required String description,
+    required IconData iconData,
+    required bool isLightMode,
+  }) {
+    Utils.hapticFeedback();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isLightMode
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
+      builder: (context) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(
+                  iconData,
+                  color:
+                      isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
+                  size: MediaQuery.of(context).size.height * 0.1,
                 ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      kprimaryColor,
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    description,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        kprimaryColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      Utils.hapticFeedback();
+                      Get.back();
+                    },
+                    child: Text(
+                      'Understood',
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: isLightMode
+                                ? kLightPrimaryTextColor
+                                : ksecondaryTextColor,
+                          ),
                     ),
                   ),
-                  onPressed: () {
-                    Utils.hapticFeedback();
-                    Get.back();
-                  },
-                  child: Text(
-                    'Understood',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall!
-                        .copyWith(
-                          color: isLightMode ? kLightPrimaryTextColor : ksecondaryTextColor,
-                        ),
-                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
+  static Future<void> playCustomSound(List<int> soundBytes) async {
+    await audioPlayer.setReleaseMode(ReleaseMode.loop);
+    await audioPlayer
+        .play(BytesSource(Uint8List.fromList(soundBytes).buffer.asUint8List()));
+  }
+
+  static void playAlarm() async {
+    CustomRingtoneStatus customRingtoneStatus =
+        await SecureStorageProvider().readCustomRingtoneStatus();
+
+    if (customRingtoneStatus == CustomRingtoneStatus.disabled) {
+      FlutterRingtonePlayer.playAlarm();
+    } else {
+      RingtoneModel? customRingtone = await IsarDb.getCustomRingtone();
+
+      if (customRingtone != null) {
+        List<int> customRingtoneBytes = customRingtone.ringtoneData;
+        await playCustomSound(customRingtoneBytes);
+      }
+    }
+  }
+
+  static void stopAlarm() async {
+    CustomRingtoneStatus customRingtoneStatus =
+        await SecureStorageProvider().readCustomRingtoneStatus();
+
+    if (customRingtoneStatus == CustomRingtoneStatus.disabled) {
+      FlutterRingtonePlayer.stop();
+    } else {
+      await audioPlayer.stop();
+    }
+  }
 }
