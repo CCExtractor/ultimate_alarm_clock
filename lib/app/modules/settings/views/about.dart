@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ultimate_alarm_clock/app/modules/About/controller/about_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 

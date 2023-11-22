@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/About/views/about_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/about/views/about_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutController extends GetxController {

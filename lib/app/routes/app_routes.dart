@@ -22,5 +22,5 @@ abstract class _Paths {
   static const ALARM_RING_IGNORE = '/alarm-ring-ignore';
   static const SETTINGS = '/settings';
   static const ALARM_CHALLENGE = '/alarm-challenge';
-  static const ABOUT = '/about-view';
+  static const ABOUT = '/about';
 }
