@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
 
-class AboutView extends StatelessWidget {
+class AboutView extends GetView<AboutController> {
   final AboutController aboutController = Get.find<AboutController>();
 
   @override
