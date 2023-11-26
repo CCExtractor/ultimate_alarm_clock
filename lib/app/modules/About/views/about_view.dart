@@ -11,6 +11,8 @@ class AboutView extends GetView<AboutController> {
     return Scaffold(
       appBar: AppBar(
         title: Text('About'),
+        elevation: 0,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
@@ -62,11 +64,14 @@ class AboutView extends GetView<AboutController> {
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
-                      ), backgroundColor: Colors.white,
+                      ),
+                      backgroundColor: Colors.white,
                     ),
                     onPressed: () async {
-                      if (!await aboutController.launchUrl(Uri.parse(AboutController.githubUrl))) {
-                        throw Exception('Could not launch ${AboutController.githubUrl}');
+                      if (!await aboutController
+                          .launchUrl(Uri.parse(AboutController.githubUrl))) {
+                        throw Exception(
+                            'Could not launch ${AboutController.githubUrl}');
                       }
                     },
                     icon: SvgPicture.asset(
@@ -91,11 +96,14 @@ class AboutView extends GetView<AboutController> {
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
-                      ), backgroundColor: Colors.white,
+                      ),
+                      backgroundColor: Colors.white,
                     ),
                     onPressed: () async {
-                      if (!await aboutController.launchUrl(Uri.parse(AboutController.ccExtractorUrl))) {
-                        throw Exception('Could not launch ${AboutController.ccExtractorUrl}');
+                      if (!await aboutController.launchUrl(
+                          Uri.parse(AboutController.ccExtractorUrl))) {
+                        throw Exception(
+                            'Could not launch ${AboutController.ccExtractorUrl}');
                       }
                     },
                     icon: SvgPicture.asset(
