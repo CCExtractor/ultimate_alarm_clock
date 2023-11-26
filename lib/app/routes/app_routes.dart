@@ -10,6 +10,7 @@ abstract class Routes {
   static const ALARM_RING_IGNORE = _Paths.ALARM_RING_IGNORE;
   static const SETTINGS = _Paths.SETTINGS;
   static const ALARM_CHALLENGE = _Paths.ALARM_CHALLENGE;
+  static const ABOUT = _Paths.ABOUT;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const ALARM_RING_IGNORE = '/alarm-ring-ignore';
   static const SETTINGS = '/settings';
   static const ALARM_CHALLENGE = '/alarm-challenge';
+  static const ABOUT = '/about';
 }
