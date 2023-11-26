@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
@@ -58,11 +61,11 @@ class AlarmControlController extends GetxController
     return latestAlarm;
   }
 
-  void startSnooze() {
+  void startSnooze() async {
     Vibration.cancel();
     vibrationTimer!.cancel();
     isSnoozing.value = true;
-    FlutterRingtonePlayer.stop();
+    Utils.stopAlarm();
 
     if (_currentTimeTimer!.isActive) {
       _currentTimeTimer?.cancel();
@@ -75,7 +78,9 @@ class AlarmControlController extends GetxController
             Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
         });
-        FlutterRingtonePlayer.playAlarm();
+
+        Utils.playAlarm();
+
         startTimer();
       } else if (seconds.value == 0) {
         minutes.value--;
@@ -106,7 +111,7 @@ class AlarmControlController extends GetxController
   void onInit() async {
     super.onInit();
 
-    FlutterRingtonePlayer.playAlarm();
+    Utils.playAlarm();
 
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
@@ -206,7 +211,7 @@ class AlarmControlController extends GetxController
     Vibration.cancel();
     vibrationTimer!.cancel();
 
-    await FlutterRingtonePlayer.stop();
+    Utils.stopAlarm();
 
     _subscription.cancel();
     _currentTimeTimer?.cancel();

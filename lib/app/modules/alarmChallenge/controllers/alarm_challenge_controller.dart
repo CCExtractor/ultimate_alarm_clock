@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shake/shake.dart';
@@ -60,7 +59,7 @@ class AlarmChallengeController extends GetxController {
     super.onInit();
     _startTimer();
 
-    await FlutterRingtonePlayer.stop();
+    Utils.stopAlarm();
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
@@ -164,9 +163,9 @@ class AlarmChallengeController extends GetxController {
     super.onClose();
 
     if (!Utils.isChallengeEnabled(alarmRecord)) {
-      await FlutterRingtonePlayer.stop();
+      Utils.stopAlarm();
     } else {
-      await FlutterRingtonePlayer.playAlarm();
+      Utils.playAlarm();
     }
   }
 }
