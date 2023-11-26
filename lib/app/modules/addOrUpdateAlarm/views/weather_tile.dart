@@ -521,7 +521,6 @@ class WeatherTile extends StatelessWidget {
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     IconButton(
