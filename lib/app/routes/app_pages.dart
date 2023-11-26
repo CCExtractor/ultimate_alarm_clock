@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/about/bindings/about_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/about/views/about_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
 
@@ -63,5 +65,12 @@ class AppPages {
       page: () => AlarmChallengeView(),
       binding: AlarmChallengeBinding(),
     ),
+    //AboutView
+    GetPage(
+      name: _Paths.ABOUT,
+      page: () => AboutView(),
+      binding: AboutBinding(),
+    ),
+
   ];
 }
