@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ class SettingsView extends GetView<SettingsController> {
   HomeController homeController = Get.find<HomeController>();
   ThemeController themeController = Get.find<ThemeController>();
   AboutController aboutController = Get.put(AboutController());
+
 
   @override
   Widget build(BuildContext context) {
