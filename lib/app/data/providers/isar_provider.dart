@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class IsarDb {
@@ -20,7 +21,7 @@ class IsarDb {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
-        [AlarmModelSchema],
+        [AlarmModelSchema, RingtoneModelSchema],
         directory: dir.path,
         inspector: true,
       );
@@ -171,6 +172,33 @@ class IsarDb {
 
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
+    });
+  }
+
+  static Future<void> addCustomRingtone(
+    RingtoneModel customRingtone,
+  ) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    await db.writeTxn(() async {
+      await db.ringtoneModels.put(customRingtone);
+    });
+  }
+
+  static Future<RingtoneModel?> getCustomRingtone() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final query = db.ringtoneModels.where().findFirst();
+
+    return query;
+  }
+
+  static Future<void> deleteCustomRingtone() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+
+    await db.writeTxn(() async {
+      await db.ringtoneModels.clear();
     });
   }
 }

@@ -14,6 +14,8 @@ enum Difficulty { Easy, Medium, Hard }
 
 enum WeatherKeyState { add, update, saveAdded, saveUpdated }
 
+enum CustomRingtoneStatus { disabled, enabled }
+
 const Color kprimaryColor = Color(0xffAFFC41);
 
 // Dark Theme Color Palette
@@ -106,6 +108,12 @@ ThemeData kThemeData = ThemeData(
     activeTrackColor: kprimaryColor,
     inactiveTrackColor: kprimaryTextColor.withOpacity(0.3),
   ),
+  outlinedButtonTheme: const OutlinedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+      side: MaterialStatePropertyAll(BorderSide(color: kprimaryColor)),
+    ),
+  ),
 );
 
 // Light ThemeData
@@ -181,5 +189,11 @@ ThemeData kLightThemeData = ThemeData(
     thumbColor: kprimaryColor,
     activeTrackColor: kprimaryColor,
     inactiveTrackColor: kLightPrimaryTextColor.withOpacity(0.3),
+  ),
+  outlinedButtonTheme: const OutlinedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+      side: MaterialStatePropertyAll(BorderSide(color: kprimaryColor)),
+    ),
   ),
 );
