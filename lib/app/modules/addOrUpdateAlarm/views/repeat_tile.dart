@@ -17,6 +17,8 @@ class RepeatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool anyDaySelected = controller.repeatDays.any((daySelected) => daySelected);
+
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
@@ -82,14 +84,21 @@ class RepeatTile extends StatelessWidget {
         tileColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: Text(
-          'Repeat',
-          style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
-            fontWeight: FontWeight.w500,
-          ),
+        title: Obx(
+              () {
+            bool anyDaySelected =
+            controller.repeatDays.any((daySelected) => daySelected);
+
+            return Text(
+              'Repeat',
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+                fontWeight: anyDaySelected ? FontWeight.w500 : FontWeight.normal,
+              ),
+            );
+          },
         ),
         trailing: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
