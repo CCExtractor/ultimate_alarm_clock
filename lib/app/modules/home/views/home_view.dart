@@ -521,34 +521,41 @@ class HomeView extends GetView<HomeController> {
                                           ),
 
                                           // Delete button
-                                          IconButton(
-                                            onPressed: () async {
-                                              // Deleting the alarms
-                                              await controller.deleteAlarms();
+                                          Obx(
+                                            () => IconButton(
+                                              onPressed: () async {
+                                                // Deleting the alarms
+                                                await controller.deleteAlarms();
 
-                                              // Closing the multiple select mode
-                                              controller.inMultipleSelectMode
-                                                  .value = false;
-                                              controller.isAnyAlarmHolded
-                                                  .value = false;
-                                              controller.isAllAlarmsSelected
-                                                  .value = false;
-                                              controller.numberOfAlarmsSelected
-                                                  .value = 0;
-                                              controller.selectedAlarmSet
-                                                  .clear();
-                                            },
-                                            icon: const Icon(
-                                              Icons.delete,
+                                                // Closing the multiple select mode
+                                                controller.inMultipleSelectMode
+                                                    .value = false;
+                                                controller.isAnyAlarmHolded
+                                                    .value = false;
+                                                controller.isAllAlarmsSelected
+                                                    .value = false;
+                                                controller.numberOfAlarmsSelected
+                                                    .value = 0;
+                                                controller.selectedAlarmSet
+                                                    .clear();
+                                              },
+                                              icon: const Icon(
+                                                Icons.delete,
+                                              ),
+                                              color: controller
+                                                          .numberOfAlarmsSelected
+                                                          .value >
+                                                      0
+                                                  ? Colors.red
+                                                  : themeController
+                                                          .isLightMode.value
+                                                      ? kLightPrimaryTextColor
+                                                          .withOpacity(0.75)
+                                                      : kprimaryTextColor
+                                                          .withOpacity(0.75),
+                                              iconSize: 27 *
+                                                  controller.scalingFactor.value,
                                             ),
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                    .withOpacity(0.75)
-                                                : kprimaryTextColor
-                                                    .withOpacity(0.75),
-                                            iconSize: 27 *
-                                                controller.scalingFactor.value,
                                           ),
                                         ],
                                       ),
