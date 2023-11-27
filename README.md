@@ -256,7 +256,7 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 
 - The floating action button in the Home View allows you to create alarms, directing you to the Add or Update Alarm View.
 - In this view, you can:
-  - Set the alarm time using a time picker.
+  - Set the alarm time using a time picker or manually entering time using keyboard.
   - Configure alarm repetition.
   - Set the snooze duration.
   - Add a label to the alarm.
