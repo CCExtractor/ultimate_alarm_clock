@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +24,7 @@ class Pair<T, U> {
 }
 
 class HomeController extends GetxController with AlarmHandlerSetupModel {
+  MethodChannel alarmChannel = MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
   Stream? isarStreamAlarms;
@@ -206,6 +208,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onInit() async {
     super.onInit();
+
     if (!isUserSignedIn.value) await loginWithGoogle();
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
@@ -331,17 +334,24 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       debugPrint(
         'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
       );
-      await stopForegroundTask();
+      //await stopForegroundTask();
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
         DateTime.now(),
         Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
       );
-      if (await FlutterForegroundTask.isRunningService == false) {
-        createForegroundTask(intervaltoAlarm);
-        await startForegroundTask(latestAlarm);
-      } else {
-        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      // if (await FlutterForegroundTask.isRunningService == false) {
+      //   createForegroundTask(10000000000);
+      //   await startForegroundTask(latestAlarm);
+      // } else {
+      //   await restartForegroundTask(latestAlarm, 10000000000);
+      // }
+      try {
+        await alarmChannel
+            .invokeMethod('scheduleAlarm', {'seconds': intervaltoAlarm});
+        print("Scheduled...");
+      } on PlatformException catch (e) {
+        print("Failed to schedule alarm: ${e.message}");
       }
     }
   }
