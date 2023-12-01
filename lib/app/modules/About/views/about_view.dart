@@ -2,17 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AboutView extends GetView<AboutController> {
   final AboutController aboutController = Get.find<AboutController>();
+  ThemeController themeController = Get.find<ThemeController>();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('About'),
+        title: Text('About',style: Theme.of(context).textTheme.titleLarge!.copyWith(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : kprimaryTextColor,
+          fontWeight: FontWeight.w500,
+        ),),
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.adaptive.arrow_back,
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
+          ),
+          onPressed: () {
+            Utils.hapticFeedback();
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Center(
         child: Column(

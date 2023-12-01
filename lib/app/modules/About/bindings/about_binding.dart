@@ -5,8 +5,9 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 class AboutBinding extends Bindings {
   @override
   void dependencies() {
-     Get.put<AboutController>(
-      AboutController(),
+    Get.lazyPut<AboutController>(
+            ()=>  AboutController(),
+        fenix: true
     );
     Get.put<ThemeController>(
       ThemeController(),
