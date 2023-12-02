@@ -14,7 +14,8 @@ class AlarmReceiver : BroadcastReceiver() {
         if (context != null) {
             val flutterIntent = Intent(context, MainActivity::class.java)
             flutterIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-           flutterIntent.putExtra("initialRoute", "/alarm-ring")
+           flutterIntent.putExtra("initialRoute", "/")
+            println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)
 
         }
