@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
@@ -18,8 +18,9 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
-class AlarmControlController extends GetxController
-    with AlarmHandlerSetupModel {
+class AlarmControlController extends GetxController {
+  MethodChannel alarmChannel = MethodChannel('ulticlock');
+
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
@@ -188,17 +189,20 @@ class AlarmControlController extends GetxController
           '${latestAlarmTimeOfDay.toString()} and '
           'current = ${currentTime.toString()}',
         );
-        await stopForegroundTask();
+
+        await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
       } else {
         int intervaltoAlarm = Utils.getMillisecondsToAlarm(
           DateTime.now(),
           Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
         );
-        if (await FlutterForegroundTask.isRunningService == false) {
-          createForegroundTask(intervaltoAlarm);
-          await startForegroundTask(latestAlarm);
-        } else {
-          await restartForegroundTask(latestAlarm, intervaltoAlarm);
+
+        try {
+          await alarmChannel
+              .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+          print("Scheduled...");
+        } on PlatformException catch (e) {
+          print("Failed to schedule alarm: ${e.message}");
         }
       }
     }

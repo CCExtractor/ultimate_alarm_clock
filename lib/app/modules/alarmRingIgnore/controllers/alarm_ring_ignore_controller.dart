@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
@@ -10,8 +11,9 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:app_minimizer/app_minimizer.dart';
 
-class AlarmControlIgnoreController extends GetxController
-    with AlarmHandlerSetupModel {
+class AlarmControlIgnoreController extends GetxController {
+  MethodChannel alarmChannel = MethodChannel('ulticlock');
+
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
@@ -90,21 +92,21 @@ class AlarmControlIgnoreController extends GetxController
 // This condition will never satisfy because this will only occur if fake mode
 // is returned as latest alarm
     if (latestAlarm.isEnabled == false) {
-      debugPrint(
-        'STOPPED IF CONDITION with latest = '
-        '${latestAlarmTimeOfDay.toString()} ',
-      );
-      await stopForegroundTask();
+      debugPrint('STOPPED IF CONDITION with latest = '
+          '${latestAlarmTimeOfDay.toString()} and ');
+      await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
         DateTime.now(),
         Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
       );
-      if (await FlutterForegroundTask.isRunningService == false) {
-        createForegroundTask(intervaltoAlarm);
-        await startForegroundTask(latestAlarm);
-      } else {
-        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+
+      try {
+        await alarmChannel
+            .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+        print("Scheduled...");
+      } on PlatformException catch (e) {
+        print("Failed to schedule alarm: ${e.message}");
       }
     }
 
