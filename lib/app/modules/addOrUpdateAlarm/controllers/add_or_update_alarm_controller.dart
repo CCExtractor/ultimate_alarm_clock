@@ -61,7 +61,7 @@ class AddOrUpdateAlarmController extends GetxController
   final numMathsQuestions = 1.obs;
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
-  final List<Marker> markersList = [];
+  final RxList markersList = [].obs;
   final daysRepeating = 'Never'.obs;
   final weatherTypes = 'Off'.obs;
   final selectedWeather = <WeatherTypes>[].obs;
@@ -492,6 +492,7 @@ class AddOrUpdateAlarmController extends GetxController
           builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
+            color: Colors.black,
           ),
         ),
       );
@@ -559,6 +560,7 @@ class AddOrUpdateAlarmController extends GetxController
           builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
+            color: Colors.black,
           ),
         ),
       );
