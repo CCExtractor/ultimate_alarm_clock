@@ -27,30 +27,24 @@ class MainActivity : FlutterActivity() {
         const val ACTION_START_FLUTTER_APP = "com.example.START_FLUTTER_APP"
 
     }
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
-    }
-
-
-
-
-
-
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 GeneratedPluginRegistrant.registerWith(flutterEngine)
-      var  methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+
+        var  methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         methodChannel.setMethodCallHandler { call, result ->
             if (call.method == "scheduleAlarm") {
-                val seconds = call.argument<Int>("seconds")
-
-               println("MARKIS CALLED SCHEDULE")
+                val seconds = call.argument<Int>("milliSeconds")
+               println("FLUTTER CALLED SCHEDULE")
                 scheduleAlarm(seconds ?: 0)
                 result.success(null)
-            } else if(call.method == "bringAppToForeground"){
+            } else if (call.method == "cancelAllScheduledAlarms") {
+               println("FLUTTER CALLED CANCEL ALARMS")
+               cancelAllScheduledAlarms()
+                result.success(null)
+            }else if(call.method == "bringAppToForeground"){
                 bringAppToForeground(this)
                 result.success(null)
             } else {
@@ -71,7 +65,7 @@ GeneratedPluginRegistrant.registerWith(flutterEngine)
         }
 
 
-private fun scheduleAlarm(seconds: Int) {
+private fun scheduleAlarm(milliSeconds: Int) {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(this, AlarmReceiver::class.java)
     val pendingIntent = PendingIntent.getBroadcast(
@@ -82,8 +76,24 @@ private fun scheduleAlarm(seconds: Int) {
     )
 
     // Schedule the alarm
-    val triggerTime = SystemClock.elapsedRealtime() + seconds * 1000
+    val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
     alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
 }
+
+private fun cancelAllScheduledAlarms() {
+    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(this, AlarmReceiver::class.java)
+    val pendingIntent = PendingIntent.getBroadcast(
+        this,
+        0,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+    )
+
+    // Cancel any existing alarms by providing the same pending intent
+    alarmManager.cancel(pendingIntent)
+    pendingIntent.cancel()
+}
+
 
 }
