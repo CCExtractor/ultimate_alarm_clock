@@ -534,10 +534,15 @@ class HomeView extends GetView<HomeController> {
                                                     .value = false;
                                                 controller.isAllAlarmsSelected
                                                     .value = false;
-                                                controller.numberOfAlarmsSelected
+                                                controller
+                                                    .numberOfAlarmsSelected
                                                     .value = 0;
                                                 controller.selectedAlarmSet
                                                     .clear();
+                                                // After deleting alarms, refreshing to schedule latest one
+                                                controller.refreshTimer = true;
+                                                controller
+                                                    .refreshUpcomingAlarms();
                                               },
                                               icon: const Icon(
                                                 Icons.delete,
@@ -554,7 +559,8 @@ class HomeView extends GetView<HomeController> {
                                                       : kprimaryTextColor
                                                           .withOpacity(0.75),
                                               iconSize: 27 *
-                                                  controller.scalingFactor.value,
+                                                  controller
+                                                      .scalingFactor.value,
                                             ),
                                           ),
                                         ],
