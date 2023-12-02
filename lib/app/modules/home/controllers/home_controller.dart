@@ -229,7 +229,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     // Check if 2 seconds have passed since the last call
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
-    if (currentTime - lastRefreshTime < 2000) {
+    if (currentTime - lastRefreshTime < 1000) {
       delayToSchedule?.cancel();
     }
 
@@ -334,21 +334,15 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       debugPrint(
         'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
       );
-      //await stopForegroundTask();
+      await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
         DateTime.now(),
         Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
       );
-      // if (await FlutterForegroundTask.isRunningService == false) {
-      //   createForegroundTask(10000000000);
-      //   await startForegroundTask(latestAlarm);
-      // } else {
-      //   await restartForegroundTask(latestAlarm, 10000000000);
-      // }
       try {
         await alarmChannel
-            .invokeMethod('scheduleAlarm', {'seconds': intervaltoAlarm});
+            .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
         print("Scheduled...");
       } on PlatformException catch (e) {
         print("Failed to schedule alarm: ${e.message}");
