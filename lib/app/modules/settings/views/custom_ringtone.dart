@@ -104,13 +104,25 @@ class CustomRingtone extends StatelessWidget {
                           Utils.hapticFeedback();
                           await controller.saveCustomRingtone();
                         },
-                        child: Text(
-                          'Choose Ringtone',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: kprimaryColor,
-                                  ),
-                        ),
+                        child: Obx(() {
+                          bool isRingtoneSelected =
+                              controller.customRingtoneName.value !=
+                                      'Custom Ringtone Disabled!' &&
+                                  controller.customRingtoneStatus.value ==
+                                      CustomRingtoneStatus.enabled;
+
+                          return Text(
+                            isRingtoneSelected
+                                ? 'Change Ringtone'
+                                : 'Choose Ringtone',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: kprimaryColor,
+                                ),
+                          );
+                        }),
                       ),
                       const SizedBox(
                         height: 10,
