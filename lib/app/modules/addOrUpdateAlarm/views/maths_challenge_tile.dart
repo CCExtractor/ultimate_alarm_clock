@@ -57,6 +57,11 @@ class MathsChallenge extends StatelessWidget {
         Utils.hapticFeedback();
         controller.isMathsEnabled.value = true;
         Get.defaultDialog(
+          onWillPop: () async {
+            Utils.hapticFeedback();
+            controller.isMathsEnabled.value = false;
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
