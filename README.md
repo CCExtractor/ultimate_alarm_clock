@@ -233,7 +233,6 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 - The "Ultimate Alarm Clock" offers both light and dark modes to suit your preferred theme and enhance readability in different lighting conditions.
 <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/3f1669a0-b860-4047-9a0f-2b7af5dabaae" height="300" alt="dark">
 <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/621bff1f-9aa1-4630-a5bc-1f5fc85ddb66" height="300" alt="light">
-<img src="" height="300" alt="light">
 
 ### Home View
 - After the splash screen, you are directed to the Home View, where you can manage your alarms.
