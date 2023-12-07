@@ -173,9 +173,7 @@ The Flutter Secure Storage library is utilized in the "Ultimate Alarm Clock" pro
 
 Flutter Secure Storage is instrumental in ensuring the security and privacy of sensitive user data and preferences, contributing to a seamless and secure user experience in the "Ultimate Alarm Clock" project.
 
-
 ## Installation & Setup
-
 ### Prerequisites
 Before getting started, ensure you have the following prerequisites installed on your system:
 
@@ -229,9 +227,14 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 
 ### Splash Screen
 - The app opens with a welcoming splash screen, providing a brief introduction to the application.
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/ae0ad406-6b6a-432f-8fec-e363bc0aa14c" height="300" alt="splash">
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/dad3ce66-3fed-4075-926d-cf29231a5e3c" height="300" alt="splash2">
 
 ### Light and Dark Modes
 - The "Ultimate Alarm Clock" offers both light and dark modes to suit your preferred theme and enhance readability in different lighting conditions.
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/3f1669a0-b860-4047-9a0f-2b7af5dabaae" height="300" alt="dark">
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/621bff1f-9aa1-4630-a5bc-1f5fc85ddb66" height="300" alt="light">
+<img src="" height="300" alt="light">
 
 ### Home View
 - After the splash screen, you are directed to the Home View, where you can manage your alarms.
@@ -242,10 +245,12 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Delete alarms.
   - Edit alarms.
   - Create new alarms using the floating action button.
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/46206641-3e62-4e5d-b8a9-5cfb93f1c18a" height="300" alt="home">
 
 - A settings icon in the app bar provides access to the Settings View.
 
 ### Settings View
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/ac18497b-4533-46e5-a6fa-9382300a4caa" height="300" alt="settings">
 
 - In the Settings View, you can customize various aspects of the app:
   - Set or edit the weather API key for weather-related features.
@@ -255,6 +260,8 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Toggle between light and dark modes.
 
 ### Add or Update Alarm View
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/f856d436-1ba4-4f1f-8297-1396627d9218" height="300" alt="add-alarm-1">
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/5f0dd9be-0afa-4b91-b084-5be949dce2df" height="300" alt="add-alarm-2">
 
 - The floating action button in the Home View allows you to create alarms, directing you to the Add or Update Alarm View.
 - In this view, you can:
