@@ -3,10 +3,12 @@
 
 This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather and  more! It also includes challenges to ensure you completely wake up and an option to set shared alarms! This is the ULTIMATE alarm clock :)
 
-# Timeline and Project Page
-
-[GSoC page](https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf)
-
+<p align="center">
+  <a href="https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf">
+    <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/38068ae2-39f4-4b25-9ab7-43c4cd4ac3f2" height="250" alt="GSOC">
+  </a>
+</p>
+  
 ## Table of Contents
 - [GetX Pattern](#getx-pattern)
 - [Database Schema](#database-schema)
