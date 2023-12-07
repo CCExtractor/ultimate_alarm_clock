@@ -11,8 +11,8 @@ This project aims to build a non-conventional alarm clock with smart features su
 ## Table of Contents
 - [GetX Pattern](#getx-pattern)
 - [Database Schema](#database-schema)
-- [Installation & Setup](#installation-setup)
-- [User Interface & Features](#user-interface-features)
+- [Installation & Setup](#installation--setup)
+- [User Interface & Features](#user-interface--features)
 - [Contribution Guidelines](#contribution-guidelines)
 - [Future Plans](#future-plans)
 - [Community](#community)
