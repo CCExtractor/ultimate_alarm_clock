@@ -394,10 +394,6 @@ If you have any questions regarding something in the project, do not hestitate t
 
 ## Future Plans
 
-#### Custom Alarm Ringtones
-
-- We plan to introduce the ability for users to set custom alarm ringtones. This feature will allow users to select their favorite music or sounds as alarm tones, adding a personal touch to their wake-up experience.
-
 #### Default Alarm Ringtones
 
 - In addition to custom ringtones, we will also provide a selection of default alarm tones. These default options will cater to a variety of preferences and ensure that users have a range of options to choose from.
