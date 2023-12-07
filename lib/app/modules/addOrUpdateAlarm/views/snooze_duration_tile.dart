@@ -18,12 +18,17 @@ class SnoozeDurationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int duration;
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
+        // storing the values
+        duration = controller.snoozeDuration.value;
         Get.defaultDialog(
           onWillPop: () async {
-            controller.snoozeDuration.value = 1;
+            Get.back();
+            // presetting the value to it's initial state
+            controller.snoozeDuration.value = duration;
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
