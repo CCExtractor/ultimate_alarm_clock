@@ -19,14 +19,17 @@ class RepeatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool anyDaySelected =
         controller.repeatDays.any((daySelected) => daySelected);
-
+    List<bool> repeatDays = List<bool>.filled(7, false);
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
+        for (var i = 0; i < controller.repeatDays.length; i++) {
+          repeatDays[i] = controller.repeatDays[i];
+        }
         Get.defaultDialog(
           onWillPop: () async {
             for (var i = 0; i < controller.repeatDays.length; i++) {
-              controller.repeatDays[i] = false;
+              controller.repeatDays[i] = repeatDays[i];
             }
             return true;
           },
