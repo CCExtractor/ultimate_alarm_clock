@@ -24,6 +24,11 @@ class ScreenActivityTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
+          onWillPop: () async {
+            controller.activityInterval.value = 0;
+            controller.isActivityenabled.value = false;
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -119,8 +124,8 @@ class ScreenActivityTile extends StatelessWidget {
                   context: context,
                   title: 'Screen activity based cancellation',
                   description: 'This feature will automatically cancel'
-                                " the alarm if you've been using your device"
-                                ' for a set number of minutes.',
+                      " the alarm if you've been using your device"
+                      ' for a set number of minutes.',
                   iconData: Icons.screen_lock_portrait_outlined,
                   isLightMode: themeController.isLightMode.value,
                 );
