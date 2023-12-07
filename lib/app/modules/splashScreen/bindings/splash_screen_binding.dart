@@ -10,6 +10,7 @@ class SplashScreenBinding extends Bindings {
     );
     Get.put<ThemeController>(
       ThemeController(),
+      permanent: true,
     );
   }
 }
