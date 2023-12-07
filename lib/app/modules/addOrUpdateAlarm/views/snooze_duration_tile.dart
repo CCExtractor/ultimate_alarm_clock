@@ -22,6 +22,10 @@ class SnoozeDurationTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
+          onWillPop: () async {
+            controller.snoozeDuration.value = 1;
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
