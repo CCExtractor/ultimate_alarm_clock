@@ -56,6 +56,11 @@ class ShakeToDismiss extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
+          onWillPop: () async {
+            controller.shakeTimes.value = 0;
+            controller.isShakeEnabled.value = false;
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
