@@ -6,7 +6,6 @@ import 'package:fl_location/fl_location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -18,8 +17,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 
-class AddOrUpdateAlarmController extends GetxController
-    with AlarmHandlerSetupModel {
+class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
 
