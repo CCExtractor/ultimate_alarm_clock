@@ -20,13 +20,18 @@ class ScreenActivityTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var height = Get.height;
     var width = Get.width;
+    int activityInterval;
+    bool isActivityEnalbed;
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
+        // storing the initial values
+        activityInterval = controller.activityInterval.value;
+        isActivityEnalbed = controller.isActivityenabled.value;
         Get.defaultDialog(
           onWillPop: () async {
-            controller.activityInterval.value = 0;
-            controller.isActivityenabled.value = false;
+            controller.activityInterval.value = activityInterval;
+            controller.isActivityenabled.value = isActivityEnalbed;
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
