@@ -24,16 +24,31 @@ class MainActivity : FlutterActivity() {
 
     companion object {
         const val CHANNEL = "ulticlock"
-        const val ACTION_START_FLUTTER_APP = "com.example.START_FLUTTER_APP"
-
+        const val ACTION_START_FLUTTER_APP = "com.example.ultimate_alarm_clock"
+const val EXTRA_KEY = "alarmRing"
+val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
     }
+
+
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 GeneratedPluginRegistrant.registerWith(flutterEngine)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
-
         var  methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+
+        val intent = intent
+        if (intent != null && intent.hasExtra(EXTRA_KEY)) {
+            val receivedData = intent.getStringExtra(EXTRA_KEY)
+            alarmConfig["shouldAlarmRing"] = true
+            val cleanIntent = Intent(intent)
+            cleanIntent.removeExtra(EXTRA_KEY)
+            setIntent(cleanIntent)
+            println("NATIVE SAID OK")
+        } else {
+            println("NATIVE SAID NO")
+        }
+        methodChannel.invokeMethod("appStartup", alarmConfig)
         methodChannel.setMethodCallHandler { call, result ->
             if (call.method == "scheduleAlarm") {
                 val seconds = call.argument<Int>("milliSeconds")
