@@ -4,7 +4,7 @@ This project aims to build a non-conventional alarm clock with smart features su
 
 <p align="center">
   <a href="https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf">
-    <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/38068ae2-39f4-4b25-9ab7-43c4cd4ac3f2" height="250" alt="GSOC">
+    <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/38068ae2-39f4-4b25-9ab7-43c4cd4ac3f2" height="500" alt="GSOC">
   </a>
 </p>
   
@@ -243,24 +243,20 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Delete alarms.
   - Edit alarms.
   - Create new alarms using the floating action button.
+- A settings icon in the app bar provides access to the Settings View.
 <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/46206641-3e62-4e5d-b8a9-5cfb93f1c18a" height="300" alt="home">
 
-- A settings icon in the app bar provides access to the Settings View.
 
 ### Settings View
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/ac18497b-4533-46e5-a6fa-9382300a4caa" height="300" alt="settings">
-
 - In the Settings View, you can customize various aspects of the app:
   - Set or edit the weather API key for weather-related features.
   - Log in with your Google account.
   - Toggle haptic feedback on/off.
   - Toggle the sorting of the alarm list based on time.
   - Toggle between light and dark modes.
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/ac18497b-4533-46e5-a6fa-9382300a4caa" height="300" alt="settings">
 
 ### Add or Update Alarm View
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/f856d436-1ba4-4f1f-8297-1396627d9218" height="300" alt="add-alarm-1">
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/5f0dd9be-0afa-4b91-b084-5be949dce2df" height="300" alt="add-alarm-2">
-
 - The floating action button in the Home View allows you to create alarms, directing you to the Add or Update Alarm View.
 - In this view, you can:
   - Set the alarm time using a time picker or manually entering time using keyboard.
@@ -270,6 +266,9 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Define automatic cancellation conditions based on screen activity, weather, and location.
   - Choose from challenges, including shake to dismiss, QR code, and math challenges.
   - Manage shared alarms.
+
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/f856d436-1ba4-4f1f-8297-1396627d9218" height="300" alt="add-alarm-1">
+<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/5f0dd9be-0afa-4b91-b084-5be949dce2df" height="300" alt="add-alarm-2">
 
 ### Shared Alarms
 
