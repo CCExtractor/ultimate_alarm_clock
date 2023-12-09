@@ -36,6 +36,7 @@ const Color kLightPrimaryDisabledTextColor = Color(0xffACACAB);
 
 // Dark ThemeData
 ThemeData kThemeData = ThemeData(
+  useMaterial3: false,
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(foregroundColor: ksecondaryColor),
   ),
@@ -118,6 +119,7 @@ ThemeData kThemeData = ThemeData(
 
 // Light ThemeData
 ThemeData kLightThemeData = ThemeData(
+  useMaterial3: false,
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(foregroundColor: kprimaryColor),
   ),
