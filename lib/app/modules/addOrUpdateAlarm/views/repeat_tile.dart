@@ -23,14 +23,12 @@ class RepeatTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
-        for (var i = 0; i < controller.repeatDays.length; i++) {
-          repeatDays[i] = controller.repeatDays[i];
-        }
+        // saving initial state
+        _storeOrPreset(repeatDays, controller.repeatDays);
         Get.defaultDialog(
           onWillPop: () async {
-            for (var i = 0; i < controller.repeatDays.length; i++) {
-              controller.repeatDays[i] = repeatDays[i];
-            }
+            // preseting values initial state
+            _storeOrPreset(controller.repeatDays, repeatDays);
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -134,6 +132,12 @@ class RepeatTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _storeOrPreset(List<bool> toSet, List<bool> toUse) {
+    for (var i = 0; i < toUse.length; i++) {
+      toSet[i] = toUse[i];
+    }
   }
 
   Widget dayTile({
