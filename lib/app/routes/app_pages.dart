@@ -24,7 +24,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.LANDING;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
@@ -34,7 +34,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.LANDING,
-      page: () => const LandingPageView(),
+      page: () => LandingPageView(),
       binding: LandingPageBinding(),
     ),
     GetPage(

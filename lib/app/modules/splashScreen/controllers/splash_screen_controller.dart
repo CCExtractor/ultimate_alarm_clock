@@ -4,7 +4,7 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() {
     Future.delayed(const Duration(seconds: 1), () {
-      Get.offNamed('/home');
+      Get.offNamed('/landing');
     });
     super.onInit();
   }
