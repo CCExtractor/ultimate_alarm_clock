@@ -5,6 +5,8 @@ import 'package:ultimate_alarm_clock/app/modules/landingpage/bindings/landing_bi
 import 'package:ultimate_alarm_clock/app/modules/landingpage/view/landing_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/bindings/stopwatch_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/view/stopwatch_view.dart';
 
 import '../modules/addOrUpdateAlarm/bindings/add_or_update_alarm_binding.dart';
 import '../modules/addOrUpdateAlarm/views/add_or_update_alarm_view.dart';
@@ -31,6 +33,11 @@ class AppPages {
       name: _Paths.SPLASH_SCREEN,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.STOPWATCH,
+      page: () => StopWatchPage(),
+      binding: StopwatchBinding(),
     ),
     GetPage(
       name: _Paths.LANDING,

@@ -1,22 +1,28 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/views/home_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/view/stopwatch_view.dart';
 
 class LandingPageController extends GetxController {
   RxInt currentIndex = 0.obs;
-  List<BottomNavigationBarItem> items = [
+  final List<BottomNavigationBarItem> items = [
     const BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      label: 'Page 1',
+      icon: Icon(Icons.alarm),
+      label: 'Alarm',
     ),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.search),
-      label: 'Page 2',
+      icon: Icon(Icons.watch),
+      label: 'Stopwatch',
     ),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.person),
-      label: 'Page 3',
+      icon: Icon(Icons.timer),
+      label: 'Pomodoro',
     ),
+  ];
+  final List<Widget> pages = [
+    HomeView(),
+    StopWatchPage(),
+    Text("3"),
   ];
 
   void changeIndex(int index) {

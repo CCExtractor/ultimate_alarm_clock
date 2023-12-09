@@ -12,8 +12,5 @@ class SplashScreenBinding extends Bindings {
     Get.put<LandingPageController>(
       LandingPageController(),
     );
-    Get.put<ThemeController>(
-      ThemeController(),
-    );
   }
 }
