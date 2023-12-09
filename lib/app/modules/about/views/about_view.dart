@@ -10,17 +10,19 @@ class AboutView extends GetView<AboutController> {
   final AboutController aboutController = Get.find<AboutController>();
   ThemeController themeController = Get.find<ThemeController>();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('About',style: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : kprimaryTextColor,
-          fontWeight: FontWeight.w500,
-        ),),
+        title: Text(
+          'About',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+                fontWeight: FontWeight.w500,
+              ),
+        ),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -43,31 +45,33 @@ class AboutView extends GetView<AboutController> {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: SizedBox.fromSize(
-                size: Size.fromRadius(48),
+                size: const Size.fromRadius(48),
                 child: Image.asset('assets/images/ic_launcher-playstore.png'),
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Ultimate Alarm Clock',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Version: 1.0.0',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather, and more!',
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Text(
+                'This project aims to build a non-conventional alarm clock'
+                ' with smart features such as auto-dismissal based on'
+                ' phone activity, weather, and more!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -75,7 +79,7 @@ class AboutView extends GetView<AboutController> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -93,16 +97,17 @@ class AboutView extends GetView<AboutController> {
                       if (!await aboutController
                           .launchUrl(Uri.parse(AboutController.githubUrl))) {
                         throw Exception(
-                            'Could not launch ${AboutController.githubUrl}');
+                          'Could not launch ${AboutController.githubUrl}',
+                        );
                       }
                     },
                     icon: SvgPicture.asset(
-                      "assets/images/github.svg",
+                      'assets/images/github.svg',
                       width: 30,
                       height: 30,
                     ),
-                    label: Text(
-                      "GitHub",
+                    label: const Text(
+                      'GitHub',
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
@@ -123,18 +128,20 @@ class AboutView extends GetView<AboutController> {
                     ),
                     onPressed: () async {
                       if (!await aboutController.launchUrl(
-                          Uri.parse(AboutController.ccExtractorUrl))) {
+                        Uri.parse(AboutController.ccExtractorUrl),
+                      )) {
                         throw Exception(
-                            'Could not launch ${AboutController.ccExtractorUrl}');
+                          'Could not launch ${AboutController.ccExtractorUrl}',
+                        );
                       }
                     },
                     icon: SvgPicture.asset(
-                      "assets/images/link.svg",
+                      'assets/images/link.svg',
                       width: 30,
                       height: 30,
                     ),
-                    label: Text(
-                      "CCExtractor",
+                    label: const Text(
+                      'CCExtractor',
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
