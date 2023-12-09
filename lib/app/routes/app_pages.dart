@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/bindings/about_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/views/about_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/landingpage/bindings/landing_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/landingpage/view/landing_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
 
@@ -22,13 +24,18 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASH_SCREEN;
+  static const INITIAL = Routes.LANDING;
 
   static final routes = [
     GetPage(
       name: _Paths.SPLASH_SCREEN,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.LANDING,
+      page: () => const LandingPageView(),
+      binding: LandingPageBinding(),
     ),
     GetPage(
       name: _Paths.HOME,
@@ -71,6 +78,5 @@ class AppPages {
       page: () => AboutView(),
       binding: AboutBinding(),
     ),
-
   ];
 }

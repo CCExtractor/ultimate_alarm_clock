@@ -1,18 +1,12 @@
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
-import '../controllers/home_controller.dart';
-
-class HomeBinding extends Bindings {
+class LandingPageBinding extends Bindings {
   @override
   void dependencies() {
     Get.put<HomeController>(
       HomeController(),
-    );
-    Get.lazyPut<SettingsController>(
-      () => SettingsController(),
-      fenix: true,
     );
     Get.put<ThemeController>(
       ThemeController(),

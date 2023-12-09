@@ -534,7 +534,8 @@ class HomeView extends GetView<HomeController> {
                                                     .value = false;
                                                 controller.isAllAlarmsSelected
                                                     .value = false;
-                                                controller.numberOfAlarmsSelected
+                                                controller
+                                                    .numberOfAlarmsSelected
                                                     .value = 0;
                                                 controller.selectedAlarmSet
                                                     .clear();
@@ -554,7 +555,8 @@ class HomeView extends GetView<HomeController> {
                                                       : kprimaryTextColor
                                                           .withOpacity(0.75),
                                               iconSize: 27 *
-                                                  controller.scalingFactor.value,
+                                                  controller
+                                                      .scalingFactor.value,
                                             ),
                                           ),
                                         ],

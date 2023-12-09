@@ -4,6 +4,7 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
+  static const LANDING = _Paths.LANDING;
   static const HOME = _Paths.HOME;
   static const ADD_ALARM = _Paths.ADD_OR_UPDATE_ALARM;
   static const ALARM_RING = _Paths.ALARM_RING;
@@ -16,6 +17,7 @@ abstract class Routes {
 abstract class _Paths {
   _Paths._();
   static const SPLASH_SCREEN = '/splash-screen';
+  static const LANDING = '/landing';
   static const HOME = '/home';
   static const ADD_OR_UPDATE_ALARM = '/add-update-alarm';
   static const ALARM_RING = '/alarm-ring';
