@@ -31,10 +31,21 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16, height * 0.2, 16, 16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  'Error Occurred',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
+                ),
+                SizedBox(
+                  height: height * 0.18,
+                ),
                 SvgPicture.asset(
                   'assets/images/warning.svg',
                   height: height * 0.3,
@@ -49,7 +60,11 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
                       : 'Something went wrong! Don\'t worry we\'re'
                           'working on it!',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
                 ),
                 const SizedBox(
                   height: 30,
