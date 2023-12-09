@@ -4,7 +4,7 @@ This project aims to build a non-conventional alarm clock with smart features su
 
 <p align="center">
   <a href="https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf">
-    <img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/38068ae2-39f4-4b25-9ab7-43c4cd4ac3f2" height="500" alt="GSOC">
+    <img src="./assets/images/readme/gsoc.jpg" alt="GSOC">
   </a>
 </p>
   
@@ -226,13 +226,15 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 
 ### Splash Screen
 - The app opens with a welcoming splash screen, providing a brief introduction to the application.
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/ae0ad406-6b6a-432f-8fec-e363bc0aa14c" height="400" alt="splash">
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/dad3ce66-3fed-4075-926d-cf29231a5e3c" height="400" alt="splash2">
+
+<img src="./assets/images/readme/splash1.jpg" height="400" alt="splash">
+<img src="./assets/images/readme/splash2.jpg" height="400" alt="splash2">
 
 ### Light and Dark Modes
 - The "Ultimate Alarm Clock" offers both light and dark modes to suit your preferred theme and enhance readability in different lighting conditions.
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/3f1669a0-b860-4047-9a0f-2b7af5dabaae" height="400" alt="dark">
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/621bff1f-9aa1-4630-a5bc-1f5fc85ddb66" height="400" alt="light">
+
+<img src="./assets/images/readme/dark.jpg" height="400" alt="dark">
+<img src="./assets/images/readme/light.jpg" height="400" alt="light">
 
 ### Home View
 - After the splash screen, you are directed to the Home View, where you can manage your alarms.
@@ -244,7 +246,8 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Edit alarms.
   - Create new alarms using the floating action button.
 - A settings icon in the app bar provides access to the Settings View.
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/46206641-3e62-4e5d-b8a9-5cfb93f1c18a" height="400" alt="home">
+
+<img src="./assets/images/readme/home.jpg" height="400" alt="home">
 
 
 ### Settings View
@@ -254,7 +257,8 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Toggle haptic feedback on/off.
   - Toggle the sorting of the alarm list based on time.
   - Toggle between light and dark modes.
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/ac18497b-4533-46e5-a6fa-9382300a4caa" height="400" alt="settings">
+
+<img src="./assets/images/readme/settings.jpg" height="400" alt="settings">
 
 ### Add or Update Alarm View
 - The floating action button in the Home View allows you to create alarms, directing you to the Add or Update Alarm View.
@@ -267,8 +271,8 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Choose from challenges, including shake to dismiss, QR code, and math challenges.
   - Manage shared alarms.
 
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/f856d436-1ba4-4f1f-8297-1396627d9218" height="400" alt="add-alarm-1">
-<img src="https://github.com/its-me-abhishek/ultimate_alarm_clock/assets/114338679/5f0dd9be-0afa-4b91-b084-5be949dce2df" height="400" alt="add-alarm-2">
+<img src="./assets/images/readme/alarm1.jpg" height="400" alt="add-alarm-1">
+<img src="./assets/images/readme/alarm2.jpg" height="400" alt="add-alarm-2">
 
 ### Shared Alarms
 
