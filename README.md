@@ -227,8 +227,8 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 ### Splash Screen
 - The app opens with a welcoming splash screen, providing a brief introduction to the application.
 
-<img src="./assets/images/readme/splash1.jpg" height="400" alt="splash">
-<img src="./assets/images/readme/splash2.jpg" height="400" alt="splash2">
+<img src="./assets/images/readme/splash1.jpg" height="400" alt="splash-1">
+<img src="./assets/images/readme/splash2.jpg" height="400" alt="splash-2">
 
 ### Light and Dark Modes
 - The "Ultimate Alarm Clock" offers both light and dark modes to suit your preferred theme and enhance readability in different lighting conditions.
