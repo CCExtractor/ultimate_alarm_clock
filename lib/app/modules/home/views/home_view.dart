@@ -648,14 +648,7 @@ class HomeView extends GetView<HomeController> {
                                         );
                                       }
                                       final AlarmModel alarm = alarms[index];
-                                      //
-                                      // final time12 = settingsController
-                                      //         .is24HrsEnabled.value
-                                      //     ? Utils.split24HourFormat(
-                                      //         alarm.alarmTime)
-                                      //     : Utils.convertTo12HourFormat(
-                                      //         alarm.alarmTime,
-                                      //       );
+
                                       final repeatDays =
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
