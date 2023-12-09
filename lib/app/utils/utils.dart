@@ -74,6 +74,12 @@ class Utils {
     return ['$hour:$minute', period];
   }
 
+  static List<String> split24HourFormat(String time) {
+    String hour = time.substring(0, 2);
+    String minute = time.substring(3);
+    return ['$hour:$minute', ''];
+  }
+
   static String getFormattedDate(DateTime now) {
     final formattedDate = DateFormat('EEE, MMMM d').format(now);
     int day = now.day;
