@@ -33,7 +33,6 @@ val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-GeneratedPluginRegistrant.registerWith(flutterEngine)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         var  methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
 
@@ -62,6 +61,9 @@ GeneratedPluginRegistrant.registerWith(flutterEngine)
             }else if(call.method == "bringAppToForeground"){
                 bringAppToForeground(this)
                 result.success(null)
+            }else if (call.method == "minimizeApp" ){
+                minimizeApp()
+                result.success(null)   
             } else {
                 result.notImplemented()
             }
@@ -78,6 +80,11 @@ GeneratedPluginRegistrant.registerWith(flutterEngine)
                 }
             }
         }
+
+
+    private fun minimizeApp() {
+        moveTaskToBack(true)
+    }
 
 
 private fun scheduleAlarm(milliSeconds: Int) {
