@@ -16,6 +16,7 @@ class SplashScreenController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
 
   bool shouldAlarmRing = true;
+  bool shouldNavigate = true;
 
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -87,60 +88,13 @@ class SplashScreenController extends GetxController {
 
   @override
   void onInit() async {
-//     Future.delayed(const Duration(seconds: 1), () async {
-//       AlarmModel latestAlarm = await getCurrentlyRingingAlarm();
-//       print("MAIN SAYS: ${latestAlarm.isEnabled} ${latestAlarm.alarmTime}");
-//       if (latestAlarm.isEnabled &&
-//           latestAlarm.alarmTime == Utils.timeOfDayToString(TimeOfDay.now()) &&
-//           Utils.isCurrentDayinList(latestAlarm.days) == true) {
-//         // Deciding to ring if weather is enabled
-//         if (latestAlarm.isWeatherEnabled == true) {
-//           LatLng currentLocation = LatLng(0, 0);
-
-//           currentLocation = await FlLocation.getLocationStream().first.then(
-//                 (value) => Utils.stringToLatLng(
-//                     '${value.latitude}, ${value.longitude}'),
-//               );
-//           bool isWeatherTypeMatching = await checkWeatherCondition(
-//             currentLocation,
-//             latestAlarm.weatherTypes,
-//           );
-//           if (isWeatherTypeMatching == true) {
-//             shouldAlarmRing = false;
-//           }
-//         }
-
-// // Deciding to ring if location is enabled
-//         if (latestAlarm.isLocationEnabled == true) {
-//           LatLng destination = LatLng(0, 0);
-//           LatLng source = Utils.stringToLatLng(latestAlarm.location);
-//           destination = await FlLocation.getLocationStream().first.then(
-//                 (value) => Utils.stringToLatLng(
-//                     '${value.latitude}, ${value.longitude}'),
-//               );
-
-//           if (Utils.isWithinRadius(source, destination, 500)) {
-//             shouldAlarmRing = false;
-//           }
-//         }
-
-//         if (shouldAlarmRing) {
-//           debugPrint("decided to run");
-//           Get.offNamed('/alarm-ring');
-//         } else {
-//           debugPrint("decided not run");
-//           Get.offNamed('/alarm-ring-ignore');
-//         }
-//       } else {
-//         Get.offNamed('/home');
-//       }
-//     });
     super.onInit();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
+          shouldNavigate = false;
           bool isAlarmIgnored = call.arguments['alarmIgnore'];
 
           // This exists to implement auto-cancellation using screen for the alarm
@@ -186,10 +140,12 @@ class SplashScreenController extends GetxController {
               Get.offNamed('/alarm-ring-ignore');
             }
           }
-        } else {
-          Get.offNamed('/home');
         }
-      } else {
+      }
+    });
+    // Necessary when hot restarting
+    Future.delayed(const Duration(seconds: 2), () {
+      if (shouldNavigate == true) {
         Get.offNamed('/home');
       }
     });
