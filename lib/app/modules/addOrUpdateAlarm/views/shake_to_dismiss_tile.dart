@@ -20,6 +20,8 @@ class ShakeToDismiss extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = Get.width;
     var height = Get.height;
+    int shakeTimes;
+    bool isShakeEnabled;
     return ListTile(
       title: Row(
         children: [
@@ -55,7 +57,15 @@ class ShakeToDismiss extends StatelessWidget {
       ),
       onTap: () {
         Utils.hapticFeedback();
+        // storing initial state
+        shakeTimes = controller.shakeTimes.value;
+        isShakeEnabled = controller.isShakeEnabled.value;
         Get.defaultDialog(
+          onWillPop: () async {
+            // presetting values to initial state
+            _presetToInitial(shakeTimes, isShakeEnabled);
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -155,5 +165,10 @@ class ShakeToDismiss extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _presetToInitial(int shakeTimes, bool isShakeEnabled) {
+    controller.shakeTimes.value = shakeTimes;
+    controller.isShakeEnabled.value = isShakeEnabled;
   }
 }

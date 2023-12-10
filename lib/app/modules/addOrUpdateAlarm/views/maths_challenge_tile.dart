@@ -20,6 +20,9 @@ class MathsChallenge extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = Get.width;
     var height = Get.height;
+    double sliderValue;
+    int noOfMathQues;
+    bool isMathsEnabled;
     return ListTile(
       title: Row(
         children: [
@@ -55,8 +58,17 @@ class MathsChallenge extends StatelessWidget {
       ),
       onTap: () {
         Utils.hapticFeedback();
-        controller.isMathsEnabled.value = true;
+        // saving initial values of sliders & numbers
+        isMathsEnabled = controller.isMathsEnabled.value;
+        sliderValue = controller.mathsSliderValue.value;
+        noOfMathQues = controller.numMathsQuestions.value;
         Get.defaultDialog(
+          onWillPop: () async {
+            Utils.hapticFeedback();
+            // presetting values to initial state
+            _presetToInitial(isMathsEnabled, sliderValue, noOfMathQues);
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -142,6 +154,7 @@ class MathsChallenge extends StatelessWidget {
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
+                          controller.isMathsEnabled.value = true;
                           Get.back();
                         },
                       ),
@@ -205,5 +218,13 @@ class MathsChallenge extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _presetToInitial(
+      bool isMathsEnabled, double sliderValue, int noOfMathQues) {
+    controller.isMathsEnabled.value = isMathsEnabled;
+    controller.mathsSliderValue.value = sliderValue;
+    controller.numMathsQuestions.value = noOfMathQues;
+    controller.mathsDifficulty.value = Utils.getDifficulty(sliderValue);
   }
 }

@@ -20,10 +20,19 @@ class RepeatTile extends StatelessWidget {
     bool anyDaySelected =
         controller.repeatDays.any((daySelected) => daySelected);
 
+    List<bool> repeatDays = List<bool>.filled(7, false);
+
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
+        // saving initial state
+        _storeOrPreset(repeatDays, controller.repeatDays);
         Get.defaultDialog(
+          onWillPop: () async {
+            // preseting values initial state
+            _storeOrPreset(controller.repeatDays, repeatDays);
+            return true;
+          },
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -125,6 +134,12 @@ class RepeatTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _storeOrPreset(List<bool> toSet, List<bool> toUse) {
+    for (var i = 0; i < toUse.length; i++) {
+      toSet[i] = toUse[i];
+    }
   }
 
   Widget dayTile({
