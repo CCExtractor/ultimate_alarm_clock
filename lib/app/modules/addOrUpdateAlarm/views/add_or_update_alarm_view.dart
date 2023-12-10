@@ -20,6 +20,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -30,7 +31,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
 
   ThemeController themeController = Get.find<ThemeController>();
   InputTimeController inputTimeController = Get.put(InputTimeController());
-
+  SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -349,7 +350,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     time: controller.selectedTime.value,
                                     isForce2Digits: true,
                                     alignment: Alignment.center,
-                                    is24HourMode: false,
+                                    is24HourMode:
+                                        settingsController.is24HrsEnabled.value,
                                     normalTextStyle: Theme.of(context)
                                         .textTheme
                                         .displayMedium!
@@ -367,12 +369,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       Utils.hapticFeedback();
                                       controller.selectedTime.value = dateTime;
                                       inputTimeController.inputHrsController
-                                          .text = dateTime.hour ==
-                                              0
-                                          ? 12.toString()
-                                          : (dateTime.hour > 12
-                                              ? (dateTime.hour - 12).toString()
-                                              : dateTime.hour.toString());
+                                          .text = settingsController
+                                              .is24HrsEnabled.value
+                                          ? dateTime.hour.toString()
+                                          : (dateTime.hour == 0
+                                              ? 12.toString()
+                                              : (dateTime.hour > 12
+                                                  ? (dateTime.hour - 12)
+                                                      .toString()
+                                                  : dateTime.hour.toString()));
                                       inputTimeController.inputMinutesController
                                           .text = dateTime.minute.toString();
                                       inputTimeController.changePeriod(
@@ -400,7 +405,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 RegExp(
                                                     '[1,2,3,4,5,6,7,8,9,0]')),
                                             LengthLimitingTextInputFormatter(2),
-                                            LimitRange(0, 12)
+                                            LimitRange(
+                                                0,
+                                                settingsController
+                                                        .is24HrsEnabled.value
+                                                    ? 23
+                                                    : 12)
                                           ],
                                         ),
                                       ),
@@ -439,28 +449,32 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       const SizedBox(
                                         width: 16,
                                       ),
-                                      DropdownButton(
-                                        underline: Container(),
-                                        value: inputTimeController.isAM.value
-                                            ? 'AM'
-                                            : 'PM',
-                                        dropdownColor:
-                                            themeController.isLightMode.value
-                                                ? kLightPrimaryBackgroundColor
-                                                : kprimaryBackgroundColor,
-                                        items:
-                                            ['AM', 'PM'].map((String period) {
-                                          return DropdownMenuItem<String>(
-                                            value: period,
-                                            child: Text(period),
-                                          );
-                                        }).toList(),
-                                        onChanged: (getPeriod) {
-                                          inputTimeController
-                                              .changePeriod(getPeriod!);
+                                      Visibility(
+                                        visible: !settingsController
+                                            .is24HrsEnabled.value,
+                                        child: DropdownButton(
+                                          underline: Container(),
+                                          value: inputTimeController.isAM.value
+                                              ? 'AM'
+                                              : 'PM',
+                                          dropdownColor:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryBackgroundColor
+                                                  : kprimaryBackgroundColor,
+                                          items:
+                                              ['AM', 'PM'].map((String period) {
+                                            return DropdownMenuItem<String>(
+                                              value: period,
+                                              child: Text(period),
+                                            );
+                                          }).toList(),
+                                          onChanged: (getPeriod) {
+                                            inputTimeController
+                                                .changePeriod(getPeriod!);
 
-                                          inputTimeController.setTime();
-                                        },
+                                            inputTimeController.setTime();
+                                          },
+                                        ),
                                       )
                                     ],
                                   ),

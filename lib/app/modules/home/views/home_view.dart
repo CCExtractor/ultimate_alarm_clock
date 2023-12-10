@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -18,7 +19,7 @@ class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
-
+  SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -651,10 +652,7 @@ class HomeView extends GetView<HomeController> {
                                         );
                                       }
                                       final AlarmModel alarm = alarms[index];
-                                      final time12 =
-                                          Utils.convertTo12HourFormat(
-                                        alarm.alarmTime,
-                                      );
+
                                       final repeatDays =
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
@@ -848,7 +846,15 @@ class HomeView extends GetView<HomeController> {
                                                                 Row(
                                                                   children: [
                                                                     Text(
-                                                                      time12[0],
+                                                                      (settingsController
+                                                                              .is24HrsEnabled
+                                                                              .value
+                                                                          ? Utils.split24HourFormat(alarm
+                                                                              .alarmTime)
+                                                                          : Utils
+                                                                              .convertTo12HourFormat(
+                                                                              alarm.alarmTime,
+                                                                            ))[0],
                                                                       style: Theme
                                                                               .of(
                                                                         context,
@@ -874,8 +880,11 @@ class HomeView extends GetView<HomeController> {
                                                                       ),
                                                                       child:
                                                                           Text(
-                                                                        time12[
-                                                                            1],
+                                                                        (settingsController.is24HrsEnabled.value
+                                                                            ? Utils.split24HourFormat(alarm.alarmTime)
+                                                                            : Utils.convertTo12HourFormat(
+                                                                                alarm.alarmTime,
+                                                                              ))[1],
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .displayMedium!
