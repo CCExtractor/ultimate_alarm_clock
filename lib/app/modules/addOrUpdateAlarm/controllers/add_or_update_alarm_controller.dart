@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -18,8 +16,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 
-class AddOrUpdateAlarmController extends GetxController
-    with AlarmHandlerSetupModel {
+class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
 
@@ -61,7 +58,7 @@ class AddOrUpdateAlarmController extends GetxController
   final numMathsQuestions = 1.obs;
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
-  final List<Marker> markersList = [];
+  final RxList markersList = [].obs;
   final daysRepeating = 'Never'.obs;
   final weatherTypes = 'Off'.obs;
   final selectedWeather = <WeatherTypes>[].obs;
@@ -81,9 +78,9 @@ class AddOrUpdateAlarmController extends GetxController
   }
 
   checkOverlayPermissionAndNavigate() async {
-    if (!(await FlutterForegroundTask.canDrawOverlays) ||
-        !(await FlutterForegroundTask.isIgnoringBatteryOptimizations) ||
-        !(await FlutterForegroundTask.canDrawOverlays)) {
+    if (!(await Permission.systemAlertWindow.isGranted) ||
+        !(await Permission.ignoreBatteryOptimizations.isGranted) ||
+        !(await Permission.systemAlertWindow.isGranted)) {
       Get.defaultDialog(
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
@@ -126,20 +123,19 @@ class AddOrUpdateAlarmController extends GetxController
               Get.back();
 
               // Request overlay permission
-              if (!(await FlutterForegroundTask.canDrawOverlays)) {
-                final isOverlayPermissionGranted =
-                    await FlutterForegroundTask.openSystemAlertWindowSettings();
-                if (!isOverlayPermissionGranted) {
+              if (!(await Permission.systemAlertWindow.isGranted)) {
+                final status = await Permission.systemAlertWindow.request();
+                if (!status.isGranted) {
                   debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
                   return;
                 }
               }
-              if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
-                // This function requires `android.permission.
-                // REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
-                await FlutterForegroundTask.requestIgnoreBatteryOptimization();
-                if (!await (FlutterForegroundTask
-                    .isIgnoringBatteryOptimizations)) {
+
+              if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
+                bool requested = await Permission.ignoreBatteryOptimizations
+                    .request()
+                    .isGranted;
+                if (!requested) {
                   debugPrint('IGNORE_BATTERY_OPTIMIZATION permission denied!');
                   return;
                 }
@@ -492,6 +488,7 @@ class AddOrUpdateAlarmController extends GetxController
           builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
+            color: Colors.black,
           ),
         ),
       );
@@ -559,6 +556,7 @@ class AddOrUpdateAlarmController extends GetxController
           builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
+            color: Colors.black,
           ),
         ),
       );

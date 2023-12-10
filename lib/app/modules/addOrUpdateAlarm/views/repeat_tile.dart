@@ -17,7 +17,8 @@ class RepeatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool anyDaySelected = controller.repeatDays.any((daySelected) => daySelected);
+    bool anyDaySelected =
+        controller.repeatDays.any((daySelected) => daySelected);
 
     return InkWell(
       onTap: () {
@@ -27,7 +28,7 @@ class RepeatTile extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Repeat',
+          title: 'Days of the week',
           titleStyle: TextStyle(
             color: themeController.isLightMode.value
                 ? kLightPrimaryTextColor
@@ -85,9 +86,9 @@ class RepeatTile extends StatelessWidget {
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: Obx(
-              () {
+          () {
             bool anyDaySelected =
-            controller.repeatDays.any((daySelected) => daySelected);
+                controller.repeatDays.any((daySelected) => daySelected);
 
             return Text(
               'Repeat',
@@ -95,7 +96,8 @@ class RepeatTile extends StatelessWidget {
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor
                     : kprimaryTextColor,
-                fontWeight: anyDaySelected ? FontWeight.w500 : FontWeight.normal,
+                fontWeight:
+                    anyDaySelected ? FontWeight.w500 : FontWeight.normal,
               ),
             );
           },

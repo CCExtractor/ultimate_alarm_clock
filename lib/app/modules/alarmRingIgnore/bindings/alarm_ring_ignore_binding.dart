@@ -13,8 +13,5 @@ class AlarmControlIgnoreBinding extends Bindings {
     Get.lazyPut<SettingsController>(
       () => SettingsController(),
     );
-    Get.put<ThemeController>(
-      ThemeController(),
-    );
   }
 }

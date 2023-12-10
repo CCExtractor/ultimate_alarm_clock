@@ -540,6 +540,10 @@ class HomeView extends GetView<HomeController> {
                                                     .value = 0;
                                                 controller.selectedAlarmSet
                                                     .clear();
+                                                // After deleting alarms, refreshing to schedule latest one
+                                                controller.refreshTimer = true;
+                                                controller
+                                                    .refreshUpcomingAlarms();
                                               },
                                               icon: const Icon(
                                                 Icons.delete,
