@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 class InputTimeController extends GetxController {
   AddOrUpdateAlarmController addOrUpdateAlarmController =
       Get.find<AddOrUpdateAlarmController>();
+  SettingsController settingsController = Get.find<SettingsController>();
   final isTimePicker = false.obs;
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
@@ -29,19 +31,22 @@ class InputTimeController extends GetxController {
 
   void setTime() {
     int hour = int.parse(inputHrsController.text);
-    if (hour == 0 && inputHrsController.text.length == 2) {
-      inputHrsController.text = '12';
+    if (!settingsController.is24HrsEnabled.value) {
+      if (hour == 0 && inputHrsController.text.length == 2) {
+        inputHrsController.text = '12';
+      }
+
+      if (isAM.value) {
+        if (hour == 12) {
+          hour = hour - 12;
+        }
+      } else {
+        if (hour != 12) {
+          hour = hour + 12;
+        }
+      }
     }
 
-    if (isAM.value) {
-      if (hour == 12) {
-        hour = hour - 12;
-      }
-    } else {
-      if (hour != 12) {
-        hour = hour + 12;
-      }
-    }
     int minute = int.parse(inputMinutesController.text);
     final time = TimeOfDay(hour: hour, minute: minute);
     DateTime today = DateTime.now();

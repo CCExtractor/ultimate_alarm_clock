@@ -17,6 +17,8 @@ class SettingsController extends GetxController {
   var homeController = Get.find<HomeController>();
   var isHapticFeedbackEnabled = true.obs;
   final _hapticFeedbackKey = 'haptic_feedback';
+  var is24HrsEnabled = false.obs;
+  final _f24HrsEnabledKey = '24_hours_format';
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
   final _secureStorageProvider = SecureStorageProvider();
@@ -181,6 +183,9 @@ class SettingsController extends GetxController {
     isHapticFeedbackEnabled.value = await _secureStorageProvider
         .readHapticFeedbackValue(key: _hapticFeedbackKey);
 
+    is24HrsEnabled.value =
+        await _secureStorageProvider.read24HoursEnabled(key: _f24HrsEnabledKey);
+
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
@@ -219,6 +224,16 @@ class SettingsController extends GetxController {
   void toggleHapticFeedback(bool enabled) {
     isHapticFeedbackEnabled.value = enabled;
     _savePreference();
+  }
+
+  void _save24HoursFormatPreference() async {
+    await _secureStorageProvider.write24HoursEnabled(
+        key: _f24HrsEnabledKey, is24HoursEnabled: is24HrsEnabled.value);
+  }
+
+  void toggle24HoursFormat(bool enabled) {
+    is24HrsEnabled.value = enabled;
+    _save24HoursFormatPreference();
   }
 
   void _saveSortedAlarmListPreference() async {
