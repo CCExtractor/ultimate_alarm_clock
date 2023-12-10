@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_fgbg/flutter_fgbg.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -122,7 +121,7 @@ class AlarmControlController extends GetxController {
     // Preventing app from being minimized!
     _subscription = FGBGEvents.stream.listen((event) {
       if (event == FGBGType.background) {
-        FlutterForegroundTask.launchApp();
+        alarmChannel.invokeMethod('bringAppToForeground');
       }
     });
 
