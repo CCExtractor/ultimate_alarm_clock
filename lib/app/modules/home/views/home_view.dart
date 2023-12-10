@@ -446,7 +446,7 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Container(
                                             padding: EdgeInsets.symmetric(
-                                              horizontal: 25 *
+                                              horizontal: 15 *
                                                   controller
                                                       .scalingFactor.value,
                                             ),
