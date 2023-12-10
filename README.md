@@ -1,17 +1,18 @@
-
 # Ultimate Alarm Clock
 
 This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather and  more! It also includes challenges to ensure you completely wake up and an option to set shared alarms! This is the ULTIMATE alarm clock :)
 
-# Timeline and Project Page
-
-[GSoC page](https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf)
-
+<p align="center">
+  <a href="https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf">
+    <img src="./assets/images/readme/gsoc.jpg" alt="GSOC">
+  </a>
+</p>
+  
 ## Table of Contents
 - [GetX Pattern](#getx-pattern)
 - [Database Schema](#database-schema)
-- [Installation & Setup](#installation-setup)
-- [User Interface & Features](#user-interface-features)
+- [Installation & Setup](#installation--setup)
+- [User Interface & Features](#user-interface--features)
 - [Contribution Guidelines](#contribution-guidelines)
 - [Future Plans](#future-plans)
 - [Community](#community)
@@ -171,9 +172,7 @@ The Flutter Secure Storage library is utilized in the "Ultimate Alarm Clock" pro
 
 Flutter Secure Storage is instrumental in ensuring the security and privacy of sensitive user data and preferences, contributing to a seamless and secure user experience in the "Ultimate Alarm Clock" project.
 
-
 ## Installation & Setup
-
 ### Prerequisites
 Before getting started, ensure you have the following prerequisites installed on your system:
 
@@ -228,8 +227,14 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 ### Splash Screen
 - The app opens with a welcoming splash screen, providing a brief introduction to the application.
 
+<img src="./assets/images/readme/splash1.jpg" height="400" alt="splash-1">
+<img src="./assets/images/readme/splash2.jpg" height="400" alt="splash-2">
+
 ### Light and Dark Modes
 - The "Ultimate Alarm Clock" offers both light and dark modes to suit your preferred theme and enhance readability in different lighting conditions.
+
+<img src="./assets/images/readme/dark.jpg" height="400" alt="dark">
+<img src="./assets/images/readme/light.jpg" height="400" alt="light">
 
 ### Home View
 - After the splash screen, you are directed to the Home View, where you can manage your alarms.
@@ -240,11 +245,12 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Delete alarms.
   - Edit alarms.
   - Create new alarms using the floating action button.
-
 - A settings icon in the app bar provides access to the Settings View.
 
-### Settings View
+<img src="./assets/images/readme/home.jpg" height="400" alt="home">
 
+
+### Settings View
 - In the Settings View, you can customize various aspects of the app:
   - Set or edit the weather API key for weather-related features.
   - Log in with your Google account.
@@ -252,8 +258,9 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Toggle the sorting of the alarm list based on time.
   - Toggle between light and dark modes.
 
-### Add or Update Alarm View
+<img src="./assets/images/readme/settings.jpg" height="400" alt="settings">
 
+### Add or Update Alarm View
 - The floating action button in the Home View allows you to create alarms, directing you to the Add or Update Alarm View.
 - In this view, you can:
   - Set the alarm time using a time picker or manually entering time using keyboard.
@@ -263,6 +270,9 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Define automatic cancellation conditions based on screen activity, weather, and location.
   - Choose from challenges, including shake to dismiss, QR code, and math challenges.
   - Manage shared alarms.
+
+<img src="./assets/images/readme/alarm1.jpg" height="400" alt="add-alarm-1">
+<img src="./assets/images/readme/alarm2.jpg" height="400" alt="add-alarm-2">
 
 ### Shared Alarms
 
@@ -385,10 +395,6 @@ We appreciate your contributions to the "Ultimate Alarm Clock" project, and your
 If you have any questions regarding something in the project, do not hestitate to ask :)
 
 ## Future Plans
-
-#### Custom Alarm Ringtones
-
-- We plan to introduce the ability for users to set custom alarm ringtones. This feature will allow users to select their favorite music or sounds as alarm tones, adding a personal touch to their wake-up experience.
 
 #### Default Alarm Ringtones
 
