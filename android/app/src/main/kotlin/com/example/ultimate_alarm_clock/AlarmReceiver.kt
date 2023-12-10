@@ -8,17 +8,21 @@ import android.os.Looper
 import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle
 
+
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        
-        if (context != null) {
-            val flutterIntent = Intent(context, MainActivity::class.java)
-            flutterIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-           flutterIntent.putExtra("initialRoute", "/")
-           flutterIntent.putExtra("alarmRing", "true")
-            println("ANDROID STARTING APP")
-            context.startActivity(flutterIntent)
+        if (context == null || intent == null) {
+            return
         }
 
-}
+
+        val flutterIntent = Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            putExtra("initialRoute", "/")
+            putExtra("alarmRing", "true")
+        }
+
+        println("ANDROID STARTING APP")
+        context.startActivity(flutterIntent)
+    }
 }
