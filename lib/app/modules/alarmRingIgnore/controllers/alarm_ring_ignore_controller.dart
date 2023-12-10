@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
@@ -8,7 +8,6 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:app_minimizer/app_minimizer.dart';
 
 class AlarmControlIgnoreController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
@@ -109,6 +108,6 @@ class AlarmControlIgnoreController extends GetxController {
       }
     }
 
-    FlutterAppMinimizer.minimize();
+    alarmChannel.invokeMethod('minimizeApp');
   }
 }
