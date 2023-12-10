@@ -1,13 +1,12 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_handler_setup_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -22,7 +21,8 @@ class Pair<T, U> {
   Pair(this.first, this.second);
 }
 
-class HomeController extends GetxController with AlarmHandlerSetupModel {
+class HomeController extends GetxController {
+  MethodChannel alarmChannel = MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
   Stream? isarStreamAlarms;
@@ -206,6 +206,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
   @override
   void onInit() async {
     super.onInit();
+
     if (!isUserSignedIn.value) await loginWithGoogle();
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
@@ -226,7 +227,7 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
     // Check if 2 seconds have passed since the last call
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
-    if (currentTime - lastRefreshTime < 2000) {
+    if (currentTime - lastRefreshTime < 1000) {
       delayToSchedule?.cancel();
     }
 
@@ -331,17 +332,18 @@ class HomeController extends GetxController with AlarmHandlerSetupModel {
       debugPrint(
         'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
       );
-      await stopForegroundTask();
+      await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
         DateTime.now(),
         Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
       );
-      if (await FlutterForegroundTask.isRunningService == false) {
-        createForegroundTask(intervaltoAlarm);
-        await startForegroundTask(latestAlarm);
-      } else {
-        await restartForegroundTask(latestAlarm, intervaltoAlarm);
+      try {
+        await alarmChannel
+            .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+        print("Scheduled...");
+      } on PlatformException catch (e) {
+        print("Failed to schedule alarm: ${e.message}");
       }
     }
   }

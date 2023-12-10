@@ -5,18 +5,11 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import '../controllers/settings_controller.dart';
 
 class SettingsBinding extends Bindings {
-
   @override
   void dependencies() {
-    Get.lazyPut<SettingsController>(
-    ()=>  SettingsController(),
-      fenix: true
-    );
+    Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
     Get.put<HomeController>(
       HomeController(),
-    );
-    Get.put<ThemeController>(
-      ThemeController(),
     );
   }
 }

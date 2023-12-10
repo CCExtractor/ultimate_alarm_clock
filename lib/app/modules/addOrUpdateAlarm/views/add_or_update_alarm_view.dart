@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
@@ -21,6 +20,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -31,13 +31,94 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
 
   ThemeController themeController = Get.find<ThemeController>();
   InputTimeController inputTimeController = Get.put(InputTimeController());
-
+  SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
     var height = Get.height;
-    return WillPopScope(
-      child: WithForegroundTask(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            return;
+          }
+
+          Get.defaultDialog(
+            titlePadding: const EdgeInsets.symmetric(
+              vertical: 20,
+            ),
+            backgroundColor: themeController.isLightMode.value
+                ? kLightSecondaryBackgroundColor
+                : ksecondaryBackgroundColor,
+            title: 'Discard Changes?',
+            titleStyle: Theme.of(context).textTheme.displaySmall,
+            content: Column(
+              children: [
+                Text(
+                  'You have unsaved changes. Are you sure you want to leave this'
+                  ' page?',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: kprimaryBackgroundColor,
+                              ),
+                        ),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          Get.offNamedUntil(
+                            '/home',
+                            (route) => route.settings.name == '/splash-screen',
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: themeController.isLightMode.value
+                                ? Colors.red.withOpacity(0.9)
+                                : Colors.red,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          'Leave',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? Colors.red.withOpacity(0.9)
+                                    : Colors.red,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
         child: Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
@@ -269,7 +350,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     time: controller.selectedTime.value,
                                     isForce2Digits: true,
                                     alignment: Alignment.center,
-                                    is24HourMode: false,
+                                    is24HourMode:
+                                        settingsController.is24HrsEnabled.value,
                                     normalTextStyle: Theme.of(context)
                                         .textTheme
                                         .displayMedium!
@@ -287,12 +369,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       Utils.hapticFeedback();
                                       controller.selectedTime.value = dateTime;
                                       inputTimeController.inputHrsController
-                                          .text = dateTime.hour ==
-                                              0
-                                          ? 12.toString()
-                                          : (dateTime.hour > 12
-                                              ? (dateTime.hour - 12).toString()
-                                              : dateTime.hour.toString());
+                                          .text = settingsController
+                                              .is24HrsEnabled.value
+                                          ? dateTime.hour.toString()
+                                          : (dateTime.hour == 0
+                                              ? 12.toString()
+                                              : (dateTime.hour > 12
+                                                  ? (dateTime.hour - 12)
+                                                      .toString()
+                                                  : dateTime.hour.toString()));
                                       inputTimeController.inputMinutesController
                                           .text = dateTime.minute.toString();
                                       inputTimeController.changePeriod(
@@ -320,7 +405,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 RegExp(
                                                     '[1,2,3,4,5,6,7,8,9,0]')),
                                             LengthLimitingTextInputFormatter(2),
-                                            LimitRange(0, 12)
+                                            LimitRange(
+                                                0,
+                                                settingsController
+                                                        .is24HrsEnabled.value
+                                                    ? 23
+                                                    : 12)
                                           ],
                                         ),
                                       ),
@@ -359,28 +449,32 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       const SizedBox(
                                         width: 16,
                                       ),
-                                      DropdownButton(
-                                        underline: Container(),
-                                        value: inputTimeController.isAM.value
-                                            ? 'AM'
-                                            : 'PM',
-                                        dropdownColor:
-                                            themeController.isLightMode.value
-                                                ? kLightPrimaryBackgroundColor
-                                                : kprimaryBackgroundColor,
-                                        items:
-                                            ['AM', 'PM'].map((String period) {
-                                          return DropdownMenuItem<String>(
-                                            value: period,
-                                            child: Text(period),
-                                          );
-                                        }).toList(),
-                                        onChanged: (getPeriod) {
-                                          inputTimeController
-                                              .changePeriod(getPeriod!);
+                                      Visibility(
+                                        visible: !settingsController
+                                            .is24HrsEnabled.value,
+                                        child: DropdownButton(
+                                          underline: Container(),
+                                          value: inputTimeController.isAM.value
+                                              ? 'AM'
+                                              : 'PM',
+                                          dropdownColor:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryBackgroundColor
+                                                  : kprimaryBackgroundColor,
+                                          items:
+                                              ['AM', 'PM'].map((String period) {
+                                            return DropdownMenuItem<String>(
+                                              value: period,
+                                              child: Text(period),
+                                            );
+                                          }).toList(),
+                                          onChanged: (getPeriod) {
+                                            inputTimeController
+                                                .changePeriod(getPeriod!);
 
-                                          inputTimeController.setTime();
-                                        },
+                                            inputTimeController.setTime();
+                                          },
+                                        ),
                                       )
                                     ],
                                   ),
@@ -400,20 +494,26 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    RepeatOnceTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
-                    Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      child: Divider(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryDisabledTextColor
-                            : kprimaryDisabledTextColor,
-                      ),
-                    ),
+                    Obx(() => (!controller.repeatDays
+                            .every((element) => element == false))
+                        ? RepeatOnceTile(
+                            controller: controller,
+                            themeController: themeController,
+                          )
+                        : const SizedBox()),
+                    Obx(() => (!controller.repeatDays
+                            .every((element) => element == false))
+                        ? Container(
+                            color: themeController.isLightMode.value
+                                ? kLightSecondaryBackgroundColor
+                                : ksecondaryBackgroundColor,
+                            child: Divider(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                          )
+                        : const SizedBox()),
                     SnoozeDurationTile(
                       controller: controller,
                       themeController: themeController,
@@ -631,83 +731,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                   ],
                 ),
-        ),
-      ),
-      onWillPop: () async {
-        Get.defaultDialog(
-          titlePadding: const EdgeInsets.symmetric(
-            vertical: 20,
-          ),
-          backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
-          title: 'Discard Changes?',
-          titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Column(
-            children: [
-              Text(
-                'You have unsaved changes. Are you sure you want to leave this'
-                ' page?',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kprimaryColor),
-                      ),
-                      child: Text(
-                        'Cancel',
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: kprimaryBackgroundColor,
-                                ),
-                      ),
-                    ),
-                    OutlinedButton(
-                      onPressed: () {
-                        Get.offNamedUntil(
-                          '/home',
-                          (route) => route.settings.name == '/splash-screen',
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          color: themeController.isLightMode.value
-                              ? Colors.red.withOpacity(0.9)
-                              : Colors.red,
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        'Leave',
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? Colors.red.withOpacity(0.9)
-                                      : Colors.red,
-                                ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-
-        return false;
-      },
-    );
+        ));
   }
 }

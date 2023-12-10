@@ -19,7 +19,9 @@ class RepeatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool anyDaySelected =
         controller.repeatDays.any((daySelected) => daySelected);
+
     List<bool> repeatDays = List<bool>.filled(7, false);
+
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
@@ -35,7 +37,7 @@ class RepeatTile extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Repeat',
+          title: 'Days of the week',
           titleStyle: TextStyle(
             color: themeController.isLightMode.value
                 ? kLightPrimaryTextColor

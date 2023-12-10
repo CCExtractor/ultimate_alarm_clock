@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/about.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/custom_ringtone.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_feedback.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
@@ -24,7 +25,6 @@ class SettingsView extends GetView<SettingsController> {
   HomeController homeController = Get.find<HomeController>();
   ThemeController themeController = Get.find<ThemeController>();
   AboutController aboutController = Get.put(AboutController());
-
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +98,15 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(
                   height: 20,
                 ),
+                Enable24HourFormat(
+                  height: height,
+                  width: width,
+                  controller: controller,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 EnableSortedAlarmList(
                   controller: controller,
                   height: height,
@@ -116,7 +125,7 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(
                   height: 20,
                 ),
-                 AboutSection(
+                AboutSection(
                   aboutController: aboutController,
                   height: height,
                   width: width,

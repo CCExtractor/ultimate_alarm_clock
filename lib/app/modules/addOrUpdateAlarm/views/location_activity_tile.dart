@@ -143,7 +143,9 @@ class LocationTile extends StatelessWidget {
                           urlTemplate:
                               'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
                         ),
-                        MarkerLayer(markers: controller.markersList),
+                        Obx(() => MarkerLayer(
+                            markers:
+                                List<Marker>.from(controller.markersList))),
                       ],
                     ),
                   ),

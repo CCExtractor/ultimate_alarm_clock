@@ -10,12 +10,6 @@ class HomeBinding extends Bindings {
     Get.put<HomeController>(
       HomeController(),
     );
-    Get.lazyPut<SettingsController>(
-      () => SettingsController(),
-      fenix: true
-    );
-    Get.put<ThemeController>(
-      ThemeController(),
-    );
+    Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
   }
 }

@@ -125,4 +125,19 @@ class SecureStorageProvider {
       value: status.toString(),
     );
   }
+
+  //check 24 hrs enabled
+  Future<bool> read24HoursEnabled({required String key}) async {
+    return await _secureStorage.read(key: key) == 'true';
+  }
+
+  Future<void> write24HoursEnabled({
+    required String key,
+    required bool is24HoursEnabled,
+  }) async {
+    await _secureStorage.write(
+      key: key,
+      value: is24HoursEnabled.toString(),
+    );
+  }
 }

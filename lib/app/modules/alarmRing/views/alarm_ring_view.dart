@@ -16,7 +16,20 @@ class AlarmControlView extends GetView<AlarmControlController> {
   Widget build(BuildContext context) {
     var width = Get.width;
     var height = Get.height;
-    return WillPopScope(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        if (didPop) {
+          return;
+        }
+
+        Get.snackbar(
+          'Note',
+          "You can't go back while the alarm is ringing",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      },
       child: SafeArea(
         child: Scaffold(
           floatingActionButtonLocation:
@@ -175,15 +188,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
           ),
         ),
       ),
-      onWillPop: () async {
-        Get.snackbar(
-          'Note',
-          "You can't go back while the alarm is ringing",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return false;
-      },
     );
   }
 }

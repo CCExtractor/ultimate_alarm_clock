@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -18,7 +19,7 @@ class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
-
+  SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -446,7 +447,7 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Container(
                                             padding: EdgeInsets.symmetric(
-                                              horizontal: 25 *
+                                              horizontal: 15 *
                                                   controller
                                                       .scalingFactor.value,
                                             ),
@@ -534,10 +535,15 @@ class HomeView extends GetView<HomeController> {
                                                     .value = false;
                                                 controller.isAllAlarmsSelected
                                                     .value = false;
-                                                controller.numberOfAlarmsSelected
+                                                controller
+                                                    .numberOfAlarmsSelected
                                                     .value = 0;
                                                 controller.selectedAlarmSet
                                                     .clear();
+                                                // After deleting alarms, refreshing to schedule latest one
+                                                controller.refreshTimer = true;
+                                                controller
+                                                    .refreshUpcomingAlarms();
                                               },
                                               icon: const Icon(
                                                 Icons.delete,
@@ -554,7 +560,8 @@ class HomeView extends GetView<HomeController> {
                                                       : kprimaryTextColor
                                                           .withOpacity(0.75),
                                               iconSize: 27 *
-                                                  controller.scalingFactor.value,
+                                                  controller
+                                                      .scalingFactor.value,
                                             ),
                                           ),
                                         ],
@@ -645,10 +652,7 @@ class HomeView extends GetView<HomeController> {
                                         );
                                       }
                                       final AlarmModel alarm = alarms[index];
-                                      final time12 =
-                                          Utils.convertTo12HourFormat(
-                                        alarm.alarmTime,
-                                      );
+
                                       final repeatDays =
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
@@ -842,7 +846,15 @@ class HomeView extends GetView<HomeController> {
                                                                 Row(
                                                                   children: [
                                                                     Text(
-                                                                      time12[0],
+                                                                      (settingsController
+                                                                              .is24HrsEnabled
+                                                                              .value
+                                                                          ? Utils.split24HourFormat(alarm
+                                                                              .alarmTime)
+                                                                          : Utils
+                                                                              .convertTo12HourFormat(
+                                                                              alarm.alarmTime,
+                                                                            ))[0],
                                                                       style: Theme
                                                                               .of(
                                                                         context,
@@ -868,8 +880,11 @@ class HomeView extends GetView<HomeController> {
                                                                       ),
                                                                       child:
                                                                           Text(
-                                                                        time12[
-                                                                            1],
+                                                                        (settingsController.is24HrsEnabled.value
+                                                                            ? Utils.split24HourFormat(alarm.alarmTime)
+                                                                            : Utils.convertTo12HourFormat(
+                                                                                alarm.alarmTime,
+                                                                              ))[1],
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .displayMedium!

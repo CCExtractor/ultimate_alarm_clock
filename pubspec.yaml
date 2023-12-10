@@ -6,19 +6,16 @@ environment:
   sdk: ">=2.19.2 <3.0.0"
 
 dependencies:
-  # objectbox_flutter_libs: ^1.7.2
   firebase_core: ^2.8.0
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
-  flutter_foreground_task: 6.0.0
   flutter_ringtone_player: ^3.2.0
   flutter_time_picker_spinner: ^2.0.0
   cloud_firestore: ^4.4.5
   intl: ^0.18.0
   latlong2: ^0.8.1
   flutter_map: ^4.0.0
-  app_minimizer: ^1.0.0+2
   fl_location: ^2.0.0+1
   flutter_fgbg: ^0.3.0
   flutter_svg: ^2.0.4
@@ -33,15 +30,13 @@ dependencies:
   permission_handler: ^11.0.1
   google_sign_in: ^6.0.2
   url_launcher: ^6.1.11
-  uuid: ^3.0.7
   flutter_expandable_fab: ^1.8.1
+  vibration: ^1.8.1
+  file_picker: ^6.1.1
+  audioplayers: ^5.2.1
   rxdart: ^0.27.7
   flutter:
     sdk: flutter
-  vibration: ^1.8.1
-  flutter_launcher_icons: ^0.13.1
-  file_picker: ^6.1.1
-  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.3
