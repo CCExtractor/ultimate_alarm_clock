@@ -400,20 +400,26 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    RepeatOnceTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
-                    Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      child: Divider(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryDisabledTextColor
-                            : kprimaryDisabledTextColor,
-                      ),
-                    ),
+                    Obx(() => (!controller.repeatDays
+                            .every((element) => element == false))
+                        ? RepeatOnceTile(
+                            controller: controller,
+                            themeController: themeController,
+                          )
+                        : const SizedBox()),
+                    Obx(() => (!controller.repeatDays
+                            .every((element) => element == false))
+                        ? Container(
+                            color: themeController.isLightMode.value
+                                ? kLightSecondaryBackgroundColor
+                                : ksecondaryBackgroundColor,
+                            child: Divider(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                          )
+                        : const SizedBox()),
                     SnoozeDurationTile(
                       controller: controller,
                       themeController: themeController,
