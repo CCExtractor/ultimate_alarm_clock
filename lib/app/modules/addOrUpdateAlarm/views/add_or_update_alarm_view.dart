@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
@@ -216,6 +217,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.mathsDifficulty.value.index,
                           isShakeEnabled: controller.isShakeEnabled.value,
                           shakeTimes: controller.shakeTimes.value,
+                          ringtoneName: controller.customRingtoneName.value,
                         );
 
                         // Adding offset details to the database if
@@ -531,6 +533,22 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     LabelTile(
                       controller: controller,
                       themeController: themeController,
+                    ),
+                    Container(
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryDisabledTextColor
+                            : kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    ChooseRingtoneTile(
+                      controller: controller,
+                      themeController: themeController,
+                      height: height,
+                      width: width,
                     ),
                     Container(
                       color: themeController.isLightMode.value
