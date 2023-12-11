@@ -169,7 +169,6 @@ class AlarmControlController extends GetxController {
     }
 
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-
     Utils.playAlarm(ringtoneName: ringtoneName);
 
     // Setting snooze duration
@@ -218,7 +217,6 @@ class AlarmControlController extends GetxController {
     vibrationTimer!.cancel();
 
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-
     Utils.stopAlarm(ringtoneName: ringtoneName);
 
     _subscription.cancel();
