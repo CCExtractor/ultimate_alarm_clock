@@ -155,8 +155,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   () => Visibility(
                     visible: !controller.isSnoozing.value,
                     child: SizedBox(
-                      height: height * 0.055,
-                      width: width * 0.25,
+                      height: height * 0.07,
+                      width: width * 0.5,
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
