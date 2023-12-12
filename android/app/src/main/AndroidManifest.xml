@@ -15,7 +15,7 @@
 
     <application
         tools:replace="android:label"
-        android:label="ultimate_alarm_clock"
+        android:label="Ultimate Alarm Clock"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
 
