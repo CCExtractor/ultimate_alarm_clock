@@ -59,7 +59,7 @@ class AboutView extends GetView<AboutController> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Version: 1.0.0',
+              'Version: 0.5.0',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
