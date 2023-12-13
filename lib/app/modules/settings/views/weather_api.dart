@@ -6,7 +6,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class WeatherApi extends StatelessWidget {
+class WeatherApi extends StatefulWidget {
   const WeatherApi({
     super.key,
     required this.controller,
@@ -21,13 +21,19 @@ class WeatherApi extends StatelessWidget {
   final double height;
 
   @override
+  State<WeatherApi> createState() => _WeatherApiState();
+}
+
+class _WeatherApiState extends State<WeatherApi> {
+  @override
   Widget build(BuildContext context) {
+    bool _validate = false;
     return InkWell(
       onTap: () async {
         Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: themeController.isLightMode.value
+          backgroundColor: widget.themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           title: 'API Key',
@@ -40,16 +46,23 @@ class WeatherApi extends StatelessWidget {
                   // If the user hasn't clicked on the 'Save' or 'Update' button of
                   // the dialog, or there is no error in the weather key, then
                   // show the dialog
-                  child: (controller.weatherKeyState.value !=
+                  child: (widget.controller.weatherKeyState.value !=
                               WeatherKeyState.saveAdded &&
-                          controller.weatherKeyState.value !=
+                          widget.controller.weatherKeyState.value !=
                               WeatherKeyState.saveUpdated)
-                      ? (controller.didWeatherKeyError.value == false)
+                      ? (widget.controller.didWeatherKeyError.value == false)
                           ? Column(
                               children: [
                                 TextField(
                                   obscureText: false,
-                                  controller: controller.apiKey,
+                                  controller: widget.controller.apiKey,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'API Key',
+                                    errorText: _validate
+                                        ? 'API Key cannot be empty'
+                                        : null,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 20.0),
@@ -68,7 +81,8 @@ class WeatherApi extends StatelessWidget {
                                           // If the weather state is add, then
                                           // show 'Save' else show 'Update' text
                                           // on the button
-                                          controller.weatherKeyState.value ==
+                                          widget.controller.weatherKeyState
+                                                      .value ==
                                                   WeatherKeyState.add
                                               ? 'Save'
                                               : 'Update',
@@ -76,7 +90,7 @@ class WeatherApi extends StatelessWidget {
                                               .textTheme
                                               .displaySmall!
                                               .copyWith(
-                                                color: themeController
+                                                color: widget.themeController
                                                         .isLightMode.value
                                                     ? kLightPrimaryTextColor
                                                     : ksecondaryTextColor,
@@ -84,44 +98,70 @@ class WeatherApi extends StatelessWidget {
                                         ),
                                         onPressed: () async {
                                           Utils.hapticFeedback();
-                                          controller
+                                          widget
+                                              .controller
                                               .showingCircularProgressIndicator
                                               .value = true;
 
+                                          // Validation If String is empty
+                                          if (await widget
+                                              .controller.apiKey.text.isEmpty) {
+                                            setState(() {
+                                              _validate = true;
+                                            });
+                                            widget
+                                                .controller
+                                                .showingCircularProgressIndicator
+                                                .value = false;
+                                            return;
+                                          }
+
+                                          // Reset state after getting error message
+                                          if (await widget.controller.apiKey
+                                              .text.isNotEmpty) {
+                                            setState(() {
+                                              _validate = false;
+                                            });
+                                          }
+
                                           // Get the user's location
-                                          await controller.getLocation();
+                                          await widget.controller.getLocation();
 
                                           // If the API key is valid
-                                          if (await controller.isApiKeyValid(
-                                            controller.apiKey.text,
+                                          if (await widget.controller
+                                              .isApiKeyValid(
+                                            widget.controller.apiKey.text,
                                           )) {
                                             // Add the key to the storage
-                                            await controller.addKey(
+                                            await widget.controller.addKey(
                                               ApiKeys.openWeatherMap,
-                                              controller.apiKey.text,
+                                              widget.controller.apiKey.text,
                                             );
 
                                             // If it is added for the first time
-                                            if (controller
+                                            if (widget.controller
                                                     .weatherKeyState.value ==
                                                 WeatherKeyState.add) {
-                                              controller.weatherKeyState.value =
+                                              widget.controller.weatherKeyState
+                                                      .value =
                                                   WeatherKeyState.saveAdded;
-                                              controller
+                                              widget.controller
                                                   .addWeatherState('saveAdded');
                                             } else {
                                               // If it is updated
-                                              controller.weatherKeyState.value =
+                                              widget.controller.weatherKeyState
+                                                      .value =
                                                   WeatherKeyState.saveUpdated;
-                                              controller.addWeatherState(
+                                              widget.controller.addWeatherState(
                                                   'saveUpdated');
                                             }
                                           } else {
                                             // If the API key is not valid
-                                            controller.didWeatherKeyError
+                                            widget.controller.didWeatherKeyError
                                                 .value = true;
                                           }
-                                          controller
+                                          widget
+                                              .controller
                                               .showingCircularProgressIndicator
                                               .value = false;
                                         },
@@ -187,15 +227,16 @@ class WeatherApi extends StatelessWidget {
                                         .textTheme
                                         .displaySmall!
                                         .copyWith(
-                                          color:
-                                              themeController.isLightMode.value
-                                                  ? kLightSecondaryTextColor
-                                                  : ksecondaryTextColor,
+                                          color: widget.themeController
+                                                  .isLightMode.value
+                                              ? kLightSecondaryTextColor
+                                              : ksecondaryTextColor,
                                         ),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
-                                    controller.didWeatherKeyError.value = false;
+                                    widget.controller.didWeatherKeyError.value =
+                                        false;
                                   },
                                 ),
                               ],
@@ -212,7 +253,7 @@ class WeatherApi extends StatelessWidget {
                                   const EdgeInsets.symmetric(vertical: 15.0),
                               child: Text(
                                 // If the user clicked on the 'Save' button, then
-                                controller.weatherKeyState.value ==
+                                widget.controller.weatherKeyState.value ==
                                         WeatherKeyState.saveAdded
                                     ? 'Your API Key is added!' // show this message
                                     : 'Your API Key is updated!',
@@ -231,7 +272,8 @@ class WeatherApi extends StatelessWidget {
                                     .textTheme
                                     .displaySmall!
                                     .copyWith(
-                                      color: themeController.isLightMode.value
+                                      color: widget
+                                              .themeController.isLightMode.value
                                           ? kLightSecondaryTextColor
                                           : ksecondaryTextColor,
                                     ),
@@ -241,16 +283,16 @@ class WeatherApi extends StatelessWidget {
 
                                 // Assign the weather state to update, and save
                                 // it in the local storage
-                                controller.weatherKeyState.value =
+                                widget.controller.weatherKeyState.value =
                                     WeatherKeyState.update;
-                                controller.addWeatherState('update');
+                                widget.controller.addWeatherState('update');
                                 Get.back();
                               },
                             ),
                           ],
                         ),
                 ),
-                if (controller.showingCircularProgressIndicator.value)
+                if (widget.controller.showingCircularProgressIndicator.value)
                   Center(
                     child: CircularProgressIndicator.adaptive(
                       backgroundColor: kprimaryColor.withOpacity(0.5),
@@ -265,10 +307,10 @@ class WeatherApi extends StatelessWidget {
         );
       },
       child: Container(
-        width: width * 0.91,
-        height: height * 0.1,
+        width: widget.width * 0.91,
+        height: widget.height * 0.1,
         decoration: Utils.getCustomTileBoxDecoration(
-          isLightMode: themeController.isLightMode.value,
+          isLightMode: widget.themeController.isLightMode.value,
         ),
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
@@ -281,7 +323,7 @@ class WeatherApi extends StatelessWidget {
               ),
               Icon(
                 Icons.arrow_forward_ios_sharp,
-                color: themeController.isLightMode.value
+                color: widget.themeController.isLightMode.value
                     ? kLightPrimaryTextColor.withOpacity(0.4)
                     : kprimaryTextColor.withOpacity(0.2),
               ),
