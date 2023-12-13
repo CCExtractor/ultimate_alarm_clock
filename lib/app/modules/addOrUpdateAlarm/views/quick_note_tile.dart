@@ -78,7 +78,7 @@ class QuickNoteTile extends StatelessWidget {
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
-              hintText: 'Enter a name',
+              hintText: 'Enter a note',
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryDisabledTextColor
