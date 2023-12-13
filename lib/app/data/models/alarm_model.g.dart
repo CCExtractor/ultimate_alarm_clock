@@ -298,7 +298,7 @@ AlarmModel _alarmModelDeserialize(
     shakeTimes: reader.readLong(offsets[26]),
     sharedUserIds: reader.readStringList(offsets[27]),
     snoozeDuration: reader.readLong(offsets[28]),
-    weatherTypes: reader.readLongList(offsets[29]) ?? [],
+    weatherTypes: reader.readLongList(offsets[29]) ?? [], quickNote: '',
   );
   object.firestoreId = reader.readStringOrNull(offsets[4]);
   object.isarId = id;

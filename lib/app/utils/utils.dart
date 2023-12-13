@@ -339,6 +339,7 @@ class Utils {
       location: '',
       alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+      quickNote: '',
     );
   }
 
