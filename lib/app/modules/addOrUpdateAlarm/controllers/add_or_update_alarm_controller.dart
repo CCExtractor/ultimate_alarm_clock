@@ -623,6 +623,7 @@ class AddOrUpdateAlarmController extends GetxController {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
       label: label.value,
+      quickNote: quickNote.value,
       isOneTime: isOneTime.value,
       mainAlarmTime:
           Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
@@ -655,7 +656,7 @@ class AddOrUpdateAlarmController extends GetxController {
       numMathsQuestions: numMathsQuestions.value,
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
-      shakeTimes: shakeTimes.value, quickNote: '',
+      shakeTimes: shakeTimes.value,
     );
   }
 }

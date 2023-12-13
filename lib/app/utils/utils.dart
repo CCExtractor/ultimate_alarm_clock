@@ -312,6 +312,7 @@ class Utils {
     return AlarmModel(
       snoozeDuration: 0,
       label: '',
+      quickNote: '',
       isOneTime: false,
       offsetDetails: {},
       mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
@@ -339,7 +340,6 @@ class Utils {
       location: '',
       alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
-      quickNote: '',
     );
   }
 
