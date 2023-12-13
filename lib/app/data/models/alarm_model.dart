@@ -39,6 +39,7 @@ class AlarmModel {
   late bool mutexLock;
   String? mainAlarmTime;
   late String label;
+  late String quickNote;
   late bool isOneTime;
   late int snoozeDuration;
   @ignore
@@ -73,6 +74,7 @@ class AlarmModel {
     this.offsetDetails = const {},
     required this.mainAlarmTime,
     required this.label,
+    required this.quickNote,
     required this.isOneTime,
     required this.snoozeDuration,
   });
@@ -101,6 +103,7 @@ class AlarmModel {
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
     label = documentSnapshot['label'];
+    quickNote = documentSnapshot['quickNote'];
     isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
     alarmID = documentSnapshot['alarmID'];
@@ -161,6 +164,7 @@ class AlarmModel {
     isShakeEnabled = alarmData['isShakeEnabled'];
     shakeTimes = alarmData['shakeTimes'];
     label = alarmData['label'];
+    quickNote = alarmData['quickNote'];
     isOneTime = alarmData['isOneTime'];
   }
 
@@ -181,6 +185,7 @@ class AlarmModel {
       'mutexLock': alarmRecord.mutexLock,
       'isOneTime': alarmRecord.isOneTime,
       'label': alarmRecord.label,
+      'quickNote': alarmRecord.quickNote,
       'ownerName': alarmRecord.ownerName,
       'sharedUserIds': alarmRecord.sharedUserIds,
       'days': alarmRecord.days,

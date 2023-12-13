@@ -167,6 +167,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           snoozeDuration: controller.snoozeDuration.value,
                           offsetDetails: controller.offsetDetails,
                           label: controller.label.value,
+                          quickNote: controller.quickNote.value,
                           isOneTime: controller.isOneTime.value,
                           lastEditedUserId: controller.lastEditedUserId,
                           mutexLock: controller.mutexLock.value,
@@ -515,6 +516,20 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           )
                         : const SizedBox()),
                     SnoozeDurationTile(
+                      controller: controller,
+                      themeController: themeController,
+                    ),
+                    Container(
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryDisabledTextColor
+                            : kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    LabelTile(
                       controller: controller,
                       themeController: themeController,
                     ),

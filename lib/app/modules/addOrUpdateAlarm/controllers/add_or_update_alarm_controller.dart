@@ -18,11 +18,13 @@ import 'package:uuid/uuid.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
+  final quickNoteController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
-
+  final RxString note = ''.obs;
   late UserModel? userModel;
   var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
+  final noteController = TextEditingController(); // Added for note
   final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final mainAlarmTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
@@ -66,6 +68,7 @@ class AddOrUpdateAlarmController extends GetxController {
       <bool>[false, false, false, false, false, false, false].obs;
   final RxBool isOneTime = false.obs;
   final RxString label = ''.obs;
+  final RxString quickNote = ''.obs;
   final RxInt snoozeDuration = 1.obs;
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -418,6 +421,10 @@ class AddOrUpdateAlarmController extends GetxController {
     );
   }
 
+  void updateNoteValue(String value) {
+    note.value = value;
+  }
+
   updateAlarm(AlarmModel alarmData) async {
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
@@ -459,7 +466,7 @@ class AddOrUpdateAlarmController extends GetxController {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
       isOneTime.value = alarmRecord!.isOneTime;
       label.value = alarmRecord!.label;
-
+      quickNote.value = alarmRecord!.quickNote;
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
@@ -596,7 +603,7 @@ class AddOrUpdateAlarmController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-
+    noteController.dispose();
     if (Get.arguments == null) {
       // Shared alarm was not suddenly enabled, so we can update doc
       // on firestore
@@ -648,7 +655,7 @@ class AddOrUpdateAlarmController extends GetxController {
       numMathsQuestions: numMathsQuestions.value,
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
-      shakeTimes: shakeTimes.value,
+      shakeTimes: shakeTimes.value, quickNote: '',
     );
   }
 }
