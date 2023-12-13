@@ -169,8 +169,7 @@ class AlarmChallengeController extends GetxController {
     if (!Utils.isChallengeEnabled(alarmRecord)) {
       Utils.stopAlarm(ringtoneName: ringtoneName);
     } else {
-
-      Utils.playAlarm(ringtoneName: ringtoneName);
+      Utils.playAlarm(alarmRecord: alarmRecord);
     }
   }
 }

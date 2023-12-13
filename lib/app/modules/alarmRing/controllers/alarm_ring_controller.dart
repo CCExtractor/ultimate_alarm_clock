@@ -80,7 +80,7 @@ class AlarmControlController extends GetxController {
           Vibration.vibrate(pattern: [500, 3000]);
         });
 
-        Utils.playAlarm(ringtoneName: ringtoneName);
+        Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
         startTimer();
       } else if (seconds.value == 0) {
@@ -168,8 +168,7 @@ class AlarmControlController extends GetxController {
       showButton.value = true;
     }
 
-    String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-    Utils.playAlarm(ringtoneName: ringtoneName);
+    Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
