@@ -597,7 +597,6 @@ class AddOrUpdateAlarmController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-    quickNoteController.dispose();
     if (Get.arguments == null) {
       // Shared alarm was not suddenly enabled, so we can update doc
       // on firestore
