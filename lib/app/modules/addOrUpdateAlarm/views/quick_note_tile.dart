@@ -22,7 +22,7 @@ class QuickNoteTile extends StatelessWidget {
           ? kLightPrimaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: Text(
-        'QuickNote',
+        'Quick Note',
         style: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -86,7 +86,7 @@ class QuickNoteTile extends StatelessWidget {
                   ),
             ),
             onChanged: (text) {
-              controller.saveQuickNote(text);
+              controller.quickNote.value = text;
             },
           ),
           buttonColor: themeController.isLightMode.value

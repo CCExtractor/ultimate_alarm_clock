@@ -419,10 +419,6 @@ class AddOrUpdateAlarmController extends GetxController {
     );
   }
 
-  void saveQuickNote(String note) {
-    quickNote.value = note;
-  }
-
   updateAlarm(AlarmModel alarmData) async {
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {

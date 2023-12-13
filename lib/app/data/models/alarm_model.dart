@@ -10,7 +10,6 @@ part 'alarm_model.g.dart';
 @collection
 class AlarmModel {
   Id isarId = Isar.autoIncrement;
-
   String? firestoreId;
   late String alarmTime;
   late String alarmID;
