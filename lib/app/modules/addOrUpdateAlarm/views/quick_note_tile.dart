@@ -86,17 +86,7 @@ class QuickNoteTile extends StatelessWidget {
                   ),
             ),
             onChanged: (text) {
-              if (text.trim().isEmpty) {
-                controller.quickNoteController.text = '';
-                if (text.isNotEmpty) {
-                  Get.snackbar(
-                    'Note',
-                    "Please don't enter whitespace as first character!",
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
-                  );
-                }
-              }
+              controller.saveQuickNote(text);
             },
           ),
           buttonColor: themeController.isLightMode.value
