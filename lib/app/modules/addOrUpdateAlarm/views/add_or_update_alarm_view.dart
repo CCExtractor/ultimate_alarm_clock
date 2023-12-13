@@ -12,6 +12,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_ti
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quick_note_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_activity_tile.dart';
@@ -543,7 +544,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    LabelTile(
+                    QuickNoteTile(
                       controller: controller,
                       themeController: themeController,
                     ),
