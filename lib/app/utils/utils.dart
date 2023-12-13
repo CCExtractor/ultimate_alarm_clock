@@ -10,6 +10,7 @@ import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 
@@ -576,9 +577,11 @@ class Utils {
   }
 
   static void playAlarm({
-    required String ringtoneName,
+    required AlarmModel alarmRecord,
   }) async {
     try {
+      String ringtoneName = alarmRecord.ringtoneName;
+
       if (ringtoneName == 'Default') {
         FlutterRingtonePlayer.playAlarm();
       } else {
@@ -590,6 +593,18 @@ class Utils {
         if (customRingtone != null) {
           String customRingtonePath = customRingtone.ringtonePath;
           await playCustomSound(customRingtonePath);
+        } else {
+          FlutterRingtonePlayer.playAlarm();
+          
+          bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
+
+          alarmRecord.ringtoneName = 'Default';
+
+          if(isSharedAlarmEnabled) {
+            await FirestoreDb.updateAlarm(alarmRecord.ownerId, alarmRecord);
+          } else {
+            await IsarDb.updateAlarm(alarmRecord);
+          }
         }
       }
     } catch (e) {
