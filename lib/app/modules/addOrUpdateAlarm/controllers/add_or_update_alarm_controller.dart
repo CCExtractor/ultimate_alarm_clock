@@ -20,11 +20,9 @@ class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   final quickNoteController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
-  final RxString note = ''.obs;
   late UserModel? userModel;
   var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
-  final noteController = TextEditingController(); // Added for note
   final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final mainAlarmTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
@@ -421,10 +419,6 @@ class AddOrUpdateAlarmController extends GetxController {
     );
   }
 
-  void updateNoteValue(String value) {
-    note.value = value;
-  }
-
   updateAlarm(AlarmModel alarmData) async {
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
@@ -603,7 +597,7 @@ class AddOrUpdateAlarmController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-    noteController.dispose();
+    quickNoteController.dispose();
     if (Get.arguments == null) {
       // Shared alarm was not suddenly enabled, so we can update doc
       // on firestore
