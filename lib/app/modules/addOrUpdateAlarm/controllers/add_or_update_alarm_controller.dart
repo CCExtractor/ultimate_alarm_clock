@@ -612,6 +612,10 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
+  RxString getQuickNote() {
+    return quickNote;
+  }
+
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,

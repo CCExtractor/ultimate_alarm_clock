@@ -11,12 +11,8 @@ import '../controllers/alarm_ring_controller.dart';
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
   ThemeController themeController = Get.find<ThemeController>();
-
-  final AddOrUpdateAlarmController _quickNote =
-      Get.put(AddOrUpdateAlarmController());
   @override
   Widget build(BuildContext context) {
-    print("Quick Note Value: ${_quickNote.quickNote.value}");
 
     var width = Get.width;
     var height = Get.height;
@@ -164,7 +160,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               .copyWith(fontSize: 25),
                         ),
                         Text(
-                          _quickNote.quickNote.value,
+                          controller.quickNote.value,
                           style: Theme.of(context)
                               .textTheme
                               .displayLarge!

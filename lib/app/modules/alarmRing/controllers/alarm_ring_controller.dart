@@ -17,9 +17,13 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
+
 class AlarmControlController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
-
+  final AddOrUpdateAlarmController addOrUpdateAlarmController =
+      Get.find<AddOrUpdateAlarmController>();
+  RxString quickNote = ''.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
@@ -109,6 +113,8 @@ class AlarmControlController extends GetxController {
 
   @override
   void onInit() async {
+    quickNote = addOrUpdateAlarmController.getQuickNote();
+
     super.onInit();
 
     Utils.playAlarm();
