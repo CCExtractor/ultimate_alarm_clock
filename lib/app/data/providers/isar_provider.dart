@@ -178,27 +178,62 @@ class IsarDb {
   static Future<void> addCustomRingtone(
     RingtoneModel customRingtone,
   ) async {
-    final isarProvider = IsarDb();
-    final db = await isarProvider.db;
-    await db.writeTxn(() async {
-      await db.ringtoneModels.put(customRingtone);
-    });
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
+      await db.writeTxn(() async {
+        await db.ringtoneModels.put(customRingtone);
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  static Future<RingtoneModel?> getCustomRingtone() async {
-    final isarProvider = IsarDb();
-    final db = await isarProvider.db;
-    final query = db.ringtoneModels.where().findFirst();
+  static Future<RingtoneModel?> getCustomRingtone({
+    required int customRingtoneId,
+  }) async {
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
+      final query = db.ringtoneModels
+          .where()
+          .filter()
+          .isarIdEqualTo(customRingtoneId)
+          .findFirst();
 
-    return query;
+      return query;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
   }
 
-  static Future<void> deleteCustomRingtone() async {
-    final isarProvider = IsarDb();
-    final db = await isarProvider.db;
+  static Future<List<RingtoneModel>> getAllCustomRingtones() async {
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
 
-    await db.writeTxn(() async {
-      await db.ringtoneModels.clear();
-    });
+      final query = db.ringtoneModels.where().findAll();
+
+      return query;
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  static Future<void> deleteCustomRingtone({
+    required int ringtoneId,
+  }) async {
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
+
+      await db.writeTxn(() async {
+        await db.ringtoneModels.delete(ringtoneId);
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

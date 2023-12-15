@@ -1,15 +1,19 @@
 import 'package:isar/isar.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 part 'ringtone_model.g.dart';
 
 @collection
 class RingtoneModel {
-  Id isarId = Isar.autoIncrement;
   late String ringtoneName;
-  late List<int> ringtoneData;
+  late String ringtonePath;
+  late int currentCounterOfUsage;
+
+  Id get isarId => Utils.fastHash(ringtoneName);
 
   RingtoneModel({
     required this.ringtoneName,
-    required this.ringtoneData,
+    required this.ringtonePath,
+    required this.currentCounterOfUsage,
   });
 }
