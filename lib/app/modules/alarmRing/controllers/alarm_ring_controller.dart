@@ -1,29 +1,19 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_fgbg/flutter_fgbg.dart';
-
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
-
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
-import '../../addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
-
 class AlarmControlController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
-  final AddOrUpdateAlarmController addOrUpdateAlarmController =
-      Get.find<AddOrUpdateAlarmController>();
-  RxString quickNote = ''.obs;
+  RxString quickNote = 'No Quick Note'.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
@@ -47,7 +37,6 @@ class AlarmControlController extends GetxController {
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
-
     return latestAlarm;
   }
 
@@ -113,12 +102,8 @@ class AlarmControlController extends GetxController {
 
   @override
   void onInit() async {
-    quickNote = addOrUpdateAlarmController.getQuickNote();
-
     super.onInit();
-
     Utils.playAlarm();
-
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);

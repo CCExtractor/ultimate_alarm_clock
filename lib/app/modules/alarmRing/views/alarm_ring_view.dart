@@ -13,7 +13,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
   ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-
     var width = Get.width;
     var height = Get.height;
     return PopScope(
@@ -160,7 +159,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               .copyWith(fontSize: 25),
                         ),
                         Text(
-                          controller.quickNote.value,
+                          controller.currentlyRingingAlarm.value.quickNote,
                           style: Theme.of(context)
                               .textTheme
                               .displayLarge!
