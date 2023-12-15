@@ -144,7 +144,7 @@ class SplashScreenController extends GetxController {
       }
     });
     // Necessary when hot restarting
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 0), () {
       if (shouldNavigate == true) {
         Get.offNamed('/home');
       }
