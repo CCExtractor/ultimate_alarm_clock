@@ -59,7 +59,7 @@ class AboutView extends GetView<AboutController> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Version: 0.5.0',
+              'Version: 1.0.0',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -69,7 +69,9 @@ class AboutView extends GetView<AboutController> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: const Text(
-                "This project was originally developed as part of Google Summer of code under the CCExtractor organization. It's free, the source code is available, and we encourage programmers to contribute.",
+                'This project aims to build a non-conventional alarm clock'
+                ' with smart features such as auto-dismissal based on'
+                ' phone activity, weather, and more!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

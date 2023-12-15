@@ -1,19 +1,15 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -22,8 +18,8 @@ import 'package:uuid/uuid.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
+  final quickNoteController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
-
   late UserModel? userModel;
   var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
@@ -70,10 +66,8 @@ class AddOrUpdateAlarmController extends GetxController {
       <bool>[false, false, false, false, false, false, false].obs;
   final RxBool isOneTime = false.obs;
   final RxString label = ''.obs;
+  final RxString quickNote = ''.obs;
   final RxInt snoozeDuration = 1.obs;
-  var customRingtoneName = 'Default'.obs;
-  var customRingtoneNames = [].obs;
-
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
@@ -466,8 +460,7 @@ class AddOrUpdateAlarmController extends GetxController {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
       isOneTime.value = alarmRecord!.isOneTime;
       label.value = alarmRecord!.label;
-      customRingtoneName.value = alarmRecord!.ringtoneName;
-
+      quickNote.value = alarmRecord!.quickNote;
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
@@ -604,7 +597,6 @@ class AddOrUpdateAlarmController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-
     if (Get.arguments == null) {
       // Shared alarm was not suddenly enabled, so we can update doc
       // on firestore
@@ -624,6 +616,7 @@ class AddOrUpdateAlarmController extends GetxController {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
       label: label.value,
+      quickNote: quickNote.value,
       isOneTime: isOneTime.value,
       mainAlarmTime:
           Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
@@ -657,133 +650,6 @@ class AddOrUpdateAlarmController extends GetxController {
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
-      ringtoneName: customRingtoneName.value,
     );
-  }
-
-  Future<FilePickerResult?> openFilePicker() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.audio,
-        withData: true,
-      );
-
-      if (result != null) {
-        customRingtoneName.value = result.files.single.name;
-        customRingtoneNames.add(customRingtoneName.value);
-        return result;
-      }
-
-      return null;
-    } catch (e) {
-      debugPrint(e.toString());
-      return null;
-    }
-  }
-
-  Future<String?> saveToDocumentsDirectory({
-    required String filePath,
-  }) async {
-    try {
-      Directory documentsDirectory = await getApplicationDocumentsDirectory();
-      String ringtonesDirectoryPath = '${documentsDirectory.path}/ringtones';
-
-      // Create the ringtones directory if it doesn't exist
-      Directory(ringtonesDirectoryPath).createSync(recursive: true);
-
-      // Copy the picked audio files to the ringtones directory
-      File pickedFile = File(filePath);
-      String newFilePath =
-          '$ringtonesDirectoryPath/${pickedFile.uri.pathSegments.last}';
-      pickedFile.copySync(newFilePath);
-
-      return newFilePath;
-    } catch (e) {
-      debugPrint(e.toString());
-      return null;
-    }
-  }
-
-  Future<void> saveCustomRingtone() async {
-    try {
-      FilePickerResult? customRingtoneResult = await openFilePicker();
-
-      if (customRingtoneResult != null) {
-        String? filePath = customRingtoneResult.files.single.path;
-
-        String? savedFilePath =
-            await saveToDocumentsDirectory(filePath: filePath!);
-
-        if (savedFilePath != null) {
-          RingtoneModel customRingtone = RingtoneModel(
-            ringtoneName: customRingtoneName.value,
-            ringtonePath: savedFilePath,
-            currentCounterOfUsage: 0,
-          );
-          await IsarDb.addCustomRingtone(customRingtone);
-        }
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  Future<List<String>> getAllCustomRingtoneNames() async {
-    try {
-      List<RingtoneModel> customRingtones =
-          await IsarDb.getAllCustomRingtones();
-
-      return customRingtones
-          .map((customRingtone) => customRingtone.ringtoneName)
-          .toList();
-    } catch (e) {
-      debugPrint(e.toString());
-      return [];
-    }
-  }
-
-  Future<void> deleteCustomRingtone({
-    required String ringtoneName,
-    required int ringtoneIndex,
-  }) async {
-    try {
-      int customRingtoneId = Utils.fastHash(ringtoneName);
-      RingtoneModel? customRingtone =
-          await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
-
-      if (customRingtone != null) {
-        int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
-
-        if (currentCounterOfUsage == 0) {
-          customRingtoneNames.removeAt(ringtoneIndex);
-          await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
-
-          final documentsDirectory = await getApplicationDocumentsDirectory();
-          final ringtoneFilePath =
-              '${documentsDirectory.path}/ringtones/$ringtoneName';
-
-          if (await File(ringtoneFilePath).exists()) {
-            await File(ringtoneFilePath).delete();
-            Get.snackbar(
-              'Ringtone Deleted',
-              'The selected ringtone has been successfully deleted.',
-            );
-          } else {
-            Get.snackbar(
-              'Ringtone Not Found',
-              'The selected ringtone does not exist and cannot be deleted.',
-            );
-          }
-        } else {
-          Get.snackbar(
-            'Ringtone in Use',
-            'This ringtone cannot be deleted as it is currently assigned'
-                ' to one or more alarms.',
-          );
-        }
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
   }
 }

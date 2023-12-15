@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -9,9 +10,7 @@ import '../controllers/alarm_ring_controller.dart';
 
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
-
   ThemeController themeController = Get.find<ThemeController>();
-
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -132,10 +131,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         controller.formattedDate.value,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      const SizedBox(
-                        height: 10,
-                        width: 0,
-                      ),
                       Text(
                         (controller.isSnoozing.value)
                             ? "${controller.minutes.toString().padLeft(2, '0')}"
@@ -152,10 +147,33 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
                 Obx(
+                  () => Padding(
+                    padding: EdgeInsets.all(0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Quick Note',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(fontSize: 25),
+                        ),
+                        Text(
+                          controller.currentlyRingingAlarm.value.quickNote,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
                   () => Visibility(
                     visible: !controller.isSnoozing.value,
                     child: SizedBox(
-                      height: height * 0.07,
+                      height: height * 0.05,
                       width: width * 0.5,
                       child: TextButton(
                         style: ButtonStyle(

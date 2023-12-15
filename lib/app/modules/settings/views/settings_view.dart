@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,7 +7,7 @@ import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controll
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/about.dart';
-
+import 'package:ultimate_alarm_clock/app/modules/settings/views/custom_ringtone.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_feedback.dart';
@@ -74,6 +75,15 @@ class SettingsView extends GetView<SettingsController> {
                   controller: controller,
                   width: width,
                   height: height,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomRingtone(
+                  controller: controller,
+                  height: height,
+                  width: width,
                   themeController: themeController,
                 ),
                 const SizedBox(

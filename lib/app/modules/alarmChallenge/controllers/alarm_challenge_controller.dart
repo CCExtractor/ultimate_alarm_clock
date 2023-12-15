@@ -59,9 +59,7 @@ class AlarmChallengeController extends GetxController {
     super.onInit();
     _startTimer();
 
-    String ringtoneName = alarmRecord.ringtoneName;
-
-    Utils.stopAlarm(ringtoneName: ringtoneName);
+    Utils.stopAlarm();
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
@@ -164,12 +162,10 @@ class AlarmChallengeController extends GetxController {
   void onClose() async {
     super.onClose();
 
-    String ringtoneName = alarmRecord.ringtoneName;
-
     if (!Utils.isChallengeEnabled(alarmRecord)) {
-      Utils.stopAlarm(ringtoneName: ringtoneName);
+      Utils.stopAlarm();
     } else {
-      Utils.playAlarm(alarmRecord: alarmRecord);
+      Utils.playAlarm();
     }
   }
 }

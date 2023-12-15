@@ -1,25 +1,19 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_fgbg/flutter_fgbg.dart';
-
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
-
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
 class AlarmControlController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
-
+  RxString quickNote = 'No Quick Note'.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
@@ -43,7 +37,6 @@ class AlarmControlController extends GetxController {
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
-
     return latestAlarm;
   }
 
@@ -65,8 +58,7 @@ class AlarmControlController extends GetxController {
     Vibration.cancel();
     vibrationTimer!.cancel();
     isSnoozing.value = true;
-    String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-    Utils.stopAlarm(ringtoneName: ringtoneName);
+    Utils.stopAlarm();
 
     if (_currentTimeTimer!.isActive) {
       _currentTimeTimer?.cancel();
@@ -80,7 +72,7 @@ class AlarmControlController extends GetxController {
           Vibration.vibrate(pattern: [500, 3000]);
         });
 
-        Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+        Utils.playAlarm();
 
         startTimer();
       } else if (seconds.value == 0) {
@@ -111,7 +103,7 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
+    Utils.playAlarm();
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);
@@ -168,8 +160,6 @@ class AlarmControlController extends GetxController {
       showButton.value = true;
     }
 
-    Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
-
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
 
@@ -215,8 +205,7 @@ class AlarmControlController extends GetxController {
     Vibration.cancel();
     vibrationTimer!.cancel();
 
-    String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-    Utils.stopAlarm(ringtoneName: ringtoneName);
+    Utils.stopAlarm();
 
     _subscription.cancel();
     _currentTimeTimer?.cancel();
