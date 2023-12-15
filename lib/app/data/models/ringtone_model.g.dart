@@ -17,19 +17,14 @@ const RingtoneModelSchema = CollectionSchema(
   name: r'RingtoneModel',
   id: 2389700415140569104,
   properties: {
-    r'currentCounterOfUsage': PropertySchema(
+    r'ringtoneData': PropertySchema(
       id: 0,
-      name: r'currentCounterOfUsage',
-      type: IsarType.long,
+      name: r'ringtoneData',
+      type: IsarType.longList,
     ),
     r'ringtoneName': PropertySchema(
       id: 1,
       name: r'ringtoneName',
-      type: IsarType.string,
-    ),
-    r'ringtonePath': PropertySchema(
-      id: 2,
-      name: r'ringtonePath',
       type: IsarType.string,
     )
   },
@@ -53,8 +48,8 @@ int _ringtoneModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.ringtoneData.length * 8;
   bytesCount += 3 + object.ringtoneName.length * 3;
-  bytesCount += 3 + object.ringtonePath.length * 3;
   return bytesCount;
 }
 
@@ -64,9 +59,8 @@ void _ringtoneModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.currentCounterOfUsage);
+  writer.writeLongList(offsets[0], object.ringtoneData);
   writer.writeString(offsets[1], object.ringtoneName);
-  writer.writeString(offsets[2], object.ringtonePath);
 }
 
 RingtoneModel _ringtoneModelDeserialize(
@@ -76,10 +70,10 @@ RingtoneModel _ringtoneModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = RingtoneModel(
-    currentCounterOfUsage: reader.readLong(offsets[0]),
+    ringtoneData: reader.readLongList(offsets[0]) ?? [],
     ringtoneName: reader.readString(offsets[1]),
-    ringtonePath: reader.readString(offsets[2]),
   );
+  object.isarId = id;
   return object;
 }
 
@@ -91,10 +85,8 @@ P _ringtoneModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 1:
-      return (reader.readString(offset)) as P;
-    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -110,7 +102,9 @@ List<IsarLinkBase<dynamic>> _ringtoneModelGetLinks(RingtoneModel object) {
 }
 
 void _ringtoneModelAttach(
-    IsarCollection<dynamic> col, Id id, RingtoneModel object) {}
+    IsarCollection<dynamic> col, Id id, RingtoneModel object) {
+  object.isarId = id;
+}
 
 extension RingtoneModelQueryWhereSort
     on QueryBuilder<RingtoneModel, RingtoneModel, QWhere> {
@@ -195,62 +189,6 @@ extension RingtoneModelQueryWhere
 extension RingtoneModelQueryFilter
     on QueryBuilder<RingtoneModel, RingtoneModel, QFilterCondition> {
   QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      currentCounterOfUsageEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'currentCounterOfUsage',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      currentCounterOfUsageGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'currentCounterOfUsage',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      currentCounterOfUsageLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'currentCounterOfUsage',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      currentCounterOfUsageBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'currentCounterOfUsage',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
       isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -303,6 +241,151 @@ extension RingtoneModelQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ringtoneData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ringtoneData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ringtoneData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ringtoneData',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ringtoneData',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ringtoneData',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ringtoneData',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ringtoneData',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ringtoneData',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
+      ringtoneDataLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ringtoneData',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -441,142 +524,6 @@ extension RingtoneModelQueryFilter
       ));
     });
   }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ringtonePath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'ringtonePath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'ringtonePath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'ringtonePath',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'ringtonePath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'ringtonePath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'ringtonePath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'ringtonePath',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ringtonePath',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterFilterCondition>
-      ringtonePathIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'ringtonePath',
-        value: '',
-      ));
-    });
-  }
 }
 
 extension RingtoneModelQueryObject
@@ -587,20 +534,6 @@ extension RingtoneModelQueryLinks
 
 extension RingtoneModelQuerySortBy
     on QueryBuilder<RingtoneModel, RingtoneModel, QSortBy> {
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      sortByCurrentCounterOfUsage() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentCounterOfUsage', Sort.asc);
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      sortByCurrentCounterOfUsageDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentCounterOfUsage', Sort.desc);
-    });
-  }
-
   QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
       sortByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
@@ -614,38 +547,10 @@ extension RingtoneModelQuerySortBy
       return query.addSortBy(r'ringtoneName', Sort.desc);
     });
   }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      sortByRingtonePath() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtonePath', Sort.asc);
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      sortByRingtonePathDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtonePath', Sort.desc);
-    });
-  }
 }
 
 extension RingtoneModelQuerySortThenBy
     on QueryBuilder<RingtoneModel, RingtoneModel, QSortThenBy> {
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      thenByCurrentCounterOfUsage() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentCounterOfUsage', Sort.asc);
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      thenByCurrentCounterOfUsageDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentCounterOfUsage', Sort.desc);
-    });
-  }
-
   QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -671,28 +576,14 @@ extension RingtoneModelQuerySortThenBy
       return query.addSortBy(r'ringtoneName', Sort.desc);
     });
   }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      thenByRingtonePath() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtonePath', Sort.asc);
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QAfterSortBy>
-      thenByRingtonePathDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtonePath', Sort.desc);
-    });
-  }
 }
 
 extension RingtoneModelQueryWhereDistinct
     on QueryBuilder<RingtoneModel, RingtoneModel, QDistinct> {
   QueryBuilder<RingtoneModel, RingtoneModel, QDistinct>
-      distinctByCurrentCounterOfUsage() {
+      distinctByRingtoneData() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'currentCounterOfUsage');
+      return query.addDistinctBy(r'ringtoneData');
     });
   }
 
@@ -700,13 +591,6 @@ extension RingtoneModelQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'ringtoneName', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<RingtoneModel, RingtoneModel, QDistinct> distinctByRingtonePath(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'ringtonePath', caseSensitive: caseSensitive);
     });
   }
 }
@@ -719,22 +603,16 @@ extension RingtoneModelQueryProperty
     });
   }
 
-  QueryBuilder<RingtoneModel, int, QQueryOperations>
-      currentCounterOfUsageProperty() {
+  QueryBuilder<RingtoneModel, List<int>, QQueryOperations>
+      ringtoneDataProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'currentCounterOfUsage');
+      return query.addPropertyName(r'ringtoneData');
     });
   }
 
   QueryBuilder<RingtoneModel, String, QQueryOperations> ringtoneNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'ringtoneName');
-    });
-  }
-
-  QueryBuilder<RingtoneModel, String, QQueryOperations> ringtonePathProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'ringtonePath');
     });
   }
 }

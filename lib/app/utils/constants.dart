@@ -14,7 +14,7 @@ enum Difficulty { Easy, Medium, Hard }
 
 enum WeatherKeyState { add, update, saveAdded, saveUpdated }
 
-enum CounterUpdate { increment, decrement }
+enum CustomRingtoneStatus { disabled, enabled }
 
 const Color kprimaryColor = Color(0xffAFFC41);
 

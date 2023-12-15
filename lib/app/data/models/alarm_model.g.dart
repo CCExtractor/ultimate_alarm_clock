@@ -147,9 +147,9 @@ const AlarmModelSchema = CollectionSchema(
       name: r'qrValue',
       type: IsarType.string,
     ),
-    r'ringtoneName': PropertySchema(
+    r'quickNote': PropertySchema(
       id: 26,
-      name: r'ringtoneName',
+      name: r'quickNote',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
@@ -214,7 +214,7 @@ int _alarmModelEstimateSize(
   bytesCount += 3 + object.ownerId.length * 3;
   bytesCount += 3 + object.ownerName.length * 3;
   bytesCount += 3 + object.qrValue.length * 3;
-  bytesCount += 3 + object.ringtoneName.length * 3;
+  bytesCount += 3 + object.quickNote.length * 3;
   {
     final list = object.sharedUserIds;
     if (list != null) {
@@ -263,7 +263,7 @@ void _alarmModelSerialize(
   writer.writeString(offsets[23], object.ownerId);
   writer.writeString(offsets[24], object.ownerName);
   writer.writeString(offsets[25], object.qrValue);
-  writer.writeString(offsets[26], object.ringtoneName);
+  writer.writeString(offsets[26], object.quickNote);
   writer.writeLong(offsets[27], object.shakeTimes);
   writer.writeStringList(offsets[28], object.sharedUserIds);
   writer.writeLong(offsets[29], object.snoozeDuration);
@@ -302,7 +302,7 @@ AlarmModel _alarmModelDeserialize(
     ownerId: reader.readString(offsets[23]),
     ownerName: reader.readString(offsets[24]),
     qrValue: reader.readString(offsets[25]),
-    ringtoneName: reader.readString(offsets[26]),
+    quickNote: reader.readString(offsets[26]),
     shakeTimes: reader.readLong(offsets[27]),
     sharedUserIds: reader.readStringList(offsets[28]),
     snoozeDuration: reader.readLong(offsets[29]),
@@ -2384,14 +2384,13 @@ extension AlarmModelQueryFilter
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameEqualTo(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> quickNoteEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -2399,7 +2398,7 @@ extension AlarmModelQueryFilter
   }
 
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameGreaterThan(
+      quickNoteGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2407,15 +2406,14 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameLessThan(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> quickNoteLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2423,15 +2421,14 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameBetween(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> quickNoteBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -2440,7 +2437,7 @@ extension AlarmModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'ringtoneName',
+        property: r'quickNote',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -2451,49 +2448,50 @@ extension AlarmModelQueryFilter
   }
 
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameStartsWith(
+      quickNoteStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameEndsWith(
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> quickNoteEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> quickNoteContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> quickNoteMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'ringtoneName',
+        property: r'quickNote',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -2501,20 +2499,20 @@ extension AlarmModelQueryFilter
   }
 
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameIsEmpty() {
+      quickNoteIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: '',
       ));
     });
   }
 
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      ringtoneNameIsNotEmpty() {
+      quickNoteIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'ringtoneName',
+        property: r'quickNote',
         value: '',
       ));
     });
@@ -3342,15 +3340,15 @@ extension AlarmModelQuerySortBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingtoneName() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByQuickNote() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtoneName', Sort.asc);
+      return query.addSortBy(r'quickNote', Sort.asc);
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingtoneNameDesc() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByQuickNoteDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtoneName', Sort.desc);
+      return query.addSortBy(r'quickNote', Sort.desc);
     });
   }
 
@@ -3708,15 +3706,15 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingtoneName() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByQuickNote() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtoneName', Sort.asc);
+      return query.addSortBy(r'quickNote', Sort.asc);
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingtoneNameDesc() {
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByQuickNoteDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ringtoneName', Sort.desc);
+      return query.addSortBy(r'quickNote', Sort.desc);
     });
   }
 
@@ -3921,10 +3919,10 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByRingtoneName(
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByQuickNote(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'ringtoneName', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'quickNote', caseSensitive: caseSensitive);
     });
   }
 
@@ -4120,9 +4118,9 @@ extension AlarmModelQueryProperty
     });
   }
 
-  QueryBuilder<AlarmModel, String, QQueryOperations> ringtoneNameProperty() {
+  QueryBuilder<AlarmModel, String, QQueryOperations> quickNoteProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'ringtoneName');
+      return query.addPropertyName(r'quickNote');
     });
   }
 

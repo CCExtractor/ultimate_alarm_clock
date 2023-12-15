@@ -10,7 +10,6 @@ part 'alarm_model.g.dart';
 @collection
 class AlarmModel {
   Id isarId = Isar.autoIncrement;
-
   String? firestoreId;
   late String alarmTime;
   late String alarmID;
@@ -39,9 +38,9 @@ class AlarmModel {
   late bool mutexLock;
   String? mainAlarmTime;
   late String label;
+  late String quickNote;
   late bool isOneTime;
   late int snoozeDuration;
-  late String ringtoneName;
   @ignore
   Map? offsetDetails;
 
@@ -74,9 +73,9 @@ class AlarmModel {
     this.offsetDetails = const {},
     required this.mainAlarmTime,
     required this.label,
+    required this.quickNote,
     required this.isOneTime,
     required this.snoozeDuration,
-    required this.ringtoneName,
   });
 
   AlarmModel.fromDocumentSnapshot({
@@ -103,6 +102,7 @@ class AlarmModel {
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
     label = documentSnapshot['label'];
+    quickNote = documentSnapshot['quickNote'];
     isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
     alarmID = documentSnapshot['alarmID'];
@@ -128,7 +128,6 @@ class AlarmModel {
     qrValue = documentSnapshot['qrValue'];
     isShakeEnabled = documentSnapshot['isShakeEnabled'];
     shakeTimes = documentSnapshot['shakeTimes'];
-    ringtoneName = documentSnapshot['ringtoneName'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -164,8 +163,8 @@ class AlarmModel {
     isShakeEnabled = alarmData['isShakeEnabled'];
     shakeTimes = alarmData['shakeTimes'];
     label = alarmData['label'];
+    quickNote = alarmData['quickNote'];
     isOneTime = alarmData['isOneTime'];
-    ringtoneName = alarmData['ringtoneName'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -185,6 +184,7 @@ class AlarmModel {
       'mutexLock': alarmRecord.mutexLock,
       'isOneTime': alarmRecord.isOneTime,
       'label': alarmRecord.label,
+      'quickNote': alarmRecord.quickNote,
       'ownerName': alarmRecord.ownerName,
       'sharedUserIds': alarmRecord.sharedUserIds,
       'days': alarmRecord.days,
@@ -207,7 +207,6 @@ class AlarmModel {
       'isShakeEnabled': alarmRecord.isShakeEnabled,
       'shakeTimes': alarmRecord.shakeTimes,
       'snoozeDuration': alarmRecord.snoozeDuration,
-      'ringtoneName': alarmRecord.ringtoneName,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
