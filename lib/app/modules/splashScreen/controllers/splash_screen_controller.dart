@@ -153,7 +153,6 @@ class SplashScreenController extends GetxController {
             if (shouldAlarmRing) {
               Get.offNamed('/alarm-ring');
             } else {
-              // Get.offNamed('/alarm-ring-ignore');
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               // If the alarm is set to NEVER repeat, then it will be chosen as
               // the next alarm to ring by default as it would ring the next day
