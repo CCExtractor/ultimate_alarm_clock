@@ -47,7 +47,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                                   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
                                   child: Obx(
                                         () => Text(
-                                          'Questions  ${controller.numMathsQuestions.value.toString()}',
+                                          'Question  ${controller.numMathsQuestions.value.toString()}',
                                           style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                             letterSpacing: 1.5,
                                           ),
