@@ -65,7 +65,8 @@ class AlarmControlController extends GetxController {
     Vibration.cancel();
     vibrationTimer!.cancel();
     isSnoozing.value = true;
-    Utils.stopAlarm();
+    String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
+    Utils.stopAlarm(ringtoneName: ringtoneName);
 
     if (_currentTimeTimer!.isActive) {
       _currentTimeTimer?.cancel();
@@ -79,7 +80,7 @@ class AlarmControlController extends GetxController {
           Vibration.vibrate(pattern: [500, 3000]);
         });
 
-        Utils.playAlarm();
+        Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
         startTimer();
       } else if (seconds.value == 0) {
@@ -110,8 +111,6 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
-    Utils.playAlarm();
 
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
@@ -169,6 +168,8 @@ class AlarmControlController extends GetxController {
       showButton.value = true;
     }
 
+    Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
 
@@ -214,7 +215,8 @@ class AlarmControlController extends GetxController {
     Vibration.cancel();
     vibrationTimer!.cancel();
 
-    Utils.stopAlarm();
+    String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
+    Utils.stopAlarm(ringtoneName: ringtoneName);
 
     _subscription.cancel();
     _currentTimeTimer?.cancel();

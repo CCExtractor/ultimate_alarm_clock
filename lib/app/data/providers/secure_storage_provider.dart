@@ -107,25 +107,6 @@ class SecureStorageProvider {
     );
   }
 
-  Future<CustomRingtoneStatus> readCustomRingtoneStatus() async {
-    String customRingtoneStatus =
-        await _secureStorage.read(key: 'custom_ringtone_status') ??
-            'CustomRingtoneStatus.disabled';
-
-    return customRingtoneStatus == 'CustomRingtoneStatus.disabled'
-        ? CustomRingtoneStatus.disabled
-        : CustomRingtoneStatus.enabled;
-  }
-
-  Future<void> writeCustomRingtoneStatus({
-    required CustomRingtoneStatus status,
-  }) async {
-    await _secureStorage.write(
-      key: 'custom_ringtone_status',
-      value: status.toString(),
-    );
-  }
-
   //check 24 hrs enabled
   Future<bool> read24HoursEnabled({required String key}) async {
     return await _secureStorage.read(key: key) == 'true';
