@@ -10,8 +10,6 @@ import '../modules/alarmChallenge/bindings/alarm_challenge_binding.dart';
 import '../modules/alarmChallenge/views/alarm_challenge_view.dart';
 import '../modules/alarmRing/bindings/alarm_ring_binding.dart';
 import '../modules/alarmRing/views/alarm_ring_view.dart';
-import '../modules/alarmRingIgnore/bindings/alarm_ring_ignore_binding.dart';
-import '../modules/alarmRingIgnore/views/alarm_ring_ignore_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -46,11 +44,6 @@ class AppPages {
       binding: AlarmControlBinding(),
     ),
     GetPage(
-      name: _Paths.ALARM_RING_IGNORE,
-      page: () => AlarmControlIgnoreView(),
-      binding: AlarmControlIgnoreBinding(),
-    ),
-    GetPage(
       name: _Paths.SETTINGS,
       page: () => SettingsView(),
       binding: SettingsBinding(),
@@ -71,6 +64,5 @@ class AppPages {
       page: () => AboutView(),
       binding: AboutBinding(),
     ),
-
   ];
 }
