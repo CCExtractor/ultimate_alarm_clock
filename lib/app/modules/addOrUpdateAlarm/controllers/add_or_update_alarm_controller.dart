@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:latlong2/latlong.dart';
@@ -259,6 +260,12 @@ class AddOrUpdateAlarmController extends GetxController {
     } else {
       alarmRecord = await IsarDb.addAlarm(alarmData);
     }
+
+    Future.delayed(const Duration(seconds: 1), () {
+      showToast(
+        alarmRecord: alarmData,
+      );
+    });
   }
 
   showQRDialog() {
@@ -449,6 +456,12 @@ class AddOrUpdateAlarmController extends GetxController {
         createAlarm(alarmData);
       }
     }
+
+    Future.delayed(const Duration(seconds: 1), () {
+      showToast(
+        alarmRecord: alarmData,
+      );
+    });
   }
 
   @override
@@ -782,6 +795,30 @@ class AddOrUpdateAlarmController extends GetxController {
           );
         }
       }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void showToast({
+    required AlarmModel alarmRecord,
+  }) {
+    try {
+      String timeToAlarm = Utils.timeUntilAlarm(
+        Utils.stringToTimeOfDay(alarmRecord.alarmTime),
+        alarmRecord.days,
+      );
+
+      Fluttertoast.showToast(
+        msg: 'Rings in $timeToAlarm',
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        textColor: themeController.isLightMode.value
+            ? kLightPrimaryTextColor
+            : kprimaryTextColor,
+      );
     } catch (e) {
       debugPrint(e.toString());
     }
