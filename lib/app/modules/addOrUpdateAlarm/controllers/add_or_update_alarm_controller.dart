@@ -74,8 +74,6 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
-  final noteController = TextEditingController();
-  final RxString note = ''.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -482,7 +480,6 @@ class AddOrUpdateAlarmController extends GetxController {
       isOneTime.value = alarmRecord!.isOneTime;
       label.value = alarmRecord!.label;
       customRingtoneName.value = alarmRecord!.ringtoneName;
-      note.value = alarmRecord!.note;
 
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
@@ -674,7 +671,6 @@ class AddOrUpdateAlarmController extends GetxController {
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
       ringtoneName: customRingtoneName.value,
-      note: note.value,
     );
   }
 

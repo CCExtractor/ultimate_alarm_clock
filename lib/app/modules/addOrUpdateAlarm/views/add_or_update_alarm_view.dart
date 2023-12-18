@@ -12,7 +12,6 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_r
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/note.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
@@ -169,7 +168,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           snoozeDuration: controller.snoozeDuration.value,
                           offsetDetails: controller.offsetDetails,
                           label: controller.label.value,
-                          note: controller.note.value,
                           isOneTime: controller.isOneTime.value,
                           lastEditedUserId: controller.lastEditedUserId,
                           mutexLock: controller.mutexLock.value,
@@ -533,20 +531,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                     ),
                     LabelTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
-                    Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      child: Divider(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryDisabledTextColor
-                            : kprimaryDisabledTextColor,
-                      ),
-                    ),
-                    NoteTile(
                       controller: controller,
                       themeController: themeController,
                     ),

@@ -127,53 +127,48 @@ const AlarmModelSchema = CollectionSchema(
       name: r'mutexLock',
       type: IsarType.bool,
     ),
-    r'note': PropertySchema(
-      id: 22,
-      name: r'note',
-      type: IsarType.string,
-    ),
     r'numMathsQuestions': PropertySchema(
-      id: 23,
+      id: 22,
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
     r'ownerId': PropertySchema(
-      id: 24,
+      id: 23,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 25,
+      id: 24,
       name: r'ownerName',
       type: IsarType.string,
     ),
     r'qrValue': PropertySchema(
-      id: 26,
+      id: 25,
       name: r'qrValue',
       type: IsarType.string,
     ),
     r'ringtoneName': PropertySchema(
-      id: 27,
+      id: 26,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 28,
+      id: 27,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 29,
+      id: 28,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 30,
+      id: 29,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'weatherTypes': PropertySchema(
-      id: 31,
+      id: 30,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -216,7 +211,6 @@ int _alarmModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.note.length * 3;
   bytesCount += 3 + object.ownerId.length * 3;
   bytesCount += 3 + object.ownerName.length * 3;
   bytesCount += 3 + object.qrValue.length * 3;
@@ -265,16 +259,15 @@ void _alarmModelSerialize(
   writer.writeLong(offsets[19], object.mathsDifficulty);
   writer.writeLong(offsets[20], object.minutesSinceMidnight);
   writer.writeBool(offsets[21], object.mutexLock);
-  writer.writeString(offsets[22], object.note);
-  writer.writeLong(offsets[23], object.numMathsQuestions);
-  writer.writeString(offsets[24], object.ownerId);
-  writer.writeString(offsets[25], object.ownerName);
-  writer.writeString(offsets[26], object.qrValue);
-  writer.writeString(offsets[27], object.ringtoneName);
-  writer.writeLong(offsets[28], object.shakeTimes);
-  writer.writeStringList(offsets[29], object.sharedUserIds);
-  writer.writeLong(offsets[30], object.snoozeDuration);
-  writer.writeLongList(offsets[31], object.weatherTypes);
+  writer.writeLong(offsets[22], object.numMathsQuestions);
+  writer.writeString(offsets[23], object.ownerId);
+  writer.writeString(offsets[24], object.ownerName);
+  writer.writeString(offsets[25], object.qrValue);
+  writer.writeString(offsets[26], object.ringtoneName);
+  writer.writeLong(offsets[27], object.shakeTimes);
+  writer.writeStringList(offsets[28], object.sharedUserIds);
+  writer.writeLong(offsets[29], object.snoozeDuration);
+  writer.writeLongList(offsets[30], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -305,16 +298,15 @@ AlarmModel _alarmModelDeserialize(
     mathsDifficulty: reader.readLong(offsets[19]),
     minutesSinceMidnight: reader.readLong(offsets[20]),
     mutexLock: reader.readBool(offsets[21]),
-    note: reader.readString(offsets[22]),
-    numMathsQuestions: reader.readLong(offsets[23]),
-    ownerId: reader.readString(offsets[24]),
-    ownerName: reader.readString(offsets[25]),
-    qrValue: reader.readString(offsets[26]),
-    ringtoneName: reader.readString(offsets[27]),
-    shakeTimes: reader.readLong(offsets[28]),
-    sharedUserIds: reader.readStringList(offsets[29]),
-    snoozeDuration: reader.readLong(offsets[30]),
-    weatherTypes: reader.readLongList(offsets[31]) ?? [],
+    numMathsQuestions: reader.readLong(offsets[22]),
+    ownerId: reader.readString(offsets[23]),
+    ownerName: reader.readString(offsets[24]),
+    qrValue: reader.readString(offsets[25]),
+    ringtoneName: reader.readString(offsets[26]),
+    shakeTimes: reader.readLong(offsets[27]),
+    sharedUserIds: reader.readStringList(offsets[28]),
+    snoozeDuration: reader.readLong(offsets[29]),
+    weatherTypes: reader.readLongList(offsets[30]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[4]);
   object.isarId = id;
@@ -373,9 +365,9 @@ P _alarmModelDeserializeProp<P>(
     case 21:
       return (reader.readBool(offset)) as P;
     case 22:
-      return (reader.readString(offset)) as P;
-    case 23:
       return (reader.readLong(offset)) as P;
+    case 23:
+      return (reader.readString(offset)) as P;
     case 24:
       return (reader.readString(offset)) as P;
     case 25:
@@ -383,14 +375,12 @@ P _alarmModelDeserializeProp<P>(
     case 26:
       return (reader.readString(offset)) as P;
     case 27:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 28:
-      return (reader.readLong(offset)) as P;
-    case 29:
       return (reader.readStringList(offset)) as P;
-    case 30:
+    case 29:
       return (reader.readLong(offset)) as P;
-    case 31:
+    case 30:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1940,136 +1930,6 @@ extension AlarmModelQueryFilter
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'note',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'note',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'note',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'note',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'note',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'note',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'note',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'note',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'note',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'note',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       numMathsQuestionsEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -3433,18 +3293,6 @@ extension AlarmModelQuerySortBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNote() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'note', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNoteDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'note', Sort.desc);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'numMathsQuestions', Sort.asc);
@@ -3811,18 +3659,6 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNote() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'note', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNoteDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'note', Sort.desc);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'numMathsQuestions', Sort.asc);
@@ -4057,13 +3893,6 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByNote(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'note', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QDistinct>
       distinctByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
@@ -4264,12 +4093,6 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, bool, QQueryOperations> mutexLockProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mutexLock');
-    });
-  }
-
-  QueryBuilder<AlarmModel, String, QQueryOperations> noteProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'note');
     });
   }
 

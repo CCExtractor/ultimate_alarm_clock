@@ -42,7 +42,6 @@ class AlarmModel {
   late bool isOneTime;
   late int snoozeDuration;
   late String ringtoneName;
-  late String note;
   @ignore
   Map? offsetDetails;
 
@@ -78,7 +77,6 @@ class AlarmModel {
     required this.isOneTime,
     required this.snoozeDuration,
     required this.ringtoneName,
-    required this.note,
   });
 
   AlarmModel.fromDocumentSnapshot({
@@ -131,7 +129,6 @@ class AlarmModel {
     isShakeEnabled = documentSnapshot['isShakeEnabled'];
     shakeTimes = documentSnapshot['shakeTimes'];
     ringtoneName = documentSnapshot['ringtoneName'];
-    note = documentSnapshot['note'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -169,7 +166,6 @@ class AlarmModel {
     label = alarmData['label'];
     isOneTime = alarmData['isOneTime'];
     ringtoneName = alarmData['ringtoneName'];
-    note = alarmData['note'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -212,7 +208,6 @@ class AlarmModel {
       'shakeTimes': alarmRecord.shakeTimes,
       'snoozeDuration': alarmRecord.snoozeDuration,
       'ringtoneName': alarmRecord.ringtoneName,
-      'note': alarmRecord.note,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
