@@ -153,7 +153,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 ),
                 Obx(
                   () => Visibility(
-                    visible: (controller.note.isNotEmpty),
+                    visible:
+                        controller.currentlyRingingAlarm.value.note.isNotEmpty,
                     child: (Container(
                       padding: EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
