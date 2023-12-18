@@ -59,6 +59,18 @@ class IsarDb {
 
     return alarms.isNotEmpty;
   }
+  static Future<bool> doesAlarmExistTime(String time, bool is_enable) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final alarms = await db.alarmModels
+        .where()
+        .filter()
+        .isEnabledEqualTo(is_enable)
+        .and()
+        .alarmTimeEqualTo(time)
+        .findAll();
+    return alarms.isNotEmpty;
+  }
 
   static Future<AlarmModel> getLatestAlarm(
     AlarmModel alarmRecord,
