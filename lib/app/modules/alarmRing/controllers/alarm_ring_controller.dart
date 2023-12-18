@@ -19,7 +19,7 @@ import 'package:vibration/vibration.dart';
 
 class AlarmControlController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
-
+  RxString note = 'No Quick Note'.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
