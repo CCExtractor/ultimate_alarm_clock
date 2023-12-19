@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -18,6 +17,8 @@ import 'constants.dart';
 
 class Utils {
   static final audioPlayer = AudioPlayer();
+
+  static MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   static String timeOfDayToString(TimeOfDay time) {
     final hours = time.hour.toString().padLeft(2, '0');
@@ -583,7 +584,7 @@ class Utils {
       String ringtoneName = alarmRecord.ringtoneName;
 
       if (ringtoneName == 'Default') {
-        FlutterRingtonePlayer.playAlarm();
+        await alarmChannel.invokeMethod('playDefaultAlarm');
       } else {
         int customRingtoneId = fastHash(ringtoneName);
         RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
@@ -594,7 +595,7 @@ class Utils {
           String customRingtonePath = customRingtone.ringtonePath;
           await playCustomSound(customRingtonePath);
         } else {
-          FlutterRingtonePlayer.playAlarm();
+          await alarmChannel.invokeMethod('playDefaultAlarm');
           
           bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
 
@@ -617,7 +618,7 @@ class Utils {
   }) async {
     try {
       if (ringtoneName == 'Default') {
-        FlutterRingtonePlayer.stop();
+        await alarmChannel.invokeMethod('stopDefaultAlarm');
       } else {
         await audioPlayer.stop();
       }
