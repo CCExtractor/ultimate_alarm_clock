@@ -342,6 +342,7 @@ class Utils {
       alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
       ringtoneName: 'Default',
+      note: '',
     );
   }
 
