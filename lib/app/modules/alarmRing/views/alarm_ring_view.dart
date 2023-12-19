@@ -155,52 +155,17 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   () => Visibility(
                     visible:
                         controller.currentlyRingingAlarm.value.note.isNotEmpty,
-                    child: (Container(
-                      padding: EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryBackgroundColor
-                            : kprimaryBackgroundColor,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 5.0,
-                            spreadRadius: 2.0,
+                    child: Text(
+                      controller.currentlyRingingAlarm.value.note,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : kprimaryTextColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w100,
+                            fontStyle: FontStyle.italic,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Note',
-                            style:
-                                Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : kprimaryTextColor,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          Text(
-                            controller.currentlyRingingAlarm.value.note,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : kprimaryTextColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w100,
-                                ),
-                          ),
-                        ],
-                      ),
-                    )),
+                    ),
                   ),
                 ),
                 Obx(
