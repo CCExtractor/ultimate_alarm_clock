@@ -29,10 +29,6 @@ class SettingsController extends GetxController {
   final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
   final RxBool didWeatherKeyError = false.obs;
   final RxBool showingCircularProgressIndicator = false.obs;
-  Rx<CustomRingtoneStatus> customRingtoneStatus =
-      CustomRingtoneStatus.disabled.obs;
-  var customRingtoneName = 'Custom Ringtone Disabled!'.obs;
-  var setCustomRingtoneFirstTime = true.obs;
   RxBool validate = false.obs;
 
   UserModel? userModel;
