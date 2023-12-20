@@ -22,7 +22,6 @@ class WeatherApi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _validate = false.obs;
     return InkWell(
       onTap: () async {
         Utils.hapticFeedback();
@@ -54,7 +53,7 @@ class WeatherApi extends StatelessWidget {
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     hintText: 'API Key',
-                                    errorText: _validate.value
+                                    errorText: controller.validate.value
                                         ? 'API Key cannot be empty'
                                         : null,
                                   ),
@@ -100,7 +99,7 @@ class WeatherApi extends StatelessWidget {
                                           if (await controller
                                               .apiKey.text.isEmpty) {
                                             // setState(() {
-                                            _validate.value = true;
+                                            controller.validate.value = true;
                                             // });
                                             controller
                                                 .showingCircularProgressIndicator
@@ -112,7 +111,7 @@ class WeatherApi extends StatelessWidget {
                                           if (await controller
                                               .apiKey.text.isNotEmpty) {
                                             // setState(() {
-                                            _validate.value = false;
+                                            controller.validate.value = false;
                                             // });
                                           }
 

@@ -34,6 +34,7 @@ class SettingsController extends GetxController {
       CustomRingtoneStatus.disabled.obs;
   var customRingtoneName = 'Custom Ringtone Disabled!'.obs;
   var setCustomRingtoneFirstTime = true.obs;
+  RxBool validate = false.obs;
 
   UserModel? userModel;
   @override
