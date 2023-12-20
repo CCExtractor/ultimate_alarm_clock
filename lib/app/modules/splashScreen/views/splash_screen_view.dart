@@ -9,29 +9,11 @@ class SplashScreenView extends GetView<SplashScreenController> {
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
-                child: Image.asset(
-                  'assets/images/ic_launcher-playstore-nobg.png',
-                  fit: BoxFit.cover,
-                  width: width / 2,
-                  height: width / 2,
-                ),
-              ),
-              Text(
-                'Ultimate Alarm Clock',
-                style: Theme.of(context)
-                    .textTheme
-                    .displayMedium!
-                    .copyWith(color: kprimaryColor),
-              ),
-            ],
           ),
         ),
       ),

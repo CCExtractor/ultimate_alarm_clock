@@ -1,11 +1,10 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -248,59 +247,5 @@ class SettingsController extends GetxController {
     isSortedAlarmListEnabled.value = enabled;
     homeController.isSortedAlarmListEnabled.value = enabled;
     _saveSortedAlarmListPreference();
-  }
-
-  void saveCustomRingtoneStatus() async {
-    await _secureStorageProvider.writeCustomRingtoneStatus(
-      status: customRingtoneStatus.value,
-    );
-  }
-
-  Future<List<int>?> openFilePicker() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.audio,
-      withData: true,
-    );
-
-    if (customRingtoneName.value != 'Custom Ringtone Disabled!') {
-      setCustomRingtoneFirstTime.value = false;
-    }
-
-    if (result != null) {
-      customRingtoneName.value = result.files.single.name;
-      List<int> customRingtoneBytes =
-          result.files.single.bytes!.cast<int>().toList();
-      return customRingtoneBytes;
-    }
-
-    return null;
-  }
-
-  Future<void> saveCustomRingtone() async {
-    List<int>? customRingtoneBytes = await openFilePicker();
-
-    if (customRingtoneBytes != null) {
-      RingtoneModel customRingtone = RingtoneModel(
-        ringtoneName: customRingtoneName.value,
-        ringtoneData: customRingtoneBytes,
-      );
-
-      if (setCustomRingtoneFirstTime.value) {
-        await IsarDb.addCustomRingtone(customRingtone);
-      } else {
-        await IsarDb.deleteCustomRingtone();
-        await IsarDb.addCustomRingtone(customRingtone);
-      }
-    }
-  }
-
-  Future<void> getCustomRingtoneName() async {
-    RingtoneModel? customRingtone = await IsarDb.getCustomRingtone();
-
-    if (customRingtone != null) {
-      customRingtoneName.value = customRingtone.ringtoneName;
-    } else {
-      customRingtoneName.value = 'Custom Ringtone Disabled!';
-    }
   }
 }

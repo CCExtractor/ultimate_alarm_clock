@@ -127,43 +127,53 @@ const AlarmModelSchema = CollectionSchema(
       name: r'mutexLock',
       type: IsarType.bool,
     ),
-    r'numMathsQuestions': PropertySchema(
+    r'note': PropertySchema(
       id: 22,
+      name: r'note',
+      type: IsarType.string,
+    ),
+    r'numMathsQuestions': PropertySchema(
+      id: 23,
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
     r'ownerId': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'ownerName',
       type: IsarType.string,
     ),
     r'qrValue': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'qrValue',
       type: IsarType.string,
     ),
+    r'ringtoneName': PropertySchema(
+      id: 27,
+      name: r'ringtoneName',
+      type: IsarType.string,
+    ),
     r'shakeTimes': PropertySchema(
-      id: 26,
+      id: 28,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 27,
+      id: 29,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 28,
+      id: 30,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'weatherTypes': PropertySchema(
-      id: 29,
+      id: 31,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -206,9 +216,11 @@ int _alarmModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.note.length * 3;
   bytesCount += 3 + object.ownerId.length * 3;
   bytesCount += 3 + object.ownerName.length * 3;
   bytesCount += 3 + object.qrValue.length * 3;
+  bytesCount += 3 + object.ringtoneName.length * 3;
   {
     final list = object.sharedUserIds;
     if (list != null) {
@@ -253,14 +265,16 @@ void _alarmModelSerialize(
   writer.writeLong(offsets[19], object.mathsDifficulty);
   writer.writeLong(offsets[20], object.minutesSinceMidnight);
   writer.writeBool(offsets[21], object.mutexLock);
-  writer.writeLong(offsets[22], object.numMathsQuestions);
-  writer.writeString(offsets[23], object.ownerId);
-  writer.writeString(offsets[24], object.ownerName);
-  writer.writeString(offsets[25], object.qrValue);
-  writer.writeLong(offsets[26], object.shakeTimes);
-  writer.writeStringList(offsets[27], object.sharedUserIds);
-  writer.writeLong(offsets[28], object.snoozeDuration);
-  writer.writeLongList(offsets[29], object.weatherTypes);
+  writer.writeString(offsets[22], object.note);
+  writer.writeLong(offsets[23], object.numMathsQuestions);
+  writer.writeString(offsets[24], object.ownerId);
+  writer.writeString(offsets[25], object.ownerName);
+  writer.writeString(offsets[26], object.qrValue);
+  writer.writeString(offsets[27], object.ringtoneName);
+  writer.writeLong(offsets[28], object.shakeTimes);
+  writer.writeStringList(offsets[29], object.sharedUserIds);
+  writer.writeLong(offsets[30], object.snoozeDuration);
+  writer.writeLongList(offsets[31], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -291,14 +305,16 @@ AlarmModel _alarmModelDeserialize(
     mathsDifficulty: reader.readLong(offsets[19]),
     minutesSinceMidnight: reader.readLong(offsets[20]),
     mutexLock: reader.readBool(offsets[21]),
-    numMathsQuestions: reader.readLong(offsets[22]),
-    ownerId: reader.readString(offsets[23]),
-    ownerName: reader.readString(offsets[24]),
-    qrValue: reader.readString(offsets[25]),
-    shakeTimes: reader.readLong(offsets[26]),
-    sharedUserIds: reader.readStringList(offsets[27]),
-    snoozeDuration: reader.readLong(offsets[28]),
-    weatherTypes: reader.readLongList(offsets[29]) ?? [],
+    note: reader.readString(offsets[22]),
+    numMathsQuestions: reader.readLong(offsets[23]),
+    ownerId: reader.readString(offsets[24]),
+    ownerName: reader.readString(offsets[25]),
+    qrValue: reader.readString(offsets[26]),
+    ringtoneName: reader.readString(offsets[27]),
+    shakeTimes: reader.readLong(offsets[28]),
+    sharedUserIds: reader.readStringList(offsets[29]),
+    snoozeDuration: reader.readLong(offsets[30]),
+    weatherTypes: reader.readLongList(offsets[31]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[4]);
   object.isarId = id;
@@ -357,20 +373,24 @@ P _alarmModelDeserializeProp<P>(
     case 21:
       return (reader.readBool(offset)) as P;
     case 22:
-      return (reader.readLong(offset)) as P;
-    case 23:
       return (reader.readString(offset)) as P;
+    case 23:
+      return (reader.readLong(offset)) as P;
     case 24:
       return (reader.readString(offset)) as P;
     case 25:
       return (reader.readString(offset)) as P;
     case 26:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 27:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 28:
       return (reader.readLong(offset)) as P;
     case 29:
+      return (reader.readStringList(offset)) as P;
+    case 30:
+      return (reader.readLong(offset)) as P;
+    case 31:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1920,6 +1940,136 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'note',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'note',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'note',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> noteIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'note',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       numMathsQuestionsEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -2369,6 +2519,142 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'qrValue',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ringtoneName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ringtoneName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ringtoneName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ringtoneName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'ringtoneName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'ringtoneName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'ringtoneName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'ringtoneName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ringtoneName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      ringtoneNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'ringtoneName',
         value: '',
       ));
     });
@@ -3147,6 +3433,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNote() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'note', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNoteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'note', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'numMathsQuestions', Sort.asc);
@@ -3193,6 +3491,18 @@ extension AlarmModelQuerySortBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByQrValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingtoneName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringtoneName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingtoneNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringtoneName', Sort.desc);
     });
   }
 
@@ -3501,6 +3811,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNote() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'note', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNoteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'note', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'numMathsQuestions', Sort.asc);
@@ -3547,6 +3869,18 @@ extension AlarmModelQuerySortThenBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByQrValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingtoneName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringtoneName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingtoneNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringtoneName', Sort.desc);
     });
   }
 
@@ -3723,6 +4057,13 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByNote(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'note', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct>
       distinctByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
@@ -3748,6 +4089,13 @@ extension AlarmModelQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'qrValue', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByRingtoneName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ringtoneName', caseSensitive: caseSensitive);
     });
   }
 
@@ -3919,6 +4267,12 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, String, QQueryOperations> noteProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'note');
+    });
+  }
+
   QueryBuilder<AlarmModel, int, QQueryOperations> numMathsQuestionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'numMathsQuestions');
@@ -3940,6 +4294,12 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, String, QQueryOperations> qrValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'qrValue');
+    });
+  }
+
+  QueryBuilder<AlarmModel, String, QQueryOperations> ringtoneNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ringtoneName');
     });
   }
 

@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -10,6 +9,7 @@ import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 
@@ -17,6 +17,8 @@ import 'constants.dart';
 
 class Utils {
   static final audioPlayer = AudioPlayer();
+
+  static MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   static String timeOfDayToString(TimeOfDay time) {
     final hours = time.hour.toString().padLeft(2, '0');
@@ -339,6 +341,8 @@ class Utils {
       location: '',
       alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+      ringtoneName: 'Default',
+      note: '',
     );
   }
 
@@ -565,36 +569,100 @@ class Utils {
     );
   }
 
-  static Future<void> playCustomSound(List<int> soundBytes) async {
-    await audioPlayer.setReleaseMode(ReleaseMode.loop);
-    await audioPlayer
-        .play(BytesSource(Uint8List.fromList(soundBytes).buffer.asUint8List()));
+  static Future<void> playCustomSound(String customRingtonePath) async {
+    try {
+      await audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await audioPlayer.play(DeviceFileSource(customRingtonePath));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  static void playAlarm() async {
-    CustomRingtoneStatus customRingtoneStatus =
-        await SecureStorageProvider().readCustomRingtoneStatus();
+  static void playAlarm({
+    required AlarmModel alarmRecord,
+  }) async {
+    try {
+      String ringtoneName = alarmRecord.ringtoneName;
 
-    if (customRingtoneStatus == CustomRingtoneStatus.disabled) {
-      FlutterRingtonePlayer.playAlarm();
-    } else {
-      RingtoneModel? customRingtone = await IsarDb.getCustomRingtone();
+      if (ringtoneName == 'Default') {
+        await alarmChannel.invokeMethod('playDefaultAlarm');
+      } else {
+        int customRingtoneId = fastHash(ringtoneName);
+        RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+          customRingtoneId: customRingtoneId,
+        );
+
+        if (customRingtone != null) {
+          String customRingtonePath = customRingtone.ringtonePath;
+          await playCustomSound(customRingtonePath);
+        } else {
+          await alarmChannel.invokeMethod('playDefaultAlarm');
+          
+          bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
+
+          alarmRecord.ringtoneName = 'Default';
+
+          if(isSharedAlarmEnabled) {
+            await FirestoreDb.updateAlarm(alarmRecord.ownerId, alarmRecord);
+          } else {
+            await IsarDb.updateAlarm(alarmRecord);
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static void stopAlarm({
+    required String ringtoneName,
+  }) async {
+    try {
+      if (ringtoneName == 'Default') {
+        await alarmChannel.invokeMethod('stopDefaultAlarm');
+      } else {
+        await audioPlayer.stop();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> updateRingtoneCounterOfUsage({
+    required String customRingtoneName,
+    required CounterUpdate counterUpdate,
+  }) async {
+    try {
+      int customRingtoneId = Utils.fastHash(customRingtoneName);
+      RingtoneModel? customRingtone =
+          await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
       if (customRingtone != null) {
-        List<int> customRingtoneBytes = customRingtone.ringtoneData;
-        await playCustomSound(customRingtoneBytes);
+        if (counterUpdate == CounterUpdate.increment) {
+          customRingtone.currentCounterOfUsage++;
+        } else if (counterUpdate == CounterUpdate.decrement) {
+          customRingtone.currentCounterOfUsage--;
+        }
+        await IsarDb.addCustomRingtone(customRingtone);
       }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
-  static void stopAlarm() async {
-    CustomRingtoneStatus customRingtoneStatus =
-        await SecureStorageProvider().readCustomRingtoneStatus();
+  /// FNV-1a 64bit hash algorithm optimized for Dart Strings
+  static int fastHash(String string) {
+    var hash = 0xcbf29ce484222325;
 
-    if (customRingtoneStatus == CustomRingtoneStatus.disabled) {
-      FlutterRingtonePlayer.stop();
-    } else {
-      await audioPlayer.stop();
+    var i = 0;
+    while (i < string.length) {
+      final codeUnit = string.codeUnitAt(i++);
+      hash ^= codeUnit >> 8;
+      hash *= 0x100000001b3;
+      hash ^= codeUnit & 0xFF;
+      hash *= 0x100000001b3;
     }
+
+    return hash;
   }
 }

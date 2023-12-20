@@ -30,36 +30,42 @@ class InputTimeController extends GetxController {
   }
 
   void setTime() {
-    int hour = int.parse(inputHrsController.text);
-    if (!settingsController.is24HrsEnabled.value) {
-      if (hour == 0 && inputHrsController.text.length == 2) {
-        inputHrsController.text = '12';
+    try {
+      int hour = int.parse(inputHrsController.text);
+      if (!settingsController.is24HrsEnabled.value) {
+        if (hour == 0 && inputHrsController.text.length == 2) {
+          inputHrsController.text = '12';
+        }
+
+        if (isAM.value) {
+          if (hour == 12) {
+            hour = hour - 12;
+          }
+        } else {
+          if (hour != 12) {
+            hour = hour + 12;
+          }
+        }
       }
 
-      if (isAM.value) {
-        if (hour == 12) {
-          hour = hour - 12;
-        }
-      } else {
-        if (hour != 12) {
-          hour = hour + 12;
-        }
-      }
+      int minute = int.parse(inputMinutesController.text);
+      final time = TimeOfDay(hour: hour, minute: minute);
+      DateTime today = DateTime.now();
+      DateTime tomorrow = today.add(const Duration(days: 1));
+      bool isNextDay =
+          (time.hour == today.hour && time.minute < today.minute) ||
+              (time.hour < today.hour);
+      bool isNextMonth = isNextDay && (today.day > tomorrow.day);
+      bool isNextYear = isNextMonth && (today.month > tomorrow.month);
+      int day = isNextDay ? tomorrow.day : today.day;
+      int month = isNextMonth ? tomorrow.month : today.month;
+      int year = isNextYear ? tomorrow.month : today.month;
+      selectedDateTime.value =
+          DateTime(year, month, day, time.hour, time.minute);
+      addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
+    } catch (e) {
+      debugPrint(e.toString());
     }
-
-    int minute = int.parse(inputMinutesController.text);
-    final time = TimeOfDay(hour: hour, minute: minute);
-    DateTime today = DateTime.now();
-    DateTime tomorrow = today.add(const Duration(days: 1));
-    bool isNextDay = (time.hour == today.hour && time.minute < today.minute) ||
-        (time.hour < today.hour);
-    bool isNextMonth = isNextDay && (today.day > tomorrow.day);
-    bool isNextYear = isNextMonth && (today.month > tomorrow.month);
-    int day = isNextDay ? tomorrow.day : today.day;
-    int month = isNextMonth ? tomorrow.month : today.month;
-    int year = isNextYear ? tomorrow.month : today.month;
-    selectedDateTime.value = DateTime(year, month, day, time.hour, time.minute);
-    addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
   }
 
   @override
@@ -83,13 +89,20 @@ class LimitRange extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    var value = int.parse(newValue.text);
-    if (value < minRange) {
-      return TextEditingValue(text: minRange.toString());
-    } else if (value > maxRange) {
-      return TextEditingValue(text: maxRange.toString());
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    try {
+      var value = int.parse(newValue.text);
+      if (value < minRange) {
+        return TextEditingValue(text: minRange.toString());
+      } else if (value > maxRange) {
+        return TextEditingValue(text: maxRange.toString());
+      }
+      return newValue;
+    } catch (e) {
+      debugPrint(e.toString());
+      return newValue;
     }
-    return newValue;
   }
 }

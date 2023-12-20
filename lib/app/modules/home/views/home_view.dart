@@ -1155,6 +1155,13 @@ class HomeView extends GetView<HomeController> {
                                                                                 await IsarDb.deleteAlarm(alarm.isarId);
                                                                               }
 
+                                                                              String ringtoneName = alarm.ringtoneName;
+
+                                                                              await Utils.updateRingtoneCounterOfUsage(
+                                                                                customRingtoneName: ringtoneName,
+                                                                                counterUpdate: CounterUpdate.decrement,
+                                                                              );
+
                                                                               controller.refreshTimer = true;
                                                                               controller.refreshUpcomingAlarms();
                                                                             }

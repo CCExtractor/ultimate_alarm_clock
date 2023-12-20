@@ -18,6 +18,8 @@ class SplashScreenController extends GetxController {
   bool shouldAlarmRing = true;
   bool shouldNavigate = true;
 
+  final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
+
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
@@ -28,6 +30,20 @@ class SplashScreenController extends GetxController {
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
+
+    return latestAlarm;
+  }
+
+  getNextAlarm() async {
+    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm =
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel firestoreLatestAlarm =
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+    AlarmModel latestAlarm =
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
   }
@@ -137,14 +153,77 @@ class SplashScreenController extends GetxController {
             if (shouldAlarmRing) {
               Get.offNamed('/alarm-ring');
             } else {
-              Get.offNamed('/alarm-ring-ignore');
+              currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+              // If the alarm is set to NEVER repeat, then it will be chosen as
+              // the next alarm to ring by default as it would ring the next day
+              if (currentlyRingingAlarm.value.days
+                  .every((element) => element == false)) {
+                currentlyRingingAlarm.value.isEnabled = false;
+
+                if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+                  IsarDb.updateAlarm(currentlyRingingAlarm.value);
+                } else {
+                  FirestoreDb.updateAlarm(
+                    currentlyRingingAlarm.value.ownerId,
+                    currentlyRingingAlarm.value,
+                  );
+                }
+              } else if (currentlyRingingAlarm.value.isOneTime == true) {
+                // If the alarm has to repeat on one day, but ring just once,
+                // we will keep seting its days to false until it will never ring
+                int currentDay = DateTime.now().weekday - 1;
+                currentlyRingingAlarm.value.days[currentDay] = false;
+
+                if (currentlyRingingAlarm.value.days
+                    .every((element) => element == false)) {
+                  currentlyRingingAlarm.value.isEnabled = false;
+                }
+
+                if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+                  IsarDb.updateAlarm(currentlyRingingAlarm.value);
+                } else {
+                  FirestoreDb.updateAlarm(
+                    currentlyRingingAlarm.value.ownerId,
+                    currentlyRingingAlarm.value,
+                  );
+                }
+              }
+
+              AlarmModel latestAlarm = await getNextAlarm();
+
+              TimeOfDay latestAlarmTimeOfDay =
+                  Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+// This condition will never satisfy because this will only occur if fake mode
+// is returned as latest alarm
+              if (latestAlarm.isEnabled == false) {
+                debugPrint('STOPPED IF CONDITION with latest = '
+                    '${latestAlarmTimeOfDay.toString()} and ');
+                await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+              } else {
+                int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+                  DateTime.now(),
+                  Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+                );
+
+                try {
+                  await alarmChannel.invokeMethod(
+                      'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+                  print("Scheduled...");
+                } on PlatformException catch (e) {
+                  print("Failed to schedule alarm: ${e.message}");
+                }
+              }
+
+              Get.offNamed('/home');
+
+              alarmChannel.invokeMethod('minimizeApp');
             }
           }
         }
       }
     });
     // Necessary when hot restarting
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 0), () {
       if (shouldNavigate == true) {
         Get.offNamed('/home');
       }
