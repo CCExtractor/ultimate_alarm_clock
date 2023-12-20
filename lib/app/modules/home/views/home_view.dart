@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -1157,7 +1158,7 @@ class HomeView extends GetView<HomeController> {
 
                                                                               String ringtoneName = alarm.ringtoneName;
 
-                                                                              await Utils.updateRingtoneCounterOfUsage(
+                                                                              await AudioUtils.updateRingtoneCounterOfUsage(
                                                                                 customRingtoneName: ringtoneName,
                                                                                 counterUpdate: CounterUpdate.decrement,
                                                                               );
