@@ -294,8 +294,13 @@ class WeatherApi extends StatelessWidget {
       child: Container(
         width: width * 0.91,
         height: height * 0.1,
-        decoration: Utils.getCustomTileBoxDecoration(
-          isLightMode: themeController.isLightMode.value,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(18),
+          ),
+          color: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
         ),
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
