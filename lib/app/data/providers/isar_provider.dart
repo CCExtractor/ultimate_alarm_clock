@@ -55,7 +55,7 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final alarms =
-        await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
+    await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
 
     return alarms.isNotEmpty;
   }
@@ -73,9 +73,9 @@ class IsarDb {
   }
 
   static Future<AlarmModel> getLatestAlarm(
-    AlarmModel alarmRecord,
-    bool wantNextAlarm,
-  ) async {
+      AlarmModel alarmRecord,
+      bool wantNextAlarm,
+      ) async {
     int nowInMinutes = 0;
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
@@ -100,7 +100,7 @@ class IsarDb {
 
     // Get all enabled alarms
     List<AlarmModel> alarms =
-        await db.alarmModels.where().filter().isEnabledEqualTo(true).findAll();
+    await db.alarmModels.where().filter().isEnabledEqualTo(true).findAll();
 
     if (alarms.isEmpty) {
       alarmRecord.minutesSinceMidnight = -1;
@@ -188,8 +188,8 @@ class IsarDb {
   }
 
   static Future<void> addCustomRingtone(
-    RingtoneModel customRingtone,
-  ) async {
+      RingtoneModel customRingtone,
+      ) async {
     try {
       final isarProvider = IsarDb();
       final db = await isarProvider.db;

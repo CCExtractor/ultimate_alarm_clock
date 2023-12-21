@@ -9,7 +9,7 @@ class FirestoreDb {
       FirebaseFirestore.instance;
 
   static final CollectionReference _usersCollection =
-      FirebaseFirestore.instance.collection('users');
+  FirebaseFirestore.instance.collection('users');
 
   static CollectionReference _alarmsCollection(UserModel? user) {
     if (user == null) {
@@ -38,11 +38,11 @@ class FirestoreDb {
 
   static Future<UserModel?> fetchUserDetails(String userId) async {
     final DocumentSnapshot userSnapshot =
-        await _usersCollection.doc(userId).get();
+    await _usersCollection.doc(userId).get();
 
     if (userSnapshot.exists) {
       final UserModel user =
-          UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>);
+      UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>);
       return user;
     }
 
@@ -57,11 +57,21 @@ class FirestoreDb {
 
     return snapshot.docs.isNotEmpty;
   }
+  static Future<bool> doesAlarmExistTime(UserModel? user, String time) async {
+    if (user == null) return false;
+
+    QuerySnapshot snapshot = await _alarmsCollection(user)
+        .where('isEnabled', isEqualTo: true)
+        .where('alarmTime', isEqualTo: time)
+        .get();
+
+    return snapshot.docs.isNotEmpty;
+  }
 
   static Future<AlarmModel> getTriggeredAlarm(
-    UserModel? user,
-    String time,
-  ) async {
+      UserModel? user,
+      String time,
+      ) async {
     if (user == null) return Utils.genFakeAlarmModel();
     QuerySnapshot snapshot = await _alarmsCollection(user)
         .where('isEnabled', isEqualTo: true)
@@ -79,10 +89,10 @@ class FirestoreDb {
   }
 
   static Future<AlarmModel> getLatestAlarm(
-    UserModel? user,
-    AlarmModel alarmRecord,
-    bool wantNextAlarm,
-  ) async {
+      UserModel? user,
+      AlarmModel alarmRecord,
+      bool wantNextAlarm,
+      ) async {
     if (user == null) {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
@@ -109,7 +119,7 @@ class FirestoreDb {
 
     // Get all enabled alarms
     QuerySnapshot snapshot =
-        await _alarmsCollection(user).where('isEnabled', isEqualTo: true).get();
+    await _alarmsCollection(user).where('isEnabled', isEqualTo: true).get();
 
     QuerySnapshot snapshotSharedAlarms = await _firebaseFirestore
         .collectionGroup('alarms')
@@ -258,9 +268,9 @@ class FirestoreDb {
     }
 
     final sharedUserIds =
-        List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
+    List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
     final offsetDetails =
-        Map<String, dynamic>.from(alarmDoc.data()['offsetDetails'] ?? {});
+    Map<String, dynamic>.from(alarmDoc.data()['offsetDetails'] ?? {});
 
     offsetDetails[userModelId] = {
       'isOffsetBefore': true,
@@ -278,9 +288,9 @@ class FirestoreDb {
   }
 
   static Future<List<String>> removeUserFromAlarmSharedUsers(
-    UserModel? userModel,
-    String alarmID,
-  ) async {
+      UserModel? userModel,
+      String alarmID,
+      ) async {
     String userModelId = userModel!.id;
 
     final alarmQuerySnapshot = await _firebaseFirestore
@@ -294,7 +304,7 @@ class FirestoreDb {
 
     final alarmDoc = alarmQuerySnapshot.docs[0];
     final sharedUserIds =
-        List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
+    List<String>.from(alarmDoc.data()['sharedUserIds'] ?? []);
 
     if (sharedUserIds.contains(userModelId)) {
       sharedUserIds.remove(userModelId); // Remove the userId from the list
