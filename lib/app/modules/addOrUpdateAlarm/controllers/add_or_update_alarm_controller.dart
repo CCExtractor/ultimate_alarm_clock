@@ -77,6 +77,7 @@ class AddOrUpdateAlarmController extends GetxController {
   var customRingtoneNames = [].obs;
   final noteController = TextEditingController();
   final RxString note = ''.obs;
+  final RxBool showMotivationalQuote = false.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -484,6 +485,7 @@ class AddOrUpdateAlarmController extends GetxController {
       label.value = alarmRecord!.label;
       customRingtoneName.value = alarmRecord!.ringtoneName;
       note.value = alarmRecord!.note;
+      showMotivationalQuote.value = alarmRecord!.showMotivationalQuote;
 
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
@@ -676,6 +678,7 @@ class AddOrUpdateAlarmController extends GetxController {
       shakeTimes: shakeTimes.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
+      showMotivationalQuote: showMotivationalQuote.value,
     );
   }
 
