@@ -111,7 +111,9 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
+    if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
+      IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
+    }
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);

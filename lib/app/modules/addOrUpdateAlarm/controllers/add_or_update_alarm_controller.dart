@@ -76,6 +76,7 @@ class AddOrUpdateAlarmController extends GetxController {
   var customRingtoneNames = [].obs;
   final noteController = TextEditingController();
   final RxString note = ''.obs;
+  final deleteAfterGoesOff = false.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -480,6 +481,7 @@ class AddOrUpdateAlarmController extends GetxController {
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
       isOneTime.value = alarmRecord!.isOneTime;
+      deleteAfterGoesOff.value = alarmRecord!.deleteAfterGoesOff;
       label.value = alarmRecord!.label;
       customRingtoneName.value = alarmRecord!.ringtoneName;
       note.value = alarmRecord!.note;
@@ -641,6 +643,7 @@ class AddOrUpdateAlarmController extends GetxController {
       snoozeDuration: snoozeDuration.value,
       label: label.value,
       isOneTime: isOneTime.value,
+      deleteAfterGoesOff: deleteAfterGoesOff.value,
       mainAlarmTime:
           Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
       offsetDetails: offsetDetails,

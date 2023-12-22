@@ -315,6 +315,7 @@ class Utils {
       snoozeDuration: 0,
       label: '',
       isOneTime: false,
+      deleteAfterGoesOff: false,
       offsetDetails: {},
       mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       lastEditedUserId: '',

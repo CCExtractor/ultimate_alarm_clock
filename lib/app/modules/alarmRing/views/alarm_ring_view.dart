@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -76,6 +77,12 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       controller.currentlyRingingAlarm.value,
                                 );
                               } else {
+                                if (controller.currentlyRingingAlarm.value
+                                        .deleteAfterGoesOff ==
+                                    true) {
+                                  IsarDb.deleteAlarm(controller
+                                      .currentlyRingingAlarm.value.isarId);
+                                }
                                 Get.offNamed('/home');
                               }
                             },

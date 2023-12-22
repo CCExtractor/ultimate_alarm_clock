@@ -5,8 +5,8 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-class RepeatOnceTile extends StatelessWidget {
-  const RepeatOnceTile({
+class DeleteAfterGoesOff extends StatelessWidget {
+  const DeleteAfterGoesOff({
     super.key,
     required this.controller,
     required this.themeController,
@@ -22,7 +22,7 @@ class RepeatOnceTile extends StatelessWidget {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: Text(
-        'Repeat only once',
+        'Delete After Goes Off',
         style: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -31,9 +31,8 @@ class RepeatOnceTile extends StatelessWidget {
       ),
       onTap: () {
         Utils.hapticFeedback();
-        if (!controller.repeatDays.every((element) => element == false)) {
-          controller.isOneTime.value = !controller.isOneTime.value;
-        }
+        controller.deleteAfterGoesOff.value =
+            !controller.deleteAfterGoesOff.value;
       },
       trailing: InkWell(
         child: Wrap(
@@ -41,23 +40,12 @@ class RepeatOnceTile extends StatelessWidget {
           children: [
             Obx(
               () {
-                if (controller.repeatDays
-                    .every((element) => element == false)) {
-                  return Switch.adaptive(
-                    value: false,
-                    activeColor: ksecondaryColor,
-                    onChanged: (value) {
-                      Utils.hapticFeedback();
-                      controller.isOneTime.value = false;
-                    },
-                  );
-                }
                 return Switch.adaptive(
-                  value: controller.isOneTime.value,
+                  value: controller.deleteAfterGoesOff.value,
                   activeColor: ksecondaryColor,
                   onChanged: (value) {
                     Utils.hapticFeedback();
-                    controller.isOneTime.value = value;
+                    controller.deleteAfterGoesOff.value = value;
                   },
                 );
               },
