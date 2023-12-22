@@ -14,6 +14,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/note.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quote_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_activity_tile.dart';
@@ -170,6 +171,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           offsetDetails: controller.offsetDetails,
                           label: controller.label.value,
                           note: controller.note.value,
+                          showMotivationalQuote:
+                              controller.showMotivationalQuote.value,
                           isOneTime: controller.isOneTime.value,
                           lastEditedUserId: controller.lastEditedUserId,
                           mutexLock: controller.mutexLock.value,
@@ -498,26 +501,30 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    Obx(() => (!controller.repeatDays
-                            .every((element) => element == false))
-                        ? RepeatOnceTile(
-                            controller: controller,
-                            themeController: themeController,
-                          )
-                        : const SizedBox()),
-                    Obx(() => (!controller.repeatDays
-                            .every((element) => element == false))
-                        ? Container(
-                            color: themeController.isLightMode.value
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
-                            child: Divider(
+                    Obx(
+                      () => (!controller.repeatDays
+                              .every((element) => element == false))
+                          ? RepeatOnceTile(
+                              controller: controller,
+                              themeController: themeController,
+                            )
+                          : const SizedBox(),
+                    ),
+                    Obx(
+                      () => (!controller.repeatDays
+                              .every((element) => element == false))
+                          ? Container(
                               color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
-                          )
-                        : const SizedBox()),
+                                  ? kLightSecondaryBackgroundColor
+                                  : ksecondaryBackgroundColor,
+                              child: Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
                     SnoozeDurationTile(
                       controller: controller,
                       themeController: themeController,
@@ -565,6 +572,20 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                       height: height,
                       width: width,
+                    ),
+                    Container(
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryDisabledTextColor
+                            : kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    QuoteTile(
+                      controller: controller,
+                      themeController: themeController,
                     ),
                     Container(
                       color: themeController.isLightMode.value
