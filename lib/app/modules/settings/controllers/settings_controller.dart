@@ -29,6 +29,7 @@ class SettingsController extends GetxController {
   final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
   final RxBool didWeatherKeyError = false.obs;
   final RxBool showingCircularProgressIndicator = false.obs;
+  RxBool validate = false.obs;
 
   UserModel? userModel;
   @override

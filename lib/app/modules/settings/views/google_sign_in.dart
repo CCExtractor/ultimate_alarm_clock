@@ -161,6 +161,126 @@ class GoogleSignIn extends StatelessWidget {
                   ],
                 ),
               ),
+              IconButton(
+                onPressed: () => {
+                  Utils.hapticFeedback(),
+                  showBottomSheet(
+                    context: context,
+                    backgroundColor: themeController.isLightMode.value
+                        ? kLightSecondaryBackgroundColor
+                        : ksecondaryBackgroundColor,
+                    builder: (context) {
+                      return Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              'Why do I have to sign in with Google?',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            Column(
+                              children: [
+                                const Text(
+                                  'Signing in is optional. It'
+                                  ' is only required for the'
+                                  ' functionalities that use'
+                                  ' cloud services to work such as:',
+                                  textAlign: TextAlign.justify,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Shared Alarms',
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
+                                ),
+                                const Text(
+                                  'Collaborate with friends, family members,'
+                                  ' or colleagues to ensure that they'
+                                  ' wake up on time using shared alarms.',
+                                  textAlign: TextAlign.justify,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Syncing Across Devices',
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
+                                ),
+                                const Text(
+                                  'Access your alarms across multiple devices'
+                                  ' where the alarms are updated in'
+                                  ' real-time.',
+                                  textAlign: TextAlign.justify,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Your privacy',
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
+                                ),
+                                const Text(
+                                  'We do not access,  use or sell any'
+                                  ' information, which you can verify by'
+                                  ' inspecting the source code.',
+                                  textAlign: TextAlign.justify,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Text(
+                                  'All access is limited exclusively to'
+                                  ' provide the functionalities described'
+                                  ' above.',
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: width,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    kprimaryColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Understood',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : ksecondaryTextColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                },
+                icon: Icon(
+                  Icons.info_sharp,
+                  size: 21,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.3)
+                      : kprimaryTextColor.withOpacity(0.3),
+                ),
+              ),
               Obx(
                 () => Icon(
                   (controller.isUserLoggedIn.value)
