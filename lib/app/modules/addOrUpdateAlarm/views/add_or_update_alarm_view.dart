@@ -341,149 +341,152 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               : ListView(
                   children: [
                     Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      height: height * 0.32,
-                      width: width,
-                      child: Obx(() {
-                        return InkWell(
-                          onTap: () {
-                            Utils.hapticFeedback();
-                            inputTimeController.changeDatePicker();
-                          },
-                          child: inputTimeController.isTimePicker.value
-                              ? TimePickerSpinner(
-                                  time: controller.selectedTime.value,
-                                  isForce2Digits: true,
-                                  alignment: Alignment.center,
-                                  is24HourMode:
-                                      settingsController.is24HrsEnabled.value,
-                                  normalTextStyle: Theme.of(context)
-                                      .textTheme
-                                      .displayMedium!
-                                      .copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
+                        color: themeController.isLightMode.value
+                            ? kLightSecondaryBackgroundColor
+                            : ksecondaryBackgroundColor,
+                        height: height * 0.32,
+                        width: width,
+                        child: Obx(() {
+                          return InkWell(
+                            onTap: () {
+                              Utils.hapticFeedback();
+                              inputTimeController.changeDatePicker();
+                            },
+                            child: inputTimeController.isTimePicker.value
+                                ? TimePickerSpinner(
+                                    time: controller.selectedTime.value,
+                                    isForce2Digits: true,
+                                    alignment: Alignment.center,
+                                    is24HourMode:
+                                        settingsController.is24HrsEnabled.value,
+                                    normalTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          color: themeController
+                                                  .isLightMode.value
+                                              ? kLightPrimaryDisabledTextColor
+                                              : kprimaryDisabledTextColor,
+                                        ),
+                                    highlightedTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                    onTimeChange: (dateTime) {
+                                      Utils.hapticFeedback();
+                                      controller.selectedTime.value = dateTime;
+                                      inputTimeController.inputHrsController
+                                          .text = settingsController
+                                              .is24HrsEnabled.value
+                                          ? dateTime.hour.toString()
+                                          : (dateTime.hour == 0
+                                              ? 12.toString()
+                                              : (dateTime.hour > 12
+                                                  ? (dateTime.hour - 12)
+                                                      .toString()
+                                                  : dateTime.hour.toString()));
+                                      inputTimeController.inputMinutesController
+                                          .text = dateTime.minute.toString();
+                                      inputTimeController.changePeriod(
+                                          dateTime.hour >= 12 ? 'PM' : 'AM');
+                                    },
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 80,
+                                        child: TextField(
+                                          onChanged: (_) {
+                                            inputTimeController.setTime();
+                                          },
+                                          decoration: const InputDecoration(
+                                              hintText: 'HH',
+                                              border: InputBorder.none),
+                                          textAlign: TextAlign.center,
+                                          controller: inputTimeController
+                                              .inputHrsController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                            LengthLimitingTextInputFormatter(2),
+                                            LimitRange(
+                                                0,
+                                                settingsController
+                                                        .is24HrsEnabled.value
+                                                    ? 23
+                                                    : 12)
+                                          ],
+                                        ),
                                       ),
-                                  highlightedTextStyle:
-                                      Theme.of(context).textTheme.displayMedium,
-                                  onTimeChange: (dateTime) {
-                                    Utils.hapticFeedback();
-                                    controller.selectedTime.value = dateTime;
-                                    inputTimeController.inputHrsController
-                                        .text = settingsController
-                                            .is24HrsEnabled.value
-                                        ? dateTime.hour.toString()
-                                        : (dateTime.hour == 0
-                                            ? 12.toString()
-                                            : (dateTime.hour > 12
-                                                ? (dateTime.hour - 12)
-                                                    .toString()
-                                                : dateTime.hour.toString()));
-                                    inputTimeController.inputMinutesController
-                                        .text = dateTime.minute.toString();
-                                    inputTimeController.changePeriod(
-                                        dateTime.hour >= 12 ? 'PM' : 'AM');
-                                  },
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 80,
-                                      child: TextField(
-                                        onChanged: (_) {
-                                          inputTimeController.setTime();
-                                        },
-                                        decoration: const InputDecoration(
-                                            hintText: 'HH',
-                                            border: InputBorder.none),
-                                        textAlign: TextAlign.center,
-                                        controller: inputTimeController
-                                            .inputHrsController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp('[1,2,3,4,5,6,7,8,9,0]')),
-                                          LengthLimitingTextInputFormatter(2),
-                                          LimitRange(
-                                              0,
-                                              settingsController
-                                                      .is24HrsEnabled.value
-                                                  ? 23
-                                                  : 12)
-                                        ],
+                                      SizedBox(
+                                        width: 16,
+                                        child: Text(
+                                          ':',
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 16,
-                                      child: Text(
-                                        ':',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
+                                      SizedBox(
+                                        width: 80,
+                                        child: TextField(
+                                          onChanged: (_) {
+                                            inputTimeController.setTime();
+                                          },
+                                          decoration: const InputDecoration(
+                                              hintText: 'MM',
+                                              border: InputBorder.none),
+                                          textAlign: TextAlign.center,
+                                          controller: inputTimeController
+                                              .inputMinutesController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                            LengthLimitingTextInputFormatter(2),
+                                            LimitRange(00, 59)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 80,
-                                      child: TextField(
-                                        onChanged: (_) {
-                                          inputTimeController.setTime();
-                                        },
-                                        decoration: const InputDecoration(
-                                            hintText: 'MM',
-                                            border: InputBorder.none),
-                                        textAlign: TextAlign.center,
-                                        controller: inputTimeController
-                                            .inputMinutesController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp('[1,2,3,4,5,6,7,8,9,0]')),
-                                          LengthLimitingTextInputFormatter(2),
-                                          LimitRange(00, 59)
-                                        ],
+                                      const SizedBox(
+                                        width: 16,
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    Visibility(
-                                      visible: !settingsController
-                                          .is24HrsEnabled.value,
-                                      child: DropdownButton(
-                                        underline: Container(),
-                                        value: inputTimeController.isAM.value
-                                            ? 'AM'
-                                            : 'PM',
-                                        dropdownColor:
-                                            themeController.isLightMode.value
-                                                ? kLightPrimaryBackgroundColor
-                                                : kprimaryBackgroundColor,
-                                        items:
-                                            ['AM', 'PM'].map((String period) {
-                                          return DropdownMenuItem<String>(
-                                            value: period,
-                                            child: Text(period),
-                                          );
-                                        }).toList(),
-                                        onChanged: (getPeriod) {
-                                          inputTimeController
-                                              .changePeriod(getPeriod!);
+                                      Visibility(
+                                        visible: !settingsController
+                                            .is24HrsEnabled.value,
+                                        child: DropdownButton(
+                                          underline: Container(),
+                                          value: inputTimeController.isAM.value
+                                              ? 'AM'
+                                              : 'PM',
+                                          dropdownColor:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryBackgroundColor
+                                                  : kprimaryBackgroundColor,
+                                          items:
+                                              ['AM', 'PM'].map((String period) {
+                                            return DropdownMenuItem<String>(
+                                              value: period,
+                                              child: Text(period),
+                                            );
+                                          }).toList(),
+                                          onChanged: (getPeriod) {
+                                            inputTimeController
+                                                .changePeriod(getPeriod!);
 
-                                          inputTimeController.setTime();
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
-                        );
-                      }),
-                    ),
+                                            inputTimeController.setTime();
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                          );
+                        })),
                     RepeatTile(
                       controller: controller,
                       themeController: themeController,
@@ -531,6 +534,30 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
+                    ),
+                    Obx(
+                      () => (controller.repeatDays
+                              .every((element) => element == false))
+                          ? DeleteAfterGoesOff(
+                              controller: controller,
+                              themeController: themeController,
+                            )
+                          : const SizedBox(),
+                    ),
+                    Obx(
+                      () => (controller.repeatDays
+                              .every((element) => element == false))
+                          ? Container(
+                              color: themeController.isLightMode.value
+                                  ? kLightSecondaryBackgroundColor
+                                  : ksecondaryBackgroundColor,
+                              child: Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                            )
+                          : const SizedBox(),
                     ),
                     LabelTile(
                       controller: controller,
