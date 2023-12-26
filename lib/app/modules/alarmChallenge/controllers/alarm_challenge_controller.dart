@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shake/shake.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -61,7 +62,7 @@ class AlarmChallengeController extends GetxController {
 
     String ringtoneName = alarmRecord.ringtoneName;
 
-    Utils.stopAlarm(ringtoneName: ringtoneName);
+    AudioUtils.stopAlarm(ringtoneName: ringtoneName);
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
@@ -167,9 +168,9 @@ class AlarmChallengeController extends GetxController {
     String ringtoneName = alarmRecord.ringtoneName;
 
     if (!Utils.isChallengeEnabled(alarmRecord)) {
-      Utils.stopAlarm(ringtoneName: ringtoneName);
+      AudioUtils.stopAlarm(ringtoneName: ringtoneName);
     } else {
-      Utils.playAlarm(alarmRecord: alarmRecord);
+      AudioUtils.playAlarm(alarmRecord: alarmRecord);
     }
   }
 }
