@@ -13,6 +13,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
@@ -66,7 +67,7 @@ class AlarmControlController extends GetxController {
     vibrationTimer!.cancel();
     isSnoozing.value = true;
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-    Utils.stopAlarm(ringtoneName: ringtoneName);
+    AudioUtils.stopAlarm(ringtoneName: ringtoneName);
 
     if (_currentTimeTimer!.isActive) {
       _currentTimeTimer?.cancel();
@@ -80,7 +81,7 @@ class AlarmControlController extends GetxController {
           Vibration.vibrate(pattern: [500, 3000]);
         });
 
-        Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+        AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
         startTimer();
       } else if (seconds.value == 0) {
@@ -170,7 +171,7 @@ class AlarmControlController extends GetxController {
       showButton.value = true;
     }
 
-    Utils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+    AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
@@ -218,7 +219,7 @@ class AlarmControlController extends GetxController {
     vibrationTimer!.cancel();
 
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-    Utils.stopAlarm(ringtoneName: ringtoneName);
+    AudioUtils.stopAlarm(ringtoneName: ringtoneName);
 
     _subscription.cancel();
     _currentTimeTimer?.cancel();

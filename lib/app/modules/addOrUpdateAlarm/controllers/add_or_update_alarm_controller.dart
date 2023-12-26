@@ -17,6 +17,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
@@ -767,7 +768,7 @@ class AddOrUpdateAlarmController extends GetxController {
     required int ringtoneIndex,
   }) async {
     try {
-      int customRingtoneId = Utils.fastHash(ringtoneName);
+      int customRingtoneId = AudioUtils.fastHash(ringtoneName);
       RingtoneModel? customRingtone =
           await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
