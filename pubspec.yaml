@@ -34,6 +34,7 @@ dependencies:
   vibration: ^1.8.1
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
+  flutter_ringtone_player: ^3.2.0
   rxdart: ^0.27.7
   flutter:
     sdk: flutter
