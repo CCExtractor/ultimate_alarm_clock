@@ -50,6 +50,13 @@ class WeatherApi extends StatelessWidget {
                                 TextField(
                                   obscureText: false,
                                   controller: controller.apiKey,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'API Key',
+                                    errorText: controller.validate.value
+                                        ? 'API Key cannot be empty'
+                                        : null,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 20.0),
@@ -87,6 +94,26 @@ class WeatherApi extends StatelessWidget {
                                           controller
                                               .showingCircularProgressIndicator
                                               .value = true;
+
+                                          // Validation If String is empty
+                                          if (await controller
+                                              .apiKey.text.isEmpty) {
+                                            // setState(() {
+                                            controller.validate.value = true;
+                                            // });
+                                            controller
+                                                .showingCircularProgressIndicator
+                                                .value = false;
+                                            return;
+                                          }
+
+                                          // Reset state after getting error message
+                                          if (await controller
+                                              .apiKey.text.isNotEmpty) {
+                                            // setState(() {
+                                            controller.validate.value = false;
+                                            // });
+                                          }
 
                                           // Get the user's location
                                           await controller.getLocation();

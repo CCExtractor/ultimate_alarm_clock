@@ -153,6 +153,23 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 ),
                 Obx(
                   () => Visibility(
+                    visible:
+                        controller.currentlyRingingAlarm.value.note.isNotEmpty,
+                    child: Text(
+                      controller.currentlyRingingAlarm.value.note,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : kprimaryTextColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w100,
+                            fontStyle: FontStyle.italic,
+                          ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
                     visible: !controller.isSnoozing.value,
                     child: SizedBox(
                       height: height * 0.07,

@@ -17,6 +17,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
@@ -74,6 +75,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
+  final noteController = TextEditingController();
+  final RxString note = ''.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -480,6 +483,7 @@ class AddOrUpdateAlarmController extends GetxController {
       isOneTime.value = alarmRecord!.isOneTime;
       label.value = alarmRecord!.label;
       customRingtoneName.value = alarmRecord!.ringtoneName;
+      note.value = alarmRecord!.note;
 
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
@@ -671,6 +675,7 @@ class AddOrUpdateAlarmController extends GetxController {
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
       ringtoneName: customRingtoneName.value,
+      note: note.value,
     );
   }
 
@@ -760,7 +765,7 @@ class AddOrUpdateAlarmController extends GetxController {
     required int ringtoneIndex,
   }) async {
     try {
-      int customRingtoneId = Utils.fastHash(ringtoneName);
+      int customRingtoneId = AudioUtils.fastHash(ringtoneName);
       RingtoneModel? customRingtone =
           await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 

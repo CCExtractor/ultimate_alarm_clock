@@ -115,12 +115,6 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(
                   height: 20,
                 ),
-                AboutSection(
-                  aboutController: aboutController,
-                  height: height,
-                  width: width,
-                  themeController: themeController,
-                ),
               ],
             ),
           ),

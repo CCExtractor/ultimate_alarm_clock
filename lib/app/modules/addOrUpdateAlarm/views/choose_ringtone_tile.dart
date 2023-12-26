@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -128,7 +129,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () async {
                       Utils.hapticFeedback();
-                      await Utils.updateRingtoneCounterOfUsage(
+                      await AudioUtils.updateRingtoneCounterOfUsage(
                         customRingtoneName: controller.customRingtoneName.value,
                         counterUpdate: CounterUpdate.increment,
                       );
