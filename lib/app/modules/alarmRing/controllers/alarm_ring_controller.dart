@@ -114,7 +114,7 @@ class AlarmControlController extends GetxController {
     super.onInit();
     if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
       IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
-    } else {
+      
       FirestoreDb.deleteOneTimeAlarm(
         currentlyRingingAlarm.value.ownerId,
         currentlyRingingAlarm.value.firestoreId,

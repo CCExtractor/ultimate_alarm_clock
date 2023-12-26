@@ -41,6 +41,7 @@ dependencies:
   fluttertoast: ^8.2.4
   path_provider: ^2.1.1
   audio_session: ^0.1.18
+  flutter_ringtone_player: ^3.2.0
 
 dev_dependencies:
   flutter_lints: ^2.0.3
