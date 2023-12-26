@@ -532,16 +532,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      child: Divider(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryDisabledTextColor
-                            : kprimaryDisabledTextColor,
-                      ),
-                    ),
                     LabelTile(
                       controller: controller,
                       themeController: themeController,
