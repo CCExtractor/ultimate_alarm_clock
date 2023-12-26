@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 
 part 'ringtone_model.g.dart';
 
@@ -9,7 +9,7 @@ class RingtoneModel {
   late String ringtonePath;
   late int currentCounterOfUsage;
 
-  Id get isarId => Utils.fastHash(ringtoneName);
+  Id get isarId => AudioUtils.fastHash(ringtoneName);
 
   RingtoneModel({
     required this.ringtoneName,
