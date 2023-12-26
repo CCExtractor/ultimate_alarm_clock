@@ -113,6 +113,11 @@ class AlarmControlController extends GetxController {
     super.onInit();
     if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
       IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
+    } else {
+      FirestoreDb.deleteOneTimeAlarm(
+        currentlyRingingAlarm.value.ownerId,
+        currentlyRingingAlarm.value.firestoreId,
+      );
     }
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
