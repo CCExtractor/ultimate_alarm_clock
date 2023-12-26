@@ -544,21 +544,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             )
                           : const SizedBox(),
                     ),
-                    Obx(
-                      () => (controller.repeatDays
-                              .every((element) => element == false))
-                          ? Container(
-                              color: themeController.isLightMode.value
-                                  ? kLightSecondaryBackgroundColor
-                                  : ksecondaryBackgroundColor,
-                              child: Divider(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryDisabledTextColor
-                                    : kprimaryDisabledTextColor,
-                              ),
-                            )
-                          : const SizedBox(),
-                    ),
                     LabelTile(
                       controller: controller,
                       themeController: themeController,
