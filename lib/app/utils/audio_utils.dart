@@ -1,7 +1,7 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart' as audioplayer;
-import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter/material.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
