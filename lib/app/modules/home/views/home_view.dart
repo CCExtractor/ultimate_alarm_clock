@@ -7,6 +7,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -18,11 +19,12 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
-
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
+    AboutController aboutController = Get.put(AboutController());
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     var width = Get.width;
     var height = Get.height;
     return Scaffold(
@@ -293,6 +295,118 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
+      endDrawer: Obx(
+        () => Drawer(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+          ),
+          backgroundColor: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
+          child: Column(
+            children: [
+              DrawerHeader(
+                  decoration: const BoxDecoration(color: kLightSecondaryColor),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        const CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage(
+                              'assets/images/ic_launcher-playstore.png',
+                            )),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: width * 0.5,
+                              child: Text(
+                                'Ultimate Alarm Clock',
+                                softWrap: true,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kprimaryTextColor
+                                            : ksecondaryTextColor,
+                                        fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              width: width * 0.5,
+                              child: Text(
+                                'v0.5.0',
+                                softWrap: true,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kprimaryTextColor
+                                            : ksecondaryTextColor,
+                                        fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+              ListTile(
+                onTap: () {
+                  Utils.hapticFeedback();
+                  Get.back();
+                  Get.toNamed('/settings');
+                },
+                contentPadding: const EdgeInsets.only(left: 20, right: 44),
+                title: Text(
+                  'Settings',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor.withOpacity(0.8)
+                            : kprimaryTextColor.withOpacity(0.8),
+                      ),
+                ),
+                leading: Icon(
+                  Icons.settings,
+                  size: 26,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.8)
+                      : kprimaryTextColor.withOpacity(0.8),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Utils.hapticFeedback();
+                  Get.back();
+                  aboutController.navigateToAboutView();
+                },
+                contentPadding: const EdgeInsets.only(left: 20, right: 44),
+                title: Text(
+                  'About',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor.withOpacity(0.8)
+                          : kprimaryTextColor.withOpacity(0.8)),
+                ),
+                leading: Icon(
+                  Icons.info_outline,
+                  size: 26,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.8)
+                      : kprimaryTextColor.withOpacity(0.8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      appBar: null,
       body: SafeArea(
         child: Obx(
           () => NestedScrollView(
@@ -302,6 +416,8 @@ class HomeView extends GetView<HomeController> {
                 ? (context, innerBoxIsScrolled) => [
                       // Show the normal app bar
                       SliverAppBar(
+                        actions: [Container()],
+                        automaticallyImplyLeading: false,
                         expandedHeight: height / 7.9,
                         floating: true,
                         pinned: true,
@@ -372,15 +488,18 @@ class HomeView extends GetView<HomeController> {
                                       Obx(
                                         () => Visibility(
                                           visible:
-                                              controller.scalingFactor < 0.95
+                                              controller.scalingFactor < 0.9
                                                   ? false
                                                   : true,
                                           child: IconButton(
                                             onPressed: () {
                                               Utils.hapticFeedback();
-                                              Get.toNamed('/settings');
+                                              Scaffold.of(context)
+                                                  .openEndDrawer();
                                             },
-                                            icon: const Icon(Icons.settings),
+                                            icon: const Icon(
+                                              Icons.menu,
+                                            ),
                                             color: themeController
                                                     .isLightMode.value
                                                 ? kLightPrimaryTextColor
@@ -390,6 +509,58 @@ class HomeView extends GetView<HomeController> {
                                             iconSize: 27 *
                                                 controller.scalingFactor.value,
                                           ),
+
+                                          //   PopupMenuButton(
+                                          //     // onPressed: () {
+                                          //     //   Utils.hapticFeedback();
+                                          //     //   Get.toNamed('/settings');
+                                          //     // },
+
+                                          //     icon: const Icon(Icons.more_vert),
+                                          //     color: themeController
+                                          //             .isLightMode.value
+                                          //         ? kLightSecondaryBackgroundColor
+                                          //         : ksecondaryBackgroundColor,
+                                          //     iconSize: 27 *
+                                          //         controller.scalingFactor.value,
+                                          //     itemBuilder: (context) {
+                                          //       return [
+                                          //         PopupMenuItem<String>(
+                                          //           onTap: () {
+                                          //             Utils.hapticFeedback();
+                                          //             Get.toNamed('/settings');
+                                          //           },
+                                          //           child: Text(
+                                          //             'Settings',
+                                          //             style: Theme.of(context)
+                                          //                 .textTheme
+                                          //                 .bodyMedium!
+                                          //                 .copyWith(
+                                          //                     color: themeController
+                                          //                             .isLightMode
+                                          //                             .value
+                                          //                         ? kLightPrimaryTextColor
+                                          //                         : kprimaryTextColor),
+                                          //           ),
+                                          //         ),
+                                          //         PopupMenuItem<String>(
+                                          //           value: 'option1',
+                                          //           child: Text(
+                                          //             'About',
+                                          //             style: Theme.of(context)
+                                          //                 .textTheme
+                                          //                 .bodyMedium!
+                                          //                 .copyWith(
+                                          //                     color: themeController
+                                          //                             .isLightMode
+                                          //                             .value
+                                          //                         ? kLightPrimaryTextColor
+                                          //                         : kprimaryTextColor),
+                                          //           ),
+                                          //         ),
+                                          //       ];
+                                          //     },
+                                          //   ),
                                         ),
                                       ),
                                     ],
@@ -404,6 +575,8 @@ class HomeView extends GetView<HomeController> {
                 : (context, innerBoxIsScrolled) => [
                       // Else show the multiple select mode app bar
                       SliverAppBar(
+                        automaticallyImplyLeading: false,
+                        actions: [Container()],
                         expandedHeight: height / 7.9,
                         floating: true,
                         pinned: true,
@@ -576,6 +749,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                       ),
                     ],
+
             body: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
