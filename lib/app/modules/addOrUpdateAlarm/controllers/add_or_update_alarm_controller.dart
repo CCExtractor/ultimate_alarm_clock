@@ -761,49 +761,43 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   Future<void> deleteCustomRingtone({
-    required String ringtoneName,
-    required int ringtoneIndex,
-  }) async {
-    try {
-      int customRingtoneId = AudioUtils.fastHash(ringtoneName);
-      RingtoneModel? customRingtone =
-          await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+  required String ringtoneName,
+  required int ringtoneIndex,
+}) async {
+  try {
+    int customRingtoneId = AudioUtils.fastHash(ringtoneName);
+    RingtoneModel? previousRingtone = await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
-      if (customRingtone != null) {
-        int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
+    if (previousRingtone != null) {
+      int previousCounterOfUsage = previousRingtone.currentCounterOfUsage;
 
-        if (currentCounterOfUsage == 0) {
-          customRingtoneNames.removeAt(ringtoneIndex);
-          await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
-
-          final documentsDirectory = await getApplicationDocumentsDirectory();
-          final ringtoneFilePath =
-              '${documentsDirectory.path}/ringtones/$ringtoneName';
-
-          if (await File(ringtoneFilePath).exists()) {
-            await File(ringtoneFilePath).delete();
-            Get.snackbar(
-              'Ringtone Deleted',
-              'The selected ringtone has been successfully deleted.',
-            );
-          } else {
-            Get.snackbar(
-              'Ringtone Not Found',
-              'The selected ringtone does not exist and cannot be deleted.',
-            );
-          }
-        } else {
-          Get.snackbar(
-            'Ringtone in Use',
-            'This ringtone cannot be deleted as it is currently assigned'
-                ' to one or more alarms.',
-          );
-        }
+      if (previousCounterOfUsage > 0) {
+        previousRingtone.currentCounterOfUsage--;
+        await IsarDb.addCustomRingtone(previousRingtone);
       }
-    } catch (e) {
-      debugPrint(e.toString());
     }
+    
+    RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+
+    if (customRingtone != null) {
+      int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
+
+      if (currentCounterOfUsage == 0) {
+        customRingtoneNames.removeAt(ringtoneIndex);
+        await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
+
+        final documentsDirectory = await getApplicationDocumentsDirectory();
+        final ringtoneFilePath = '${documentsDirectory.path}/ringtones/$ringtoneName';
+
+        if (await File(ringtoneFilePath).exists()) {
+          await File(ringtoneFilePath).delete();
+        } 
+      } 
+    }
+  } catch (e) {
+    debugPrint(e.toString());
   }
+}
 
   void showToast({
     required AlarmModel alarmRecord,
