@@ -178,31 +178,38 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 Obx(
                   () => Visibility(
                     visible: !controller.isSnoozing.value,
-                    child: SizedBox(
-                      height: height * 0.07,
-                      width: width * 0.5,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            themeController.isLightMode.value
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
+                    child: Obx(
+                     () =>  Padding(
+                       padding: Get.arguments != null
+                           ? const EdgeInsets.symmetric(vertical: 90.0)
+                           : EdgeInsets.zero,
+                        child: SizedBox(
+                          height: height * 0.07,
+                          width: width * 0.5,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                themeController.isLightMode.value
+                                    ? kLightSecondaryBackgroundColor
+                                    : ksecondaryBackgroundColor,
+                              ),
+                            ),
+                            child: Text(
+                              'Snooze',
+                              style:
+                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : kprimaryTextColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                            ),
+                            onPressed: () {
+                              Utils.hapticFeedback();
+                              controller.startSnooze();
+                            },
                           ),
                         ),
-                        child: Text(
-                          'Snooze',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : kprimaryTextColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.startSnooze();
-                        },
                       ),
                     ),
                   ),
