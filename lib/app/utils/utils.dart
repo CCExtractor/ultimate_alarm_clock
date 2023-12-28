@@ -10,7 +10,7 @@ import 'dart:math';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/quote_list.dart';
+import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
 import 'constants.dart';
 
