@@ -766,6 +766,16 @@ class AddOrUpdateAlarmController extends GetxController {
   }) async {
     try {
       int customRingtoneId = AudioUtils.fastHash(ringtoneName);
+      RingtoneModel? previousRingtone = await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+
+    if (previousRingtone != null) {
+      int previousCounterOfUsage = previousRingtone.currentCounterOfUsage;
+
+      if (previousCounterOfUsage > 0) {
+        previousRingtone.currentCounterOfUsage--;
+        await IsarDb.addCustomRingtone(previousRingtone);
+      }
+    }
       RingtoneModel? customRingtone =
           await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
@@ -782,23 +792,8 @@ class AddOrUpdateAlarmController extends GetxController {
 
           if (await File(ringtoneFilePath).exists()) {
             await File(ringtoneFilePath).delete();
-            Get.snackbar(
-              'Ringtone Deleted',
-              'The selected ringtone has been successfully deleted.',
-            );
-          } else {
-            Get.snackbar(
-              'Ringtone Not Found',
-              'The selected ringtone does not exist and cannot be deleted.',
-            );
-          }
-        } else {
-          Get.snackbar(
-            'Ringtone in Use',
-            'This ringtone cannot be deleted as it is currently assigned'
-                ' to one or more alarms.',
-          );
-        }
+          } 
+        } 
       }
     } catch (e) {
       debugPrint(e.toString());
