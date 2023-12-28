@@ -568,7 +568,7 @@ class Utils {
   static Quote getRandomQuote() {
     try {
       int randomIndex = Random.secure().nextInt(quoteList.length);
-      return Quote.fromJson(quoteList[randomIndex]);
+      return Quote.fromMap(quoteList[randomIndex]);
     } catch (e) {
       debugPrint(e.toString());
       return Quote(

@@ -15,7 +15,7 @@ class Quote {
     return author;
   }
 
-  Quote.fromJson(Map json)
+  Quote.fromMap(Map json)
       : quote = json['quote'],
         author = json['author'];
 }
