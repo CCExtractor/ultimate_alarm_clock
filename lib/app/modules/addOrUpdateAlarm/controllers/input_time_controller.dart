@@ -12,6 +12,13 @@ class InputTimeController extends GetxController {
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
   final selectedDateTime = DateTime.now().obs;
+  bool isInputtingTime = false;
+
+  void confirmTimeInput() {
+    setTime();
+    changeDatePicker(); 
+  }
+
   @override
   void onInit() {
     isTimePicker.value = true;

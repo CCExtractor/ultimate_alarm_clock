@@ -482,7 +482,35 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             inputTimeController.setTime();
                                           },
                                         ),
-                                      )
+                                      ),
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      Visibility(
+                                        visible: inputTimeController
+                                            .isTimePicker.isFalse,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Utils.hapticFeedback();
+                                            inputTimeController
+                                                .confirmTimeInput();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                border: Border.all(
+                                                  color: kprimaryColor,
+                                                  width: 1.0,
+                                                )),
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Icon(
+                                              Icons.done,
+                                              color: kprimaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                           );
