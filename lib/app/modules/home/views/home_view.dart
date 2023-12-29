@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -21,6 +22,7 @@ class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
+
   @override
   Widget build(BuildContext context) {
     AboutController aboutController = Get.put(AboutController());
@@ -307,19 +309,25 @@ class HomeView extends GetView<HomeController> {
           child: Column(
             children: [
               DrawerHeader(
-                  decoration: const BoxDecoration(color: kLightSecondaryColor),
-                  child: Center(
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage(
-                              'assets/images/ic_launcher-playstore.png',
-                            )),
-                        const SizedBox(
-                          width: 10,
+                decoration: const BoxDecoration(color: kLightSecondaryColor),
+                child: Center(
+                  child: Row(
+                    children: [
+                      const Flexible(
+                        flex: 1,
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage(
+                            'assets/images/ic_launcher-playstore.png',
+                          ),
                         ),
-                        Column(
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                        flex: 3,
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
@@ -354,9 +362,11 @@ class HomeView extends GetView<HomeController> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               ListTile(
                 onTap: () {
                   Utils.hapticFeedback();
@@ -1003,7 +1013,8 @@ class HomeView extends GetView<HomeController> {
                                                                               Text(
                                                                             alarm.label,
                                                                             overflow:
-                                                                                TextOverflow.ellipsis, // Set overflow property here
+                                                                                TextOverflow.ellipsis,
+                                                                            // Set overflow property here
                                                                             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                                                                   fontWeight: FontWeight.w500,
                                                                                   color: alarm.isEnabled == true
