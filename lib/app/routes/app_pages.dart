@@ -43,11 +43,6 @@ class AppPages {
       page: () => AlarmControlView(),
       binding: AlarmControlBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.SETTINGS,
-    //   page: () => SettingsView(),
-    //   binding: SettingsBinding(),
-    // ),
     GetPage(
       name: _Paths.SETTINGS,
       page: () => SettingsView(),
