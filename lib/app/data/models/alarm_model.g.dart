@@ -167,13 +167,18 @@ const AlarmModelSchema = CollectionSchema(
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
-    r'snoozeDuration': PropertySchema(
+    r'showMotivationalQuote': PropertySchema(
       id: 30,
+      name: r'showMotivationalQuote',
+      type: IsarType.bool,
+    ),
+    r'snoozeDuration': PropertySchema(
+      id: 31,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'weatherTypes': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -273,8 +278,9 @@ void _alarmModelSerialize(
   writer.writeString(offsets[27], object.ringtoneName);
   writer.writeLong(offsets[28], object.shakeTimes);
   writer.writeStringList(offsets[29], object.sharedUserIds);
-  writer.writeLong(offsets[30], object.snoozeDuration);
-  writer.writeLongList(offsets[31], object.weatherTypes);
+  writer.writeBool(offsets[30], object.showMotivationalQuote);
+  writer.writeLong(offsets[31], object.snoozeDuration);
+  writer.writeLongList(offsets[32], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -313,8 +319,9 @@ AlarmModel _alarmModelDeserialize(
     ringtoneName: reader.readString(offsets[27]),
     shakeTimes: reader.readLong(offsets[28]),
     sharedUserIds: reader.readStringList(offsets[29]),
-    snoozeDuration: reader.readLong(offsets[30]),
-    weatherTypes: reader.readLongList(offsets[31]) ?? [],
+    showMotivationalQuote: reader.readBool(offsets[30]),
+    snoozeDuration: reader.readLong(offsets[31]),
+    weatherTypes: reader.readLongList(offsets[32]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[4]);
   object.isarId = id;
@@ -389,8 +396,10 @@ P _alarmModelDeserializeProp<P>(
     case 29:
       return (reader.readStringList(offset)) as P;
     case 30:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 31:
+      return (reader.readLong(offset)) as P;
+    case 32:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2959,6 +2968,16 @@ extension AlarmModelQueryFilter
   }
 
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      showMotivationalQuoteEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'showMotivationalQuote',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       snoozeDurationEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -3518,6 +3537,20 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByShowMotivationalQuote() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'showMotivationalQuote', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByShowMotivationalQuoteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'showMotivationalQuote', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortBySnoozeDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'snoozeDuration', Sort.asc);
@@ -3896,6 +3929,20 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByShowMotivationalQuote() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'showMotivationalQuote', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByShowMotivationalQuoteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'showMotivationalQuote', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenBySnoozeDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'snoozeDuration', Sort.asc);
@@ -4111,6 +4158,13 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct>
+      distinctByShowMotivationalQuote() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'showMotivationalQuote');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctBySnoozeDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'snoozeDuration');
@@ -4313,6 +4367,13 @@ extension AlarmModelQueryProperty
       sharedUserIdsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'sharedUserIds');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations>
+      showMotivationalQuoteProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'showMotivationalQuote');
     });
   }
 

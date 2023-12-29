@@ -8,8 +8,9 @@ import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-
+import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
 import 'constants.dart';
 
@@ -337,6 +338,7 @@ class Utils {
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
       ringtoneName: 'Default',
       note: '',
+      showMotivationalQuote: false,
     );
   }
 
@@ -561,5 +563,18 @@ class Utils {
         );
       },
     );
+  }
+
+  static Quote getRandomQuote() {
+    try {
+      int randomIndex = Random.secure().nextInt(quoteList.length);
+      return Quote.fromMap(quoteList[randomIndex]);
+    } catch (e) {
+      debugPrint(e.toString());
+      return Quote(
+        quote: 'The only way to do great work is to love what you do.',
+        author: 'Steve Jobs',
+      );
+    }
   }
 }
