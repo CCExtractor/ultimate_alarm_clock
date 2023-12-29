@@ -401,12 +401,14 @@ P _alarmModelDeserializeProp<P>(
     case 28:
       return (reader.readString(offset)) as P;
     case 29:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 30:
       return (reader.readStringList(offset)) as P;
     case 31:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 32:
+      return (reader.readLong(offset)) as P;
+    case 33:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
