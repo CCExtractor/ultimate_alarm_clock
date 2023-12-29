@@ -31,6 +31,7 @@ class AlarmChallengeController extends GetxController {
   int mathsAnswer = 0;
 
   bool isTimerEnabled = true;
+  bool isNumMathQuestionsSet = false;
 
   void onButtonPressed(String buttonText) {
     displayValue.value += buttonText;
@@ -46,7 +47,10 @@ class AlarmChallengeController extends GetxController {
   }
 
   newMathsQuestion() {
-    numMathsQuestions.value = alarmRecord.numMathsQuestions;
+    if (!isNumMathQuestionsSet){
+      numMathsQuestions.value = alarmRecord.numMathsQuestions;
+      isNumMathQuestionsSet = true;
+    }
     List mathsProblemDetails = Utils.generateMathProblem(
       Difficulty.values[alarmRecord.mathsDifficulty],
     );
@@ -156,6 +160,7 @@ class AlarmChallengeController extends GetxController {
 
   isChallengesComplete() {
     if (!Utils.isChallengeEnabled(alarmRecord)) {
+      isNumMathQuestionsSet = false;
       isTimerEnabled = false;
       Get.offAllNamed('/home');
     }
