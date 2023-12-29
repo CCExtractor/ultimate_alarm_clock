@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -322,7 +322,9 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       ),
-                      const Gap(10),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       Flexible(
                         flex: 3,
                         child: Column(
