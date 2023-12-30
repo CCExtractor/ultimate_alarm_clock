@@ -44,7 +44,7 @@ class AlarmModel {
   late String ringtoneName;
   late String note;
   late bool deleteAfterGoesOff;
-
+  late bool showMotivationalQuote;
   @ignore
   Map? offsetDetails;
 
@@ -82,6 +82,7 @@ class AlarmModel {
     required this.ringtoneName,
     required this.note,
     required this.deleteAfterGoesOff,
+    required this.showMotivationalQuote,
   });
 
   AlarmModel.fromDocumentSnapshot({
@@ -136,6 +137,7 @@ class AlarmModel {
     ringtoneName = documentSnapshot['ringtoneName'];
     note = documentSnapshot['note'];
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
+    showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -175,6 +177,7 @@ class AlarmModel {
     ringtoneName = alarmData['ringtoneName'];
     note = alarmData['note'];
     deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
+    showMotivationalQuote = alarmData['showMotivationalQuote'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -219,6 +222,7 @@ class AlarmModel {
       'ringtoneName': alarmRecord.ringtoneName,
       'note': alarmRecord.note,
       'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
+      'showMotivationalQuote': alarmRecord.showMotivationalQuote,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
