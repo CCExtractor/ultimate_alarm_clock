@@ -49,11 +49,6 @@ class AppPages {
       binding: SettingsBinding(),
     ),
     GetPage(
-      name: _Paths.SETTINGS,
-      page: () => SettingsView(),
-      binding: SettingsBinding(),
-    ),
-    GetPage(
       name: _Paths.ALARM_CHALLENGE,
       page: () => AlarmChallengeView(),
       binding: AlarmChallengeBinding(),

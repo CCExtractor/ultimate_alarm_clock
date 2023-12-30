@@ -8,10 +8,13 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class Pair<T, U> {
@@ -22,7 +25,7 @@ class Pair<T, U> {
 }
 
 class HomeController extends GetxController {
-  MethodChannel alarmChannel = MethodChannel('ulticlock');
+  MethodChannel alarmChannel = const MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
   Stream? isarStreamAlarms;
@@ -56,6 +59,8 @@ class HomeController extends GetxController {
   Pair<List<AlarmModel>, List<RxBool>> alarmListPairs = Pair([], []);
 
   Set<Pair<dynamic, bool>> selectedAlarmSet = {};
+
+  ThemeController themeController = Get.find<ThemeController>();
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -221,6 +226,15 @@ class HomeController extends GetxController {
       final newFactor = 1.0 - (offset / maxOffset).clamp(0.0, 1.0);
       scalingFactor.value = (minFactor + (maxFactor - minFactor) * newFactor);
     });
+
+    if (Get.arguments != null) {
+      bool showMotivationalQuote = Get.arguments;
+
+      if (showMotivationalQuote) {
+        Quote quote = Utils.getRandomQuote();
+        showQuotePopup(quote);
+      }
+    }
   }
 
   refreshUpcomingAlarms() async {
@@ -397,5 +411,73 @@ class HomeController extends GetxController {
             )
           : await IsarDb.deleteAlarm(alarmId);
     }
+  }
+
+  void showQuotePopup(Quote quote) {
+    Get.defaultDialog(
+      title: 'Motivational Quote',
+      titlePadding: const EdgeInsets.only(
+        top: 20,
+        bottom: 10,
+      ),
+      backgroundColor: themeController.isLightMode.value
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
+      titleStyle: TextStyle(
+        color: themeController.isLightMode.value
+            ? kLightPrimaryTextColor
+            : kprimaryTextColor,
+      ),
+      contentPadding: const EdgeInsets.all(20),
+      content: Column(
+        children: [
+          Text(
+            quote.getQuote(),
+            style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              quote.getAuthor(),
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+                fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                kprimaryColor,
+              ),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : ksecondaryTextColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

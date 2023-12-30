@@ -76,7 +76,11 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       controller.currentlyRingingAlarm.value,
                                 );
                               } else {
-                                Get.offNamed('/home');
+                                Get.offNamed(
+                                  '/home',
+                                  arguments: controller.currentlyRingingAlarm
+                                      .value.showMotivationalQuote,
+                                );
                               }
                             },
                           )
