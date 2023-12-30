@@ -8,6 +8,7 @@ class AppTranslations extends Translations{
   Map<String, Map<String, String>> get keys => {
     'en_US' : {
       'No upcoming alarms!' : 'No upcoming alarms!',
+      'Rings in @timeToAlarm' : 'Rings in @timeToAlarm',
       //home_view.dart texts
       'Next alarm' : 'Next alarm',
       'About' : 'About',
@@ -88,6 +89,7 @@ class AppTranslations extends Translations{
       //repeat_once_tile.dart
       'Repeat only once' : 'Repeat only once',
       //repeat_tile.dart
+      'Repeat' : 'Repeat',
       'Days of the week' : 'Days of the week',
       'Monday' : 'Monday', 'Tuesday' : 'Tuesday', 'Wednesday' : 'Wednesday',
       'Thursday' : 'Thursday', 'Friday' : 'Friday', 'Saturday' : 'Saturday',
@@ -230,6 +232,7 @@ class AppTranslations extends Translations{
 //repeat_once_tile.dart
       'Repeat only once' : 'Nur einmal wiederholen',
 //repeat_tile.dart
+     'Repeat' : 'Wiederholen',
       'Days of the week' : 'Tage der Woche',
       'Monday' : 'Montag', 'Tuesday' : 'Dienstag', 'Wednesday' : 'Mittwoch',
       'Thursday' : 'Donnerstag', 'Friday' : 'Freitag', 'Saturday' : 'Samstag',
@@ -374,6 +377,7 @@ class AppTranslations extends Translations{
 //repeat_once_tile.dart
       'Repeat only once' : 'Повторять только один раз',
 //repeat_tile.dart
+      'Repeat' : 'Повторить',
       'Days of the week' : 'Дни недели',
       'Monday' : 'Понедельник', 'Tuesday' : 'Вторник', 'Wednesday' : 'Среда',
       'Thursday' : 'Четверг', 'Friday' : 'Пятница', 'Saturday' : 'Суббота',
@@ -517,6 +521,7 @@ class AppTranslations extends Translations{
 //repeat_once_tile.dart
   'Repeat only once' : 'Répéter une seule fois',
 //repeat_tile.dart
+  'Repeat' : 'Répéter',
   'Days of the week' : 'Jours de la semaine',
   'Monday' : 'Lundi', 'Tuesday' : 'Mardi', 'Wednesday' : 'Mercredi',
   'Thursday' : 'Jeudi', 'Friday' : 'Vendredi', 'Saturday' : 'Samedi',
@@ -660,6 +665,7 @@ class AppTranslations extends Translations{
 //repeat_once_tile.dart
       'Repeat only once' : 'Repetir solo una vez',
 //repeat_tile.dart
+      'Repeat' : 'Repetir',
       'Days of the week' : 'Días de la semana',
       'Monday' : 'Lunes', 'Tuesday' : 'Martes', 'Wednesday' : 'Miércoles',
       'Thursday' : 'Jueves', 'Friday' : 'Viernes', 'Saturday' : 'Sábado',

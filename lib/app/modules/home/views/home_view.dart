@@ -461,7 +461,7 @@ class HomeView extends GetView<HomeController> {
                                             ),
                                             Obx(
                                               () => Text(
-                                                controller.alarmTime.value,
+                                                controller.alarmTime.value.tr,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .displaySmall!

@@ -116,7 +116,7 @@ class RepeatTile extends StatelessWidget {
           children: [
             Obx(
               () => Text(
-                controller.daysRepeating.value,
+                controller.daysRepeating.value.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: themeController.isLightMode.value
                           ? kLightPrimaryTextColor

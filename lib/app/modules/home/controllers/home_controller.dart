@@ -260,7 +260,7 @@ class HomeController extends GetxController {
         Utils.stringToTimeOfDay(latestAlarm.alarmTime),
         latestAlarm.days,
       );
-      alarmTime.value = 'Rings in $timeToAlarm';
+      alarmTime.value = 'Rings in @timeToAlarm'.trParams({'timeToAlarm' : timeToAlarm.toString()}) ;
 
       // This function is necessary when alarms are deleted/enabled
       await scheduleNextAlarm(
