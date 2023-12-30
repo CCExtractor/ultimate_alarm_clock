@@ -22,7 +22,7 @@ class RepeatOnceTile extends StatelessWidget {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: Text(
-        'Repeat only once',
+        'Repeat only once'.tr,
         style: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor

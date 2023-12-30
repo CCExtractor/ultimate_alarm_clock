@@ -9,6 +9,8 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
+import 'package:ultimate_alarm_clock/app/modules/languages/controllers/language_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/languages/views/language_menu.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
@@ -24,6 +26,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     AboutController aboutController = Get.put(AboutController());
+    LanguageController languageController = Get.put(LanguageController());
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     var width = Get.width;
     var height = Get.height;
@@ -40,8 +43,8 @@ class HomeView extends GetView<HomeController> {
                     type: ExpandableFabType.up,
                     childrenOffset: Offset.zero,
                     distance: 70,
-                    child: const Icon(Icons.add),
                     children: [
+                      const Icon(Icons.add),
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
@@ -51,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                           Utils.hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
                           Get.defaultDialog(
-                            title: 'Join an alarm',
+                            title: 'Join an alarm'.tr,
                             titlePadding:
                                 const EdgeInsets.fromLTRB(0, 21, 0, 0),
                             backgroundColor: themeController.isLightMode.value
@@ -109,7 +112,7 @@ class HomeView extends GetView<HomeController> {
                                     Radius.circular(12),
                                   ),
                                 ),
-                                hintText: 'Enter Alarm ID',
+                                hintText: 'Enter Alarm ID'.tr,
                                 hintStyle: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -130,7 +133,7 @@ class HomeView extends GetView<HomeController> {
                                 ),
                               ),
                               child: Text(
-                                'Join',
+                                'Join'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall!
@@ -157,7 +160,7 @@ class HomeView extends GetView<HomeController> {
                                         themeController.isLightMode.value
                                             ? kLightSecondaryBackgroundColor
                                             : ksecondaryBackgroundColor,
-                                    title: 'Error!',
+                                    title: 'Error!'.tr,
                                     titleStyle: Theme.of(context)
                                         .textTheme
                                         .displaySmall,
@@ -176,10 +179,8 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           child: Text(
                                             result == null
-                                                ? 'You cannot join your'
-                                                    ' own alarm!'
-                                                : 'An alarm with this ID'
-                                                    " doesn't exist!",
+                                                ? 'You cannot join your own alarm!'.tr
+                                                : 'An alarm with this ID doesn\'t exist!'.tr,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall,
@@ -194,7 +195,7 @@ class HomeView extends GetView<HomeController> {
                                             ),
                                           ),
                                           child: Text(
-                                            'Okay',
+                                            'Okay'.tr,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
@@ -231,7 +232,7 @@ class HomeView extends GetView<HomeController> {
                             ),
                             const SizedBox(width: 8.0),
                             Text(
-                              'Join alarm',
+                              'Join alarm'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -265,7 +266,7 @@ class HomeView extends GetView<HomeController> {
                             ),
                             const SizedBox(width: 8.0),
                             Text(
-                              'Create alarm',
+                              'Create alarm'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -282,9 +283,8 @@ class HomeView extends GetView<HomeController> {
                   )
                 : ExpandableFab(
                     initialOpen: false,
-                    child: const Icon(Icons.add),
                     key: controller.floatingButtonKeyLoggedOut,
-                    children: const [],
+                    children: const [const Icon(Icons.add)],
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
@@ -325,7 +325,7 @@ class HomeView extends GetView<HomeController> {
                             SizedBox(
                               width: width * 0.5,
                               child: Text(
-                                'Ultimate Alarm Clock',
+                                'Ultimate Alarm Clock'.tr,
                                 softWrap: true,
                                 style: Theme.of(context)
                                     .textTheme
@@ -340,7 +340,7 @@ class HomeView extends GetView<HomeController> {
                             SizedBox(
                               width: width * 0.5,
                               child: Text(
-                                'v0.5.0',
+                                'v0.5.0'.tr,
                                 softWrap: true,
                                 style: Theme.of(context)
                                     .textTheme
@@ -365,7 +365,7 @@ class HomeView extends GetView<HomeController> {
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
-                  'Settings',
+                  'Settings'.tr,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor.withOpacity(0.8)
@@ -380,6 +380,7 @@ class HomeView extends GetView<HomeController> {
                       : kprimaryTextColor.withOpacity(0.8),
                 ),
               ),
+              LanguageMenu(),
               ListTile(
                 onTap: () {
                   Utils.hapticFeedback();
@@ -388,7 +389,7 @@ class HomeView extends GetView<HomeController> {
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
-                  'About',
+                  'About'.tr,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       color: themeController.isLightMode.value
                           ? kLightPrimaryTextColor.withOpacity(0.8)
@@ -444,7 +445,7 @@ class HomeView extends GetView<HomeController> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'Next alarm',
+                                              'Next alarm'.tr,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .displaySmall!
@@ -630,7 +631,7 @@ class HomeView extends GetView<HomeController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Select alarms to delete',
+                                                  'Select alarms to delete'.tr,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .displaySmall!
@@ -654,11 +655,10 @@ class HomeView extends GetView<HomeController> {
                                                           .value;
                                                   return Text(
                                                     numberOfAlarmsSelected == 0
-                                                        ? 'No alarm selected'
-                                                        : numberOfAlarmsSelected ==
-                                                                1
-                                                            ? '1 alarm selected'
-                                                            : '$numberOfAlarmsSelected alarms selected',
+                                                        ? 'No alarm selected'.tr
+                                                        : '@noofAlarm alarms selected'.trParams({
+                                                                'noofAlarm' : numberOfAlarmsSelected.toString(),
+                                                    }),
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .displaySmall!
@@ -797,7 +797,7 @@ class HomeView extends GetView<HomeController> {
                                             width: width * 0.8,
                                           ),
                                           Text(
-                                            'Add an alarm to get started!',
+                                            'Add an alarm to get started!'.tr,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
@@ -963,8 +963,8 @@ class HomeView extends GetView<HomeController> {
                                                                       Text(
                                                                         repeatDays
                                                                             .replaceAll(
-                                                                          'Never',
-                                                                          'One Time',
+                                                                          'Never'.tr,
+                                                                          'One Time'.tr,
                                                                         ),
                                                                         style: Theme.of(context)
                                                                             .textTheme
@@ -1361,7 +1361,7 @@ class HomeView extends GetView<HomeController> {
                                                                               PopupMenuItem<int>(
                                                                                 value: 0,
                                                                                 child: Text(
-                                                                                  'Preview Alarm',
+                                                                                  'Preview Alarm'.tr,
                                                                                   style: Theme.of(context).textTheme.bodyMedium,
                                                                                 ),
                                                                               ),
@@ -1369,7 +1369,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 PopupMenuItem<int>(
                                                                                   value: 1,
                                                                                   child: Text(
-                                                                                    'Delete Alarm',
+                                                                                    'Delete Alarm'.tr,
                                                                                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                                                                           color: Colors.red,
                                                                                         ),

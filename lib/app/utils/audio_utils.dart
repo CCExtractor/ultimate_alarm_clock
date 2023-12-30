@@ -58,7 +58,8 @@ class AudioUtils {
       String ringtoneName = alarmRecord.ringtoneName;
 
       if (ringtoneName == 'Default') {
-        FlutterRingtonePlayer.playAlarm();
+        FlutterRingtonePlayer flutterRingtonePlayer = FlutterRingtonePlayer();
+        flutterRingtonePlayer.playAlarm();
       } else {
         int customRingtoneId = fastHash(ringtoneName);
         RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
@@ -69,7 +70,8 @@ class AudioUtils {
           String customRingtonePath = customRingtone.ringtonePath;
           await playCustomSound(customRingtonePath);
         } else {
-          FlutterRingtonePlayer.playAlarm();
+          FlutterRingtonePlayer flutterRingtonePlayer = FlutterRingtonePlayer();
+          flutterRingtonePlayer.playAlarm();
 
           bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
 
@@ -93,7 +95,8 @@ class AudioUtils {
     try {
       if (audioSession != null) {
         if (ringtoneName == 'Default') {
-          FlutterRingtonePlayer.stop();
+          FlutterRingtonePlayer flutterRingtonePlayer = FlutterRingtonePlayer();
+          flutterRingtonePlayer.stop();
         } else {
           await audioPlayer.stop();
         }

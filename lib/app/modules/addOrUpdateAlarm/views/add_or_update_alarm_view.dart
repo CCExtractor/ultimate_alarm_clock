@@ -52,13 +52,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
             backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-            title: 'Discard Changes?',
+            title: 'Discard Changes?'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Column(
               children: [
                 Text(
-                  'You have unsaved changes. Are you sure you want to leave this'
-                  ' page?',
+                  //'You have unsaved changes. Are you sure you want to leave this
+                  //           'page?'
+                  'unsavedChanges'.tr,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -78,7 +79,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Cancel',
+                          'Cancel'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -103,7 +104,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           ),
                         ),
                         child: Text(
-                          'Leave',
+                          'Leave'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -138,7 +139,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        (controller.alarmRecord == null) ? 'Save' : 'Update',
+                        (controller.alarmRecord == null) ? 'Save'.tr : 'Update'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
@@ -267,7 +268,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 ? const Text('')
                 : Obx(
                     () => Text(
-                      'Rings in ${controller.timeToAlarm.value}',
+                      'Rings in @timeToAlarm'.trParams(
+                          {
+                        'timeToAlarm': controller.timeToAlarm.value.toString()
+                      }),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
@@ -281,7 +285,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-                          'Uh-oh!',
+                          'Uh-oh!'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displayMedium!
@@ -300,7 +304,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-                          'This alarm is currently being edited!',
+                          //'This alarm is currently being edited!'
+                          'alarmEditing'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -317,7 +322,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Go back',
+                          'Go back'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -584,7 +589,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Text(
-                                'Automatic Cancellation',
+                                'Automatic Cancellation'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
@@ -643,7 +648,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Text(
-                                'Challenges',
+                                'Challenges'.tr,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleMedium!.copyWith(
@@ -699,7 +704,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Text(
-                                'Shared Alarm',
+                                'Shared Alarm'.tr,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleMedium!.copyWith(
