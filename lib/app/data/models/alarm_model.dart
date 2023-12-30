@@ -43,7 +43,6 @@ class AlarmModel {
   late int snoozeDuration;
   late String ringtoneName;
   late String note;
-  late bool deleteAfterGoesOff;
 
   @ignore
   Map? offsetDetails;
@@ -81,7 +80,6 @@ class AlarmModel {
     required this.snoozeDuration,
     required this.ringtoneName,
     required this.note,
-    required this.deleteAfterGoesOff,
   });
 
   AlarmModel.fromDocumentSnapshot({

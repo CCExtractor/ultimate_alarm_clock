@@ -79,6 +79,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
 
+
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
