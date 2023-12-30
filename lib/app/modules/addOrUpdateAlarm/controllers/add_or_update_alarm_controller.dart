@@ -65,8 +65,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final RxList markersList = [].obs;
-  final daysRepeating = 'Never'.obs;
-  final weatherTypes = 'Off'.obs;
+  final daysRepeating = 'Never'.tr.obs;
+  final weatherTypes = 'Off'.tr.obs;
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;

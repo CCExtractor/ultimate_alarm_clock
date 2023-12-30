@@ -178,7 +178,7 @@ class LocationTile extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              'Location Based',
+              'Location Based'.tr,
               style: TextStyle(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor

@@ -9,6 +9,7 @@ class AppTranslations extends Translations{
     'en_US' : {
       'No upcoming alarms!' : 'No upcoming alarms!',
       'Rings in @timeToAlarm' : 'Rings in @timeToAlarm',
+      'Show Motivational Quote' : 'Show Motivational Quote',
       //home_view.dart texts
       'Next alarm' : 'Next alarm',
       'About' : 'About',
@@ -151,9 +152,12 @@ class AppTranslations extends Translations{
       'Exit Preview' : 'Exit Preview',
       'Snooze' : 'Snooze',
 },
+
     'de_DE' : {
       'No upcoming alarms!' : 'Keine bevorstehenden Alarme',
       'Next alarm' : 'Nächster Alarm',
+      'Show Motivational Quote' : 'Zeige motivierendes Zitat',
+      //home_view.dart
       'About' : 'Um',
       'Settings' : 'Einstellungen',
       'v0.5.0' : 'v0.5.0',
@@ -299,6 +303,8 @@ class AppTranslations extends Translations{
     'ru_RU' : {
       'No upcoming alarms!' : 'Никаких предстоящих сигналов тревоги!',
       'Next alarm' : 'Следующий сигнал тревоги',
+      'Show Motivational Quote' : 'Показать мотивационную цитату',
+      //home_view.dart
       'About' : 'О',
       'Settings' : 'Настройки',
       'v0.5.0' : 'v0.5.0',
@@ -443,6 +449,8 @@ class AppTranslations extends Translations{
     'fr_FR' : {
       'No upcoming alarms!' : 'Pas d\'alarmes à venir !',
       'Next alarm' : 'Prochain réveil',
+      'Show Motivational Quote' : 'Afficher une citation motivante',
+      //home_view.dart
       'About' : 'À propos',
       'Settings' : 'Paramètres',
       'v0.5.0' : 'v0.5.0',
@@ -587,6 +595,8 @@ class AppTranslations extends Translations{
     'es_ES' : {
       'No upcoming alarms!' : '¡No hay alarmas próximas!',
       'Next alarm' : 'Próxima alarma',
+      'Show Motivational Quote' : 'Mostrar cita motivadora',
+      //home_view.dart
       'About' : 'Acerca de',
       'Settings' : 'Configuración',
       'v0.5.0' : 'v0.5.0',

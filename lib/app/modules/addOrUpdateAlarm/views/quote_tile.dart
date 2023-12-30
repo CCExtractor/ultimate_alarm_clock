@@ -21,7 +21,7 @@ class QuoteTile extends StatelessWidget {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: Text(
-        'Show Motivational Quote',
+        'Show Motivational Quote'.tr,
         style: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
