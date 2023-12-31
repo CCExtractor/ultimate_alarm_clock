@@ -792,7 +792,9 @@ class HomeView extends GetView<HomeController> {
                                     ),
                                   );
                                 } else {
-                                  final List<AlarmModel> alarms = snapshot.data;
+                                  List<AlarmModel> alarms = snapshot.data;
+
+                                  alarms = alarms.where((alarm) => !alarm.isTimer).toList();
 
                                   controller.refreshUpcomingAlarms();
                                   if (alarms.isEmpty) {

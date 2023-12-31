@@ -162,7 +162,7 @@ class AlarmChallengeController extends GetxController {
     if (!Utils.isChallengeEnabled(alarmRecord)) {
       isNumMathQuestionsSet = false;
       isTimerEnabled = false;
-      Get.offAllNamed('/home');
+      Get.offAllNamed('/bottom-navigation-bar');
     }
   }
 

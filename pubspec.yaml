@@ -34,7 +34,6 @@ dependencies:
   vibration: ^1.8.1
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
-  flutter_ringtone_player: ^3.2.0
   rxdart: ^0.27.7
   flutter:
     sdk: flutter
@@ -42,7 +41,6 @@ dependencies:
   fluttertoast: ^8.2.4
   path_provider: ^2.1.1
   audio_session: ^0.1.18
-
 
 dev_dependencies:
   flutter_lints: ^2.0.3

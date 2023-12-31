@@ -77,7 +77,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                 );
                               } else {
                                 Get.offNamed(
-                                  '/home',
+                                  '/bottom-navigation-bar',
                                   arguments: controller.currentlyRingingAlarm
                                       .value.showMotivationalQuote,
                                 );
@@ -116,7 +116,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
-                              Get.offNamed('/home');
+                              Get.offNamed('/bottom-navigation-bar');
                             },
                           ),
                         ),

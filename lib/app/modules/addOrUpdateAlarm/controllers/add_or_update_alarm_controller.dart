@@ -679,6 +679,7 @@ class AddOrUpdateAlarmController extends GetxController {
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
+      isTimer: false,
     );
   }
 
