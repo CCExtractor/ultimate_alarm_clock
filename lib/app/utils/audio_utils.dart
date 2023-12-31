@@ -1,7 +1,7 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart' as audioplayer;
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -10,6 +10,8 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class AudioUtils {
   static final audioPlayer = audioplayer.AudioPlayer();
+
+  static MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   static AudioSession? audioSession;
 
@@ -58,7 +60,7 @@ class AudioUtils {
       String ringtoneName = alarmRecord.ringtoneName;
 
       if (ringtoneName == 'Default') {
-        FlutterRingtonePlayer.playAlarm();
+        await alarmChannel.invokeMethod('playDefaultAlarm');
       } else {
         int customRingtoneId = fastHash(ringtoneName);
         RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
@@ -69,7 +71,7 @@ class AudioUtils {
           String customRingtonePath = customRingtone.ringtonePath;
           await playCustomSound(customRingtonePath);
         } else {
-          FlutterRingtonePlayer.playAlarm();
+          await alarmChannel.invokeMethod('playDefaultAlarm');
 
           bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
 
@@ -93,7 +95,7 @@ class AudioUtils {
     try {
       if (audioSession != null) {
         if (ringtoneName == 'Default') {
-          FlutterRingtonePlayer.stop();
+          await alarmChannel.invokeMethod('stopDefaultAlarm');
         } else {
           await audioPlayer.stop();
         }
