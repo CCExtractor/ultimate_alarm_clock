@@ -10,7 +10,8 @@ class AppTranslations extends Translations{
       'No upcoming alarms!' : 'No upcoming alarms!',
       'Rings in @timeToAlarm' : 'Rings in @timeToAlarm',
       'Show Motivational Quote' : 'Show Motivational Quote',
-      //home_view.dart texts
+      'Location Based' : 'Location Based',
+  //home_view.dart texts
       'Next alarm' : 'Next alarm',
       'About' : 'About',
       'Settings' : 'Settings',
@@ -151,6 +152,12 @@ class AppTranslations extends Translations{
       'Dismiss' : 'Dismiss',
       'Exit Preview' : 'Exit Preview',
       'Snooze' : 'Snooze',
+      //util.dart
+      'Everyday' : 'Everyday',
+      'Weekdays' : 'Weekdays',
+      'Weekends' : 'Weekends',
+      'Mon' : 'Mon' , 'Tue' : 'Tue', 'Wed' : 'Wed', 'Thur' : 'Thur',
+      'Fri' : 'Fri', 'Sat' : 'Sat', 'Sun' : 'Sun',
 },
 
     'de_DE' : {
@@ -297,9 +304,16 @@ class AppTranslations extends Translations{
       'Dismiss' : 'Abbrechen',
       'Exit Preview' : 'Vorschau beenden',
       'Snooze' : 'Schlummern',
-
+      //utils.dart
+      'Location Based': 'Ortsbasiert',
+      'Everyday': 'Täglich',
+      'Weekdays': 'Wochentage',
+      'Weekends': 'Wochenenden',
+      'Mon': 'Mo', 'Tue': 'Di', 'Wed': 'Mi', 'Thur': 'Do',
+      'Fri': 'Fr', 'Sat': 'Sa', 'Sun': 'So'
 
     },
+
     'ru_RU' : {
       'No upcoming alarms!' : 'Никаких предстоящих сигналов тревоги!',
       'Next alarm' : 'Следующий сигнал тревоги',
@@ -444,8 +458,16 @@ class AppTranslations extends Translations{
       'Dismiss' : 'Отклонить',
       'Exit Preview' : 'Выйти из предпросмотра',
       'Snooze' : 'Отложить',
+      //utils.dart
+      'Location Based': 'На основе местоположения',
+      'Everyday': 'Каждый день',
+      'Weekdays': 'Будние дни',
+      'Weekends': 'Выходные',
+      'Mon': 'Пн', 'Tue': 'Вт', 'Wed': 'Ср', 'Thur': 'Чт',
+      'Fri': 'Пт', 'Sat': 'Сб', 'Sun': 'Вс'
 
     },
+
     'fr_FR' : {
       'No upcoming alarms!' : 'Pas d\'alarmes à venir !',
       'Next alarm' : 'Prochain réveil',
@@ -590,6 +612,13 @@ class AppTranslations extends Translations{
   'Dismiss' : 'Rejeter',
   'Exit Preview' : 'Quitter l\'aperçu',
   'Snooze' : 'Hibernation',
+      //utils.dart
+      'Location Based': 'Basé sur la localisation',
+      'Everyday': 'Tous les jours',
+      'Weekdays': 'Jours de la semaine',
+      'Weekends': 'Week-ends',
+      'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mer', 'Thur': 'Jeu',
+      'Fri': 'Ven', 'Sat': 'Sam', 'Sun': 'Dim',
 
 },
     'es_ES' : {
@@ -736,6 +765,13 @@ class AppTranslations extends Translations{
       'Dismiss' : 'Descartar',
       'Exit Preview' : 'Salir de la vista previa',
       'Snooze' : 'Siesta',
+    //utils.dart
+      'Location Based': 'Basado en la ubicación',
+      'Everyday': 'Todos los días',
+      'Weekdays': 'Días laborables',
+      'Weekends': 'Fines de semana',
+      'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mié', 'Thur': 'Jue',
+      'Fri': 'Vie', 'Sat': 'Sáb', 'Sun': 'Dom'
 
     }
 
