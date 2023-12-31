@@ -10,6 +10,8 @@ abstract class Routes {
   static const SETTINGS = _Paths.SETTINGS;
   static const ALARM_CHALLENGE = _Paths.ALARM_CHALLENGE;
   static const ABOUT = _Paths.ABOUT;
+  static const BOTTOM_NAVIGATION_BAR = _Paths.BOTTOM_NAVIGATION_BAR;
+  static const TIMER_RING = _Paths.TIMER_RING;
 }
 
 abstract class _Paths {
@@ -21,4 +23,6 @@ abstract class _Paths {
   static const SETTINGS = '/settings';
   static const ALARM_CHALLENGE = '/alarm-challenge';
   static const ABOUT = '/about';
+  static const BOTTOM_NAVIGATION_BAR = '/bottom-navigation-bar';
+  static const TIMER_RING = '/timer-ring';
 }

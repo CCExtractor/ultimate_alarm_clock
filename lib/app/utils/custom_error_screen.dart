@@ -72,7 +72,7 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
                 OutlinedButton(
                   onPressed: () {
                     Get.offNamedUntil(
-                      '/home',
+                      '/bottom-navigation-bar',
                       (route) => route.settings.name == '/splash-screen',
                     );
                   },

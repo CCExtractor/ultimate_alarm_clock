@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
-import '../storage_service.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 
 class LanguageController extends GetxController{
-  final storage=Get.find<StorageService>();
+  final storage=Get.find<GetStorageProvider>();
   final RxString local = Get.locale.toString().obs;
 
   final Map<String, dynamic> optionslocales = {

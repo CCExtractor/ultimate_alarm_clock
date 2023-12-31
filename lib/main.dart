@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/languages/bindings/language_binding.dart';
-import 'package:ultimate_alarm_clock/app/modules/languages/language.dart';
-import 'package:ultimate_alarm_clock/app/modules/languages/storage_service.dart';
+import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
-import 'app/modules/languages/views/language_menu.dart';
 import 'app/routes/app_pages.dart';
 
 var storage;
@@ -39,20 +38,18 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
-
-  storage=Get.find<StorageService>();
   runApp(
     UltimateAlarmClockApp(),
   );
 }
 
 initialConfig() async{
-  await Get.putAsync(() => StorageService().init());
+  await Get.putAsync(() => GetStorageProvider().init());
 }
 
 class UltimateAlarmClockApp extends StatelessWidget {
   UltimateAlarmClockApp({super.key});
-  final storage = Get.find<StorageService>();
+  final storage = Get.find<GetStorageProvider>();
 
   @override
   Widget build(BuildContext context) {

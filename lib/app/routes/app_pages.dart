@@ -1,8 +1,12 @@
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/bindings/about_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/about/views/about_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/bindings/bottom_navigation_bar_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/views/bottom_navigation_bar_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/timerRing/bindings/timer_ring_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/timerRing/views/timer_ring_view.dart';
 
 import '../modules/addOrUpdateAlarm/bindings/add_or_update_alarm_binding.dart';
 import '../modules/addOrUpdateAlarm/views/add_or_update_alarm_view.dart';
@@ -58,6 +62,16 @@ class AppPages {
       name: _Paths.ABOUT,
       page: () => AboutView(),
       binding: AboutBinding(),
+    ),
+    GetPage(
+      name: _Paths.BOTTOM_NAVIGATION_BAR,
+      page: () => const BottomNavigationBarView(),
+      binding: BottomNavigationBarBinding(),
+    ),
+    GetPage(
+      name: _Paths.TIMER_RING,
+      page: () => TimerRingView(),
+      binding: TimerRingBinding(),
     ),
   ];
 }
