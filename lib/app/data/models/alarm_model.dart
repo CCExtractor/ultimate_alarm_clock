@@ -45,6 +45,7 @@ class AlarmModel {
   late String note;
   late bool deleteAfterGoesOff;
   late bool showMotivationalQuote;
+  late bool isTimer;
   @ignore
   Map? offsetDetails;
 
@@ -83,6 +84,7 @@ class AlarmModel {
     required this.note,
     required this.deleteAfterGoesOff,
     required this.showMotivationalQuote,
+    required this.isTimer,
   });
 
   AlarmModel.fromDocumentSnapshot({
@@ -138,6 +140,7 @@ class AlarmModel {
     note = documentSnapshot['note'];
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
     showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
+    isTimer = documentSnapshot['isTimer'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -178,6 +181,7 @@ class AlarmModel {
     note = alarmData['note'];
     deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
     showMotivationalQuote = alarmData['showMotivationalQuote'];
+    isTimer = alarmData['isTimer'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -223,6 +227,7 @@ class AlarmModel {
       'note': alarmRecord.note,
       'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
       'showMotivationalQuote': alarmRecord.showMotivationalQuote,
+      'isTimer': alarmRecord.isTimer,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

@@ -21,11 +21,47 @@ class Utils {
     return '$hours:$minutes';
   }
 
+  static String formatDateTimeToHHMMSS(DateTime dateTime) {
+    // Extract hours, minutes, and seconds from the DateTime
+    int hours = dateTime.hour;
+    int minutes = dateTime.minute;
+    int seconds = dateTime.second;
+
+    // Format each component to have two digits
+    String formattedHours = hours.toString().padLeft(2, '0');
+    String formattedMinutes = minutes.toString().padLeft(2, '0');
+    String formattedSeconds = seconds.toString().padLeft(2, '0');
+
+    // Concatenate the components with ':' separator
+    return '$formattedHours:$formattedMinutes:$formattedSeconds';
+  }
+
   static TimeOfDay stringToTimeOfDay(String time) {
     final parts = time.split(':');
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
     return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  static DateTime? stringToDateTime(String timeString) {
+    try {
+      final parts = timeString.split(':');
+      if (parts.length == 3) {
+        final hours = int.parse(parts[0]);
+        final minutes = int.parse(parts[1]);
+        final seconds = int.parse(parts[2]);
+
+        // Create a DateTime object with today's date and the provided time
+        final now = DateTime.now();
+        return DateTime(now.year, now.month, now.day, hours, minutes, seconds);
+      }
+    } catch (e) {
+      // Handle parsing errors if any
+      debugPrint(e.toString());
+    }
+
+    // Return null or some default value in case of an error
+    return null;
   }
 
   static DateTime timeOfDayToDateTime(TimeOfDay time) {
@@ -340,6 +376,7 @@ class Utils {
       ringtoneName: 'Default',
       note: '',
       showMotivationalQuote: false,
+      isTimer: false,
     );
   }
 

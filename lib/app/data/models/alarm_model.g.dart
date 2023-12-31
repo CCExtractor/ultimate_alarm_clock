@@ -37,59 +37,59 @@ const AlarmModelSchema = CollectionSchema(
       name: r'days',
       type: IsarType.boolList,
     ),
-    r'deleteAfterGoesOff': PropertySchema(
-      id: 4,
-      name: r'deleteAfterGoesOff',
-      type: IsarType.bool,
-    ),
     r'firestoreId': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'firestoreId',
       type: IsarType.string,
     ),
     r'intervalToAlarm': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'intervalToAlarm',
       type: IsarType.long,
     ),
     r'isActivityEnabled': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'isActivityEnabled',
       type: IsarType.bool,
     ),
     r'isEnabled': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'isEnabled',
       type: IsarType.bool,
     ),
     r'isLocationEnabled': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'isLocationEnabled',
       type: IsarType.bool,
     ),
     r'isMathsEnabled': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'isMathsEnabled',
       type: IsarType.bool,
     ),
     r'isOneTime': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'isOneTime',
       type: IsarType.bool,
     ),
     r'isQrEnabled': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'isQrEnabled',
       type: IsarType.bool,
     ),
     r'isShakeEnabled': PropertySchema(
-      id: 13,
+      id: 12,
       name: r'isShakeEnabled',
       type: IsarType.bool,
     ),
     r'isSharedAlarmEnabled': PropertySchema(
-      id: 14,
+      id: 13,
       name: r'isSharedAlarmEnabled',
+      type: IsarType.bool,
+    ),
+    r'isTimer': PropertySchema(
+      id: 14,
+      name: r'isTimer',
       type: IsarType.bool,
     ),
     r'isWeatherEnabled': PropertySchema(
@@ -257,17 +257,17 @@ void _alarmModelSerialize(
   writer.writeString(offsets[1], object.alarmID);
   writer.writeString(offsets[2], object.alarmTime);
   writer.writeBoolList(offsets[3], object.days);
-  writer.writeBool(offsets[4], object.deleteAfterGoesOff);
-  writer.writeString(offsets[5], object.firestoreId);
-  writer.writeLong(offsets[6], object.intervalToAlarm);
-  writer.writeBool(offsets[7], object.isActivityEnabled);
-  writer.writeBool(offsets[8], object.isEnabled);
-  writer.writeBool(offsets[9], object.isLocationEnabled);
-  writer.writeBool(offsets[10], object.isMathsEnabled);
-  writer.writeBool(offsets[11], object.isOneTime);
-  writer.writeBool(offsets[12], object.isQrEnabled);
-  writer.writeBool(offsets[13], object.isShakeEnabled);
-  writer.writeBool(offsets[14], object.isSharedAlarmEnabled);
+  writer.writeString(offsets[4], object.firestoreId);
+  writer.writeLong(offsets[5], object.intervalToAlarm);
+  writer.writeBool(offsets[6], object.isActivityEnabled);
+  writer.writeBool(offsets[7], object.isEnabled);
+  writer.writeBool(offsets[8], object.isLocationEnabled);
+  writer.writeBool(offsets[9], object.isMathsEnabled);
+  writer.writeBool(offsets[10], object.isOneTime);
+  writer.writeBool(offsets[11], object.isQrEnabled);
+  writer.writeBool(offsets[12], object.isShakeEnabled);
+  writer.writeBool(offsets[13], object.isSharedAlarmEnabled);
+  writer.writeBool(offsets[14], object.isTimer);
   writer.writeBool(offsets[15], object.isWeatherEnabled);
   writer.writeString(offsets[16], object.label);
   writer.writeString(offsets[17], object.lastEditedUserId);
@@ -300,16 +300,16 @@ AlarmModel _alarmModelDeserialize(
     alarmID: reader.readString(offsets[1]),
     alarmTime: reader.readString(offsets[2]),
     days: reader.readBoolList(offsets[3]) ?? [],
-    deleteAfterGoesOff: reader.readBool(offsets[4]),
-    intervalToAlarm: reader.readLong(offsets[6]),
-    isActivityEnabled: reader.readBool(offsets[7]),
-    isEnabled: reader.readBoolOrNull(offsets[8]) ?? true,
-    isLocationEnabled: reader.readBool(offsets[9]),
-    isMathsEnabled: reader.readBool(offsets[10]),
-    isOneTime: reader.readBool(offsets[11]),
-    isQrEnabled: reader.readBool(offsets[12]),
-    isShakeEnabled: reader.readBool(offsets[13]),
-    isSharedAlarmEnabled: reader.readBool(offsets[14]),
+    intervalToAlarm: reader.readLong(offsets[5]),
+    isActivityEnabled: reader.readBool(offsets[6]),
+    isEnabled: reader.readBoolOrNull(offsets[7]) ?? true,
+    isLocationEnabled: reader.readBool(offsets[8]),
+    isMathsEnabled: reader.readBool(offsets[9]),
+    isOneTime: reader.readBool(offsets[10]),
+    isQrEnabled: reader.readBool(offsets[11]),
+    isShakeEnabled: reader.readBool(offsets[12]),
+    isSharedAlarmEnabled: reader.readBool(offsets[13]),
+    isTimer: reader.readBool(offsets[14]),
     isWeatherEnabled: reader.readBool(offsets[15]),
     label: reader.readString(offsets[16]),
     lastEditedUserId: reader.readString(offsets[17]),
@@ -330,7 +330,7 @@ AlarmModel _alarmModelDeserialize(
     snoozeDuration: reader.readLong(offsets[32]),
     weatherTypes: reader.readLongList(offsets[33]) ?? [],
   );
-  object.firestoreId = reader.readStringOrNull(offsets[5]);
+  object.firestoreId = reader.readStringOrNull(offsets[4]);
   object.isarId = id;
   return object;
 }
@@ -351,15 +351,15 @@ P _alarmModelDeserializeProp<P>(
     case 3:
       return (reader.readBoolList(offset) ?? []) as P;
     case 4:
-      return (reader.readBool(offset)) as P;
-    case 5:
       return (reader.readStringOrNull(offset)) as P;
-    case 6:
+    case 5:
       return (reader.readLong(offset)) as P;
-    case 7:
+    case 6:
       return (reader.readBool(offset)) as P;
-    case 8:
+    case 7:
       return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 8:
+      return (reader.readBool(offset)) as P;
     case 9:
       return (reader.readBool(offset)) as P;
     case 10:
@@ -929,16 +929,6 @@ extension AlarmModelQueryFilter
   }
 
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      deleteAfterGoesOffEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'deleteAfterGoesOff',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       firestoreIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1223,6 +1213,16 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isSharedAlarmEnabled',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> isTimerEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isTimer',
         value: value,
       ));
     });
@@ -3243,20 +3243,6 @@ extension AlarmModelQuerySortBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
-      sortByDeleteAfterGoesOff() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'deleteAfterGoesOff', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
-      sortByDeleteAfterGoesOffDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'deleteAfterGoesOff', Sort.desc);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByFirestoreId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firestoreId', Sort.asc);
@@ -3381,6 +3367,18 @@ extension AlarmModelQuerySortBy
       sortByIsSharedAlarmEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isSharedAlarmEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsTimer() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTimer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsTimerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTimer', Sort.desc);
     });
   }
 
@@ -3637,20 +3635,6 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
-      thenByDeleteAfterGoesOff() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'deleteAfterGoesOff', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
-      thenByDeleteAfterGoesOffDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'deleteAfterGoesOff', Sort.desc);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByFirestoreId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firestoreId', Sort.asc);
@@ -3775,6 +3759,18 @@ extension AlarmModelQuerySortThenBy
       thenByIsSharedAlarmEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isSharedAlarmEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsTimer() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTimer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsTimerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTimer', Sort.desc);
     });
   }
 
@@ -4032,13 +4028,6 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QDistinct>
-      distinctByDeleteAfterGoesOff() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'deleteAfterGoesOff');
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByFirestoreId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -4100,6 +4089,12 @@ extension AlarmModelQueryWhereDistinct
       distinctByIsSharedAlarmEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isSharedAlarmEnabled');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsTimer() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isTimer');
     });
   }
 
@@ -4264,13 +4259,6 @@ extension AlarmModelQueryProperty
     });
   }
 
-  QueryBuilder<AlarmModel, bool, QQueryOperations>
-      deleteAfterGoesOffProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'deleteAfterGoesOff');
-    });
-  }
-
   QueryBuilder<AlarmModel, String?, QQueryOperations> firestoreIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'firestoreId');
@@ -4329,6 +4317,12 @@ extension AlarmModelQueryProperty
       isSharedAlarmEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isSharedAlarmEnabled');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations> isTimerProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isTimer');
     });
   }
 
