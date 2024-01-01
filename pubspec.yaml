@@ -22,7 +22,7 @@ dependencies:
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   async: ^2.10.0
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^9.0.0
   weather: ^2.0.1
   shake: ^2.2.0
   numberpicker: ^2.1.2
