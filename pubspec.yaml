@@ -30,7 +30,7 @@ dependencies:
   permission_handler: ^11.0.1
   google_sign_in: ^6.0.2
   url_launcher: ^6.1.11
-  flutter_expandable_fab: ^1.8.1
+  flutter_expandable_fab: ^2.0.0
   vibration: ^1.8.1
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
