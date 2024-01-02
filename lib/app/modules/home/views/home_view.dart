@@ -28,7 +28,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     AboutController aboutController = Get.put(AboutController());
-    LanguageController languageController = Get.put(LanguageController());
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     var width = Get.width;
     var height = Get.height;
@@ -390,7 +389,7 @@ class HomeView extends GetView<HomeController> {
                       : kprimaryTextColor.withOpacity(0.8),
                 ),
               ),
-              LanguageMenu(),
+              // LanguageMenu(),
               ListTile(
                 onTap: () {
                   Utils.hapticFeedback();

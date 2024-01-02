@@ -11,6 +11,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_fo
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_feedback.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/views/language_menu.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/weather_api.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -24,7 +25,6 @@ class SettingsView extends GetView<SettingsController> {
   HomeController homeController = Get.find<HomeController>();
   ThemeController themeController = Get.find<ThemeController>();
   AboutController aboutController = Get.put(AboutController());
-
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -107,6 +107,15 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 ThemeValueTile(
+                  controller: controller,
+                  height: height,
+                  width: width,
+                  themeController: themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                LanguageMenu(
                   controller: controller,
                   height: height,
                   width: width,

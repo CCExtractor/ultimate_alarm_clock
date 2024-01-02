@@ -3,6 +3,7 @@ import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/controllers
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
+import '../controllers/language_controller.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsBinding extends Bindings {
@@ -21,5 +22,8 @@ class SettingsBinding extends Bindings {
     Get.lazyPut<BottomNavigationBarController>(
       () => BottomNavigationBarController(),
     );
+    // Get.put<LanguageController>(
+    //     LanguageController(),
+    // );
   }
 }

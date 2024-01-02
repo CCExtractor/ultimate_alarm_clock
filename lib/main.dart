@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/bindings/language_binding.dart';
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
@@ -56,7 +55,6 @@ class UltimateAlarmClockApp extends StatelessWidget {
       translations: AppTranslations(),
       locale: loc,
       fallbackLocale: Locale('en', 'US'),
-      initialBinding: LanguageBinding(),
       builder: (BuildContext context, Widget? error) {
         ErrorWidget.builder = (FlutterErrorDetails? error) {
           return CustomErrorScreen(errorDetails: error!);
