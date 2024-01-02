@@ -40,7 +40,6 @@ class LanguageController extends GetxController{
     final String countryCode = optionslocales[key]['countryCode'];
     Get.updateLocale(Locale(languageCode, countryCode));
     local.value=Get.locale.toString();
-    storage.write("languageCode", languageCode);
-    storage.write("countryCode", countryCode);
+    storage.writeLocale(languageCode, countryCode);
   }
 }

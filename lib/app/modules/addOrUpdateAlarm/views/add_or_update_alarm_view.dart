@@ -101,7 +101,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         ),
                       ),
                       child: Text(
-                        'Leave',
+                        'Leave'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
@@ -132,7 +132,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
-                      (controller.alarmRecord == null) ? 'Save' : 'Update',
+                      (controller.alarmRecord == null) ? 'Save'.tr : 'Update'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor
@@ -276,7 +276,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
-                        'Uh-oh!',
+                        'Uh-oh!'.tr,
                         style:
                             Theme.of(context).textTheme.displayMedium!.copyWith(
                                   color: themeController.isLightMode.value
@@ -293,7 +293,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
-                        'This alarm is currently being edited!',
+                        // 'This alarm is currently being edited!',
+                          'alarmEditing'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value

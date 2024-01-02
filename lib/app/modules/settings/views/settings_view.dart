@@ -32,7 +32,7 @@ class SettingsView extends GetView<SettingsController> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Settings'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor

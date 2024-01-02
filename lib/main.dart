@@ -4,21 +4,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/languages/bindings/language_binding.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/bindings/language_binding.dart';
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
 import 'app/routes/app_pages.dart';
-
-var storage;
+Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
-  //multi language storage
-  await initialConfig();
+  await Get.putAsync(() => GetStorageProvider().init());
+  final storage=Get.find<GetStorageProvider>();
+  loc = await storage.readLocale();
 
   AudioPlayer.global.setAudioContext(
     const AudioContext(
@@ -43,14 +42,8 @@ void main() async {
   );
 }
 
-initialConfig() async{
-  await Get.putAsync(() => GetStorageProvider().init());
-}
-
 class UltimateAlarmClockApp extends StatelessWidget {
   UltimateAlarmClockApp({super.key});
-  final storage = Get.find<GetStorageProvider>();
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -61,8 +54,7 @@ class UltimateAlarmClockApp extends StatelessWidget {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       translations: AppTranslations(),
-      locale: storage.lanCode!=null
-          ? Locale(storage.lanCode!, storage.countryCode) : Get.deviceLocale,
+      locale: loc,
       fallbackLocale: Locale('en', 'US'),
       initialBinding: LanguageBinding(),
       builder: (BuildContext context, Widget? error) {

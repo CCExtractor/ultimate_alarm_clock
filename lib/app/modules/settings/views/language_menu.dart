@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/languages/controllers/language_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/language_controller.dart';
 
 import '../../../utils/constants.dart';
 import '../../settings/controllers/theme_controller.dart';
