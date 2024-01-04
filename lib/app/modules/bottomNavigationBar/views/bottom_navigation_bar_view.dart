@@ -27,6 +27,10 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
               icon: Icon(Icons.timer),
               label: 'Timer',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.timer),
+              label: 'Stopwatch',
+            ),
           ],
           onTap: (index) {
             Utils.hapticFeedback();

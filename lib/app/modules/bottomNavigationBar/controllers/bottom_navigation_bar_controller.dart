@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/home_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/view/stopwatch.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_view.dart';
 
@@ -17,6 +18,7 @@ class BottomNavigationBarController extends GetxController
   List<Widget> pages = [
     HomeView(),
     TimerView(),
+    StopWatchPage()
   ];
 
   @override

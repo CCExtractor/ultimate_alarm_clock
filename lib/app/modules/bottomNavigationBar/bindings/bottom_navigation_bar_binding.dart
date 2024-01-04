@@ -3,6 +3,7 @@ import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/controllers
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/controller/stopwatch_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
 class BottomNavigationBarBinding extends Bindings {
@@ -10,6 +11,9 @@ class BottomNavigationBarBinding extends Bindings {
   void dependencies() {
     Get.put<TimerController>(
       TimerController(),
+    );
+    Get.put<StopwatchController>(
+      StopwatchController(),
     );
     Get.lazyPut<SettingsController>(
       () => SettingsController(),
