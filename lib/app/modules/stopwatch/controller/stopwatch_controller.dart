@@ -29,10 +29,14 @@ class StopwatchController extends GetxController {
   }
 
   void addLap() {
-    String lap =
-        '${_formatDigit(hourDigit)}:${_formatDigit(minuteDigit)}:${_formatDigit(secondDigit)}';
+  String lap =
+      '${_formatDigit(hourDigit)}:${_formatDigit(minuteDigit)}:${_formatDigit(secondDigit)}';
+  
+  if (!laps.contains(lap)) {
     laps.add(lap);
   }
+}
+
 
   void reset() {
     _elapsedSeconds = 0;
