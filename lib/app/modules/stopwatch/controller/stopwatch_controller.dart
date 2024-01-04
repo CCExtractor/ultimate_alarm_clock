@@ -32,7 +32,7 @@ class StopwatchController extends GetxController {
   String lap =
       '${_formatDigit(hourDigit)}:${_formatDigit(minuteDigit)}:${_formatDigit(secondDigit)}';
   
-  if (!laps.contains(lap)) {
+  if (!laps.contains(lap) && isStarted.value) {
     laps.add(lap);
   }
 }
