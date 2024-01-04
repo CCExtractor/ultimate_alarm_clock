@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controller/stopwatch_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class StopWatchPage extends GetView<StopwatchController> {
   @override
@@ -38,7 +39,7 @@ class StopWatchPage extends GetView<StopwatchController> {
                         title: Text(
                           'Lap ${index + 1}',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: kprimaryColor,
                             fontSize: 20,
                           ),
                         ),
