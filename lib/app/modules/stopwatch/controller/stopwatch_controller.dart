@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StopwatchController extends GetxController {
+  final ScrollController lapsScrollController = ScrollController();
   RxInt hourDigit = 0.obs;
   RxInt minuteDigit = 0.obs;
   RxInt secondDigit = 0.obs;
@@ -29,14 +31,18 @@ class StopwatchController extends GetxController {
   }
 
   void addLap() {
-  String lap =
-      '${_formatDigit(hourDigit)}:${_formatDigit(minuteDigit)}:${_formatDigit(secondDigit)}';
-  
-  if (!laps.contains(lap) && isStarted.value) {
-    laps.add(lap);
-  }
-}
+    String lap =
+        '${_formatDigit(hourDigit)}:${_formatDigit(minuteDigit)}:${_formatDigit(secondDigit)}';
 
+    if (!laps.contains(lap) && isStarted.value) {
+      lapsScrollController.animateTo(
+        lapsScrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      laps.add(lap);
+    }
+  }
 
   void reset() {
     _elapsedSeconds = 0;

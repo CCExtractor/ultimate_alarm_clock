@@ -65,6 +65,7 @@ class StopWatchPage extends GetView<StopwatchController> {
                 ),
                 child: Obx(
                   () => ListView.builder(
+                    controller: controller.lapsScrollController,
                     itemCount: controller.laps.length,
                     itemBuilder: (context, index) {
                       return ListTile(
