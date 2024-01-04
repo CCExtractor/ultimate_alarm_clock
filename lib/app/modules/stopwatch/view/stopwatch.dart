@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controller/stopwatch_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class StopWatchPage extends GetView<StopwatchController> {
   @override
   Widget build(BuildContext context) {
+  ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      
+      backgroundColor: themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
