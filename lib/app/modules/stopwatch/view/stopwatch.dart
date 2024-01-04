@@ -3,16 +3,44 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controller/stopwatch_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class StopWatchPage extends GetView<StopwatchController> {
   @override
   Widget build(BuildContext context) {
-  ThemeController themeController = Get.find<ThemeController>();
+    var width = Get.width;
+    var height = Get.height;
+    ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
-      
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(height / 7.9),
+        child: AppBar(
+           backgroundColor: themeController.isLightMode.value
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
+          toolbarHeight: height / 7.9,
+          elevation: 0.0,
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Utils.hapticFeedback();
+                Get.toNamed('/settings');
+              },
+              icon: const Icon(
+                Icons.settings,
+                size: 27,
+              ),
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.75)
+                  : kprimaryTextColor.withOpacity(0.75),
+            ),
+          ],
+        ),
+      ),
       backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -40,7 +68,6 @@ class StopWatchPage extends GetView<StopwatchController> {
                     itemCount: controller.laps.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        
                         title: Text(
                           'Lap ${index + 1}',
                           style: const TextStyle(
