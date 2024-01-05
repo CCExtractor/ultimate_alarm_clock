@@ -63,7 +63,7 @@ class TimerView extends GetView<TimerController> {
                         controller.remainingTime.value.inSeconds.remainder(60),
                       );
                       return Text(
-                        '$hours hrs : $minutes min : $seconds sec',
+                        '$hours:$minutes:$seconds',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: themeController.isLightMode.value
