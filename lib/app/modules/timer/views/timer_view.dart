@@ -10,7 +10,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class TimerView extends GetView<TimerController> {
   TimerView({Key? key}) : super(key: key);
-
+  String timeLabel = '00 hrs : 00 min : 00 sec';
   ThemeController themeController = Get.find<ThemeController>();
 
   @override
@@ -46,6 +46,8 @@ class TimerView extends GetView<TimerController> {
         () => controller.isTimerRunning.value
             ? Column(
                 children: [
+                  Text(timeLabel),
+                  SizedBox(height: 10),
                   SizedBox(
                     height: height * 0.3,
                   ),
@@ -61,7 +63,7 @@ class TimerView extends GetView<TimerController> {
                         controller.remainingTime.value.inSeconds.remainder(60),
                       );
                       return Text(
-                        '$hours:$minutes:$seconds',
+                        '$hours hrs : $minutes min : $seconds sec',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: themeController.isLightMode.value
@@ -119,6 +121,17 @@ class TimerView extends GetView<TimerController> {
                   children: [
                     ListView(
                       children: [
+                        Text(
+                          'Hours : Minutes : Seconds',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : kLightPrimaryBackgroundColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
                         Container(
                           color: themeController.isLightMode.value
                               ? kLightPrimaryBackgroundColor
@@ -145,11 +158,15 @@ class TimerView extends GetView<TimerController> {
                               highlightedTextStyle:
                                   Theme.of(context).textTheme.displayMedium,
                               onTimeChange: (dateTime) {
+                                final hours = dateTime.hour;
+                                final minutes = dateTime.minute;
+                                final seconds = dateTime.second;
+                                timeLabel='Timer Duration - $hours hrs : $minutes min : $seconds sec';
                                 Utils.hapticFeedback();
                                 controller.remainingTime.value = Duration(
-                                  hours: dateTime.hour,
-                                  minutes: dateTime.minute,
-                                  seconds: dateTime.second,
+                                  hours: hours,
+                                  minutes: minutes,
+                                  seconds: seconds,
                                 );
                               },
                             ),
