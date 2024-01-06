@@ -22,7 +22,7 @@ class WeatherApi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () async {
         Utils.hapticFeedback();
         Get.defaultDialog(
