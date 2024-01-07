@@ -515,7 +515,7 @@ class AddOrUpdateAlarmController extends GetxController {
       markersList.add(
         Marker(
           point: selectedPoint.value,
-            child: const Icon(
+          builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
             color: Colors.black,
@@ -582,8 +582,8 @@ class AddOrUpdateAlarmController extends GetxController {
       markersList.clear();
       markersList.add(
         Marker(
-          point: point,
-          child: const Icon(
+          point: selectedPoint.value,
+          builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
             color: Colors.black,
