@@ -159,6 +159,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         controller.offsetDetails.value = {};
                       }
                       AlarmModel alarmRecord = AlarmModel(
+                        deleteAfterGoesOff:
+                              controller.deleteAfterGoesOff.value,
                         snoozeDuration: controller.snoozeDuration.value,
                         offsetDetails: controller.offsetDetails,
                         label: controller.label.value,
@@ -549,6 +551,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
+                    ),
+                     Obx(
+                      () => (controller.repeatDays
+                              .every((element) => element == false))
+                          ? DeleteAfterGoesOff(
+                              controller: controller,
+                              themeController: themeController,
+                            )
+                          : const SizedBox(),
                     ),
                     LabelTile(
                       controller: controller,
