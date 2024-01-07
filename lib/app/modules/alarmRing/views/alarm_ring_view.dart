@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -176,10 +177,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   () => Visibility(
                     visible: !controller.isSnoozing.value,
                     child: Obx(
-                     () =>  Padding(
-                       padding: Get.arguments != null
-                           ? const EdgeInsets.symmetric(vertical: 90.0)
-                           : EdgeInsets.zero,
+                      () => Padding(
+                        padding: Get.arguments != null
+                            ? const EdgeInsets.symmetric(vertical: 90.0)
+                            : EdgeInsets.zero,
                         child: SizedBox(
                           height: height * 0.07,
                           width: width * 0.5,
@@ -193,13 +194,15 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             child: Text(
                               'Snooze',
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : kprimaryTextColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();

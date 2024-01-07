@@ -197,6 +197,25 @@ class FirestoreDb {
         .update(AlarmModel.toMap(alarmRecord));
   }
 
+  static Future<void> deleteOneTimeAlarm(
+    String? ownerId,
+    String? firestoreId,
+  ) async {
+    try {
+      // Delete alarm remotely (from Firestore)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(ownerId)
+          .collection('alarms')
+          .doc(firestoreId)
+          .delete();
+
+      debugPrint('Alarm deleted successfully from Firestore.');
+    } catch (e) {
+      debugPrint('Error deleting alarm from Firestore: $e');
+    }
+  }
+
   static getAlarm(UserModel? user, String id) async {
     if (user == null) return null;
     return await _alarmsCollection(user).doc(id).get();

@@ -9,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/in
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/delete_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
@@ -549,6 +550,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
+                    ),
+                    Obx(
+                      () => (controller.repeatDays
+                              .every((element) => element == false))
+                          ? DeleteAfterGoesOff(
+                              controller: controller,
+                              themeController: themeController,
+                            )
+                          : const SizedBox(),
                     ),
                     LabelTile(
                       controller: controller,
