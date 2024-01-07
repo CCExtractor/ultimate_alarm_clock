@@ -23,6 +23,9 @@ class GoogleSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      highlightColor: Colors.transparent,
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
       onTap: () async {
         Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
