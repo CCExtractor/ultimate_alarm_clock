@@ -12,6 +12,8 @@ import 'package:weather/weather.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
 
+import '../../../data/providers/get_storage_provider.dart';
+
 class SettingsController extends GetxController {
   var homeController = Get.find<HomeController>();
   var isHapticFeedbackEnabled = true.obs;
@@ -30,6 +32,36 @@ class SettingsController extends GetxController {
   final RxBool didWeatherKeyError = false.obs;
   final RxBool showingCircularProgressIndicator = false.obs;
   RxBool validate = false.obs;
+  final storage=Get.find<GetStorageProvider>();
+  final RxString local = Get.locale.toString().obs;
+
+  final Map<String, dynamic> optionslocales = {
+    'en_US' : {
+      'languageCode' : 'en',
+      'countryCode' : 'US',
+      'description' : 'English',
+    },
+    'de_DE' : {
+      'languageCode' : 'de',
+      'countryCode' : 'DE',
+      'description' : 'German',
+    },
+    'ru_RU' : {
+      'languageCode' : 'ru',
+      'countryCode' : 'RU',
+      'description' : 'Russian',
+    },
+    'fr_FR' : {
+      'languageCode' : 'fr',
+      'countryCode' : 'FR',
+      'description' : 'French',
+    },
+    'es_ES' : {
+      'languageCode' : 'es',
+      'countryCode' : 'ES',
+      'description' : 'Spanish',
+    },
+  };
 
   UserModel? userModel;
   @override
@@ -243,5 +275,13 @@ class SettingsController extends GetxController {
     isSortedAlarmListEnabled.value = enabled;
     homeController.isSortedAlarmListEnabled.value = enabled;
     _saveSortedAlarmListPreference();
+  }
+
+  void updateLocale(String key){
+    final String languageCode = optionslocales[key]['languageCode'];
+    final String countryCode = optionslocales[key]['countryCode'];
+    Get.updateLocale(Locale(languageCode, countryCode));
+    local.value=Get.locale.toString();
+    storage.writeLocale(languageCode, countryCode);
   }
 }

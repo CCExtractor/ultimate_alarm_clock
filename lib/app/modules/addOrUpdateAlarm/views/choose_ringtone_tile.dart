@@ -28,7 +28,7 @@ class ChooseRingtoneTile extends StatelessWidget {
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: Text(
-          'Choose Ringtone',
+          'Choose Ringtone'.tr,
           style: TextStyle(
             color: themeController.isLightMode.value
                 ? kLightPrimaryTextColor
@@ -48,7 +48,7 @@ class ChooseRingtoneTile extends StatelessWidget {
             backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-            title: 'Choose Ringtone',
+            title: 'Choose Ringtone'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Obx(
               () => Column(
@@ -86,7 +86,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                 .customRingtoneNames[index]) ||
                                         (controller
                                                 .customRingtoneNames[index] ==
-                                            'Default')
+                                            'Default'.tr)
                                     ? null
                                     : IconButton(
                                         onPressed: () async {
@@ -117,7 +117,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                       await controller.saveCustomRingtone();
                     },
                     child: Text(
-                      'Upload Ringtone',
+                      'Upload Ringtone'.tr,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: kprimaryColor,
                           ),
@@ -139,7 +139,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                       backgroundColor: kprimaryColor,
                     ),
                     child: Text(
-                      'Done',
+                      'Done'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor

@@ -15,7 +15,7 @@ class AboutView extends GetView<AboutController> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'About',
+          'About'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor
@@ -50,16 +50,16 @@ class AboutView extends GetView<AboutController> {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Ultimate Alarm Clock',
+            Text(
+              'Ultimate Alarm Clock'.tr,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Version: 0.5.0',
+             Text(
+              'Version: 0.5.0'.tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -68,8 +68,8 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Text(
-                "This project was originally developed as part of Google Summer of code under the CCExtractor organization. It's free, the source code is available, and we encourage programmers to contribute.",
+              child:  Text(
+                'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -95,7 +95,7 @@ class AboutView extends GetView<AboutController> {
                       if (!await aboutController
                           .launchUrl(Uri.parse(AboutController.githubUrl))) {
                         throw Exception(
-                          'Could not launch ${AboutController.githubUrl}',
+                          'Could not launch ${AboutController.githubUrl}'.tr,
                         );
                       }
                     },
@@ -129,7 +129,7 @@ class AboutView extends GetView<AboutController> {
                         Uri.parse(AboutController.ccExtractorUrl),
                       )) {
                         throw Exception(
-                          'Could not launch ${AboutController.ccExtractorUrl}',
+                          'Could not launch ${AboutController.ccExtractorUrl}'.tr,
                         );
                       }
                     },

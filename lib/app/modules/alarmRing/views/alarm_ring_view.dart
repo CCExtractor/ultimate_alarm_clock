@@ -25,8 +25,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
         }
 
         Get.snackbar(
-          'Note',
-          "You can't go back while the alarm is ringing",
+          'Note'.tr,
+          "You can't go back while the alarm is ringing".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -55,8 +55,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               Utils.isChallengeEnabled(
                                 controller.currentlyRingingAlarm.value,
                               )
-                                  ? 'Start Challenge'
-                                  : 'Dismiss',
+                                  ? 'Start Challenge'.tr
+                                  : 'Dismiss'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -105,7 +105,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               ),
                             ),
                             child: Text(
-                              'Exit Preview',
+                              'Exit Preview'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -193,16 +193,14 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               ),
                             ),
                             child: Text(
-                              'Snooze',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : kprimaryTextColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              'Snooze'.tr,
+                              style:
+                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : kprimaryTextColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();

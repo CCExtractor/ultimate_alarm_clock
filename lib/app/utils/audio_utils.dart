@@ -72,7 +72,6 @@ class AudioUtils {
           await playCustomSound(customRingtonePath);
         } else {
           await alarmChannel.invokeMethod('playDefaultAlarm');
-
           bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
 
           alarmRecord.ringtoneName = 'Default';

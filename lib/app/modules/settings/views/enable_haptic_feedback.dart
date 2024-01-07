@@ -39,7 +39,7 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Enable Haptic Feedback',
+              'Enable Haptic Feedback'.tr,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Obx(

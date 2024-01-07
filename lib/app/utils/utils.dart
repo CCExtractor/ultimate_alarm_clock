@@ -254,7 +254,7 @@ class Utils {
   }
 
   static String getRepeatDays(List<bool> days) {
-    const dayAbbreviations = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
+    List dayAbbreviations = ['Mon'.tr, 'Tue'.tr, 'Wed'.tr, 'Thur'.tr, 'Fri'.tr, 'Sat'.tr, 'Sun'.tr];
     int weekdayCount = 0;
     int weekendCount = 0;
     List<String> selectedDays = [];
@@ -271,13 +271,13 @@ class Utils {
     }
 
     if (weekdayCount + weekendCount == 7) {
-      return 'Everyday';
+      return 'Everyday'.tr;
     } else if (weekdayCount == 5 && weekendCount == 0) {
-      return 'Weekdays';
+      return 'Weekdays'.tr;
     } else if (weekendCount == 2 && weekdayCount == 0) {
-      return 'Weekends';
+      return 'Weekends'.tr;
     } else if (selectedDays.isEmpty) {
-      return 'Never';
+      return 'Never'.tr;
     } else {
       return selectedDays.join(', ');
     }
