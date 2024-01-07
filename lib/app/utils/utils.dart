@@ -8,8 +8,9 @@ import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-
+import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
 import 'constants.dart';
 
@@ -20,11 +21,47 @@ class Utils {
     return '$hours:$minutes';
   }
 
+  static String formatDateTimeToHHMMSS(DateTime dateTime) {
+    // Extract hours, minutes, and seconds from the DateTime
+    int hours = dateTime.hour;
+    int minutes = dateTime.minute;
+    int seconds = dateTime.second;
+
+    // Format each component to have two digits
+    String formattedHours = hours.toString().padLeft(2, '0');
+    String formattedMinutes = minutes.toString().padLeft(2, '0');
+    String formattedSeconds = seconds.toString().padLeft(2, '0');
+
+    // Concatenate the components with ':' separator
+    return '$formattedHours:$formattedMinutes:$formattedSeconds';
+  }
+
   static TimeOfDay stringToTimeOfDay(String time) {
     final parts = time.split(':');
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
     return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  static DateTime? stringToDateTime(String timeString) {
+    try {
+      final parts = timeString.split(':');
+      if (parts.length == 3) {
+        final hours = int.parse(parts[0]);
+        final minutes = int.parse(parts[1]);
+        final seconds = int.parse(parts[2]);
+
+        // Create a DateTime object with today's date and the provided time
+        final now = DateTime.now();
+        return DateTime(now.year, now.month, now.day, hours, minutes, seconds);
+      }
+    } catch (e) {
+      // Handle parsing errors if any
+      debugPrint(e.toString());
+    }
+
+    // Return null or some default value in case of an error
+    return null;
   }
 
   static DateTime timeOfDayToDateTime(TimeOfDay time) {
@@ -217,7 +254,7 @@ class Utils {
   }
 
   static String getRepeatDays(List<bool> days) {
-    const dayAbbreviations = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
+    List dayAbbreviations = ['Mon'.tr, 'Tue'.tr, 'Wed'.tr, 'Thur'.tr, 'Fri'.tr, 'Sat'.tr, 'Sun'.tr];
     int weekdayCount = 0;
     int weekendCount = 0;
     List<String> selectedDays = [];
@@ -234,13 +271,13 @@ class Utils {
     }
 
     if (weekdayCount + weekendCount == 7) {
-      return 'Everyday';
+      return 'Everyday'.tr;
     } else if (weekdayCount == 5 && weekendCount == 0) {
-      return 'Weekdays';
+      return 'Weekdays'.tr;
     } else if (weekendCount == 2 && weekdayCount == 0) {
-      return 'Weekends';
+      return 'Weekends'.tr;
     } else if (selectedDays.isEmpty) {
-      return 'Never';
+      return 'Never'.tr;
     } else {
       return selectedDays.join(', ');
     }
@@ -309,6 +346,7 @@ class Utils {
       snoozeDuration: 0,
       label: '',
       isOneTime: false,
+      deleteAfterGoesOff: false,
       offsetDetails: {},
       mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       lastEditedUserId: '',
@@ -337,6 +375,8 @@ class Utils {
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
       ringtoneName: 'Default',
       note: '',
+      showMotivationalQuote: false,
+      isTimer: false,
     );
   }
 
@@ -561,5 +601,18 @@ class Utils {
         );
       },
     );
+  }
+
+  static Quote getRandomQuote() {
+    try {
+      int randomIndex = Random.secure().nextInt(quoteList.length);
+      return Quote.fromMap(quoteList[randomIndex]);
+    } catch (e) {
+      debugPrint(e.toString());
+      return Quote(
+        quote: 'The only way to do great work is to love what you do.',
+        author: 'Steve Jobs',
+      );
+    }
   }
 }

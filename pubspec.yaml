@@ -11,6 +11,7 @@ dependencies:
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.5
+  get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
   cloud_firestore: ^4.4.5
   intl: ^0.18.0
@@ -34,7 +35,6 @@ dependencies:
   vibration: ^1.8.1
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
-  flutter_ringtone_player: ^3.2.0
   rxdart: ^0.27.7
   flutter:
     sdk: flutter

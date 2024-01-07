@@ -35,7 +35,7 @@ class SnoozeDurationTile extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Select duration',
+          title: 'Select duration'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
@@ -55,8 +55,8 @@ class SnoozeDurationTile extends StatelessWidget {
                     ),
                     Text(
                       controller.snoozeDuration.value > 1
-                          ? 'minutes'
-                          : 'minute',
+                          ? 'minutes'.tr
+                          : 'minute'.tr,
                     ),
                   ],
                 ),
@@ -76,7 +76,7 @@ class SnoozeDurationTile extends StatelessWidget {
                             backgroundColor: kprimaryColor,
                           ),
                           child: Text(
-                            'Done',
+                            'Done'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
@@ -101,7 +101,7 @@ class SnoozeDurationTile extends StatelessWidget {
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: Text(
-          'Snooze Duration',
+          'Snooze Duration'.tr,
           style: TextStyle(
             color: themeController.isLightMode.value
                 ? kLightPrimaryTextColor
@@ -115,7 +115,7 @@ class SnoozeDurationTile extends StatelessWidget {
               () => Text(
                 controller.snoozeDuration.value > 0
                     ? '${controller.snoozeDuration.value} min'
-                    : 'Off',
+                    : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.snoozeDuration.value <= 0)
                           ? themeController.isLightMode.value

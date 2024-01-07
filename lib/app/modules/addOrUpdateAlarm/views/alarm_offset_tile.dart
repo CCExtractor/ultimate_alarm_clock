@@ -28,7 +28,7 @@ class AlarmOffset extends StatelessWidget {
                   backgroundColor: themeController.isLightMode.value
                       ? kLightSecondaryBackgroundColor
                       : ksecondaryBackgroundColor,
-                  title: 'Choose duration',
+                  title: 'Choose duration'.tr,
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,8 +49,8 @@ class AlarmOffset extends StatelessWidget {
                             ),
                             Text(
                               controller.offsetDuration.value > 1
-                                  ? 'minutes'
-                                  : 'minute',
+                                  ? 'minutes'.tr
+                                  : 'minute'.tr,
                             ),
                           ],
                         ),
@@ -81,8 +81,8 @@ class AlarmOffset extends StatelessWidget {
                                             ? kLightPrimaryTextColor
                                             : kprimaryTextColor,
                               ),
-                              child: const Text(
-                                'Before',
+                              child:  Text(
+                                'Before'.tr,
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
@@ -110,8 +110,8 @@ class AlarmOffset extends StatelessWidget {
                                             ? kLightPrimaryTextColor
                                             : kprimaryTextColor,
                               ),
-                              child: const Text(
-                                'After',
+                              child:  Text(
+                                'After'.tr,
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
@@ -123,13 +123,13 @@ class AlarmOffset extends StatelessWidget {
                 );
               },
               child: ListTile(
-                title: const Text('Ring before / after '),
+                title:  Text('Ring before / after '.tr),
                 trailing: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Obx(
                       () => Text(
-                        controller.offsetDuration.value > 0 ? 'Enabled' : 'Off',
+                        controller.offsetDuration.value > 0 ? 'Enabled'.tr : 'Off'.tr,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: (controller.offsetDuration.value > 0)
                                   ? themeController.isLightMode.value

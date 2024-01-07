@@ -48,7 +48,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Shake your phone!',
+                            'Shake your phone!'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!

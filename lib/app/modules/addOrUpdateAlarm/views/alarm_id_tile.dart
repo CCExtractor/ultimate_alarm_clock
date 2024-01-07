@@ -28,8 +28,8 @@ class AlarmIDTile extends StatelessWidget {
                   Utils.hapticFeedback();
                   Clipboard.setData(ClipboardData(text: controller.alarmID));
                   Get.snackbar(
-                    'Success!',
-                    'Alarm ID has been copied!',
+                    'Success!'.tr,
+                    'Alarm ID has been copied!'.tr,
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.green,
                     colorText: themeController.isLightMode.value
@@ -40,7 +40,7 @@ class AlarmIDTile extends StatelessWidget {
                   );
                 },
                 title: Text(
-                  'Alarm ID',
+                  'Alarm ID'.tr,
                   style: TextStyle(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryTextColor
@@ -64,14 +64,15 @@ class AlarmIDTile extends StatelessWidget {
                     backgroundColor: themeController.isLightMode.value
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
-                    title: 'Disabled!',
+                    title: 'Disabled!'.tr,
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
                       children: [
-                        const Padding(
+                         Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Text(
-                            'To copy Alarm ID you have enable shared alarm!',
+                            //'To copy Alarm ID you have enable shared alarm!',
+                            'toCopyAlarm'.tr,
                           ),
                         ),
                         Padding(
@@ -83,7 +84,7 @@ class AlarmIDTile extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              'Okay',
+                              'Okay'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -104,7 +105,7 @@ class AlarmIDTile extends StatelessWidget {
                   );
                 },
                 title: Text(
-                  'Alarm ID',
+                  'Alarm ID'.tr,
                   style: TextStyle(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryTextColor

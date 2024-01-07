@@ -38,7 +38,7 @@ class ScreenActivityTile extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Timeout Duration',
+          title: 'Timeout Duration'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
@@ -63,8 +63,8 @@ class ScreenActivityTile extends StatelessWidget {
                     ),
                     Text(
                       controller.activityInterval.value > 1
-                          ? 'minutes'
-                          : 'minute',
+                          ? 'minutes'.tr
+                          : 'minute'.tr,
                     ),
                   ],
                 ),
@@ -85,7 +85,7 @@ class ScreenActivityTile extends StatelessWidget {
                             // Set the desired background color
                           ),
                           child: Text(
-                            'Done',
+                            'Done'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
@@ -109,7 +109,7 @@ class ScreenActivityTile extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              'Screen Activity',
+              'Screen Activity'.tr,
               style: TextStyle(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor
@@ -127,10 +127,11 @@ class ScreenActivityTile extends StatelessWidget {
               onPressed: () {
                 Utils.showModal(
                   context: context,
-                  title: 'Screen activity based cancellation',
-                  description: 'This feature will automatically cancel'
-                      " the alarm if you've been using your device"
-                      ' for a set number of minutes.',
+                  title: 'Screen activity based cancellation'.tr,
+                  // description: 'This feature will automatically cancel'
+                  //     " the alarm if you've been using your device"
+                  //     ' for a set number of minutes.',
+                  description: 'screenDescription'.tr,
                   iconData: Icons.screen_lock_portrait_outlined,
                   isLightMode: themeController.isLightMode.value,
                 );
@@ -145,7 +146,7 @@ class ScreenActivityTile extends StatelessWidget {
               () => Text(
                 controller.activityInterval.value > 0
                     ? '${controller.activityInterval.value} min'
-                    : 'Off',
+                    : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isActivityenabled.value == false)
                           ? themeController.isLightMode.value

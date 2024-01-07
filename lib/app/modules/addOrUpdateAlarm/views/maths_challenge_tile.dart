@@ -27,7 +27,7 @@ class MathsChallenge extends StatelessWidget {
       title: Row(
         children: [
           Text(
-            'Maths',
+            'Maths'.tr,
             style: TextStyle(
               color: themeController.isLightMode.value
                   ? kLightPrimaryTextColor
@@ -45,10 +45,11 @@ class MathsChallenge extends StatelessWidget {
             onPressed: () {
               Utils.showModal(
                 context: context,
-                title: 'Math problems',
-                description: 'You will have to solve simple math problems of'
-                    ' the chosen difficulty level to'
-                    ' dismiss the alarm.',
+                title: 'Math problems'.tr,
+                //description :  'You will have to solve simple math problems of'
+                //     ' the chosen difficulty level to'
+                //     ' dismiss the alarm.'
+                description: 'mathDescription'.tr,
                 iconData: Icons.calculate,
                 isLightMode: themeController.isLightMode.value,
               );
@@ -73,7 +74,7 @@ class MathsChallenge extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Solve Maths questions',
+          title: 'Solve Maths questions'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
@@ -125,8 +126,8 @@ class MathsChallenge extends StatelessWidget {
                       ),
                       Text(
                         controller.numMathsQuestions.value > 1
-                            ? 'questions'
-                            : 'question',
+                            ? 'questions'.tr
+                            : 'question'.tr,
                       ),
                     ],
                   ),
@@ -142,7 +143,7 @@ class MathsChallenge extends StatelessWidget {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Save',
+                          'Save'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -164,7 +165,7 @@ class MathsChallenge extends StatelessWidget {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Cancel',
+                          'Cancel'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -196,7 +197,7 @@ class MathsChallenge extends StatelessWidget {
               () => Text(
                 controller.isMathsEnabled == true
                     ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
-                    : 'Off',
+                    : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: (controller.isMathsEnabled.value == false)
                           ? themeController.isLightMode.value

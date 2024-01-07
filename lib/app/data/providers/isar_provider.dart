@@ -105,10 +105,10 @@ class IsarDb {
 
         // If alarm is one-time and has already passed or is happening now,
         // set time until next alarm to next day
-        if (!aRepeats && aTimeUntilNextAlarm < 0) {
+        if (!aRepeats && aTimeUntilNextAlarm < 0 && !a.isTimer) {
           aTimeUntilNextAlarm += Duration.minutesPerDay;
         }
-        if (!bRepeats && bTimeUntilNextAlarm < 0) {
+        if (!bRepeats && bTimeUntilNextAlarm < 0 && !b.isTimer) {
           bTimeUntilNextAlarm += Duration.minutesPerDay;
         }
 

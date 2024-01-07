@@ -50,7 +50,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Scan your QR/Bar Code!',
+                            'Scan your QR/Bar Code!'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
@@ -130,7 +130,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             ),
                                                     ),
                                                     Text(
-                                                      'Wrong Code Scanned!',
+                                                      'Wrong Code Scanned!'.tr,
                                                       style: Theme.of(
                                                         context,
                                                       )
@@ -161,7 +161,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                         ),
                                                       ),
                                                       child: Text(
-                                                        'Retake',
+                                                        'Retake'.tr,
                                                         style: Theme.of(
                                                           context,
                                                         )

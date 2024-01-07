@@ -88,7 +88,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       size: 28,
                                     ),
                                     Text(
-                                      'Shake Challenge',
+                                      'Shake Challenge'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -156,7 +156,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       size: 28,
                                     ),
                                     Text(
-                                      'Maths Challenge',
+                                      'Maths Challenge'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -222,7 +222,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       size: 28,
                                     ),
                                     Text(
-                                      'QR/Bar Code Challenge',
+                                      'QR/Bar Code Challenge'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!

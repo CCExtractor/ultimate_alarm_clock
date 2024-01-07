@@ -115,6 +115,22 @@ ThemeData kThemeData = ThemeData(
       side: MaterialStatePropertyAll(BorderSide(color: kprimaryColor)),
     ),
   ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    elevation: 0,
+    backgroundColor: kprimaryBackgroundColor,
+    selectedLabelStyle: TextStyle(
+      color: kprimaryColor,
+    ),
+    unselectedLabelStyle: TextStyle(
+      color: kprimaryTextColor,
+    ),
+    selectedIconTheme: IconThemeData(
+      color: kprimaryColor,
+    ),
+    unselectedIconTheme: IconThemeData(
+      color: kprimaryTextColor,
+    ),
+  ),
 );
 
 // Light ThemeData
@@ -196,6 +212,22 @@ ThemeData kLightThemeData = ThemeData(
     style: ButtonStyle(
       backgroundColor: MaterialStatePropertyAll(Colors.transparent),
       side: MaterialStatePropertyAll(BorderSide(color: kprimaryColor)),
+    ),
+  ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    elevation: 0,
+    backgroundColor: kLightPrimaryBackgroundColor,
+    selectedLabelStyle: TextStyle(
+      color: kprimaryColor,
+    ),
+    unselectedLabelStyle: TextStyle(
+      color: kLightPrimaryTextColor,
+    ),
+    selectedIconTheme: IconThemeData(
+      color: kprimaryColor,
+    ),
+    unselectedIconTheme: IconThemeData(
+      color: kLightPrimaryTextColor,
     ),
   ),
 );

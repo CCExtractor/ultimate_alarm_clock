@@ -65,8 +65,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final RxList markersList = [].obs;
-  final daysRepeating = 'Never'.obs;
-  final weatherTypes = 'Off'.obs;
+  final daysRepeating = 'Never'.tr.obs;
+  final weatherTypes = 'Off'.tr.obs;
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
@@ -77,6 +77,9 @@ class AddOrUpdateAlarmController extends GetxController {
   var customRingtoneNames = [].obs;
   final noteController = TextEditingController();
   final RxString note = ''.obs;
+  final deleteAfterGoesOff = false.obs;
+
+  final RxBool showMotivationalQuote = false.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -481,9 +484,11 @@ class AddOrUpdateAlarmController extends GetxController {
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
       isOneTime.value = alarmRecord!.isOneTime;
+      deleteAfterGoesOff.value = alarmRecord!.deleteAfterGoesOff;
       label.value = alarmRecord!.label;
       customRingtoneName.value = alarmRecord!.ringtoneName;
       note.value = alarmRecord!.note;
+      showMotivationalQuote.value = alarmRecord!.showMotivationalQuote;
 
       sharedUserIds.value = alarmRecord!.sharedUserIds!;
       // Reinitializing all values here
@@ -577,7 +582,7 @@ class AddOrUpdateAlarmController extends GetxController {
       markersList.clear();
       markersList.add(
         Marker(
-          point: point,
+          point: selectedPoint.value,
           builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
@@ -642,6 +647,7 @@ class AddOrUpdateAlarmController extends GetxController {
       snoozeDuration: snoozeDuration.value,
       label: label.value,
       isOneTime: isOneTime.value,
+      deleteAfterGoesOff: deleteAfterGoesOff.value,
       mainAlarmTime:
           Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
       offsetDetails: offsetDetails,
@@ -676,6 +682,8 @@ class AddOrUpdateAlarmController extends GetxController {
       shakeTimes: shakeTimes.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
+      showMotivationalQuote: showMotivationalQuote.value,
+      isTimer: false,
     );
   }
 

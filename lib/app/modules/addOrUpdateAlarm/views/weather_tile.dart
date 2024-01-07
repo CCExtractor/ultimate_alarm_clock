@@ -31,7 +31,7 @@ class WeatherTile extends StatelessWidget {
                     backgroundColor: themeController.isLightMode.value
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
-                    title: 'Select weather types',
+                    title: 'Select weather types'.tr,
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Obx(
                       () => Column(
@@ -78,7 +78,7 @@ class WeatherTile extends StatelessWidget {
                                     },
                                   ),
                                   Text(
-                                    'Sunny',
+                                    'Sunny'.tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -131,7 +131,7 @@ class WeatherTile extends StatelessWidget {
                                     },
                                   ),
                                   Text(
-                                    'Cloudy',
+                                    'Cloudy'.tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -183,7 +183,7 @@ class WeatherTile extends StatelessWidget {
                                     },
                                   ),
                                   Text(
-                                    'Rainy',
+                                    'Rainy'.tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -235,7 +235,7 @@ class WeatherTile extends StatelessWidget {
                                     },
                                   ),
                                   Text(
-                                    'Windy',
+                                    'Windy'.tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -288,7 +288,7 @@ class WeatherTile extends StatelessWidget {
                                     },
                                   ),
                                   Text(
-                                    'Stormy',
+                                    'Stormy'.tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -309,7 +309,7 @@ class WeatherTile extends StatelessWidget {
                 title: Row(
                   children: [
                     Text(
-                      'Weather Condition',
+                      'Weather Condition'.tr,
                       style: TextStyle(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor
@@ -348,7 +348,7 @@ class WeatherTile extends StatelessWidget {
                                       size: height * 0.1,
                                     ),
                                     Text(
-                                      'Weather based cancellation',
+                                      'Weather based cancellation'.tr,
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
@@ -357,11 +357,12 @@ class WeatherTile extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 15.0),
                                       child: Text(
-                                        'This feature will automatically'
-                                        ' cancel the alarm if the current'
-                                        ' weather matches your chosen'
-                                        ' weather conditions, allowing you'
-                                        ' to sleep better!',
+                                        // 'This feature will automatically'
+                                        // ' cancel the alarm if the current'
+                                        // ' weather matches your chosen'
+                                        // ' weather conditions, allowing you'
+                                        // ' to sleep better!',
+                                        'weatherDescription'.tr,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
@@ -382,7 +383,7 @@ class WeatherTile extends StatelessWidget {
                                           Get.back();
                                         },
                                         child: Text(
-                                          'Understood',
+                                          'Understood'.tr,
                                           style: Theme.of(context)
                                               .textTheme
                                               .displaySmall!
@@ -442,13 +443,12 @@ class WeatherTile extends StatelessWidget {
                     backgroundColor: themeController.isLightMode.value
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
-                    title: 'Disabled!',
+                    title: 'Disabled!'.tr,
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
                       children: [
-                        const Text(
-                          'To use this feature, you have to'
-                          ' add an OpenWeatherMap API key!',
+                         Text(
+                          'To use this feature, you have to add an OpenWeatherMap API key!'.tr,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -462,7 +462,7 @@ class WeatherTile extends StatelessWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  'Go to settings',
+                                  'Go to settings'.tr,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
@@ -488,7 +488,7 @@ class WeatherTile extends StatelessWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  'Cancel',
+                                  'Cancel'.tr,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
@@ -516,7 +516,7 @@ class WeatherTile extends StatelessWidget {
                 title: Row(
                   children: [
                     Text(
-                      'Weather Condition',
+                      'Weather Condition'.tr,
                       style: TextStyle(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor
@@ -534,12 +534,13 @@ class WeatherTile extends StatelessWidget {
                       onPressed: () {
                         Utils.showModal(
                           context: context,
-                          title: 'Weather based cancellation',
-                          description: 'This feature will automatically'
-                              ' cancel the alarm if the current'
-                              ' weather matches your chosen'
-                              ' weather conditions, allowing you'
-                              ' to sleep better!',
+                          title: 'Weather based cancellation'.tr,
+                          // description: 'This feature will automatically'
+                          //     ' cancel the alarm if the current'
+                          //     ' weather matches your chosen'
+                          //     ' weather conditions, allowing you'
+                          //     ' to sleep better!',
+                          description: 'weatherDescription'.tr,
                           iconData: Icons.cloudy_snowing,
                           isLightMode: themeController.isLightMode.value,
                         );

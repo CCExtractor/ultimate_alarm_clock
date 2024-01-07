@@ -8,10 +8,13 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class Pair<T, U> {
@@ -22,7 +25,7 @@ class Pair<T, U> {
 }
 
 class HomeController extends GetxController {
-  MethodChannel alarmChannel = MethodChannel('ulticlock');
+  MethodChannel alarmChannel = const MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
   Stream? isarStreamAlarms;
@@ -56,6 +59,8 @@ class HomeController extends GetxController {
   Pair<List<AlarmModel>, List<RxBool>> alarmListPairs = Pair([], []);
 
   Set<Pair<dynamic, bool>> selectedAlarmSet = {};
+
+  ThemeController themeController = Get.find<ThemeController>();
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -221,6 +226,15 @@ class HomeController extends GetxController {
       final newFactor = 1.0 - (offset / maxOffset).clamp(0.0, 1.0);
       scalingFactor.value = (minFactor + (maxFactor - minFactor) * newFactor);
     });
+
+    if (Get.arguments != null) {
+      bool showMotivationalQuote = Get.arguments;
+
+      if (showMotivationalQuote) {
+        Quote quote = Utils.getRandomQuote();
+        showQuotePopup(quote);
+      }
+    }
   }
 
   refreshUpcomingAlarms() async {
@@ -256,66 +270,75 @@ class HomeController extends GetxController {
       debugPrint('ISAR: ${isarLatestAlarm.alarmTime}');
       debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
 
-      String timeToAlarm = Utils.timeUntilAlarm(
-        Utils.stringToTimeOfDay(latestAlarm.alarmTime),
-        latestAlarm.days,
-      );
-      alarmTime.value = 'Rings in $timeToAlarm';
-
-      // This function is necessary when alarms are deleted/enabled
-      await scheduleNextAlarm(
-        alarmRecord,
-        isarLatestAlarm,
-        firestoreLatestAlarm,
-        latestAlarm,
-      );
-
-      if (latestAlarm.minutesSinceMidnight > -1) {
-        // To account for difference between seconds upto the next minute
-        DateTime now = DateTime.now();
-        DateTime nextMinute =
-            DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
-        Duration delay = nextMinute.difference(now).inMilliseconds > 0
-            ? nextMinute.difference(now)
-            : Duration.zero;
-
-        // Adding a delay till that difference between seconds upto the next
-        // minute
-        await Future.delayed(delay);
-
-        // Update the value of timeToAlarm only once till it settles it's time
-        // with the upcoming alarm
-        // Doing this because of an bug :
-        // If we are not doing the below three lines of code the
-        // time is not updating for 2 min after running
-        // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
-        // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE MISCALCULATION
-        // FOR INITIAL MINUTES
-        // This is just to make sure that our calculated time-to-alarm is
-        // upto date with the real time for next alarm
-        timeToAlarm = Utils.timeUntilAlarm(
+      if (!latestAlarm.isTimer) {
+        String timeToAlarm = Utils.timeUntilAlarm(
           Utils.stringToTimeOfDay(latestAlarm.alarmTime),
           latestAlarm.days,
         );
         alarmTime.value = 'Rings in $timeToAlarm';
 
-        // Running a timer of periodic one minute as it is now in sync with
-        // the current time
-        _timer = Timer.periodic(
-            Duration(
-              milliseconds: Utils.getMillisecondsToAlarm(
-                DateTime.now(),
-                DateTime.now().add(const Duration(minutes: 1)),
-              ),
-            ), (timer) {
+        // This function is necessary when alarms are deleted/enabled
+        await scheduleNextAlarm(
+          alarmRecord,
+          isarLatestAlarm,
+          firestoreLatestAlarm,
+          latestAlarm,
+        );
+
+        if (latestAlarm.minutesSinceMidnight > -1) {
+          // To account for difference between seconds upto the next minute
+          DateTime now = DateTime.now();
+          DateTime nextMinute =
+              DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
+          Duration delay = nextMinute.difference(now).inMilliseconds > 0
+              ? nextMinute.difference(now)
+              : Duration.zero;
+
+          // Adding a delay till that difference between seconds upto the next
+          // minute
+          await Future.delayed(delay);
+
+          // Update the value of timeToAlarm only once till it settles it's time
+          // with the upcoming alarm
+          // Doing this because of an bug :
+          // If we are not doing the below three lines of code the
+          // time is not updating for 2 min after running
+          // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
+          // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE
+          // MISCALCULATION FOR INITIAL MINUTES
+          // This is just to make sure that our calculated time-to-alarm is
+          // upto date with the real time for next alarm
           timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime),
             latestAlarm.days,
           );
           alarmTime.value = 'Rings in $timeToAlarm';
-        });
+
+          // Running a timer of periodic one minute as it is now in sync with
+          // the current time
+          _timer = Timer.periodic(
+              Duration(
+                milliseconds: Utils.getMillisecondsToAlarm(
+                  DateTime.now(),
+                  DateTime.now().add(const Duration(minutes: 1)),
+                ),
+              ), (timer) {
+            timeToAlarm = Utils.timeUntilAlarm(
+              Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+              latestAlarm.days,
+            );
+            alarmTime.value = 'Rings in $timeToAlarm';
+          });
+        } else {
+          alarmTime.value = 'No upcoming alarms!';
+        }
       } else {
-        alarmTime.value = 'No upcoming alarms!';
+        await scheduleNextAlarm(
+          alarmRecord,
+          isarLatestAlarm,
+          firestoreLatestAlarm,
+          latestAlarm,
+        );
       }
     });
   }
@@ -326,24 +349,51 @@ class HomeController extends GetxController {
     AlarmModel firestoreLatestAlarm,
     AlarmModel latestAlarm,
   ) async {
-    TimeOfDay latestAlarmTimeOfDay =
-        Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-    if (latestAlarm.isEnabled == false) {
-      debugPrint(
-        'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
-      );
-      await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+    bool isTimer = latestAlarm.isTimer;
+
+    if (isTimer) {
+      DateTime? latestAlarmDateTime =
+          Utils.stringToDateTime(latestAlarm.alarmTime);
+      if (latestAlarmDateTime != null) {
+        if (latestAlarm.isEnabled == false) {
+          debugPrint(
+            'STOPPED IF CONDITION with latest = ${latestAlarmDateTime.toString()}',
+          );
+          await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+        } else {
+          int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+            DateTime.now(),
+            latestAlarmDateTime,
+          );
+          try {
+            await alarmChannel.invokeMethod(
+                'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+            print("Scheduled...");
+          } on PlatformException catch (e) {
+            print("Failed to schedule alarm: ${e.message}");
+          }
+        }
+      }
     } else {
-      int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-        DateTime.now(),
-        Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-      );
-      try {
-        await alarmChannel
-            .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-        print("Scheduled...");
-      } on PlatformException catch (e) {
-        print("Failed to schedule alarm: ${e.message}");
+      TimeOfDay latestAlarmTimeOfDay =
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+      if (latestAlarm.isEnabled == false) {
+        debugPrint(
+          'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
+        );
+        await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+      } else {
+        int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+          DateTime.now(),
+          Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+        );
+        try {
+          await alarmChannel
+              .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+          print("Scheduled...");
+        } on PlatformException catch (e) {
+          print("Failed to schedule alarm: ${e.message}");
+        }
       }
     }
   }
@@ -397,5 +447,73 @@ class HomeController extends GetxController {
             )
           : await IsarDb.deleteAlarm(alarmId);
     }
+  }
+
+  void showQuotePopup(Quote quote) {
+    Get.defaultDialog(
+      title: 'Motivational Quote',
+      titlePadding: const EdgeInsets.only(
+        top: 20,
+        bottom: 10,
+      ),
+      backgroundColor: themeController.isLightMode.value
+          ? kLightSecondaryBackgroundColor
+          : ksecondaryBackgroundColor,
+      titleStyle: TextStyle(
+        color: themeController.isLightMode.value
+            ? kLightPrimaryTextColor
+            : kprimaryTextColor,
+      ),
+      contentPadding: const EdgeInsets.all(20),
+      content: Column(
+        children: [
+          Text(
+            quote.getQuote(),
+            style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              quote.getAuthor(),
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+                fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                kprimaryColor,
+              ),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : ksecondaryTextColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

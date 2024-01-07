@@ -9,11 +9,13 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/in
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/delete_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/note.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quote_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_activity_tile.dart';
@@ -52,13 +54,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
             backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-            title: 'Discard Changes?',
+            title: 'Discard Changes?'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Column(
               children: [
                 Text(
-                  'You have unsaved changes. Are you sure you want to leave this'
-                  ' page?',
+                  'unsavedChanges'.tr,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -78,7 +79,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Cancel',
+                          'Cancel'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -90,7 +91,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       OutlinedButton(
                         onPressed: () {
                           Get.offNamedUntil(
-                            '/home',
+                            '/bottom-navigation-bar',
                             (route) => route.settings.name == '/splash-screen',
                           );
                         },
@@ -103,7 +104,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           ),
                         ),
                         child: Text(
-                          'Leave',
+                          'Leave'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -138,7 +139,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        (controller.alarmRecord == null) ? 'Save' : 'Update',
+                        (controller.alarmRecord == null)
+                            ? 'Save'.tr
+                            : 'Update'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
@@ -166,10 +169,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           controller.offsetDetails.value = {};
                         }
                         AlarmModel alarmRecord = AlarmModel(
+                          deleteAfterGoesOff:
+                              controller.deleteAfterGoesOff.value,
                           snoozeDuration: controller.snoozeDuration.value,
                           offsetDetails: controller.offsetDetails,
                           label: controller.label.value,
                           note: controller.note.value,
+                          showMotivationalQuote:
+                              controller.showMotivationalQuote.value,
                           isOneTime: controller.isOneTime.value,
                           lastEditedUserId: controller.lastEditedUserId,
                           mutexLock: controller.mutexLock.value,
@@ -220,6 +227,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           isShakeEnabled: controller.isShakeEnabled.value,
                           shakeTimes: controller.shakeTimes.value,
                           ringtoneName: controller.customRingtoneName.value,
+                          isTimer: false,
                         );
 
                         // Adding offset details to the database if
@@ -267,7 +275,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 ? const Text('')
                 : Obx(
                     () => Text(
-                      'Rings in ${controller.timeToAlarm.value}',
+                      'Rings in @timeToAlarm'.trParams({
+                        'timeToAlarm': controller.timeToAlarm.value.toString()
+                      }),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
@@ -281,7 +291,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-                          'Uh-oh!',
+                          'Uh-oh!'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displayMedium!
@@ -300,7 +310,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-                          'This alarm is currently being edited!',
+                          // 'This alarm is currently being edited!',
+                          'alarmEditing'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -317,7 +328,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Go back',
+                          'Go back'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -479,7 +490,35 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             inputTimeController.setTime();
                                           },
                                         ),
-                                      )
+                                      ),
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      Visibility(
+                                        visible: inputTimeController
+                                            .isTimePicker.isFalse,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Utils.hapticFeedback();
+                                            inputTimeController
+                                                .confirmTimeInput();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                border: Border.all(
+                                                  color: kprimaryColor,
+                                                  width: 1.0,
+                                                )),
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Icon(
+                                              Icons.done,
+                                              color: kprimaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                           );
@@ -498,26 +537,30 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    Obx(() => (!controller.repeatDays
-                            .every((element) => element == false))
-                        ? RepeatOnceTile(
-                            controller: controller,
-                            themeController: themeController,
-                          )
-                        : const SizedBox()),
-                    Obx(() => (!controller.repeatDays
-                            .every((element) => element == false))
-                        ? Container(
-                            color: themeController.isLightMode.value
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
-                            child: Divider(
+                    Obx(
+                      () => (!controller.repeatDays
+                              .every((element) => element == false))
+                          ? RepeatOnceTile(
+                              controller: controller,
+                              themeController: themeController,
+                            )
+                          : const SizedBox(),
+                    ),
+                    Obx(
+                      () => (!controller.repeatDays
+                              .every((element) => element == false))
+                          ? Container(
                               color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
-                          )
-                        : const SizedBox()),
+                                  ? kLightSecondaryBackgroundColor
+                                  : ksecondaryBackgroundColor,
+                              child: Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
                     SnoozeDurationTile(
                       controller: controller,
                       themeController: themeController,
@@ -531,6 +574,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
+                    ),
+                    Obx(
+                      () => (controller.repeatDays
+                              .every((element) => element == false))
+                          ? DeleteAfterGoesOff(
+                              controller: controller,
+                              themeController: themeController,
+                            )
+                          : const SizedBox(),
                     ),
                     LabelTile(
                       controller: controller,
@@ -568,6 +620,20 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                     Container(
                       color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryDisabledTextColor
+                            : kprimaryDisabledTextColor,
+                      ),
+                    ),
+                    QuoteTile(
+                      controller: controller,
+                      themeController: themeController,
+                    ),
+                    Container(
+                      color: themeController.isLightMode.value
                           ? kLightPrimaryBackgroundColor
                           : ksecondaryTextColor,
                       height: 10,
@@ -584,7 +650,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Text(
-                                'Automatic Cancellation',
+                                'Automatic Cancellation'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
@@ -643,7 +709,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Text(
-                                'Challenges',
+                                'Challenges'.tr,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleMedium!.copyWith(
@@ -699,7 +765,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Text(
-                                'Shared Alarm',
+                                'Shared Alarm'.tr,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleMedium!.copyWith(

@@ -22,7 +22,7 @@ class LabelTile extends StatelessWidget {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: Text(
-        'Label',
+        'Label'.tr,
         style: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -32,7 +32,7 @@ class LabelTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          title: 'Enter a name',
+          title: 'Enter a name'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -78,7 +78,7 @@ class LabelTile extends StatelessWidget {
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
-              hintText: 'Enter a name',
+              hintText: 'Enter a name'.tr,
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryDisabledTextColor
@@ -90,8 +90,9 @@ class LabelTile extends StatelessWidget {
                 controller.labelController.text = '';
                 if (text.isNotEmpty) {
                   Get.snackbar(
-                    'Note',
-                    "Please don't enter whitespace as first character!",
+                    'Note'.tr,
+                    // "Please don't enter whitespace as first character!",
+                    'noWhitespace'.tr,
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
                   );
@@ -107,7 +108,7 @@ class LabelTile extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(kprimaryColor),
             ),
             child: Text(
-              'Save',
+              'Save'.tr,
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryTextColor
@@ -133,7 +134,7 @@ class LabelTile extends StatelessWidget {
                 child: Text(
                   (controller.label.value.trim().isNotEmpty)
                       ? controller.label.value
-                      : 'Off',
+                      : 'Off'.tr,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.label.value.trim().isEmpty)

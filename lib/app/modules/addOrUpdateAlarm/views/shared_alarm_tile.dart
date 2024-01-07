@@ -26,7 +26,7 @@ class SharedAlarm extends StatelessWidget {
               title: Row(
                 children: [
                   Text(
-                    'Shared Alarm',
+                    'Shared Alarm'.tr,
                     style: TextStyle(
                       color: themeController.isLightMode.value
                           ? kLightPrimaryTextColor
@@ -64,7 +64,7 @@ class SharedAlarm extends StatelessWidget {
                                     size: height * 0.1,
                                   ),
                                   Text(
-                                    'Shared alarms',
+                                    'Shared alarms'.tr,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(context)
                                         .textTheme
@@ -73,10 +73,11 @@ class SharedAlarm extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Text(
-                                      'Share alarms with others using the'
-                                      ' Alarm ID. Each shared user can choose'
-                                      ' to have their alarm ring before or'
-                                      ' after the set time.',
+                                      // 'Share alarms with others using the'
+                                      // ' Alarm ID. Each shared user can choose'
+                                      // ' to have their alarm ring before or'
+                                      // ' after the set time.',
+                                      'sharedDescription'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium,
@@ -97,7 +98,7 @@ class SharedAlarm extends StatelessWidget {
                                         Get.back();
                                       },
                                       child: Text(
-                                        'Understood',
+                                        'Understood'.tr,
                                         style: Theme.of(context)
                                             .textTheme
                                             .displaySmall!
@@ -148,13 +149,12 @@ class SharedAlarm extends StatelessWidget {
                   backgroundColor: themeController.isLightMode.value
                       ? kLightSecondaryBackgroundColor
                       : ksecondaryBackgroundColor,
-                  title: 'Disabled!',
+                  title: 'Disabled!'.tr,
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
                     children: [
-                      const Text(
-                        'To use this feature, you have link your'
-                        ' Google account!',
+                       Text(
+                        'To use this feature, you have to link your Google account!'.tr,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -168,7 +168,7 @@ class SharedAlarm extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                'Go to settings',
+                                'Go to settings'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall!
@@ -193,7 +193,7 @@ class SharedAlarm extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                'Cancel',
+                                'Cancel'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall!
@@ -216,7 +216,7 @@ class SharedAlarm extends StatelessWidget {
                 );
               },
               title: Text(
-                'Enable Shared Alarm',
+                'Enable Shared Alarm'.tr,
                 style: TextStyle(
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor

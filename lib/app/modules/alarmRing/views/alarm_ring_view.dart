@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -24,8 +25,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
         }
 
         Get.snackbar(
-          'Note',
-          "You can't go back while the alarm is ringing",
+          'Note'.tr,
+          "You can't go back while the alarm is ringing".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -54,8 +55,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               Utils.isChallengeEnabled(
                                 controller.currentlyRingingAlarm.value,
                               )
-                                  ? 'Start Challenge'
-                                  : 'Dismiss',
+                                  ? 'Start Challenge'.tr
+                                  : 'Dismiss'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -76,7 +77,11 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       controller.currentlyRingingAlarm.value,
                                 );
                               } else {
-                                Get.offNamed('/home');
+                                Get.offNamed(
+                                  '/bottom-navigation-bar',
+                                  arguments: controller.currentlyRingingAlarm
+                                      .value.showMotivationalQuote,
+                                );
                               }
                             },
                           )
@@ -100,7 +105,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               ),
                             ),
                             child: Text(
-                              'Exit Preview',
+                              'Exit Preview'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -112,7 +117,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
-                              Get.offNamed('/home');
+                              Get.offNamed('/bottom-navigation-bar');
                             },
                           ),
                         ),
@@ -171,31 +176,38 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 Obx(
                   () => Visibility(
                     visible: !controller.isSnoozing.value,
-                    child: SizedBox(
-                      height: height * 0.07,
-                      width: width * 0.5,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            themeController.isLightMode.value
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
+                    child: Obx(
+                      () => Padding(
+                        padding: Get.arguments != null
+                            ? const EdgeInsets.symmetric(vertical: 90.0)
+                            : EdgeInsets.zero,
+                        child: SizedBox(
+                          height: height * 0.07,
+                          width: width * 0.5,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                themeController.isLightMode.value
+                                    ? kLightSecondaryBackgroundColor
+                                    : ksecondaryBackgroundColor,
+                              ),
+                            ),
+                            child: Text(
+                              'Snooze'.tr,
+                              style:
+                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : kprimaryTextColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                            ),
+                            onPressed: () {
+                              Utils.hapticFeedback();
+                              controller.startSnooze();
+                            },
                           ),
                         ),
-                        child: Text(
-                          'Snooze',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : kprimaryTextColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.startSnooze();
-                        },
                       ),
                     ),
                   ),

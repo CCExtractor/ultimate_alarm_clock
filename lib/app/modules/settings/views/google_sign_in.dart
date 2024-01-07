@@ -23,6 +23,9 @@ class GoogleSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      highlightColor: Colors.transparent,
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
       onTap: () async {
         Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
@@ -34,7 +37,7 @@ class GoogleSignIn extends StatelessWidget {
               backgroundColor: themeController.isLightMode.value
                   ? kLightSecondaryBackgroundColor
                   : ksecondaryBackgroundColor,
-              title: 'Success!',
+              title: 'Success!'.tr,
               titleStyle: Theme.of(context).textTheme.displaySmall,
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -47,7 +50,7 @@ class GoogleSignIn extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Text(
-                      'Your account is now linked!',
+                      'Your account is now linked!'.tr,
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
                   ),
@@ -56,7 +59,7 @@ class GoogleSignIn extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
-                      'Okay',
+                      'Okay'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryTextColor
@@ -79,11 +82,14 @@ class GoogleSignIn extends StatelessWidget {
             backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-            title: 'Are you sure?',
+            title: 'Are you sure?'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Column(
               children: [
-                const Text('Do you want to unlink your Google account?'),
+                 Text(
+                    // 'Do you want to unlink your Google account?',
+                   'unlinkAccount'.tr
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
@@ -95,7 +101,7 @@ class GoogleSignIn extends StatelessWidget {
                               MaterialStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
-                          'Unlink',
+                          'Unlink'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -118,7 +124,7 @@ class GoogleSignIn extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Cancel',
+                          'Cancel'.tr,
                           style: Theme.of(context).textTheme.displaySmall!,
                         ),
                         onPressed: () {
@@ -152,8 +158,10 @@ class GoogleSignIn extends StatelessWidget {
                   children: [
                     Text(
                       (controller.isUserLoggedIn.value)
-                          ? 'Unlink ${controller.userModel!.email}'
-                          : 'Sign-In with Google',
+                          ?
+                      // 'Unlink ${controller.userModel!.email}'
+                      'Unlink @usermail'.trParams({'usermail' : controller.userModel!.email})
+                          : 'Sign-In with Google'.tr,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -176,68 +184,73 @@ class GoogleSignIn extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              'Why do I have to sign in with Google?',
+                              'Why do I have to sign in with Google?'.tr,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.displayMedium,
                             ),
                             Column(
                               children: [
-                                const Text(
-                                  'Signing in is optional. It'
-                                  ' is only required for the'
-                                  ' functionalities that use'
-                                  ' cloud services to work such as:',
+                                 Text(
+                                  // 'Signing in is optional. It'
+                                  // ' is only required for the'
+                                  // ' functionalities that use'
+                                  // ' cloud services to work such as:',
+                                  'Sign-inDescription'.tr,
                                   textAlign: TextAlign.justify,
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'Shared Alarms',
+                                  'Shared Alarms'.tr,
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
-                                const Text(
-                                  'Collaborate with friends, family members,'
-                                  ' or colleagues to ensure that they'
-                                  ' wake up on time using shared alarms.',
+                                 Text(
+                                  // 'Collaborate with friends, family members,'
+                                  // ' or colleagues to ensure that they'
+                                  // ' wake up on time using shared alarms.',
+                                  'CollabDescription'.tr,
                                   textAlign: TextAlign.justify,
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'Syncing Across Devices',
+                                  'Syncing Across Devices'.tr,
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
-                                const Text(
-                                  'Access your alarms across multiple devices'
-                                  ' where the alarms are updated in'
-                                  ' real-time.',
+                                 Text(
+                                  // 'Access your alarms across multiple devices'
+                                  // ' where the alarms are updated in'
+                                  // ' real-time.',
+                                  'AccessMultiple'.tr,
                                   textAlign: TextAlign.justify,
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'Your privacy',
+                                  'Your privacy'.tr,
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
-                                const Text(
-                                  'We do not access,  use or sell any'
-                                  ' information, which you can verify by'
-                                  ' inspecting the source code.',
+                                 Text(
+                                  // 'We do not access,  use or sell any'
+                                  // ' information, which you can verify by'
+                                  // ' inspecting the source code.',
+                                  'NoAccessInfo'.tr,
                                   textAlign: TextAlign.justify,
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const Text(
-                                  'All access is limited exclusively to'
-                                  ' provide the functionalities described'
-                                  ' above.',
+                                 Text(
+                                  // 'All access is limited exclusively to'
+                                  // ' provide the functionalities described'
+                                  // ' above.',
+                                  'LimitedAccess'.tr,
                                   textAlign: TextAlign.justify,
                                 ),
                               ],
@@ -255,7 +268,7 @@ class GoogleSignIn extends StatelessWidget {
                                   Get.back();
                                 },
                                 child: Text(
-                                  'Understood',
+                                  'Understood'.tr,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
