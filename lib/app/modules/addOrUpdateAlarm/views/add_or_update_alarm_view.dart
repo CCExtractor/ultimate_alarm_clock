@@ -41,427 +41,447 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
     var width = Get.width;
     var height = Get.height;
     return PopScope(
-      canPop: false,
-      onPopInvoked: (bool didPop) {
-        if (didPop) {
-          return;
-        }
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            return;
+          }
 
-        Get.defaultDialog(
-          titlePadding: const EdgeInsets.symmetric(
-            vertical: 20,
-          ),
-          backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
-          title: 'Discard Changes?',
-          titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Column(
-            children: [
-              Text(
-                'You have unsaved changes. Are you sure you want to leave this'
-                ' page?',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
+          Get.defaultDialog(
+            titlePadding: const EdgeInsets.symmetric(
+              vertical: 20,
+            ),
+            backgroundColor: themeController.isLightMode.value
+                ? kLightSecondaryBackgroundColor
+                : ksecondaryBackgroundColor,
+            title: 'Discard Changes?',
+            titleStyle: Theme.of(context).textTheme.displaySmall,
+            content: Column(
+              children: [
+                Text(
+                  'You have unsaved changes. Are you sure you want to leave this'
+                  ' page?',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kprimaryColor),
-                      ),
-                      child: Text(
-                        'Cancel',
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: kprimaryBackgroundColor,
-                                ),
-                      ),
-                    ),
-                    OutlinedButton(
-                      onPressed: () {
-                        Get.offNamedUntil(
-                          '/bottom-navigation-bar',
-                          (route) => route.settings.name == '/splash-screen',
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          color: themeController.isLightMode.value
-                              ? Colors.red.withOpacity(0.9)
-                              : Colors.red,
-                          width: 1,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
                         ),
-                      ),
-                      child: Text(
-                        'Leave',
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? Colors.red.withOpacity(0.9)
-                                      : Colors.red,
-                                ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: (controller.alarmRecord != null &&
-                controller.mutexLock.value == true)
-            ? const SizedBox()
-            : Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: SizedBox(
-                  height: height * 0.06,
-                  width: width * 0.8,
-                  child: TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                    ),
-                    child: Text(
-                      (controller.alarmRecord == null) ? 'Save' : 'Update',
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
-                          ),
-                    ),
-                    onPressed: () async {
-                      Utils.hapticFeedback();
-                      if (controller.userModel != null) {
-                        controller.offsetDetails[controller.userModel!.id] = {
-                          'offsettedTime': Utils.timeOfDayToString(
-                            TimeOfDay.fromDateTime(
-                              Utils.calculateOffsetAlarmTime(
-                                controller.selectedTime.value,
-                                controller.isOffsetBefore.value,
-                                controller.offsetDuration.value,
+                        child: Text(
+                          'Cancel',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: kprimaryBackgroundColor,
                               ),
-                            ),
-                          ),
-                          'offsetDuration': controller.offsetDuration.value,
-                          'isOffsetBefore': controller.isOffsetBefore.value,
-                        };
-                      } else {
-                        controller.offsetDetails.value = {};
-                      }
-                      AlarmModel alarmRecord = AlarmModel(
-                        snoozeDuration: controller.snoozeDuration.value,
-                        offsetDetails: controller.offsetDetails,
-                        label: controller.label.value,
-                        note: controller.note.value,
-                          showMotivationalQuote:
-                              controller.showMotivationalQuote.value,
-                        isOneTime: controller.isOneTime.value,
-                        lastEditedUserId: controller.lastEditedUserId,
-                        mutexLock: controller.mutexLock.value,
-                        alarmID: controller.alarmID,
-                        ownerId: controller.ownerId,
-                        ownerName: controller.ownerName,
-                        activityInterval:
-                            controller.activityInterval.value * 60000,
-                        days: controller.repeatDays.toList(),
-                        alarmTime: Utils.timeOfDayToString(
-                          TimeOfDay.fromDateTime(
-                            controller.selectedTime.value,
+                        ),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          Get.offNamedUntil(
+                            '/bottom-navigation-bar',
+                            (route) => route.settings.name == '/splash-screen',
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: themeController.isLightMode.value
+                                ? Colors.red.withOpacity(0.9)
+                                : Colors.red,
+                            width: 1,
                           ),
                         ),
-                        mainAlarmTime: Utils.timeOfDayToString(
-                          TimeOfDay.fromDateTime(
-                            controller.selectedTime.value,
-                          ),
+                        child: Text(
+                          'Leave',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? Colors.red.withOpacity(0.9)
+                                    : Colors.red,
+                              ),
                         ),
-                        intervalToAlarm: Utils.getMillisecondsToAlarm(
-                          DateTime.now(),
-                          controller.selectedTime.value,
-                        ),
-                        isActivityEnabled: controller.isActivityenabled.value,
-                        minutesSinceMidnight: Utils.timeOfDayToInt(
-                          TimeOfDay.fromDateTime(
-                            controller.selectedTime.value,
-                          ),
-                        ),
-                        isLocationEnabled: controller.isLocationEnabled.value,
-                        weatherTypes: Utils.getIntFromWeatherTypes(
-                          controller.selectedWeather.toList(),
-                        ),
-                        isWeatherEnabled: controller.isWeatherEnabled.value,
-                        location: Utils.geoPointToString(
-                          Utils.latLngToGeoPoint(
-                            controller.selectedPoint.value,
-                          ),
-                        ),
-                        isSharedAlarmEnabled:
-                            controller.isSharedAlarmEnabled.value,
-                        isQrEnabled: controller.isQrEnabled.value,
-                        qrValue: controller.qrValue.value,
-                        isMathsEnabled: controller.isMathsEnabled.value,
-                        numMathsQuestions: controller.numMathsQuestions.value,
-                        mathsDifficulty: controller.mathsDifficulty.value.index,
-                        isShakeEnabled: controller.isShakeEnabled.value,
-                        shakeTimes: controller.shakeTimes.value,
-                        ringtoneName: controller.customRingtoneName.value,
-                        isTimer: false,
-                      );
-
-                      // Adding offset details to the database if
-                      // its a shared alarm
-                      if (controller.isSharedAlarmEnabled.value) {
-                        alarmRecord.offsetDetails = controller.offsetDetails;
-                        alarmRecord.mainAlarmTime = Utils.timeOfDayToString(
-                          TimeOfDay.fromDateTime(
-                            controller.selectedTime.value,
-                          ),
-                        );
-                      }
-
-                      try {
-                        if (controller.alarmRecord == null) {
-                          await controller.createAlarm(alarmRecord);
-                        } else {
-                          AlarmModel updatedAlarmModel =
-                              controller.updatedAlarmModel();
-                          await controller.updateAlarm(updatedAlarmModel);
-                        }
-                      } catch (e) {
-                        debugPrint(e.toString());
-                      }
-
-                      await controller.checkOverlayPermissionAndNavigate();
-                    },
+                      ),
+                    ],
                   ),
                 ),
-              ),
-        appBar: AppBar(
-          backgroundColor: (controller.alarmRecord != null &&
+              ],
+            ),
+          );
+        },
+        child: Scaffold(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: (controller.alarmRecord != null &&
                   controller.mutexLock.value == true)
-              ? themeController.isLightMode.value
-                  ? kLightPrimaryBackgroundColor
-                  : kprimaryBackgroundColor
-              : themeController.isLightMode.value
-                  ? kLightSecondaryBackgroundColor
-                  : ksecondaryBackgroundColor,
-          elevation: 0.0,
-          centerTitle: true,
-          iconTheme: Theme.of(context).iconTheme,
-          title: (controller.alarmRecord != null &&
-                  controller.mutexLock.value == true)
-              ? const Text('')
-              : Obx(
-                  () => Text(
-                    'Rings in ${controller.timeToAlarm.value}',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-        ),
-        body: (controller.alarmRecord != null &&
-                controller.mutexLock.value == true)
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        'Uh-oh!',
-                        style:
-                            Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor,
-                                ),
-                      ),
-                    ),
-                    SvgPicture.asset(
-                      'assets/images/locked.svg',
-                      height: height * 0.24,
-                      width: width * 0.5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        'This alarm is currently being edited!',
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor,
-                                ),
-                      ),
-                    ),
-                    TextButton(
+              ? const SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: SizedBox(
+                    height: height * 0.06,
+                    width: width * 0.8,
+                    child: TextButton(
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        'Go back',
+                        (controller.alarmRecord == null) ? 'Save' : 'Update',
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
-                                      ? kLightSecondaryTextColor
+                                      ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         Utils.hapticFeedback();
-                        Get.back();
+                        if (controller.userModel != null) {
+                          controller.offsetDetails[controller.userModel!.id] = {
+                            'offsettedTime': Utils.timeOfDayToString(
+                              TimeOfDay.fromDateTime(
+                                Utils.calculateOffsetAlarmTime(
+                                  controller.selectedTime.value,
+                                  controller.isOffsetBefore.value,
+                                  controller.offsetDuration.value,
+                                ),
+                              ),
+                            ),
+                            'offsetDuration': controller.offsetDuration.value,
+                            'isOffsetBefore': controller.isOffsetBefore.value,
+                          };
+                        } else {
+                          controller.offsetDetails.value = {};
+                        }
+                        AlarmModel alarmRecord = AlarmModel(
+                          deleteAfterGoesOff:
+                              controller.deleteAfterGoesOff.value,
+                          snoozeDuration: controller.snoozeDuration.value,
+                          offsetDetails: controller.offsetDetails,
+                          label: controller.label.value,
+                          note: controller.note.value,
+                          showMotivationalQuote:
+                              controller.showMotivationalQuote.value,
+                          isOneTime: controller.isOneTime.value,
+                          lastEditedUserId: controller.lastEditedUserId,
+                          mutexLock: controller.mutexLock.value,
+                          alarmID: controller.alarmID,
+                          ownerId: controller.ownerId,
+                          ownerName: controller.ownerName,
+                          activityInterval:
+                              controller.activityInterval.value * 60000,
+                          days: controller.repeatDays.toList(),
+                          alarmTime: Utils.timeOfDayToString(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          ),
+                          mainAlarmTime: Utils.timeOfDayToString(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          ),
+                          intervalToAlarm: Utils.getMillisecondsToAlarm(
+                            DateTime.now(),
+                            controller.selectedTime.value,
+                          ),
+                          isActivityEnabled: controller.isActivityenabled.value,
+                          minutesSinceMidnight: Utils.timeOfDayToInt(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          ),
+                          isLocationEnabled: controller.isLocationEnabled.value,
+                          weatherTypes: Utils.getIntFromWeatherTypes(
+                            controller.selectedWeather.toList(),
+                          ),
+                          isWeatherEnabled: controller.isWeatherEnabled.value,
+                          location: Utils.geoPointToString(
+                            Utils.latLngToGeoPoint(
+                              controller.selectedPoint.value,
+                            ),
+                          ),
+                          isSharedAlarmEnabled:
+                              controller.isSharedAlarmEnabled.value,
+                          isQrEnabled: controller.isQrEnabled.value,
+                          qrValue: controller.qrValue.value,
+                          isMathsEnabled: controller.isMathsEnabled.value,
+                          numMathsQuestions: controller.numMathsQuestions.value,
+                          mathsDifficulty:
+                              controller.mathsDifficulty.value.index,
+                          isShakeEnabled: controller.isShakeEnabled.value,
+                          shakeTimes: controller.shakeTimes.value,
+                          ringtoneName: controller.customRingtoneName.value,
+                          isTimer: false,
+                        );
+
+                        // Adding offset details to the database if
+                        // its a shared alarm
+                        if (controller.isSharedAlarmEnabled.value) {
+                          alarmRecord.offsetDetails = controller.offsetDetails;
+                          alarmRecord.mainAlarmTime = Utils.timeOfDayToString(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          );
+                        }
+
+                        try {
+                          if (controller.alarmRecord == null) {
+                            await controller.createAlarm(alarmRecord);
+                          } else {
+                            AlarmModel updatedAlarmModel =
+                                controller.updatedAlarmModel();
+                            await controller.updateAlarm(updatedAlarmModel);
+                          }
+                        } catch (e) {
+                          debugPrint(e.toString());
+                        }
+
+                        await controller.checkOverlayPermissionAndNavigate();
                       },
                     ),
-                  ],
+                  ),
                 ),
-              )
-            : ListView(
-                children: [
-                  Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      height: height * 0.32,
-                      width: width,
-                      child: Obx(() {
-                        return InkWell(
-                          onTap: () {
-                            Utils.hapticFeedback();
-                            inputTimeController.changeDatePicker();
-                          },
-                          child: inputTimeController.isTimePicker.value
-                              ? TimePickerSpinner(
-                                  time: controller.selectedTime.value,
-                                  isForce2Digits: true,
-                                  alignment: Alignment.center,
-                                  is24HourMode:
-                                      settingsController.is24HrsEnabled.value,
-                                  normalTextStyle: Theme.of(context)
-                                      .textTheme
-                                      .displayMedium!
-                                      .copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
+          appBar: AppBar(
+            backgroundColor: (controller.alarmRecord != null &&
+                    controller.mutexLock.value == true)
+                ? themeController.isLightMode.value
+                    ? kLightPrimaryBackgroundColor
+                    : kprimaryBackgroundColor
+                : themeController.isLightMode.value
+                    ? kLightSecondaryBackgroundColor
+                    : ksecondaryBackgroundColor,
+            elevation: 0.0,
+            centerTitle: true,
+            iconTheme: Theme.of(context).iconTheme,
+            title: (controller.alarmRecord != null &&
+                    controller.mutexLock.value == true)
+                ? const Text('')
+                : Obx(
+                    () => Text(
+                      'Rings in ${controller.timeToAlarm.value}',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ),
+          ),
+          body: (controller.alarmRecord != null &&
+                  controller.mutexLock.value == true)
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          'Uh-oh!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        'assets/images/locked.svg',
+                        height: height * 0.24,
+                        width: width * 0.5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          'This alarm is currently being edited!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        child: Text(
+                          'Go back',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightSecondaryTextColor
+                                    : ksecondaryTextColor,
+                              ),
+                        ),
+                        onPressed: () {
+                          Utils.hapticFeedback();
+                          Get.back();
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              : ListView(
+                  children: [
+                    Container(
+                        color: themeController.isLightMode.value
+                            ? kLightSecondaryBackgroundColor
+                            : ksecondaryBackgroundColor,
+                        height: height * 0.32,
+                        width: width,
+                        child: Obx(() {
+                          return InkWell(
+                            onTap: () {
+                              Utils.hapticFeedback();
+                              inputTimeController.changeDatePicker();
+                            },
+                            child: inputTimeController.isTimePicker.value
+                                ? TimePickerSpinner(
+                                    time: controller.selectedTime.value,
+                                    isForce2Digits: true,
+                                    alignment: Alignment.center,
+                                    is24HourMode:
+                                        settingsController.is24HrsEnabled.value,
+                                    normalTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          color: themeController
+                                                  .isLightMode.value
+                                              ? kLightPrimaryDisabledTextColor
+                                              : kprimaryDisabledTextColor,
+                                        ),
+                                    highlightedTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                    onTimeChange: (dateTime) {
+                                      Utils.hapticFeedback();
+                                      controller.selectedTime.value = dateTime;
+                                      inputTimeController.inputHrsController
+                                          .text = settingsController
+                                              .is24HrsEnabled.value
+                                          ? dateTime.hour.toString()
+                                          : (dateTime.hour == 0
+                                              ? 12.toString()
+                                              : (dateTime.hour > 12
+                                                  ? (dateTime.hour - 12)
+                                                      .toString()
+                                                  : dateTime.hour.toString()));
+                                      inputTimeController.inputMinutesController
+                                          .text = dateTime.minute.toString();
+                                      inputTimeController.changePeriod(
+                                          dateTime.hour >= 12 ? 'PM' : 'AM');
+                                    },
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 80,
+                                        child: TextField(
+                                          onChanged: (_) {
+                                            inputTimeController.setTime();
+                                          },
+                                          decoration: const InputDecoration(
+                                              hintText: 'HH',
+                                              border: InputBorder.none),
+                                          textAlign: TextAlign.center,
+                                          controller: inputTimeController
+                                              .inputHrsController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                            LengthLimitingTextInputFormatter(2),
+                                            LimitRange(
+                                                0,
+                                                settingsController
+                                                        .is24HrsEnabled.value
+                                                    ? 23
+                                                    : 12)
+                                          ],
+                                        ),
                                       ),
-                                  highlightedTextStyle:
-                                      Theme.of(context).textTheme.displayMedium,
-                                  onTimeChange: (dateTime) {
-                                    Utils.hapticFeedback();
-                                    controller.selectedTime.value = dateTime;
-                                    inputTimeController.inputHrsController
-                                        .text = settingsController
-                                            .is24HrsEnabled.value
-                                        ? dateTime.hour.toString()
-                                        : (dateTime.hour == 0
-                                            ? 12.toString()
-                                            : (dateTime.hour > 12
-                                                ? (dateTime.hour - 12)
-                                                    .toString()
-                                                : dateTime.hour.toString()));
-                                    inputTimeController.inputMinutesController
-                                        .text = dateTime.minute.toString();
-                                    inputTimeController.changePeriod(
-                                        dateTime.hour >= 12 ? 'PM' : 'AM');
-                                  },
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 80,
-                                      child: TextField(
-                                        onChanged: (_) {
-                                          inputTimeController.setTime();
-                                        },
-                                        decoration: const InputDecoration(
-                                            hintText: 'HH',
-                                            border: InputBorder.none),
-                                        textAlign: TextAlign.center,
-                                        controller: inputTimeController
-                                            .inputHrsController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp('[1,2,3,4,5,6,7,8,9,0]')),
-                                          LengthLimitingTextInputFormatter(2),
-                                          LimitRange(
-                                              0,
-                                              settingsController
-                                                      .is24HrsEnabled.value
-                                                  ? 23
-                                                  : 12)
-                                        ],
+                                      SizedBox(
+                                        width: 16,
+                                        child: Text(
+                                          ':',
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 16,
-                                      child: Text(
-                                        ':',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
+                                      SizedBox(
+                                        width: 80,
+                                        child: TextField(
+                                          onChanged: (_) {
+                                            inputTimeController.setTime();
+                                          },
+                                          decoration: const InputDecoration(
+                                              hintText: 'MM',
+                                              border: InputBorder.none),
+                                          textAlign: TextAlign.center,
+                                          controller: inputTimeController
+                                              .inputMinutesController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                            LengthLimitingTextInputFormatter(2),
+                                            LimitRange(00, 59)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 80,
-                                      child: TextField(
-                                        onChanged: (_) {
-                                          inputTimeController.setTime();
-                                        },
-                                        decoration: const InputDecoration(
-                                            hintText: 'MM',
-                                            border: InputBorder.none),
-                                        textAlign: TextAlign.center,
-                                        controller: inputTimeController
-                                            .inputMinutesController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp('[1,2,3,4,5,6,7,8,9,0]')),
-                                          LengthLimitingTextInputFormatter(2),
-                                          LimitRange(00, 59)
-                                        ],
+                                      const SizedBox(
+                                        width: 16,
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    Visibility(
-                                      visible: !settingsController
-                                          .is24HrsEnabled.value,
-                                      child: DropdownButton(
-                                        underline: Container(),
-                                        value: inputTimeController.isAM.value
-                                            ? 'AM'
-                                            : 'PM',
-                                        dropdownColor:
-                                            themeController.isLightMode.value
-                                                ? kLightPrimaryBackgroundColor
-                                                : kprimaryBackgroundColor,
-                                        items:
-                                            ['AM', 'PM'].map((String period) {
-                                          return DropdownMenuItem<String>(
-                                            value: period,
-                                            child: Text(period),
-                                          );
-                                        }).toList(),
-                                        onChanged: (getPeriod) {
-                                          inputTimeController
-                                              .changePeriod(getPeriod!);
+                                      Visibility(
+                                        visible: !settingsController
+                                            .is24HrsEnabled.value,
+                                        child: DropdownButton(
+                                          underline: Container(),
+                                          value: inputTimeController.isAM.value
+                                              ? 'AM'
+                                              : 'PM',
+                                          dropdownColor:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryBackgroundColor
+                                                  : kprimaryBackgroundColor,
+                                          items:
+                                              ['AM', 'PM'].map((String period) {
+                                            return DropdownMenuItem<String>(
+                                              value: period,
+                                              child: Text(period),
+                                            );
+                                          }).toList(),
+                                          onChanged: (getPeriod) {
+                                            inputTimeController
+                                                .changePeriod(getPeriod!);
 
                                             inputTimeController.setTime();
                                           },
