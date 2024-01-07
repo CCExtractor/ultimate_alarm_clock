@@ -37,7 +37,7 @@ class RepeatTile extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Days of the week',
+          title: 'Days of the week'.tr,
           titleStyle: TextStyle(
             color: themeController.isLightMode.value
                 ? kLightPrimaryTextColor
@@ -46,13 +46,13 @@ class RepeatTile extends StatelessWidget {
           content: Obx(
             () => Column(
               children: [
-                dayTile(dayIndex: 0, dayName: 'Monday', context: context),
-                dayTile(dayIndex: 1, dayName: 'Tuesday', context: context),
-                dayTile(dayIndex: 2, dayName: 'Wednesday', context: context),
-                dayTile(dayIndex: 3, dayName: 'Thursday', context: context),
-                dayTile(dayIndex: 4, dayName: 'Friday', context: context),
-                dayTile(dayIndex: 5, dayName: 'Saturday', context: context),
-                dayTile(dayIndex: 6, dayName: 'Sunday', context: context),
+                dayTile(dayIndex: 0, dayName: 'Monday'.tr, context: context),
+                dayTile(dayIndex: 1, dayName: 'Tuesday'.tr, context: context),
+                dayTile(dayIndex: 2, dayName: 'Wednesday'.tr, context: context),
+                dayTile(dayIndex: 3, dayName: 'Thursday'.tr, context: context),
+                dayTile(dayIndex: 4, dayName: 'Friday'.tr, context: context),
+                dayTile(dayIndex: 5, dayName: 'Saturday'.tr, context: context),
+                dayTile(dayIndex: 6, dayName: 'Sunday'.tr, context: context),
                 InkWell(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
@@ -70,7 +70,7 @@ class RepeatTile extends StatelessWidget {
                             // Set the desired background color
                           ),
                           child: Text(
-                            'Done',
+                            'Done'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
@@ -100,7 +100,7 @@ class RepeatTile extends StatelessWidget {
                 controller.repeatDays.any((daySelected) => daySelected);
 
             return Text(
-              'Repeat',
+              'Repeat'.tr,
               style: TextStyle(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor
@@ -116,7 +116,7 @@ class RepeatTile extends StatelessWidget {
           children: [
             Obx(
               () => Text(
-                controller.daysRepeating.value,
+                controller.daysRepeating.value.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: themeController.isLightMode.value
                           ? kLightPrimaryTextColor

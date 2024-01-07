@@ -44,7 +44,7 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Enable Sorted Alarm List',
+              'Enable Sorted Alarm List'.tr,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: widget.themeController.isLightMode.value
                         ? kLightPrimaryTextColor

@@ -43,6 +43,7 @@ class AlarmModel {
   late int snoozeDuration;
   late String ringtoneName;
   late String note;
+  late bool deleteAfterGoesOff;
   late bool showMotivationalQuote;
   late bool isTimer;
   @ignore
@@ -81,6 +82,7 @@ class AlarmModel {
     required this.snoozeDuration,
     required this.ringtoneName,
     required this.note,
+    required this.deleteAfterGoesOff,
     required this.showMotivationalQuote,
     required this.isTimer,
   });
@@ -136,6 +138,7 @@ class AlarmModel {
     shakeTimes = documentSnapshot['shakeTimes'];
     ringtoneName = documentSnapshot['ringtoneName'];
     note = documentSnapshot['note'];
+    deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
     showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
     isTimer = documentSnapshot['isTimer'];
   }
@@ -176,6 +179,7 @@ class AlarmModel {
     isOneTime = alarmData['isOneTime'];
     ringtoneName = alarmData['ringtoneName'];
     note = alarmData['note'];
+    deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
     showMotivationalQuote = alarmData['showMotivationalQuote'];
     isTimer = alarmData['isTimer'];
   }
@@ -221,6 +225,7 @@ class AlarmModel {
       'snoozeDuration': alarmRecord.snoozeDuration,
       'ringtoneName': alarmRecord.ringtoneName,
       'note': alarmRecord.note,
+      'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
       'showMotivationalQuote': alarmRecord.showMotivationalQuote,
       'isTimer': alarmRecord.isTimer,
     };

@@ -23,7 +23,7 @@ class QrBarCode extends StatelessWidget {
       title: Row(
         children: [
           Text(
-            'QR/Bar Code',
+            'QR/Bar Code'.tr,
             style: TextStyle(
               color: themeController.isLightMode.value
                   ? kLightPrimaryTextColor
@@ -41,9 +41,10 @@ class QrBarCode extends StatelessWidget {
             onPressed: () {
               Utils.showModal(
                 context: context,
-                title: 'QR / Bar code',
-                description:
-                    'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
+                title: 'QR/Bar Code'.tr,
+                // description:
+                //     'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
+                description: 'qrDescription'.tr,
                 iconData: Icons.qr_code_scanner,
                 isLightMode: themeController.isLightMode.value,
               );
@@ -61,7 +62,7 @@ class QrBarCode extends StatelessWidget {
           children: [
             Obx(
               () => Text(
-                controller.isQrEnabled.value == true ? 'Enabled' : 'Off',
+                controller.isQrEnabled.value == true ? 'Enabled'.tr : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isQrEnabled.value == false)
                           ? themeController.isLightMode.value

@@ -26,7 +26,7 @@ class ShakeToDismiss extends StatelessWidget {
       title: Row(
         children: [
           Text(
-            'Shake to dismiss',
+            'Shake to dismiss'.tr,
             style: TextStyle(
               color: themeController.isLightMode.value
                   ? kLightPrimaryTextColor
@@ -44,10 +44,11 @@ class ShakeToDismiss extends StatelessWidget {
             onPressed: () {
               Utils.showModal(
                 context: context,
-                title: 'Shake to dismiss',
-                description: 'You will have to shake your phone a set number'
-                    ' of times to dismiss the alarm'
-                    ' - no more lazy snoozing :)',
+                title: 'Shake to dismiss'.tr,
+                // description: 'You will have to shake your phone a set number'
+                //     ' of times to dismiss the alarm'
+                //     ' - no more lazy snoozing :)',
+                description: 'shakeDescription'.tr,
                 iconData: Icons.vibration_sharp,
                 isLightMode: themeController.isLightMode.value,
               );
@@ -70,7 +71,7 @@ class ShakeToDismiss extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Number of shakes',
+          title: 'Number of shakes'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
@@ -93,7 +94,7 @@ class ShakeToDismiss extends StatelessWidget {
                         controller.shakeTimes.value = value;
                       },
                     ),
-                    Text(controller.shakeTimes.value > 1 ? 'times' : 'time'),
+                    Text(controller.shakeTimes.value > 1 ? 'times'.tr : 'time'.tr),
                   ],
                 ),
                 InkWell(
@@ -113,7 +114,7 @@ class ShakeToDismiss extends StatelessWidget {
                             // Set the desired background color
                           ),
                           child: Text(
-                            'Done',
+                            'Done'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
@@ -143,7 +144,7 @@ class ShakeToDismiss extends StatelessWidget {
                     ? controller.shakeTimes.value > 1
                         ? '${controller.shakeTimes.value} times'
                         : '${controller.shakeTimes.value} time'
-                    : 'Off',
+                    : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isShakeEnabled.value == false)
                           ? themeController.isLightMode.value

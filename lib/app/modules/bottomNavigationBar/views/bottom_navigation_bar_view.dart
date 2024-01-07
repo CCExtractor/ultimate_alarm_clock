@@ -18,14 +18,14 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
           useLegacyColorScheme: false,
-          items: const [
+          items:  [
             BottomNavigationBarItem(
               icon: Icon(Icons.alarm),
-              label: 'Alarm',
+              label: 'Alarm'.tr,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.timer),
-              label: 'Timer',
+              label: 'Timer'.tr,
             ),
           ],
           onTap: (index) {

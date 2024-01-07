@@ -28,7 +28,7 @@ class SharedUsers extends StatelessWidget {
             ? (controller.alarmRecord!.ownerId != controller.userModel!.id)
                 ? ListTile(
                     title: Text(
-                      'Alarm Owner',
+                      'Alarm Owner'.tr,
                       style: TextStyle(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor
@@ -46,7 +46,7 @@ class SharedUsers extends StatelessWidget {
                   )
                 : ListTile(
                     title: Text(
-                      'Shared Users',
+                      'Shared Users'.tr,
                       style: TextStyle(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor
@@ -66,8 +66,8 @@ class SharedUsers extends StatelessWidget {
 
                             return Obx(() {
                               if (controller.sharedUserIds.isEmpty) {
-                                return const Center(
-                                  child: Text('No shared users!'),
+                                return  Center(
+                                  child: Text('No shared users!'.tr),
                                 );
                               }
 
@@ -100,7 +100,7 @@ class SharedUsers extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            'Shared Users',
+                                            'Shared Users'.tr,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleMedium,
@@ -147,7 +147,7 @@ class SharedUsers extends StatelessWidget {
                                                             .all(Colors.red),
                                                   ),
                                                   child: Text(
-                                                    'Remove',
+                                                    'Remove'.tr,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyLarge!

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -24,8 +25,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
         }
 
         Get.snackbar(
-          'Note',
-          "You can't go back while the alarm is ringing",
+          'Note'.tr,
+          "You can't go back while the alarm is ringing".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -54,8 +55,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               Utils.isChallengeEnabled(
                                 controller.currentlyRingingAlarm.value,
                               )
-                                  ? 'Start Challenge'
-                                  : 'Dismiss',
+                                  ? 'Start Challenge'.tr
+                                  : 'Dismiss'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -104,7 +105,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               ),
                             ),
                             child: Text(
-                              'Exit Preview',
+                              'Exit Preview'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -176,10 +177,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   () => Visibility(
                     visible: !controller.isSnoozing.value,
                     child: Obx(
-                     () =>  Padding(
-                       padding: Get.arguments != null
-                           ? const EdgeInsets.symmetric(vertical: 90.0)
-                           : EdgeInsets.zero,
+                      () => Padding(
+                        padding: Get.arguments != null
+                            ? const EdgeInsets.symmetric(vertical: 90.0)
+                            : EdgeInsets.zero,
                         child: SizedBox(
                           height: height * 0.07,
                           width: width * 0.5,
@@ -192,7 +193,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               ),
                             ),
                             child: Text(
-                              'Snooze',
+                              'Snooze'.tr,
                               style:
                                   Theme.of(context).textTheme.bodyMedium!.copyWith(
                                         color: themeController.isLightMode.value

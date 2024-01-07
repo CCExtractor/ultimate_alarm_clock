@@ -22,7 +22,7 @@ class NoteTile extends StatelessWidget {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: Text(
-        'Note',
+        'Note'.tr,
         style: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -32,7 +32,7 @@ class NoteTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          title: 'Enter a note',
+          title: 'Enter a note'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -78,7 +78,7 @@ class NoteTile extends StatelessWidget {
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
-              hintText: 'Enter a note',
+              hintText: 'Enter a note'.tr,
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryDisabledTextColor
@@ -90,8 +90,9 @@ class NoteTile extends StatelessWidget {
                 controller.noteController.text = '';
                 if (text.isNotEmpty) {
                   Get.snackbar(
-                    'Note',
-                    "Please don't enter whitespace as first character!",
+                    'Note'.tr,
+                    // "Please don't enter whitespace as first character!",
+                    'noWhitespace'.tr,
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
                   );
@@ -107,7 +108,7 @@ class NoteTile extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(kprimaryColor),
             ),
             child: Text(
-              'Save',
+              'Save'.tr,
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryTextColor
@@ -133,7 +134,7 @@ class NoteTile extends StatelessWidget {
                 child: Text(
                   (controller.note.value.trim().isNotEmpty)
                       ? controller.note.value
-                      : 'Off',
+                      : 'Off'.tr,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.note.value.trim().isEmpty)
