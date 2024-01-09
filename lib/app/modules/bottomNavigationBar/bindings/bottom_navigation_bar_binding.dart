@@ -8,20 +8,13 @@ import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_control
 class BottomNavigationBarBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put<TimerController>(
-      TimerController(),
+    Get.lazyPut<BottomNavigationBarController>(
+      () => BottomNavigationBarController(),
     );
-    Get.lazyPut<SettingsController>(
-      () => SettingsController(),
+    Get.lazyPut<TimerController>(
+      () => TimerController(),
     );
-    Get.put<HomeController>(
-      HomeController(),
-    );
-    Get.put<ThemeController>(
-      ThemeController(),
-    );
-    Get.put<BottomNavigationBarController>(
-      BottomNavigationBarController(),
-    );
+    Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
+    Get.lazyPut(() => HomeController());
   }
 }
