@@ -7,6 +7,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:weather/weather.dart';
 import 'package:latlong2/latlong.dart';
@@ -15,7 +16,8 @@ import 'package:fl_location/fl_location.dart';
 import '../../../data/providers/get_storage_provider.dart';
 
 class SettingsController extends GetxController {
-  var homeController = Get.find<HomeController>();
+  HomeController homeController = Get.find<HomeController>();
+  ThemeController themeController = Get.find<ThemeController>();
   var isHapticFeedbackEnabled = true.obs;
   final _hapticFeedbackKey = 'haptic_feedback';
   var is24HrsEnabled = false.obs;
@@ -32,34 +34,34 @@ class SettingsController extends GetxController {
   final RxBool didWeatherKeyError = false.obs;
   final RxBool showingCircularProgressIndicator = false.obs;
   RxBool validate = false.obs;
-  final storage=Get.find<GetStorageProvider>();
+  final storage = Get.find<GetStorageProvider>();
   final RxString local = Get.locale.toString().obs;
 
   final Map<String, dynamic> optionslocales = {
-    'en_US' : {
-      'languageCode' : 'en',
-      'countryCode' : 'US',
-      'description' : 'English',
+    'en_US': {
+      'languageCode': 'en',
+      'countryCode': 'US',
+      'description': 'English',
     },
-    'de_DE' : {
-      'languageCode' : 'de',
-      'countryCode' : 'DE',
-      'description' : 'German',
+    'de_DE': {
+      'languageCode': 'de',
+      'countryCode': 'DE',
+      'description': 'German',
     },
-    'ru_RU' : {
-      'languageCode' : 'ru',
-      'countryCode' : 'RU',
-      'description' : 'Russian',
+    'ru_RU': {
+      'languageCode': 'ru',
+      'countryCode': 'RU',
+      'description': 'Russian',
     },
-    'fr_FR' : {
-      'languageCode' : 'fr',
-      'countryCode' : 'FR',
-      'description' : 'French',
+    'fr_FR': {
+      'languageCode': 'fr',
+      'countryCode': 'FR',
+      'description': 'French',
     },
-    'es_ES' : {
-      'languageCode' : 'es',
-      'countryCode' : 'ES',
-      'description' : 'Spanish',
+    'es_ES': {
+      'languageCode': 'es',
+      'countryCode': 'ES',
+      'description': 'Spanish',
     },
   };
 
@@ -115,7 +117,7 @@ class SettingsController extends GetxController {
         await FirestoreDb.addUser(userModel!);
         await SecureStorageProvider().storeUserModel(userModel!);
         isUserLoggedIn.value = true;
-
+        await homeController.initStream(userModel);
         return true;
       } else {
         return null;
@@ -277,11 +279,11 @@ class SettingsController extends GetxController {
     _saveSortedAlarmListPreference();
   }
 
-  void updateLocale(String key){
+  void updateLocale(String key) {
     final String languageCode = optionslocales[key]['languageCode'];
     final String countryCode = optionslocales[key]['countryCode'];
     Get.updateLocale(Locale(languageCode, countryCode));
-    local.value=Get.locale.toString();
+    local.value = Get.locale.toString();
     storage.writeLocale(languageCode, countryCode);
   }
 }
