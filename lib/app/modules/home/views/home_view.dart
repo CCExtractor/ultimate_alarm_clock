@@ -12,6 +12,7 @@ import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controll
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -26,7 +27,6 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    AboutController aboutController = Get.put(AboutController());
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     var width = Get.width;
     var height = Get.height;
@@ -44,7 +44,6 @@ class HomeView extends GetView<HomeController> {
                     childrenOffset: Offset.zero,
                     distance: 70,
                     children: [
-                      const Icon(Icons.add),
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
@@ -286,7 +285,8 @@ class HomeView extends GetView<HomeController> {
                 : ExpandableFab(
                     initialOpen: false,
                     key: controller.floatingButtonKeyLoggedOut,
-                    children: [Icon(Icons.add)],
+                    child: Icon(Icons.add),
+                    children: [],
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
@@ -371,7 +371,7 @@ class HomeView extends GetView<HomeController> {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.back();
-                  Get.toNamed('/settings');
+                  Get.offNamed('/settings');
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
@@ -395,7 +395,7 @@ class HomeView extends GetView<HomeController> {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.back();
-                  aboutController.navigateToAboutView();
+                  Get.toNamed(Routes.ABOUT);
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
@@ -775,7 +775,7 @@ class HomeView extends GetView<HomeController> {
                     axisDirection: AxisDirection.down,
                     child: Obx(() {
                       return FutureBuilder(
-                        future: controller.isSortedAlarmListEnabled.value
+                        future: controller.isUserSignedIn.value
                             ? controller.initStream(controller.userModel.value)
                             : controller.initStream(controller.userModel.value),
                         builder: (context, AsyncSnapshot snapshot) {
