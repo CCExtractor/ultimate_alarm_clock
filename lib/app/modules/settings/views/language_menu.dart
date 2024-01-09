@@ -35,7 +35,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
         isLightMode: widget.themeController.isLightMode.value,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: EdgeInsets.only(left: 30),
         child: Row(
           children: [
             DropdownMenu(
@@ -58,7 +58,8 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 }).toList(),
                 onSelected: (newValue) {
                   widget.controller.updateLocale(newValue!);
-                }),
+                }
+            ),
           ],
         ),
       ),
