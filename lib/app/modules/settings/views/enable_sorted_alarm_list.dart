@@ -43,13 +43,15 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Enable Sorted Alarm List'.tr,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: widget.themeController.isLightMode.value
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
-                  ),
+            Expanded(
+              child: Text(
+                'Enable Sorted Alarm List'.tr,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: widget.themeController.isLightMode.value
+                          ? kLightPrimaryTextColor
+                          : kprimaryTextColor,
+                    ),
+              ),
             ),
             Obx(
               () => Switch.adaptive(
