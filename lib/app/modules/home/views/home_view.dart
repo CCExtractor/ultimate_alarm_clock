@@ -1468,13 +1468,19 @@ Future<bool> showDeleteAlarmConfirmationPopupOnSwipe(
                 onPressed: () {
                   Navigator.of(context).pop(false); // User canceled
                 },
-                child: const Text('NO'),
+                child: const Text(
+                  'NO',
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true); // User confirmed
                 },
-                child: const Text('YES'),
+                child: const Text(
+                  'YES',
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
             ],
           );
