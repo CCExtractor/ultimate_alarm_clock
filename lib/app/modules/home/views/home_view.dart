@@ -285,7 +285,7 @@ class HomeView extends GetView<HomeController> {
                 : ExpandableFab(
                     initialOpen: false,
                     key: controller.floatingButtonKeyLoggedOut,
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                     children: [],
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
@@ -850,14 +850,25 @@ class HomeView extends GetView<HomeController> {
                                       // Main card
                                       return Dismissible(
                                         onDismissed: (direction) async {
-                                          if (alarm.isSharedAlarmEnabled ==
-                                              true) {
-                                            await FirestoreDb.deleteAlarm(
+                                          bool userConfirmed =
+                                              await showDeleteAlarmConfirmationPopupOnSwipe(
+                                            context,
+                                          );
+                                          if (userConfirmed) {
+                                            if (alarm.isSharedAlarmEnabled ==
+                                                true) {
+                                              await FirestoreDb.deleteAlarm(
                                                 controller.userModel.value,
-                                                alarm.firestoreId!);
+                                                alarm.firestoreId!,
+                                              );
+                                            } else {
+                                              await IsarDb.deleteAlarm(
+                                                alarm.isarId,
+                                              );
+                                            }
                                           } else {
-                                            await IsarDb.deleteAlarm(
-                                                alarm.isarId);
+                                            // do not dismiss
+                                            await Get.toNamed(Routes.HOME);
                                           }
                                         },
                                         key: ValueKey(alarms[index]),
@@ -1431,4 +1442,43 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
+}
+
+Future<bool> showDeleteAlarmConfirmationPopupOnSwipe(
+  BuildContext context,
+) async {
+  // Return true if user confirms deletion, false if canceled
+
+  return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'Confirmation',
+              style: TextStyle(color: Colors.blueGrey),
+            ),
+            content: const Text(
+              'Are you sure you want to delete this alarm?',
+              style: TextStyle(
+                color: Colors.blueGrey,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false); // User canceled
+                },
+                child: const Text('NO'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true); // User confirmed
+                },
+                child: const Text('YES'),
+              ),
+            ],
+          );
+        },
+      ) ??
+      false; // Default to false if the user dismisses the dialog without tapping any button
 }
