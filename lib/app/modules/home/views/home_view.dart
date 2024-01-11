@@ -850,15 +850,34 @@ class HomeView extends GetView<HomeController> {
                                       // Main card
                                       return Dismissible(
                                         onDismissed: (direction) async {
+                                          AlarmModel? alarm_to_delete;
                                           if (alarm.isSharedAlarmEnabled ==
                                               true) {
+                                            alarm_to_delete = await FirestoreDb.getAlarm(controller.userModel.value, alarm.firestoreId!);
                                             await FirestoreDb.deleteAlarm(
                                                 controller.userModel.value,
                                                 alarm.firestoreId!);
                                           } else {
+                                            alarm_to_delete = await IsarDb.getAlarm(alarm.isarId);
                                             await IsarDb.deleteAlarm(
                                                 alarm.isarId);
                                           }
+                                          ScaffoldMessenger.of(context).clearSnackBars();
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                duration: const Duration(seconds: 4),
+                                                  content: const Text('Alarm deleted'),
+                                                action: SnackBarAction(
+                                                    label: 'Undo',
+                                                    onPressed: () async {
+                                                      if (alarm.isSharedAlarmEnabled == true){
+                                                        await FirestoreDb.addAlarm(controller.userModel.value, alarm_to_delete!);
+                                                      }else{
+                                                        await IsarDb.addAlarm(alarm_to_delete!);
+                                                      }
+                                                    },),
+                                              )
+                                          );
                                         },
                                         key: ValueKey(alarms[index]),
                                         child: Obx(
