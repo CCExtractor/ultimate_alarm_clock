@@ -41,6 +41,12 @@ class _LanguageMenuState extends State<LanguageMenu> {
             DropdownMenu(
                 inputDecorationTheme:
                     InputDecorationTheme(enabledBorder: InputBorder.none),
+                menuStyle: MenuStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      widget.themeController.isLightMode.value
+                          ? Colors.white
+                          : Colors.black),
+                ),
                 trailingIcon: Icon(Icons.arrow_drop_down_outlined,
                     size: 40.0,
                     color: widget.themeController.isLightMode.value
@@ -54,6 +60,11 @@ class _LanguageMenuState extends State<LanguageMenu> {
                   return DropdownMenuEntry(
                     value: e.key,
                     label: "${e.value['description']}",
+                    style: MenuItemButton.styleFrom(
+                      foregroundColor: !widget.themeController.isLightMode.value
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   );
                 }).toList(),
                 onSelected: (newValue) {
