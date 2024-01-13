@@ -40,30 +40,34 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 30, right: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Enable Sorted Alarm List'.tr,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: widget.themeController.isLightMode.value
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
-                  ),
-            ),
-            Obx(
-              () => Switch.adaptive(
-                value: widget.controller.isSortedAlarmListEnabled.value,
-                activeColor: ksecondaryColor,
-                onChanged: (bool value) async {
-                  widget.controller.toggleSortedAlarmList(value);
-                  Utils.hapticFeedback();
-                },
+        
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  'Enable Sorted Alarm List'.tr,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: widget.themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
+                  softWrap: true,
+                ),
               ),
-            ),
-          ],
+              Obx(
+                () => Switch.adaptive(
+                  value: widget.controller.isSortedAlarmListEnabled.value,
+                  activeColor: ksecondaryColor,
+                  onChanged: (bool value) async {
+                    widget.controller.toggleSortedAlarmList(value);
+                    Utils.hapticFeedback();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 }
