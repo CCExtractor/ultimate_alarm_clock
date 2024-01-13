@@ -17,9 +17,6 @@ class RepeatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool anyDaySelected =
-        controller.repeatDays.any((daySelected) => daySelected);
-
     List<bool> repeatDays = List<bool>.filled(7, false);
 
     return InkWell(
@@ -46,6 +43,8 @@ class RepeatTile extends StatelessWidget {
           content: Obx(
             () => Column(
               children: [
+                dailyTile(context: context),
+                weekdaysTile(context: context),
                 dayTile(dayIndex: 0, dayName: 'Monday'.tr, context: context),
                 dayTile(dayIndex: 1, dayName: 'Tuesday'.tr, context: context),
                 dayTile(dayIndex: 2, dayName: 'Wednesday'.tr, context: context),
@@ -140,6 +139,103 @@ class RepeatTile extends StatelessWidget {
     for (var i = 0; i < toUse.length; i++) {
       toSet[i] = toUse[i];
     }
+  }
+
+  Widget weekdaysTile({
+    required BuildContext context,
+  }) {
+    bool areWeekdaysSelected = controller.repeatDays
+        .sublist(0, controller.repeatDays.length - 2)
+        .every((daySelected) => daySelected);
+
+    return InkWell(
+      onTap: () {
+        Utils.hapticFeedback();
+        bool newWeekdaysValue = !areWeekdaysSelected;
+        for (int i = 0; i < controller.repeatDays.length - 2; i++) {
+          controller.repeatDays[i] = newWeekdaysValue;
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Checkbox.adaptive(
+              side: BorderSide(
+                width: 1.5,
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor.withOpacity(0.5)
+                    : kprimaryTextColor.withOpacity(0.5),
+              ),
+              activeColor: kprimaryColor.withOpacity(0.8),
+              value: areWeekdaysSelected,
+              onChanged: (value) {
+                Utils.hapticFeedback();
+                bool newWeekdaysValue = !areWeekdaysSelected;
+                for (int i = 0; i < controller.repeatDays.length - 2; i++) {
+                  controller.repeatDays[i] = newWeekdaysValue;
+                }
+              },
+            ),
+            Text(
+              'Weekdays',
+              style:
+                  Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget dailyTile({
+    required BuildContext context,
+  }) {
+    bool isDailySelected =
+        controller.repeatDays.every((daySelected) => daySelected);
+
+    return InkWell(
+      onTap: () {
+        Utils.hapticFeedback();
+        bool newDailyValue = !isDailySelected;
+        for (int i = 0; i < controller.repeatDays.length; i++) {
+          controller.repeatDays[i] = newDailyValue;
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Checkbox.adaptive(
+              side: BorderSide(
+                width: 1.5,
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor.withOpacity(0.5)
+                    : kprimaryTextColor.withOpacity(0.5),
+              ),
+              activeColor: kprimaryColor.withOpacity(0.8),
+              value: isDailySelected,
+              onChanged: (value) {
+                Utils.hapticFeedback();
+                bool newDailyValue = !isDailySelected;
+                for (int i = 0; i < controller.repeatDays.length; i++) {
+                  controller.repeatDays[i] = newDailyValue;
+                }
+              },
+            ),
+            Text(
+              'Daily',
+              style:
+                  Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget dayTile({
