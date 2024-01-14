@@ -815,6 +815,7 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Text(
                                             'Add an alarm to get started!'.tr,
+                                            textWidthBasis: TextWidthBasis.longestLine,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
