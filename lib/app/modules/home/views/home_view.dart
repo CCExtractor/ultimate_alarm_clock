@@ -868,9 +868,13 @@ class HomeView extends GetView<HomeController> {
                                               );
                                             }
                                           } else {
-                                            // do not dismiss
-                                            await Get.toNamed(
-                                                Routes.BOTTOM_NAVIGATION_BAR);
+                                            // do not delete on dismiss
+                                            Get.offNamedUntil(
+                                              '/bottom-navigation-bar',
+                                              (route) =>
+                                                  route.settings.name ==
+                                                  '/splash-screen',
+                                            );
                                           }
                                         },
                                         key: ValueKey(alarms[index]),
