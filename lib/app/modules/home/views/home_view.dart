@@ -850,6 +850,7 @@ class HomeView extends GetView<HomeController> {
                                       // Main card
                                       return Dismissible(
                                         onDismissed: (direction) async {
+                                          // pop up confirmation to delete on swipe
                                           bool userConfirmed =
                                               await showDeleteAlarmConfirmationPopupOnSwipe(
                                             context,
@@ -868,7 +869,8 @@ class HomeView extends GetView<HomeController> {
                                             }
                                           } else {
                                             // do not dismiss
-                                            await Get.toNamed(Routes.HOME);
+                                            await Get.toNamed(
+                                                Routes.BOTTOM_NAVIGATION_BAR);
                                           }
                                         },
                                         key: ValueKey(alarms[index]),
@@ -1442,49 +1444,51 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
-}
 
-Future<bool> showDeleteAlarmConfirmationPopupOnSwipe(
-  BuildContext context,
-) async {
-  // Return true if user confirms deletion, false if canceled
+  Future<bool> showDeleteAlarmConfirmationPopupOnSwipe(
+    BuildContext context,
+  ) async {
+    // Return true if user confirms deletion, false if canceled
 
-  return await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(
-              'Confirmation',
-              style: TextStyle(color: Colors.blueGrey),
+    var result = await Get.dialog<bool>(
+      AlertDialog(
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryTextColor
+            : ksecondaryTextColor,
+        title: const Text(
+          'Confirmation',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Are you sure you want to delete this alarm?',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(result: false); // User canceled
+            },
+            child: const Text(
+              'NO',
+              style: TextStyle(color: Colors.green),
             ),
-            content: const Text(
-              'Are you sure you want to delete this alarm?',
-              style: TextStyle(
-                color: Colors.blueGrey,
-              ),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back(result: true); // User confirmed
+            },
+            child: const Text(
+              'YES',
+              style: TextStyle(color: Colors.green),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false); // User canceled
-                },
-                child: const Text(
-                  'NO',
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true); // User confirmed
-                },
-                child: const Text(
-                  'YES',
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-            ],
-          );
-        },
-      ) ??
-      false; // Default to false if the user dismisses the dialog without tapping any button
+          ),
+        ],
+      ),
+    );
+
+    return result ??
+        false; // Default to false if the user dismisses the dialog without tapping any button
+  }
 }
