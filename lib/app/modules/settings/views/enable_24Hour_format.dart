@@ -38,9 +38,11 @@ class _Enable24HourFormatState extends State<Enable24HourFormat> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Enable 24 Hour Format'.tr,
-              style: Theme.of(context).textTheme.bodyLarge,
+            Expanded(
+              child: Text(
+                'Enable 24 Hour Format'.tr,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
             Obx(
               () => Switch.adaptive(
