@@ -371,7 +371,7 @@ class HomeView extends GetView<HomeController> {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.back();
-                  Get.offNamed('/settings');
+                  Get.toNamed('/settings');
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(

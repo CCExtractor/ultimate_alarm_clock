@@ -46,7 +46,7 @@ class SettingsView extends GetView<SettingsController> {
           ),
           onPressed: () {
             Utils.hapticFeedback();
-            Get.offNamed(Routes.BOTTOM_NAVIGATION_BAR);
+            Get.back();
           },
         ),
       ),
