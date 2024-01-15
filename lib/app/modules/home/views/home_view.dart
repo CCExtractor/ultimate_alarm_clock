@@ -851,15 +851,7 @@ class HomeView extends GetView<HomeController> {
                                       // Main card
                                       return Dismissible(
                                         onDismissed: (direction) async {
-                                          if (alarm.isSharedAlarmEnabled ==
-                                              true) {
-                                            await FirestoreDb.deleteAlarm(
-                                                controller.userModel.value,
-                                                alarm.firestoreId!);
-                                          } else {
-                                            await IsarDb.deleteAlarm(
-                                                alarm.isarId);
-                                          }
+                                          await controller.swipeToDeleteAlarm(controller.userModel.value,alarm);
                                         },
                                         key: ValueKey(alarms[index]),
                                         child: Obx(
