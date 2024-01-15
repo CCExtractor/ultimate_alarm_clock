@@ -28,7 +28,7 @@ class StopwatchView extends GetView<StopwatchController> {
                 Utils.hapticFeedback();
                 Get.toNamed('/settings');
               },
-              icon: const Icon(
+              icon: const Icon( 
                 Icons.settings,
                 size: 27,
               ),
