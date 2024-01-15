@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 import '../../settings/controllers/theme_controller.dart';
@@ -26,6 +24,7 @@ class LanguageMenu extends StatefulWidget {
 }
 
 class _LanguageMenuState extends State<LanguageMenu> {
+  String lang = 'en_US';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,30 +34,41 @@ class _LanguageMenuState extends State<LanguageMenu> {
         isLightMode: widget.themeController.isLightMode.value,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: const EdgeInsets.only(left: 30, right: 20),
         child: Row(
           children: [
-            DropdownMenu(
-                inputDecorationTheme:
-                    InputDecorationTheme(enabledBorder: InputBorder.none),
-                trailingIcon: Icon(Icons.arrow_drop_down_outlined,
-                    size: 40.0,
+            Container(
+              width: widget.width * 0.78,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: lang,
+                  items: widget.controller.optionslocales.entries.map((e) {
+                    return DropdownMenuItem<String>(
+                      value: e.key,
+                      child: Text(
+                        "${e.value['description']}",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    widget.controller.updateLocale(newValue!);
+                    setState(() {
+                      lang = newValue;
+                    });
+                  },
+                  style: TextStyle(
                     color: widget.themeController.isLightMode.value
                         ? kLightPrimaryTextColor.withOpacity(0.8)
-                        : kprimaryTextColor.withOpacity(0.8)),
-                width: widget.width * 0.78,
-                initialSelection: 'English',
-                label: const Text('Change Language'),
-                dropdownMenuEntries:
-                    widget.controller.optionslocales.entries.map((e) {
-                  return DropdownMenuEntry(
-                    value: e.key,
-                    label: "${e.value['description']}",
-                  );
-                }).toList(),
-                onSelected: (newValue) {
-                  widget.controller.updateLocale(newValue!);
-                }),
+                        : kprimaryTextColor.withOpacity(0.8),
+                  ),
+                  dropdownColor: widget.themeController.isLightMode.value
+                      ? Colors.white // Light theme background color
+                      : Colors.black, // Dark theme background color
+                ),
+              ),
+            ),
           ],
         ),
       ),

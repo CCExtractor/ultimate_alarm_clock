@@ -19,7 +19,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
 class AlarmControlController extends GetxController {
-  MethodChannel alarmChannel = MethodChannel('ulticlock');
+  MethodChannel alarmChannel = const MethodChannel('ulticlock');
   RxString note = ''.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
@@ -35,12 +35,12 @@ class AlarmControlController extends GetxController {
   Timer? _currentTimeTimer;
 
   getCurrentlyRingingAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+        await IsarDb.getLatestAlarm(alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, false);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
@@ -49,12 +49,12 @@ class AlarmControlController extends GetxController {
   }
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
@@ -210,9 +210,9 @@ class AlarmControlController extends GetxController {
         try {
           await alarmChannel
               .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-          print("Scheduled...");
+          print('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          print('Failed to schedule alarm: ${e.message}');
         }
       }
     }

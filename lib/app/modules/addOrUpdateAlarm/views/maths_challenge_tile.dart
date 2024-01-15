@@ -222,7 +222,7 @@ class MathsChallenge extends StatelessWidget {
   }
 
   void _presetToInitial(
-      bool isMathsEnabled, double sliderValue, int noOfMathQues) {
+      bool isMathsEnabled, double sliderValue, int noOfMathQues,) {
     controller.isMathsEnabled.value = isMathsEnabled;
     controller.mathsSliderValue.value = sliderValue;
     controller.numMathsQuestions.value = noOfMathQues;

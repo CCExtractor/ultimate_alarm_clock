@@ -258,7 +258,9 @@ class SettingsController extends GetxController {
 
   void _save24HoursFormatPreference() async {
     await _secureStorageProvider.write24HoursEnabled(
-        key: _f24HrsEnabledKey, is24HoursEnabled: is24HrsEnabled.value);
+      key: _f24HrsEnabledKey,
+      is24HoursEnabled: is24HrsEnabled.value,
+    );
   }
 
   void toggle24HoursFormat(bool enabled) {

@@ -8,6 +8,8 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 class TimerRingView extends GetView<TimerRingController> {
   ThemeController themeController = Get.find<ThemeController>();
 
+  TimerRingView({super.key});
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;

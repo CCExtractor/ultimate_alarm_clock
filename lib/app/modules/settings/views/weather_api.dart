@@ -54,7 +54,7 @@ class WeatherApi extends StatelessWidget {
                                   obscureText: false,
                                   controller: controller.apiKey,
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                                    border: const OutlineInputBorder(),
                                     hintText: 'API Key',
                                     errorText: controller.validate.value
                                         ? 'API Key cannot be empty'
@@ -99,7 +99,7 @@ class WeatherApi extends StatelessWidget {
                                               .value = true;
 
                                           // Validation If String is empty
-                                          if (await controller
+                                          if (controller
                                               .apiKey.text.isEmpty) {
                                             // setState(() {
                                             controller.validate.value = true;
@@ -111,7 +111,7 @@ class WeatherApi extends StatelessWidget {
                                           }
 
                                           // Reset state after getting error message
-                                          if (await controller
+                                          if (controller
                                               .apiKey.text.isNotEmpty) {
                                             // setState(() {
                                             controller.validate.value = false;
@@ -144,7 +144,7 @@ class WeatherApi extends StatelessWidget {
                                               controller.weatherKeyState.value =
                                                   WeatherKeyState.saveUpdated;
                                               controller.addWeatherState(
-                                                  'saveUpdated');
+                                                  'saveUpdated',);
                                             }
                                           } else {
                                             // If the API key is not valid
@@ -197,9 +197,9 @@ class WeatherApi extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 15.0),
+                                      vertical: 15.0,),
                                   child: Text(
-                                    "Error adding key!",
+                                    'Error adding key!',
                                     style: Theme.of(context)
                                         .textTheme
                                         .displaySmall,
@@ -301,7 +301,7 @@ class WeatherApi extends StatelessWidget {
           isLightMode: themeController.isLightMode.value,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: const EdgeInsets.only(left: 30, right: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

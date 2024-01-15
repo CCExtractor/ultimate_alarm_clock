@@ -145,7 +145,7 @@ class LocationTile extends StatelessWidget {
                         ),
                         Obx(() => MarkerLayer(
                             markers:
-                                List<Marker>.from(controller.markersList))),
+                                List<Marker>.from(controller.markersList),),),
                       ],
                     ),
                   ),

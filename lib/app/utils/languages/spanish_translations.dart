@@ -165,7 +165,7 @@ class SpanishTranslations extends Translations {
 //shake_challenge_view.dart
         'Shake your phone!' : '¡Agita tu teléfono!',
 //alarm_ring_view.dart
-        "You can't go back while the alarm is ringing" : "No puedes retroceder mientras suena la alarma",
+        "You can't go back while the alarm is ringing" : 'No puedes retroceder mientras suena la alarma',
         'Start Challenge' : 'Comenzar el desafío',
         'Dismiss' : 'Descartar',
         'Exit Preview' : 'Salir de la vista previa',
@@ -176,7 +176,7 @@ class SpanishTranslations extends Translations {
         'Weekdays': 'Días laborables',
         'Weekends': 'Fines de semana',
         'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mié', 'Thur': 'Jue',
-        'Fri': 'Vie', 'Sat': 'Sáb', 'Sun': 'Dom'
+        'Fri': 'Vie', 'Sat': 'Sáb', 'Sun': 'Dom',
     },
   };
 }

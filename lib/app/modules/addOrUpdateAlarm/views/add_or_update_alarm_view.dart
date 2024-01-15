@@ -276,7 +276,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 : Obx(
                     () => Text(
                       'Rings in @timeToAlarm'.trParams({
-                        'timeToAlarm': controller.timeToAlarm.value.toString()
+                        'timeToAlarm': controller.timeToAlarm.value.toString(),
                       }),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
@@ -396,7 +396,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       inputTimeController.inputMinutesController
                                           .text = dateTime.minute.toString();
                                       inputTimeController.changePeriod(
-                                          dateTime.hour >= 12 ? 'PM' : 'AM');
+                                          dateTime.hour >= 12 ? 'PM' : 'AM',);
                                     },
                                   )
                                 : Row(
@@ -410,7 +410,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           },
                                           decoration: const InputDecoration(
                                               hintText: 'HH',
-                                              border: InputBorder.none),
+                                              border: InputBorder.none,),
                                           textAlign: TextAlign.center,
                                           controller: inputTimeController
                                               .inputHrsController,
@@ -418,14 +418,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           inputFormatters: [
                                             FilteringTextInputFormatter.allow(
                                                 RegExp(
-                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                                    '[1,2,3,4,5,6,7,8,9,0]',),),
                                             LengthLimitingTextInputFormatter(2),
                                             LimitRange(
                                                 0,
                                                 settingsController
                                                         .is24HrsEnabled.value
                                                     ? 23
-                                                    : 12)
+                                                    : 12,),
                                           ],
                                         ),
                                       ),
@@ -447,7 +447,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           },
                                           decoration: const InputDecoration(
                                               hintText: 'MM',
-                                              border: InputBorder.none),
+                                              border: InputBorder.none,),
                                           textAlign: TextAlign.center,
                                           controller: inputTimeController
                                               .inputMinutesController,
@@ -455,9 +455,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           inputFormatters: [
                                             FilteringTextInputFormatter.allow(
                                                 RegExp(
-                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                                    '[1,2,3,4,5,6,7,8,9,0]',),),
                                             LengthLimitingTextInputFormatter(2),
-                                            LimitRange(00, 59)
+                                            LimitRange(00, 59),
                                           ],
                                         ),
                                       ),
@@ -510,9 +510,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 border: Border.all(
                                                   color: kprimaryColor,
                                                   width: 1.0,
-                                                )),
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Icon(
+                                                ),),
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: const Icon(
                                               Icons.done,
                                               color: kprimaryColor,
                                             ),
@@ -522,7 +522,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     ],
                                   ),
                           );
-                        })),
+                        }),),
                     RepeatTile(
                       controller: controller,
                       themeController: themeController,
@@ -831,6 +831,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                   ],
                 ),
-        ));
+        ),);
   }
 }

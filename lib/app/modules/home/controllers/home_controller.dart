@@ -367,10 +367,10 @@ class HomeController extends GetxController {
           );
           try {
             await alarmChannel.invokeMethod(
-                'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-            print("Scheduled...");
+                'scheduleAlarm', {'milliSeconds': intervaltoAlarm},);
+            print('Scheduled...');
           } on PlatformException catch (e) {
-            print("Failed to schedule alarm: ${e.message}");
+            print('Failed to schedule alarm: ${e.message}');
           }
         }
       }
@@ -390,9 +390,9 @@ class HomeController extends GetxController {
         try {
           await alarmChannel
               .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-          print("Scheduled...");
+          print('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          print('Failed to schedule alarm: ${e.message}');
         }
       }
     }

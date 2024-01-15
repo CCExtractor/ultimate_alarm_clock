@@ -83,7 +83,7 @@ class AlarmOffset extends StatelessWidget {
                               ),
                               child:  Text(
                                 'Before'.tr,
-                                style: TextStyle(fontSize: 14),
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ),
                           ),
@@ -112,7 +112,7 @@ class AlarmOffset extends StatelessWidget {
                               ),
                               child:  Text(
                                 'After'.tr,
-                                style: TextStyle(fontSize: 14),
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ),
                           ),

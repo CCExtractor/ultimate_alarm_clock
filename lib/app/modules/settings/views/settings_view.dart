@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
 
@@ -18,7 +16,7 @@ import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  SettingsView({Key? key}) : super(key: key);
+  const SettingsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

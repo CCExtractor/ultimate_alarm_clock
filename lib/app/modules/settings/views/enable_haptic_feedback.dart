@@ -34,7 +34,7 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
         isLightMode: widget.themeController.isLightMode.value,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: const EdgeInsets.only(left: 30, right: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

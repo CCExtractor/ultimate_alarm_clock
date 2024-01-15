@@ -88,7 +88,7 @@ class GoogleSignIn extends StatelessWidget {
               children: [
                  Text(
                     // 'Do you want to unlink your Google account?',
-                   'unlinkAccount'.tr
+                   'unlinkAccount'.tr,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -147,7 +147,7 @@ class GoogleSignIn extends StatelessWidget {
           isLightMode: themeController.isLightMode.value,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: const EdgeInsets.only(left: 30, right: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

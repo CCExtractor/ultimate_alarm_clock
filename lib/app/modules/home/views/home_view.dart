@@ -8,7 +8,6 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -17,7 +16,6 @@ import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-import '../../settings/views/language_menu.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -285,8 +283,8 @@ class HomeView extends GetView<HomeController> {
                 : ExpandableFab(
                     initialOpen: false,
                     key: controller.floatingButtonKeyLoggedOut,
-                    child: Icon(Icons.add),
-                    children: [],
+                    child: const Icon(Icons.add),
+                    children: const [],
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
@@ -301,7 +299,9 @@ class HomeView extends GetView<HomeController> {
         () => Drawer(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+            ),
           ),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -339,10 +339,11 @@ class HomeView extends GetView<HomeController> {
                                     .textTheme
                                     .displayMedium!
                                     .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
+                                      color: themeController.isLightMode.value
+                                          ? kprimaryTextColor
+                                          : ksecondaryTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                             SizedBox(
@@ -354,10 +355,11 @@ class HomeView extends GetView<HomeController> {
                                     .textTheme
                                     .titleLarge!
                                     .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
+                                      color: themeController.isLightMode.value
+                                          ? kprimaryTextColor
+                                          : ksecondaryTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                           ],
@@ -401,9 +403,10 @@ class HomeView extends GetView<HomeController> {
                 title: Text(
                   'About'.tr,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor.withOpacity(0.8)
-                          : kprimaryTextColor.withOpacity(0.8)),
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor.withOpacity(0.8)
+                            : kprimaryTextColor.withOpacity(0.8),
+                      ),
                 ),
                 leading: Icon(
                   Icons.info_outline,
@@ -853,11 +856,13 @@ class HomeView extends GetView<HomeController> {
                                           if (alarm.isSharedAlarmEnabled ==
                                               true) {
                                             await FirestoreDb.deleteAlarm(
-                                                controller.userModel.value,
-                                                alarm.firestoreId!);
+                                              controller.userModel.value,
+                                              alarm.firestoreId!,
+                                            );
                                           } else {
                                             await IsarDb.deleteAlarm(
-                                                alarm.isarId);
+                                              alarm.isarId,
+                                            );
                                           }
                                         },
                                         key: ValueKey(alarms[index]),

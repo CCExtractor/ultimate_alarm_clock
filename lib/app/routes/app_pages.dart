@@ -49,7 +49,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SETTINGS,
-      page: () => SettingsView(),
+      page: () => const SettingsView(),
       binding: SettingsBinding(),
     ),
     GetPage(

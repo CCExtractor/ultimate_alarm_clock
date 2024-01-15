@@ -20,11 +20,11 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           useLegacyColorScheme: false,
           items:  [
             BottomNavigationBarItem(
-              icon: Icon(Icons.alarm),
+              icon: const Icon(Icons.alarm),
               label: 'Alarm'.tr,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.timer),
+              icon: const Icon(Icons.timer),
               label: 'Timer'.tr,
             ),
           ],

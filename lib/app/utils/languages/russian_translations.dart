@@ -165,7 +165,7 @@ class RussianTranslations extends Translations {
 //shake_challenge_view.dart
     'Shake your phone!' : 'Встряхните свой телефон!',
 //alarm_ring_view.dart
-    "You can't go back while the alarm is ringing" : "Вы не можете вернуться, пока звонит будильник",
+    "You can't go back while the alarm is ringing" : 'Вы не можете вернуться, пока звонит будильник',
     'Start Challenge' : 'Начать задание',
     'Dismiss' : 'Отклонить',
     'Exit Preview' : 'Выйти из предпросмотра',
@@ -176,7 +176,7 @@ class RussianTranslations extends Translations {
     'Weekdays': 'Будние дни',
     'Weekends': 'Выходные',
     'Mon': 'Пн', 'Tue': 'Вт', 'Wed': 'Ср', 'Thur': 'Чт',
-    'Fri': 'Пт', 'Sat': 'Сб', 'Sun': 'Вс'
+    'Fri': 'Пт', 'Sat': 'Сб', 'Sun': 'Вс',
 
   },
   };
