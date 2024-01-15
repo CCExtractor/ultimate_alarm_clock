@@ -446,8 +446,8 @@ class HomeView extends GetView<HomeController> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 25 *
+                                        padding: EdgeInsets.only(
+                                          left: 25 *
                                               controller.scalingFactor.value,
                                         ),
                                         child: Column(
