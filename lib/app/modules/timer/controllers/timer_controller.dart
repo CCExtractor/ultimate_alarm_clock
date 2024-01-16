@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -9,6 +10,8 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
 class TimerController extends GetxController with WidgetsBindingObserver {
+  final CountDownController ccontroller = CountDownController();
+  Rx<Duration> totalTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   final currentTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
