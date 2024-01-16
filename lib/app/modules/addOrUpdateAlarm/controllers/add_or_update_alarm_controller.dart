@@ -112,7 +112,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setIsCustomSelected(bool value) {
-    isCustomSelected.value = value;
+    isCustomSelected.value = true;
     if (value == true) {
       isWeekdaysSelected.value = false;
       isDailySelected.value = false;
