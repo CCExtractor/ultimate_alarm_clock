@@ -519,8 +519,7 @@ class HomeController extends GetxController {
 
   Future<void> swipeToDeleteAlarm(UserModel? user, AlarmModel alarm) async {
     AlarmModel? alarmToDelete;
-
-    // Delete the alarm based on the type (shared or not shared)
+    
     if (alarm.isSharedAlarmEnabled == true) {
       alarmToDelete = await FirestoreDb.getAlarm(user, alarm.firestoreId!);
       await FirestoreDb.deleteAlarm(user, alarm.firestoreId!);
@@ -533,7 +532,7 @@ class HomeController extends GetxController {
       Get.closeCurrentSnackbar();
     }
 
-    GetBar _snackbar = GetBar(
+    GetSnackBar snackbar = GetSnackBar(
       message: 'Alarm deleted',
       duration: const Duration(seconds: 4),
       mainButton: TextButton(
@@ -549,7 +548,7 @@ class HomeController extends GetxController {
     );
 
     Get.showSnackbar(
-      _snackbar,
+      snackbar,
     );
   }
 }
