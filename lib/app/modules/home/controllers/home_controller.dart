@@ -518,37 +518,32 @@ class HomeController extends GetxController {
   }
 
   Future<void> swipeToDeleteAlarm(UserModel? user, AlarmModel alarm) async {
-    AlarmModel? alarmToDelete;
-    
+    AlarmModel? alarm_to_delete;
+
     if (alarm.isSharedAlarmEnabled == true) {
-      alarmToDelete = await FirestoreDb.getAlarm(user, alarm.firestoreId!);
+      alarm_to_delete = await FirestoreDb.getAlarm(user, alarm.firestoreId!);
       await FirestoreDb.deleteAlarm(user, alarm.firestoreId!);
     } else {
-      alarmToDelete = await IsarDb.getAlarm(alarm.isarId);
+      alarm_to_delete = await IsarDb.getAlarm(alarm.isarId);
       await IsarDb.deleteAlarm(alarm.isarId);
     }
 
-    if (Get.isSnackbarOpen) {
-      Get.closeCurrentSnackbar();
-    }
-
-    GetSnackBar snackbar = GetSnackBar(
-      message: 'Alarm deleted',
-      duration: const Duration(seconds: 4),
+    Get.back();
+    Get.snackbar(
+      'Alarm deleted',
+      'The alarm has been deleted.',
+      duration: const Duration(seconds: 9),
+      snackPosition: SnackPosition.BOTTOM,
       mainButton: TextButton(
         onPressed: () async {
           if (alarm.isSharedAlarmEnabled == true) {
-            await FirestoreDb.addAlarm(user, alarmToDelete!);
+            await FirestoreDb.addAlarm(user, alarm_to_delete!);
           } else {
-            await IsarDb.addAlarm(alarmToDelete!);
+            await IsarDb.addAlarm(alarm_to_delete!);
           }
         },
         child: const Text('Undo'),
       ),
-    );
-
-    Get.showSnackbar(
-      snackbar,
     );
   }
 }
