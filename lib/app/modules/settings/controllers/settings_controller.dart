@@ -24,6 +24,8 @@ class SettingsController extends GetxController {
   final _f24HrsEnabledKey = '24_hours_format';
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
+  var currentLanguage = 'en_US'.obs;
+  final _currentLanguageKey = 'language_key';
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;
@@ -218,6 +220,10 @@ class SettingsController extends GetxController {
 
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
+    
+    currentLanguage.value = await _secureStorageProvider.readCurrentLanguage(
+      key: _currentLanguageKey,
+    );
 
     // Store the retrieved API key from the flutter secure storage
     String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
@@ -279,9 +285,23 @@ class SettingsController extends GetxController {
     _saveSortedAlarmListPreference();
   }
 
+// change and save current language
+  void _saveCurrentLanguage() async {
+    await _secureStorageProvider.writeCurrentLanguage(
+      key: _currentLanguageKey,
+      currentLanguage: currentLanguage.value,
+    );
+  }
+
+  void _changeCurrentLanguage(String key) {
+    currentLanguage.value = key;
+    _saveCurrentLanguage();
+  }
+
   void updateLocale(String key) {
     final String languageCode = optionslocales[key]['languageCode'];
     final String countryCode = optionslocales[key]['countryCode'];
+    _changeCurrentLanguage(key);
     Get.updateLocale(Locale(languageCode, countryCode));
     local.value = Get.locale.toString();
     storage.writeLocale(languageCode, countryCode);
