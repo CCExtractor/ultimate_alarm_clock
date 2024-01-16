@@ -532,7 +532,7 @@ class HomeController extends GetxController {
     Get.snackbar(
       'Alarm deleted',
       'The alarm has been deleted.',
-      duration: const Duration(seconds: 9),
+      duration: const Duration(seconds: 4),
       snackPosition: SnackPosition.BOTTOM,
       mainButton: TextButton(
         onPressed: () async {
