@@ -33,7 +33,7 @@ class RepeatTile extends StatelessWidget {
                 : ksecondaryBackgroundColor,
             builder: (BuildContext context) {
               return Container(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.45,
                 child: Column(
                   children: [
                     buildDailyTile(
@@ -68,20 +68,6 @@ class RepeatTile extends StatelessWidget {
                       controller: controller,
                       themeController: themeController,
                       context: context,
-                    ),
-                    Container(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
-                      child: Divider(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryDisabledTextColor
-                            : kprimaryDisabledTextColor,
-                      ),
-                    ),
-                    RepeatOnceTile(
-                      controller: controller,
-                      themeController: themeController,
                     ),
                     const SizedBox(
                       height: 25,
