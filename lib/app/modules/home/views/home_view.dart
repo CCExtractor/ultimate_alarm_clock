@@ -815,7 +815,8 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Text(
                                             'Add an alarm to get started!'.tr,
-                                            textWidthBasis: TextWidthBasis.longestLine,
+                                            textWidthBasis:
+                                                TextWidthBasis.longestLine,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
@@ -850,10 +851,24 @@ class HomeView extends GetView<HomeController> {
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
                                       return Dismissible(
+                                        direction: DismissDirection.startToEnd,
                                         onDismissed: (direction) async {
-                                          await controller.swipeToDeleteAlarm(controller.userModel.value,alarm);
+                                          await controller.swipeToDeleteAlarm(
+                                              controller.userModel.value,
+                                              alarm);
                                         },
                                         key: ValueKey(alarms[index]),
+                                        background: Container(
+                                          color: Colors
+                                              .red, // Set the background color to red
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          alignment: Alignment.center,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                         child: Obx(
                                           () => GestureDetector(
                                             onTap: () {
