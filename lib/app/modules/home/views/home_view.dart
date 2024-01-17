@@ -371,7 +371,7 @@ class HomeView extends GetView<HomeController> {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.back();
-                  Get.offNamed('/settings');
+                  Get.toNamed('/settings');
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
@@ -446,8 +446,8 @@ class HomeView extends GetView<HomeController> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 25 *
+                                        padding: EdgeInsets.only(
+                                          left: 25 *
                                               controller.scalingFactor.value,
                                         ),
                                         child: Column(
@@ -815,6 +815,8 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Text(
                                             'Add an alarm to get started!'.tr,
+                                            textWidthBasis:
+                                                TextWidthBasis.longestLine,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
@@ -849,18 +851,24 @@ class HomeView extends GetView<HomeController> {
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
                                       return Dismissible(
+                                        direction: DismissDirection.startToEnd,
                                         onDismissed: (direction) async {
-                                          if (alarm.isSharedAlarmEnabled ==
-                                              true) {
-                                            await FirestoreDb.deleteAlarm(
-                                                controller.userModel.value,
-                                                alarm.firestoreId!);
-                                          } else {
-                                            await IsarDb.deleteAlarm(
-                                                alarm.isarId);
-                                          }
+                                          await controller.swipeToDeleteAlarm(
+                                              controller.userModel.value,
+                                              alarm);
                                         },
                                         key: ValueKey(alarms[index]),
+                                        background: Container(
+                                          color: Colors
+                                              .red, // Set the background color to red
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          alignment: Alignment.center,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                         child: Obx(
                                           () => GestureDetector(
                                             onTap: () {

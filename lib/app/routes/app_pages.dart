@@ -65,7 +65,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.BOTTOM_NAVIGATION_BAR,
-      page: () => const BottomNavigationBarView(),
+      page: () => BottomNavigationBarView(),
       binding: BottomNavigationBarBinding(),
     ),
     GetPage(

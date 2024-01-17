@@ -35,10 +35,17 @@ class _LanguageMenuState extends State<LanguageMenu> {
         isLightMode: widget.themeController.isLightMode.value,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: EdgeInsets.only(left: 30),
         child: Row(
           children: [
             DropdownMenu(
+              menuStyle: MenuStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                    widget.themeController.isLightMode.value
+                        ? kLightSecondaryBackgroundColor
+                        : ksecondaryBackgroundColor,
+                  ),
+                ),
                 inputDecorationTheme:
                     InputDecorationTheme(enabledBorder: InputBorder.none),
                 trailingIcon: Icon(Icons.arrow_drop_down_outlined,
@@ -54,11 +61,19 @@ class _LanguageMenuState extends State<LanguageMenu> {
                   return DropdownMenuEntry(
                     value: e.key,
                     label: "${e.value['description']}",
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStatePropertyAll(
+                        widget.themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
+                    ),
                   );
                 }).toList(),
                 onSelected: (newValue) {
                   widget.controller.updateLocale(newValue!);
-                }),
+                },
+            ),
           ],
         ),
       ),

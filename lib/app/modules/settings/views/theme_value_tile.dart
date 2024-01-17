@@ -39,9 +39,11 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Enable Light Mode'.tr,
-                style: Theme.of(context).textTheme.bodyLarge,
+              Expanded(
+                child: Text(
+                  'Enable Light Mode'.tr,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
               Obx(
                 () => Switch.adaptive(
