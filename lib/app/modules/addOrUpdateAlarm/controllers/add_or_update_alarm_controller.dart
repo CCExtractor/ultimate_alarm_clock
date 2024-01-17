@@ -91,6 +91,34 @@ class AddOrUpdateAlarmController extends GetxController {
     return userDetails;
   }
 
+  RxBool isDailySelected = false.obs;
+  RxBool isWeekdaysSelected = false.obs;
+  RxBool isCustomSelected = false.obs;
+
+  void setIsDailySelected(bool value) {
+    isDailySelected.value = value;
+    if (value == true) {
+      isCustomSelected.value = false;
+      isWeekdaysSelected.value = false;
+    }
+  }
+
+  void setIsWeekdaysSelected(bool value) {
+    isWeekdaysSelected.value = value;
+    if (value == true) {
+      isCustomSelected.value = false;
+      isDailySelected.value = false;
+    }
+  }
+
+  void setIsCustomSelected(bool value) {
+    isCustomSelected.value = true;
+    if (value == true) {
+      isWeekdaysSelected.value = false;
+      isDailySelected.value = false;
+    }
+  }
+
   checkOverlayPermissionAndNavigate() async {
     if (!(await Permission.systemAlertWindow.isGranted) ||
         !(await Permission.ignoreBatteryOptimizations.isGranted) ||
