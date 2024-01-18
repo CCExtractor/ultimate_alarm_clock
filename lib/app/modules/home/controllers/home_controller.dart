@@ -534,6 +534,8 @@ class HomeController extends GetxController {
       'The alarm has been deleted.',
       duration: const Duration(seconds: 4),
       snackPosition: SnackPosition.BOTTOM,
+      borderWidth: 1.0,
+      borderColor: Color.fromARGB(255, 255, 72, 58),
       mainButton: TextButton(
         onPressed: () async {
           if (alarm.isSharedAlarmEnabled == true) {
