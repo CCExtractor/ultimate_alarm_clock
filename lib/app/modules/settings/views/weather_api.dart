@@ -305,9 +305,11 @@ class WeatherApi extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Open Weather Map API',
-                style: Theme.of(context).textTheme.bodyLarge,
+              Expanded(
+                child: Text(
+                  'Open Weather Map API',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
               Icon(
                 Icons.arrow_forward_ios_sharp,

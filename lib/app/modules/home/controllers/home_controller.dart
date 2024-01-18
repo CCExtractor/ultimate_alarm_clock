@@ -241,7 +241,7 @@ class HomeController extends GetxController {
     // Check if 2 seconds have passed since the last call
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
-    if (currentTime - lastRefreshTime < 1000) {
+    if (currentTime - lastRefreshTime < 2000) {
       delayToSchedule?.cancel();
     }
 
@@ -249,7 +249,7 @@ class HomeController extends GetxController {
       return;
     }
 
-    delayToSchedule = Timer(const Duration(seconds: 2), () async {
+    delayToSchedule = Timer(const Duration(seconds: 1), () async {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
       // Cancel timer if we have to refresh
       if (refreshTimer == true && _timer.isActive) {
@@ -516,4 +516,35 @@ class HomeController extends GetxController {
       ),
     );
   }
+
+  Future<void> swipeToDeleteAlarm(UserModel? user, AlarmModel alarm) async {
+    AlarmModel? alarm_to_delete;
+
+    if (alarm.isSharedAlarmEnabled == true) {
+      alarm_to_delete = await FirestoreDb.getAlarm(user, alarm.firestoreId!);
+      await FirestoreDb.deleteAlarm(user, alarm.firestoreId!);
+    } else {
+      alarm_to_delete = await IsarDb.getAlarm(alarm.isarId);
+      await IsarDb.deleteAlarm(alarm.isarId);
+    }
+
+    // Display snackbar
+    Get.snackbar(
+      'Alarm deleted',
+      'The alarm has been deleted.',
+      duration: const Duration(seconds: 4),
+      snackPosition: SnackPosition.BOTTOM,
+      mainButton: TextButton(
+        onPressed: () async {
+          if (alarm.isSharedAlarmEnabled == true) {
+            await FirestoreDb.addAlarm(user, alarm_to_delete!);
+          } else {
+            await IsarDb.addAlarm(alarm_to_delete!);
+          }
+        },
+        child: const Text('Undo'),
+      ),
+    );
+  }
 }
+

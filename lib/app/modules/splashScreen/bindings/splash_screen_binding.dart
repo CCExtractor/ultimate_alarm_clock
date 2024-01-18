@@ -14,11 +14,5 @@ class SplashScreenBinding extends Bindings {
       ThemeController(),
       permanent: true,
     );
-    Get.put<TimerController>(
-      TimerController(),
-    );
-    Get.put<HomeController>(
-      HomeController(),
-    );
   }
 }
