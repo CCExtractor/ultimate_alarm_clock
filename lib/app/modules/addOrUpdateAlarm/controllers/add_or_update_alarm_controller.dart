@@ -40,6 +40,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
   final shakeTimes = 0.obs;
+  final isPedometerEnabled = false.obs;
+  final numberOfSteps = 0.obs;
   var ownerId = '';
   final mutexLock = false.obs;
   var lastEditedUserId = '';
@@ -562,6 +564,9 @@ class AddOrUpdateAlarmController extends GetxController {
       isShakeEnabled.value = alarmRecord!.isShakeEnabled;
       shakeTimes.value = alarmRecord!.shakeTimes;
 
+      isPedometerEnabled.value = alarmRecord!.isPedometerEnabled;
+      numberOfSteps.value = alarmRecord!.numberOfSteps;
+
       isQrEnabled.value = alarmRecord!.isQrEnabled;
       qrValue.value = alarmRecord!.qrValue;
 
@@ -708,6 +713,8 @@ class AddOrUpdateAlarmController extends GetxController {
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
+      isPedometerEnabled: isPedometerEnabled.value,
+      numberOfSteps: numberOfSteps.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
