@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shake/shake.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
@@ -33,6 +35,14 @@ class AlarmChallengeController extends GetxController {
   bool isTimerEnabled = true;
   bool isNumMathQuestionsSet = false;
 
+  final RxInt stepsCount = 0.obs;
+  final isPedometerOngoing = Status.initialized.obs;
+  late int numberOfSteps;
+  int initialSteps = 0;
+  bool shouldProcessStepCount = false;
+
+  late Stream<StepCount> _stepCountStream;
+
   void onButtonPressed(String buttonText) {
     displayValue.value += buttonText;
   }
@@ -47,7 +57,7 @@ class AlarmChallengeController extends GetxController {
   }
 
   newMathsQuestion() {
-    if (!isNumMathQuestionsSet){
+    if (!isNumMathQuestionsSet) {
       numMathsQuestions.value = alarmRecord.numMathsQuestions;
       isNumMathQuestionsSet = true;
     }
@@ -57,6 +67,23 @@ class AlarmChallengeController extends GetxController {
     questionText.value = mathsProblemDetails[0];
     displayValue.value = '';
     mathsAnswer = mathsProblemDetails[1];
+  }
+
+  void onStepCount(StepCount event) {
+    if (shouldProcessStepCount) {
+      if (initialSteps == 0) {
+        initialSteps = event.steps;
+      } else {
+        stepsCount.value = event.steps - initialSteps;
+      }
+    }
+  }
+
+  void onStepCountError(error) {
+    if (shouldProcessStepCount) {
+      debugPrint('onStepCountError: $error');
+      stepsCount.value = -1;
+    }
   }
 
   @override
@@ -132,6 +159,44 @@ class AlarmChallengeController extends GetxController {
         }
       });
     }
+
+    if (alarmRecord.isPedometerEnabled) {
+      final PermissionStatus status =
+          await Permission.activityRecognition.request();
+
+      if (status == PermissionStatus.granted) {
+        numberOfSteps = alarmRecord.numberOfSteps;
+
+        shouldProcessStepCount = true;
+
+        _stepCountStream = Pedometer.stepCountStream;
+
+        isPedometerOngoing.listen((value) {
+          if (value == Status.ongoing) {
+            _stepCountStream.listen(onStepCount).onError(onStepCountError);
+          }
+        });
+
+        stepsCount.listen((value) {
+          if (numberOfSteps - value <= 0) {
+            isPedometerOngoing.value = Status.completed;
+            alarmRecord.isPedometerEnabled = false;
+            Get.back();
+            isChallengesComplete();
+          } else if (value == -1) {
+            Get.snackbar(
+              'Step Count Unavailable',
+              'We\'re unable to retrieve your step count at the moment.'
+                  ' Please try again later.',
+            );
+            isPedometerOngoing.value = Status.completed;
+            alarmRecord.isPedometerEnabled = false;
+            Get.back();
+            isChallengesComplete();
+          }
+        });
+      }
+    }
   }
 
   void _startTimer() async {
@@ -145,6 +210,7 @@ class AlarmChallengeController extends GetxController {
         break;
       }
       if (progress.value <= 0.0) {
+        shouldProcessStepCount = false;
         Get.until((route) => route.settings.name == '/alarm-ring');
         break;
       }
@@ -169,6 +235,8 @@ class AlarmChallengeController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
+
+    shouldProcessStepCount = false;
 
     String ringtoneName = alarmRecord.ringtoneName;
 
