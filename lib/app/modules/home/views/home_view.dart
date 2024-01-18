@@ -1267,7 +1267,29 @@ class HomeView extends GetView<HomeController> {
                                                                                       : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
-                                                                      ],
+                                                                        if (alarm
+                                                                          .isPedometerEnabled)
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                3.0,
+                                                                          ),
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.directions_walk,
+                                                                            size:
+                                                                                24,
+                                                                            color: alarm.isEnabled == true
+                                                                                ? themeController.isLightMode.value
+                                                                                    ? kLightPrimaryTextColor.withOpacity(0.5)
+                                                                                    : kprimaryTextColor.withOpacity(0.5)
+                                                                                : themeController.isLightMode.value
+                                                                                    ? kLightPrimaryDisabledTextColor
+                                                                                    : kprimaryDisabledTextColor,
+                                                                          ),
+                                                                        ),
+                                                                    ],
                                                                     ),
                                                                 ],
                                                               ),
