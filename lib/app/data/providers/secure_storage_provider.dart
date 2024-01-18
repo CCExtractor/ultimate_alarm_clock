@@ -122,22 +122,6 @@ class SecureStorageProvider {
     );
   }
 
-  // write and read last choosen language
-  Future<String> readCurrentLanguage({required String key}) async {
-    return await _secureStorage.read(key: key) ?? '';
-  }
-
-  Future<void> writeCurrentLanguage({
-    required String key,
-    required String currentLanguage,
-  }) async {
-    await _secureStorage.write(
-      key: key,
-      value: currentLanguage,
-    );
-  }
-
-
   Future<int> readTabIndex() async {
     String tabIndex = await _secureStorage.read(key: 'tab_index') ?? '0';
     return int.parse(tabIndex);
