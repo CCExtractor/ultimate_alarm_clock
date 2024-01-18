@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/maths_challenge_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/pedometer_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/qr_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/shake_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -236,6 +237,76 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                     Obx(
                                       () => Icon(
                                         controller.isQrOngoing.value ==
+                                                Status.completed
+                                            ? Icons.done
+                                            : Icons.arrow_forward_ios_sharp,
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                                .withOpacity(0.4)
+                                            : kprimaryTextColor
+                                                .withOpacity(0.2),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          const SizedBox(
+                            height: 20,
+                            width: 0,
+                          ),
+                          if (controller.alarmRecord.isPedometerEnabled)
+                            InkWell(
+                              onTap: () {
+                                Utils.hapticFeedback();
+                                if (controller.isPedometerOngoing.value !=
+                                        Status.completed &&
+                                    controller.alarmRecord.isPedometerEnabled) {
+                                  controller.numberOfSteps =
+                                      controller.alarmRecord.numberOfSteps;
+                                  controller.isPedometerOngoing.value =
+                                      Status.ongoing;
+                                  Get.to(() => PedometerChallengeView());
+                                }
+                              },
+                              child: Container(
+                                width: width * 0.91,
+                                height: height * 0.1,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(18),
+                                  ),
+                                  color: themeController.isLightMode.value
+                                      ? kLightSecondaryBackgroundColor
+                                      : ksecondaryBackgroundColor,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Icon(
+                                      Icons.directions_walk,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                              .withOpacity(0.8)
+                                          : kprimaryTextColor.withOpacity(0.8),
+                                      size: 28,
+                                    ),
+                                    Text(
+                                      'Pedometer Challenge',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            color: themeController
+                                                    .isLightMode.value
+                                                ? kLightPrimaryTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                    ),
+                                    Obx(
+                                      () => Icon(
+                                        controller.isPedometerOngoing.value ==
                                                 Status.completed
                                             ? Icons.done
                                             : Icons.arrow_forward_ios_sharp,
