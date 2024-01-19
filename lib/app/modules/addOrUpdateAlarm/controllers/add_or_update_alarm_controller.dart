@@ -94,6 +94,15 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isDailySelected = false.obs;
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
+  RxBool isPlaying = false.obs; // Observable boolean to track playing state
+
+  void toggleIsPlaying() {
+    isPlaying.toggle();
+  }
+
+  void resetIsPlaying() {
+    isPlaying.value = false;
+  }
 
   void setIsDailySelected(bool value) {
     isDailySelected.value = value;
