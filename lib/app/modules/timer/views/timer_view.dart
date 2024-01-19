@@ -1,4 +1,3 @@
-// import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -26,7 +25,6 @@ class TimerView extends GetView<TimerController> {
           toolbarHeight: height / 7.9,
           elevation: 0.0,
           centerTitle: true,
-          
         ),
       ),
       body: Obx(
@@ -102,162 +100,162 @@ class TimerView extends GetView<TimerController> {
                 ],
               )
             : Obx(
-                  () => Container(
-                    color: themeController.isLightMode.value
-                        ? kLightPrimaryBackgroundColor
-                        : kprimaryBackgroundColor,
-                    height: height * 0.25,
-                    width: width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        NumberPicker(
-                          minValue: 0,
-                          maxValue: 23,
-                          value: controller.hours.value,
-                          onChanged: (value) {
-                            controller.hours.value = value;
-                          },
-                          infiniteLoop: true,
-                          itemWidth: width * 0.18,
-                          zeroPad: true,
-                          selectedTextStyle: TextStyle(
-                            fontSize: 27,
-                            fontWeight: FontWeight.bold,
-                            color: kprimaryColor,
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: themeController.isLightMode.value
-                                ? ksecondaryBackgroundColor
-                                : kLightSecondaryBackgroundColor,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                width: width * 0.006,
-                                color: themeController.isLightMode.value
-                                    ? kprimaryDisabledTextColor
-                                    : kLightPrimaryDisabledTextColor,
-                              ),
-                              bottom: BorderSide(
-                                width: width * 0.006,
-                                color: themeController.isLightMode.value
-                                    ? kprimaryDisabledTextColor
-                                    : kLightPrimaryDisabledTextColor,
-                              ),
-                            ),
-                          ),
+                () => Container(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryBackgroundColor
+                      : kprimaryBackgroundColor,
+                  height: height * 0.25,
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        minValue: 0,
+                        maxValue: 23,
+                        value: controller.hours.value,
+                        onChanged: (value) {
+                          controller.hours.value = value;
+                        },
+                        infiniteLoop: true,
+                        itemWidth: width * 0.17,
+                        zeroPad: true,
+                        selectedTextStyle: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: kprimaryColor,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-                          child: Text(
-                            ':',
-                            style: TextStyle(
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold,
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              width: width * 0.006,
                               color: themeController.isLightMode.value
-                                ? ksecondaryBackgroundColor
-                                : kLightSecondaryBackgroundColor,
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
                             ),
-                          ),
-                        ),
-                        NumberPicker(
-                          minValue: 0,
-                          maxValue: 59,
-                          value: controller.minutes.value,
-                          onChanged: (value) {
-                            controller.minutes.value = value;
-                          },
-                          infiniteLoop: true,
-                          itemWidth: width * 0.18,
-                          zeroPad: true,
-                          selectedTextStyle: TextStyle(
-                            fontSize: 27,
-                            fontWeight: FontWeight.bold,
-                            color: kprimaryColor,
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: themeController.isLightMode.value
-                                ? ksecondaryBackgroundColor
-                                : kLightSecondaryBackgroundColor,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                width: width * 0.006,
-                                color: themeController.isLightMode.value
-                                    ? kprimaryDisabledTextColor
-                                    : kLightPrimaryDisabledTextColor,
-                              ),
-                              bottom: BorderSide(
-                                width: width * 0.006,
-                                color: themeController.isLightMode.value
-                                    ? kprimaryDisabledTextColor
-                                    : kLightPrimaryDisabledTextColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-                          child: Text(
-                            ':',
-                            style: TextStyle(
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold,
+                            bottom: BorderSide(
+                              width: width * 0.006,
                               color: themeController.isLightMode.value
-                                ? ksecondaryBackgroundColor
-                                : kLightSecondaryBackgroundColor,
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
                             ),
                           ),
                         ),
-                        NumberPicker(
-                          minValue: 0,
-                          maxValue: 59,
-                          value: controller.seconds.value,
-                          onChanged: (value) {
-                            controller.seconds.value = value;
-                          },
-                          infiniteLoop: true,
-                          itemWidth: width * 0.18,
-                          zeroPad: true,
-                          selectedTextStyle: TextStyle(
-                            fontSize: 27,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                        child: Text(
+                          ':',
+                          style: TextStyle(
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: kprimaryColor,
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
                             color: themeController.isLightMode.value
-                                ? ksecondaryBackgroundColor
-                                : kLightSecondaryBackgroundColor,
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor,
                           ),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                width: width * 0.006,
-                                color: themeController.isLightMode.value
-                                    ? kprimaryDisabledTextColor
-                                    : kLightPrimaryDisabledTextColor,
-                              ),
-                              bottom: BorderSide(
-                                width: width * 0.006,
-                                color: themeController.isLightMode.value
-                                    ? kprimaryDisabledTextColor
-                                    : kLightPrimaryDisabledTextColor,
-                              ),
+                        ),
+                      ),
+                      NumberPicker(
+                        minValue: 0,
+                        maxValue: 59,
+                        value: controller.minutes.value,
+                        onChanged: (value) {
+                          controller.minutes.value = value;
+                        },
+                        infiniteLoop: true,
+                        itemWidth: width * 0.17,
+                        zeroPad: true,
+                        selectedTextStyle: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: kprimaryColor,
+                        ),
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              width: width * 0.006,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                            bottom: BorderSide(
+                              width: width * 0.006,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                        child: Text(
+                          ':',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor,
+                          ),
+                        ),
+                      ),
+                      NumberPicker(
+                        minValue: 0,
+                        maxValue: 59,
+                        value: controller.seconds.value,
+                        onChanged: (value) {
+                          controller.seconds.value = value;
+                        },
+                        infiniteLoop: true,
+                        itemWidth: width * 0.17,
+                        zeroPad: true,
+                        selectedTextStyle: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: kprimaryColor,
+                        ),
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryDisabledTextColor
+                              : kprimaryDisabledTextColor,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              width: width * 0.006,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                            bottom: BorderSide(
+                              width: width * 0.006,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),  
+                ),
+              ),
       ),
       floatingActionButton: Obx(
         () => controller.isTimerRunning.value
@@ -271,21 +269,20 @@ class TimerView extends GetView<TimerController> {
                       : false,
                   child: FloatingActionButton(
                     onPressed: () {
-                            Utils.hapticFeedback();
-                            controller.remainingTime.value = Duration(
-                              hours: controller.hours.value,
-                              minutes: controller.minutes.value,
-                              seconds: controller.seconds.value,
-                            );
-                            controller.startTimer();
-                            controller.createTimer();
-                          },
-                    backgroundColor:
-                        controller.hours.value == 0 &&
-                        controller.minutes.value == 0 &&
-                        controller.seconds.value == 0
-                            ? kprimaryDisabledTextColor
-                            : kprimaryColor,
+                      Utils.hapticFeedback();
+                      controller.remainingTime.value = Duration(
+                        hours: controller.hours.value,
+                        minutes: controller.minutes.value,
+                        seconds: controller.seconds.value,
+                      );
+                      controller.startTimer();
+                      controller.createTimer();
+                    },
+                    backgroundColor: controller.hours.value == 0 &&
+                            controller.minutes.value == 0 &&
+                            controller.seconds.value == 0
+                        ? kprimaryDisabledTextColor
+                        : kprimaryColor,
                     child: const Icon(
                       Icons.play_arrow_rounded,
                     ),
@@ -297,7 +294,9 @@ class TimerView extends GetView<TimerController> {
         () => Drawer(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+            ),
           ),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -335,10 +334,11 @@ class TimerView extends GetView<TimerController> {
                                     .textTheme
                                     .displayMedium!
                                     .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
+                                      color: themeController.isLightMode.value
+                                          ? kprimaryTextColor
+                                          : ksecondaryTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                             SizedBox(
@@ -350,10 +350,11 @@ class TimerView extends GetView<TimerController> {
                                     .textTheme
                                     .titleLarge!
                                     .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
+                                      color: themeController.isLightMode.value
+                                          ? kprimaryTextColor
+                                          : ksecondaryTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                           ],
@@ -397,9 +398,10 @@ class TimerView extends GetView<TimerController> {
                 title: Text(
                   'About'.tr,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor.withOpacity(0.8)
-                          : kprimaryTextColor.withOpacity(0.8)),
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor.withOpacity(0.8)
+                            : kprimaryTextColor.withOpacity(0.8),
+                      ),
                 ),
                 leading: Icon(
                   Icons.info_outline,
