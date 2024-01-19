@@ -108,12 +108,14 @@ class ScreenActivityTile extends StatelessWidget {
       child: ListTile(
         title: Row(
           children: [
-            Text(
-              'Screen Activity'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+            Flexible(
+              child: Text(
+                'Screen Activity'.tr,
+                style: TextStyle(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
               ),
             ),
             IconButton(

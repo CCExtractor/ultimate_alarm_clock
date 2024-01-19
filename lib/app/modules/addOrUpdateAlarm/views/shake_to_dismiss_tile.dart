@@ -25,12 +25,14 @@ class ShakeToDismiss extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Text(
-            'Shake to dismiss'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+          Flexible(
+            child: Text(
+              'Shake to dismiss'.tr,
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
             ),
           ),
           IconButton(

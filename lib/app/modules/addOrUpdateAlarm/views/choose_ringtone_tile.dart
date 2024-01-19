@@ -27,12 +27,14 @@ class ChooseRingtoneTile extends StatelessWidget {
         tileColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: Text(
-          'Choose Ringtone'.tr,
-          style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+        title: Flexible(
+          child: Text(
+            'Choose Ringtone'.tr,
+            style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+            ),
           ),
         ),
         onTap: () async {

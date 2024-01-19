@@ -26,12 +26,14 @@ class MathsChallenge extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Text(
-            'Maths'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+          Flexible(
+            child: Text(
+              'Maths'.tr,
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
             ),
           ),
           IconButton(

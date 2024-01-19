@@ -308,13 +308,15 @@ class WeatherTile extends StatelessWidget {
                     : ksecondaryBackgroundColor,
                 title: Row(
                   children: [
-                    Text(
-                      'Weather Condition'.tr,
-                      style: TextStyle(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: Text(
+                        'Weather Condition'.tr,
+                        style: TextStyle(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : kprimaryTextColor,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     IconButton(

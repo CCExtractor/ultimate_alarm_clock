@@ -20,6 +20,8 @@ class RepeatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<bool> repeatDays = List<bool>.filled(7, false);
+    var height = Get.height;
+    var width = Get.width;
 
     return InkWell(
       onTap: () {
@@ -33,7 +35,7 @@ class RepeatTile extends StatelessWidget {
                 : ksecondaryBackgroundColor,
             builder: (BuildContext context) {
               return Container(
-                height: MediaQuery.of(context).size.height * 0.45,
+                height: height * 0.45,
                 child: Column(
                   children: [
                     buildDailyTile(
@@ -73,7 +75,7 @@ class RepeatTile extends StatelessWidget {
                       height: 25,
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width,
+                      width: width,
                       child: Padding(
                         padding: const EdgeInsets.only(
                           left: 25,
@@ -119,14 +121,16 @@ class RepeatTile extends StatelessWidget {
           () {
             bool anyDaySelected =
                 controller.repeatDays.any((daySelected) => daySelected);
-            return Text(
-              'Repeat'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
-                fontWeight:
-                    anyDaySelected ? FontWeight.w500 : FontWeight.normal,
+            return Flexible(
+              child: Text(
+                'Repeat'.tr,
+                style: TextStyle(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                  fontWeight:
+                      anyDaySelected ? FontWeight.w500 : FontWeight.normal,
+                ),
               ),
             );
           },

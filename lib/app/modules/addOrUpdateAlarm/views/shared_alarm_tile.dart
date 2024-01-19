@@ -25,12 +25,14 @@ class SharedAlarm extends StatelessWidget {
           ? ListTile(
               title: Row(
                 children: [
-                  Text(
-                    'Shared Alarm'.tr,
-                    style: TextStyle(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+                  Expanded(
+                    child: Text(
+                      'Shared Alarm'.tr,
+                      style: TextStyle(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -153,12 +155,23 @@ class SharedAlarm extends StatelessWidget {
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
                     children: [
-                       Text(
-                        'To use this feature, you have to link your Google account!'.tr,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0
+                        ),
+                        child: Text(
+                          'To use this feature, you have to link your Google account!'
+                              .tr,
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             TextButton(
@@ -167,16 +180,19 @@ class SharedAlarm extends StatelessWidget {
                                   kprimaryColor,
                                 ),
                               ),
-                              child: Text(
-                                'Go to settings'.tr,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : ksecondaryTextColor,
-                                    ),
+                              child: SizedBox(
+                                width: width * 0.28,
+                                child: Text(
+                                  'Go to settings'.tr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : ksecondaryTextColor,
+                                      ),
+                                ),
                               ),
                               onPressed: () {
                                 Utils.hapticFeedback();
@@ -192,16 +208,19 @@ class SharedAlarm extends StatelessWidget {
                                       : kprimaryTextColor.withOpacity(0.5),
                                 ),
                               ),
-                              child: Text(
-                                'Cancel'.tr,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : kprimaryTextColor,
-                                    ),
+                              child: SizedBox(
+                                width: width * 0.28,
+                                child: Text(
+                                  'Cancel'.tr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : kprimaryTextColor,
+                                      ),
+                                ),
                               ),
                               onPressed: () {
                                 Utils.hapticFeedback();
@@ -215,12 +234,14 @@ class SharedAlarm extends StatelessWidget {
                   ),
                 );
               },
-              title: Text(
-                'Enable Shared Alarm'.tr,
-                style: TextStyle(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+              title: Flexible(
+                child: Text(
+                  'Enable Shared Alarm'.tr,
+                  style: TextStyle(
+                    color: themeController.isLightMode.value
+                        ? kLightPrimaryTextColor
+                        : kprimaryTextColor,
+                  ),
                 ),
               ),
               trailing: InkWell(

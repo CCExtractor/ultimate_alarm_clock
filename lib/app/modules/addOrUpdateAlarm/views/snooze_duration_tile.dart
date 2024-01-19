@@ -100,12 +100,14 @@ class SnoozeDurationTile extends StatelessWidget {
         tileColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: Text(
-          'Snooze Duration'.tr,
-          style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+        title: Flexible(
+          child: Text(
+            'Snooze Duration'.tr,
+            style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+            ),
           ),
         ),
         trailing: Wrap(
