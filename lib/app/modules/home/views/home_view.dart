@@ -712,25 +712,100 @@ class HomeView extends GetView<HomeController> {
                                           Obx(
                                             () => IconButton(
                                               onPressed: () async {
-                                                // Deleting the alarms
-                                                await controller.deleteAlarms();
+                                                Get.defaultDialog(
+                                                  titlePadding: const EdgeInsets.symmetric(
+                                                    vertical: 20,
+                                                  ),
+                                                  backgroundColor: themeController.isLightMode.value
+                                                      ? kLightSecondaryBackgroundColor
+                                                      : ksecondaryBackgroundColor,
+                                                  title: 'Are you sure you want to delete these alarms?',
+                                                  titleStyle: Theme.of(context).textTheme.displaySmall,
+                                                  content: Column(
+                                                    children: [
+                                                      Text(
+                                                        'This action will permanently delete these alarms from your device.',
+                                                        style: Theme.of(context).textTheme.bodyMedium,
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(
+                                                          top: 20,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          children: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Get.back();
+                                                              },
+                                                              style: ButtonStyle(
+                                                                backgroundColor:
+                                                                MaterialStateProperty.all(kprimaryColor),
+                                                              ),
+                                                              child: Text(
+                                                                'Cancel'.tr,
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .displaySmall!
+                                                                    .copyWith(
+                                                                  color: kprimaryBackgroundColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            OutlinedButton(
+                                                              onPressed: () async {
+                                                                // Deleting the alarms
+                                                                await controller.deleteAlarms();
 
-                                                // Closing the multiple select mode
-                                                controller.inMultipleSelectMode
-                                                    .value = false;
-                                                controller.isAnyAlarmHolded
-                                                    .value = false;
-                                                controller.isAllAlarmsSelected
-                                                    .value = false;
-                                                controller
-                                                    .numberOfAlarmsSelected
-                                                    .value = 0;
-                                                controller.selectedAlarmSet
-                                                    .clear();
-                                                // After deleting alarms, refreshing to schedule latest one
-                                                controller.refreshTimer = true;
-                                                controller
-                                                    .refreshUpcomingAlarms();
+                                                                // Closing the multiple select mode
+                                                                controller.inMultipleSelectMode
+                                                                    .value = false;
+                                                                controller.isAnyAlarmHolded
+                                                                    .value = false;
+                                                                controller.isAllAlarmsSelected
+                                                                    .value = false;
+                                                                controller
+                                                                    .numberOfAlarmsSelected
+                                                                    .value = 0;
+                                                                controller.selectedAlarmSet
+                                                                    .clear();
+                                                                // After deleting alarms, refreshing to schedule latest one
+                                                                controller.refreshTimer = true;
+                                                                controller
+                                                                    .refreshUpcomingAlarms();
+
+                                                                Get.offNamedUntil(
+                                                                  '/bottom-navigation-bar',
+                                                                      (route) => route.settings.name == '/splash-screen',
+                                                                );
+                                                              },
+                                                              style: OutlinedButton.styleFrom(
+                                                                side: BorderSide(
+                                                                  color: themeController.isLightMode.value
+                                                                      ? Colors.red.withOpacity(0.9)
+                                                                      : Colors.red,
+                                                                  width: 1,
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                'Okay',
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .displaySmall!
+                                                                    .copyWith(
+                                                                  color: themeController.isLightMode.value
+                                                                      ? Colors.red.withOpacity(0.9)
+                                                                      : Colors.red,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                               icon: const Icon(
                                                 Icons.delete,
