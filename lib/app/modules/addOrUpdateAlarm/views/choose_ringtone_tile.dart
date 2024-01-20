@@ -62,45 +62,47 @@ class ChooseRingtoneTile extends StatelessWidget {
                           itemCount: controller.customRingtoneNames.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
+                            bool isSelected = controller.customRingtoneName ==
+                                controller.customRingtoneNames[index];
+
                             return Obx(
-                              () => ListTile(
-                                onTap: () {
-                                  controller.customRingtoneName.value =
-                                      controller.customRingtoneNames[index];
-                                },
-                                tileColor: controller.customRingtoneName ==
-                                        controller.customRingtoneNames[index]
+                              () => Container(
+                                color: isSelected
                                     ? themeController.isLightMode.value
                                         ? kLightPrimaryBackgroundColor
                                         : kprimaryBackgroundColor
                                     : themeController.isLightMode.value
                                         ? kLightSecondaryBackgroundColor
                                         : ksecondaryBackgroundColor,
-                                title: Text(
-                                  controller.customRingtoneNames[index],
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: (controller
-                                                .customRingtoneName.value ==
-                                            controller
-                                                .customRingtoneNames[index]) ||
-                                        (controller
-                                                .customRingtoneNames[index] ==
-                                            'Default'.tr)
-                                    ? null
-                                    : IconButton(
-                                        onPressed: () async {
-                                          await controller.deleteCustomRingtone(
-                                            ringtoneName: controller
-                                                .customRingtoneNames[index],
-                                            ringtoneIndex: index,
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
+                                child: ListTile(
+                                  onTap: () {
+                                    controller.customRingtoneName.value =
+                                        controller.customRingtoneNames[index];
+                                  },
+                                  title: Text(
+                                    controller.customRingtoneNames[index],
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: isSelected ||
+                                          (controller
+                                                  .customRingtoneNames[index] ==
+                                              'Default'.tr)
+                                      ? null
+                                      : IconButton(
+                                          onPressed: () async {
+                                            await controller
+                                                .deleteCustomRingtone(
+                                              ringtoneName: controller
+                                                  .customRingtoneNames[index],
+                                              ringtoneIndex: index,
+                                            );
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
                                         ),
-                                      ),
+                                ),
                               ),
                             );
                           },
