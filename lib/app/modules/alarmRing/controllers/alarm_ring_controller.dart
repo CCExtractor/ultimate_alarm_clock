@@ -227,7 +227,7 @@ class AlarmControlController extends GetxController {
 
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
-
+    
     _subscription.cancel();
     _currentTimeTimer?.cancel();
   }

@@ -531,6 +531,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  flutter_volume_controller:
+    dependency: "direct main"
+    description:
+      name: flutter_volume_controller
+      sha256: "0f10cc759499cb6c3e152a8f6ff8e5ce385b99db7e1f586d1a29d8e6c11f4082"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
