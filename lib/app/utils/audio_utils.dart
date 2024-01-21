@@ -1,17 +1,12 @@
-import 'dart:async';
-
 import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart' as audioplayer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_volume_controller/flutter_volume_controller.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
-import 'dart:math';
 
 class AudioUtils {
   static final audioPlayer = audioplayer.AudioPlayer();
@@ -45,7 +40,6 @@ class AudioUtils {
 
   static Future<void> playCustomSound(
     String customRingtonePath,
-    int gradientDurationInSeconds,
   ) async {
     try {
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
@@ -77,7 +71,7 @@ class AudioUtils {
 
         if (customRingtone != null) {
           String customRingtonePath = customRingtone.ringtonePath;
-          await playCustomSound(customRingtonePath, alarmRecord.gradient);
+          await playCustomSound(customRingtonePath);
         } else {
           await alarmChannel.invokeMethod('playDefaultAlarm');
           bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
