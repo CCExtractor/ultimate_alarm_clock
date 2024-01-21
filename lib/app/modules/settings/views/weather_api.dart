@@ -303,14 +303,199 @@ class WeatherApi extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Text(
-                  'Open Weather Map API',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+              Text(
+                'Open Weather Map API',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
+              IconButton(
+                icon: Icon(
+                  Icons.info_sharp,
+                  size: 21,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.3)
+                      : kprimaryTextColor.withOpacity(0.3),
+                ),
+                onPressed: () => {
+                  Utils.hapticFeedback(),
+                  showBottomSheet(
+                    context: context,
+                    backgroundColor: themeController.isLightMode.value
+                        ? kLightSecondaryBackgroundColor
+                        : ksecondaryBackgroundColor,
+                    builder: (context) {
+                      return Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              'onenweathermap_title'.tr,
+                              style: Theme.of(context).textTheme.displayMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: height * 0.6,
+                              child: ListView(
+                                children: [
+                                  RichText(
+                                    textAlign: TextAlign.justify,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'step1.1'.tr,
+                                        ),
+                                        TextSpan(
+                                          text: 'step1.2'.tr,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'step1.3'.tr,
+                                        ),
+                                        TextSpan(
+                                          text: 'step1.4'.tr,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'step1.5'.tr,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.justify,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'step2.1'.tr,
+                                        ),
+                                        TextSpan(
+                                          text: 'step2.2'.tr,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'step2.3'.tr,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.justify,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'step3'.tr,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.justify,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'step4.1'.tr,
+                                        ),
+                                        TextSpan(
+                                          text: 'step4.2'.tr,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'step4.3'.tr,
+                                        ),
+                                        TextSpan(
+                                          text: 'step4.4'.tr,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'step4.5'.tr,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.justify,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'step5'.tr,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    kprimaryColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Understood'.tr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : ksecondaryTextColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                },
+              ),
+              Spacer(),
               Icon(
                 Icons.arrow_forward_ios_sharp,
                 color: themeController.isLightMode.value

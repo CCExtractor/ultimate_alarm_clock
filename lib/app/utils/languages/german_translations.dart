@@ -127,7 +127,6 @@ class GermanTranslations extends Translations {
       'time' : 'Mal',
 //'shared_alarm_tile.dart
       'Shared Alarm' : 'Geteilter Alarm',
-      'Shared alarms' : 'Geteilte Alarme',
       'sharedDescription' : 'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',
       'Understood' : 'Verstanden',
       'To use this feature, you have to link your Google account!' : 'Um diese Funktion zu verwenden, müssen Sie Ihr Google-Konto verknüpfen!',
@@ -176,8 +175,23 @@ class GermanTranslations extends Translations {
       'Weekdays': 'Wochentage',
       'Weekends': 'Wochenenden',
       'Mon': 'Mo', 'Tue': 'Di', 'Wed': 'Mi', 'Thur': 'Do',
-      'Fri': 'Fr', 'Sat': 'Sa', 'Sun': 'So'
-
-    }
+      'Fri': 'Fr', 'Sat': 'Sa', 'Sun': 'So',
+      //OpenWeatherMap
+      'step1.1':'Gehe zu ',
+      'step1.2':'openweathermap.org',
+      'step1.3':', klick auf das ',
+      'step1.4':'SignIn',
+      'step1.5':' taste(obere rechte Ecke) anschließend werden Sie nach Anmeldeinformationen gefragt.',
+      'step2.1':'Wenn Sie bereits ein Konto haben, geben Sie Ihre Anmeldedaten ein. Ansonsten klicken auf ',
+      'step2.2':'Create an Account',
+      'step2.3':' Möglichkeit. Sie werden aufgefordert, Ihren Benutzernamen, Ihre E-Mail-Adresse und Ihr Passwort einzugeben. Stellen Sie sicher, dass die eingegebenen Daten korrekt sind.',
+      'step3':'Sobald Ihr Konto erstellt ist, werden Sie automatisch zur OpenWeather-Seite weitergeleitet. Sie werden nach Ihrem Unternehmen und dem Zweck der Nutzung der Plattform gefragt. Füllen Sie diese Angaben entsprechend aus.',
+      'step4.1':'Klicken Sie auf Ihr ',
+      'step4.2':'Username',
+      'step4.3':'(obere rechte Ecke). Es erscheint ein Dropdown-Menü. Klicke auf ',
+      'step4.4':'My API',
+      'step4.5':' Möglichkeit.',
+      'step5':'Sie haben jetzt den Wetter-API-Schlüssel. Wählen Sie den Schlüssel aus und kopieren Sie ihn..',
+    },
   };
 }
