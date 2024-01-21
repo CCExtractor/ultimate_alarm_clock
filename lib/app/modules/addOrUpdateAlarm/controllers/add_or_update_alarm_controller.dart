@@ -821,11 +821,21 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           } else {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           }
         } else {
@@ -833,6 +843,11 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
+            margin: EdgeInsets.all(15),
+            animationDuration: Duration(seconds: 1),
+            snackPosition: SnackPosition.BOTTOM,
+            barBlur: 15,
+            colorText: kprimaryTextColor,
           );
         }
       }
