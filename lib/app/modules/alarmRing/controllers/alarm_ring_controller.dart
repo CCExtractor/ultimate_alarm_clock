@@ -36,6 +36,7 @@ class AlarmControlController extends GetxController {
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
   Timer? _currentTimeTimer;
   bool isAlarmActive = true;
+  late double initialVolume;
 
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -155,6 +156,10 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    initialVolume = await FlutterVolumeController.getVolume(
+      stream: AudioStream.alarm,
+    ) as double;
+
     FlutterVolumeController.updateShowSystemUI(false);
 
     _fadeInAlarmVolume();
@@ -273,7 +278,10 @@ class AlarmControlController extends GetxController {
     isAlarmActive = false;
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
-
+    await FlutterVolumeController.setVolume(
+      initialVolume,
+      stream: AudioStream.alarm,
+    );
     _subscription.cancel();
     _currentTimeTimer?.cancel();
   }
