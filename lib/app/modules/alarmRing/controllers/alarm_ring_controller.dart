@@ -35,6 +35,7 @@ class AlarmControlController extends GetxController {
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
   Timer? _currentTimeTimer;
+  bool isAlarmActive = true;
 
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -119,19 +120,24 @@ class AlarmControlController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 2000));
 
     double vol = 0.0;
-    double diff = 1.0 - 0.1; // initial volume to avoid loud start
+    double diff = 1.0 - 0.1; // Adjusted the initial volume to avoid loud start
     int len = currentlyRingingAlarm.value.gradient * 1000;
     double steps = (diff / 0.01).abs();
     int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
     int lastTick = DateTime.now().millisecondsSinceEpoch;
 
     Timer.periodic(Duration(milliseconds: stepLen), (Timer t) {
+      if (!isAlarmActive) {
+        t.cancel();
+        return;
+      }
+
       var now = DateTime.now().millisecondsSinceEpoch;
       var tick = (now - lastTick) / len;
       lastTick = now;
       vol += diff * tick;
 
-      vol = max(0.1, vol); // lower bound to avoid muting
+      vol = max(0.1, vol); // Adjusted the lower bound to avoid muting
       vol = min(1, vol);
       vol = (vol * 100).round() / 100;
 
@@ -151,9 +157,8 @@ class AlarmControlController extends GetxController {
     super.onInit();
     FlutterVolumeController.updateShowSystemUI(false);
 
-    //play area
     _fadeInAlarmVolume();
-// safe code
+
     if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
       if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
         FirestoreDb.deleteOneTimeAlarm(
@@ -265,7 +270,7 @@ class AlarmControlController extends GetxController {
     super.onClose();
     Vibration.cancel();
     vibrationTimer!.cancel();
-
+    isAlarmActive = false;
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
 
