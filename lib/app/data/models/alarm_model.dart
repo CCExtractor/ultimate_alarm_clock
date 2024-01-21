@@ -41,6 +41,7 @@ class AlarmModel {
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
+  late int gradient;
   late String ringtoneName;
   late String note;
   late bool deleteAfterGoesOff;
@@ -80,6 +81,7 @@ class AlarmModel {
     required this.label,
     required this.isOneTime,
     required this.snoozeDuration,
+    required this.gradient,
     required this.ringtoneName,
     required this.note,
     required this.deleteAfterGoesOff,
@@ -110,6 +112,7 @@ class AlarmModel {
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
+    gradient = documentSnapshot['gradient'];
     label = documentSnapshot['label'];
     isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
@@ -146,6 +149,7 @@ class AlarmModel {
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
     snoozeDuration = alarmData['snoozeDuration'];
+    gradient = alarmData['gradient'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     alarmTime = alarmData['alarmTime'];
@@ -223,6 +227,7 @@ class AlarmModel {
       'isShakeEnabled': alarmRecord.isShakeEnabled,
       'shakeTimes': alarmRecord.shakeTimes,
       'snoozeDuration': alarmRecord.snoozeDuration,
+      'gradient': alarmRecord.gradient,
       'ringtoneName': alarmRecord.ringtoneName,
       'note': alarmRecord.note,
       'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
