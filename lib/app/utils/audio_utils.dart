@@ -48,44 +48,8 @@ class AudioUtils {
     int gradientDurationInSeconds,
   ) async {
     try {
-      await FlutterVolumeController.setVolume(
-        0.1,
-        stream: AudioStream.alarm,
-      );
-      await Future.delayed(const Duration(milliseconds: 2000));
-
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.DeviceFileSource(customRingtonePath));
-      double vol = 0.0;
-      double diff = 1.0 - 0.0;
-      int len = gradientDurationInSeconds * 1000;
-      double steps = (diff / 0.01).abs();
-      int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
-      int lastTick = DateTime.now().millisecondsSinceEpoch;
-
-      // Update the volume value on each interval ticks
-      Timer.periodic(Duration(milliseconds: stepLen), (Timer t) {
-        var now = DateTime.now().millisecondsSinceEpoch;
-        var tick = (now - lastTick) / len;
-        lastTick = now;
-        vol += diff * tick;
-
-        vol = max(0, vol);
-        vol = min(1, vol);
-        vol = (vol * 100).round() / 100;
-
-        FlutterVolumeController.setVolume(
-          vol,
-          stream: AudioStream.alarm,
-        );
-        if ((1.0 < 0.0 && vol <= 1.0) || (1.0 > 0.0 && vol >= 1.0)) {
-          t.cancel();
-          FlutterVolumeController.setVolume(
-            vol,
-            stream: AudioStream.alarm,
-          );
-        }
-      });
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -105,40 +69,6 @@ class AudioUtils {
 
       if (ringtoneName == 'Default') {
         await alarmChannel.invokeMethod('playDefaultAlarm');
-        await FlutterVolumeController.setVolume(
-          0.1,
-          stream: AudioStream.alarm,
-        );
-        await Future.delayed(const Duration(milliseconds: 2000));
-        double vol = 0.0;
-        double diff = 1.0 - 0.0;
-        int len = alarmRecord.gradient * 1000;
-        double steps = (diff / 0.01).abs();
-        int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
-        int lastTick = DateTime.now().millisecondsSinceEpoch;
-
-        Timer.periodic(Duration(milliseconds: stepLen), (Timer t) {
-          var now = DateTime.now().millisecondsSinceEpoch;
-          var tick = (now - lastTick) / len;
-          lastTick = now;
-          vol += diff * tick;
-
-          vol = max(0, vol);
-          vol = min(1, vol);
-          vol = (vol * 100).round() / 100;
-
-          FlutterVolumeController.setVolume(
-            vol,
-            stream: AudioStream.alarm,
-          );
-          if ((1.0 < 0.0 && vol <= 1.0) || (1.0 > 0.0 && vol >= 1.0)) {
-            t.cancel();
-            FlutterVolumeController.setVolume(
-              vol,
-              stream: AudioStream.alarm,
-            );
-          }
-        });
       } else {
         int customRingtoneId = fastHash(ringtoneName);
         RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(

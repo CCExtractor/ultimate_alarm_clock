@@ -51,8 +51,8 @@ class AscendingVolumeTile extends StatelessWidget {
                     controller.gradient.value = value.toInt();
                   },
                   min: 0.0,
-                  max: 100.0,
-                  divisions: 100,
+                  max: 60.0,
+                  divisions: 60,
                   label: controller.gradient.value.toString(),
                 ),
                 ElevatedButton(

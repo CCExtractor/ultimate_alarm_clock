@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -109,9 +111,49 @@ class AlarmControlController extends GetxController {
     });
   }
 
+  Future<void> _fadeInAlarmVolume() async {
+    await FlutterVolumeController.setVolume(
+      0.1,
+      stream: AudioStream.alarm,
+    );
+    await Future.delayed(const Duration(milliseconds: 2000));
+
+    double vol = 0.0;
+    double diff = 1.0 - 0.1; // initial volume to avoid loud start
+    int len = currentlyRingingAlarm.value.gradient * 1000;
+    double steps = (diff / 0.01).abs();
+    int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
+    int lastTick = DateTime.now().millisecondsSinceEpoch;
+
+    Timer.periodic(Duration(milliseconds: stepLen), (Timer t) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      var tick = (now - lastTick) / len;
+      lastTick = now;
+      vol += diff * tick;
+
+      vol = max(0.1, vol); // lower bound to avoid muting
+      vol = min(1, vol);
+      vol = (vol * 100).round() / 100;
+
+      FlutterVolumeController.setVolume(
+        vol,
+        stream: AudioStream.alarm,
+      );
+
+      if (vol >= 1.0) {
+        t.cancel();
+      }
+    });
+  }
+
   @override
   void onInit() async {
     super.onInit();
+    FlutterVolumeController.updateShowSystemUI(false);
+
+    //play area
+    _fadeInAlarmVolume();
+// safe code
     if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
       if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
         FirestoreDb.deleteOneTimeAlarm(
@@ -221,13 +263,12 @@ class AlarmControlController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-
     Vibration.cancel();
     vibrationTimer!.cancel();
 
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
-    
+
     _subscription.cancel();
     _currentTimeTimer?.cancel();
   }
