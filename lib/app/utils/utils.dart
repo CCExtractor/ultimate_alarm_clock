@@ -362,6 +362,8 @@ class Utils {
       isQrEnabled: false,
       isShakeEnabled: false,
       shakeTimes: 0,
+      isPedometerEnabled: false,
+      numberOfSteps: 0,
       days: [false, false, false, false, false, false, false],
       weatherTypes: [],
       isWeatherEnabled: false,
@@ -495,7 +497,8 @@ class Utils {
   static bool isChallengeEnabled(AlarmModel alarmRecord) {
     if (alarmRecord.isMathsEnabled ||
         alarmRecord.isQrEnabled ||
-        alarmRecord.isShakeEnabled) {
+        alarmRecord.isShakeEnabled ||
+        alarmRecord.isPedometerEnabled) {
       return true;
     }
     return false;
