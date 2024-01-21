@@ -14,6 +14,8 @@ class AudioUtils {
   static MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   static AudioSession? audioSession;
+  
+  static bool isPreviewing = false;
 
   static Future<void> initializeAudioSession() async {
     audioSession = await AudioSession.instance;
@@ -88,7 +90,7 @@ class AudioUtils {
     }
   }
 
-  static bool isPreviewing = false;
+  
 
   static Future<void> stopDefaultAlarm() async {
     try {
