@@ -54,62 +54,91 @@ class ChooseRingtoneTile extends StatelessWidget {
               () => Column(
                 children: [
                   Obx(
-                    () => SizedBox(
-                      width: width * 0.8,
-                      height: height * 0.2,
-                      child: Scrollbar(
-                        child: ListView.builder(
-                          itemCount: controller.customRingtoneNames.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Obx(
-                              () => ListTile(
-                                onTap: () {
-                                  controller.customRingtoneName.value =
-                                      controller.customRingtoneNames[index];
+                    () => Padding(
+                      padding: EdgeInsets.all(4),
+                      child: SizedBox(
+                        width: width * 0.8,
+                        height: height * 0.2,
+                        child: Card(
+                          elevation: 0,
+                          color: themeController.isLightMode.value
+                              ? kLightSecondaryBackgroundColor
+                              : ksecondaryBackgroundColor,
+                          child: Scrollbar(
+                            radius: Radius.circular(5),
+                            thumbVisibility: true,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 4),
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    color: themeController.isLightMode.value
+                                        ? ksecondaryBackgroundColor
+                                        : kLightSecondaryBackgroundColor,
+                                    height: 0,
+                                  );
                                 },
-                                tileColor: controller.customRingtoneName ==
-                                        controller.customRingtoneNames[index]
-                                    ? themeController.isLightMode.value
-                                        ? kLightPrimaryBackgroundColor
-                                        : kprimaryBackgroundColor
-                                    : themeController.isLightMode.value
-                                        ? kLightSecondaryBackgroundColor
-                                        : ksecondaryBackgroundColor,
-                                title: Text(
-                                  controller.customRingtoneNames[index],
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: (controller
-                                                .customRingtoneName.value ==
+                                itemCount:
+                                    controller.customRingtoneNames.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return Obx(
+                                    () => ListTile(
+                                      onTap: () {
+                                        controller.customRingtoneName.value =
                                             controller
-                                                .customRingtoneNames[index]) ||
-                                        (controller
-                                                .customRingtoneNames[index] ==
-                                            'Default'.tr)
-                                    ? null
-                                    : IconButton(
-                                        onPressed: () async {
-                                          await controller.deleteCustomRingtone(
-                                            ringtoneName: controller
-                                                .customRingtoneNames[index],
-                                            ringtoneIndex: index,
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
+                                                .customRingtoneNames[index];
+                                      },
+                                      tileColor: controller
+                                                  .customRingtoneName ==
+                                              controller
+                                                  .customRingtoneNames[index]
+                                          ? themeController.isLightMode.value
+                                              ? kLightPrimaryBackgroundColor
+                                              : kprimaryBackgroundColor
+                                          : themeController.isLightMode.value
+                                              ? kLightSecondaryBackgroundColor
+                                              : ksecondaryBackgroundColor,
+                                      title: Text(
+                                        controller.customRingtoneNames[index],
+                                        overflow: TextOverflow.ellipsis,
                                       ),
+                                      trailing: (controller.customRingtoneName
+                                                      .value ==
+                                                  controller
+                                                          .customRingtoneNames[
+                                                      index]) ||
+                                              (controller.customRingtoneNames[
+                                                      index] ==
+                                                  'Default'.tr)
+                                          ? null
+                                          : IconButton(
+                                              onPressed: () async {
+                                                await controller
+                                                    .deleteCustomRingtone(
+                                                  ringtoneName: controller
+                                                          .customRingtoneNames[
+                                                      index],
+                                                  ringtoneIndex: index,
+                                                );
+                                              },
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   OutlinedButton(
                     onPressed: () async {
@@ -124,7 +153,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () async {
