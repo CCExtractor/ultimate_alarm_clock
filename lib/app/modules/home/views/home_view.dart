@@ -371,7 +371,7 @@ class HomeView extends GetView<HomeController> {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.back();
-                  Get.offNamed('/settings');
+                  Get.toNamed('/settings');
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
@@ -446,8 +446,8 @@ class HomeView extends GetView<HomeController> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 25 *
+                                        padding: EdgeInsets.only(
+                                          left: 25 *
                                               controller.scalingFactor.value,
                                         ),
                                         child: Column(
