@@ -104,14 +104,14 @@ class TimerView extends GetView<TimerController> {
                   color: themeController.isLightMode.value
                       ? kLightPrimaryBackgroundColor
                       : kprimaryBackgroundColor,
-                  height: height * 0.25,
+                  height: height * 0.3,
                   width: width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Hours',
@@ -123,7 +123,7 @@ class TimerView extends GetView<TimerController> {
                             ),
                           ),
                           SizedBox(
-                            height: 10,
+                            height: height * 0.01,
                           ),
                           NumberPicker(
                             minValue: 0,
@@ -167,7 +167,11 @@ class TimerView extends GetView<TimerController> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                        padding: EdgeInsets.only(
+                          left: width * 0.02,
+                          right: width * 0.02,
+                          top: height * 0.032,
+                        ),
                         child: Text(
                           ':',
                           style: TextStyle(
@@ -180,7 +184,7 @@ class TimerView extends GetView<TimerController> {
                         ),
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Minutes',
@@ -192,7 +196,7 @@ class TimerView extends GetView<TimerController> {
                             ),
                           ),
                           SizedBox(
-                            height: 10,
+                            height: height * 0.01,
                           ),
                           NumberPicker(
                             minValue: 0,
@@ -236,7 +240,11 @@ class TimerView extends GetView<TimerController> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                        padding: EdgeInsets.only(
+                          left: width * 0.02,
+                          right: width * 0.02,
+                          top: height * 0.032,
+                        ),
                         child: Text(
                           ':',
                           style: TextStyle(
@@ -249,7 +257,7 @@ class TimerView extends GetView<TimerController> {
                         ),
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Seconds',
@@ -261,7 +269,7 @@ class TimerView extends GetView<TimerController> {
                             ),
                           ),
                           SizedBox(
-                            height: 10,
+                            height: height * 0.011,
                           ),
                           NumberPicker(
                             minValue: 0,
