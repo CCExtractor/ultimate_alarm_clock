@@ -21,6 +21,7 @@ class AlarmModel {
   late bool isMathsEnabled;
   late bool isShakeEnabled;
   late bool isQrEnabled;
+  late bool isPedometerEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
@@ -29,6 +30,7 @@ class AlarmModel {
   late List<bool> days;
   late List<int> weatherTypes;
   late int shakeTimes;
+  late int numberOfSteps;
   late int numMathsQuestions;
   late int mathsDifficulty;
   late String qrValue;
@@ -75,6 +77,8 @@ class AlarmModel {
     required this.shakeTimes,
     required this.isQrEnabled,
     required this.qrValue,
+    required this.isPedometerEnabled,
+    required this.numberOfSteps,
     required this.activityInterval,
     this.offsetDetails = const {},
     required this.mainAlarmTime,
@@ -139,6 +143,8 @@ class AlarmModel {
     qrValue = documentSnapshot['qrValue'];
     isShakeEnabled = documentSnapshot['isShakeEnabled'];
     shakeTimes = documentSnapshot['shakeTimes'];
+    isPedometerEnabled = documentSnapshot['isPedometerEnabled'];
+    numberOfSteps = documentSnapshot['numberOfSteps'];
     ringtoneName = documentSnapshot['ringtoneName'];
     note = documentSnapshot['note'];
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
@@ -179,6 +185,8 @@ class AlarmModel {
     qrValue = alarmData['qrValue'];
     isShakeEnabled = alarmData['isShakeEnabled'];
     shakeTimes = alarmData['shakeTimes'];
+    isPedometerEnabled = alarmData['isPedometerEnabled'];
+    numberOfSteps = alarmData['numberOfSteps'];
     label = alarmData['label'];
     isOneTime = alarmData['isOneTime'];
     ringtoneName = alarmData['ringtoneName'];
@@ -226,6 +234,8 @@ class AlarmModel {
       'qrValue': alarmRecord.qrValue,
       'isShakeEnabled': alarmRecord.isShakeEnabled,
       'shakeTimes': alarmRecord.shakeTimes,
+      'isPedometerEnabled': alarmRecord.isPedometerEnabled,
+      'numberOfSteps': alarmRecord.numberOfSteps,
       'snoozeDuration': alarmRecord.snoozeDuration,
       'gradient': alarmRecord.gradient,
       'ringtoneName': alarmRecord.ringtoneName,

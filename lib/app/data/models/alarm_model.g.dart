@@ -47,39 +47,39 @@ const AlarmModelSchema = CollectionSchema(
       name: r'firestoreId',
       type: IsarType.string,
     ),
-    r'gradient': PropertySchema(
-      id: 6,
-      name: r'gradient',
-      type: IsarType.long,
-    ),
     r'intervalToAlarm': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'intervalToAlarm',
       type: IsarType.long,
     ),
     r'isActivityEnabled': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'isActivityEnabled',
       type: IsarType.bool,
     ),
     r'isEnabled': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'isEnabled',
       type: IsarType.bool,
     ),
     r'isLocationEnabled': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'isLocationEnabled',
       type: IsarType.bool,
     ),
     r'isMathsEnabled': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'isMathsEnabled',
       type: IsarType.bool,
     ),
     r'isOneTime': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'isOneTime',
+      type: IsarType.bool,
+    ),
+    r'isPedometerEnabled': PropertySchema(
+      id: 12,
+      name: r'isPedometerEnabled',
       type: IsarType.bool,
     ),
     r'isQrEnabled': PropertySchema(
@@ -152,48 +152,53 @@ const AlarmModelSchema = CollectionSchema(
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
-    r'ownerId': PropertySchema(
+    r'numberOfSteps': PropertySchema(
       id: 27,
+      name: r'numberOfSteps',
+      type: IsarType.long,
+    ),
+    r'ownerId': PropertySchema(
+      id: 28,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'ownerName',
       type: IsarType.string,
     ),
     r'qrValue': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'qrValue',
       type: IsarType.string,
     ),
     r'ringtoneName': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 32,
+      id: 33,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 33,
+      id: 34,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 34,
+      id: 35,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'weatherTypes': PropertySchema(
-      id: 35,
+      id: 36,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -269,13 +274,13 @@ void _alarmModelSerialize(
   writer.writeBoolList(offsets[3], object.days);
   writer.writeBool(offsets[4], object.deleteAfterGoesOff);
   writer.writeString(offsets[5], object.firestoreId);
-  writer.writeLong(offsets[6], object.gradient);
-  writer.writeLong(offsets[7], object.intervalToAlarm);
-  writer.writeBool(offsets[8], object.isActivityEnabled);
-  writer.writeBool(offsets[9], object.isEnabled);
-  writer.writeBool(offsets[10], object.isLocationEnabled);
-  writer.writeBool(offsets[11], object.isMathsEnabled);
-  writer.writeBool(offsets[12], object.isOneTime);
+  writer.writeLong(offsets[6], object.intervalToAlarm);
+  writer.writeBool(offsets[7], object.isActivityEnabled);
+  writer.writeBool(offsets[8], object.isEnabled);
+  writer.writeBool(offsets[9], object.isLocationEnabled);
+  writer.writeBool(offsets[10], object.isMathsEnabled);
+  writer.writeBool(offsets[11], object.isOneTime);
+  writer.writeBool(offsets[12], object.isPedometerEnabled);
   writer.writeBool(offsets[13], object.isQrEnabled);
   writer.writeBool(offsets[14], object.isShakeEnabled);
   writer.writeBool(offsets[15], object.isSharedAlarmEnabled);
@@ -290,15 +295,16 @@ void _alarmModelSerialize(
   writer.writeBool(offsets[24], object.mutexLock);
   writer.writeString(offsets[25], object.note);
   writer.writeLong(offsets[26], object.numMathsQuestions);
-  writer.writeString(offsets[27], object.ownerId);
-  writer.writeString(offsets[28], object.ownerName);
-  writer.writeString(offsets[29], object.qrValue);
-  writer.writeString(offsets[30], object.ringtoneName);
-  writer.writeLong(offsets[31], object.shakeTimes);
-  writer.writeStringList(offsets[32], object.sharedUserIds);
-  writer.writeBool(offsets[33], object.showMotivationalQuote);
-  writer.writeLong(offsets[34], object.snoozeDuration);
-  writer.writeLongList(offsets[35], object.weatherTypes);
+  writer.writeLong(offsets[27], object.numberOfSteps);
+  writer.writeString(offsets[28], object.ownerId);
+  writer.writeString(offsets[29], object.ownerName);
+  writer.writeString(offsets[30], object.qrValue);
+  writer.writeString(offsets[31], object.ringtoneName);
+  writer.writeLong(offsets[32], object.shakeTimes);
+  writer.writeStringList(offsets[33], object.sharedUserIds);
+  writer.writeBool(offsets[34], object.showMotivationalQuote);
+  writer.writeLong(offsets[35], object.snoozeDuration);
+  writer.writeLongList(offsets[36], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -313,13 +319,13 @@ AlarmModel _alarmModelDeserialize(
     alarmTime: reader.readString(offsets[2]),
     days: reader.readBoolList(offsets[3]) ?? [],
     deleteAfterGoesOff: reader.readBool(offsets[4]),
-    gradient: reader.readLong(offsets[6]),
-    intervalToAlarm: reader.readLong(offsets[7]),
-    isActivityEnabled: reader.readBool(offsets[8]),
-    isEnabled: reader.readBoolOrNull(offsets[9]) ?? true,
-    isLocationEnabled: reader.readBool(offsets[10]),
-    isMathsEnabled: reader.readBool(offsets[11]),
-    isOneTime: reader.readBool(offsets[12]),
+    intervalToAlarm: reader.readLong(offsets[6]),
+    isActivityEnabled: reader.readBool(offsets[7]),
+    isEnabled: reader.readBoolOrNull(offsets[8]) ?? true,
+    isLocationEnabled: reader.readBool(offsets[9]),
+    isMathsEnabled: reader.readBool(offsets[10]),
+    isOneTime: reader.readBool(offsets[11]),
+    isPedometerEnabled: reader.readBool(offsets[12]),
     isQrEnabled: reader.readBool(offsets[13]),
     isShakeEnabled: reader.readBool(offsets[14]),
     isSharedAlarmEnabled: reader.readBool(offsets[15]),
@@ -334,15 +340,16 @@ AlarmModel _alarmModelDeserialize(
     mutexLock: reader.readBool(offsets[24]),
     note: reader.readString(offsets[25]),
     numMathsQuestions: reader.readLong(offsets[26]),
-    ownerId: reader.readString(offsets[27]),
-    ownerName: reader.readString(offsets[28]),
-    qrValue: reader.readString(offsets[29]),
-    ringtoneName: reader.readString(offsets[30]),
-    shakeTimes: reader.readLong(offsets[31]),
-    sharedUserIds: reader.readStringList(offsets[32]),
-    showMotivationalQuote: reader.readBool(offsets[33]),
-    snoozeDuration: reader.readLong(offsets[34]),
-    weatherTypes: reader.readLongList(offsets[35]) ?? [],
+    numberOfSteps: reader.readLong(offsets[27]),
+    ownerId: reader.readString(offsets[28]),
+    ownerName: reader.readString(offsets[29]),
+    qrValue: reader.readString(offsets[30]),
+    ringtoneName: reader.readString(offsets[31]),
+    shakeTimes: reader.readLong(offsets[32]),
+    sharedUserIds: reader.readStringList(offsets[33]),
+    showMotivationalQuote: reader.readBool(offsets[34]),
+    snoozeDuration: reader.readLong(offsets[35]),
+    weatherTypes: reader.readLongList(offsets[36]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[5]);
   object.isarId = id;
@@ -371,11 +378,11 @@ P _alarmModelDeserializeProp<P>(
     case 6:
       return (reader.readLong(offset)) as P;
     case 7:
-      return (reader.readLong(offset)) as P;
-    case 8:
       return (reader.readBool(offset)) as P;
-    case 9:
+    case 8:
       return (reader.readBoolOrNull(offset) ?? true) as P;
+    case 9:
+      return (reader.readBool(offset)) as P;
     case 10:
       return (reader.readBool(offset)) as P;
     case 11:
@@ -411,7 +418,7 @@ P _alarmModelDeserializeProp<P>(
     case 26:
       return (reader.readLong(offset)) as P;
     case 27:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 28:
       return (reader.readString(offset)) as P;
     case 29:
@@ -419,14 +426,16 @@ P _alarmModelDeserializeProp<P>(
     case 30:
       return (reader.readString(offset)) as P;
     case 31:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 32:
-      return (reader.readStringList(offset)) as P;
-    case 33:
-      return (reader.readBool(offset)) as P;
-    case 34:
       return (reader.readLong(offset)) as P;
+    case 33:
+      return (reader.readStringList(offset)) as P;
+    case 34:
+      return (reader.readBool(offset)) as P;
     case 35:
+      return (reader.readLong(offset)) as P;
+    case 36:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1110,60 +1119,6 @@ extension AlarmModelQueryFilter
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> gradientEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'gradient',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
-      gradientGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'gradient',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> gradientLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'gradient',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> gradientBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'gradient',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       intervalToAlarmEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -1265,6 +1220,16 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isOneTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      isPedometerEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isPedometerEnabled',
         value: value,
       ));
     });
@@ -2228,6 +2193,62 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'numMathsQuestions',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      numberOfStepsEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'numberOfSteps',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      numberOfStepsGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'numberOfSteps',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      numberOfStepsLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'numberOfSteps',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      numberOfStepsBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'numberOfSteps',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -3351,18 +3372,6 @@ extension AlarmModelQuerySortBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByGradient() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gradient', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByGradientDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gradient', Sort.desc);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIntervalToAlarm() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'intervalToAlarm', Sort.asc);
@@ -3436,6 +3445,20 @@ extension AlarmModelQuerySortBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsOneTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isOneTime', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByIsPedometerEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPedometerEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByIsPedometerEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPedometerEnabled', Sort.desc);
     });
   }
 
@@ -3616,6 +3639,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNumberOfSteps() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfSteps', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByNumberOfStepsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfSteps', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByOwnerId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ownerId', Sort.asc);
@@ -3769,18 +3804,6 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByGradient() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gradient', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByGradientDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gradient', Sort.desc);
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIntervalToAlarm() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'intervalToAlarm', Sort.asc);
@@ -3854,6 +3877,20 @@ extension AlarmModelQuerySortThenBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsOneTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isOneTime', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByIsPedometerEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPedometerEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByIsPedometerEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPedometerEnabled', Sort.desc);
     });
   }
 
@@ -4046,6 +4083,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNumberOfSteps() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfSteps', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByNumberOfStepsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfSteps', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByOwnerId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ownerId', Sort.asc);
@@ -4176,12 +4225,6 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByGradient() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'gradient');
-    });
-  }
-
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIntervalToAlarm() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'intervalToAlarm');
@@ -4217,6 +4260,13 @@ extension AlarmModelQueryWhereDistinct
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsOneTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isOneTime');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct>
+      distinctByIsPedometerEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isPedometerEnabled');
     });
   }
 
@@ -4311,6 +4361,12 @@ extension AlarmModelQueryWhereDistinct
       distinctByNumMathsQuestions() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'numMathsQuestions');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByNumberOfSteps() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'numberOfSteps');
     });
   }
 
@@ -4419,12 +4475,6 @@ extension AlarmModelQueryProperty
     });
   }
 
-  QueryBuilder<AlarmModel, int, QQueryOperations> gradientProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'gradient');
-    });
-  }
-
   QueryBuilder<AlarmModel, int, QQueryOperations> intervalToAlarmProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'intervalToAlarm');
@@ -4458,6 +4508,13 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, bool, QQueryOperations> isOneTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isOneTime');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations>
+      isPedometerEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isPedometerEnabled');
     });
   }
 
@@ -4545,6 +4602,12 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, int, QQueryOperations> numMathsQuestionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'numMathsQuestions');
+    });
+  }
+
+  QueryBuilder<AlarmModel, int, QQueryOperations> numberOfStepsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'numberOfSteps');
     });
   }
 

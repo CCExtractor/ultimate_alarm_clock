@@ -40,6 +40,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
   final shakeTimes = 0.obs;
+  final isPedometerEnabled = false.obs;
+  final numberOfSteps = 0.obs;
   var ownerId = '';
   final mutexLock = false.obs;
   var lastEditedUserId = '';
@@ -569,6 +571,9 @@ class AddOrUpdateAlarmController extends GetxController {
       isShakeEnabled.value = alarmRecord!.isShakeEnabled;
       shakeTimes.value = alarmRecord!.shakeTimes;
 
+      isPedometerEnabled.value = alarmRecord!.isPedometerEnabled;
+      numberOfSteps.value = alarmRecord!.numberOfSteps;
+
       isQrEnabled.value = alarmRecord!.isQrEnabled;
       qrValue.value = alarmRecord!.qrValue;
 
@@ -716,6 +721,8 @@ class AddOrUpdateAlarmController extends GetxController {
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
+      isPedometerEnabled: isPedometerEnabled.value,
+      numberOfSteps: numberOfSteps.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
@@ -829,11 +836,21 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           } else {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           }
         } else {
@@ -841,6 +858,11 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
+            margin: EdgeInsets.all(15),
+            animationDuration: Duration(seconds: 1),
+            snackPosition: SnackPosition.BOTTOM,
+            barBlur: 15,
+            colorText: kprimaryTextColor,
           );
         }
       }
