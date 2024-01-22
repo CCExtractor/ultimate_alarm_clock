@@ -8,9 +8,7 @@ import '../controllers/stopwatch_controller.dart';
 
 class StopwatchView extends GetView<StopwatchController> {
   StopwatchView({Key? key}) : super(key: key);
-
   ThemeController themeController = Get.find<ThemeController>();
-  StopwatchController stopwatchController=Get.put(StopwatchController());
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -26,9 +24,10 @@ class StopwatchView extends GetView<StopwatchController> {
             IconButton(
               onPressed: () {
                 Utils.hapticFeedback();
+                controller.saveTimerStateToStorage();
                 Get.toNamed('/settings');
               },
-              icon: const Icon( 
+              icon: const Icon(
                 Icons.settings,
                 size: 27,
               ),
@@ -44,10 +43,10 @@ class StopwatchView extends GetView<StopwatchController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Obx(() => Text(
-              controller.result,
-              style: const TextStyle(
-                  fontSize: 60.0, fontWeight: FontWeight.bold),
-            )),
+                  controller.result,
+                  style: const TextStyle(
+                      fontSize: 60.0, fontWeight: FontWeight.bold),
+                )),
             const SizedBox(
               height: 20.0,
             ),
@@ -57,10 +56,10 @@ class StopwatchView extends GetView<StopwatchController> {
                 FloatingActionButton(
                   onPressed: controller.toggleTimer,
                   child: Obx(() => Icon(
-                    controller.isTimerPaused.value
-                        ? Icons.play_arrow
-                        : Icons.pause,
-                  )),
+                        controller.isTimerPaused.value
+                            ? Icons.play_arrow
+                            : Icons.pause,
+                      )),
                 ),
                 // Reset button
                 FloatingActionButton(
