@@ -186,7 +186,8 @@ class AppTranslations extends Translations{
       'Mon' : 'Mon' , 'Tue' : 'Tue', 'Wed' : 'Wed', 'Thur' : 'Thur',
       'Fri' : 'Fri', 'Sat' : 'Sat', 'Sun' : 'Sun',
       //OpenWeatherMap
-      'onenweathermap_title': 'Steps to get OpenWeatherMap API.', 
+      'onenweathermap_title1.1': 'Steps to get ',
+      'onenweathermap_title1.2': 'OpenWeatherMap API',
       'step1.1':'Go to ',
       'step1.2':'openweathermap.org',
       'step1.3':', click on the ',
@@ -201,7 +202,7 @@ class AppTranslations extends Translations{
       'step4.3':'(top right corner). A dropdown menu appears. Click on ',
       'step4.4':'My API',
       'step4.5':' option.',
-      'step5':'You now have the Weather API key. Select the key and copy it.',
+      'step5':'Now you have the API key. Select the key and copy it.',
 },
 
     'de_DE' : GermanTranslations().keys['de_DE']!,

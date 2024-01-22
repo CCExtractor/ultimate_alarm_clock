@@ -325,14 +325,27 @@ class WeatherApi extends StatelessWidget {
                         : ksecondaryBackgroundColor,
                     builder: (context) {
                       return Padding(
-                        padding: const EdgeInsets.all(25.0),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.05,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text(
-                              'onenweathermap_title'.tr,
-                              style: Theme.of(context).textTheme.displayMedium,
-                              textAlign: TextAlign.center,
+                            Column(
+                              children: [
+                                Text(
+                                  'onenweathermap_title1.1'.tr,
+                                  style:
+                                      Theme.of(context).textTheme.displayMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  'onenweathermap_title1.2'.tr,
+                                  style:
+                                      Theme.of(context).textTheme.displayMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                             SizedBox(
                               height: height * 0.6,
