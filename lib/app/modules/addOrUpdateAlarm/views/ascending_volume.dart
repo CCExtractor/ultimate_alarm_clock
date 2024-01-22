@@ -19,7 +19,7 @@ class AscendingVolumeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int gradient = 10;
+    int gradient;
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
@@ -29,6 +29,8 @@ class AscendingVolumeTile extends StatelessWidget {
             Get.back();
             // Resetting the value to its initial state
             controller.gradient.value = gradient;
+            controller.selectedGradientDouble.value = gradient.toDouble();
+
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
