@@ -449,13 +449,14 @@ class WeatherTile extends StatelessWidget {
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
                       children: [
-                         Text(
-                          'To use this feature, you have to add an OpenWeatherMap API key!'.tr,
+                        Text(
+                          'To use this feature, you have to add an OpenWeatherMap API key!'
+                              .tr,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               TextButton(
                                 style: ButtonStyle(
@@ -463,22 +464,28 @@ class WeatherTile extends StatelessWidget {
                                     kprimaryColor,
                                   ),
                                 ),
-                                child: Text(
-                                  'Go to settings'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : ksecondaryTextColor,
-                                      ),
+                                child: SizedBox(
+                                  width: width * 0.35,
+                                  child: Text(
+                                    'Go to settings'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                          color: themeController.isLightMode.value
+                                              ? kLightPrimaryTextColor
+                                              : ksecondaryTextColor,
+                                        ),
+                                  ),
                                 ),
                                 onPressed: () {
                                   Utils.hapticFeedback();
                                   Get.back();
                                   Get.toNamed('/settings');
                                 },
+                              ),
+                              SizedBox(
+                                width: width * 0.05,
                               ),
                               TextButton(
                                 style: ButtonStyle(

@@ -31,7 +31,7 @@ class SnoozeDurationTile extends StatelessWidget {
             controller.snoozeDuration.value = duration;
             return true;
           },
-          titlePadding: const EdgeInsets.symmetric(vertical: 20),
+          titlePadding: const EdgeInsets.only(top: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
@@ -40,55 +40,47 @@ class SnoozeDurationTile extends StatelessWidget {
           content: Obx(
             () => Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    NumberPicker(
-                      value: controller.snoozeDuration.value,
-                      minValue: 1,
-                      maxValue: 1440,
-                      onChanged: (value) {
-                        Utils.hapticFeedback();
-                        controller.snoozeDuration.value = value;
-                      },
-                    ),
-                    Text(
-                      controller.snoozeDuration.value > 1
-                          ? 'minutes'.tr
-                          : 'minute'.tr,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        value: controller.snoozeDuration.value,
+                        minValue: 1,
+                        maxValue: 1440,
+                        onChanged: (value) {
+                          Utils.hapticFeedback();
+                          controller.snoozeDuration.value = value;
+                        },
+                      ),
+                      Text(
+                        controller.snoozeDuration.value > 1
+                            ? 'minutes'.tr
+                            : 'minute'.tr,
+                      ),
+                    ],
+                  ),
                 ),
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Utils.hapticFeedback();
-                            Get.back();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: kprimaryColor,
-                          ),
-                          child: Text(
-                            'Done'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
-                                ),
-                          ),
+                ElevatedButton(
+                  onPressed: () {
+                    Utils.hapticFeedback();
+                    Get.back();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kprimaryColor,
+                  ),
+                  child: Text(
+                    'Done'.tr,
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : ksecondaryTextColor,
                         ),
-                      ],
-                    ),
                   ),
                 ),
               ],

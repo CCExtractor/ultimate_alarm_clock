@@ -157,9 +157,7 @@ class SharedAlarm extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4.0
-                        ),
+                            horizontal: 8.0, vertical: 4.0),
                         child: Text(
                           'To use this feature, you have to link your Google account!'
                               .tr,
@@ -167,12 +165,11 @@ class SharedAlarm extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4.0,
+                          vertical: 10.0,
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
                               style: ButtonStyle(
@@ -181,7 +178,7 @@ class SharedAlarm extends StatelessWidget {
                                 ),
                               ),
                               child: SizedBox(
-                                width: width * 0.28,
+                                width: width * 0.35,
                                 child: Text(
                                   'Go to settings'.tr,
                                   style: Theme.of(context)
@@ -200,6 +197,9 @@ class SharedAlarm extends StatelessWidget {
                                 Get.toNamed('/settings');
                               },
                             ),
+                            SizedBox(
+                              width: width * 0.05,
+                            ),
                             TextButton(
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
@@ -208,19 +208,16 @@ class SharedAlarm extends StatelessWidget {
                                       : kprimaryTextColor.withOpacity(0.5),
                                 ),
                               ),
-                              child: SizedBox(
-                                width: width * 0.28,
-                                child: Text(
-                                  'Cancel'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
-                                      ),
-                                ),
+                              child: Text(
+                                'Cancel'.tr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                          : kprimaryTextColor,
+                                    ),
                               ),
                               onPressed: () {
                                 Utils.hapticFeedback();

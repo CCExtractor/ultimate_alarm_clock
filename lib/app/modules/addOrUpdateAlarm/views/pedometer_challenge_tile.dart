@@ -64,7 +64,7 @@ class PedometerChallenge extends StatelessWidget {
             _presetToInitial(numberOfSteps, isPedometerEnabled);
             return true;
           },
-          titlePadding: const EdgeInsets.symmetric(vertical: 20),
+          titlePadding: const EdgeInsets.only(top: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
@@ -73,26 +73,29 @@ class PedometerChallenge extends StatelessWidget {
           content: Obx(
             () => Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    NumberPicker(
-                      value: controller.numberOfSteps.value,
-                      minValue: 0,
-                      maxValue: 60,
-                      onChanged: (value) {
-                        Utils.hapticFeedback();
-                        if (value > 0) {
-                          controller.isPedometerEnabled.value = true;
-                        } else {
-                          controller.isPedometerEnabled.value = false;
-                        }
-                        controller.numberOfSteps.value = value;
-                      },
-                    ),
-                    Text(controller.numberOfSteps.value > 1 ? 'steps' : 'step'),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        value: controller.numberOfSteps.value,
+                        minValue: 0,
+                        maxValue: 60,
+                        onChanged: (value) {
+                          Utils.hapticFeedback();
+                          if (value > 0) {
+                            controller.isPedometerEnabled.value = true;
+                          } else {
+                            controller.isPedometerEnabled.value = false;
+                          }
+                          controller.numberOfSteps.value = value;
+                        },
+                      ),
+                      Text(controller.numberOfSteps.value > 1 ? 'steps' : 'step'),
+                    ],
+                  ),
                 ),
                 InkWell(
                   child: Padding(
