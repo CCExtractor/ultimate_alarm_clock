@@ -591,7 +591,6 @@ class HomeController extends GetxController {
                 ),
                 OutlinedButton(
                   onPressed: () async {
-                    // Deleting the alarms
                     await deleteAlarms();
 
                     // Closing the multiple select mode
@@ -619,7 +618,7 @@ class HomeController extends GetxController {
                     ),
                   ),
                   child: Text(
-                    'Okay',
+                    'Okay'.tr,
                     style: Theme.of(context)
                         .textTheme
                         .displaySmall!
