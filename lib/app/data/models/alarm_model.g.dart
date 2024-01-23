@@ -202,8 +202,18 @@ const AlarmModelSchema = CollectionSchema(
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
-    r'weatherTypes': PropertySchema(
+    r'volMax': PropertySchema(
       id: 37,
+      name: r'volMax',
+      type: IsarType.double,
+    ),
+    r'volMin': PropertySchema(
+      id: 38,
+      name: r'volMin',
+      type: IsarType.double,
+    ),
+    r'weatherTypes': PropertySchema(
+      id: 39,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -310,7 +320,9 @@ void _alarmModelSerialize(
   writer.writeStringList(offsets[34], object.sharedUserIds);
   writer.writeBool(offsets[35], object.showMotivationalQuote);
   writer.writeLong(offsets[36], object.snoozeDuration);
-  writer.writeLongList(offsets[37], object.weatherTypes);
+  writer.writeDouble(offsets[37], object.volMax);
+  writer.writeDouble(offsets[38], object.volMin);
+  writer.writeLongList(offsets[39], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -356,7 +368,9 @@ AlarmModel _alarmModelDeserialize(
     sharedUserIds: reader.readStringList(offsets[34]),
     showMotivationalQuote: reader.readBool(offsets[35]),
     snoozeDuration: reader.readLong(offsets[36]),
-    weatherTypes: reader.readLongList(offsets[37]) ?? [],
+    volMax: reader.readDouble(offsets[37]),
+    volMin: reader.readDouble(offsets[38]),
+    weatherTypes: reader.readLongList(offsets[39]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[5]);
   object.isarId = id;
@@ -445,6 +459,10 @@ P _alarmModelDeserializeProp<P>(
     case 36:
       return (reader.readLong(offset)) as P;
     case 37:
+      return (reader.readDouble(offset)) as P;
+    case 38:
+      return (reader.readDouble(offset)) as P;
+    case 39:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -3218,6 +3236,130 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMaxEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'volMax',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMaxGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'volMax',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMaxLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'volMax',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMaxBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'volMax',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMinEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'volMin',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMinGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'volMin',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMinLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'volMin',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> volMinBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'volMin',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       weatherTypesElementEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -3812,6 +3954,30 @@ extension AlarmModelQuerySortBy
       return query.addSortBy(r'snoozeDuration', Sort.desc);
     });
   }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByVolMax() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMax', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByVolMaxDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMax', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByVolMin() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMin', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByVolMinDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMin', Sort.desc);
+    });
+  }
 }
 
 extension AlarmModelQuerySortThenBy
@@ -4268,6 +4434,30 @@ extension AlarmModelQuerySortThenBy
       return query.addSortBy(r'snoozeDuration', Sort.desc);
     });
   }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByVolMax() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMax', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByVolMaxDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMax', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByVolMin() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMin', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByVolMinDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'volMin', Sort.desc);
+    });
+  }
 }
 
 extension AlarmModelQueryWhereDistinct
@@ -4516,6 +4706,18 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByVolMax() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'volMax');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByVolMin() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'volMin');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByWeatherTypes() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'weatherTypes');
@@ -4757,6 +4959,18 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, int, QQueryOperations> snoozeDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'snoozeDuration');
+    });
+  }
+
+  QueryBuilder<AlarmModel, double, QQueryOperations> volMaxProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'volMax');
+    });
+  }
+
+  QueryBuilder<AlarmModel, double, QQueryOperations> volMinProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'volMin');
     });
   }
 

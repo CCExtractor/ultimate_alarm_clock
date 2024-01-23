@@ -57,10 +57,39 @@ class AscendingVolumeTile extends StatelessWidget {
                   divisions: 60,
                   label: controller.gradient.value.toString(),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Adjust the volume range:',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+                // Replace the volMin Slider with RangeSlider
+                RangeSlider(
+                  labels: RangeLabels(
+                    controller.volMin.value
+                        .toInt()
+                        .toString(), // Label for volMin
+                    controller.volMax.value
+                        .toInt()
+                        .toString(), // Label for volMax
+                  ),
+                  values: RangeValues(
+                    controller.volMin.value,
+                    controller.volMax.value,
+                  ),
+                  onChanged: (RangeValues values) {
+                    controller.volMin.value = values.start;
+                    controller.volMax.value = values.end;
+                  },
+                  min: 0.0,
+                  max: 10.0,
+                  divisions: 10,
+                ),
+
                 ElevatedButton(
                   onPressed: () {
                     Get.back();
-                    // Add your logic to handle the gradient value
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kprimaryColor,

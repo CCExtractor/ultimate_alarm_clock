@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 
 import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
@@ -49,6 +49,9 @@ class AlarmModel {
   late bool deleteAfterGoesOff;
   late bool showMotivationalQuote;
   late bool isTimer;
+  late double volMax;
+  late double volMin;
+
   @ignore
   Map? offsetDetails;
 
@@ -91,10 +94,12 @@ class AlarmModel {
     required this.deleteAfterGoesOff,
     required this.showMotivationalQuote,
     required this.isTimer,
+    required this.volMax,
+    required this.volMin,
   });
 
   AlarmModel.fromDocumentSnapshot({
-    required DocumentSnapshot documentSnapshot,
+    required firestore.DocumentSnapshot documentSnapshot,
     required UserModel? user,
   }) {
     // Making sure the alarms work with the offsets
@@ -150,6 +155,8 @@ class AlarmModel {
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
     showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
     isTimer = documentSnapshot['isTimer'];
+    volMax = documentSnapshot['volMax'];
+    volMin = documentSnapshot['volMin'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
@@ -194,6 +201,8 @@ class AlarmModel {
     deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
     showMotivationalQuote = alarmData['showMotivationalQuote'];
     isTimer = alarmData['isTimer'];
+    volMin = alarmData['volMin'];
+    volMax = alarmData['volMax'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -243,6 +252,8 @@ class AlarmModel {
       'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
       'showMotivationalQuote': alarmRecord.showMotivationalQuote,
       'isTimer': alarmRecord.isTimer,
+      'volMin': alarmRecord.volMin,
+      'volMax': alarmRecord.volMax,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

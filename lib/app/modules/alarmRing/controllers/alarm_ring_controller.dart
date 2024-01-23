@@ -115,13 +115,15 @@ class AlarmControlController extends GetxController {
 
   Future<void> _fadeInAlarmVolume() async {
     await FlutterVolumeController.setVolume(
-      0.1,
+      currentlyRingingAlarm.value.volMin / 10.0,
       stream: AudioStream.alarm,
     );
     await Future.delayed(const Duration(milliseconds: 2000));
 
-    double vol = 0.0;
-    double diff = 1.0 - 0.1; // Adjusted the initial volume to avoid loud start
+    double vol = currentlyRingingAlarm.value.volMin / 10.0;
+    double diff = (currentlyRingingAlarm.value.volMax -
+            currentlyRingingAlarm.value.volMin) /
+        10.0;
     int len = currentlyRingingAlarm.value.gradient * 1000;
     double steps = (diff / 0.01).abs();
     int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
@@ -138,8 +140,8 @@ class AlarmControlController extends GetxController {
       lastTick = now;
       vol += diff * tick;
 
-      vol = max(0.1, vol); // Adjusted the lower bound to avoid muting
-      vol = min(1, vol);
+      vol = max(currentlyRingingAlarm.value.volMin / 10.0, vol);
+      vol = min(currentlyRingingAlarm.value.volMax / 10.0, vol);
       vol = (vol * 100).round() / 100;
 
       FlutterVolumeController.setVolume(
@@ -147,7 +149,7 @@ class AlarmControlController extends GetxController {
         stream: AudioStream.alarm,
       );
 
-      if (vol >= 1.0) {
+      if (vol >= currentlyRingingAlarm.value.volMax / 10.0) {
         t.cancel();
       }
     });

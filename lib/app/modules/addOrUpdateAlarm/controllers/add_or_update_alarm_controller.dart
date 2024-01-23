@@ -82,8 +82,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final deleteAfterGoesOff = false.obs;
 
   final RxBool showMotivationalQuote = false.obs;
-  final RxInt gradient = 1.obs;
+  final RxInt gradient = 0.obs;
   final RxDouble selectedGradientDouble = 0.0.obs;
+  final RxDouble volMin = 0.0.obs;
+  final RxDouble volMax = 10.0.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -520,6 +522,8 @@ class AddOrUpdateAlarmController extends GetxController {
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
       gradient.value = alarmRecord!.gradient;
+      volMin.value = alarmRecord!.volMin;
+      volMax.value = alarmRecord!.volMax;
       isOneTime.value = alarmRecord!.isOneTime;
       deleteAfterGoesOff.value = alarmRecord!.deleteAfterGoesOff;
       label.value = alarmRecord!.label;
@@ -685,6 +689,8 @@ class AddOrUpdateAlarmController extends GetxController {
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
+      volMax: volMax.value,
+      volMin: volMin.value,
       gradient: gradient.value,
       label: label.value,
       isOneTime: isOneTime.value,
