@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/internacionalization.dart';
 import 'package:ultimate_alarm_clock/app/utils/languages/french_translations.dart';
 import 'package:ultimate_alarm_clock/app/utils/languages/german_translations.dart';
@@ -203,6 +204,28 @@ class AppTranslations extends Translations {
           'Weekends': 'Weekends',
           'Mon': 'Mon', 'Tue': 'Tue', 'Wed': 'Wed', 'Thur': 'Thur',
           'Fri': 'Fri', 'Sat': 'Sat', 'Sun': 'Sun',
+          //OpenWeatherMap
+          'onenweathermap_title1.1': 'Steps to get ',
+          'onenweathermap_title1.2': 'OpenWeatherMap API',
+          'step1.1': 'Go to ',
+          'step1.2': 'openweathermap.org',
+          'step1.3': ', click on the ',
+          'step1.4': 'SignIn',
+          'step1.5':
+              ' button(top right corner) then it ask for login credentials.',
+          'step2.1':
+              'If you already have an account then enter your credentials. Otherwise, click on ',
+          'step2.2': 'Create an Account',
+          'step2.3':
+              ' option. It asks you to Enter your username, email, and password. Make sure entered details are correct.',
+          'step3':
+              'Once your account is created, you are automatically directed to the OpenWeather page. It asks you about your company and the purpose of using the platform, fill this details accordingly.',
+          'step4.1': 'Click on your ',
+          'step4.2': 'Username',
+          'step4.3': '(top right corner). A dropdown menu appears. Click on ',
+          'step4.4': 'My API',
+          'step4.5': ' option.',
+          'step5': 'Now you have the API key. Select the key and copy it.',
           //ascending_volume.dart
           'Volume will reach maximum in': 'Volume will reach maximum in',
           'seconds': 'seconds',
