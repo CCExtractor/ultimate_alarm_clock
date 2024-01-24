@@ -1,6 +1,6 @@
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -25,7 +25,6 @@ class TimerView extends GetView<TimerController> {
           toolbarHeight: height / 7.9,
           elevation: 0.0,
           centerTitle: true,
-          
         ),
       ),
       body: Obx(
@@ -101,49 +100,220 @@ class TimerView extends GetView<TimerController> {
                 ],
               )
             : Obx(
-                () => Stack(
-                  children: [
-                    ListView(
-                      children: [
-                        Container(
-                          color: themeController.isLightMode.value
-                              ? kLightPrimaryBackgroundColor
-                              : kprimaryBackgroundColor,
-                          height: height * 0.32,
-                          width: width,
-                          child: Obx(
-                            () => TimePickerSpinner(
-                              time: DateTime(0, 0, 0, 0, 1, 0),
-                              minutesInterval: 1,
-                              secondsInterval: 1,
-                              is24HourMode: true,
-                              isShowSeconds: true,
-                              alignment: Alignment.center,
-                              normalTextStyle: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryDisabledTextColor
-                                        : kprimaryDisabledTextColor,
-                                  ),
-                              highlightedTextStyle:
-                                  Theme.of(context).textTheme.displayMedium,
-                              onTimeChange: (dateTime) {
-                                Utils.hapticFeedback();
-                                controller.remainingTime.value = Duration(
-                                  hours: dateTime.hour,
-                                  minutes: dateTime.minute,
-                                  seconds: dateTime.second,
-                                );
-                              },
+                () => Container(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryBackgroundColor
+                      : kprimaryBackgroundColor,
+                  height: height * 0.3,
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Hours',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
                             ),
                           ),
+                          SizedBox(
+                            height: height * 0.01,
+                          ),
+                          NumberPicker(
+                            minValue: 0,
+                            maxValue: 23,
+                            value: controller.hours.value,
+                            onChanged: (value) {
+                              controller.hours.value = value;
+                            },
+                            infiniteLoop: true,
+                            itemWidth: width * 0.17,
+                            zeroPad: true,
+                            selectedTextStyle: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: kprimaryColor,
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  width: width * 0.005,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                                bottom: BorderSide(
+                                  width: width * 0.005,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: width * 0.02,
+                          right: width * 0.02,
+                          top: height * 0.032,
                         ),
-                      ],
-                    ),
-                  ],
+                        child: Text(
+                          ':',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Minutes',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: height * 0.01,
+                          ),
+                          NumberPicker(
+                            minValue: 0,
+                            maxValue: 59,
+                            value: controller.minutes.value,
+                            onChanged: (value) {
+                              controller.minutes.value = value;
+                            },
+                            infiniteLoop: true,
+                            itemWidth: width * 0.17,
+                            zeroPad: true,
+                            selectedTextStyle: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: kprimaryColor,
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  width: width * 0.005,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                                bottom: BorderSide(
+                                  width: width * 0.005,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: width * 0.02,
+                          right: width * 0.02,
+                          top: height * 0.032,
+                        ),
+                        child: Text(
+                          ':',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Seconds',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: height * 0.011,
+                          ),
+                          NumberPicker(
+                            minValue: 0,
+                            maxValue: 59,
+                            value: controller.seconds.value,
+                            onChanged: (value) {
+                              controller.seconds.value = value;
+                            },
+                            infiniteLoop: true,
+                            itemWidth: width * 0.17,
+                            zeroPad: true,
+                            selectedTextStyle: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: kprimaryColor,
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryDisabledTextColor
+                                  : kprimaryDisabledTextColor,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  width: width * 0.005,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                                bottom: BorderSide(
+                                  width: width * 0.005,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),
@@ -152,23 +322,27 @@ class TimerView extends GetView<TimerController> {
             ? const SizedBox()
             : Obx(
                 () => AbsorbPointer(
-                  absorbing: controller.remainingTime.value.inHours == 0 &&
-                          controller.remainingTime.value.inMinutes == 0 &&
-                          controller.remainingTime.value.inSeconds == 0
+                  absorbing: controller.hours.value == 0 &&
+                          controller.minutes.value == 0 &&
+                          controller.seconds.value == 0
                       ? true
                       : false,
                   child: FloatingActionButton(
                     onPressed: () {
-                            Utils.hapticFeedback();
-                            controller.startTimer();
-                            controller.createTimer();
-                          },
-                    backgroundColor:
-                        controller.remainingTime.value.inHours == 0 &&
-                                controller.remainingTime.value.inMinutes == 0 &&
-                                controller.remainingTime.value.inSeconds == 0
-                            ? kprimaryDisabledTextColor
-                            : kprimaryColor,
+                      Utils.hapticFeedback();
+                      controller.remainingTime.value = Duration(
+                        hours: controller.hours.value,
+                        minutes: controller.minutes.value,
+                        seconds: controller.seconds.value,
+                      );
+                      controller.startTimer();
+                      controller.createTimer();
+                    },
+                    backgroundColor: controller.hours.value == 0 &&
+                            controller.minutes.value == 0 &&
+                            controller.seconds.value == 0
+                        ? kprimaryDisabledTextColor
+                        : kprimaryColor,
                     child: const Icon(
                       Icons.play_arrow_rounded,
                     ),
@@ -180,7 +354,9 @@ class TimerView extends GetView<TimerController> {
         () => Drawer(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+            ),
           ),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -218,10 +394,11 @@ class TimerView extends GetView<TimerController> {
                                     .textTheme
                                     .displayMedium!
                                     .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
+                                      color: themeController.isLightMode.value
+                                          ? kprimaryTextColor
+                                          : ksecondaryTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                             SizedBox(
@@ -233,10 +410,11 @@ class TimerView extends GetView<TimerController> {
                                     .textTheme
                                     .titleLarge!
                                     .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
+                                      color: themeController.isLightMode.value
+                                          ? kprimaryTextColor
+                                          : ksecondaryTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                           ],
@@ -280,9 +458,10 @@ class TimerView extends GetView<TimerController> {
                 title: Text(
                   'About'.tr,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor.withOpacity(0.8)
-                          : kprimaryTextColor.withOpacity(0.8)),
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor.withOpacity(0.8)
+                            : kprimaryTextColor.withOpacity(0.8),
+                      ),
                 ),
                 leading: Icon(
                   Icons.info_outline,
