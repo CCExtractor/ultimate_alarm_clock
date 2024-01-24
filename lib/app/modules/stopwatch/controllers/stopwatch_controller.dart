@@ -43,5 +43,4 @@ class StopwatchController extends GetxController {
         '${_stopwatch.elapsed.inMinutes.toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inMilliseconds % 100).toString().padLeft(2, '0')}';
   }
 
-  void saveTimerStateToStorage() {}
 }
