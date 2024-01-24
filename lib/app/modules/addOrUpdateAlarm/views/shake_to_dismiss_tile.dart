@@ -25,12 +25,14 @@ class ShakeToDismiss extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Text(
-            'Shake to dismiss'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+          Flexible(
+            child: Text(
+              'Shake to dismiss'.tr,
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
             ),
           ),
           IconButton(
@@ -67,7 +69,7 @@ class ShakeToDismiss extends StatelessWidget {
             _presetToInitial(shakeTimes, isShakeEnabled);
             return true;
           },
-          titlePadding: const EdgeInsets.symmetric(vertical: 20),
+          titlePadding: const EdgeInsets.only(top: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
@@ -76,26 +78,29 @@ class ShakeToDismiss extends StatelessWidget {
           content: Obx(
             () => Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    NumberPicker(
-                      value: controller.shakeTimes.value,
-                      minValue: 0,
-                      maxValue: 100,
-                      onChanged: (value) {
-                        Utils.hapticFeedback();
-                        if (value > 0) {
-                          controller.isShakeEnabled.value = true;
-                        } else {
-                          controller.isShakeEnabled.value = false;
-                        }
-                        controller.shakeTimes.value = value;
-                      },
-                    ),
-                    Text(controller.shakeTimes.value > 1 ? 'times'.tr : 'time'.tr),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        value: controller.shakeTimes.value,
+                        minValue: 0,
+                        maxValue: 100,
+                        onChanged: (value) {
+                          Utils.hapticFeedback();
+                          if (value > 0) {
+                            controller.isShakeEnabled.value = true;
+                          } else {
+                            controller.isShakeEnabled.value = false;
+                          }
+                          controller.shakeTimes.value = value;
+                        },
+                      ),
+                      Text(controller.shakeTimes.value > 1 ? 'times'.tr : 'time'.tr),
+                    ],
+                  ),
                 ),
                 InkWell(
                   child: Padding(

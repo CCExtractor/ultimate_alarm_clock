@@ -21,12 +21,14 @@ class NoteTile extends StatelessWidget {
       tileColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: Text(
-        'Note'.tr,
-        style: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : kprimaryTextColor,
+      title: Flexible(
+        child: Text(
+          'Note'.tr,
+          style: TextStyle(
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
+          ),
         ),
       ),
       onTap: () {

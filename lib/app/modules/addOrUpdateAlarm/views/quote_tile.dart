@@ -20,12 +20,14 @@ class QuoteTile extends StatelessWidget {
       tileColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: Text(
-        'Show Motivational Quote'.tr,
-        style: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : kprimaryTextColor,
+      title: Flexible(
+        child: Text(
+          'Show Motivational Quote'.tr,
+          style: TextStyle(
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
+          ),
         ),
       ),
       trailing: Obx(
