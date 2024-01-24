@@ -37,13 +37,13 @@ class AscendingVolumeTile extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Volume will reach maximum in '.tr,
+          title: 'Volume will reach maximum in'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
               children: [
                 Text(
-                  '${controller.gradient.value} seconds',
+                  '${controller.gradient.value} seconds'.tr,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 Slider(
@@ -60,8 +60,9 @@ class AscendingVolumeTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    'Adjust the volume range:',
+                    'Adjust the volume range:'.tr,
                     style: Theme.of(context).textTheme.displaySmall,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 // Replace the volMin Slider with RangeSlider
@@ -95,7 +96,7 @@ class AscendingVolumeTile extends StatelessWidget {
                     backgroundColor: kprimaryColor,
                   ),
                   child: Text(
-                    'Apply Gradient',
+                    'Apply Gradient'.tr,
                     style: TextStyle(
                       color: themeController.isLightMode.value
                           ? kLightSecondaryTextColor
