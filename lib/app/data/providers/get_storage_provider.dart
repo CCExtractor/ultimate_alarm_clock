@@ -7,8 +7,22 @@ class GetStorageProvider {
 
   Future<GetStorageProvider> init() async {
     await GetStorage.init();
-    _getStorage =  GetStorage();
+    _getStorage = GetStorage();
     return this;
+  }
+
+  Future<String> readCurrentLanguage() async {
+    print(_getStorage.read('currentLanguageKey'));
+    String? language = await _getStorage.read(('currentLanguageKey'));
+    if (language == null) {
+      language = Get.locale.toString();
+      writeCurrentLanguage(language);
+    }
+    return language;
+  }
+
+  Future<void> writeCurrentLanguage(String value) async {
+    await _getStorage.write('currentLanguageKey', value);
   }
 
   Future<Locale> readLocale() async {
@@ -16,16 +30,14 @@ class GetStorageProvider {
 
     return languageCode != null
         ? Locale(
-      languageCode,
-      _getStorage.read('countryCode') ?? '',
-    ) : const Locale('en', 'EN');
+            languageCode,
+            _getStorage.read('countryCode') ?? '',
+          )
+        : const Locale('en', 'EN');
   }
 
   Future<void> writeLocale(String lanCode, String countryCode) async {
     await _getStorage.write('languageCode', lanCode);
     await _getStorage.write('countryCode', countryCode);
   }
-
 }
-
-
