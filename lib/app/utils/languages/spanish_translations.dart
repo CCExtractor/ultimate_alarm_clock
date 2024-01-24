@@ -176,7 +176,25 @@ class SpanishTranslations extends Translations {
         'Weekdays': 'Días laborables',
         'Weekends': 'Fines de semana',
         'Mon': 'Lun', 'Tue': 'Mar', 'Wed': 'Mié', 'Thur': 'Jue',
-        'Fri': 'Vie', 'Sat': 'Sáb', 'Sun': 'Dom'
+        'Fri': 'Vie', 'Sat': 'Sáb', 'Sun': 'Dom',
+        //OpenWeatherMap
+        'onenweathermap_title1.1': 'Pasos para conseguir ',
+        'onenweathermap_title1.2': 'OpenWeatherMap API',
+        'step1.1':'Ir a ',
+        'step1.2':'openweathermap.org',
+        'step1.3':', haga clic en el botón ',
+        'step1.4':'SignIn',
+        'step1.5':' (esquina superior derecha) luego solicita las credenciales de inicio de sesión.',
+        'step2.1':'Si ya tiene una cuenta, ingrese sus credenciales. De lo contrario, haga clic en la opción ',
+        'step2.2':'Create an Account',
+        'step2.3':'. Le pide que ingrese su nombre de usuario, correo electrónico y contraseña. Asegúrate de que los detalles sean correctos.',
+        'step3':'Una vez que su cuenta esté lista, se le dirigirá automáticamente a la página de OpenWeather. Te pregunta sobre tu empresa y el propósito de uso de la plataforma, complete estos detalles en consecuencia.',
+        'step4.1':'Haga clic en su ',
+        'step4.2':'Username',
+        'step4.3':'(esquina superior derecha). Aparece un menú desplegable. Haga clic en la opción ',
+        'step4.4':'My API',
+        'step4.5':'.',
+        'step5':'Ahora tienes la API. Seleccione la API y cópiela.',
     },
   };
 }

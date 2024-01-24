@@ -127,7 +127,6 @@ class GermanTranslations extends Translations {
       'time' : 'Mal',
 //'shared_alarm_tile.dart
       'Shared Alarm' : 'Geteilter Alarm',
-      'Shared alarms' : 'Geteilte Alarme',
       'sharedDescription' : 'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',
       'Understood' : 'Verstanden',
       'To use this feature, you have to link your Google account!' : 'Um diese Funktion zu verwenden, müssen Sie Ihr Google-Konto verknüpfen!',
@@ -176,8 +175,25 @@ class GermanTranslations extends Translations {
       'Weekdays': 'Wochentage',
       'Weekends': 'Wochenenden',
       'Mon': 'Mo', 'Tue': 'Di', 'Wed': 'Mi', 'Thur': 'Do',
-      'Fri': 'Fr', 'Sat': 'Sa', 'Sun': 'So'
-
-    }
+      'Fri': 'Fr', 'Sat': 'Sa', 'Sun': 'So',
+      //OpenWeatherMap
+      'onenweathermap_title1.1': 'Schritte zum Erhalten ',
+      'onenweathermap_title1.2': 'OpenWeatherMap API',
+      'step1.1':'Gehe zu ',
+      'step1.2':'openweathermap.org',
+      'step1.3':', Klicken Sie auf die Schaltfläche ',
+      'step1.4':'SignIn',
+      'step1.5':' (oben rechts) und Sie werden nach Ihren Anmeldeinformationen gefragt.',
+      'step2.1':'Wenn Sie bereits ein Konto haben, geben Sie Ihre Zugangsdaten ein. Andernfalls klicken Sie auf die Option ',
+      'step2.2':'Create an Account',
+      'step2.3':'. Sie werden aufgefordert, Ihren Benutzernamen, Ihre E-Mail-Adresse und Ihr Passwort einzugeben. Stellen Sie sicher, dass die Angaben korrekt sind.',
+      'step3':'Sobald Ihr Konto bereit ist, werden Sie automatisch zur OpenWeather-Seite weitergeleitet. Dabei werden Sie nach Ihrem Unternehmen und dem Zweck der Nutzung der Plattform gefragt, Füllen Sie diese Angaben entsprechend aus.',
+      'step4.1':'Klicken Sie auf Ihr ',
+      'step4.2':'Username',
+      'step4.3':'(oben rechts). Es erscheint ein Dropdown-Menü. Klicken Sie auf die Option ',
+      'step4.4':'My API',
+      'step4.5':'.',
+      'step5':'Jetzt haben Sie den Wetter-API-Schlüssel. Wählen Sie den Schlüssel aus und kopieren Sie ihn.',
+    },
   };
 }
