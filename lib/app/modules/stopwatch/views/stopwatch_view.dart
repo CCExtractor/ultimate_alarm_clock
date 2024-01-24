@@ -24,7 +24,6 @@ class StopwatchView extends GetView<StopwatchController> {
             IconButton(
               onPressed: () {
                 Utils.hapticFeedback();
-                controller.saveTimerStateToStorage();
                 Get.toNamed('/settings');
               },
               icon: const Icon(
