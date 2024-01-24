@@ -5,6 +5,8 @@ import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/bindings/bo
 import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/views/bottom_navigation_bar_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/bindings/stopwatch_bindings.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/views/stopwatch_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/timerRing/bindings/timer_ring_binding.dart';
 import 'package:ultimate_alarm_clock/app/modules/timerRing/views/timer_ring_view.dart';
 
@@ -72,6 +74,11 @@ class AppPages {
       name: _Paths.TIMER_RING,
       page: () => TimerRingView(),
       binding: TimerRingBinding(),
+    ),
+    GetPage(
+      name: _Paths.STOPWATCH,
+      page: () => StopwatchView(),
+      binding: StopwatchBinding(),
     ),
   ];
 }
