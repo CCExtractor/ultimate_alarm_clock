@@ -25,12 +25,14 @@ class SharedAlarm extends StatelessWidget {
           ? ListTile(
               title: Row(
                 children: [
-                  Text(
-                    'Shared Alarm'.tr,
-                    style: TextStyle(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+                  Expanded(
+                    child: Text(
+                      'Shared Alarm'.tr,
+                      style: TextStyle(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -153,60 +155,81 @@ class SharedAlarm extends StatelessWidget {
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
                     children: [
-                       Text(
-                        'To use this feature, you have to link your Google account!'.tr,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        child: Text(
+                          'To use this feature, you have to link your Google account!'
+                              .tr,
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                        ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                  kprimaryColor,
+                            SizedBox(
+                              width: width * 0.37,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    kprimaryColor,
+                                  ),
                                 ),
+                                child: Flexible(
+                                  child: Text(
+                                    'Go to settings'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                          color: themeController.isLightMode.value
+                                              ? kLightPrimaryTextColor
+                                              : ksecondaryTextColor,
+                                        ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  Get.back();
+                                  Get.toNamed('/settings');
+                                },
                               ),
-                              child: Text(
-                                'Go to settings'.tr,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : ksecondaryTextColor,
-                                    ),
-                              ),
-                              onPressed: () {
-                                Utils.hapticFeedback();
-                                Get.back();
-                                Get.toNamed('/settings');
-                              },
                             ),
-                            TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                  themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor.withOpacity(0.5)
-                                      : kprimaryTextColor.withOpacity(0.5),
+                            SizedBox(
+                              width: width * 0.05,
+                            ),
+                            SizedBox(
+                              width: width * 0.3,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor.withOpacity(0.5)
+                                        : kprimaryTextColor.withOpacity(0.5),
+                                  ),
                                 ),
+                                child: Flexible(
+                                  child: Text(
+                                    'Cancel'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                          color: themeController.isLightMode.value
+                                              ? kLightPrimaryTextColor
+                                              : kprimaryTextColor,
+                                        ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  Get.back();
+                                },
                               ),
-                              child: Text(
-                                'Cancel'.tr,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : kprimaryTextColor,
-                                    ),
-                              ),
-                              onPressed: () {
-                                Utils.hapticFeedback();
-                                Get.back();
-                              },
                             ),
                           ],
                         ),
@@ -215,12 +238,14 @@ class SharedAlarm extends StatelessWidget {
                   ),
                 );
               },
-              title: Text(
-                'Enable Shared Alarm'.tr,
-                style: TextStyle(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+              title: Flexible(
+                child: Text(
+                  'Enable Shared Alarm'.tr,
+                  style: TextStyle(
+                    color: themeController.isLightMode.value
+                        ? kLightPrimaryTextColor
+                        : kprimaryTextColor,
+                  ),
                 ),
               ),
               trailing: InkWell(

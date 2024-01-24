@@ -39,12 +39,14 @@ class AlarmIDTile extends StatelessWidget {
                     duration: const Duration(seconds: 2),
                   );
                 },
-                title: Text(
-                  'Alarm ID'.tr,
-                  style: TextStyle(
-                    color: themeController.isLightMode.value
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
+                title: Flexible(
+                  child: Text(
+                    'Alarm ID'.tr,
+                    style: TextStyle(
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor
+                          : kprimaryTextColor,
+                    ),
                   ),
                 ),
                 trailing: InkWell(
