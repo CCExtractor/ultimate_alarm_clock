@@ -5,7 +5,6 @@ import 'package:ultimate_alarm_clock/app/modules/stopwatch/controllers/stopwatch
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
-import '../controllers/stopwatch_controller.dart';
 
 class StopwatchView extends GetView<StopwatchController> {
   StopwatchView({Key? key}) : super(key: key);
@@ -39,6 +38,7 @@ class StopwatchView extends GetView<StopwatchController> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
+                  heroTag: "start",
                   onPressed: controller.toggleTimer,
                   child: Obx(() => Icon(
                         controller.isTimerPaused.value
@@ -48,6 +48,7 @@ class StopwatchView extends GetView<StopwatchController> {
                 ),
                 // Reset button
                 FloatingActionButton(
+                  heroTag: "stop",
                   onPressed: controller.resetTime,
                   child: Icon(Icons.square_rounded),
                 ),
