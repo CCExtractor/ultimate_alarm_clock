@@ -24,7 +24,7 @@ class PedometerChallenge extends StatelessWidget {
       title: Row(
         children: [
           Text(
-            'Pedometer',
+            'Pedometer'.tr,
             style: TextStyle(
               color: themeController.isLightMode.value
                   ? kLightPrimaryTextColor
@@ -42,10 +42,8 @@ class PedometerChallenge extends StatelessWidget {
             onPressed: () {
               Utils.showModal(
                 context: context,
-                title: 'Pedometer',
-                description: 'Step up to dismiss! Set a step goal to turn off'
-                    ' your alarm, promoting an active and'
-                    ' energized start to the day.',
+                title: 'Pedometer'.tr,
+                description: 'pedometerDescription'.tr,
                 iconData: Icons.directions_walk,
                 isLightMode: themeController.isLightMode.value,
               );
@@ -68,13 +66,13 @@ class PedometerChallenge extends StatelessWidget {
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Number of steps',
+          title: 'Number of steps'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +91,11 @@ class PedometerChallenge extends StatelessWidget {
                           controller.numberOfSteps.value = value;
                         },
                       ),
-                      Text(controller.numberOfSteps.value > 1 ? 'steps' : 'step'),
+                      Text(
+                        controller.numberOfSteps.value > 1
+                            ? 'steps'.tr
+                            : 'step'.tr,
+                      ),
                     ],
                   ),
                 ),
@@ -114,7 +116,7 @@ class PedometerChallenge extends StatelessWidget {
                             // Set the desired background color
                           ),
                           child: Text(
-                            'Done',
+                            'Done'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
@@ -142,9 +144,9 @@ class PedometerChallenge extends StatelessWidget {
               () => Text(
                 controller.numberOfSteps.value > 0
                     ? controller.numberOfSteps.value > 1
-                        ? '${controller.numberOfSteps.value} steps'
-                        : '${controller.numberOfSteps.value} step'
-                    : 'Off',
+                        ? '${controller.numberOfSteps.value} ' + 'steps'.tr
+                        : '${controller.numberOfSteps.value} ' + 'step'.tr
+                    : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isPedometerEnabled.value == false)
                           ? themeController.isLightMode.value

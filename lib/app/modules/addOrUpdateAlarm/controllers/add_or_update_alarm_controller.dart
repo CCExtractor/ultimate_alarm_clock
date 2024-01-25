@@ -399,7 +399,7 @@ class AddOrUpdateAlarmController extends GetxController {
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: 'Camera Permission',
+        title: 'Camera Permission'.tr,
         titleStyle: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -410,7 +410,7 @@ class AddOrUpdateAlarmController extends GetxController {
           left: 10,
         ),
         contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
-        content: const Text('Please allow camera access to scan QR codes.'),
+        content: Text('Please allow camera access to scan QR codes.'.tr),
         onCancel: () {
           Get.back(); // Close the alert box
         },
@@ -426,8 +426,8 @@ class AddOrUpdateAlarmController extends GetxController {
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: const Text(
-            'Cancel',
+          child: Text(
+            'Cancel'.tr,
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () {
@@ -438,8 +438,8 @@ class AddOrUpdateAlarmController extends GetxController {
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: const Text(
-            'OK',
+          child: Text(
+            'OK'.tr,
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () async {
