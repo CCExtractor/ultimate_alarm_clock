@@ -20,6 +20,26 @@ class StopwatchView extends GetView<StopwatchController> {
           toolbarHeight: height / 7.9,
           elevation: 0.0,
           centerTitle: true,
+          actions: [
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return IconButton(
+                  onPressed: () {
+                    Utils.hapticFeedback();
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  icon: const Icon(
+                    Icons.menu,
+                  ),
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.75)
+                      : kprimaryTextColor.withOpacity(0.75),
+                  iconSize: 27,
+                  // splashRadius: 0.000001,
+                );
+              },
+            ),
+          ],
         ),
       ),
       body: Center(
