@@ -27,7 +27,7 @@ dependencies:
   weather: ^2.0.1
   shake: ^2.2.0
   numberpicker: ^2.1.2
-  mobile_scanner: ^3.5.2
+  mobile_scanner: 3.5.5
   permission_handler: ^11.0.1
   google_sign_in: ^6.0.2
   url_launcher: ^6.1.11
