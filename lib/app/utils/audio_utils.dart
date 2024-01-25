@@ -40,7 +40,9 @@ class AudioUtils {
     );
   }
 
-  static Future<void> playCustomSound(String customRingtonePath) async {
+  static Future<void> playCustomSound(
+    String customRingtonePath,
+  ) async {
     try {
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.DeviceFileSource(customRingtonePath));
