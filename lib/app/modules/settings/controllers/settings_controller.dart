@@ -37,6 +37,7 @@ class SettingsController extends GetxController {
   RxBool validate = false.obs;
   final storage = Get.find<GetStorageProvider>();
   final RxString local = Get.locale.toString().obs;
+  UserModel? userModel;
 
   final Map<String, dynamic> optionslocales = {
     'en_US': {
@@ -66,21 +67,20 @@ class SettingsController extends GetxController {
     },
   };
 
-  UserModel? userModel;
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-
     userModel = homeController.userModel.value;
-    isUserLoggedIn.value = homeController.isUserSignedIn.value;
+    isUserLoggedIn.value = await _googleSignIn.isSignedIn();
+    if (isUserLoggedIn.value) {
+      userModel = await _secureStorageProvider.retrieveUserModel();
+    }
     _loadPreference();
   }
 
   @override
   void onClose() {
     super.onClose();
-    homeController.isUserSignedIn.value = isUserLoggedIn.value;
-    homeController.userModel.value = userModel;
   }
 
   // Logins user using GoogleSignIn
@@ -118,6 +118,8 @@ class SettingsController extends GetxController {
         await FirestoreDb.addUser(userModel!);
         await SecureStorageProvider().storeUserModel(userModel!);
         isUserLoggedIn.value = true;
+        homeController.isUserSignedIn.value = true;
+        homeController.userModel.value = userModel;
         await homeController.initStream(userModel);
         return true;
       } else {
@@ -135,6 +137,8 @@ class SettingsController extends GetxController {
     await SecureStorageProvider().deleteUserModel();
     userModel = null;
     isUserLoggedIn.value = false;
+    homeController.isUserSignedIn.value = false;
+    homeController.userModel.value = null;
   }
 
   addKey(ApiKeys key, String val) async {
@@ -220,7 +224,7 @@ class SettingsController extends GetxController {
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
-    currentLanguage.value=await storage.readCurrentLanguage();
+    currentLanguage.value = await storage.readCurrentLanguage();
 
     // Store the retrieved API key from the flutter secure storage
     String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
