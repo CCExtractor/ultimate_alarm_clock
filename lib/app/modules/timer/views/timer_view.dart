@@ -449,11 +449,7 @@ class TimerView extends GetView<TimerController> {
                 ),
               ),
               // LanguageMenu(),
-              Divider(
-                color: Colors.white,
-                indent: width * 0.01,
-                endIndent: width * 0.01,
-              ),
+              
               ListTile(
                 onTap: () {
                   Utils.hapticFeedback();
