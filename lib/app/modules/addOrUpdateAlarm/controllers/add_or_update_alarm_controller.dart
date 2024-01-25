@@ -82,6 +82,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final deleteAfterGoesOff = false.obs;
 
   final RxBool showMotivationalQuote = false.obs;
+  final RxInt gradient = 0.obs;
+  final RxDouble selectedGradientDouble = 0.0.obs;
+  final RxDouble volMin = 0.0.obs;
+  final RxDouble volMax = 10.0.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -96,6 +100,15 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isDailySelected = false.obs;
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
+  RxBool isPlaying = false.obs; // Observable boolean to track playing state
+
+  void toggleIsPlaying() {
+    isPlaying.toggle();
+  }
+
+  void resetIsPlaying() {
+    isPlaying.value = false;
+  }
 
   void setIsDailySelected(bool value) {
     isDailySelected.value = value;
@@ -103,6 +116,10 @@ class AddOrUpdateAlarmController extends GetxController {
       isCustomSelected.value = false;
       isWeekdaysSelected.value = false;
     }
+  }
+
+  void setGradient(int value) {
+    this.gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -513,6 +530,9 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
+      gradient.value = alarmRecord!.gradient;
+      volMin.value = alarmRecord!.volMin;
+      volMax.value = alarmRecord!.volMax;
       isOneTime.value = alarmRecord!.isOneTime;
       deleteAfterGoesOff.value = alarmRecord!.deleteAfterGoesOff;
       label.value = alarmRecord!.label;
@@ -678,6 +698,9 @@ class AddOrUpdateAlarmController extends GetxController {
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
+      volMax: volMax.value,
+      volMin: volMin.value,
+      gradient: gradient.value,
       label: label.value,
       isOneTime: isOneTime.value,
       deleteAfterGoesOff: deleteAfterGoesOff.value,

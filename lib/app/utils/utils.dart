@@ -254,7 +254,15 @@ class Utils {
   }
 
   static String getRepeatDays(List<bool> days) {
-    List dayAbbreviations = ['Mon'.tr, 'Tue'.tr, 'Wed'.tr, 'Thur'.tr, 'Fri'.tr, 'Sat'.tr, 'Sun'.tr];
+    List dayAbbreviations = [
+      'Mon'.tr,
+      'Tue'.tr,
+      'Wed'.tr,
+      'Thur'.tr,
+      'Fri'.tr,
+      'Sat'.tr,
+      'Sun'.tr
+    ];
     int weekdayCount = 0;
     int weekendCount = 0;
     List<String> selectedDays = [];
@@ -343,7 +351,10 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+      volMax: 1.0,
+      volMin: 0.0,
       snoozeDuration: 0,
+      gradient: 1,
       label: '',
       isOneTime: false,
       deleteAfterGoesOff: false,
