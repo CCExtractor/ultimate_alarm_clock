@@ -25,6 +25,10 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
               label: 'Alarm'.tr,
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.timer_outlined),
+              label: 'StopWatch'.tr,
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.timer),
               label: 'Timer'.tr,
             ),

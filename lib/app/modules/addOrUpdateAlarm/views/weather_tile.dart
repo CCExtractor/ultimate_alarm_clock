@@ -308,13 +308,15 @@ class WeatherTile extends StatelessWidget {
                     : ksecondaryBackgroundColor,
                 title: Row(
                   children: [
-                    Text(
-                      'Weather Condition'.tr,
-                      style: TextStyle(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: Text(
+                        'Weather Condition'.tr,
+                        style: TextStyle(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : kprimaryTextColor,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     IconButton(
@@ -447,61 +449,75 @@ class WeatherTile extends StatelessWidget {
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
                       children: [
-                         Text(
-                          'To use this feature, you have to add an OpenWeatherMap API key!'.tr,
+                        Text(
+                          'To use this feature, you have to add an OpenWeatherMap API key!'
+                              .tr,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    kprimaryColor,
+                              SizedBox(
+                                width: width * 0.37,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      kprimaryColor,
+                                    ),
                                   ),
+                                  child: Flexible(
+                                    child: Text(
+                                      'Go to settings'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
+                                            color: themeController.isLightMode.value
+                                                ? kLightPrimaryTextColor
+                                                : ksecondaryTextColor,
+                                          ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Utils.hapticFeedback();
+                                    Get.back();
+                                    Get.toNamed('/settings');
+                                  },
                                 ),
-                                child: Text(
-                                  'Go to settings'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : ksecondaryTextColor,
-                                      ),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                  Get.toNamed('/settings');
-                                },
                               ),
-                              TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.5)
-                                        : kprimaryTextColor.withOpacity(0.5),
+                              SizedBox(
+                                width: width * 0.05,
+                              ),
+                              SizedBox(
+                                width: width * 0.3,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                              .withOpacity(0.5)
+                                          : kprimaryTextColor.withOpacity(0.5),
+                                    ),
                                   ),
+                                  child: Flexible(
+                                    child: Text(
+                                      'Cancel'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
+                                            color: themeController.isLightMode.value
+                                                ? kLightPrimaryTextColor
+                                                : kprimaryTextColor,
+                                          ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Utils.hapticFeedback();
+                                    Get.back();
+                                  },
                                 ),
-                                child: Text(
-                                  'Cancel'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
-                                      ),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                },
                               ),
                             ],
                           ),

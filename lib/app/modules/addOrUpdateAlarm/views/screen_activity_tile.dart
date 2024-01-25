@@ -34,7 +34,7 @@ class ScreenActivityTile extends StatelessWidget {
             controller.isActivityenabled.value = isActivityEnalbed;
             return true;
           },
-          titlePadding: const EdgeInsets.symmetric(vertical: 20),
+          titlePadding: const EdgeInsets.only(top: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
@@ -43,61 +43,53 @@ class ScreenActivityTile extends StatelessWidget {
           content: Obx(
             () => Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    NumberPicker(
-                      value: controller.activityInterval.value,
-                      minValue: 0,
-                      maxValue: 1440,
-                      onChanged: (value) {
-                        Utils.hapticFeedback();
-                        if (value > 0) {
-                          controller.isActivityenabled.value = true;
-                        } else {
-                          controller.isActivityenabled.value = false;
-                        }
-                        controller.activityInterval.value = value;
-                      },
-                    ),
-                    Text(
-                      controller.activityInterval.value > 1
-                          ? 'minutes'.tr
-                          : 'minute'.tr,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumberPicker(
+                        value: controller.activityInterval.value,
+                        minValue: 0,
+                        maxValue: 1440,
+                        onChanged: (value) {
+                          Utils.hapticFeedback();
+                          if (value > 0) {
+                            controller.isActivityenabled.value = true;
+                          } else {
+                            controller.isActivityenabled.value = false;
+                          }
+                          controller.activityInterval.value = value;
+                        },
+                      ),
+                      Text(
+                        controller.activityInterval.value > 1
+                            ? 'minutes'.tr
+                            : 'minute'.tr,
+                      ),
+                    ],
+                  ),
                 ),
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Utils.hapticFeedback();
-                            Get.back();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: kprimaryColor,
-                            // Set the desired background color
-                          ),
-                          child: Text(
-                            'Done'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
-                                ),
-                          ),
+                ElevatedButton(
+                  onPressed: () {
+                    Utils.hapticFeedback();
+                    Get.back();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kprimaryColor,
+                    // Set the desired background color
+                  ),
+                  child: Text(
+                    'Done'.tr,
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : ksecondaryTextColor,
                         ),
-                      ],
-                    ),
                   ),
                 ),
               ],
@@ -108,12 +100,14 @@ class ScreenActivityTile extends StatelessWidget {
       child: ListTile(
         title: Row(
           children: [
-            Text(
-              'Screen Activity'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+            Flexible(
+              child: Text(
+                'Screen Activity'.tr,
+                style: TextStyle(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
               ),
             ),
             IconButton(

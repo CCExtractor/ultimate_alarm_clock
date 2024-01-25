@@ -12,6 +12,7 @@ abstract class Routes {
   static const ABOUT = _Paths.ABOUT;
   static const BOTTOM_NAVIGATION_BAR = _Paths.BOTTOM_NAVIGATION_BAR;
   static const TIMER_RING = _Paths.TIMER_RING;
+  static const STOPWATCH = _Paths.STOPWATCH;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const ABOUT = '/about';
   static const BOTTOM_NAVIGATION_BAR = '/bottom-navigation-bar';
   static const TIMER_RING = '/timer-ring';
+  static const STOPWATCH = '/stopwatch';
 }

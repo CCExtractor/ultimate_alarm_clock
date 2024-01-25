@@ -24,6 +24,7 @@ class SettingsController extends GetxController {
   final _f24HrsEnabledKey = '24_hours_format';
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
+  var currentLanguage = 'en_US'.obs;
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;
@@ -219,6 +220,8 @@ class SettingsController extends GetxController {
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
+    currentLanguage.value=await storage.readCurrentLanguage();
+
     // Store the retrieved API key from the flutter secure storage
     String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
 
@@ -284,6 +287,7 @@ class SettingsController extends GetxController {
     final String countryCode = optionslocales[key]['countryCode'];
     Get.updateLocale(Locale(languageCode, countryCode));
     local.value = Get.locale.toString();
+    storage.writeCurrentLanguage(local.value);
     storage.writeLocale(languageCode, countryCode);
   }
 }

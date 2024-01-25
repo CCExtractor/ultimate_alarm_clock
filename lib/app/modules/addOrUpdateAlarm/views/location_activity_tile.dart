@@ -177,12 +177,14 @@ class LocationTile extends StatelessWidget {
       child: ListTile(
         title: Row(
           children: [
-            Text(
-              'Location Based'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+            Flexible(
+              child: Text(
+                'Location Based'.tr,
+                style: TextStyle(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
               ),
             ),
             IconButton(

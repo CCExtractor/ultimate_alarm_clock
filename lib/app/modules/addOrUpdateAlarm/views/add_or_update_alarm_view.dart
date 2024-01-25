@@ -14,6 +14,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_ti
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/note.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/pedometer_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quote_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
@@ -226,6 +227,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.mathsDifficulty.value.index,
                           isShakeEnabled: controller.isShakeEnabled.value,
                           shakeTimes: controller.shakeTimes.value,
+                          isPedometerEnabled:
+                              controller.isPedometerEnabled.value,
+                          numberOfSteps: controller.numberOfSteps.value,
                           ringtoneName: controller.customRingtoneName.value,
                           isTimer: false,
                         );
@@ -741,6 +745,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 : kprimaryDisabledTextColor,
                           ),
                           MathsChallenge(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor,
+                          ),
+                          PedometerChallenge(
                             controller: controller,
                             themeController: themeController,
                           ),
