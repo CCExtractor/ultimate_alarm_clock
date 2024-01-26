@@ -172,7 +172,7 @@ class SharedAlarm extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: width * 0.37,
+                              width: width * 0.4,
                               child: TextButton(
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
@@ -186,9 +186,10 @@ class SharedAlarm extends StatelessWidget {
                                         .textTheme
                                         .displaySmall!
                                         .copyWith(
-                                          color: themeController.isLightMode.value
-                                              ? kLightPrimaryTextColor
-                                              : ksecondaryTextColor,
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : ksecondaryTextColor,
                                         ),
                                   ),
                                 ),
@@ -208,7 +209,8 @@ class SharedAlarm extends StatelessWidget {
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                     themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor.withOpacity(0.5)
+                                        ? kLightPrimaryTextColor
+                                            .withOpacity(0.5)
                                         : kprimaryTextColor.withOpacity(0.5),
                                   ),
                                 ),
@@ -219,9 +221,10 @@ class SharedAlarm extends StatelessWidget {
                                         .textTheme
                                         .displaySmall!
                                         .copyWith(
-                                          color: themeController.isLightMode.value
-                                              ? kLightPrimaryTextColor
-                                              : kprimaryTextColor,
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : kprimaryTextColor,
                                         ),
                                   ),
                                 ),
