@@ -104,6 +104,7 @@ class FrenchTranslations extends Translations {
 //label_tile.dart
           'Label': 'Étiquette',
           'Enter a name': 'Entrez un nom',
+          'Add a label': 'Ajouter une étiquette',
           'Note': 'Note',
           'noWhitespace':
               'Veuillez ne pas entrer d\'espace en tant que premier caractère !',
@@ -116,7 +117,7 @@ class FrenchTranslations extends Translations {
           'questions': 'questions',
           'question': 'question',
 //note.dart
-          'Enter a note': 'Entrer une note',
+          'Add a note': 'Ajouter une note',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR/Code-barres',
           'qrDescription':

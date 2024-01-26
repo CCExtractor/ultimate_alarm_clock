@@ -103,7 +103,7 @@ class SpanishTranslations extends Translations {
           'Done': 'Hecho',
 //label_tile.dart
           'Label': 'Etiqueta',
-          'Enter a name': 'Ingrese un nombre',
+          'Add a label': 'Agregar una etiqueta',
           'Note': 'Nota',
           'noWhitespace':
               'Por favor, no ingrese espacios en blanco como primer carácter!',
@@ -116,7 +116,7 @@ class SpanishTranslations extends Translations {
           'questions': 'preguntas',
           'question': 'pregunta',
 //note.dart
-          'Enter a note': 'Ingrese una nota',
+          'Add a note': 'Agrega una nota',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'Código QR/Código de barras',
           'qrDescription':

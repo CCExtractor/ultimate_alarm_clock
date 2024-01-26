@@ -103,7 +103,7 @@ class GermanTranslations extends Translations {
           'Done': 'Fertig',
 //label_tile.dart
           'Label': 'Etikett',
-          'Enter a name': 'Geben Sie einen Namen ein',
+          'Add a label': 'Fügen Sie ein Etikett hinzu',
           'Note': 'Hinweis',
           'noWhitespace':
               'Bitte geben Sie kein Leerzeichen als ersten Zeichen ein!',
@@ -116,7 +116,7 @@ class GermanTranslations extends Translations {
           'questions': 'Fragen',
           'question': 'Frage',
 //note.dart
-          'Enter a note': 'Geben Sie eine Notiz ein',
+          'Add a note': 'Füg ein Notiz hinzu',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR-/Strichcode',
           'qrDescription':
