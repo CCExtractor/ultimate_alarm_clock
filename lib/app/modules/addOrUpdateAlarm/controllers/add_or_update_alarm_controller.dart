@@ -409,8 +409,9 @@ class AddOrUpdateAlarmController extends GetxController {
     );
   }
 
-  requestQrPermission() async {
+  requestQrPermission(context) async {
     PermissionStatus cameraStatus = await Permission.camera.status;
+
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
         backgroundColor: themeController.isLightMode.value
@@ -439,25 +440,17 @@ class AddOrUpdateAlarmController extends GetxController {
             showQRDialog();
           }
         },
-        cancel: TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: kprimaryColor,
-          ),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(color: Colors.black),
-          ),
-          onPressed: () {
-            Get.back(); // Close the alert box
-          },
-        ),
         confirm: TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: kprimaryColor,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(kprimaryColor),
           ),
-          child: const Text(
+          child: Text(
             'OK',
-            style: TextStyle(color: Colors.black),
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : ksecondaryTextColor,
+                ),
           ),
           onPressed: () async {
             Get.back(); // Close the alert box
@@ -467,6 +460,26 @@ class AddOrUpdateAlarmController extends GetxController {
               // Permission granted, proceed with QR code scanning
               showQRDialog();
             }
+          },
+        ),
+        cancel: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.5)
+                  : kprimaryTextColor.withOpacity(0.5),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
+          ),
+          onPressed: () {
+            Get.back(); // Close the alert box
           },
         ),
       );
