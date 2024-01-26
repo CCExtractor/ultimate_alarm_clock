@@ -34,7 +34,7 @@ class NoteTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          title: 'Enter a note'.tr,
+          title: 'Add a note'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
