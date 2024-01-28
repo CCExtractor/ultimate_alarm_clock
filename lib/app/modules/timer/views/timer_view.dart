@@ -115,12 +115,15 @@ class TimerView extends GetView<TimerController> {
                         children: [
                           Text(
                             'Hours',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
                           ),
                           SizedBox(
                             height: height * 0.01,
@@ -130,23 +133,28 @@ class TimerView extends GetView<TimerController> {
                             maxValue: 23,
                             value: controller.hours.value,
                             onChanged: (value) {
+                              Utils.hapticFeedback();
                               controller.hours.value = value;
                             },
                             infiniteLoop: true,
                             itemWidth: width * 0.17,
                             zeroPad: true,
-                            selectedTextStyle: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: kprimaryColor,
-                            ),
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
+                            selectedTextStyle: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: kprimaryColor,
+                                ),
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  fontSize: 20,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(
@@ -170,17 +178,19 @@ class TimerView extends GetView<TimerController> {
                         padding: EdgeInsets.only(
                           left: width * 0.02,
                           right: width * 0.02,
-                          top: height * 0.032,
+                          top: height * 0.035,
                         ),
                         child: Text(
                           ':',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
                         ),
                       ),
                       Column(
@@ -188,12 +198,15 @@ class TimerView extends GetView<TimerController> {
                         children: [
                           Text(
                             'Minutes',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
                           ),
                           SizedBox(
                             height: height * 0.01,
@@ -208,18 +221,22 @@ class TimerView extends GetView<TimerController> {
                             infiniteLoop: true,
                             itemWidth: width * 0.17,
                             zeroPad: true,
-                            selectedTextStyle: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: kprimaryColor,
-                            ),
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
+                            selectedTextStyle: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: kprimaryColor,
+                                ),
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  fontSize: 20,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(
@@ -243,17 +260,19 @@ class TimerView extends GetView<TimerController> {
                         padding: EdgeInsets.only(
                           left: width * 0.02,
                           right: width * 0.02,
-                          top: height * 0.032,
+                          top: height * 0.035,
                         ),
                         child: Text(
                           ':',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
                         ),
                       ),
                       Column(
@@ -261,12 +280,15 @@ class TimerView extends GetView<TimerController> {
                         children: [
                           Text(
                             'Seconds',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
                           ),
                           SizedBox(
                             height: height * 0.011,
@@ -281,18 +303,22 @@ class TimerView extends GetView<TimerController> {
                             infiniteLoop: true,
                             itemWidth: width * 0.17,
                             zeroPad: true,
-                            selectedTextStyle: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: kprimaryColor,
-                            ),
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
+                            selectedTextStyle: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: kprimaryColor,
+                                ),
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  fontSize: 20,
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(

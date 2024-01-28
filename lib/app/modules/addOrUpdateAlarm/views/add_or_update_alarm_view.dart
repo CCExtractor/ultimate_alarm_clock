@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
-
 import 'package:get/get.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
@@ -41,6 +40,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
+    // print(controller.selectedTime.value.hour);
     var width = Get.width;
     var height = Get.height;
     return PopScope(
@@ -368,44 +368,273 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               inputTimeController.changeDatePicker();
                             },
                             child: inputTimeController.isTimePicker.value
-                                ? TimePickerSpinner(
-                                    time: controller.selectedTime.value,
-                                    isForce2Digits: true,
-                                    alignment: Alignment.center,
-                                    is24HourMode:
-                                        settingsController.is24HrsEnabled.value,
-                                    normalTextStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          fontWeight: FontWeight.normal,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
+                                ? Obx(
+                                    () => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        NumberPicker(
+                                          minValue: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? 0
+                                              : 1,
+                                          maxValue: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? 23
+                                              : 12,
+                                          value: controller.hours.value,
+                                          onChanged: (value) {
+                                            Utils.hapticFeedback();
+                                            controller.hours.value = value;
+                                            inputTimeController
+                                                    .inputHrsController.text =
+                                                controller.hours.value
+                                                    .toString();
+                                          },
+                                          infiniteLoop: true,
+                                          itemWidth: width * 0.17,
+                                          zeroPad: true,
+                                          selectedTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: kprimaryColor,
+                                              ),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                fontSize: 20,
+                                                color: themeController
+                                                        .isLightMode.value
+                                                    ? kLightPrimaryDisabledTextColor
+                                                    : kprimaryDisabledTextColor,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                        .isLightMode.value
+                                                    ? kLightPrimaryDisabledTextColor
+                                                    : kprimaryDisabledTextColor,
+                                              ),
+                                              bottom: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                        .isLightMode.value
+                                                    ? kLightPrimaryDisabledTextColor
+                                                    : kprimaryDisabledTextColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                    highlightedTextStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
-                                    onTimeChange: (dateTime) {
-                                      Utils.hapticFeedback();
-                                      controller.selectedTime.value = dateTime;
-                                      inputTimeController.inputHrsController
-                                          .text = settingsController
-                                              .is24HrsEnabled.value
-                                          ? dateTime.hour.toString()
-                                          : (dateTime.hour == 0
-                                              ? 12.toString()
-                                              : (dateTime.hour > 12
-                                                  ? (dateTime.hour - 12)
-                                                      .toString()
-                                                  : dateTime.hour.toString()));
-                                      inputTimeController.inputMinutesController
-                                          .text = dateTime.minute.toString();
-                                      inputTimeController.changePeriod(
-                                          dateTime.hour >= 12 ? 'PM' : 'AM');
-                                    },
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.02,
+                                          ),
+                                          child: Text(
+                                            ':',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: themeController
+                                                          .isLightMode.value
+                                                      ? kLightPrimaryDisabledTextColor
+                                                      : kprimaryDisabledTextColor,
+                                                ),
+                                          ),
+                                        ),
+                                        NumberPicker(
+                                          minValue: 0,
+                                          maxValue: 59,
+                                          value: controller.minutes.value,
+                                          onChanged: (value) {
+                                            Utils.hapticFeedback();
+                                            controller.minutes.value = value;
+                                            inputTimeController
+                                                    .inputMinutesController
+                                                    .text =
+                                                controller.minutes.value
+                                                    .toString();
+                                          },
+                                          infiniteLoop: true,
+                                          itemWidth: width * 0.17,
+                                          zeroPad: true,
+                                          selectedTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: kprimaryColor,
+                                              ),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                fontSize: 20,
+                                                color: themeController
+                                                        .isLightMode.value
+                                                    ? kLightPrimaryDisabledTextColor
+                                                    : kprimaryDisabledTextColor,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                        .isLightMode.value
+                                                    ? kLightPrimaryDisabledTextColor
+                                                    : kprimaryDisabledTextColor,
+                                              ),
+                                              bottom: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                        .isLightMode.value
+                                                    ? kLightPrimaryDisabledTextColor
+                                                    : kprimaryDisabledTextColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? false
+                                              : true,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: width * 0.02,
+                                            ),
+                                            child: Text(
+                                              ':',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displayLarge!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: themeController
+                                                            .isLightMode.value
+                                                        ? kLightPrimaryDisabledTextColor
+                                                        : kprimaryDisabledTextColor,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? false
+                                              : true,
+                                          child: NumberPicker(
+                                            minValue: 0,
+                                            maxValue: 1,
+                                            value:
+                                                controller.meridiemIndex.value,
+                                            onChanged: (value) {
+                                              Utils.hapticFeedback();
+                                              value == 0
+                                                  ? controller
+                                                      .meridiemIndex.value = 0
+                                                  : controller
+                                                      .meridiemIndex.value = 1;
+                                              inputTimeController.changePeriod(
+                                                controller.hours.value >= 12
+                                                    ? 'PM'
+                                                    : 'AM',
+                                              );
+                                            },
+                                            textMapper: (numberText) {
+                                              return controller
+                                                  .current[
+                                                      int.parse(numberText)]
+                                                  .value;
+                                            },
+                                            itemWidth: width * 0.17,
+                                            selectedTextStyle: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: kprimaryColor,
+                                                ),
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium!
+                                                .copyWith(
+                                                  fontSize: 20,
+                                                  color: themeController
+                                                          .isLightMode.value
+                                                      ? kLightPrimaryDisabledTextColor
+                                                      : kprimaryDisabledTextColor,
+                                                ),
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                top: BorderSide(
+                                                  width: width * 0.005,
+                                                  color: themeController
+                                                          .isLightMode.value
+                                                      ? kLightPrimaryDisabledTextColor
+                                                      : kprimaryDisabledTextColor,
+                                                ),
+                                                bottom: BorderSide(
+                                                  width: width * 0.005,
+                                                  color: themeController
+                                                          .isLightMode.value
+                                                      ? kLightPrimaryDisabledTextColor
+                                                      : kprimaryDisabledTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   )
+
+                                // TimePickerSpinner(
+                                //     time: controller.selectedTime.value,
+                                //     isForce2Digits: true,
+                                //     alignment: Alignment.center,
+                                //     is24HourMode:
+                                //         settingsController.is24HrsEnabled.value,
+                                //     normalTextStyle: Theme.of(context)
+                                //         .textTheme
+                                //         .displayMedium!
+                                //         .copyWith(
+                                //           fontWeight: FontWeight.normal,
+                                //           color: themeController
+                                //                   .isLightMode.value
+                                //               ? kLightPrimaryDisabledTextColor
+                                //               : kprimaryDisabledTextColor,
+                                //         ),
+                                //     highlightedTextStyle: Theme.of(context)
+                                //         .textTheme
+                                //         .displayMedium,
+                                //     onTimeChange: (dateTime) {
+                                //       Utils.hapticFeedback();
+                                //       controller.selectedTime.value = dateTime;
+                                //       inputTimeController.inputHrsController
+                                //           .text = settingsController
+                                //               .is24HrsEnabled.value
+                                //           ? dateTime.hour.toString()
+                                //           : (dateTime.hour == 0
+                                //               ? 12.toString()
+                                //               : (dateTime.hour > 12
+                                //                   ? (dateTime.hour - 12)
+                                //                       .toString()
+                                //                   : dateTime.hour.toString()));
+                                //       inputTimeController.inputMinutesController
+                                //           .text = dateTime.minute.toString();
+                                //       inputTimeController.changePeriod(
+                                //           dateTime.hour >= 12 ? 'PM' : 'AM');
+                                //     },
+                                //   )
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
