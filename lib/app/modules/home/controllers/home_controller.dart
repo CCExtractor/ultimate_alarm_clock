@@ -555,12 +555,12 @@ class HomeController extends GetxController {
       backgroundColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: 'Are you sure you want to delete these alarms?',
+      title: 'Are you sure you want to delete these alarms?'.tr,
       titleStyle: Theme.of(context).textTheme.displaySmall,
       content: Column(
         children: [
           Text(
-            'This action will permanently delete these alarms from your device.',
+            'This action will permanently delete these alarms from your device.'.tr,
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
