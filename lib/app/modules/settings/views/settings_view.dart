@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/views/customize_undo_duration.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
 
@@ -106,6 +107,13 @@ class SettingsView extends GetView<SettingsController> {
                   height: height,
                   width: width,
                   themeController: controller.themeController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomizeUndoDuration(
+                  controller: controller,
+                    themeController: controller.themeController
                 ),
                 const SizedBox(
                   height: 20,
