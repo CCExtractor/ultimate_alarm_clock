@@ -62,8 +62,6 @@ class AppTranslations extends Translations{
       'Delete Alarm' : 'Delete Alarm',
       'Are you sure you want to delete these alarms?' : 'Are you sure you want to delete these alarms?',
       'This action will permanently delete these alarms from your device.' : 'This action will permanently delete these alarms from your device.',
-      'Cancel' : 'Cancel',
-      'Okay' : 'Okay'
       //about_view.dart texts
       'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute',
       'Could not launch' : 'Could not launch',

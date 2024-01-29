@@ -53,6 +53,8 @@ class RussianTranslations extends Translations {
     'One Time' : 'Один раз',
     'Preview Alarm' : 'Предварительный просмотр тревоги',
     'Delete Alarm' : 'Удалить сигнал тревоги',
+    'Are you sure you want to delete these alarms?' : 'Вы уверены, что хотите удалить эти будильники?',
+    'This action will permanently delete these alarms from your device.' : 'Это действие окончательно удалит эти будильники с вашего устройства.',
     //about_view.dart texts
     'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Этот проект изначально был разработан в рамках Google Summer of Code под руководством организации CCExtractor. Он бесплатен, исходный код доступен, и мы приглашаем программистов внести свой вклад.',
     'Could not launch' : 'Не удалось запустить',

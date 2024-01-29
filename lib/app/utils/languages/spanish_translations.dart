@@ -53,6 +53,9 @@ class SpanishTranslations extends Translations {
         'One Time' : 'Una vez',
         'Preview Alarm' : 'Vista previa de alarma',
         'Delete Alarm' : 'Eliminar alarma',
+        'Are you sure you want to delete these alarms?': '¿Estás seguro de que deseas eliminar estas alarmas?',
+        'This action will permanently delete these alarms from your device.': 'Esta acción eliminará permanentemente estas alarmas de tu dispositivo.',
+
         //about_view.dart texts
         'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Este proyecto fue desarrollado originalmente como parte del Google Summer of Code bajo la organización CCExtractor. Es gratuito, el código fuente está disponible y animamos a los programadores a contribuir.',
         'Could not launch' : 'No se pudo iniciar',

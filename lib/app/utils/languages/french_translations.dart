@@ -54,6 +54,9 @@ class FrenchTranslations extends Translations {
   'One Time' : 'Une fois',
   'Preview Alarm' : 'Aperçu du réveil',
   'Delete Alarm' : 'Supprimer le réveil',
+   'Are you sure you want to delete these alarms?': 'Êtes-vous sûr(e) de vouloir supprimer ces alarmes ?',
+    'This action will permanently delete these alarms from your device.': 'Cette action supprimera définitivement ces alarmes de votre appareil.',
+
   //about_view.dart texts
   'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Ce projet a été initialement développé dans le cadre du Google Summer of Code sous l\'organisation CCExtractor. Il est gratuit, le code source est disponible et nous encourageons les programmeurs à contribuer.',
   'Could not launch' : 'Impossible de lancer',

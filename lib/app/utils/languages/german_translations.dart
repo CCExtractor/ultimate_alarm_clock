@@ -53,6 +53,8 @@ class GermanTranslations extends Translations {
       'One Time' : 'Einmal',
       'Preview Alarm' : 'Vorschaualarm',
       'Delete Alarm' : 'Alarm löschen',
+      'Are you sure you want to delete these alarms?' : 'Sind Sie sicher, dass Sie diese Wecker löschen möchten?',
+      'This action will permanently delete these alarms from your device.': 'Diese Aktion wird diese Wecker dauerhaft von Ihrem Gerät löschen.',
       //about_view.dart texts
       'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Dieses Projekt wurde ursprünglich im Rahmen des Google Summer of Code unter der Organisation CCExtractor entwickelt. Es ist kostenlos, der Quellcode ist verfügbar, und wir ermutigen Programmierer zur Mitarbeit.',
       'Could not launch' : 'Konnte nicht starten',
