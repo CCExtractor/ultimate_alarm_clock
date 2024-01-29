@@ -13,9 +13,13 @@ class CustomizeUndoDuration extends StatelessWidget{
     super.key ,
     required this.controller,
     required this.themeController,
+    required this.height,
+    required this.width,
   });
   final SettingsController controller;
   final ThemeController themeController;
+  final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,6 @@ class CustomizeUndoDuration extends StatelessWidget{
             Get.back();
             // Resetting the value to its initial state
             controller.duration.value = duration;
-
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
@@ -50,6 +53,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                   onChanged: (double value) {
                     controller.selecteddurationDouble.value = value;
                     controller.duration.value = value.toInt();
+
                   },
                   min: 0.0,
                   max: 20.0,
@@ -79,40 +83,50 @@ class CustomizeUndoDuration extends StatelessWidget{
           ),
         );
       },
-      child: ListTile(
-        tileColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
-        title: Text(
-          'Undo Duration'.tr,
-          style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
-          ),
+      child: Container(
+        width: width * 0.91,
+        height: height * 0.09,
+        decoration: Utils.getCustomTileBoxDecoration(
+          isLightMode: themeController.isLightMode.value,
         ),
-        trailing: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Obx(
-                  () => Text(
-                '${controller.duration.value.round().toInt()} seconds',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
-                ),
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: ListTile(
+            tileColor: themeController.isLightMode.value
+                ? kLightSecondaryBackgroundColor
+                : ksecondaryBackgroundColor,
+            title: Text(
+              'Undo Duration'.tr,
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
+            trailing: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Obx(
+                      () => Text(
+                    '${controller.duration.value.round().toInt()} seconds',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor
+                          : kprimaryTextColor,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryDisabledTextColor
+                      : kprimaryDisabledTextColor,
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        )
+      )
     );
   }
 

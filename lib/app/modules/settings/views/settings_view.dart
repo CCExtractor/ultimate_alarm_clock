@@ -112,6 +112,8 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 CustomizeUndoDuration(
+                    width: width,
+                    height: height,
                   controller: controller,
                     themeController: controller.themeController
                 ),
