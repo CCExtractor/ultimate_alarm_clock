@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
@@ -40,7 +41,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
-    // print(controller.selectedTime.value.hour);
     var width = Get.width;
     var height = Get.height;
     return PopScope(
@@ -282,9 +282,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 ? const Text('')
                 : Obx(
                     () => Text(
-                      'Rings in @timeToAlarm'.trParams({
-                        'timeToAlarm': controller.timeToAlarm.value.toString()
-                      }),
+                      'Rings in @timeToAlarm'.trParams(
+                        {
+                          'timeToAlarm':
+                              controller.timeToAlarm.value.toString(),
+                        },
+                      ),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
@@ -356,12 +359,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               : ListView(
                   children: [
                     Container(
-                        color: themeController.isLightMode.value
-                            ? kLightSecondaryBackgroundColor
-                            : ksecondaryBackgroundColor,
-                        height: height * 0.32,
-                        width: width,
-                        child: Obx(() {
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      height: height * 0.32,
+                      width: width,
+                      child: Obx(
+                        () {
                           return InkWell(
                             onTap: () {
                               Utils.hapticFeedback();
@@ -388,10 +392,33 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             controller.hours.value = value;
+                                            controller.selectedTime.value =
+                                                DateTime(
+                                              controller
+                                                  .selectedTime.value.year,
+                                              controller
+                                                  .selectedTime.value.month,
+                                              controller.selectedTime.value.day,
+                                              inputTimeController
+                                                  .convert24(value),
+                                              controller
+                                                  .selectedTime.value.minute,
+                                            );
                                             inputTimeController
                                                     .inputHrsController.text =
                                                 controller.hours.value
                                                     .toString();
+                                            inputTimeController
+                                                    .inputMinutesController
+                                                    .text =
+                                                controller.minutes.value
+                                                    .toString();
+                                            inputTimeController.changePeriod(
+                                              controller.meridiemIndex.value ==
+                                                      0
+                                                  ? 'AM'
+                                                  : 'PM',
+                                            );
                                           },
                                           infiniteLoop: true,
                                           itemWidth: width * 0.17,
@@ -457,11 +484,32 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             controller.minutes.value = value;
+                                            controller.selectedTime.value =
+                                                DateTime(
+                                              controller
+                                                  .selectedTime.value.year,
+                                              controller
+                                                  .selectedTime.value.month,
+                                              controller.selectedTime.value.day,
+                                              controller
+                                                  .selectedTime.value.hour,
+                                              controller.minutes.value,
+                                            );
+                                            inputTimeController
+                                                    .inputHrsController.text =
+                                                controller.hours.value
+                                                    .toString();
                                             inputTimeController
                                                     .inputMinutesController
                                                     .text =
                                                 controller.minutes.value
                                                     .toString();
+                                            inputTimeController.changePeriod(
+                                              controller.meridiemIndex.value ==
+                                                      0
+                                                  ? 'AM'
+                                                  : 'PM',
+                                            );
                                           },
                                           infiniteLoop: true,
                                           itemWidth: width * 0.17,
@@ -543,15 +591,38 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       .meridiemIndex.value = 0
                                                   : controller
                                                       .meridiemIndex.value = 1;
+                                              controller.selectedTime.value =
+                                                  DateTime(
+                                                controller
+                                                    .selectedTime.value.year,
+                                                controller
+                                                    .selectedTime.value.month,
+                                                controller
+                                                    .selectedTime.value.day,
+                                                inputTimeController
+                                                    .convert24(controller.hours.value),
+                                                controller.minutes.value,
+                                              );
+                                              inputTimeController
+                                                      .inputHrsController.text =
+                                                  controller.hours.value
+                                                      .toString();
+                                              inputTimeController
+                                                      .inputMinutesController
+                                                      .text =
+                                                  controller.minutes.value
+                                                      .toString();
                                               inputTimeController.changePeriod(
-                                                controller.hours.value >= 12
-                                                    ? 'PM'
-                                                    : 'AM',
+                                                controller.meridiemIndex
+                                                            .value ==
+                                                        0
+                                                    ? 'AM'
+                                                    : 'PM',
                                               );
                                             },
                                             textMapper: (numberText) {
                                               return controller
-                                                  .current[
+                                                  .meridiem[
                                                       int.parse(numberText)]
                                                   .value;
                                             },
@@ -596,45 +667,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ],
                                     ),
                                   )
-
-                                // TimePickerSpinner(
-                                //     time: controller.selectedTime.value,
-                                //     isForce2Digits: true,
-                                //     alignment: Alignment.center,
-                                //     is24HourMode:
-                                //         settingsController.is24HrsEnabled.value,
-                                //     normalTextStyle: Theme.of(context)
-                                //         .textTheme
-                                //         .displayMedium!
-                                //         .copyWith(
-                                //           fontWeight: FontWeight.normal,
-                                //           color: themeController
-                                //                   .isLightMode.value
-                                //               ? kLightPrimaryDisabledTextColor
-                                //               : kprimaryDisabledTextColor,
-                                //         ),
-                                //     highlightedTextStyle: Theme.of(context)
-                                //         .textTheme
-                                //         .displayMedium,
-                                //     onTimeChange: (dateTime) {
-                                //       Utils.hapticFeedback();
-                                //       controller.selectedTime.value = dateTime;
-                                //       inputTimeController.inputHrsController
-                                //           .text = settingsController
-                                //               .is24HrsEnabled.value
-                                //           ? dateTime.hour.toString()
-                                //           : (dateTime.hour == 0
-                                //               ? 12.toString()
-                                //               : (dateTime.hour > 12
-                                //                   ? (dateTime.hour - 12)
-                                //                       .toString()
-                                //                   : dateTime.hour.toString()));
-                                //       inputTimeController.inputMinutesController
-                                //           .text = dateTime.minute.toString();
-                                //       inputTimeController.changePeriod(
-                                //           dateTime.hour >= 12 ? 'PM' : 'AM');
-                                //     },
-                                //   )
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -645,23 +677,27 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             inputTimeController.setTime();
                                           },
                                           decoration: const InputDecoration(
-                                              hintText: 'HH',
-                                              border: InputBorder.none),
+                                            hintText: 'HH',
+                                            border: InputBorder.none,
+                                          ),
                                           textAlign: TextAlign.center,
                                           controller: inputTimeController
                                               .inputHrsController,
                                           keyboardType: TextInputType.number,
                                           inputFormatters: [
                                             FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                              RegExp(
+                                                '[1,2,3,4,5,6,7,8,9,0]',
+                                              ),
+                                            ),
                                             LengthLimitingTextInputFormatter(2),
                                             LimitRange(
-                                                0,
-                                                settingsController
-                                                        .is24HrsEnabled.value
-                                                    ? 23
-                                                    : 12)
+                                              0,
+                                              settingsController
+                                                      .is24HrsEnabled.value
+                                                  ? 23
+                                                  : 12,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -682,18 +718,21 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             inputTimeController.setTime();
                                           },
                                           decoration: const InputDecoration(
-                                              hintText: 'MM',
-                                              border: InputBorder.none),
+                                            hintText: 'MM',
+                                            border: InputBorder.none,
+                                          ),
                                           textAlign: TextAlign.center,
                                           controller: inputTimeController
                                               .inputMinutesController,
                                           keyboardType: TextInputType.number,
                                           inputFormatters: [
                                             FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                              RegExp(
+                                                '[1,2,3,4,5,6,7,8,9,0]',
+                                              ),
+                                            ),
                                             LengthLimitingTextInputFormatter(2),
-                                            LimitRange(00, 59)
+                                            LimitRange(00, 59),
                                           ],
                                         ),
                                       ),
@@ -741,12 +780,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                border: Border.all(
-                                                  color: kprimaryColor,
-                                                  width: 1.0,
-                                                )),
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              border: Border.all(
+                                                color: kprimaryColor,
+                                                width: 1.0,
+                                              ),
+                                            ),
                                             padding: EdgeInsets.all(5.0),
                                             child: Icon(
                                               Icons.done,
@@ -758,7 +798,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     ],
                                   ),
                           );
-                        })),
+                        },
+                      ),
+                    ),
                     RepeatTile(
                       controller: controller,
                       themeController: themeController,

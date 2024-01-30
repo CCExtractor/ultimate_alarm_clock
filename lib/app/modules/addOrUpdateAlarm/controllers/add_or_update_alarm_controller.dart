@@ -89,8 +89,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxDouble volMin = 0.0.obs;
   final RxDouble volMax = 10.0.obs;
 
-  final RxInt hours=0.obs, minutes=0.obs, meridiemIndex=0.obs;
-  final List<RxString> current=['AM'.obs, 'PM'.obs];
+  final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
+  final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -526,26 +526,6 @@ class AddOrUpdateAlarmController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    hours.value=selectedTime.value.hour;
-    minutes.value=selectedTime.value.minute;
-
-    if(settingsController.is24HrsEnabled.value==false){
-      if(selectedTime.value.hour==0){
-        hours.value=12;
-        meridiemIndex.value=0;
-      }
-      else if(selectedTime.value.hour==12){
-        meridiemIndex.value=1;
-      }
-      else if(selectedTime.value.hour>12){
-        hours.value=selectedTime.value.hour-12;
-        meridiemIndex.value=1;
-      }
-      else{
-        meridiemIndex.value=0;
-      }
-    }
-
     userModel = homeController.userModel.value;
     if (userModel != null) {
       ownerId = userModel!.id;
@@ -570,6 +550,22 @@ class AddOrUpdateAlarmController extends GetxController {
       selectedTime.value = Utils.timeOfDayToDateTime(
         Utils.stringToTimeOfDay(alarmRecord!.alarmTime),
       );
+      hours.value = selectedTime.value.hour;
+      minutes.value = selectedTime.value.minute;
+      
+      if (settingsController.is24HrsEnabled.value == false) {
+        if (selectedTime.value.hour == 0) {
+          hours.value = 12;
+          meridiemIndex.value = 0;
+        } else if (selectedTime.value.hour == 12) {
+          meridiemIndex.value = 1;
+        } else if (selectedTime.value.hour > 12) {
+          hours.value = selectedTime.value.hour - 12;
+          meridiemIndex.value = 1;
+        } else {
+          meridiemIndex.value = 0;
+        }
+      }
       // Shows the "Rings in" time
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
@@ -646,6 +642,23 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord!.mutexLock = false;
         mutexLock.value = false;
       }
+    } else {
+      hours.value = selectedTime.value.hour;
+      minutes.value = selectedTime.value.minute;
+
+      if (settingsController.is24HrsEnabled.value == false) {
+        if (selectedTime.value.hour == 0) {
+          hours.value = 12;
+          meridiemIndex.value = 0;
+        } else if (selectedTime.value.hour == 12) {
+          meridiemIndex.value = 1;
+        } else if (selectedTime.value.hour > 12) {
+          hours.value = selectedTime.value.hour - 12;
+          meridiemIndex.value = 1;
+        } else {
+          meridiemIndex.value = 0;
+        }
+      }
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
@@ -655,20 +668,22 @@ class AddOrUpdateAlarmController extends GetxController {
 
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
-    selectedPoint.listen((point) {
-      selectedPoint.value = point;
-      markersList.clear();
-      markersList.add(
-        Marker(
-          point: selectedPoint.value,
-          builder: (ctx) => const Icon(
-            Icons.location_on,
-            size: 35,
-            color: Colors.black,
+    selectedPoint.listen(
+      (point) {
+        selectedPoint.value = point;
+        markersList.clear();
+        markersList.add(
+          Marker(
+            point: selectedPoint.value,
+            builder: (ctx) => const Icon(
+              Icons.location_on,
+              size: 35,
+              color: Colors.black,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     // Updating UI to show time to alarm
 

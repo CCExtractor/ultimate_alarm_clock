@@ -104,7 +104,7 @@ class TimerView extends GetView<TimerController> {
                   color: themeController.isLightMode.value
                       ? kLightPrimaryBackgroundColor
                       : kprimaryBackgroundColor,
-                  height: height * 0.3,
+                  height: height * 0.32,
                   width: width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +126,7 @@ class TimerView extends GetView<TimerController> {
                                 ),
                           ),
                           SizedBox(
-                            height: height * 0.01,
+                            height: height * 0.008,
                           ),
                           NumberPicker(
                             minValue: 0,
@@ -209,7 +209,7 @@ class TimerView extends GetView<TimerController> {
                                 ),
                           ),
                           SizedBox(
-                            height: height * 0.01,
+                            height: height * 0.008,
                           ),
                           NumberPicker(
                             minValue: 0,
@@ -291,7 +291,7 @@ class TimerView extends GetView<TimerController> {
                                 ),
                           ),
                           SizedBox(
-                            height: height * 0.011,
+                            height: height * 0.008,
                           ),
                           NumberPicker(
                             minValue: 0,
