@@ -89,6 +89,26 @@ class InputTimeController extends GetxController {
       selectedDateTime.value =
           DateTime(year, month, day, time.hour, time.minute);
       addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
+
+      if (!settingsController.is24HrsEnabled.value) {
+        if (selectedDateTime.value.hour == 0) {
+          addOrUpdateAlarmController.hours.value = 12;
+        } else if (selectedDateTime.value.hour > 12) {
+          addOrUpdateAlarmController.hours.value =
+              (selectedDateTime.value.hour-12);
+        } else {
+          addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
+        }
+      } else {
+        addOrUpdateAlarmController.hours.value =
+            convert24(selectedDateTime.value.hour);
+      }
+      addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
+      if (selectedDateTime.value.hour >= 12) {
+        addOrUpdateAlarmController.meridiemIndex.value = 1;
+      } else {
+        addOrUpdateAlarmController.meridiemIndex.value = 0;
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
