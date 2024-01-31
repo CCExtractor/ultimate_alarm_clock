@@ -35,27 +35,80 @@ class TimerView extends GetView<TimerController> {
                     height: height * 0.3,
                   ),
                   Center(
-                    child: Obx(() {
-                      final hours = controller.strDigits(
-                        controller.remainingTime.value.inHours.remainder(24),
-                      );
-                      final minutes = controller.strDigits(
-                        controller.remainingTime.value.inMinutes.remainder(60),
-                      );
-                      final seconds = controller.strDigits(
-                        controller.remainingTime.value.inSeconds.remainder(60),
-                      );
-                      return Text(
-                        '$hours:$minutes:$seconds',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
-                          fontSize: 50,
-                        ),
-                      );
-                    }),
+                    child: Obx(
+                      () {
+                        final hours = controller.strDigits(
+                          controller.remainingTime.value.inHours.remainder(24),
+                        );
+                        final minutes = controller.strDigits(
+                          controller.remainingTime.value.inMinutes
+                              .remainder(60),
+                        );
+                        final seconds = controller.strDigits(
+                          controller.remainingTime.value.inSeconds
+                              .remainder(60),
+                        );
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 55,
+                              width: 70,
+                              child: Center(
+                                child: Text(
+                                  '$hours',
+                                  style: const TextStyle(
+                                    fontSize: 50.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              ':',
+                              style: TextStyle(
+                                fontSize: 50.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 55,
+                              width: 70,
+                              child: Center(
+                                child: Text(
+                                  '$minutes',
+                                  style: const TextStyle(
+                                    fontSize: 50.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              ':',
+                              style: TextStyle(
+                                fontSize: 50.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 55,
+                              width: 70,
+                              child: Center(
+                                child: Text(
+                                  '$seconds',
+                                  style: const TextStyle(
+                                    fontSize: 50.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                   SizedBox(
                     height: height * 0.15,
@@ -75,7 +128,7 @@ class TimerView extends GetView<TimerController> {
                                 await SecureStorageProvider().readTimerId();
                             await IsarDb.deleteAlarm(timerId);
                           },
-                          child: const Icon(Icons.close),
+                          child: const Icon(Icons.close_rounded),
                         ),
                         SizedBox(
                           width: width * 0.11,
@@ -90,8 +143,9 @@ class TimerView extends GetView<TimerController> {
                           },
                           child: Icon(
                             controller.isTimerPaused.value
-                                ? Icons.play_arrow
-                                : Icons.pause,
+                                ? Icons.play_arrow_rounded
+                                : Icons.pause_rounded,
+                            size: 33,
                           ),
                         ),
                       ],
@@ -345,6 +399,7 @@ class TimerView extends GetView<TimerController> {
                         : kprimaryColor,
                     child: const Icon(
                       Icons.play_arrow_rounded,
+                      size: 33,
                     ),
                   ),
                 ),
