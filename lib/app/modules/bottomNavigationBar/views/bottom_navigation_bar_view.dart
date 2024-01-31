@@ -33,11 +33,12 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
               label: 'Timer'.tr,
             ),
           ],
-          onTap: (index) {
+         onTap: (index) {
             Utils.hapticFeedback();
             controller.changeTab(index);
-            pageController.animateToPage(index,
-                duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+            pageController.jumpToPage(
+              index,
+            );
           },
           currentIndex: controller.activeTabIndex.value,
         ),
