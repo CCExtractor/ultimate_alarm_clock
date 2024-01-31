@@ -14,6 +14,8 @@ class AudioUtils {
   static MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   static AudioSession? audioSession;
+  
+  static bool isPreviewing = false;
 
   static Future<void> initializeAudioSession() async {
     audioSession = await AudioSession.instance;
@@ -38,7 +40,9 @@ class AudioUtils {
     );
   }
 
-  static Future<void> playCustomSound(String customRingtonePath) async {
+  static Future<void> playCustomSound(
+    String customRingtonePath,
+  ) async {
     try {
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.DeviceFileSource(customRingtonePath));
@@ -82,6 +86,65 @@ class AudioUtils {
             await IsarDb.updateAlarm(alarmRecord);
           }
         }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  
+
+  static Future<void> stopDefaultAlarm() async {
+    try {
+      if (audioSession != null) {
+        await alarmChannel.invokeMethod('stopDefaultAlarm');
+        await audioSession!.setActive(false);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> previewCustomSound(String ringtoneName) async {
+    try {
+      if (audioSession == null) {
+        await initializeAudioSession();
+      }
+
+      await audioSession!.setActive(true);
+
+      if (ringtoneName == 'Default') {
+        await alarmChannel.invokeMethod('playDefaultAlarm');
+      } else {
+        int customRingtoneId = fastHash(ringtoneName);
+        RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+          customRingtoneId: customRingtoneId,
+        );
+
+        if (customRingtone != null) {
+          String customRingtonePath = customRingtone.ringtonePath;
+          await alarmChannel.invokeMethod('stopDefaultAlarm');
+          await audioSession!.setActive(false);
+          await audioSession!.setActive(true);
+          await playCustomSound(customRingtonePath);
+          isPreviewing = true;
+        } else {
+          await alarmChannel.invokeMethod('playDefaultAlarm');
+          isPreviewing = true;
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> stopPreviewCustomSound() async {
+    try {
+      if (audioSession != null && isPreviewing) {
+        await audioPlayer.stop();
+        await alarmChannel.invokeMethod('stopDefaultAlarm');
+        await audioSession!.setActive(false);
+        isPreviewing = false;
       }
     } catch (e) {
       debugPrint(e.toString());

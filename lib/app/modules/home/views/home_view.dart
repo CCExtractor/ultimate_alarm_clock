@@ -1,14 +1,12 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:get/get.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/about/controller/about_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -17,7 +15,6 @@ import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-import '../../settings/views/language_menu.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -308,62 +305,67 @@ class HomeView extends GetView<HomeController> {
               : ksecondaryBackgroundColor,
           child: Column(
             children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(color: kLightSecondaryColor),
-                child: Center(
-                  child: Row(
-                    children: [
-                      const Flexible(
-                        flex: 1,
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage(
-                            'assets/images/ic_launcher-playstore.png',
+              SizedBox(
+                height: height * 0.2,
+                child: DrawerHeader(
+                  decoration: const BoxDecoration(color: kLightSecondaryColor),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        const Flexible(
+                          flex: 1,
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage(
+                              'assets/images/ic_launcher-playstore.png',
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Flexible(
-                        flex: 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: width * 0.5,
-                              child: Text(
-                                'Ultimate Alarm Clock'.tr,
-                                softWrap: true,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              width: width * 0.5,
-                              child: Text(
-                                'v0.5.0'.tr,
-                                softWrap: true,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kprimaryTextColor
-                                            : ksecondaryTextColor,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
+                        const SizedBox(
+                          width: 10,
                         ),
-                      ),
-                    ],
+                        Flexible(
+                          flex: 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: width * 0.5,
+                                child: Text(
+                                  'Ultimate Alarm Clock'.tr,
+                                  softWrap: true,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kprimaryTextColor
+                                                  : ksecondaryTextColor,
+                                          fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                width: width * 0.5,
+                                child: Text(
+                                  'v0.5.0'.tr,
+                                  softWrap: true,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
+                                          color:
+                                              themeController.isLightMode.value
+                                                  ? kprimaryTextColor
+                                                  : ksecondaryTextColor,
+                                          fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -371,12 +373,12 @@ class HomeView extends GetView<HomeController> {
                 onTap: () {
                   Utils.hapticFeedback();
                   Get.back();
-                  Get.offNamed('/settings');
+                  Get.toNamed('/settings');
                 },
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
                   'Settings'.tr,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: themeController.isLightMode.value
                             ? kLightPrimaryTextColor.withOpacity(0.8)
                             : kprimaryTextColor.withOpacity(0.8),
@@ -391,6 +393,11 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               // LanguageMenu(),
+              Divider(
+                color: Colors.white,
+                indent: width * 0.01,
+                endIndent: width * 0.01,
+              ),
               ListTile(
                 onTap: () {
                   Utils.hapticFeedback();
@@ -400,7 +407,7 @@ class HomeView extends GetView<HomeController> {
                 contentPadding: const EdgeInsets.only(left: 20, right: 44),
                 title: Text(
                   'About'.tr,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: themeController.isLightMode.value
                           ? kLightPrimaryTextColor.withOpacity(0.8)
                           : kprimaryTextColor.withOpacity(0.8)),
@@ -446,8 +453,8 @@ class HomeView extends GetView<HomeController> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 25 *
+                                        padding: EdgeInsets.only(
+                                          left: 25 *
                                               controller.scalingFactor.value,
                                         ),
                                         child: Column(
@@ -815,6 +822,8 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Text(
                                             'Add an alarm to get started!'.tr,
+                                            textWidthBasis:
+                                                TextWidthBasis.longestLine,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .displaySmall!
@@ -849,18 +858,24 @@ class HomeView extends GetView<HomeController> {
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
                                       return Dismissible(
+                                        direction: DismissDirection.startToEnd,
                                         onDismissed: (direction) async {
-                                          if (alarm.isSharedAlarmEnabled ==
-                                              true) {
-                                            await FirestoreDb.deleteAlarm(
-                                                controller.userModel.value,
-                                                alarm.firestoreId!);
-                                          } else {
-                                            await IsarDb.deleteAlarm(
-                                                alarm.isarId);
-                                          }
+                                          await controller.swipeToDeleteAlarm(
+                                              controller.userModel.value,
+                                              alarm);
                                         },
                                         key: ValueKey(alarms[index]),
+                                        background: Container(
+                                          color: Colors
+                                              .red, // Set the background color to red
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          alignment: Alignment.center,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                         child: Obx(
                                           () => GestureDetector(
                                             onTap: () {
@@ -1259,6 +1274,26 @@ class HomeView extends GetView<HomeController> {
                                                                                       : kprimaryDisabledTextColor,
                                                                             ),
                                                                           ),
+                                                                        if (alarm
+                                                                            .isPedometerEnabled)
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.symmetric(
+                                                                              horizontal: 3.0,
+                                                                            ),
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.directions_walk,
+                                                                              size: 24,
+                                                                              color: alarm.isEnabled == true
+                                                                                  ? themeController.isLightMode.value
+                                                                                      ? kLightPrimaryTextColor.withOpacity(0.5)
+                                                                                      : kprimaryTextColor.withOpacity(0.5)
+                                                                                  : themeController.isLightMode.value
+                                                                                      ? kLightPrimaryDisabledTextColor
+                                                                                      : kprimaryDisabledTextColor,
+                                                                            ),
+                                                                          ),
                                                                       ],
                                                                     ),
                                                                 ],
@@ -1342,6 +1377,31 @@ class HomeView extends GetView<HomeController> {
                                                                                 } else {
                                                                                   await IsarDb.deleteAlarm(alarm.isarId);
                                                                                 }
+
+                                                                                if (Get.isSnackbarOpen) {
+                                                                                  Get.closeAllSnackbars();
+                                                                                }
+
+                                                                                Get.snackbar(
+                                                                                  'Alarm deleted',
+                                                                                  'The alarm has been deleted.',
+                                                                                  duration: const Duration(seconds: 4),
+                                                                                  snackPosition: SnackPosition.BOTTOM,
+                                                                                  margin: const EdgeInsets.symmetric(
+                                                                                    horizontal: 10,
+                                                                                    vertical: 15,
+                                                                                  ),
+                                                                                  mainButton: TextButton(
+                                                                                    onPressed: () async {
+                                                                                      if (alarm.isSharedAlarmEnabled == true) {
+                                                                                        await FirestoreDb.addAlarm(controller.userModel.value, alarm);
+                                                                                      } else {
+                                                                                        await IsarDb.addAlarm(alarm);
+                                                                                      }
+                                                                                    },
+                                                                                    child: const Text('Undo'),
+                                                                                  ),
+                                                                                );
 
                                                                                 String ringtoneName = alarm.ringtoneName;
 

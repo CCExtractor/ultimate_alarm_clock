@@ -8,12 +8,14 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/ascending_volume.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/delete_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/maths_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/note.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/pedometer_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quote_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
@@ -26,6 +28,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_d
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
@@ -90,10 +93,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                       OutlinedButton(
                         onPressed: () {
-                          Get.offNamedUntil(
-                            '/bottom-navigation-bar',
-                            (route) => route.settings.name == '/splash-screen',
-                          );
+                          Get.back(closeOverlays: true);
+                          Get.back();
                         },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
@@ -172,6 +173,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           deleteAfterGoesOff:
                               controller.deleteAfterGoesOff.value,
                           snoozeDuration: controller.snoozeDuration.value,
+                          volMax: controller.volMax.value,
+                          volMin: controller.volMin.value,
+                          gradient: controller.gradient.value,
                           offsetDetails: controller.offsetDetails,
                           label: controller.label.value,
                           note: controller.note.value,
@@ -226,6 +230,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.mathsDifficulty.value.index,
                           isShakeEnabled: controller.isShakeEnabled.value,
                           shakeTimes: controller.shakeTimes.value,
+                          isPedometerEnabled:
+                              controller.isPedometerEnabled.value,
+                          numberOfSteps: controller.numberOfSteps.value,
                           ringtoneName: controller.customRingtoneName.value,
                           isTimer: false,
                         );
@@ -628,6 +635,20 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
+                    AscendingVolumeTile(
+                      controller: controller,
+                      themeController: themeController,
+                    ),
+                    Container(
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryDisabledTextColor
+                            : kprimaryDisabledTextColor,
+                      ),
+                    ),
                     QuoteTile(
                       controller: controller,
                       themeController: themeController,
@@ -741,6 +762,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 : kprimaryDisabledTextColor,
                           ),
                           MathsChallenge(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryDisabledTextColor
+                                : kprimaryDisabledTextColor,
+                          ),
+                          PedometerChallenge(
                             controller: controller,
                             themeController: themeController,
                           ),

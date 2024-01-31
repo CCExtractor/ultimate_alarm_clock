@@ -6,8 +6,8 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-class ShakeToDismiss extends StatelessWidget {
-  const ShakeToDismiss({
+class PedometerChallenge extends StatelessWidget {
+  const PedometerChallenge({
     super.key,
     required this.controller,
     required this.themeController,
@@ -18,21 +18,17 @@ class ShakeToDismiss extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
-    int shakeTimes;
-    bool isShakeEnabled;
+    int numberOfSteps;
+    bool isPedometerEnabled;
     return ListTile(
       title: Row(
         children: [
-          Flexible(
-            child: Text(
-              'Shake to dismiss'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
-              ),
+          Text(
+            'Pedometer',
+            style: TextStyle(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
             ),
           ),
           IconButton(
@@ -46,12 +42,11 @@ class ShakeToDismiss extends StatelessWidget {
             onPressed: () {
               Utils.showModal(
                 context: context,
-                title: 'Shake to dismiss'.tr,
-                // description: 'You will have to shake your phone a set number'
-                //     ' of times to dismiss the alarm'
-                //     ' - no more lazy snoozing :)',
-                description: 'shakeDescription'.tr,
-                iconData: Icons.vibration_sharp,
+                title: 'Pedometer',
+                description: 'Step up to dismiss! Set a step goal to turn off'
+                    ' your alarm, promoting an active and'
+                    ' energized start to the day.',
+                iconData: Icons.directions_walk,
                 isLightMode: themeController.isLightMode.value,
               );
             },
@@ -61,19 +56,19 @@ class ShakeToDismiss extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         // storing initial state
-        shakeTimes = controller.shakeTimes.value;
-        isShakeEnabled = controller.isShakeEnabled.value;
+        numberOfSteps = controller.numberOfSteps.value;
+        isPedometerEnabled = controller.isPedometerEnabled.value;
         Get.defaultDialog(
           onWillPop: () async {
             // presetting values to initial state
-            _presetToInitial(shakeTimes, isShakeEnabled);
+            _presetToInitial(numberOfSteps, isPedometerEnabled);
             return true;
           },
           titlePadding: const EdgeInsets.only(top: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
-          title: 'Number of shakes'.tr,
+          title: 'Number of steps',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
@@ -85,20 +80,20 @@ class ShakeToDismiss extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       NumberPicker(
-                        value: controller.shakeTimes.value,
+                        value: controller.numberOfSteps.value,
                         minValue: 0,
-                        maxValue: 100,
+                        maxValue: 60,
                         onChanged: (value) {
                           Utils.hapticFeedback();
                           if (value > 0) {
-                            controller.isShakeEnabled.value = true;
+                            controller.isPedometerEnabled.value = true;
                           } else {
-                            controller.isShakeEnabled.value = false;
+                            controller.isPedometerEnabled.value = false;
                           }
-                          controller.shakeTimes.value = value;
+                          controller.numberOfSteps.value = value;
                         },
                       ),
-                      Text(controller.shakeTimes.value > 1 ? 'times'.tr : 'time'.tr),
+                      Text(controller.numberOfSteps.value > 1 ? 'steps' : 'step'),
                     ],
                   ),
                 ),
@@ -119,7 +114,7 @@ class ShakeToDismiss extends StatelessWidget {
                             // Set the desired background color
                           ),
                           child: Text(
-                            'Done'.tr,
+                            'Done',
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
@@ -145,13 +140,13 @@ class ShakeToDismiss extends StatelessWidget {
           children: [
             Obx(
               () => Text(
-                controller.shakeTimes.value > 0
-                    ? controller.shakeTimes.value > 1
-                        ? '${controller.shakeTimes.value} times'
-                        : '${controller.shakeTimes.value} time'
-                    : 'Off'.tr,
+                controller.numberOfSteps.value > 0
+                    ? controller.numberOfSteps.value > 1
+                        ? '${controller.numberOfSteps.value} steps'
+                        : '${controller.numberOfSteps.value} step'
+                    : 'Off',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: (controller.isShakeEnabled.value == false)
+                      color: (controller.isPedometerEnabled.value == false)
                           ? themeController.isLightMode.value
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
@@ -173,8 +168,8 @@ class ShakeToDismiss extends StatelessWidget {
     );
   }
 
-  void _presetToInitial(int shakeTimes, bool isShakeEnabled) {
-    controller.shakeTimes.value = shakeTimes;
-    controller.isShakeEnabled.value = isShakeEnabled;
+  void _presetToInitial(int numberOfSteps, bool isPedometerEnabled) {
+    controller.numberOfSteps.value = numberOfSteps;
+    controller.isPedometerEnabled.value = isPedometerEnabled;
   }
 }

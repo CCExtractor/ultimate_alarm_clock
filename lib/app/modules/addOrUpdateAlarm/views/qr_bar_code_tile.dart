@@ -17,17 +17,17 @@ class QrBarCode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = Get.height;
-    var width = Get.width;
     return ListTile(
       title: Row(
         children: [
-          Text(
-            'QR/Bar Code'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+          Flexible(
+            child: Text(
+              'QR/Bar Code'.tr,
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
             ),
           ),
           IconButton(

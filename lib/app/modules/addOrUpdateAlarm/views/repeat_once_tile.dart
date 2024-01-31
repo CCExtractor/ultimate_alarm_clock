@@ -21,12 +21,14 @@ class RepeatOnceTile extends StatelessWidget {
       tileColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: Text(
-        'Repeat only once'.tr,
-        style: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : kprimaryTextColor,
+      title: Flexible(
+        child: Text(
+          'Ring once'.tr,
+          style: TextStyle(
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
+          ),
         ),
       ),
       onTap: () {

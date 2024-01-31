@@ -149,7 +149,6 @@ class GoogleSignIn extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Obx(
                 () => Column(
@@ -202,7 +201,7 @@ class GoogleSignIn extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Shared Alarms'.tr,
+                                  'Shared Alarm'.tr,
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
@@ -294,6 +293,7 @@ class GoogleSignIn extends StatelessWidget {
                       : kprimaryTextColor.withOpacity(0.3),
                 ),
               ),
+              Spacer(),
               Obx(
                 () => Icon(
                   (controller.isUserLoggedIn.value)

@@ -8,17 +8,32 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class ChooseRingtoneTile extends StatelessWidget {
   const ChooseRingtoneTile({
-    super.key,
+    Key? key,
     required this.controller,
     required this.themeController,
     required this.height,
     required this.width,
-  });
+  }) : super(key: key);
 
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;
   final double height;
   final double width;
+
+  void onTapPreview(String ringtonePath) async {
+    Utils.hapticFeedback();
+
+    // Stop the currently playing audio before starting the preview for the new audio
+    await AudioUtils.stopPreviewCustomSound();
+
+    if (controller.isPlaying.value) {
+      // If it was playing, reset the isPlaying state to false
+      controller.toggleIsPlaying();
+    } else {
+      await AudioUtils.previewCustomSound(ringtonePath);
+      controller.toggleIsPlaying(); // Toggle the isPlaying state
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +95,45 @@ class ChooseRingtoneTile extends StatelessWidget {
                                   controller.customRingtoneNames[index],
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                trailing: (controller
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (controller.customRingtoneName.value ==
+                                        controller.customRingtoneNames[index])
+                                      IconButton(
+                                        onPressed: () => onTapPreview(controller
+                                            .customRingtoneNames[index]),
+                                        icon: Icon(
+                                          (controller.isPlaying.value &&
+                                                  controller.customRingtoneName
+                                                          .value ==
+                                                      controller
+                                                              .customRingtoneNames[
+                                                          index])
+                                              ? Icons.stop
+                                              : Icons.play_arrow,
+                                          color: (controller.isPlaying.value &&
+                                                  controller.customRingtoneName
+                                                          .value ==
+                                                      controller
+                                                              .customRingtoneNames[
+                                                          index])
+                                              ? const Color.fromARGB(
+                                                  255,
+                                                  116,
+                                                  111,
+                                                  110) // Change this color to red
+                                              : kprimaryColor,
+                                        ),
+                                      ),
+                                    if (!((controller
                                                 .customRingtoneName.value ==
                                             controller
                                                 .customRingtoneNames[index]) ||
                                         (controller
                                                 .customRingtoneNames[index] ==
-                                            'Default'.tr)
-                                    ? null
-                                    : IconButton(
+                                            'Default'.tr)))
+                                      IconButton(
                                         onPressed: () async {
                                           await controller.deleteCustomRingtone(
                                             ringtoneName: controller
@@ -101,6 +146,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                           color: Colors.red,
                                         ),
                                       ),
+                                  ],
+                                ),
                               ),
                             );
                           },
@@ -127,14 +174,17 @@ class ChooseRingtoneTile extends StatelessWidget {
                     height: 30,
                   ),
                   ElevatedButton(
-                    onPressed: () async {
-                      Utils.hapticFeedback();
-                      await AudioUtils.updateRingtoneCounterOfUsage(
-                        customRingtoneName: controller.customRingtoneName.value,
-                        counterUpdate: CounterUpdate.increment,
-                      );
-                      Get.back();
-                    },
+  onPressed: () async {
+    Utils.hapticFeedback();
+    await AudioUtils.updateRingtoneCounterOfUsage(
+      customRingtoneName: controller.customRingtoneName.value,
+      counterUpdate: CounterUpdate.increment,
+    );
+    await AudioUtils.stopPreviewCustomSound(); // Stop custom ringtone preview
+    await AudioUtils.stopDefaultAlarm(); // Stop default alarm
+    controller.resetIsPlaying(); // Reset the isPlaying state
+    Get.back();
+  },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kprimaryColor,
                     ),

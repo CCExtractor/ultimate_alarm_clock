@@ -516,4 +516,41 @@ class HomeController extends GetxController {
       ),
     );
   }
+
+  Future<void> swipeToDeleteAlarm(UserModel? user, AlarmModel alarm) async {
+    AlarmModel? alarmToDelete;
+
+    if (alarm.isSharedAlarmEnabled == true) {
+      alarmToDelete = await FirestoreDb.getAlarm(user, alarm.firestoreId!);
+      await FirestoreDb.deleteAlarm(user, alarm.firestoreId!);
+    } else {
+      alarmToDelete = await IsarDb.getAlarm(alarm.isarId);
+      await IsarDb.deleteAlarm(alarm.isarId);
+    }
+
+    if (Get.isSnackbarOpen) {
+      Get.closeAllSnackbars();
+    }
+
+    Get.snackbar(
+      'Alarm deleted',
+      'The alarm has been deleted.',
+      duration: const Duration(seconds: 4),
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 15,
+      ),
+      mainButton: TextButton(
+        onPressed: () async {
+          if (alarm.isSharedAlarmEnabled == true) {
+            await FirestoreDb.addAlarm(user, alarmToDelete!);
+          } else {
+            await IsarDb.addAlarm(alarmToDelete!);
+          }
+        },
+        child: const Text('Undo'),
+      ),
+    );
+  }
 }

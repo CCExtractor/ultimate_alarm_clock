@@ -40,6 +40,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
   final shakeTimes = 0.obs;
+  final isPedometerEnabled = false.obs;
+  final numberOfSteps = 0.obs;
   var ownerId = '';
   final mutexLock = false.obs;
   var lastEditedUserId = '';
@@ -80,6 +82,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final deleteAfterGoesOff = false.obs;
 
   final RxBool showMotivationalQuote = false.obs;
+  final RxInt gradient = 0.obs;
+  final RxDouble selectedGradientDouble = 0.0.obs;
+  final RxDouble volMin = 0.0.obs;
+  final RxDouble volMax = 10.0.obs;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -89,6 +95,47 @@ class AddOrUpdateAlarmController extends GetxController {
     }
 
     return userDetails;
+  }
+
+  RxBool isDailySelected = false.obs;
+  RxBool isWeekdaysSelected = false.obs;
+  RxBool isCustomSelected = false.obs;
+  RxBool isPlaying = false.obs; // Observable boolean to track playing state
+
+  void toggleIsPlaying() {
+    isPlaying.toggle();
+  }
+
+  void resetIsPlaying() {
+    isPlaying.value = false;
+  }
+
+  void setIsDailySelected(bool value) {
+    isDailySelected.value = value;
+    if (value == true) {
+      isCustomSelected.value = false;
+      isWeekdaysSelected.value = false;
+    }
+  }
+
+  void setGradient(int value) {
+    this.gradient.value = value;
+  }
+
+  void setIsWeekdaysSelected(bool value) {
+    isWeekdaysSelected.value = value;
+    if (value == true) {
+      isCustomSelected.value = false;
+      isDailySelected.value = false;
+    }
+  }
+
+  void setIsCustomSelected(bool value) {
+    isCustomSelected.value = true;
+    if (value == true) {
+      isWeekdaysSelected.value = false;
+      isDailySelected.value = false;
+    }
   }
 
   checkOverlayPermissionAndNavigate() async {
@@ -483,6 +530,9 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
+      gradient.value = alarmRecord!.gradient;
+      volMin.value = alarmRecord!.volMin;
+      volMax.value = alarmRecord!.volMax;
       isOneTime.value = alarmRecord!.isOneTime;
       deleteAfterGoesOff.value = alarmRecord!.deleteAfterGoesOff;
       label.value = alarmRecord!.label;
@@ -533,6 +583,9 @@ class AddOrUpdateAlarmController extends GetxController {
 
       isShakeEnabled.value = alarmRecord!.isShakeEnabled;
       shakeTimes.value = alarmRecord!.shakeTimes;
+
+      isPedometerEnabled.value = alarmRecord!.isPedometerEnabled;
+      numberOfSteps.value = alarmRecord!.numberOfSteps;
 
       isQrEnabled.value = alarmRecord!.isQrEnabled;
       qrValue.value = alarmRecord!.qrValue;
@@ -645,6 +698,9 @@ class AddOrUpdateAlarmController extends GetxController {
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
+      volMax: volMax.value,
+      volMin: volMin.value,
+      gradient: gradient.value,
       label: label.value,
       isOneTime: isOneTime.value,
       deleteAfterGoesOff: deleteAfterGoesOff.value,
@@ -680,6 +736,8 @@ class AddOrUpdateAlarmController extends GetxController {
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
+      isPedometerEnabled: isPedometerEnabled.value,
+      numberOfSteps: numberOfSteps.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
@@ -793,11 +851,21 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           } else {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           }
         } else {
@@ -805,6 +873,11 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
+            margin: EdgeInsets.all(15),
+            animationDuration: Duration(seconds: 1),
+            snackPosition: SnackPosition.BOTTOM,
+            barBlur: 15,
+            colorText: kprimaryTextColor,
           );
         }
       }

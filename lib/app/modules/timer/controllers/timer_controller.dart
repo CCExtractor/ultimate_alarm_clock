@@ -18,6 +18,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   Rx<Timer?> countdownTimer = Rx<Timer?>(null);
   AlarmModel alarmRecord = Utils.genFakeAlarmModel();
   late int currentTimerIsarId;
+  var hours=0.obs, minutes=1.obs, seconds=0.obs;
 
   final _secureStorageProvider = SecureStorageProvider();
 
