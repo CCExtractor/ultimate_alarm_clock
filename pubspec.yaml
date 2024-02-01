@@ -13,7 +13,7 @@ dependencies:
   get: 4.6.5
   get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
-  cloud_firestore: ^4.4.5
+  cloud_firestore: ^4.15.0
   intl: ^0.18.0
   latlong2: ^0.8.1
   flutter_map: ^4.0.0
