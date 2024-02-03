@@ -22,40 +22,102 @@ class StopwatchView extends GetView<StopwatchController> {
           centerTitle: true,
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(() => Text(
-                  controller.result,
-                  style: const TextStyle(
-                      fontSize: 60.0, fontWeight: FontWeight.bold),
-                )),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Column(
+        children: [
+          SizedBox(
+            height: height * 0.3,
+          ),
+          Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FloatingActionButton(
-                  heroTag: "start",
-                  onPressed: controller.toggleTimer,
-                  child: Obx(() => Icon(
-                        controller.isTimerPaused.value
-                            ? Icons.play_arrow
-                            : Icons.pause,
-                      )),
+                SizedBox(
+                  height: 55,
+                  width: 70,
+                  child: Center(
+                    child: Text(
+                      controller.result.split(':')[0],
+                      style: const TextStyle(
+                        fontSize: 50.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-                // Reset button
-                FloatingActionButton(
-                  heroTag: "stop",
-                  onPressed: controller.resetTime,
-                  child: Icon(Icons.square_rounded),
+                const Text(
+                  ':',
+                  style: TextStyle(
+                    fontSize: 50.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 55,
+                  width: 70,
+                  child: Center(
+                    child: Text(
+                      controller.result.split(':')[1],
+                      style: const TextStyle(
+                        fontSize: 50.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const Text(
+                  ':',
+                  style: TextStyle(
+                    fontSize: 50.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 55,
+                  width: 70,
+                  child: Center(
+                    child: Text(
+                      controller.result.split(':')[2],
+                      style: const TextStyle(
+                        fontSize: 50.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FloatingActionButton(
+                heroTag: "start",
+                onPressed: controller.toggleTimer,
+                child: Obx(
+                  () => Icon(
+                    controller.isTimerPaused.value
+                        ? Icons.play_arrow_rounded
+                        : Icons.pause_rounded,
+                    size: 33,
+                  ),
+                ),
+              ),
+              // Reset button
+              FloatingActionButton(
+                heroTag: "stop",
+                onPressed: controller.resetTime,
+                child: Icon(
+                  Icons.stop_rounded,
+                  size: 33,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       endDrawer: Obx(
         () => Drawer(
