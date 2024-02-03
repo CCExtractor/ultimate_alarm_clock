@@ -393,11 +393,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               // LanguageMenu(),
-              Divider(
-                color: Colors.white,
-                indent: width * 0.01,
-                endIndent: width * 0.01,
-              ),
+
               ListTile(
                 onTap: () {
                   Utils.hapticFeedback();
