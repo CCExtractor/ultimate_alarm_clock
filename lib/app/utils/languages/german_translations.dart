@@ -6,6 +6,8 @@ class GermanTranslations extends Translations {
         'de_DE': {
           'Alarm': 'Wecker',
           'Timer': 'Schaltuhr',
+          'StopWatch': 'Stoppuhr',
+
 
           'Enable 24 Hour Format': '24-Stunden-Format aktivieren',
           'Enable Haptic Feedback': 'Haptisches Feedback aktivieren',
@@ -32,7 +34,12 @@ class GermanTranslations extends Translations {
           'LimitedAccess':
               'Alle Zugriffe sind ausschließlich darauf beschränkt, die oben beschriebenen Funktionen bereitzustellen.',
           'Enable Light Mode': 'Lichtmodus aktivieren',
-
+          'Change Language': 'Sprache ändern',
+          'English': 'Englisch',
+          'Spanish': 'Spanisch',
+          'German': 'Deutsch',
+          'French': 'Französisch',
+          'Russian': 'Russisch',
           'No upcoming alarms!': 'Keine bevorstehenden Alarme',
           'Next alarm': 'Nächster Alarm',
           'Show Motivational Quote': 'Zeige motivierendes Zitat',
@@ -81,6 +88,11 @@ class GermanTranslations extends Translations {
           'Automatic Cancellation': 'Automatische Stornierung',
           'Challenges': 'Herausforderungen',
           'Shared Alarm': 'Geteilter Alarm',
+          'Camera Permission': 'Kameraberechtigung',
+          'Please allow camera access to scan QR codes.':
+              'Bitte erlauben Sie den Zugriff auf die Kamera, um QR-Codes zu scannen.',
+          'OK': 'OK',
+
 //alarm_id_tile.dart
           'Success!': 'Erfolg!',
           'Alarm ID has been copied!': 'Alarm-ID wurde kopiert!',
@@ -97,10 +109,14 @@ class GermanTranslations extends Translations {
           'Enabled': 'Aktiviert',
           'Off': 'Aus',
 //choose_ringtone_tile.dart
+
           'Choose Ringtone': 'Klingelton auswählen',
           'Default': 'Standard',
           'Upload Ringtone': 'Klingelton hochladen',
           'Done': 'Fertig',
+
+//delete_tile.dart
+          'Delete After Goes Off': 'Nach dem Ablauf löschen',
 //label_tile.dart
           'Label': 'Etikett',
           'Enter a name': 'Geben Sie einen Namen ein',
@@ -112,6 +128,21 @@ class GermanTranslations extends Translations {
           'Math problems': 'Mathematische Probleme',
           'mathDescription':
               'Sie müssen einfache mathematische Probleme der gewählten Schwierigkeitsstufe lösen, um den Alarm abzuschalten.',
+          'Easy': 'Leicht',
+          'Medium': 'Mittel',
+          'Hard': 'Schwer',
+          'Solve Maths questions': 'Lösen Sie mathematische Fragen',
+          'questions': 'Fragen',
+          'question': 'Frage',
+
+// pedometer_challenge_tile.dart
+          'Pedometer': 'Schrittzähler',
+          'Number of steps': 'Anzahl der Schritte',
+          'step': 'Schritt',
+          'steps': 'Schritte',
+          'pedometerDescription':
+              'Schreiten Sie voran, um zu entlassen! Setzen Sie ein Schrittziel, um den Wecker auszuschalten und einen aktiven und energiegeladenen Start in den Tag zu fördern.',
+
           'Solve Maths questions': 'Lösen Sie mathematische Fragen',
           'questions': 'Fragen',
           'question': 'Frage',
@@ -145,6 +176,7 @@ class GermanTranslations extends Translations {
           'time': 'Mal',
 //'shared_alarm_tile.dart
           'Shared Alarm': 'Geteilter Alarm',
+
           'Shared alarms': 'Geteilte Alarme',
           'sharedDescription':
               'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',
@@ -225,6 +257,7 @@ class GermanTranslations extends Translations {
           'step4.5': '.',
           'step5':
               'Jetzt haben Sie den Wetter-API-Schlüssel. Wählen Sie den Schlüssel aus und kopieren Sie ihn.',
+
           //ascending_volume.dart
           'Volume will reach maximum in': 'Die Lautstärke erreicht ihr Maximum',
           'seconds': 'sekunden',
