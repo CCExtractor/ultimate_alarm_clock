@@ -1374,6 +1374,31 @@ class HomeView extends GetView<HomeController> {
                                                                                   await IsarDb.deleteAlarm(alarm.isarId);
                                                                                 }
 
+                                                                                if (Get.isSnackbarOpen) {
+                                                                                  Get.closeAllSnackbars();
+                                                                                }
+
+                                                                                Get.snackbar(
+                                                                                  'Alarm deleted',
+                                                                                  'The alarm has been deleted.',
+                                                                                  duration: const Duration(seconds: 4),
+                                                                                  snackPosition: SnackPosition.BOTTOM,
+                                                                                  margin: const EdgeInsets.symmetric(
+                                                                                    horizontal: 10,
+                                                                                    vertical: 15,
+                                                                                  ),
+                                                                                  mainButton: TextButton(
+                                                                                    onPressed: () async {
+                                                                                      if (alarm.isSharedAlarmEnabled == true) {
+                                                                                        await FirestoreDb.addAlarm(controller.userModel.value, alarm);
+                                                                                      } else {
+                                                                                        await IsarDb.addAlarm(alarm);
+                                                                                      }
+                                                                                    },
+                                                                                    child: const Text('Undo'),
+                                                                                  ),
+                                                                                );
+
                                                                                 String ringtoneName = alarm.ringtoneName;
 
                                                                                 await AudioUtils.updateRingtoneCounterOfUsage(

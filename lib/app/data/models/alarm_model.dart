@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 
 import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
@@ -43,11 +43,15 @@ class AlarmModel {
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
+  late int gradient;
   late String ringtoneName;
   late String note;
   late bool deleteAfterGoesOff;
   late bool showMotivationalQuote;
   late bool isTimer;
+  late double volMax;
+  late double volMin;
+
   @ignore
   Map? offsetDetails;
 
@@ -84,15 +88,18 @@ class AlarmModel {
     required this.label,
     required this.isOneTime,
     required this.snoozeDuration,
+    required this.gradient,
     required this.ringtoneName,
     required this.note,
     required this.deleteAfterGoesOff,
     required this.showMotivationalQuote,
     required this.isTimer,
+    required this.volMax,
+    required this.volMin,
   });
 
   AlarmModel.fromDocumentSnapshot({
-    required DocumentSnapshot documentSnapshot,
+    required firestore.DocumentSnapshot documentSnapshot,
     required UserModel? user,
   }) {
     // Making sure the alarms work with the offsets
@@ -114,6 +121,7 @@ class AlarmModel {
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
+    gradient = documentSnapshot['gradient'];
     label = documentSnapshot['label'];
     isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
@@ -147,11 +155,14 @@ class AlarmModel {
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
     showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
     isTimer = documentSnapshot['isTimer'];
+    volMax = documentSnapshot['volMax'];
+    volMin = documentSnapshot['volMin'];
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
     snoozeDuration = alarmData['snoozeDuration'];
+    gradient = alarmData['gradient'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     alarmTime = alarmData['alarmTime'];
@@ -190,6 +201,8 @@ class AlarmModel {
     deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
     showMotivationalQuote = alarmData['showMotivationalQuote'];
     isTimer = alarmData['isTimer'];
+    volMin = alarmData['volMin'];
+    volMax = alarmData['volMax'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -233,11 +246,14 @@ class AlarmModel {
       'isPedometerEnabled': alarmRecord.isPedometerEnabled,
       'numberOfSteps': alarmRecord.numberOfSteps,
       'snoozeDuration': alarmRecord.snoozeDuration,
+      'gradient': alarmRecord.gradient,
       'ringtoneName': alarmRecord.ringtoneName,
       'note': alarmRecord.note,
       'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
       'showMotivationalQuote': alarmRecord.showMotivationalQuote,
       'isTimer': alarmRecord.isTimer,
+      'volMin': alarmRecord.volMin,
+      'volMax': alarmRecord.volMax,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

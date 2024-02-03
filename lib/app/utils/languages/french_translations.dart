@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:get/get.dart';
 
 class FrenchTranslations extends Translations {
@@ -7,7 +9,6 @@ class FrenchTranslations extends Translations {
           'Alarm': 'Réveil',
           'Timer': 'Minuteur',
           'StopWatch': 'Chronomètre',
-
           'Enable 24 Hour Format': 'Activer le format 24 heures',
           'Enable Haptic Feedback': 'Activer les commentaires haptiques',
           'Enable Sorted Alarm List': 'Activer la liste de réveils triée',
@@ -39,6 +40,7 @@ class FrenchTranslations extends Translations {
           'German': 'Allemand',
           'French': 'Français',
           'Russian': 'Russe',
+
           'No upcoming alarms!': 'Pas d\'alarmes à venir !',
           'Next alarm': 'Prochain réveil',
           'Show Motivational Quote': 'Afficher une citation motivante',
@@ -112,6 +114,7 @@ class FrenchTranslations extends Translations {
           'Done': 'Terminé',
 //delete_tile.dart
           'Delete After Goes Off': 'Supprimer après la fin',
+
 //label_tile.dart
           'Label': 'Étiquette',
           'Enter a name': 'Entrez un nom',
@@ -121,14 +124,17 @@ class FrenchTranslations extends Translations {
 //maths_challenge_tile.dart
           'Maths': 'Mathématiques',
           'Math problems': 'Problèmes mathématiques',
+
           'Easy': 'Facile',
           'Medium': 'Moyen',
           'Hard': 'Difficile',
+
           'mathDescription':
               'Vous devrez résoudre des problèmes mathématiques simples du niveau de difficulté choisi pour désactiver l\'alarme.',
           'Solve Maths questions': 'Résoudre des questions de mathématiques',
           'questions': 'questions',
           'question': 'question',
+
 
           'Pedometer': 'Podomètre',
           'Number of steps': 'Nombre de pas',
@@ -136,6 +142,7 @@ class FrenchTranslations extends Translations {
           'steps': 'pas',
           'pedometerDescription':
               'Avancez pour rejeter! Fixez un objectif en nombre de pas pour éteindre votre alarme, favorisant un début de journée actif et plein d\'énergie.',
+
 //note.dart
           'Enter a note': 'Entrer une note',
 // qr_bar_code_tile.dart
@@ -245,6 +252,14 @@ class FrenchTranslations extends Translations {
           'step4.5': '.',
           'step5':
               'Vous disposez désormais de la clé API Météo. Sélectionnez la clé et copiez-la.',
+
+          //ascending_volume.dart
+          'Volume will reach maximum in':
+              'Le volume atteindra son maximum dans',
+          'seconds': 'secondes',
+          'Adjust the volume range:': 'Ajustez la plage de volume:',
+          'Apply Gradient': 'Appliquer un dégradé',
+          'Ascending Volume': 'Volume croissant',
         },
       };
 }

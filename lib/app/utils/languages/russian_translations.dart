@@ -91,6 +91,8 @@ class RussianTranslations extends Translations {
           'Please allow camera access to scan QR codes.':
               'Пожалуйста, разрешите доступ к камере для сканирования QR-кодов.',
           'OK': 'Хорошо',
+
+ 
 //alarm_id_tile.dart
           'Success!': 'Успех!',
           'Alarm ID has been copied!': 'ID будильника скопирован!',
@@ -113,6 +115,7 @@ class RussianTranslations extends Translations {
           'Done': 'Готово',
           //delete_tile.dart
           'Delete After Goes Off': 'Удалить после срабатывания',
+
 //label_tile.dart
           'Label': 'Метка',
           'Enter a name': 'Введите имя',
@@ -202,6 +205,7 @@ class RussianTranslations extends Translations {
           'steps': 'шаги',
           'pedometerDescription':
               'Шагайте, чтобы отключить! Установите цель по количеству шагов, чтобы выключить будильник и активизировать начало дня с энергией.',
+
 //qr_challenge_view.dart
           'Scan your QR/Bar Code!': 'Отсканируйте свой QR-код / Штрих-код!',
           'Wrong Code Scanned!': 'Неправильный код отсканирован!',
@@ -245,6 +249,12 @@ class RussianTranslations extends Translations {
           'step4.4': 'My API',
           'step4.5': '.',
           'step5': 'Теперь у вас есть API. Выберите ключ и скопируйте его.',
+          //ascending_volume.dart
+          'Volume will reach maximum in': 'Объем достигнет максимума через',
+          'seconds': 'секунды',
+          'Adjust the volume range:': 'Отрегулируйте диапазон громкости:',
+          'Apply Gradient': 'Применить градиент',
+          'Ascending Volume': 'Восходящий объем',
         },
       };
 }

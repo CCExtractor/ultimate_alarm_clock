@@ -20,6 +20,21 @@ class ChooseRingtoneTile extends StatelessWidget {
   final double height;
   final double width;
 
+  void onTapPreview(String ringtonePath) async {
+    Utils.hapticFeedback();
+
+    // Stop the currently playing audio before starting the preview for the new audio
+    await AudioUtils.stopPreviewCustomSound();
+
+    if (controller.isPlaying.value) {
+      // If it was playing, reset the isPlaying state to false
+      controller.toggleIsPlaying();
+    } else {
+      await AudioUtils.previewCustomSound(ringtonePath);
+      controller.toggleIsPlaying(); // Toggle the isPlaying state
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -27,14 +42,12 @@ class ChooseRingtoneTile extends StatelessWidget {
         tileColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: Flexible(
-          child: Text(
-            'Choose Ringtone'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
-            ),
+        title: Text(
+          'Choose Ringtone'.tr,
+          style: TextStyle(
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
           ),
         ),
         onTap: () async {
@@ -105,30 +118,65 @@ class ChooseRingtoneTile extends StatelessWidget {
                                         controller.customRingtoneNames[index],
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      trailing: (controller.customRingtoneName
-                                                      .value ==
-                                                  controller
-                                                          .customRingtoneNames[
-                                                      index]) ||
-                                              (controller.customRingtoneNames[
-                                                      index] ==
-                                                  'Default'.tr)
-                                          ? null
-                                          : IconButton(
-                                              onPressed: () async {
-                                                await controller
-                                                    .deleteCustomRingtone(
-                                                  ringtoneName: controller
-                                                          .customRingtoneNames[
-                                                      index],
-                                                  ringtoneIndex: index,
-                                                );
-                                              },
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
+                                      trailing: Obx(
+                                        () => Wrap(
+                                          children: [
+                                            if (controller
+                                                    .customRingtoneName.value ==
+                                                controller
+                                                    .customRingtoneNames[index])
+                                              IconButton(
+                                                onPressed: () => onTapPreview(
+                                                    controller
+                                                            .customRingtoneNames[
+                                                        index]),
+                                                icon: Icon(
+                                                  (controller.isPlaying.value &&
+                                                          controller
+                                                                  .customRingtoneName
+                                                                  .value ==
+                                                              controller
+                                                                      .customRingtoneNames[
+                                                                  index])
+                                                      ? Icons.stop
+                                                      : Icons.play_arrow,
+                                                  color: (controller.isPlaying
+                                                              .value &&
+                                                          controller
+                                                                  .customRingtoneName
+                                                                  .value ==
+                                                              controller
+                                                                      .customRingtoneNames[
+                                                                  index])
+                                                      ? const Color.fromARGB(
+                                                          255,
+                                                          116,
+                                                          111,
+                                                          110) // Change this color to red
+                                                      : kprimaryColor,
+                                                ),
                                               ),
-                                            ),
+                                            if (controller.customRingtoneNames[
+                                                    index] !=
+                                                'Default'.tr)
+                                              IconButton(
+                                                onPressed: () async {
+                                                  await controller
+                                                      .deleteCustomRingtone(
+                                                    ringtoneName: controller
+                                                            .customRingtoneNames[
+                                                        index],
+                                                    ringtoneIndex: index,
+                                                  );
+                                                },
+                                                icon: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   );
                                 },

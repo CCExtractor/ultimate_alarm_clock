@@ -8,6 +8,7 @@ class GermanTranslations extends Translations {
           'Timer': 'Schaltuhr',
           'StopWatch': 'Stoppuhr',
 
+
           'Enable 24 Hour Format': '24-Stunden-Format aktivieren',
           'Enable Haptic Feedback': 'Haptisches Feedback aktivieren',
           'Enable Sorted Alarm List': 'Sortierte Weckerliste aktivieren',
@@ -91,6 +92,7 @@ class GermanTranslations extends Translations {
           'Please allow camera access to scan QR codes.':
               'Bitte erlauben Sie den Zugriff auf die Kamera, um QR-Codes zu scannen.',
           'OK': 'OK',
+
 //alarm_id_tile.dart
           'Success!': 'Erfolg!',
           'Alarm ID has been copied!': 'Alarm-ID wurde kopiert!',
@@ -140,6 +142,10 @@ class GermanTranslations extends Translations {
           'steps': 'Schritte',
           'pedometerDescription':
               'Schreiten Sie voran, um zu entlassen! Setzen Sie ein Schrittziel, um den Wecker auszuschalten und einen aktiven und energiegeladenen Start in den Tag zu fördern.',
+
+          'Solve Maths questions': 'Lösen Sie mathematische Fragen',
+          'questions': 'Fragen',
+          'question': 'Frage',
 //note.dart
           'Enter a note': 'Geben Sie eine Notiz ein',
 // qr_bar_code_tile.dart
@@ -170,6 +176,8 @@ class GermanTranslations extends Translations {
           'time': 'Mal',
 //'shared_alarm_tile.dart
           'Shared Alarm': 'Geteilter Alarm',
+
+          'Shared alarms': 'Geteilte Alarme',
           'sharedDescription':
               'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',
           'Understood': 'Verstanden',
@@ -249,6 +257,13 @@ class GermanTranslations extends Translations {
           'step4.5': '.',
           'step5':
               'Jetzt haben Sie den Wetter-API-Schlüssel. Wählen Sie den Schlüssel aus und kopieren Sie ihn.',
+
+          //ascending_volume.dart
+          'Volume will reach maximum in': 'Die Lautstärke erreicht ihr Maximum',
+          'seconds': 'sekunden',
+          'Adjust the volume range:': 'Passen Sie den Lautstärkebereich ans:',
+          'Apply Gradient': 'Farbverlauf anwenden',
+          'Ascending Volume': 'Aufsteigende Lautstärke',
         },
       };
 }

@@ -7,6 +7,7 @@ class SpanishTranslations extends Translations {
           'Alarm': 'Alarma',
           'Timer': 'Temporizador',
           'StopWatch': 'Cronómetro',
+
           'Enable 24 Hour Format': 'Habilitar formato de 24 horas',
           'Enable Haptic Feedback': 'Habilitar retroalimentación háptica',
           'Enable Sorted Alarm List': 'Habilitar lista de alarmas ordenada',
@@ -39,6 +40,8 @@ class SpanishTranslations extends Translations {
           'German': 'Alemán',
           'French': 'Francés',
           'Russian': 'Ruso',
+
+
           'No upcoming alarms!': '¡No hay alarmas próximas!',
           'Next alarm': 'Próxima alarma',
           'Show Motivational Quote': 'Mostrar cita motivadora',
@@ -91,6 +94,7 @@ class SpanishTranslations extends Translations {
               'Por favor, permita el acceso a la cámara para escanear códigos QR.',
           'OK': 'De \n acuerdo',
 
+
 //alarm_id_tile.dart
           'Success!': '¡Éxito!',
           'Alarm ID has been copied!': '¡Se ha copiado el ID de la alarma!',
@@ -111,8 +115,10 @@ class SpanishTranslations extends Translations {
           'Default': 'Predeterminado',
           'Upload Ringtone': 'Subir tono de llamada',
           'Done': 'Hecho',
+ 
           //delete_tile.dart
           'Delete After Goes Off': 'Eliminar después de que expire',
+
 //label_tile.dart
           'Label': 'Etiqueta',
           'Enter a name': 'Ingrese un nombre',
@@ -126,6 +132,10 @@ class SpanishTranslations extends Translations {
           'Easy': 'Fácil',
           'Medium': 'Medio',
           'Hard': 'Difícil',
+
+//maths_challenge_tile.dart
+          'Maths': 'Matemáticas',
+          'Math problems': 'Problemas matemáticos',
           'mathDescription':
               'Deberá resolver problemas matemáticos simples del nivel de dificultad elegido para desactivar la alarma.',
           'Solve Maths questions': 'Resolver preguntas de matemáticas',
@@ -138,8 +148,7 @@ class SpanishTranslations extends Translations {
           'step': 'paso',
           'steps': 'pasos',
           'pedometerDescription':
-              '¡Avance para despedir! Establezca una meta de pasos para apagar la alarma, promoviendo un comienzo del día activo y lleno de energía.',
-
+              '¡Avance para despedir! Establezca una meta de pasos para apagar la alarma, promoviendo un comienzo del día activo y lleno de energía.', 
 //note.dart
           'Enter a note': 'Ingrese una nota',
 // qr_bar_code_tile.dart
@@ -217,7 +226,7 @@ class SpanishTranslations extends Translations {
           'Start Challenge': 'Comenzar el desafío',
           'Dismiss': 'Descartar',
           'Exit Preview': 'Salir de la vista previa',
-          'Snooze': 'Siesta',
+          'Snooze': 'Siesta', 
           //utils.dart
           'Location Based': 'Basado en la ubicación',
           'Everyday': 'Todos los días',
@@ -248,6 +257,12 @@ class SpanishTranslations extends Translations {
           'step4.4': 'My API',
           'step4.5': '.',
           'step5': 'Ahora tienes la API. Seleccione la API y cópiela.',
+          //ascending_volume.dart
+          'Volume will reach maximum in': 'El volumen alcanzará el máximo en',
+          'seconds': 'segundos',
+          'Adjust the volume range:': 'Ajustar el rango de volumen:',
+          'Apply Gradient': 'Aplicar degradado',
+          'Ascending Volume': 'Volumen ascendente',
         },
       };
 }

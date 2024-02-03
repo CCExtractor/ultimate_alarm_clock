@@ -351,7 +351,10 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
+      volMax: 1.0,
+      volMin: 0.0,
       snoozeDuration: 0,
+      gradient: 1,
       label: '',
       isOneTime: false,
       deleteAfterGoesOff: false,

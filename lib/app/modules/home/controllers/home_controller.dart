@@ -532,9 +532,15 @@ class HomeController extends GetxController {
       Get.closeAllSnackbars();
     }
 
-    GetSnackBar snackbar = GetSnackBar(
-      message: 'Alarm deleted',
+    Get.snackbar(
+      'Alarm deleted',
+      'The alarm has been deleted.',
       duration: const Duration(seconds: 4),
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 15,
+      ),
       mainButton: TextButton(
         onPressed: () async {
           if (alarm.isSharedAlarmEnabled == true) {
@@ -546,10 +552,5 @@ class HomeController extends GetxController {
         child: const Text('Undo'),
       ),
     );
-
-    Get.showSnackbar(
-      snackbar,
-    );
   }
 }
-
