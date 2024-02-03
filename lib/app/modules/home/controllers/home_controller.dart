@@ -533,8 +533,8 @@ class HomeController extends GetxController {
     }
 
     Get.snackbar(
-      'Alarm deleted',
-      'The alarm has been deleted.',
+      'Alarm deleted'.tr,
+      'The alarm has been deleted'.tr,
       duration: const Duration(seconds: 4),
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.symmetric(
@@ -549,7 +549,7 @@ class HomeController extends GetxController {
             await IsarDb.addAlarm(alarmToDelete!);
           }
         },
-        child: const Text('Undo'),
+        child: Text('Undo'.tr),
       ),
     );
   }

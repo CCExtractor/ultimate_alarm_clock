@@ -8,7 +8,6 @@ class GermanTranslations extends Translations {
           'Timer': 'Schaltuhr',
           'StopWatch': 'Stoppuhr',
 
-
           'Enable 24 Hour Format': '24-Stunden-Format aktivieren',
           'Enable Haptic Feedback': 'Haptisches Feedback aktivieren',
           'Enable Sorted Alarm List': 'Sortierte Weckerliste aktivieren',
@@ -264,6 +263,9 @@ class GermanTranslations extends Translations {
           'Adjust the volume range:': 'Passen Sie den Lautstärkebereich ans:',
           'Apply Gradient': 'Farbverlauf anwenden',
           'Ascending Volume': 'Aufsteigende Lautstärke',
+          'Alarm deleted': 'Alarm gelöscht',
+          'Undo': 'Rückgängig machen',
+          'The alarm has been deleted': 'Der Alarm wurde gelöscht'
         },
       };
 }

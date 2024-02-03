@@ -135,7 +135,6 @@ class FrenchTranslations extends Translations {
           'questions': 'questions',
           'question': 'question',
 
-
           'Pedometer': 'Podomètre',
           'Number of steps': 'Nombre de pas',
           'step': 'étape',
@@ -260,6 +259,9 @@ class FrenchTranslations extends Translations {
           'Adjust the volume range:': 'Ajustez la plage de volume:',
           'Apply Gradient': 'Appliquer un dégradé',
           'Ascending Volume': 'Volume croissant',
+          'Alarm deleted': 'Alarme supprimée',
+          'The alarm has been deleted': "L'alarme a été supprimée",
+          'Undo': 'annuler',
         },
       };
 }

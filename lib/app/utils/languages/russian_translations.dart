@@ -92,7 +92,6 @@ class RussianTranslations extends Translations {
               'Пожалуйста, разрешите доступ к камере для сканирования QR-кодов.',
           'OK': 'Хорошо',
 
- 
 //alarm_id_tile.dart
           'Success!': 'Успех!',
           'Alarm ID has been copied!': 'ID будильника скопирован!',
@@ -255,6 +254,9 @@ class RussianTranslations extends Translations {
           'Adjust the volume range:': 'Отрегулируйте диапазон громкости:',
           'Apply Gradient': 'Применить градиент',
           'Ascending Volume': 'Восходящий объем',
+          'Alarm deleted': 'Будильник удален',
+          'The alarm has been deleted': 'Будильник удален',
+          'Undo': 'Отменить',
         },
       };
 }
