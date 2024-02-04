@@ -74,6 +74,8 @@ class GoogleSignIn extends StatelessWidget {
                 ],
               ),
             );
+          } else {
+            Get.snackbar("Error", "Sign-In attempt failed!");
           }
         } else {
           Get.defaultDialog(
@@ -86,10 +88,9 @@ class GoogleSignIn extends StatelessWidget {
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Column(
               children: [
-                 Text(
+                Text(
                     // 'Do you want to unlink your Google account?',
-                   'unlinkAccount'.tr
-                ),
+                    'unlinkAccount'.tr),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
@@ -158,8 +159,9 @@ class GoogleSignIn extends StatelessWidget {
                     Text(
                       (controller.isUserLoggedIn.value)
                           ?
-                      // 'Unlink ${controller.userModel!.email}'
-                      'Unlink @usermail'.trParams({'usermail' : controller.userModel!.email})
+                          // 'Unlink ${controller.userModel!.email}'
+                          'Unlink @usermail'.trParams(
+                              {'usermail': controller.userModel!.email})
                           : 'Sign-In with Google'.tr,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             overflow: TextOverflow.ellipsis,
@@ -189,7 +191,7 @@ class GoogleSignIn extends StatelessWidget {
                             ),
                             Column(
                               children: [
-                                 Text(
+                                Text(
                                   // 'Signing in is optional. It'
                                   // ' is only required for the'
                                   // ' functionalities that use'
@@ -205,7 +207,7 @@ class GoogleSignIn extends StatelessWidget {
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
-                                 Text(
+                                Text(
                                   // 'Collaborate with friends, family members,'
                                   // ' or colleagues to ensure that they'
                                   // ' wake up on time using shared alarms.',
@@ -220,7 +222,7 @@ class GoogleSignIn extends StatelessWidget {
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
-                                 Text(
+                                Text(
                                   // 'Access your alarms across multiple devices'
                                   // ' where the alarms are updated in'
                                   // ' real-time.',
@@ -235,7 +237,7 @@ class GoogleSignIn extends StatelessWidget {
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 ),
-                                 Text(
+                                Text(
                                   // 'We do not access,  use or sell any'
                                   // ' information, which you can verify by'
                                   // ' inspecting the source code.',
@@ -245,7 +247,7 @@ class GoogleSignIn extends StatelessWidget {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                 Text(
+                                Text(
                                   // 'All access is limited exclusively to'
                                   // ' provide the functionalities described'
                                   // ' above.',

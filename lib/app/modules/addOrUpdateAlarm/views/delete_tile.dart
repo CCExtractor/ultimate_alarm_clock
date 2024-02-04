@@ -20,7 +20,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
     // Check if using Firestore and the current user is the owner
     // and if not using, just show the tile
     bool isVisible = (controller.isSharedAlarmEnabled.value == true &&
-            controller.userModel?.id == controller.ownerId) ||
+            controller.userModel.value?.id == controller.ownerId) ||
         (controller.isSharedAlarmEnabled.value == false);
 
     return Column(

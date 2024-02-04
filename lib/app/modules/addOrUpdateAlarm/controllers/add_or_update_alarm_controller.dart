@@ -26,7 +26,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
 
-  late UserModel? userModel;
+  final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
@@ -309,7 +309,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
   createAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
-      alarmRecord = await FirestoreDb.addAlarm(userModel, alarmData);
+      alarmRecord = await FirestoreDb.addAlarm(userModel.value, alarmData);
     } else {
       alarmRecord = await IsarDb.addAlarm(alarmData);
     }
@@ -505,7 +505,8 @@ class AddOrUpdateAlarmController extends GetxController {
         await IsarDb.updateAlarm(alarmData);
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
-        await FirestoreDb.deleteAlarm(userModel, alarmRecord!.firestoreId!);
+        await FirestoreDb.deleteAlarm(
+            userModel.value, alarmRecord!.firestoreId!);
         createAlarm(alarmData);
       }
     }
@@ -521,12 +522,22 @@ class AddOrUpdateAlarmController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    userModel = homeController.userModel.value;
-    if (userModel != null) {
-      ownerId = userModel!.id;
-      ownerName = userModel!.fullName;
-      lastEditedUserId = userModel!.id;
+    userModel.value = homeController.userModel.value;
+    if (userModel.value != null) {
+      ownerId = userModel.value!.id;
+      ownerName = userModel.value!.fullName;
+      lastEditedUserId = userModel.value!.id;
     }
+
+    // listens to the userModel declared in homeController and updates on signup event
+    homeController.userModel.stream.listen((UserModel? user) {
+      userModel.value = user;
+      if (user != null) {
+        ownerId = user.id;
+        ownerName = user.fullName;
+        lastEditedUserId = user.id;
+      }
+    });
 
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
@@ -607,16 +618,16 @@ class AddOrUpdateAlarmController extends GetxController {
         );
         offsetDetails.value = alarmRecord!.offsetDetails!;
         offsetDuration.value =
-            alarmRecord!.offsetDetails![userModel!.id]['offsetDuration'];
+            alarmRecord!.offsetDetails![userModel.value!.id]['offsetDuration'];
         isOffsetBefore.value =
-            alarmRecord!.offsetDetails![userModel!.id]['isOffsetBefore'];
+            alarmRecord!.offsetDetails![userModel.value!.id]['isOffsetBefore'];
       }
 
       // Set lock only if its not locked
       if (isSharedAlarmEnabled.value == true &&
           alarmRecord!.mutexLock == false) {
         alarmRecord!.mutexLock = true;
-        alarmRecord!.lastEditedUserId = userModel!.id;
+        alarmRecord!.lastEditedUserId = userModel.value!.id;
         await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmRecord!);
         alarmRecord!.mutexLock = false;
         mutexLock.value = false;

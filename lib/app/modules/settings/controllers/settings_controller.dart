@@ -87,7 +87,7 @@ class SettingsController extends GetxController {
   loginWithGoogle() async {
     try {
       googleSignInAccount = await _googleSignIn.signIn();
-
+      print(googleSignInAccount);
       if (googleSignInAccount != null) {
         // Process successful sign-in
         String fullName = googleSignInAccount!.displayName.toString();
@@ -128,7 +128,7 @@ class SettingsController extends GetxController {
     } catch (e) {
       // Handle any other exceptions that may occur
       debugPrint(e.toString());
-      return false;
+      return null;
     }
   }
 
