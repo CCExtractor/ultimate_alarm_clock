@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/internacionalization.dart';
 import 'package:ultimate_alarm_clock/app/utils/languages/french_translations.dart';
 import 'package:ultimate_alarm_clock/app/utils/languages/german_translations.dart';
@@ -7,31 +8,37 @@ import 'package:ultimate_alarm_clock/app/utils/languages/spanish_translations.da
 //this is the dictionary for every text shown in app in 5 languages
 // english, german, russian, french, spanish
 
-class AppTranslations extends Translations{
+class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-    'en_US' : {
-      'Alarm' : 'Alarm',
-      'Timer' : 'Timer',
-      'Enable 24 Hour Format' : 'Enable 24 Hour Format',
-      'Enable Haptic Feedback' : 'Enable Haptic Feedback',
-      'Enable Sorted Alarm List' : 'Enable Sorted Alarm List',
-      //google_sign_in.dart
-      'Your account is now linked!' : 'Your account is now linked!',
-      'Are you sure?' : 'Are you sure?',
-      'unlinkAccount' : 'Do you want to unlink your Google account?',
-      'Unlink' : 'Unlink',
-      'Sign-In with Google' : 'Sign-In with Google',
-      'Unlink @usermail' : 'Unlink @usermail',
-      'Why do I have to sign in with Google?' : 'Why do I have to sign in with Google?',
-      'Sign-inDescription' : 'Signing in is optional. It is only required for the functionalities that use cloud services to work such as:',
-      'CollabDescription' : 'Collaborate with friends, family members, or colleagues to ensure that they wake up on time using shared alarms.',
-      'Syncing Across Devices' : 'Syncing Across Devices',
-      'AccessMultiple' : 'Access your alarms across multiple devices where the alarms are updated in real-time.',
-      'Your privacy' : 'Your privacy',
-      'NoAccessInfo' : 'We do not access,  use or sell any information, which you can verify by inspecting the source code.',
-      'LimitedAccess' : 'All access is limited exclusively to provide the functionalities described above.',
-      'Enable Light Mode' : 'Enable Light Mode',
+        'en_US': {
+          'Alarm': 'Alarm',
+          'Timer': 'Timer',
+          'Enable 24 Hour Format': 'Enable 24 Hour Format',
+          'Enable Haptic Feedback': 'Enable Haptic Feedback',
+          'Enable Sorted Alarm List': 'Enable Sorted Alarm List',
+          //google_sign_in.dart
+          'Your account is now linked!': 'Your account is now linked!',
+          'Are you sure?': 'Are you sure?',
+          'unlinkAccount': 'Do you want to unlink your Google account?',
+          'Unlink': 'Unlink',
+          'Sign-In with Google': 'Sign-In with Google',
+          'Unlink @usermail': 'Unlink @usermail',
+          'Why do I have to sign in with Google?':
+              'Why do I have to sign in with Google?',
+          'Sign-inDescription':
+              'Signing in is optional. It is only required for the functionalities that use cloud services to work such as:',
+          'CollabDescription':
+              'Collaborate with friends, family members, or colleagues to ensure that they wake up on time using shared alarms.',
+          'Syncing Across Devices': 'Syncing Across Devices',
+          'AccessMultiple':
+              'Access your alarms across multiple devices where the alarms are updated in real-time.',
+          'Your privacy': 'Your privacy',
+          'NoAccessInfo':
+              'We do not access,  use or sell any information, which you can verify by inspecting the source code.',
+          'LimitedAccess':
+              'All access is limited exclusively to provide the functionalities described above.',
+          'Enable Light Mode': 'Enable Light Mode',
 
       //home_view.dart texts
       'No upcoming alarms!' : 'No upcoming alarms!',

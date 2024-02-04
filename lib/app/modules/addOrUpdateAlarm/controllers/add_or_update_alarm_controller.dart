@@ -21,10 +21,12 @@ import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
+import '../../settings/controllers/settings_controller.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
+  SettingsController settingsController = Get.find<SettingsController>();
 
   late UserModel? userModel;
   var alarmID = const Uuid().v4();
@@ -40,6 +42,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final isShakeEnabled = false.obs;
   final timeToAlarm = ''.obs;
   final shakeTimes = 0.obs;
+  final isPedometerEnabled = false.obs;
+  final numberOfSteps = 0.obs;
   var ownerId = '';
   final mutexLock = false.obs;
   var lastEditedUserId = '';
@@ -80,6 +84,13 @@ class AddOrUpdateAlarmController extends GetxController {
   final deleteAfterGoesOff = false.obs;
 
   final RxBool showMotivationalQuote = false.obs;
+  final RxInt gradient = 0.obs;
+  final RxDouble selectedGradientDouble = 0.0.obs;
+  final RxDouble volMin = 0.0.obs;
+  final RxDouble volMax = 10.0.obs;
+
+  final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
+  final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -94,6 +105,15 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isDailySelected = false.obs;
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
+  RxBool isPlaying = false.obs; // Observable boolean to track playing state
+
+  void toggleIsPlaying() {
+    isPlaying.toggle();
+  }
+
+  void resetIsPlaying() {
+    isPlaying.value = false;
+  }
 
   void setIsDailySelected(bool value) {
     isDailySelected.value = value;
@@ -101,6 +121,10 @@ class AddOrUpdateAlarmController extends GetxController {
       isCustomSelected.value = false;
       isWeekdaysSelected.value = false;
     }
+  }
+
+  void setGradient(int value) {
+    this.gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -397,7 +421,7 @@ class AddOrUpdateAlarmController extends GetxController {
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: 'Camera Permission',
+        title: 'Camera Permission'.tr,
         titleStyle: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -408,7 +432,7 @@ class AddOrUpdateAlarmController extends GetxController {
           left: 10,
         ),
         contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
-        content: const Text('Please allow camera access to scan QR codes.'),
+        content: Text('Please allow camera access to scan QR codes.'.tr),
         onCancel: () {
           Get.back(); // Close the alert box
         },
@@ -424,8 +448,8 @@ class AddOrUpdateAlarmController extends GetxController {
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: const Text(
-            'Cancel',
+          child: Text(
+            'Cancel'.tr,
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () {
@@ -436,8 +460,8 @@ class AddOrUpdateAlarmController extends GetxController {
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: const Text(
-            'OK',
+          child: Text(
+            'OK'.tr,
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () async {
@@ -511,6 +535,9 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
+      gradient.value = alarmRecord!.gradient;
+      volMin.value = alarmRecord!.volMin;
+      volMax.value = alarmRecord!.volMax;
       isOneTime.value = alarmRecord!.isOneTime;
       deleteAfterGoesOff.value = alarmRecord!.deleteAfterGoesOff;
       label.value = alarmRecord!.label;
@@ -523,6 +550,22 @@ class AddOrUpdateAlarmController extends GetxController {
       selectedTime.value = Utils.timeOfDayToDateTime(
         Utils.stringToTimeOfDay(alarmRecord!.alarmTime),
       );
+      hours.value = selectedTime.value.hour;
+      minutes.value = selectedTime.value.minute;
+      
+      if (settingsController.is24HrsEnabled.value == false) {
+        if (selectedTime.value.hour == 0) {
+          hours.value = 12;
+          meridiemIndex.value = 0;
+        } else if (selectedTime.value.hour == 12) {
+          meridiemIndex.value = 1;
+        } else if (selectedTime.value.hour > 12) {
+          hours.value = selectedTime.value.hour - 12;
+          meridiemIndex.value = 1;
+        } else {
+          meridiemIndex.value = 0;
+        }
+      }
       // Shows the "Rings in" time
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
@@ -562,6 +605,9 @@ class AddOrUpdateAlarmController extends GetxController {
       isShakeEnabled.value = alarmRecord!.isShakeEnabled;
       shakeTimes.value = alarmRecord!.shakeTimes;
 
+      isPedometerEnabled.value = alarmRecord!.isPedometerEnabled;
+      numberOfSteps.value = alarmRecord!.numberOfSteps;
+
       isQrEnabled.value = alarmRecord!.isQrEnabled;
       qrValue.value = alarmRecord!.qrValue;
 
@@ -596,6 +642,23 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord!.mutexLock = false;
         mutexLock.value = false;
       }
+    } else {
+      hours.value = selectedTime.value.hour;
+      minutes.value = selectedTime.value.minute;
+
+      if (settingsController.is24HrsEnabled.value == false) {
+        if (selectedTime.value.hour == 0) {
+          hours.value = 12;
+          meridiemIndex.value = 0;
+        } else if (selectedTime.value.hour == 12) {
+          meridiemIndex.value = 1;
+        } else if (selectedTime.value.hour > 12) {
+          hours.value = selectedTime.value.hour - 12;
+          meridiemIndex.value = 1;
+        } else {
+          meridiemIndex.value = 0;
+        }
+      }
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
@@ -605,20 +668,22 @@ class AddOrUpdateAlarmController extends GetxController {
 
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
-    selectedPoint.listen((point) {
-      selectedPoint.value = point;
-      markersList.clear();
-      markersList.add(
-        Marker(
-          point: selectedPoint.value,
-          builder: (ctx) => const Icon(
-            Icons.location_on,
-            size: 35,
-            color: Colors.black,
+    selectedPoint.listen(
+      (point) {
+        selectedPoint.value = point;
+        markersList.clear();
+        markersList.add(
+          Marker(
+            point: selectedPoint.value,
+            builder: (ctx) => const Icon(
+              Icons.location_on,
+              size: 35,
+              color: Colors.black,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     // Updating UI to show time to alarm
 
@@ -673,6 +738,9 @@ class AddOrUpdateAlarmController extends GetxController {
   AlarmModel updatedAlarmModel() {
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
+      volMax: volMax.value,
+      volMin: volMin.value,
+      gradient: gradient.value,
       label: label.value,
       isOneTime: isOneTime.value,
       deleteAfterGoesOff: deleteAfterGoesOff.value,
@@ -708,6 +776,8 @@ class AddOrUpdateAlarmController extends GetxController {
       mathsDifficulty: mathsDifficulty.value.index,
       isShakeEnabled: isShakeEnabled.value,
       shakeTimes: shakeTimes.value,
+      isPedometerEnabled: isPedometerEnabled.value,
+      numberOfSteps: numberOfSteps.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
@@ -821,11 +891,21 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           } else {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
+              margin: EdgeInsets.all(15),
+              animationDuration: Duration(seconds: 1),
+              snackPosition: SnackPosition.BOTTOM,
+              barBlur: 15,
+              colorText: kprimaryTextColor,
             );
           }
         } else {
@@ -833,6 +913,11 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
+            margin: EdgeInsets.all(15),
+            animationDuration: Duration(seconds: 1),
+            snackPosition: SnackPosition.BOTTOM,
+            barBlur: 15,
+            colorText: kprimaryTextColor,
           );
         }
       }

@@ -26,12 +26,14 @@ class MathsChallenge extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Text(
-            'Maths'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+          Flexible(
+            child: Text(
+              'Maths'.tr,
+              style: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
             ),
           ),
           IconButton(
@@ -70,7 +72,7 @@ class MathsChallenge extends StatelessWidget {
             _presetToInitial(isMathsEnabled, sliderValue, noOfMathQues);
             return true;
           },
-          titlePadding: const EdgeInsets.symmetric(vertical: 20),
+          titlePadding: const EdgeInsets.only(top: 20),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
@@ -78,111 +80,113 @@ class MathsChallenge extends StatelessWidget {
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
             () => Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  Utils.getDifficultyLabel(controller.mathsDifficulty.value),
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-                Text(
-                  Utils.generateMathProblem(
-                    controller.mathsDifficulty.value,
-                  )[0],
-                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor.withOpacity(0.78)
-                            : kprimaryTextColor.withOpacity(0.78),
-                      ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: Slider.adaptive(
-                    min: 0.0,
-                    max: 2.0,
-                    thumbColor: kprimaryColor,
-                    activeColor: kprimaryColor,
-                    divisions: 2,
-                    value: controller.mathsSliderValue.value,
-                    onChanged: (newValue) {
-                      Utils.hapticFeedback();
-                      controller.mathsSliderValue.value = newValue;
-                      controller.mathsDifficulty.value =
-                          Utils.getDifficulty(newValue);
-                    },
-                  ),
+                Column(
+                  children: [
+                    Text(
+                      Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                          .tr,
+                      style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                    Text(
+                      Utils.generateMathProblem(
+                        controller.mathsDifficulty.value,
+                      )[0],
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor.withOpacity(0.78)
+                                : kprimaryTextColor.withOpacity(0.78),
+                          ),
+                    ),
+                    Slider.adaptive(
+                      min: 0.0,
+                      max: 2.0,
+                      thumbColor: kprimaryColor,
+                      activeColor: kprimaryColor,
+                      divisions: 2,
+                      value: controller.mathsSliderValue.value,
+                      onChanged: (newValue) {
+                        Utils.hapticFeedback();
+                        controller.mathsSliderValue.value = newValue;
+                        controller.mathsDifficulty.value =
+                            Utils.getDifficulty(newValue);
+                      },
+                    ),
+                  ],
                 ),
                 Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      NumberPicker(
-                        value: controller.numMathsQuestions.value,
-                        minValue: 1,
-                        maxValue: 100,
-                        onChanged: (value) {
-                          Utils.hapticFeedback();
-                          controller.numMathsQuestions.value = value;
-                        },
-                      ),
-                      Text(
-                        controller.numMathsQuestions.value > 1
-                            ? 'questions'.tr
-                            : 'question'.tr,
-                      ),
-                    ],
+                  () => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        NumberPicker(
+                          value: controller.numMathsQuestions.value,
+                          minValue: 1,
+                          maxValue: 100,
+                          onChanged: (value) {
+                            Utils.hapticFeedback();
+                            controller.numMathsQuestions.value = value;
+                          },
+                        ),
+                        Text(
+                          controller.numMathsQuestions.value > 1
+                              ? 'questions'.tr
+                              : 'question'.tr,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Save'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
-                              ),
-                        ),
-                        onPressed: () async {
-                          Utils.hapticFeedback();
-                          controller.isMathsEnabled.value = true;
-                          Get.back();
-                        },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(kprimaryColor),
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Cancel'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
-                              ),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.isMathsEnabled.value = false;
-                          Get.back();
-                        },
+                      child: Text(
+                        'Save'.tr,
+                        style:
+                            Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
                       ),
-                    ],
-                  ),
+                      onPressed: () async {
+                        Utils.hapticFeedback();
+                        controller.isMathsEnabled.value = true;
+                        Get.back();
+                      },
+                    ),
+                    SizedBox(
+                      width: width * 0.05,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(kprimaryColor),
+                      ),
+                      child: Text(
+                        'Cancel'.tr,
+                        style:
+                            Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
+                      ),
+                      onPressed: () {
+                        Utils.hapticFeedback();
+                        controller.isMathsEnabled.value = false;
+                        Get.back();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -197,6 +201,7 @@ class MathsChallenge extends StatelessWidget {
               () => Text(
                 controller.isMathsEnabled == true
                     ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                        .tr
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: (controller.isMathsEnabled.value == false)

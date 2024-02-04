@@ -31,12 +31,14 @@ class DeleteAfterGoesOff extends StatelessWidget {
             tileColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-            title: Text(
-              'Delete After Goes Off',
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+            title: Flexible(
+              child: Text(
+                'Delete After Goes Off'.tr,
+                style: TextStyle(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
               ),
             ),
             onTap: () {

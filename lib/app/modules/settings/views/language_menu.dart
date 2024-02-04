@@ -38,8 +38,9 @@ class _LanguageMenuState extends State<LanguageMenu> {
         padding: EdgeInsets.only(left: 30),
         child: Row(
           children: [
-            DropdownMenu(
-              menuStyle: MenuStyle(
+            Obx(
+              () => DropdownMenu(
+                menuStyle: MenuStyle(
                   backgroundColor: MaterialStatePropertyAll(
                     widget.themeController.isLightMode.value
                         ? kLightSecondaryBackgroundColor
@@ -48,18 +49,20 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 ),
                 inputDecorationTheme:
                     InputDecorationTheme(enabledBorder: InputBorder.none),
-                trailingIcon: Icon(Icons.arrow_drop_down_outlined,
-                    size: 40.0,
-                    color: widget.themeController.isLightMode.value
-                        ? kLightPrimaryTextColor.withOpacity(0.8)
-                        : kprimaryTextColor.withOpacity(0.8)),
+                trailingIcon: Icon(
+                  Icons.arrow_drop_down_outlined,
+                  size: 40.0,
+                  color: widget.themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.8)
+                      : kprimaryTextColor.withOpacity(0.8),
+                ),
                 width: widget.width * 0.78,
-                initialSelection: 'English',
-                label: const Text('Change Language'),
+                initialSelection: widget.controller.currentLanguage.value,
+                label: Text('Change Language'),
                 dropdownMenuEntries:
                     widget.controller.optionslocales.entries.map((e) {
                   return DropdownMenuEntry(
-                    value: e.key,
+                    value: "${e.key}",
                     label: "${e.value['description']}",
                     style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(
@@ -73,6 +76,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 onSelected: (newValue) {
                   widget.controller.updateLocale(newValue!);
                 },
+              ),
             ),
           ],
         ),
