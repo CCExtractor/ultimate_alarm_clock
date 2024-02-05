@@ -78,7 +78,6 @@ class SettingsController extends GetxController {
     _loadPreference();
   }
 
-
   // Logins user using GoogleSignIn
   loginWithGoogle() async {
     try {
