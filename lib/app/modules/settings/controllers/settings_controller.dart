@@ -34,7 +34,7 @@ class SettingsController extends GetxController {
   final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
   final RxBool didWeatherKeyError = false.obs;
   final RxBool showingCircularProgressIndicator = false.obs;
-  RxBool validate = false.obs;
+  RxBool isApiKeyEmpty = false.obs;
   final storage = Get.find<GetStorageProvider>();
   final RxString local = Get.locale.toString().obs;
   UserModel? userModel;
