@@ -21,10 +21,12 @@ import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
+import '../../settings/controllers/settings_controller.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
+  SettingsController settingsController = Get.find<SettingsController>();
 
   late UserModel? userModel;
   var alarmID = const Uuid().v4();
@@ -86,6 +88,9 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxDouble selectedGradientDouble = 0.0.obs;
   final RxDouble volMin = 0.0.obs;
   final RxDouble volMax = 10.0.obs;
+
+  final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
+  final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -416,7 +421,7 @@ class AddOrUpdateAlarmController extends GetxController {
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: 'Camera Permission',
+        title: 'Camera Permission'.tr,
         titleStyle: TextStyle(
           color: themeController.isLightMode.value
               ? kLightPrimaryTextColor
@@ -427,7 +432,7 @@ class AddOrUpdateAlarmController extends GetxController {
           left: 10,
         ),
         contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
-        content: const Text('Please allow camera access to scan QR codes.'),
+        content: Text('Please allow camera access to scan QR codes.'.tr),
         onCancel: () {
           Get.back(); // Close the alert box
         },
@@ -443,8 +448,8 @@ class AddOrUpdateAlarmController extends GetxController {
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: const Text(
-            'Cancel',
+          child: Text(
+            'Cancel'.tr,
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () {
@@ -455,8 +460,8 @@ class AddOrUpdateAlarmController extends GetxController {
           style: TextButton.styleFrom(
             backgroundColor: kprimaryColor,
           ),
-          child: const Text(
-            'OK',
+          child: Text(
+            'OK'.tr,
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () async {
@@ -545,6 +550,22 @@ class AddOrUpdateAlarmController extends GetxController {
       selectedTime.value = Utils.timeOfDayToDateTime(
         Utils.stringToTimeOfDay(alarmRecord!.alarmTime),
       );
+      hours.value = selectedTime.value.hour;
+      minutes.value = selectedTime.value.minute;
+      
+      if (settingsController.is24HrsEnabled.value == false) {
+        if (selectedTime.value.hour == 0) {
+          hours.value = 12;
+          meridiemIndex.value = 0;
+        } else if (selectedTime.value.hour == 12) {
+          meridiemIndex.value = 1;
+        } else if (selectedTime.value.hour > 12) {
+          hours.value = selectedTime.value.hour - 12;
+          meridiemIndex.value = 1;
+        } else {
+          meridiemIndex.value = 0;
+        }
+      }
       // Shows the "Rings in" time
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
@@ -621,6 +642,23 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord!.mutexLock = false;
         mutexLock.value = false;
       }
+    } else {
+      hours.value = selectedTime.value.hour;
+      minutes.value = selectedTime.value.minute;
+
+      if (settingsController.is24HrsEnabled.value == false) {
+        if (selectedTime.value.hour == 0) {
+          hours.value = 12;
+          meridiemIndex.value = 0;
+        } else if (selectedTime.value.hour == 12) {
+          meridiemIndex.value = 1;
+        } else if (selectedTime.value.hour > 12) {
+          hours.value = selectedTime.value.hour - 12;
+          meridiemIndex.value = 1;
+        } else {
+          meridiemIndex.value = 0;
+        }
+      }
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
@@ -630,20 +668,22 @@ class AddOrUpdateAlarmController extends GetxController {
 
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
-    selectedPoint.listen((point) {
-      selectedPoint.value = point;
-      markersList.clear();
-      markersList.add(
-        Marker(
-          point: selectedPoint.value,
-          builder: (ctx) => const Icon(
-            Icons.location_on,
-            size: 35,
-            color: Colors.black,
+    selectedPoint.listen(
+      (point) {
+        selectedPoint.value = point;
+        markersList.clear();
+        markersList.add(
+          Marker(
+            point: selectedPoint.value,
+            builder: (ctx) => const Icon(
+              Icons.location_on,
+              size: 35,
+              color: Colors.black,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     // Updating UI to show time to alarm
 

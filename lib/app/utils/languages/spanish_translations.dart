@@ -6,6 +6,7 @@ class SpanishTranslations extends Translations {
         'es_ES': {
           'Alarm': 'Alarma',
           'Timer': 'Temporizador',
+          'StopWatch': 'Cronómetro',
 
           'Enable 24 Hour Format': 'Habilitar formato de 24 horas',
           'Enable Haptic Feedback': 'Habilitar retroalimentación háptica',
@@ -33,6 +34,12 @@ class SpanishTranslations extends Translations {
           'LimitedAccess':
               'Todo el acceso está limitado exclusivamente para proporcionar las funcionalidades descritas anteriormente.',
           'Enable Light Mode': 'Habilitar modo claro',
+          'Change Language': 'Cambiar Idioma',
+          'English': 'Inglés',
+          'Spanish': 'Español',
+          'German': 'Alemán',
+          'French': 'Francés',
+          'Russian': 'Ruso',
 
           'No upcoming alarms!': '¡No hay alarmas próximas!',
           'Next alarm': 'Próxima alarma',
@@ -81,6 +88,11 @@ class SpanishTranslations extends Translations {
           'Automatic Cancellation': 'Cancelación automática',
           'Challenges': 'Desafíos',
           'Shared Alarm': 'Alarma compartida',
+          'Camera Permission': 'Permiso de cámara',
+          'Please allow camera access to scan QR codes.':
+              'Por favor, permita el acceso a la cámara para escanear códigos QR.',
+          'OK': 'De \n acuerdo',
+
 //alarm_id_tile.dart
           'Success!': '¡Éxito!',
           'Alarm ID has been copied!': '¡Se ha copiado el ID de la alarma!',
@@ -101,12 +113,24 @@ class SpanishTranslations extends Translations {
           'Default': 'Predeterminado',
           'Upload Ringtone': 'Subir tono de llamada',
           'Done': 'Hecho',
+
+          //delete_tile.dart
+          'Delete After Goes Off': 'Eliminar después de que expire',
+
 //label_tile.dart
           'Label': 'Etiqueta',
           'Enter a name': 'Ingrese un nombre',
           'Note': 'Nota',
           'noWhitespace':
               'Por favor, no ingrese espacios en blanco como primer carácter!',
+
+//maths_challenge_tile.dart
+          'Maths': 'Matemáticas',
+          'Math problems': 'Problemas matemáticos',
+          'Easy': 'Fácil',
+          'Medium': 'Medio',
+          'Hard': 'Difícil',
+
 //maths_challenge_tile.dart
           'Maths': 'Matemáticas',
           'Math problems': 'Problemas matemáticos',
@@ -115,6 +139,14 @@ class SpanishTranslations extends Translations {
           'Solve Maths questions': 'Resolver preguntas de matemáticas',
           'questions': 'preguntas',
           'question': 'pregunta',
+
+          // pedometer_challenge_tile.dart
+          'Pedometer': 'Podómetro',
+          'Number of steps': 'Numero de pasos',
+          'step': 'paso',
+          'steps': 'pasos',
+          'pedometerDescription':
+              '¡Avance para despedir! Establezca una meta de pasos para apagar la alarma, promoviendo un comienzo del día activo y lleno de energía.',
 //note.dart
           'Enter a note': 'Ingrese una nota',
 // qr_bar_code_tile.dart
@@ -187,6 +219,12 @@ class SpanishTranslations extends Translations {
 //shake_challenge_view.dart
           'Shake your phone!': '¡Agita tu teléfono!',
 //alarm_ring_view.dart
+          "You can't go back while the alarm is ringing":
+              "No puedes retroceder mientras suena la alarma",
+          'Start Challenge': 'Comenzar el desafío',
+          'Dismiss': 'Descartar',
+          'Exit Preview': 'Salir de la vista previa',
+          'Snooze': 'Siesta',
           //utils.dart
           'Location Based': 'Basado en la ubicación',
           'Everyday': 'Todos los días',
@@ -223,6 +261,9 @@ class SpanishTranslations extends Translations {
           'Adjust the volume range:': 'Ajustar el rango de volumen:',
           'Apply Gradient': 'Aplicar degradado',
           'Ascending Volume': 'Volumen ascendente',
+          'Alarm deleted': 'Alarma eliminada',
+          'Undo': 'Deshacer',
+          'The alarm has been deleted': 'La alarma ha sido eliminada'
         },
       };
 }
