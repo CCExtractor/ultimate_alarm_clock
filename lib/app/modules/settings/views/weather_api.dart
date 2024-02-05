@@ -35,6 +35,17 @@ class WeatherApi extends StatelessWidget {
               : ksecondaryBackgroundColor,
           title: 'API Key',
           titleStyle: Theme.of(context).textTheme.displaySmall,
+          onWillPop: () async {
+            Future.delayed(
+              const Duration(
+                milliseconds: 300,
+              ),
+              () {
+                controller.validate.value = false;
+              },
+            );
+            return true;
+          },
           content: Obx(
             () => Stack(
               alignment: Alignment.center,
