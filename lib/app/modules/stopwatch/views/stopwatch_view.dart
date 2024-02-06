@@ -52,9 +52,7 @@ class StopwatchView extends GetView<StopwatchController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 55,
-                  width: 70,
+                Expanded(
                   child: Center(
                     child: Text(
                       controller.result.split(':')[0],
@@ -72,9 +70,7 @@ class StopwatchView extends GetView<StopwatchController> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
-                  height: 55,
-                  width: 70,
+                Expanded(
                   child: Center(
                     child: Text(
                       controller.result.split(':')[1],
@@ -92,9 +88,7 @@ class StopwatchView extends GetView<StopwatchController> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
-                  height: 55,
-                  width: 70,
+                Expanded(
                   child: Center(
                     child: Text(
                       controller.result.split(':')[2],
