@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/std_time_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -15,13 +16,21 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   RxInt startTime = 0.obs;
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
+  RxBool isDeleteTimeMode = false.obs;
+  var newHrs = 0.obs, newMins = 0.obs, newSecs = 0.obs;
+  RxList stdTimesList = [
+    StandardTimeModel(hours: 00, minutes: 5, seconds: 00),
+    StandardTimeModel(hours: 00, minutes: 10, seconds: 00),
+    StandardTimeModel(hours: 00, minutes: 20, seconds: 00)
+  ].obs;
+  RxBool isStandardTimeSelected = false.obs;
   Rx<Timer?> countdownTimer = Rx<Timer?>(null);
   AlarmModel alarmRecord = Utils.genFakeAlarmModel();
   late int currentTimerIsarId;
-  var hours=0.obs, minutes=1.obs, seconds=0.obs;
-
+  var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
+  var stdHrs = 24.obs, stdMin = 60.obs, stdSec = 60.obs;
   final _secureStorageProvider = SecureStorageProvider();
-
+  var currentStandardTimeIndex = 0.obs;
   String strDigits(int n) => n.toString().padLeft(2, '0');
 
   @override
@@ -43,6 +52,35 @@ class TimerController extends GetxController with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.resumed) {
       loadTimerStateFromStorage();
+    }
+  }
+
+  void addStdTimes(StandardTimeModel time) {
+    stdTimesList.add(time);
+  }
+
+  bool checkStdList(StandardTimeModel time) {
+    for (int i = 0; i < stdTimesList.length; i++) {
+      if (stdTimesList[i].hours == time.hours &&
+          stdTimesList[i].minutes == time.minutes &&
+          stdTimesList[i].seconds == time.seconds) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void removeStdTime(int index) {
+    stdTimesList.removeAt(index);
+  }
+
+  void checkStandardTimeSelected() {
+    if (hours.value == stdHrs.value &&
+        minutes.value == stdMin.value &&
+        seconds.value == stdSec.value) {
+      isStandardTimeSelected.value = true;
+    } else {
+      isStandardTimeSelected.value = false;
     }
   }
 

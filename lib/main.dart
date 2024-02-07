@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
 import 'app/routes/app_pages.dart';
+
 Locale? loc;
 
 void main() async {
@@ -15,7 +16,7 @@ void main() async {
 
   await Firebase.initializeApp();
   await Get.putAsync(() => GetStorageProvider().init());
-  final storage=Get.find<GetStorageProvider>();
+  final storage = Get.find<GetStorageProvider>();
   loc = await storage.readLocale();
 
   AudioPlayer.global.setAudioContext(
