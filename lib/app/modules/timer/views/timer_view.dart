@@ -72,9 +72,7 @@ class TimerView extends GetView<TimerController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 55,
-                              width: 70,
+                            Expanded(
                               child: Center(
                                 child: Text(
                                   '$hours',
@@ -92,9 +90,7 @@ class TimerView extends GetView<TimerController> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
-                              height: 55,
-                              width: 70,
+                            Expanded(
                               child: Center(
                                 child: Text(
                                   '$minutes',
@@ -112,9 +108,7 @@ class TimerView extends GetView<TimerController> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
-                              height: 55,
-                              width: 70,
+                            Expanded(
                               child: Center(
                                 child: Text(
                                   '$seconds',
