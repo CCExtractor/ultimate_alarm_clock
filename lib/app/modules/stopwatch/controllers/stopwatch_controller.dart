@@ -48,7 +48,7 @@ class StopwatchController extends GetxController {
       isLapButtonEnabled = false; // Disable lap button temporarily
       _laps.add(_formattedElapsedTime());
       update();
-      print('Lap recorded: ${_formattedElapsedTime()}');
+      print('Lap recorded:${_formattedElapsedTime()}');
 
       // Allow lap button after a short delay (adjust as needed)
       Future.delayed(const Duration(milliseconds: 500), () {

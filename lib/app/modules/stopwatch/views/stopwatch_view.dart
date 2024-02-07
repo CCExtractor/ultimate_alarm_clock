@@ -73,7 +73,7 @@ class StopwatchView extends GetView<StopwatchController> {
                     return ListTile(
                       title: Text(
                           'Lap ${reversedIndex + 1}: ${controller.laps[reversedIndex]}'),
-                    );
+                     );
                   },
                 ),
               ),
