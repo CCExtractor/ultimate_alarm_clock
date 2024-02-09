@@ -714,26 +714,8 @@ class HomeView extends GetView<HomeController> {
                                           // Delete button
                                           Obx(
                                             () => IconButton(
-                                              onPressed: () async {
-                                                // Deleting the alarms
-                                                await controller.deleteAlarms();
-
-                                                // Closing the multiple select mode
-                                                controller.inMultipleSelectMode
-                                                    .value = false;
-                                                controller.isAnyAlarmHolded
-                                                    .value = false;
-                                                controller.isAllAlarmsSelected
-                                                    .value = false;
-                                                controller
-                                                    .numberOfAlarmsSelected
-                                                    .value = 0;
-                                                controller.selectedAlarmSet
-                                                    .clear();
-                                                // After deleting alarms, refreshing to schedule latest one
-                                                controller.refreshTimer = true;
-                                                controller
-                                                    .refreshUpcomingAlarms();
+                                              onPressed: (){
+                                                controller.showDeleteConfirmationDialog(context);
                                               },
                                               icon: const Icon(
                                                 Icons.delete,
