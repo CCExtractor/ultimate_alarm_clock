@@ -459,7 +459,7 @@ class WeatherTile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: width * 0.37,
+                                width: width * 0.4,
                                 child: TextButton(
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
@@ -473,7 +473,8 @@ class WeatherTile extends StatelessWidget {
                                           .textTheme
                                           .displaySmall!
                                           .copyWith(
-                                            color: themeController.isLightMode.value
+                                            color: themeController
+                                                    .isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : ksecondaryTextColor,
                                           ),
@@ -507,7 +508,8 @@ class WeatherTile extends StatelessWidget {
                                           .textTheme
                                           .displaySmall!
                                           .copyWith(
-                                            color: themeController.isLightMode.value
+                                            color: themeController
+                                                    .isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : kprimaryTextColor,
                                           ),

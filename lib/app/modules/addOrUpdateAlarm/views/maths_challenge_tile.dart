@@ -168,8 +168,11 @@ class MathsChallenge extends StatelessWidget {
                     ),
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kprimaryColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          themeController.isLightMode.value
+                              ? kLightPrimaryTextColor.withOpacity(0.5)
+                              : kprimaryTextColor.withOpacity(0.5),
+                        ),
                       ),
                       child: Text(
                         'Cancel'.tr,
@@ -177,7 +180,7 @@ class MathsChallenge extends StatelessWidget {
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
+                                      : kprimaryTextColor,
                                 ),
                       ),
                       onPressed: () {

@@ -117,7 +117,7 @@ class RussianTranslations extends Translations {
 
 //label_tile.dart
           'Label': 'Метка',
-          'Enter a name': 'Введите имя',
+          'Add a label': 'Добавить ярлык',
           'Note': 'Примечание',
           'noWhitespace':
               'Пожалуйста, не вводите пробел в качестве первого символа!',
@@ -133,7 +133,7 @@ class RussianTranslations extends Translations {
           'questions': 'вопросы',
           'question': 'вопрос',
 //note.dart
-          'Enter a note': 'Введите заметку',
+          'Add a note': 'Добавить заметку',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR-код / Штрих-код',
           'qrDescription':
