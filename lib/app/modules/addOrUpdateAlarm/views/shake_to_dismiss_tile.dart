@@ -25,7 +25,9 @@ class ShakeToDismiss extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Flexible(
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
             child: Text(
               'Shake to dismiss'.tr,
               style: TextStyle(
@@ -79,7 +81,7 @@ class ShakeToDismiss extends StatelessWidget {
             () => Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,7 +100,9 @@ class ShakeToDismiss extends StatelessWidget {
                           controller.shakeTimes.value = value;
                         },
                       ),
-                      Text(controller.shakeTimes.value > 1 ? 'times'.tr : 'time'.tr),
+                      Text(controller.shakeTimes.value > 1
+                          ? 'times'.tr
+                          : 'time'.tr),
                     ],
                   ),
                 ),

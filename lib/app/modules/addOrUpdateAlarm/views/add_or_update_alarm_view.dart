@@ -599,8 +599,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     .selectedTime.value.month,
                                                 controller
                                                     .selectedTime.value.day,
-                                                inputTimeController
-                                                    .convert24(controller.hours.value),
+                                                inputTimeController.convert24(
+                                                    controller.hours.value),
                                                 controller.minutes.value,
                                               );
                                               inputTimeController

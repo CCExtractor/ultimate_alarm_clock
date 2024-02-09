@@ -21,7 +21,9 @@ class LabelTile extends StatelessWidget {
       tileColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: Flexible(
+      title: FittedBox(
+        alignment: Alignment.centerLeft,
+        fit: BoxFit.scaleDown,
         child: Text(
           'Label'.tr,
           style: TextStyle(

@@ -26,7 +26,9 @@ class MathsChallenge extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Flexible(
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
             child: Text(
               'Maths'.tr,
               style: TextStyle(

@@ -41,7 +41,7 @@ class SnoozeDurationTile extends StatelessWidget {
             () => Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,10 +73,7 @@ class SnoozeDurationTile extends StatelessWidget {
                   ),
                   child: Text(
                     'Done'.tr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall!
-                        .copyWith(
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
                           color: themeController.isLightMode.value
                               ? kLightPrimaryTextColor
                               : ksecondaryTextColor,
@@ -92,7 +89,9 @@ class SnoozeDurationTile extends StatelessWidget {
         tileColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: Flexible(
+        title: FittedBox(
+          alignment: Alignment.centerLeft,
+          fit: BoxFit.scaleDown,
           child: Text(
             'Snooze Duration'.tr,
             style: TextStyle(

@@ -121,7 +121,9 @@ class RepeatTile extends StatelessWidget {
           () {
             bool anyDaySelected =
                 controller.repeatDays.any((daySelected) => daySelected);
-            return Flexible(
+            return FittedBox(
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.scaleDown,
               child: Text(
                 'Repeat'.tr,
                 style: TextStyle(

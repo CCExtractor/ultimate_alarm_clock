@@ -308,7 +308,9 @@ class WeatherTile extends StatelessWidget {
                     : ksecondaryBackgroundColor,
                 title: Row(
                   children: [
-                    Flexible(
+                    FittedBox(
+                      alignment: Alignment.centerLeft,
+                      fit: BoxFit.scaleDown,
                       child: Text(
                         'Weather Condition'.tr,
                         style: TextStyle(
@@ -466,7 +468,9 @@ class WeatherTile extends StatelessWidget {
                                       kprimaryColor,
                                     ),
                                   ),
-                                  child: Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
                                     child: Text(
                                       'Go to settings'.tr,
                                       style: Theme.of(context)
@@ -501,7 +505,9 @@ class WeatherTile extends StatelessWidget {
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                   ),
-                                  child: Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
                                     child: Text(
                                       'Cancel'.tr,
                                       style: Theme.of(context)

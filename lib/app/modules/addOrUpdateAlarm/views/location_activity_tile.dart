@@ -177,7 +177,9 @@ class LocationTile extends StatelessWidget {
       child: ListTile(
         title: Row(
           children: [
-            Flexible(
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
               child: Text(
                 'Location Based'.tr,
                 style: TextStyle(

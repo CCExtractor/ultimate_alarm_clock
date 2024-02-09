@@ -44,7 +44,7 @@ class ScreenActivityTile extends StatelessWidget {
             () => Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,10 +82,7 @@ class ScreenActivityTile extends StatelessWidget {
                   ),
                   child: Text(
                     'Done'.tr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall!
-                        .copyWith(
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
                           color: themeController.isLightMode.value
                               ? kLightPrimaryTextColor
                               : ksecondaryTextColor,
@@ -100,7 +97,9 @@ class ScreenActivityTile extends StatelessWidget {
       child: ListTile(
         title: Row(
           children: [
-            Flexible(
+            FittedBox(
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.scaleDown,
               child: Text(
                 'Screen Activity'.tr,
                 style: TextStyle(

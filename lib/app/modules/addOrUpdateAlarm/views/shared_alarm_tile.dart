@@ -181,7 +181,9 @@ class SharedAlarm extends StatelessWidget {
                                         kprimaryColor,
                                       ),
                                     ),
-                                    child: Flexible(
+                                    child: FittedBox(
+                                      alignment: Alignment.centerLeft,
+                                      fit: BoxFit.scaleDown,
                                       child: Text(
                                         'Go to settings'.tr,
                                         style: Theme.of(context)
@@ -218,7 +220,9 @@ class SharedAlarm extends StatelessWidget {
                                                 .withOpacity(0.5),
                                       ),
                                     ),
-                                    child: Flexible(
+                                    child: FittedBox(
+                                      alignment: Alignment.centerLeft,
+                                      fit: BoxFit.scaleDown,
                                       child: Text(
                                         'Cancel'.tr,
                                         style: Theme.of(context)
@@ -236,7 +240,6 @@ class SharedAlarm extends StatelessWidget {
                                       Utils.hapticFeedback();
                                       Get.back();
                                     },
-
                                   ),
                                 ),
                               ],
@@ -246,7 +249,9 @@ class SharedAlarm extends StatelessWidget {
                       ),
                     );
                   },
-                  title: Flexible(
+                  title: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Enable Shared Alarm'.tr,
                       style: TextStyle(
