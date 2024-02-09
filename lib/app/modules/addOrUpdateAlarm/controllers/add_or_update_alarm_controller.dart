@@ -79,6 +79,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
+  var previousRingtone='';
   final noteController = TextEditingController();
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
@@ -842,7 +843,7 @@ class AddOrUpdateAlarmController extends GetxController {
           RingtoneModel customRingtone = RingtoneModel(
             ringtoneName: customRingtoneName.value,
             ringtonePath: savedFilePath,
-            currentCounterOfUsage: 0,
+            currentCounterOfUsage: 1,
           );
           await IsarDb.addCustomRingtone(customRingtone);
         }
