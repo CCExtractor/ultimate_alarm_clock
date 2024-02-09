@@ -123,7 +123,7 @@ class SettingsController extends GetxController {
     } catch (e) {
       // Handle any other exceptions that may occur
       debugPrint(e.toString());
-      return false;
+      return null;
     }
   }
 

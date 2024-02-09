@@ -25,7 +25,8 @@ class SharedUsers extends StatelessWidget {
       () => Container(
         child: (controller.isSharedAlarmEnabled.value &&
                 controller.alarmRecord != null)
-            ? (controller.alarmRecord!.ownerId != controller.userModel!.id)
+            ? (controller.alarmRecord!.ownerId !=
+                    controller.userModel.value!.id)
                 ? ListTile(
                     title: Text(
                       'Alarm Owner'.tr,
@@ -66,7 +67,7 @@ class SharedUsers extends StatelessWidget {
 
                             return Obx(() {
                               if (controller.sharedUserIds.isEmpty) {
-                                return  Center(
+                                return Center(
                                   child: Text('No shared users!'.tr),
                                 );
                               }

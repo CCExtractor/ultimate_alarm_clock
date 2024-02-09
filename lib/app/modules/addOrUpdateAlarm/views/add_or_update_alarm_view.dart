@@ -151,8 +151,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                       onPressed: () async {
                         Utils.hapticFeedback();
-                        if (controller.userModel != null) {
-                          controller.offsetDetails[controller.userModel!.id] = {
+                        if (controller.userModel.value != null) {
+                          controller
+                              .offsetDetails[controller.userModel.value!.id] = {
                             'offsettedTime': Utils.timeOfDayToString(
                               TimeOfDay.fromDateTime(
                                 Utils.calculateOffsetAlarmTime(
