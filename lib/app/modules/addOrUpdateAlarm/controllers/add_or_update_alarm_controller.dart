@@ -28,7 +28,7 @@ class AddOrUpdateAlarmController extends GetxController {
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
 
-  late UserModel? userModel;
+  final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   var alarmID = const Uuid().v4();
   var homeController = Get.find<HomeController>();
   final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
@@ -79,6 +79,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
+  var previousRingtone='';
   final noteController = TextEditingController();
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
@@ -314,7 +315,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
   createAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
-      alarmRecord = await FirestoreDb.addAlarm(userModel, alarmData);
+      alarmRecord = await FirestoreDb.addAlarm(userModel.value, alarmData);
     } else {
       alarmRecord = await IsarDb.addAlarm(alarmData);
     }
@@ -414,8 +415,9 @@ class AddOrUpdateAlarmController extends GetxController {
     );
   }
 
-  requestQrPermission() async {
+  requestQrPermission(context) async {
     PermissionStatus cameraStatus = await Permission.camera.status;
+
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
         backgroundColor: themeController.isLightMode.value
@@ -444,25 +446,19 @@ class AddOrUpdateAlarmController extends GetxController {
             showQRDialog();
           }
         },
-        cancel: TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: kprimaryColor,
-          ),
-          child: Text(
-            'Cancel'.tr,
-            style: TextStyle(color: Colors.black),
-          ),
-          onPressed: () {
-            Get.back(); // Close the alert box
-          },
-        ),
+
         confirm: TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: kprimaryColor,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(kprimaryColor),
           ),
           child: Text(
-            'OK'.tr,
-            style: TextStyle(color: Colors.black),
+            'OK',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : ksecondaryTextColor,
+                ),
+
           ),
           onPressed: () async {
             Get.back(); // Close the alert box
@@ -472,6 +468,26 @@ class AddOrUpdateAlarmController extends GetxController {
               // Permission granted, proceed with QR code scanning
               showQRDialog();
             }
+          },
+        ),
+        cancel: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.5)
+                  : kprimaryTextColor.withOpacity(0.5),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
+          ),
+          onPressed: () {
+            Get.back(); // Close the alert box
           },
         ),
       );
@@ -510,7 +526,8 @@ class AddOrUpdateAlarmController extends GetxController {
         await IsarDb.updateAlarm(alarmData);
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
-        await FirestoreDb.deleteAlarm(userModel, alarmRecord!.firestoreId!);
+        await FirestoreDb.deleteAlarm(
+            userModel.value, alarmRecord!.firestoreId!);
         createAlarm(alarmData);
       }
     }
@@ -526,12 +543,22 @@ class AddOrUpdateAlarmController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    userModel = homeController.userModel.value;
-    if (userModel != null) {
-      ownerId = userModel!.id;
-      ownerName = userModel!.fullName;
-      lastEditedUserId = userModel!.id;
+    userModel.value = homeController.userModel.value;
+    if (userModel.value != null) {
+      ownerId = userModel.value!.id;
+      ownerName = userModel.value!.fullName;
+      lastEditedUserId = userModel.value!.id;
     }
+
+    // listens to the userModel declared in homeController and updates on signup event
+    homeController.userModel.stream.listen((UserModel? user) {
+      userModel.value = user;
+      if (user != null) {
+        ownerId = user.id;
+        ownerName = user.fullName;
+        lastEditedUserId = user.id;
+      }
+    });
 
     if (Get.arguments != null) {
       snoozeDuration.value = alarmRecord!.snoozeDuration;
@@ -628,16 +655,16 @@ class AddOrUpdateAlarmController extends GetxController {
         );
         offsetDetails.value = alarmRecord!.offsetDetails!;
         offsetDuration.value =
-            alarmRecord!.offsetDetails![userModel!.id]['offsetDuration'];
+            alarmRecord!.offsetDetails![userModel.value!.id]['offsetDuration'];
         isOffsetBefore.value =
-            alarmRecord!.offsetDetails![userModel!.id]['isOffsetBefore'];
+            alarmRecord!.offsetDetails![userModel.value!.id]['isOffsetBefore'];
       }
 
       // Set lock only if its not locked
       if (isSharedAlarmEnabled.value == true &&
           alarmRecord!.mutexLock == false) {
         alarmRecord!.mutexLock = true;
-        alarmRecord!.lastEditedUserId = userModel!.id;
+        alarmRecord!.lastEditedUserId = userModel.value!.id;
         await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmRecord!);
         alarmRecord!.mutexLock = false;
         mutexLock.value = false;
@@ -842,7 +869,7 @@ class AddOrUpdateAlarmController extends GetxController {
           RingtoneModel customRingtone = RingtoneModel(
             ringtoneName: customRingtoneName.value,
             ringtonePath: savedFilePath,
-            currentCounterOfUsage: 0,
+            currentCounterOfUsage: 1,
           );
           await IsarDb.addCustomRingtone(customRingtone);
         }

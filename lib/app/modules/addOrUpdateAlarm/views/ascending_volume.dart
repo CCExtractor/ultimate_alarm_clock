@@ -60,7 +60,7 @@ class AscendingVolumeTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    'Adjust the volume range:'.tr,
+                    'Adjust the volume range'.tr,
                     style: Theme.of(context).textTheme.displaySmall,
                     textAlign: TextAlign.center,
                   ),
@@ -97,11 +97,11 @@ class AscendingVolumeTile extends StatelessWidget {
                   ),
                   child: Text(
                     'Apply Gradient'.tr,
-                    style: TextStyle(
-                      color: themeController.isLightMode.value
-                          ? kLightSecondaryTextColor
-                          : ksecondaryTextColor,
-                    ),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          color: themeController.isLightMode.value
+                              ? kLightPrimaryTextColor
+                              : ksecondaryTextColor,
+                        ),
                   ),
                 ),
               ],

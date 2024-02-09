@@ -4,6 +4,8 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/ad
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
+import '../../../utils/utils.dart';
+
 class QuoteTile extends StatelessWidget {
   const QuoteTile({
     super.key,
@@ -39,6 +41,11 @@ class QuoteTile extends StatelessWidget {
           },
         ),
       ),
+      onTap: () {
+        Utils.hapticFeedback();
+        controller.showMotivationalQuote.value =
+            !controller.showMotivationalQuote.value;
+      },
     );
   }
 }

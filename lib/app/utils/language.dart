@@ -109,7 +109,7 @@ class AppTranslations extends Translations {
           'Done': 'Done',
           //label_tile.dart
           'Label': 'Label',
-          'Enter a name': 'Enter a name',
+          'Add a label': 'Add a label',
           'Note': 'Note',
           'noWhitespace': 'Please don\'t enter whitespace as first character!',
           //maths_challenge_tile.dart
@@ -121,7 +121,7 @@ class AppTranslations extends Translations {
           'questions': 'questions',
           'question': 'question',
           //note.dart
-          'Enter a note': 'Enter a note',
+          'Add a note': 'Add a note',
           // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR/Bar Code',
           'qrDescription':
@@ -239,3 +239,4 @@ class AppTranslations extends Translations {
         'es_ES': SpanishTranslations().keys['es_ES']!,
       };
 }
+

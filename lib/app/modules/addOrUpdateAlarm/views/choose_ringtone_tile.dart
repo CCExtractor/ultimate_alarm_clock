@@ -99,10 +99,33 @@ class ChooseRingtoneTile extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   return Obx(
                                     () => ListTile(
-                                      onTap: () {
+                                      onTap: () async {
+                                        controller.previousRingtone =
+                                            controller.customRingtoneName.value;
+
                                         controller.customRingtoneName.value =
                                             controller
                                                 .customRingtoneNames[index];
+
+                                        if (controller
+                                                .customRingtoneName.value !=
+                                            controller.previousRingtone) {
+                                          await AudioUtils
+                                              .updateRingtoneCounterOfUsage(
+                                            customRingtoneName: controller
+                                                .customRingtoneName.value,
+                                            counterUpdate:
+                                                CounterUpdate.increment,
+                                          );
+
+                                          await AudioUtils
+                                              .updateRingtoneCounterOfUsage(
+                                            customRingtoneName:
+                                                controller.previousRingtone,
+                                            counterUpdate:
+                                                CounterUpdate.decrement,
+                                          );
+                                        }
                                       },
                                       tileColor: controller
                                                   .customRingtoneName ==
@@ -208,10 +231,6 @@ class ChooseRingtoneTile extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () async {
                       Utils.hapticFeedback();
-                      await AudioUtils.updateRingtoneCounterOfUsage(
-                        customRingtoneName: controller.customRingtoneName.value,
-                        counterUpdate: CounterUpdate.increment,
-                      );
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(
