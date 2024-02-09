@@ -35,7 +35,11 @@ Before getting started, ensure you have the following prerequisites installed on
 
 6. **Documentation**: If your changes impact the user interface, configuration, or functionality, update the documentation to reflect the changes.
 
-7. **Commit**: Commit your changes with a clear and concise message.
+7. **Commit**:
+
+- **Activate pre-commit hooks (one-time process):** We strongly recommend activating the pre-commit hooks to ensure code consistency. Follow the instructions in the [Activating Pre-Commit Hooks](#activating-pre-commit-hooks) section. This is a one-time setup process, so you only need to do it once on your local machine.
+
+- Commit your changes with a clear and concise message:
 
     ```bash
     git commit -m "Add feature/fix: Describe your changes here"
@@ -52,6 +56,22 @@ Before getting started, ensure you have the following prerequisites installed on
 10. **Code Review**: Your PR will undergo code review. Make any necessary adjustments based on feedback.
 
 11. **Merge**: Once your PR is approved, it will be merged into the main project repository.
+
+## Activating Pre-Commit Hooks
+
+To ensure code consistency and improved code readability, we have implemented pre-commit hooks that automatically format your Dart code before each commit. To activate these hooks:
+
+1. **Make the hook script executable:**
+
+    ```bash
+    chmod +x .github/hooks/pre_commit.sh
+    ```
+
+2. **Create a symbolic link to the hook:**
+
+    ```bash
+    ln -s ../../.github/hooks/pre_commit.sh .git/hooks/pre-commit
+    ```
 
 ## Reporting Issues
 

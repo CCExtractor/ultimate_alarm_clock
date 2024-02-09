@@ -236,6 +236,7 @@ class SharedAlarm extends StatelessWidget {
                                       Utils.hapticFeedback();
                                       Get.back();
                                     },
+
                                   ),
                                 ),
                               ],

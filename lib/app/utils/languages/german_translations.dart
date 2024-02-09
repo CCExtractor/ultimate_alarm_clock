@@ -6,66 +6,59 @@ class GermanTranslations extends Translations {
         'de_DE': {
           'Alarm': 'Wecker',
           'Timer': 'Schaltuhr',
+          'StopWatch': 'Stoppuhr',
 
-          'Enable 24 Hour Format': '24-Stunden-Format aktivieren',
-          'Enable Haptic Feedback': 'Haptisches Feedback aktivieren',
-          'Enable Sorted Alarm List': 'Sortierte Weckerliste aktivieren',
-          // google_sign_in.dart
-          'Your account is now linked!': 'Ihr Konto ist jetzt verknüpft!',
-          'Are you sure?': 'Sind Sie sicher?',
-          'unlinkAccount': 'Möchten Sie Ihr Google-Konto wirklich entknüpfen?',
-          'Unlink': 'Entknüpfen',
-          'Sign-In with Google': 'Mit Google anmelden',
-          'Unlink @usermail': 'Entknüpfen von @usermail',
-          'Why do I have to sign in with Google?':
-              'Warum muss ich mich bei Google anmelden?',
-          'Sign-inDescription':
-              'Die Anmeldung ist optional. Sie ist nur erforderlich für Funktionen, die Cloud-Dienste nutzen, wie zum Beispiel:',
-          'CollabDescription':
-              'Zusammenarbeit mit Freunden, Familienmitgliedern oder Kollegen, um sicherzustellen, dass sie rechtzeitig aufwachen, indem geteilte Wecker verwendet werden.',
-          'Syncing Across Devices': 'Synchronisation über Geräte hinweg',
-          'AccessMultiple':
-              'Greifen Sie auf Ihre Wecker von mehreren Geräten aus zu, wo die Wecker in Echtzeit aktualisiert werden.',
-          'Your privacy': 'Ihre Privatsphäre',
-          'NoAccessInfo':
-              'Wir greifen nicht auf Informationen zu, verwenden sie nicht und verkaufen sie nicht, was Sie durch Überprüfen des Quellcodes überprüfen können.',
-          'LimitedAccess':
-              'Alle Zugriffe sind ausschließlich darauf beschränkt, die oben beschriebenen Funktionen bereitzustellen.',
-          'Enable Light Mode': 'Lichtmodus aktivieren',
+      'Enable 24 Hour Format' : '24-Stunden-Format aktivieren',
+      'Enable Haptic Feedback' : 'Haptisches Feedback aktivieren',
+      'Enable Sorted Alarm List' : 'Sortierte Weckerliste aktivieren',
+      // google_sign_in.dart
+      'Your account is now linked!' : 'Ihr Konto ist jetzt verknüpft!',
+      'Are you sure?' : 'Sind Sie sicher?',
+      'unlinkAccount' : 'Möchten Sie Ihr Google-Konto wirklich entknüpfen?',
+      'Unlink' : 'Entknüpfen',
+      'Sign-In with Google' : 'Mit Google anmelden',
+      'Unlink @usermail' : 'Entknüpfen von @usermail',
+      'Why do I have to sign in with Google?' : 'Warum muss ich mich bei Google anmelden?',
+      'Sign-inDescription' : 'Die Anmeldung ist optional. Sie ist nur erforderlich für Funktionen, die Cloud-Dienste nutzen, wie zum Beispiel:',
+      'CollabDescription' : 'Zusammenarbeit mit Freunden, Familienmitgliedern oder Kollegen, um sicherzustellen, dass sie rechtzeitig aufwachen, indem geteilte Wecker verwendet werden.',
+      'Syncing Across Devices' : 'Synchronisation über Geräte hinweg',
+      'AccessMultiple' : 'Greifen Sie auf Ihre Wecker von mehreren Geräten aus zu, wo die Wecker in Echtzeit aktualisiert werden.',
+      'Your privacy' : 'Ihre Privatsphäre',
+      'NoAccessInfo' : 'Wir greifen nicht auf Informationen zu, verwenden sie nicht und verkaufen sie nicht, was Sie durch Überprüfen des Quellcodes überprüfen können.',
+      'LimitedAccess' : 'Alle Zugriffe sind ausschließlich darauf beschränkt, die oben beschriebenen Funktionen bereitzustellen.',
+      'Enable Light Mode' : 'Lichtmodus aktivieren',
 
-          'No upcoming alarms!': 'Keine bevorstehenden Alarme',
-          'Next alarm': 'Nächster Alarm',
-          'Show Motivational Quote': 'Zeige motivierendes Zitat',
-          //home_view.dart
-          'About': 'Um',
-          'Settings': 'Einstellungen',
-          'v0.5.0': 'v0.5.0',
-          'Ultimate Alarm Clock': 'Ultimativer Wecker',
-          'Create alarm': 'Alarm erstellen',
-          'Join alarm': 'Alarm beitreten',
-          'Okay': 'Okay',
-          'You cannot join your own alarm!':
-              'Sie können Ihrem eigenen Alarm nicht beitreten!',
-          'An alarm with this ID doesn\'t exist!':
-              'Ein Alarm mit dieser ID existiert nicht!',
-          'Error!': 'Fehler!',
-          'Join': 'Verbinden',
-          'Enter Alarm ID': 'Alarm-ID eingeben.',
-          'Join an alarm': 'Alarm beitreten',
-          'Select alarms to delete': 'Wählen Sie zu löschende Wecker aus',
-          'No alarm selected': 'Kein Alarm ausgewählt',
-          '1 alarm selected': '1 Alarm ausgewählt',
-          ' alarms selected': 'Alarm ausgewählt',
-          'Add an alarm to get started!':
-              'Fügen Sie einen Alarm hinzu, um loszulegen!',
-          'Never': 'Niemals',
-          'One Time': 'Einmal',
-          'Preview Alarm': 'Vorschaualarm',
-          'Delete Alarm': 'Alarm löschen',
-          //about_view.dart texts
-          'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute':
-              'Dieses Projekt wurde ursprünglich im Rahmen des Google Summer of Code unter der Organisation CCExtractor entwickelt. Es ist kostenlos, der Quellcode ist verfügbar, und wir ermutigen Programmierer zur Mitarbeit.',
-          'Could not launch': 'Konnte nicht starten',
+      'No upcoming alarms!' : 'Keine bevorstehenden Alarme',
+      'Next alarm' : 'Nächster Alarm',
+      'Show Motivational Quote' : 'Zeige motivierendes Zitat',
+      //home_view.dart
+      'About' : 'Um',
+      'Settings' : 'Einstellungen',
+      'v0.5.0' : 'v0.5.0',
+      'Ultimate Alarm Clock' : 'Ultimativer Wecker',
+      'Create alarm' : 'Alarm erstellen',
+      'Join alarm' : 'Alarm beitreten',
+      'Okay' : 'Okay',
+      'You cannot join your own alarm!' : 'Sie können Ihrem eigenen Alarm nicht beitreten!',
+      'An alarm with this ID doesn\'t exist!' : 'Ein Alarm mit dieser ID existiert nicht!',
+      'Error!' : 'Fehler!',
+      'Join' : 'Verbinden',
+      'Enter Alarm ID' : 'Alarm-ID eingeben.',
+      'Join an alarm' : 'Alarm beitreten',
+      'Select alarms to delete' : 'Wählen Sie zu löschende Wecker aus',
+      'No alarm selected' : 'Kein Alarm ausgewählt',
+      '1 alarm selected' : '1 Alarm ausgewählt',
+      ' alarms selected' :  'Alarm ausgewählt',
+      'Add an alarm to get started!' : 'Fügen Sie einen Alarm hinzu, um loszulegen!',
+      'Never' : 'Niemals',
+      'One Time' : 'Einmal',
+      'Preview Alarm' : 'Vorschaualarm',
+      'Delete Alarm' : 'Alarm löschen',
+      'Are you sure you want to delete these alarms?' : 'Sind Sie sicher, dass Sie diese Wecker löschen möchten?',
+      'This action will permanently delete these alarms from your device.': 'Diese Aktion wird diese Wecker dauerhaft von Ihrem Gerät löschen.',
+      //about_view.dart texts
+      'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Dieses Projekt wurde ursprünglich im Rahmen des Google Summer of Code unter der Organisation CCExtractor entwickelt. Es ist kostenlos, der Quellcode ist verfügbar, und wir ermutigen Programmierer zur Mitarbeit.',
+      'Could not launch' : 'Konnte nicht starten',
 //add_or_update_alarm_view.dart
           'Discard Changes?': 'Änderungen verwerfen?',
           'unsavedChanges':
@@ -81,6 +74,11 @@ class GermanTranslations extends Translations {
           'Automatic Cancellation': 'Automatische Stornierung',
           'Challenges': 'Herausforderungen',
           'Shared Alarm': 'Geteilter Alarm',
+          'Camera Permission': 'Kameraberechtigung',
+          'Please allow camera access to scan QR codes.':
+              'Bitte erlauben Sie den Zugriff auf die Kamera, um QR-Codes zu scannen.',
+          'OK': 'OK',
+
 //alarm_id_tile.dart
           'Success!': 'Erfolg!',
           'Alarm ID has been copied!': 'Alarm-ID wurde kopiert!',
@@ -97,13 +95,17 @@ class GermanTranslations extends Translations {
           'Enabled': 'Aktiviert',
           'Off': 'Aus',
 //choose_ringtone_tile.dart
+
           'Choose Ringtone': 'Klingelton auswählen',
           'Default': 'Standard',
           'Upload Ringtone': 'Klingelton hochladen',
           'Done': 'Fertig',
+
+//delete_tile.dart
+          'Delete After Goes Off': 'Nach dem Ablauf löschen',
 //label_tile.dart
           'Label': 'Etikett',
-          'Enter a name': 'Geben Sie einen Namen ein',
+          'Add a label': 'Fügen Sie ein Etikett hinzu',
           'Note': 'Hinweis',
           'noWhitespace':
               'Bitte geben Sie kein Leerzeichen als ersten Zeichen ein!',
@@ -112,11 +114,26 @@ class GermanTranslations extends Translations {
           'Math problems': 'Mathematische Probleme',
           'mathDescription':
               'Sie müssen einfache mathematische Probleme der gewählten Schwierigkeitsstufe lösen, um den Alarm abzuschalten.',
+          'Easy': 'Leicht',
+          'Medium': 'Mittel',
+          'Hard': 'Schwer',
+          'Solve Maths questions': 'Lösen Sie mathematische Fragen',
+          'questions': 'Fragen',
+          'question': 'Frage',
+
+// pedometer_challenge_tile.dart
+          'Pedometer': 'Schrittzähler',
+          'Number of steps': 'Anzahl der Schritte',
+          'step': 'Schritt',
+          'steps': 'Schritte',
+          'pedometerDescription':
+              'Schreiten Sie voran, um zu entlassen! Setzen Sie ein Schrittziel, um den Wecker auszuschalten und einen aktiven und energiegeladenen Start in den Tag zu fördern.',
+
           'Solve Maths questions': 'Lösen Sie mathematische Fragen',
           'questions': 'Fragen',
           'question': 'Frage',
 //note.dart
-          'Enter a note': 'Geben Sie eine Notiz ein',
+          'Add a note': 'Füg ein Notiz hinzu',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR-/Strichcode',
           'qrDescription':
@@ -145,6 +162,7 @@ class GermanTranslations extends Translations {
           'time': 'Mal',
 //'shared_alarm_tile.dart
           'Shared Alarm': 'Geteilter Alarm',
+
           'Shared alarms': 'Geteilte Alarme',
           'sharedDescription':
               'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',
@@ -225,12 +243,16 @@ class GermanTranslations extends Translations {
           'step4.5': '.',
           'step5':
               'Jetzt haben Sie den Wetter-API-Schlüssel. Wählen Sie den Schlüssel aus und kopieren Sie ihn.',
+
           //ascending_volume.dart
           'Volume will reach maximum in': 'Die Lautstärke erreicht ihr Maximum',
           'seconds': 'sekunden',
           'Adjust the volume range:': 'Passen Sie den Lautstärkebereich ans:',
           'Apply Gradient': 'Farbverlauf anwenden',
           'Ascending Volume': 'Aufsteigende Lautstärke',
+          'Alarm deleted': 'Alarm gelöscht',
+          'Undo': 'Rückgängig machen',
+          'The alarm has been deleted': 'Der Alarm wurde gelöscht'
         },
       };
 }

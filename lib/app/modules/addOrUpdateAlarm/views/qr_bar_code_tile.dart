@@ -54,7 +54,7 @@ class QrBarCode extends StatelessWidget {
       ),
       onTap: () async {
         Utils.hapticFeedback();
-        await controller.requestQrPermission();
+        await controller.requestQrPermission(context);
       },
       trailing: InkWell(
         child: Wrap(

@@ -33,7 +33,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
                 : ksecondaryBackgroundColor,
             title: Flexible(
               child: Text(
-                'Delete After Goes Off',
+                'Delete After Goes Off'.tr,
                 style: TextStyle(
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor
