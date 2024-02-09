@@ -35,14 +35,25 @@ class WeatherApi extends StatelessWidget {
               : ksecondaryBackgroundColor,
           title: 'API Key',
           titleStyle: Theme.of(context).textTheme.displaySmall,
+          onWillPop: () async {
+            Future.delayed(
+              const Duration(
+                milliseconds: 300,
+              ),
+              () {
+                controller.isApiKeyEmpty.value = false;
+              },
+            );
+            return true;
+          },
           content: Obx(
             () => Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  // If the user hasn't clicked on the 'Save' or 'Update' button of
-                  // the dialog, or there is no error in the weather key, then
-                  // show the dialog
+                  // If the user hasn't clicked on the 'Save' or 'Update' button
+                  // of the dialog, or there is no error in the weather key,
+                  // then show the dialog
                   child: (controller.weatherKeyState.value !=
                               WeatherKeyState.saveAdded &&
                           controller.weatherKeyState.value !=
@@ -54,9 +65,9 @@ class WeatherApi extends StatelessWidget {
                                   obscureText: false,
                                   controller: controller.apiKey,
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                                    border: const OutlineInputBorder(),
                                     hintText: 'API Key',
-                                    errorText: controller.validate.value
+                                    errorText: controller.isApiKeyEmpty.value
                                         ? 'API Key cannot be empty'
                                         : null,
                                   ),
@@ -99,10 +110,10 @@ class WeatherApi extends StatelessWidget {
                                               .value = true;
 
                                           // Validation If String is empty
-                                          if (await controller
-                                              .apiKey.text.isEmpty) {
+                                          if (controller.apiKey.text.isEmpty) {
                                             // setState(() {
-                                            controller.validate.value = true;
+                                            controller.isApiKeyEmpty.value =
+                                                true;
                                             // });
                                             controller
                                                 .showingCircularProgressIndicator
@@ -111,10 +122,11 @@ class WeatherApi extends StatelessWidget {
                                           }
 
                                           // Reset state after getting error message
-                                          if (await controller
+                                          if (controller
                                               .apiKey.text.isNotEmpty) {
                                             // setState(() {
-                                            controller.validate.value = false;
+                                            controller.isApiKeyEmpty.value =
+                                                false;
                                             // });
                                           }
 
@@ -144,7 +156,8 @@ class WeatherApi extends StatelessWidget {
                                               controller.weatherKeyState.value =
                                                   WeatherKeyState.saveUpdated;
                                               controller.addWeatherState(
-                                                  'saveUpdated');
+                                                'saveUpdated',
+                                              );
                                             }
                                           } else {
                                             // If the API key is not valid
@@ -197,9 +210,10 @@ class WeatherApi extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 15.0),
+                                    vertical: 15.0,
+                                  ),
                                   child: Text(
-                                    "Error adding key!",
+                                    'Error adding key!',
                                     style: Theme.of(context)
                                         .textTheme
                                         .displaySmall,
@@ -301,7 +315,7 @@ class WeatherApi extends StatelessWidget {
           isLightMode: themeController.isLightMode.value,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: const EdgeInsets.only(left: 30, right: 30),
           child: Row(
             children: [
               Text(
@@ -354,7 +368,7 @@ class WeatherApi extends StatelessWidget {
                                   RichText(
                                     textAlign: TextAlign.justify,
                                     text: TextSpan(
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                       children: [
@@ -363,7 +377,7 @@ class WeatherApi extends StatelessWidget {
                                         ),
                                         TextSpan(
                                           text: 'step1.2'.tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -372,7 +386,7 @@ class WeatherApi extends StatelessWidget {
                                         ),
                                         TextSpan(
                                           text: 'step1.4'.tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -382,13 +396,13 @@ class WeatherApi extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   RichText(
                                     textAlign: TextAlign.justify,
                                     text: TextSpan(
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                       children: [
@@ -397,7 +411,7 @@ class WeatherApi extends StatelessWidget {
                                         ),
                                         TextSpan(
                                           text: 'step2.2'.tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -407,13 +421,13 @@ class WeatherApi extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   RichText(
                                     textAlign: TextAlign.justify,
                                     text: TextSpan(
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                       children: [
@@ -423,13 +437,13 @@ class WeatherApi extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   RichText(
                                     textAlign: TextAlign.justify,
                                     text: TextSpan(
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                       children: [
@@ -438,7 +452,7 @@ class WeatherApi extends StatelessWidget {
                                         ),
                                         TextSpan(
                                           text: 'step4.2'.tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -447,7 +461,7 @@ class WeatherApi extends StatelessWidget {
                                         ),
                                         TextSpan(
                                           text: 'step4.4'.tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -457,13 +471,13 @@ class WeatherApi extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   RichText(
                                     textAlign: TextAlign.justify,
                                     text: TextSpan(
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                       children: [
@@ -508,7 +522,7 @@ class WeatherApi extends StatelessWidget {
                   ),
                 },
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.arrow_forward_ios_sharp,
                 color: themeController.isLightMode.value
