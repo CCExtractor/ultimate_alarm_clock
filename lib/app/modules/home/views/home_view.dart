@@ -13,6 +13,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/home_controller.dart';
@@ -294,136 +295,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-      endDrawer: Obx(
-        () => Drawer(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
-          ),
-          backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
-          child: Column(
-            children: [
-              SizedBox(
-                height: height * 0.2,
-                child: DrawerHeader(
-                  decoration: const BoxDecoration(color: kLightSecondaryColor),
-                  child: Center(
-                    child: Row(
-                      children: [
-                        const Flexible(
-                          flex: 1,
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage(
-                              'assets/images/ic_launcher-playstore.png',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: width * 0.5,
-                                child: Text(
-                                  'Ultimate Alarm Clock'.tr,
-                                  softWrap: true,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                          color:
-                                              themeController.isLightMode.value
-                                                  ? kprimaryTextColor
-                                                  : ksecondaryTextColor,
-                                          fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              SizedBox(
-                                width: width * 0.5,
-                                child: Text(
-                                  'v0.5.0'.tr,
-                                  softWrap: true,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                          color:
-                                              themeController.isLightMode.value
-                                                  ? kprimaryTextColor
-                                                  : ksecondaryTextColor,
-                                          fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Utils.hapticFeedback();
-                  Get.back();
-                  Get.toNamed('/settings');
-                },
-                contentPadding: const EdgeInsets.only(left: 20, right: 44),
-                title: Text(
-                  'Settings'.tr,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor.withOpacity(0.8)
-                            : kprimaryTextColor.withOpacity(0.8),
-                      ),
-                ),
-                leading: Icon(
-                  Icons.settings,
-                  size: 26,
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.8)
-                      : kprimaryTextColor.withOpacity(0.8),
-                ),
-              ),
-              // LanguageMenu(),
-              Divider(
-                color: Colors.white,
-                indent: width * 0.01,
-                endIndent: width * 0.01,
-              ),
-              ListTile(
-                onTap: () {
-                  Utils.hapticFeedback();
-                  Get.back();
-                  Get.toNamed(Routes.ABOUT);
-                },
-                contentPadding: const EdgeInsets.only(left: 20, right: 44),
-                title: Text(
-                  'About'.tr,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor.withOpacity(0.8)
-                          : kprimaryTextColor.withOpacity(0.8)),
-                ),
-                leading: Icon(
-                  Icons.info_outline,
-                  size: 26,
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.8)
-                      : kprimaryTextColor.withOpacity(0.8),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      endDrawer: buildEndDrawer(context),
       appBar: null,
       body: SafeArea(
         child: Obx(
@@ -718,26 +590,8 @@ class HomeView extends GetView<HomeController> {
                                           // Delete button
                                           Obx(
                                             () => IconButton(
-                                              onPressed: () async {
-                                                // Deleting the alarms
-                                                await controller.deleteAlarms();
-
-                                                // Closing the multiple select mode
-                                                controller.inMultipleSelectMode
-                                                    .value = false;
-                                                controller.isAnyAlarmHolded
-                                                    .value = false;
-                                                controller.isAllAlarmsSelected
-                                                    .value = false;
-                                                controller
-                                                    .numberOfAlarmsSelected
-                                                    .value = 0;
-                                                controller.selectedAlarmSet
-                                                    .clear();
-                                                // After deleting alarms, refreshing to schedule latest one
-                                                controller.refreshTimer = true;
-                                                controller
-                                                    .refreshUpcomingAlarms();
+                                              onPressed: (){
+                                                controller.showDeleteConfirmationDialog(context);
                                               },
                                               icon: const Icon(
                                                 Icons.delete,

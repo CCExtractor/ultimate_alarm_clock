@@ -239,3 +239,4 @@ class AppTranslations extends Translations {
         'es_ES': SpanishTranslations().keys['es_ES']!,
       };
 }
+

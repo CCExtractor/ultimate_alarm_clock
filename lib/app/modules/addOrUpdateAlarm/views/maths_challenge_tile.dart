@@ -85,8 +85,8 @@ class MathsChallenge extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      Utils.getDifficultyLabel(
-                          controller.mathsDifficulty.value),
+                      Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                          .tr,
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
                     Text(
@@ -204,6 +204,7 @@ class MathsChallenge extends StatelessWidget {
               () => Text(
                 controller.isMathsEnabled == true
                     ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                        .tr
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: (controller.isMathsEnabled.value == false)
