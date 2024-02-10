@@ -52,7 +52,7 @@ class AlarmControlController extends GetxController {
     return latestAlarm;
   }
 
-  getNextAlarm() async {
+  getAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
@@ -193,8 +193,8 @@ class AlarmControlController extends GetxController {
       currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
       showButton.value = true;
       // If the alarm is set to NEVER repeat, then it will
-      // be chosen as the next alarm to ring by default as
-      // it would ring the next day
+      // be chosen as the  alarm to ring by default as
+      // it would ring the  day
       if (currentlyRingingAlarm.value.days
           .every((element) => element == false)) {
         currentlyRingingAlarm.value.isEnabled = false;
@@ -237,10 +237,10 @@ class AlarmControlController extends GetxController {
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
 
-    // Scheduling next alarm if it's not in preview mode
+    // Scheduling  alarm if it's not in preview mode
     if (Get.arguments == null) {
-      // Finding the next alarm to ring
-      AlarmModel latestAlarm = await getNextAlarm();
+      // Finding the  alarm to ring
+      AlarmModel latestAlarm = await getAlarm();
       TimeOfDay latestAlarmTimeOfDay =
           Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 
