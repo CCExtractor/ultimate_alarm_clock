@@ -36,6 +36,7 @@ class HomeController extends GetxController {
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
+  Timer? delayTimer;
   Timer _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
@@ -253,6 +254,7 @@ class HomeController extends GetxController {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
       // Cancel timer if we have to refresh
       if (refreshTimer == true && _timer.isActive) {
+        if (delayTimer != null) delayTimer?.cancel();
         _timer.cancel();
         refreshTimer = false;
       }
@@ -276,7 +278,6 @@ class HomeController extends GetxController {
           latestAlarm.days,
         );
         alarmTime.value = 'Rings in $timeToAlarm';
-
         // This function is necessary when alarms are deleted/enabled
         await scheduleNextAlarm(
           alarmRecord,
@@ -296,38 +297,39 @@ class HomeController extends GetxController {
 
           // Adding a delay till that difference between seconds upto the next
           // minute
-          await Future.delayed(delay);
+          delayTimer = Timer(delay, () {
 
-          // Update the value of timeToAlarm only once till it settles it's time
-          // with the upcoming alarm
-          // Doing this because of an bug :
-          // If we are not doing the below three lines of code the
-          // time is not updating for 2 min after running
-          // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
-          // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE
-          // MISCALCULATION FOR INITIAL MINUTES
-          // This is just to make sure that our calculated time-to-alarm is
-          // upto date with the real time for next alarm
-          timeToAlarm = Utils.timeUntilAlarm(
-            Utils.stringToTimeOfDay(latestAlarm.alarmTime),
-            latestAlarm.days,
-          );
-          alarmTime.value = 'Rings in $timeToAlarm';
-
-          // Running a timer of periodic one minute as it is now in sync with
-          // the current time
-          _timer = Timer.periodic(
-              Duration(
-                milliseconds: Utils.getMillisecondsToAlarm(
-                  DateTime.now(),
-                  DateTime.now().add(const Duration(minutes: 1)),
-                ),
-              ), (timer) {
+            // Update the value of timeToAlarm only once till it settles it's time
+            // with the upcoming alarm
+            // Doing this because of an bug :
+            // If we are not doing the below three lines of code the
+            // time is not updating for 2 min after running
+            // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
+            // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE
+            // MISCALCULATION FOR INITIAL MINUTES
+            // This is just to make sure that our calculated time-to-alarm is
+            // upto date with the real time for next alarm
             timeToAlarm = Utils.timeUntilAlarm(
               Utils.stringToTimeOfDay(latestAlarm.alarmTime),
               latestAlarm.days,
             );
             alarmTime.value = 'Rings in $timeToAlarm';
+
+            // Running a timer of periodic one minute as it is now in sync with
+            // the current time
+            _timer = Timer.periodic(
+                Duration(
+                  milliseconds: Utils.getMillisecondsToAlarm(
+                    DateTime.now(),
+                    DateTime.now().add(const Duration(minutes: 1)),
+                  ),
+                ), (timer) {
+              timeToAlarm = Utils.timeUntilAlarm(
+                Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+                latestAlarm.days,
+              );
+              alarmTime.value = 'Rings in $timeToAlarm';
+            });
           });
         } else {
           alarmTime.value = 'No upcoming alarms!';
@@ -567,7 +569,8 @@ class HomeController extends GetxController {
       content: Column(
         children: [
           Text(
-            'This action will permanently delete these alarms from your device.'.tr,
+            'This action will permanently delete these alarms from your device.'
+                .tr,
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
@@ -583,17 +586,13 @@ class HomeController extends GetxController {
                     Get.back();
                   },
                   style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
                   ),
                   child: Text(
                     'Cancel'.tr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall!
-                        .copyWith(
-                      color: kprimaryBackgroundColor,
-                    ),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          color: kprimaryBackgroundColor,
+                        ),
                   ),
                 ),
                 OutlinedButton(
@@ -613,7 +612,7 @@ class HomeController extends GetxController {
 
                     Get.offNamedUntil(
                       '/bottom-navigation-bar',
-                          (route) => route.settings.name == '/splash-screen',
+                      (route) => route.settings.name == '/splash-screen',
                     );
                   },
                   style: OutlinedButton.styleFrom(
@@ -626,14 +625,11 @@ class HomeController extends GetxController {
                   ),
                   child: Text(
                     'Okay'.tr,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall!
-                        .copyWith(
-                      color: themeController.isLightMode.value
-                          ? Colors.red.withOpacity(0.9)
-                          : Colors.red,
-                    ),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          color: themeController.isLightMode.value
+                              ? Colors.red.withOpacity(0.9)
+                              : Colors.red,
+                        ),
                   ),
                 ),
               ],
