@@ -36,7 +36,7 @@ class HomeController extends GetxController {
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
-  Timer? delayTimer;
+  Timer? _delayTimer;
   Timer _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
@@ -253,9 +253,9 @@ class HomeController extends GetxController {
     delayToSchedule = Timer(const Duration(seconds: 1), () async {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
       // Cancel timer if we have to refresh
-      if (refreshTimer == true && _timer.isActive) {
-        if (delayTimer != null) delayTimer?.cancel();
-        _timer.cancel();
+      if (refreshTimer == true) {
+        if (_timer.isActive) _timer.cancel();
+        if (_delayTimer != null) _delayTimer?.cancel();
         refreshTimer = false;
       }
 
@@ -297,8 +297,7 @@ class HomeController extends GetxController {
 
           // Adding a delay till that difference between seconds upto the next
           // minute
-          delayTimer = Timer(delay, () {
-
+          _delayTimer = Timer(delay, () {
             // Update the value of timeToAlarm only once till it settles it's time
             // with the upcoming alarm
             // Doing this because of an bug :

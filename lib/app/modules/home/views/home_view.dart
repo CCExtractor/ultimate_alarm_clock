@@ -1244,7 +1244,6 @@ class HomeView extends GetView<HomeController> {
                                                                                 (bool value) async {
                                                                               Utils.hapticFeedback();
                                                                               alarm.isEnabled = value;
-                                                                              print(alarm.isEnabled);
                                                                               if (alarm.isSharedAlarmEnabled == true) {
                                                                                 await FirestoreDb.updateAlarm(alarm.ownerId, alarm);
                                                                               } else {
