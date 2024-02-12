@@ -704,7 +704,7 @@ class HomeView extends GetView<HomeController> {
                                   alarms = alarms
                                       .where((alarm) => !alarm.isTimer)
                                       .toList();
-
+                                  controller.refreshTimer = true;
                                   controller.refreshUpcomingAlarms();
                                   if (alarms.isEmpty) {
                                     return Center(
