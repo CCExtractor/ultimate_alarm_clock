@@ -177,6 +177,21 @@ class SecureStorageProvider {
     );
   }
 
+  Future<void> writeTimerStartTimeInSeconds({
+    required int timerStartTimeInSeconds,
+  }) async {
+    await _secureStorage.write(
+      key: 'timer_start_time_in_seconds',
+      value: timerStartTimeInSeconds.toString(),
+    );
+  }
+
+  Future<int> readTimerStartTimeInSeconds() async {
+    String timerStartTime =
+        await _secureStorage.read(key: 'timer_start_time_in_seconds') ?? '-1';
+    return int.parse(timerStartTime);
+  }
+
   Future<void> removeRemainingTimeInSeconds() async {
     await _secureStorage.delete(key: 'remaining_time_in_seconds');
   }
