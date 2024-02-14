@@ -124,8 +124,9 @@ class WeatherApi extends StatelessWidget {
                                           }
 
                                           // Reset state after getting error message
-                                          if (controller
-                                              .apiKey.text.trim().isNotEmpty) {
+                                          if (controller.apiKey.text
+                                              .trim()
+                                              .isNotEmpty) {
                                             // setState(() {
                                             controller.isApiKeyEmpty.value =
                                                 false;
