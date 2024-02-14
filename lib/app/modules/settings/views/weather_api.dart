@@ -110,7 +110,9 @@ class WeatherApi extends StatelessWidget {
                                               .value = true;
 
                                           // Validation If String is empty
-                                          if (controller.apiKey.text.isEmpty) {
+                                          if (controller.apiKey.text
+                                              .trim()
+                                              .isEmpty) {
                                             // setState(() {
                                             controller.isApiKeyEmpty.value =
                                                 true;
@@ -123,7 +125,7 @@ class WeatherApi extends StatelessWidget {
 
                                           // Reset state after getting error message
                                           if (controller
-                                              .apiKey.text.isNotEmpty) {
+                                              .apiKey.text.trim().isNotEmpty) {
                                             // setState(() {
                                             controller.isApiKeyEmpty.value =
                                                 false;
