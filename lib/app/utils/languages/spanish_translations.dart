@@ -113,7 +113,9 @@ class SpanishTranslations extends Translations {
           'Default': 'Predeterminado',
           'Upload Ringtone': 'Subir tono de llamada',
           'Done': 'Hecho',
-
+          'Duplicate Ringtone': 'Tono duplicado',
+          'Choosen ringtone is already present':
+              'El tono de llamada elegido ya está presente',
           //delete_tile.dart
           'Delete After Goes Off': 'Eliminar después de que expire',
 

@@ -8,57 +8,69 @@ class GermanTranslations extends Translations {
           'Timer': 'Schaltuhr',
           'StopWatch': 'Stoppuhr',
 
-      'Enable 24 Hour Format' : '24-Stunden-Format aktivieren',
-      'Enable Haptic Feedback' : 'Haptisches Feedback aktivieren',
-      'Enable Sorted Alarm List' : 'Sortierte Weckerliste aktivieren',
-      // google_sign_in.dart
-      'Your account is now linked!' : 'Ihr Konto ist jetzt verknüpft!',
-      'Are you sure?' : 'Sind Sie sicher?',
-      'unlinkAccount' : 'Möchten Sie Ihr Google-Konto wirklich entknüpfen?',
-      'Unlink' : 'Entknüpfen',
-      'Sign-In with Google' : 'Mit Google anmelden',
-      'Unlink @usermail' : 'Entknüpfen von @usermail',
-      'Why do I have to sign in with Google?' : 'Warum muss ich mich bei Google anmelden?',
-      'Sign-inDescription' : 'Die Anmeldung ist optional. Sie ist nur erforderlich für Funktionen, die Cloud-Dienste nutzen, wie zum Beispiel:',
-      'CollabDescription' : 'Zusammenarbeit mit Freunden, Familienmitgliedern oder Kollegen, um sicherzustellen, dass sie rechtzeitig aufwachen, indem geteilte Wecker verwendet werden.',
-      'Syncing Across Devices' : 'Synchronisation über Geräte hinweg',
-      'AccessMultiple' : 'Greifen Sie auf Ihre Wecker von mehreren Geräten aus zu, wo die Wecker in Echtzeit aktualisiert werden.',
-      'Your privacy' : 'Ihre Privatsphäre',
-      'NoAccessInfo' : 'Wir greifen nicht auf Informationen zu, verwenden sie nicht und verkaufen sie nicht, was Sie durch Überprüfen des Quellcodes überprüfen können.',
-      'LimitedAccess' : 'Alle Zugriffe sind ausschließlich darauf beschränkt, die oben beschriebenen Funktionen bereitzustellen.',
-      'Enable Light Mode' : 'Lichtmodus aktivieren',
+          'Enable 24 Hour Format': '24-Stunden-Format aktivieren',
+          'Enable Haptic Feedback': 'Haptisches Feedback aktivieren',
+          'Enable Sorted Alarm List': 'Sortierte Weckerliste aktivieren',
+          // google_sign_in.dart
+          'Your account is now linked!': 'Ihr Konto ist jetzt verknüpft!',
+          'Are you sure?': 'Sind Sie sicher?',
+          'unlinkAccount': 'Möchten Sie Ihr Google-Konto wirklich entknüpfen?',
+          'Unlink': 'Entknüpfen',
+          'Sign-In with Google': 'Mit Google anmelden',
+          'Unlink @usermail': 'Entknüpfen von @usermail',
+          'Why do I have to sign in with Google?':
+              'Warum muss ich mich bei Google anmelden?',
+          'Sign-inDescription':
+              'Die Anmeldung ist optional. Sie ist nur erforderlich für Funktionen, die Cloud-Dienste nutzen, wie zum Beispiel:',
+          'CollabDescription':
+              'Zusammenarbeit mit Freunden, Familienmitgliedern oder Kollegen, um sicherzustellen, dass sie rechtzeitig aufwachen, indem geteilte Wecker verwendet werden.',
+          'Syncing Across Devices': 'Synchronisation über Geräte hinweg',
+          'AccessMultiple':
+              'Greifen Sie auf Ihre Wecker von mehreren Geräten aus zu, wo die Wecker in Echtzeit aktualisiert werden.',
+          'Your privacy': 'Ihre Privatsphäre',
+          'NoAccessInfo':
+              'Wir greifen nicht auf Informationen zu, verwenden sie nicht und verkaufen sie nicht, was Sie durch Überprüfen des Quellcodes überprüfen können.',
+          'LimitedAccess':
+              'Alle Zugriffe sind ausschließlich darauf beschränkt, die oben beschriebenen Funktionen bereitzustellen.',
+          'Enable Light Mode': 'Lichtmodus aktivieren',
 
-      'No upcoming alarms!' : 'Keine bevorstehenden Alarme',
-      'Next alarm' : 'Nächster Alarm',
-      'Show Motivational Quote' : 'Zeige motivierendes Zitat',
-      //home_view.dart
-      'About' : 'Um',
-      'Settings' : 'Einstellungen',
-      'v0.5.0' : 'v0.5.0',
-      'Ultimate Alarm Clock' : 'Ultimativer Wecker',
-      'Create alarm' : 'Alarm erstellen',
-      'Join alarm' : 'Alarm beitreten',
-      'Okay' : 'Okay',
-      'You cannot join your own alarm!' : 'Sie können Ihrem eigenen Alarm nicht beitreten!',
-      'An alarm with this ID doesn\'t exist!' : 'Ein Alarm mit dieser ID existiert nicht!',
-      'Error!' : 'Fehler!',
-      'Join' : 'Verbinden',
-      'Enter Alarm ID' : 'Alarm-ID eingeben.',
-      'Join an alarm' : 'Alarm beitreten',
-      'Select alarms to delete' : 'Wählen Sie zu löschende Wecker aus',
-      'No alarm selected' : 'Kein Alarm ausgewählt',
-      '1 alarm selected' : '1 Alarm ausgewählt',
-      ' alarms selected' :  'Alarm ausgewählt',
-      'Add an alarm to get started!' : 'Fügen Sie einen Alarm hinzu, um loszulegen!',
-      'Never' : 'Niemals',
-      'One Time' : 'Einmal',
-      'Preview Alarm' : 'Vorschaualarm',
-      'Delete Alarm' : 'Alarm löschen',
-      'Are you sure you want to delete these alarms?' : 'Sind Sie sicher, dass Sie diese Wecker löschen möchten?',
-      'This action will permanently delete these alarms from your device.': 'Diese Aktion wird diese Wecker dauerhaft von Ihrem Gerät löschen.',
-      //about_view.dart texts
-      'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Dieses Projekt wurde ursprünglich im Rahmen des Google Summer of Code unter der Organisation CCExtractor entwickelt. Es ist kostenlos, der Quellcode ist verfügbar, und wir ermutigen Programmierer zur Mitarbeit.',
-      'Could not launch' : 'Konnte nicht starten',
+          'No upcoming alarms!': 'Keine bevorstehenden Alarme',
+          'Next alarm': 'Nächster Alarm',
+          'Show Motivational Quote': 'Zeige motivierendes Zitat',
+          //home_view.dart
+          'About': 'Um',
+          'Settings': 'Einstellungen',
+          'v0.5.0': 'v0.5.0',
+          'Ultimate Alarm Clock': 'Ultimativer Wecker',
+          'Create alarm': 'Alarm erstellen',
+          'Join alarm': 'Alarm beitreten',
+          'Okay': 'Okay',
+          'You cannot join your own alarm!':
+              'Sie können Ihrem eigenen Alarm nicht beitreten!',
+          'An alarm with this ID doesn\'t exist!':
+              'Ein Alarm mit dieser ID existiert nicht!',
+          'Error!': 'Fehler!',
+          'Join': 'Verbinden',
+          'Enter Alarm ID': 'Alarm-ID eingeben.',
+          'Join an alarm': 'Alarm beitreten',
+          'Select alarms to delete': 'Wählen Sie zu löschende Wecker aus',
+          'No alarm selected': 'Kein Alarm ausgewählt',
+          '1 alarm selected': '1 Alarm ausgewählt',
+          ' alarms selected': 'Alarm ausgewählt',
+          'Add an alarm to get started!':
+              'Fügen Sie einen Alarm hinzu, um loszulegen!',
+          'Never': 'Niemals',
+          'One Time': 'Einmal',
+          'Preview Alarm': 'Vorschaualarm',
+          'Delete Alarm': 'Alarm löschen',
+          'Are you sure you want to delete these alarms?':
+              'Sind Sie sicher, dass Sie diese Wecker löschen möchten?',
+          'This action will permanently delete these alarms from your device.':
+              'Diese Aktion wird diese Wecker dauerhaft von Ihrem Gerät löschen.',
+          //about_view.dart texts
+          'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute':
+              'Dieses Projekt wurde ursprünglich im Rahmen des Google Summer of Code unter der Organisation CCExtractor entwickelt. Es ist kostenlos, der Quellcode ist verfügbar, und wir ermutigen Programmierer zur Mitarbeit.',
+          'Could not launch': 'Konnte nicht starten',
 //add_or_update_alarm_view.dart
           'Discard Changes?': 'Änderungen verwerfen?',
           'unsavedChanges':
@@ -100,7 +112,9 @@ class GermanTranslations extends Translations {
           'Default': 'Standard',
           'Upload Ringtone': 'Klingelton hochladen',
           'Done': 'Fertig',
-
+          'Duplicate Ringtone': 'Ringtone duplizieren',
+          'Choosen ringtone is already present':
+              'Der gewählte Klingelton ist bereits vorhanden',
 //delete_tile.dart
           'Delete After Goes Off': 'Nach dem Ablauf löschen',
 //label_tile.dart

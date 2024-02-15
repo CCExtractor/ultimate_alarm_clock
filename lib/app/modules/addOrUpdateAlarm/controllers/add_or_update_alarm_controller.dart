@@ -79,7 +79,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
-  var previousRingtone='';
+  var previousRingtone = '';
   final noteController = TextEditingController();
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
@@ -446,7 +446,6 @@ class AddOrUpdateAlarmController extends GetxController {
             showQRDialog();
           }
         },
-
         confirm: TextButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(kprimaryColor),
@@ -458,7 +457,6 @@ class AddOrUpdateAlarmController extends GetxController {
                       ? kLightPrimaryTextColor
                       : ksecondaryTextColor,
                 ),
-
           ),
           onPressed: () async {
             Get.back(); // Close the alert box
@@ -579,7 +577,7 @@ class AddOrUpdateAlarmController extends GetxController {
       );
       hours.value = selectedTime.value.hour;
       minutes.value = selectedTime.value.minute;
-      
+
       if (settingsController.is24HrsEnabled.value == false) {
         if (selectedTime.value.hour == 0) {
           hours.value = 12;
@@ -821,10 +819,24 @@ class AddOrUpdateAlarmController extends GetxController {
 
       if (result != null) {
         customRingtoneName.value = result.files.single.name;
-        customRingtoneNames.add(customRingtoneName.value);
-        return result;
+        if (customRingtoneNames.contains(customRingtoneName.value)) {
+          Get.snackbar(
+            'Duplicate Ringtone'.tr,
+            'Choosen ringtone is already present'.tr,
+            duration: const Duration(seconds: 2),
+            snackPosition: SnackPosition.BOTTOM,
+            barBlur: 15,
+            colorText: kprimaryTextColor,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 15,
+            ),
+          );
+        } else {
+          customRingtoneNames.add(customRingtoneName.value);
+          return result;
+        }
       }
-
       return null;
     } catch (e) {
       debugPrint(e.toString());
