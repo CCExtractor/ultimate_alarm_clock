@@ -525,7 +525,9 @@ class AddOrUpdateAlarmController extends GetxController {
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
-            userModel.value, alarmRecord!.firestoreId!);
+          userModel.value,
+          alarmRecord!.firestoreId!,
+        );
         createAlarm(alarmData);
       }
     }
