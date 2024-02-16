@@ -5,6 +5,8 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+import '../../../data/providers/secure_storage_provider.dart';
+
 class ThemeValueTile extends StatefulWidget {
   const ThemeValueTile({
     Key? key,
@@ -24,6 +26,33 @@ class ThemeValueTile extends StatefulWidget {
 }
 
 class _ThemeValueTileState extends State<ThemeValueTile> {
+    final _secureStorageProvider = SecureStorageProvider();
+    String appthem = '';
+@override
+  void initState() {
+    getAppTheme();
+        super.initState();
+  }
+
+  void getAppTheme()async{
+if(await _secureStorageProvider.readThemeValue() == AppTheme.system){
+ setState(() {
+    appthem = 'System Mode';
+ });
+}
+if(await _secureStorageProvider.readThemeValue() == AppTheme.light){
+  setState(() {
+    appthem = 'Light Mode';
+  });
+}
+if(await _secureStorageProvider.readThemeValue() == AppTheme.dark){
+  setState(() {
+    appthem = 'Dark Mode';
+  });
+}
+
+
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,9 +83,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
                     : kprimaryTextColor.withOpacity(0.8),
               ),
               width: widget.width * 0.78,
-              initialSelection: widget.themeController.isLightMode.value
-                  ? 'Light Mode'
-                  : 'Dark Mode',
+              initialSelection: appthem,
               label: Text('Select Theme'),
               dropdownMenuEntries: [
                 DropdownMenuEntry(
@@ -104,6 +131,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
                   Get.changeThemeMode(ThemeMode.dark);
                 }
                 Utils.hapticFeedback();
+                
               },
             ),
           ],
