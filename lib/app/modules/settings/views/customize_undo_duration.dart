@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 
 import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
@@ -9,14 +10,13 @@ import '../controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 class CustomizeUndoDuration extends StatelessWidget{
+  HomeController homeController = Get.find<HomeController>();
   CustomizeUndoDuration({
     super.key ,
-    required this.controller,
     required this.themeController,
     required this.height,
     required this.width,
   });
-  final SettingsController controller;
   final ThemeController themeController;
   final double width;
   final double height;
@@ -27,12 +27,12 @@ class CustomizeUndoDuration extends StatelessWidget{
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
-        duration = controller.duration.value;
+        duration = homeController.duration.value;
         Get.defaultDialog(
           onWillPop: () async {
             Get.back();
             // Resetting the value to its initial state
-            controller.duration.value = duration;
+            homeController.duration.value = duration;
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
@@ -45,20 +45,20 @@ class CustomizeUndoDuration extends StatelessWidget{
                 () => Column(
               children: [
                 Text(
-                  '${controller.duration.value} seconds'.tr,
+                  '${homeController.duration.value} seconds'.tr,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 Slider(
-                  value: controller.selecteddurationDouble.value,
+                  value: homeController.selecteddurationDouble.value,
                   onChanged: (double value) {
-                    controller.selecteddurationDouble.value = value;
-                    controller.duration.value = value.toInt();
+                    homeController.selecteddurationDouble.value = value;
+                    homeController.duration.value = value.toInt();
 
                   },
                   min: 0.0,
                   max: 20.0,
                   divisions: 20,
-                  label: controller.duration.value.toString(),
+                  label: homeController.duration.value.toString(),
                 ),
                 // Replace the volMin Slider with RangeSlider
 
@@ -89,40 +89,44 @@ class CustomizeUndoDuration extends StatelessWidget{
         decoration: Utils.getCustomTileBoxDecoration(
           isLightMode: themeController.isLightMode.value,
         ),
-        child: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: ListTile(
-            tileColor: themeController.isLightMode.value
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
-            title: Text(
-              'Undo Duration'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: ListTile(
+              tileColor: themeController.isLightMode.value
+                  ? kLightSecondaryBackgroundColor
+                  : ksecondaryBackgroundColor,
+              title: Text(
+                'Undo Duration'.tr,
+                style: TextStyle(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                  fontSize: 15
+                ),
               ),
-            ),
-            trailing: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Obx(
-                      () => Text(
-                    '${controller.duration.value.round().toInt()} seconds',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+              trailing: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Obx(
+                        () => Text(
+                      '${homeController.duration.value.round().toInt()} seconds',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                          fontSize: 13
+                      ),
                     ),
                   ),
-                ),
-                Icon(
-                  Icons.chevron_right,
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryDisabledTextColor
-                      : kprimaryDisabledTextColor,
-                ),
-              ],
+                  Icon(
+                    Icons.chevron_right,
+                    color: themeController.isLightMode.value
+                        ? kLightPrimaryDisabledTextColor
+                        : kprimaryDisabledTextColor,
+                  ),
+                ],
+              ),
             ),
           ),
         )

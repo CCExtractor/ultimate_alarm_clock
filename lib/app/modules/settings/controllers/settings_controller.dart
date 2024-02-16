@@ -39,9 +39,6 @@ class SettingsController extends GetxController {
   final RxString local = Get.locale.toString().obs;
   UserModel? userModel;
 
-  final RxInt duration = 0.obs;
-  final RxDouble selecteddurationDouble = 0.0.obs;
-
   final Map<String, dynamic> optionslocales = {
     'en_US': {
       'languageCode': 'en',

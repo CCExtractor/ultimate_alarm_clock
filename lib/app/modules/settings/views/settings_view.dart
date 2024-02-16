@@ -114,7 +114,6 @@ class SettingsView extends GetView<SettingsController> {
                 CustomizeUndoDuration(
                     width: width,
                     height: height,
-                  controller: controller,
                     themeController: controller.themeController
                 ),
                 const SizedBox(
