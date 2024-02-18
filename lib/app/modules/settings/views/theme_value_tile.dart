@@ -27,7 +27,7 @@ class ThemeValueTile extends StatefulWidget {
 
 class _ThemeValueTileState extends State<ThemeValueTile> {
     final _secureStorageProvider = SecureStorageProvider();
-    String appthem = '';
+    String appTheme = '';
 @override
   void initState() {
     getAppTheme();
@@ -37,17 +37,17 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
   void getAppTheme()async{
 if(await _secureStorageProvider.readThemeValue() == AppTheme.system){
  setState(() {
-    appthem = 'System Mode';
+    appTheme = 'System Mode';
  });
 }
 if(await _secureStorageProvider.readThemeValue() == AppTheme.light){
   setState(() {
-    appthem = 'Light Mode';
+    appTheme = 'Light Mode';
   });
 }
 if(await _secureStorageProvider.readThemeValue() == AppTheme.dark){
   setState(() {
-    appthem = 'Dark Mode';
+    appTheme = 'Dark Mode';
   });
 }
 
@@ -83,7 +83,7 @@ if(await _secureStorageProvider.readThemeValue() == AppTheme.dark){
                     : kprimaryTextColor.withOpacity(0.8),
               ),
               width: widget.width * 0.78,
-              initialSelection: appthem,
+              initialSelection: appTheme,
               label: Text('Select Theme'),
               dropdownMenuEntries: [
                 DropdownMenuEntry(
