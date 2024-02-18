@@ -16,7 +16,7 @@ class InputTimeController extends GetxController {
 
   void confirmTimeInput() {
     setTime();
-    changeDatePicker(); 
+    changeDatePicker();
   }
 
   @override
@@ -24,6 +24,14 @@ class InputTimeController extends GetxController {
     isTimePicker.value = true;
     selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
     isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+    inputHrsController.text = settingsController.is24HrsEnabled.value
+        ? selectedDateTime.value.hour.toString()
+        : (selectedDateTime.value.hour == 0
+            ? 12.toString()
+            : (selectedDateTime.value.hour > 12
+                ? (selectedDateTime.value.hour - 12).toString()
+                : selectedDateTime.value.hour.toString()));
+    inputMinutesController.text = selectedDateTime.value.minute.toString();
     super.onInit();
   }
 
@@ -36,14 +44,25 @@ class InputTimeController extends GetxController {
     isTimePicker.value = !isTimePicker.value;
   }
 
+  int convert24(int value) {
+    if (!settingsController.is24HrsEnabled.value) {
+      if (addOrUpdateAlarmController.meridiemIndex == 0) {
+        if (value == 12) {
+          value = value - 12;
+        }
+      } else {
+        if (value != 12) {
+          value = value + 12;
+        }
+      }
+    }
+    return value;
+  }
+
   void setTime() {
     try {
       int hour = int.parse(inputHrsController.text);
       if (!settingsController.is24HrsEnabled.value) {
-        if (hour == 0 && inputHrsController.text.length == 2) {
-          inputHrsController.text = '12';
-        }
-
         if (isAM.value) {
           if (hour == 12) {
             hour = hour - 12;
@@ -70,6 +89,26 @@ class InputTimeController extends GetxController {
       selectedDateTime.value =
           DateTime(year, month, day, time.hour, time.minute);
       addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
+
+      if (!settingsController.is24HrsEnabled.value) {
+        if (selectedDateTime.value.hour == 0) {
+          addOrUpdateAlarmController.hours.value = 12;
+        } else if (selectedDateTime.value.hour > 12) {
+          addOrUpdateAlarmController.hours.value =
+              (selectedDateTime.value.hour-12);
+        } else {
+          addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
+        }
+      } else {
+        addOrUpdateAlarmController.hours.value =
+            convert24(selectedDateTime.value.hour);
+      }
+      addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
+      if (selectedDateTime.value.hour >= 12) {
+        addOrUpdateAlarmController.meridiemIndex.value = 1;
+      } else {
+        addOrUpdateAlarmController.meridiemIndex.value = 0;
+      }
     } catch (e) {
       debugPrint(e.toString());
     }

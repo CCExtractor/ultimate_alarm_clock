@@ -20,7 +20,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
     // Check if using Firestore and the current user is the owner
     // and if not using, just show the tile
     bool isVisible = (controller.isSharedAlarmEnabled.value == true &&
-            controller.userModel?.id == controller.ownerId) ||
+            controller.userModel.value?.id == controller.ownerId) ||
         (controller.isSharedAlarmEnabled.value == false);
 
     return Column(
@@ -31,9 +31,11 @@ class DeleteAfterGoesOff extends StatelessWidget {
             tileColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
-            title: Flexible(
+            title: FittedBox(
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.scaleDown,
               child: Text(
-                'Delete After Goes Off',
+                'Delete After Goes Off'.tr,
                 style: TextStyle(
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor

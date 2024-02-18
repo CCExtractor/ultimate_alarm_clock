@@ -8,6 +8,7 @@ class FrenchTranslations extends Translations {
         'fr_FR': {
           'Alarm': 'Réveil',
           'Timer': 'Minuteur',
+          'StopWatch': 'Chronomètre',
           'Enable 24 Hour Format': 'Activer le format 24 heures',
           'Enable Haptic Feedback': 'Activer les commentaires haptiques',
           'Enable Sorted Alarm List': 'Activer la liste de réveils triée',
@@ -33,39 +34,46 @@ class FrenchTranslations extends Translations {
           'LimitedAccess':
               'Tout accès est limité exclusivement à la fourniture des fonctionnalités décrites ci-dessus.',
           'Enable Light Mode': 'Activer le mode clair',
+          'Change Language': 'Changer de langue',
+          'English': 'Anglais',
+          'Spanish': 'Espagnol',
+          'German': 'Allemand',
+          'French': 'Français',
+          'Russian': 'Russe',
 
-          'No upcoming alarms!': 'Pas d\'alarmes à venir !',
-          'Next alarm': 'Prochain réveil',
-          'Show Motivational Quote': 'Afficher une citation motivante',
-          //home_view.dart
-          'About': 'À propos',
-          'Settings': 'Paramètres',
-          'v0.5.0': 'v0.5.0',
-          'Ultimate Alarm Clock': 'Réveil Ultime',
-          'Create alarm': 'Créer un réveil',
-          'Join alarm': 'Rejoindre un réveil',
-          'Okay': 'D\'accord',
-          'You cannot join your own alarm!':
-              'Vous ne pouvez pas rejoindre votre propre réveil !',
-          'An alarm with this ID doesn\'t exist!':
-              'Un réveil avec cet identifiant n\'existe pas !',
-          'Error!': 'Erreur !',
-          'Join': 'Rejoindre',
-          'Enter Alarm ID': 'Entrer l\'identifiant du réveil',
-          'Join an alarm': 'Rejoindre un réveil',
-          'Select alarms to delete': 'Sélectionnez les réveils à supprimer',
-          'No alarm selected': 'Aucun réveil sélectionné',
-          '1 alarm selected': '1 réveil sélectionné',
-          ' alarms selected': ' réveils sélectionnés',
-          'Add an alarm to get started!': 'Ajoutez un réveil pour commencer !',
-          'Never': 'Jamais',
-          'One Time': 'Une fois',
-          'Preview Alarm': 'Aperçu du réveil',
-          'Delete Alarm': 'Supprimer le réveil',
-          //about_view.dart texts
-          'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute':
-              'Ce projet a été initialement développé dans le cadre du Google Summer of Code sous l\'organisation CCExtractor. Il est gratuit, le code source est disponible et nous encourageons les programmeurs à contribuer.',
-          'Could not launch': 'Impossible de lancer',
+
+  'No upcoming alarms!' : 'Pas d\'alarmes à venir !',
+  'Next alarm' : 'Prochain réveil',
+  'Show Motivational Quote' : 'Afficher une citation motivante',
+  //home_view.dart
+  'About' : 'À propos',
+  'Settings' : 'Paramètres',
+  'v0.5.0' : 'v0.5.0',
+  'Ultimate Alarm Clock' : 'Réveil Ultime',
+  'Create alarm' : 'Créer un réveil',
+  'Join alarm' : 'Rejoindre un réveil',
+  'Okay' : 'D\'accord',
+  'You cannot join your own alarm!' : 'Vous ne pouvez pas rejoindre votre propre réveil !',
+  'An alarm with this ID doesn\'t exist!' : 'Un réveil avec cet identifiant n\'existe pas !',
+  'Error!' : 'Erreur !',
+  'Join' : 'Rejoindre',
+  'Enter Alarm ID' : 'Entrer l\'identifiant du réveil',
+  'Join an alarm' : 'Rejoindre un réveil',
+  'Select alarms to delete' : 'Sélectionnez les réveils à supprimer',
+  'No alarm selected' : 'Aucun réveil sélectionné',
+  '1 alarm selected' : '1 réveil sélectionné',
+  ' alarms selected' : ' réveils sélectionnés',
+  'Add an alarm to get started!' : 'Ajoutez un réveil pour commencer !',
+  'Never' : 'Jamais',
+  'One Time' : 'Une fois',
+  'Preview Alarm' : 'Aperçu du réveil',
+  'Delete Alarm' : 'Supprimer le réveil',
+   'Are you sure you want to delete these alarms?': 'Êtes-vous sûr(e) de vouloir supprimer ces alarmes ?',
+    'This action will permanently delete these alarms from your device.': 'Cette action supprimera définitivement ces alarmes de votre appareil.',
+
+  //about_view.dart texts
+  'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Ce projet a été initialement développé dans le cadre du Google Summer of Code sous l\'organisation CCExtractor. Il est gratuit, le code source est disponible et nous encourageons les programmeurs à contribuer.',
+  'Could not launch' : 'Impossible de lancer',
 //add_or_update_alarm_view.dart
           'Discard Changes?': 'Ignorer les modifications ?',
           'unsavedChanges':
@@ -81,6 +89,10 @@ class FrenchTranslations extends Translations {
           'Automatic Cancellation': 'Annulation automatique',
           'Challenges': 'Défis',
           'Shared Alarm': 'Alarme partagée',
+          'Camera Permission': 'Autorisation de la caméra',
+          'Please allow camera access to scan QR codes.':
+              'Veuillez autoriser l\'accès à la caméra pour scanner les codes QR.',
+          'OK': "D'accord",
 //alarm_id_tile.dart
           'Success!': 'Succès !',
           'Alarm ID has been copied!': "L'ID de l'alarme a été copié !",
@@ -101,22 +113,39 @@ class FrenchTranslations extends Translations {
           'Default': 'Par défaut',
           'Upload Ringtone': 'Télécharger une sonnerie',
           'Done': 'Terminé',
+//delete_tile.dart
+          'Delete After Goes Off': 'Supprimer après la fin',
+
 //label_tile.dart
           'Label': 'Étiquette',
           'Enter a name': 'Entrez un nom',
+          'Add a label': 'Ajouter une étiquette',
           'Note': 'Note',
           'noWhitespace':
               'Veuillez ne pas entrer d\'espace en tant que premier caractère !',
 //maths_challenge_tile.dart
           'Maths': 'Mathématiques',
           'Math problems': 'Problèmes mathématiques',
+
+          'Easy': 'Facile',
+          'Medium': 'Moyen',
+          'Hard': 'Difficile',
+
           'mathDescription':
               'Vous devrez résoudre des problèmes mathématiques simples du niveau de difficulté choisi pour désactiver l\'alarme.',
           'Solve Maths questions': 'Résoudre des questions de mathématiques',
           'questions': 'questions',
           'question': 'question',
+
+          'Pedometer': 'Podomètre',
+          'Number of steps': 'Nombre de pas',
+          'step': 'étape',
+          'steps': 'pas',
+          'pedometerDescription':
+              'Avancez pour rejeter! Fixez un objectif en nombre de pas pour éteindre votre alarme, favorisant un début de journée actif et plein d\'énergie.',
+
 //note.dart
-          'Enter a note': 'Entrer une note',
+          'Add a note': 'Ajouter une note',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR/Code-barres',
           'qrDescription':
@@ -224,6 +253,7 @@ class FrenchTranslations extends Translations {
           'step4.5': '.',
           'step5':
               'Vous disposez désormais de la clé API Météo. Sélectionnez la clé et copiez-la.',
+
           //ascending_volume.dart
           'Volume will reach maximum in':
               'Le volume atteindra son maximum dans',
@@ -231,6 +261,9 @@ class FrenchTranslations extends Translations {
           'Adjust the volume range:': 'Ajustez la plage de volume:',
           'Apply Gradient': 'Appliquer un dégradé',
           'Ascending Volume': 'Volume croissant',
+          'Alarm deleted': 'Alarme supprimée',
+          'The alarm has been deleted': "L'alarme a été supprimée",
+          'Undo': 'annuler',
         },
       };
 }

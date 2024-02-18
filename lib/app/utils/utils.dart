@@ -575,14 +575,14 @@ class Utils {
                   size: MediaQuery.of(context).size.height * 0.1,
                 ),
                 Text(
-                  title,
+                  title.tr,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0),
                   child: Text(
-                    description,
+                    description.tr,
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -600,7 +600,7 @@ class Utils {
                       Get.back();
                     },
                     child: Text(
-                      'Understood',
+                      'Understood'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             color: isLightMode
                                 ? kLightPrimaryTextColor

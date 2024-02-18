@@ -20,7 +20,9 @@ class QrBarCode extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Flexible(
+          FittedBox(
+            alignment: Alignment.centerLeft,
+            fit: BoxFit.scaleDown,
             child: Text(
               'QR/Bar Code'.tr,
               style: TextStyle(
@@ -54,7 +56,7 @@ class QrBarCode extends StatelessWidget {
       ),
       onTap: () async {
         Utils.hapticFeedback();
-        await controller.requestQrPermission();
+        await controller.requestQrPermission(context);
       },
       trailing: InkWell(
         child: Wrap(

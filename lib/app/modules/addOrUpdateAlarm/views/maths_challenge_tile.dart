@@ -26,7 +26,9 @@ class MathsChallenge extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Flexible(
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
             child: Text(
               'Maths'.tr,
               style: TextStyle(
@@ -85,8 +87,8 @@ class MathsChallenge extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      Utils.getDifficultyLabel(
-                          controller.mathsDifficulty.value),
+                      Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                          .tr,
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
                     Text(
@@ -168,8 +170,11 @@ class MathsChallenge extends StatelessWidget {
                     ),
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kprimaryColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          themeController.isLightMode.value
+                              ? kLightPrimaryTextColor.withOpacity(0.5)
+                              : kprimaryTextColor.withOpacity(0.5),
+                        ),
                       ),
                       child: Text(
                         'Cancel'.tr,
@@ -177,7 +182,7 @@ class MathsChallenge extends StatelessWidget {
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
+                                      : kprimaryTextColor,
                                 ),
                       ),
                       onPressed: () {
@@ -201,6 +206,7 @@ class MathsChallenge extends StatelessWidget {
               () => Text(
                 controller.isMathsEnabled == true
                     ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                        .tr
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: (controller.isMathsEnabled.value == false)

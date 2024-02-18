@@ -21,7 +21,9 @@ class LabelTile extends StatelessWidget {
       tileColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: Flexible(
+      title: FittedBox(
+        alignment: Alignment.centerLeft,
+        fit: BoxFit.scaleDown,
         child: Text(
           'Label'.tr,
           style: TextStyle(
@@ -34,7 +36,7 @@ class LabelTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          title: 'Enter a name'.tr,
+          title: 'Add a label'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
@@ -80,7 +82,7 @@ class LabelTile extends StatelessWidget {
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
-              hintText: 'Enter a name'.tr,
+              hintText: 'Enter a label'.tr,
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: themeController.isLightMode.value
                         ? kLightPrimaryDisabledTextColor

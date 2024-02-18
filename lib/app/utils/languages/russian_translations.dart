@@ -6,7 +6,7 @@ class RussianTranslations extends Translations {
         'ru_RU': {
           'Alarm': 'Будильник',
           'Timer': 'Таймер',
-
+          'StopWatch': 'Секундомер',
           'Enable 24 Hour Format': 'Включить 24-часовой формат',
           'Enable Haptic Feedback': 'Включить тактильную отдачу',
           'Enable Sorted Alarm List':
@@ -34,7 +34,12 @@ class RussianTranslations extends Translations {
           'LimitedAccess':
               'Весь доступ ограничен исключительно предоставлением описанных выше функций.',
           'Enable Light Mode': 'Включить светлый режим',
-
+          'Change Language': 'Изменить язык',
+          'English': 'Английский',
+          'Spanish': 'Испанский',
+          'German': 'Немецкий',
+          'French': 'Французский',
+          'Russian': 'Русский',
           'No upcoming alarms!': 'Никаких предстоящих сигналов тревоги!',
           'Next alarm': 'Следующий сигнал тревоги',
           'Show Motivational Quote': 'Показать мотивационную цитату',
@@ -82,6 +87,11 @@ class RussianTranslations extends Translations {
           'Automatic Cancellation': 'Автоматическая отмена',
           'Challenges': 'Задания',
           'Shared Alarm': 'Общий будильник',
+          'Camera Permission': 'Разрешение на камеру',
+          'Please allow camera access to scan QR codes.':
+              'Пожалуйста, разрешите доступ к камере для сканирования QR-кодов.',
+          'OK': 'Хорошо',
+
 //alarm_id_tile.dart
           'Success!': 'Успех!',
           'Alarm ID has been copied!': 'ID будильника скопирован!',
@@ -102,22 +112,28 @@ class RussianTranslations extends Translations {
           'Default': 'По умолчанию',
           'Upload Ringtone': 'Загрузить мелодию',
           'Done': 'Готово',
+          //delete_tile.dart
+          'Delete After Goes Off': 'Удалить после срабатывания',
+
 //label_tile.dart
           'Label': 'Метка',
-          'Enter a name': 'Введите имя',
+          'Add a label': 'Добавить ярлык',
           'Note': 'Примечание',
           'noWhitespace':
               'Пожалуйста, не вводите пробел в качестве первого символа!',
 //maths_challenge_tile.dart
           'Maths': 'Математика',
           'Math problems': 'Математические задачи',
+          'Easy': 'Легкий',
+          'Medium': 'Средний',
+          'Hard': 'Тяжелый',
           'mathDescription':
               'Вам нужно решать простые математические задачи выбранного уровня сложности, чтобы отключить будильник.',
           'Solve Maths questions': 'Решить математические вопросы',
           'questions': 'вопросы',
           'question': 'вопрос',
 //note.dart
-          'Enter a note': 'Введите заметку',
+          'Add a note': 'Добавить заметку',
 // qr_bar_code_tile.dart
           'QR/Bar Code': 'QR-код / Штрих-код',
           'qrDescription':
@@ -181,6 +197,14 @@ class RussianTranslations extends Translations {
           'QR/Bar Code Challenge': 'Задание на QR-код / Штрих-код',
 //maths_challenge_view.dart
           'Question @noMathQ': 'Вопрос @noMathQ',
+          // pedometer_challenge_tile.dart
+          'Pedometer': 'Педометр',
+          'Number of steps': 'Количество шагов',
+          'step': 'шаг',
+          'steps': 'шаги',
+          'pedometerDescription':
+              'Шагайте, чтобы отключить! Установите цель по количеству шагов, чтобы выключить будильник и активизировать начало дня с энергией.',
+
 //qr_challenge_view.dart
           'Scan your QR/Bar Code!': 'Отсканируйте свой QR-код / Штрих-код!',
           'Wrong Code Scanned!': 'Неправильный код отсканирован!',
@@ -230,6 +254,9 @@ class RussianTranslations extends Translations {
           'Adjust the volume range:': 'Отрегулируйте диапазон громкости:',
           'Apply Gradient': 'Применить градиент',
           'Ascending Volume': 'Восходящий объем',
+          'Alarm deleted': 'Будильник удален',
+          'The alarm has been deleted': 'Будильник удален',
+          'Undo': 'Отменить',
         },
       };
 }

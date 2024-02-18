@@ -34,7 +34,7 @@ class SettingsController extends GetxController {
   final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
   final RxBool didWeatherKeyError = false.obs;
   final RxBool showingCircularProgressIndicator = false.obs;
-  RxBool validate = false.obs;
+  RxBool isApiKeyEmpty = false.obs;
   final storage = Get.find<GetStorageProvider>();
   final RxString local = Get.locale.toString().obs;
   UserModel? userModel;
@@ -76,11 +76,6 @@ class SettingsController extends GetxController {
       userModel = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   // Logins user using GoogleSignIn
@@ -128,7 +123,7 @@ class SettingsController extends GetxController {
     } catch (e) {
       // Handle any other exceptions that may occur
       debugPrint(e.toString());
-      return false;
+      return null;
     }
   }
 
@@ -265,7 +260,9 @@ class SettingsController extends GetxController {
 
   void _save24HoursFormatPreference() async {
     await _secureStorageProvider.write24HoursEnabled(
-        key: _f24HrsEnabledKey, is24HoursEnabled: is24HrsEnabled.value);
+      key: _f24HrsEnabledKey,
+      is24HoursEnabled: is24HrsEnabled.value,
+    );
   }
 
   void toggle24HoursFormat(bool enabled) {

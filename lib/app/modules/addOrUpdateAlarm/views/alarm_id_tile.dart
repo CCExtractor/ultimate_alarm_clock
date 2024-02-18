@@ -39,7 +39,9 @@ class AlarmIDTile extends StatelessWidget {
                     duration: const Duration(seconds: 2),
                   );
                 },
-                title: Flexible(
+                title: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
                   child: Text(
                     'Alarm ID'.tr,
                     style: TextStyle(
@@ -70,7 +72,7 @@ class AlarmIDTile extends StatelessWidget {
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
                       children: [
-                         Padding(
+                        Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Text(
                             //'To copy Alarm ID you have enable shared alarm!',

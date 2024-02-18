@@ -21,7 +21,9 @@ class NoteTile extends StatelessWidget {
       tileColor: themeController.isLightMode.value
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      title: Flexible(
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
         child: Text(
           'Note'.tr,
           style: TextStyle(
@@ -34,7 +36,7 @@ class NoteTile extends StatelessWidget {
       onTap: () {
         Utils.hapticFeedback();
         Get.defaultDialog(
-          title: 'Enter a note'.tr,
+          title: 'Add a note'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
           backgroundColor: themeController.isLightMode.value
               ? kLightSecondaryBackgroundColor
