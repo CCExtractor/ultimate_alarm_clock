@@ -108,7 +108,7 @@ class InputTimeController extends GetxController {
           addOrUpdateAlarmController.hours.value = 12;
         } else if (selectedDateTime.value.hour > 12) {
           addOrUpdateAlarmController.hours.value =
-              (selectedDateTime.value.hour-12);
+              (selectedDateTime.value.hour - 12);
         } else {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }
@@ -126,7 +126,7 @@ class InputTimeController extends GetxController {
       debugPrint(e.toString());
     }
   }
-  
+
   void setTimerTime() {
     try {
       int hours = int.parse(inputHoursControllerTimer.text);
@@ -135,7 +135,7 @@ class InputTimeController extends GetxController {
 
       timerController.hours.value = hours;
       timerController.minutes.value = minutes;
-      timerController.seconds.value = seconds; 
+      timerController.seconds.value = seconds;
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -146,7 +146,7 @@ class InputTimeController extends GetxController {
     inputHrsController.dispose();
     inputMinutesController.dispose();
     inputHoursControllerTimer.dispose();
-    inputMinutesControllerTimer.dispose(); 
+    inputMinutesControllerTimer.dispose();
     inputSecondsControllerTimer.dispose();
     super.onClose();
   }
