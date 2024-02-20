@@ -68,7 +68,6 @@ class ThemeController extends GetxController {
   }
 
   void _saveThemeValuePreference({required AppTheme theme}) async {
-    print(']]]]]]]]]]]]]]]$isSystemModeActive ${isLightMode.value.toString()}');
     await _secureStorageProvider.writeThemeValue(theme: theme);
   }
 
