@@ -79,7 +79,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
-  var previousRingtone='';
+  var previousRingtone = '';
   final noteController = TextEditingController();
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
@@ -446,7 +446,6 @@ class AddOrUpdateAlarmController extends GetxController {
             showQRDialog();
           }
         },
-
         confirm: TextButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(kprimaryColor),
@@ -458,7 +457,6 @@ class AddOrUpdateAlarmController extends GetxController {
                       ? kLightPrimaryTextColor
                       : ksecondaryTextColor,
                 ),
-
           ),
           onPressed: () async {
             Get.back(); // Close the alert box
@@ -516,6 +514,7 @@ class AddOrUpdateAlarmController extends GetxController {
         await FirestoreDb.updateAlarm(alarmRecord!.ownerId, alarmData);
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
+        alarmData.ownerId = ownerId;
         await IsarDb.deleteAlarm(alarmRecord!.isarId);
         createAlarm(alarmData);
       }
@@ -579,7 +578,7 @@ class AddOrUpdateAlarmController extends GetxController {
       );
       hours.value = selectedTime.value.hour;
       minutes.value = selectedTime.value.minute;
-      
+
       if (settingsController.is24HrsEnabled.value == false) {
         if (selectedTime.value.hour == 0) {
           hours.value = 12;
@@ -763,6 +762,9 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   AlarmModel updatedAlarmModel() {
+    print(alarmRecord?.ownerId); // ""
+    print(ownerName); // keyur
+    print(lastEditedUserId); // 106268199904962485566
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
       volMax: volMax.value,
