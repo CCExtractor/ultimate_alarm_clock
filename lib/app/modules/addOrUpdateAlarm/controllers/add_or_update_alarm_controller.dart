@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
@@ -62,6 +63,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final qrValue = ''.obs;
   final isQrEnabled = false.obs;
 
+  //photochallenge
+  final imageurl = ''.obs;
+  final isPhotochallengeEnabled = false.obs;
+
   final mathsSliderValue = 0.0.obs;
   final mathsDifficulty = Difficulty.Easy.obs;
   final isMathsEnabled = false.obs;
@@ -79,7 +84,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
   var customRingtoneNames = [].obs;
-  var previousRingtone='';
+  var previousRingtone = '';
   final noteController = TextEditingController();
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
@@ -89,6 +94,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxDouble selectedGradientDouble = 0.0.obs;
   final RxDouble volMin = 0.0.obs;
   final RxDouble volMax = 10.0.obs;
+  final picker = ImagePicker();
 
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
@@ -446,7 +452,6 @@ class AddOrUpdateAlarmController extends GetxController {
             showQRDialog();
           }
         },
-
         confirm: TextButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(kprimaryColor),
@@ -458,7 +463,6 @@ class AddOrUpdateAlarmController extends GetxController {
                       ? kLightPrimaryTextColor
                       : ksecondaryTextColor,
                 ),
-
           ),
           onPressed: () async {
             Get.back(); // Close the alert box
@@ -504,6 +508,90 @@ class AddOrUpdateAlarmController extends GetxController {
       facing: CameraFacing.back,
       torchEnabled: false,
     );
+  }
+
+  requestPhotoPermission(context) async {
+    PermissionStatus cameraStatus = await Permission.camera.status;
+
+    if (!cameraStatus.isGranted) {
+      Get.defaultDialog(
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: 'Camera Permission'.tr,
+        titleStyle: TextStyle(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : Colors.white,
+        ),
+        titlePadding: const EdgeInsets.only(
+          top: 25,
+          left: 10,
+        ),
+        contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
+        content: Text('Please allow camera access for capturing photo.'.tr),
+        onCancel: () {
+          Get.back(); // Close the alert box
+        },
+        onConfirm: () async {
+          Get.back(); // Close the alert box
+          PermissionStatus permissionStatus = await Permission.camera.request();
+          if (permissionStatus.isGranted) {
+            // Permission granted, proceed with QR code scanning
+            pickimage();
+          }
+        },
+        confirm: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+          ),
+          child: Text(
+            'OK',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : ksecondaryTextColor,
+                ),
+          ),
+          onPressed: () async {
+            Get.back(); // Close the alert box
+            PermissionStatus permissionStatus =
+                await Permission.camera.request();
+            if (permissionStatus.isGranted) {
+              // Permission granted, proceed with QR code scanning
+              pickimage();
+            }
+          },
+        ),
+        cancel: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.5)
+                  : kprimaryTextColor.withOpacity(0.5),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
+          ),
+          onPressed: () {
+            Get.back(); // Close the alert box
+          },
+        ),
+      );
+    } else {
+      pickimage();
+    }
+  }
+
+  pickimage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final imagefile = File(pickedFile!.path);
   }
 
   updateAlarm(AlarmModel alarmData) async {
@@ -579,7 +667,7 @@ class AddOrUpdateAlarmController extends GetxController {
       );
       hours.value = selectedTime.value.hour;
       minutes.value = selectedTime.value.minute;
-      
+
       if (settingsController.is24HrsEnabled.value == false) {
         if (selectedTime.value.hour == 0) {
           hours.value = 12;
@@ -798,6 +886,8 @@ class AddOrUpdateAlarmController extends GetxController {
       isSharedAlarmEnabled: isSharedAlarmEnabled.value,
       isQrEnabled: isQrEnabled.value,
       qrValue: qrValue.value,
+      isPhotochallengeEnabled: isPhotochallengeEnabled.value,
+      imageurl: imageurl.value,
       isMathsEnabled: isMathsEnabled.value,
       numMathsQuestions: numMathsQuestions.value,
       mathsDifficulty: mathsDifficulty.value.index,

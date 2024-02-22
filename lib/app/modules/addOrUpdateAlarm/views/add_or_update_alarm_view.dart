@@ -224,6 +224,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.isSharedAlarmEnabled.value,
                           isQrEnabled: controller.isQrEnabled.value,
                           qrValue: controller.qrValue.value,
+                          isPhotochallengeEnabled:
+                              controller.isPhotochallengeEnabled.value,
+                          imageurl: controller.imageurl.value,
                           isMathsEnabled: controller.isMathsEnabled.value,
                           numMathsQuestions: controller.numMathsQuestions.value,
                           mathsDifficulty:

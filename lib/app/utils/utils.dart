@@ -371,6 +371,8 @@ class Utils {
       mathsDifficulty: 0,
       qrValue: '',
       isQrEnabled: false,
+      imageurl: '',
+      isPhotochallengeEnabled: false,
       isShakeEnabled: false,
       shakeTimes: 0,
       isPedometerEnabled: false,

@@ -22,6 +22,7 @@ class AlarmModel {
   late bool isShakeEnabled;
   late bool isQrEnabled;
   late bool isPedometerEnabled;
+  late bool isPhotochallengeEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
@@ -34,6 +35,7 @@ class AlarmModel {
   late int numMathsQuestions;
   late int mathsDifficulty;
   late String qrValue;
+  late String imageurl;
   List<String>? sharedUserIds;
   late String ownerId;
   late String ownerName;
@@ -83,6 +85,8 @@ class AlarmModel {
     required this.isPedometerEnabled,
     required this.numberOfSteps,
     required this.activityInterval,
+    required this.isPhotochallengeEnabled,
+    required this.imageurl,
     this.offsetDetails = const {},
     required this.mainAlarmTime,
     required this.label,
@@ -146,6 +150,8 @@ class AlarmModel {
     numMathsQuestions = documentSnapshot['numMathsQuestions'];
     isQrEnabled = documentSnapshot['isQrEnabled'];
     qrValue = documentSnapshot['qrValue'];
+    isPhotochallengeEnabled = documentSnapshot['isPhotochallengeEnabled'];
+    imageurl = documentSnapshot['imageurl'];
     isShakeEnabled = documentSnapshot['isShakeEnabled'];
     shakeTimes = documentSnapshot['shakeTimes'];
     isPedometerEnabled = documentSnapshot['isPedometerEnabled'];
@@ -190,6 +196,8 @@ class AlarmModel {
     numMathsQuestions = alarmData['numMathsQuestions'];
     isQrEnabled = alarmData['isQrEnabled'];
     qrValue = alarmData['qrValue'];
+    isPhotochallengeEnabled = alarmData['isPhotochallengeEnabled'];
+    imageurl = alarmData['imageurl'];
     isShakeEnabled = alarmData['isShakeEnabled'];
     shakeTimes = alarmData['shakeTimes'];
     isPedometerEnabled = alarmData['isPedometerEnabled'];
@@ -241,6 +249,8 @@ class AlarmModel {
       'numMathsQuestions': alarmRecord.numMathsQuestions,
       'isQrEnabled': alarmRecord.isQrEnabled,
       'qrValue': alarmRecord.qrValue,
+      'isPhotochallengeEnabled': alarmRecord.isPhotochallengeEnabled,
+      'imageurl': alarmRecord.imageurl,
       'isShakeEnabled': alarmRecord.isShakeEnabled,
       'shakeTimes': alarmRecord.shakeTimes,
       'isPedometerEnabled': alarmRecord.isPedometerEnabled,
