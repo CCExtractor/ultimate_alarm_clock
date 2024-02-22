@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -65,6 +67,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
   //photochallenge
   final imageurl = ''.obs;
+  final imageFile = File('').obs;
   final isPhotochallengeEnabled = false.obs;
 
   final mathsSliderValue = 0.0.obs;
@@ -538,7 +541,7 @@ class AddOrUpdateAlarmController extends GetxController {
           PermissionStatus permissionStatus = await Permission.camera.request();
           if (permissionStatus.isGranted) {
             // Permission granted, proceed with QR code scanning
-            pickimage();
+            showPhotoDialog();
           }
         },
         confirm: TextButton(
@@ -559,7 +562,7 @@ class AddOrUpdateAlarmController extends GetxController {
                 await Permission.camera.request();
             if (permissionStatus.isGranted) {
               // Permission granted, proceed with QR code scanning
-              pickimage();
+              showPhotoDialog();
             }
           },
         ),
@@ -585,13 +588,97 @@ class AddOrUpdateAlarmController extends GetxController {
         ),
       );
     } else {
-      pickimage();
+      showPhotoDialog();
     }
   }
 
-  pickimage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    final imagefile = File(pickedFile!.path);
+  Future<String> _uploadImageToStorage(File image) async {
+    final firebaseStorage = FirebaseStorage.instance;
+    Reference ref = firebaseStorage.ref().child(alarmID);
+
+    UploadTask tsk = ref.putFile(image);
+    TaskSnapshot snap = await tsk;
+    Future<String> dowloadurl = snap.ref.getDownloadURL();
+
+    return dowloadurl;
+  }
+
+  showPhotoDialog() async {
+    if (isPhotochallengeEnabled.value == false) {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+      if (pickedFile != null) {
+        imageFile.value = File(pickedFile.path);
+        imageurl.value = await _uploadImageToStorage(imageFile.value);
+        isPhotochallengeEnabled.value = true;
+      } else {}
+    } else {
+      Get.defaultDialog(
+        titlePadding: const EdgeInsets.symmetric(vertical: 20),
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: 'Capture a Photo',
+        titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
+        content: Obx(
+          () => Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: imageFile.value
+                        .existsSync() // Check if file exists before trying to display
+                    ? Image.file(imageFile.value, fit: BoxFit.cover)
+                    : SizedBox.shrink(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      'Save',
+                      style: Theme.of(Get.context!)
+                          .textTheme
+                          .displaySmall!
+                          .copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : ksecondaryTextColor,
+                          ),
+                    ),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      'Retake',
+                      style: Theme.of(Get.context!)
+                          .textTheme
+                          .displaySmall!
+                          .copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : ksecondaryTextColor,
+                          ),
+                    ),
+                    onPressed: () async {
+                      showPhotoDialog();
+                      isPhotochallengeEnabled.value = false;
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   updateAlarm(AlarmModel alarmData) async {
