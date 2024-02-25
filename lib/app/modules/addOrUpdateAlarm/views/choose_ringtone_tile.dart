@@ -216,6 +216,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                   OutlinedButton(
                     onPressed: () async {
                       Utils.hapticFeedback();
+                      controller.previousRingtone =
+                      controller.customRingtoneName.value;
                       await controller.saveCustomRingtone();
                     },
                     child: Text(
