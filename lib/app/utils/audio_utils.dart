@@ -14,7 +14,7 @@ class AudioUtils {
   static MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   static AudioSession? audioSession;
-  
+
   static bool isPreviewing = false;
 
   static Future<void> initializeAudioSession() async {
@@ -92,8 +92,6 @@ class AudioUtils {
     }
   }
 
-  
-
   static Future<void> stopDefaultAlarm() async {
     try {
       if (audioSession != null) {
@@ -115,6 +113,7 @@ class AudioUtils {
 
       if (ringtoneName == 'Default') {
         await alarmChannel.invokeMethod('playDefaultAlarm');
+        isPreviewing = true;
       } else {
         int customRingtoneId = fastHash(ringtoneName);
         RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
@@ -128,10 +127,7 @@ class AudioUtils {
           await audioSession!.setActive(true);
           await playCustomSound(customRingtonePath);
           isPreviewing = true;
-        } else {
-          await alarmChannel.invokeMethod('playDefaultAlarm');
-          isPreviewing = true;
-        }
+        } 
       }
     } catch (e) {
       debugPrint(e.toString());
