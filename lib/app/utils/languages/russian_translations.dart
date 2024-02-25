@@ -112,6 +112,9 @@ class RussianTranslations extends Translations {
           'Default': 'По умолчанию',
           'Upload Ringtone': 'Загрузить мелодию',
           'Done': 'Готово',
+          'Duplicate Ringtone': 'Дублировать рингтон',
+          'Choosen ringtone is already present':
+              'Выбранный рингтон уже присутствует.',
           //delete_tile.dart
           'Delete After Goes Off': 'Удалить после срабатывания',
 
