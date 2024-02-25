@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -38,10 +36,7 @@ class RepeatTile extends StatelessWidget {
                 height: height * 0.45,
                 child: Column(
                   children: [
-                    buildDailyTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
+                    buildDailyTile(),
                     Container(
                       color: themeController.isLightMode.value
                           ? kLightSecondaryBackgroundColor
@@ -52,10 +47,7 @@ class RepeatTile extends StatelessWidget {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    buildWeekdaysTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
+                    buildWeekdaysTile(),
                     Container(
                       color: themeController.isLightMode.value
                           ? kLightSecondaryBackgroundColor
@@ -67,8 +59,6 @@ class RepeatTile extends StatelessWidget {
                       ),
                     ),
                     buildCustomDaysTile(
-                      controller: controller,
-                      themeController: themeController,
                       context: context,
                     ),
                     const SizedBox(
@@ -168,12 +158,9 @@ class RepeatTile extends StatelessWidget {
     }
   }
 
-  ListTile buildDailyTile({
-    required AddOrUpdateAlarmController controller,
-    required ThemeController themeController,
-  }) {
+  ListTile buildDailyTile() {
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 10.0),
+      contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
@@ -186,7 +173,7 @@ class RepeatTile extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0), // Adjust the padding as needed
+            padding: const EdgeInsets.all(8.0), // Adjust the padding as needed
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -261,13 +248,11 @@ class RepeatTile extends StatelessWidget {
   }
 
   ListTile buildCustomDaysTile({
-    required AddOrUpdateAlarmController controller,
-    required ThemeController themeController,
     required BuildContext context,
   }) {
     List<bool> repeatDays = List<bool>.filled(7, false);
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 10.0),
+      contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
@@ -362,7 +347,7 @@ class RepeatTile extends StatelessWidget {
             );
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -393,12 +378,9 @@ class RepeatTile extends StatelessWidget {
     );
   }
 
-  ListTile buildWeekdaysTile({
-    required AddOrUpdateAlarmController controller,
-    required ThemeController themeController,
-  }) {
+  ListTile buildWeekdaysTile() {
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 10.0),
+      contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
@@ -414,12 +396,12 @@ class RepeatTile extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0), // Adjust the padding as needed
+            padding: const EdgeInsets.all(8.0), // Adjust the padding as needed
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Weekdays',
                 ),
                 Checkbox.adaptive(
@@ -434,7 +416,8 @@ class RepeatTile extends StatelessWidget {
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     controller.setIsWeekdaysSelected(
-                        !controller.isWeekdaysSelected.value);
+                      !controller.isWeekdaysSelected.value,
+                    );
 
                     // Update repeatDays based on isWeekdaysSelected value
                     for (int i = 0; i < controller.repeatDays.length; i++) {
