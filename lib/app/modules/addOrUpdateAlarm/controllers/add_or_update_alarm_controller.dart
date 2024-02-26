@@ -108,6 +108,9 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isCustomSelected = false.obs;
   RxBool isPlaying = false.obs; // Observable boolean to track playing state
 
+  Map<String, dynamic> initialValues = {};
+  Map<String, dynamic> changedFields = {};
+
   void toggleIsPlaying() {
     isPlaying.toggle();
   }
@@ -691,6 +694,85 @@ class AddOrUpdateAlarmController extends GetxController {
       repeatDays,
     );
 
+    initialValues.addAll({
+      'selectedTime': selectedTime.value,
+      'daysRepeating': daysRepeating.value,
+      'snoozeDuration': snoozeDuration.value,
+      'deleteAfterGoesOff': deleteAfterGoesOff.value,
+      'label': label.value,
+      'note': note.value,
+      // 'ringtone' : ,
+    });
+
+    addListeners();
+
+    if (await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap) !=
+        null) {
+      weatherApiKeyExists.value = true;
+    }
+
+    // If there's an argument sent, we are in update mode
+  }
+
+  void addListeners() {
+    // Updating UI to show time to alarm
+    selectedTime.listen((time) {
+      debugPrint('CHANGED CHANGED CHANGED CHANGED');
+      if (initialValues.containsKey('selectedTime') &&
+          ((initialValues['selectedTime'] as DateTime).compareTo(time)) == 0) {
+        changedFields['selectedTime'] = false;
+      } else {
+        changedFields['selectedTime'] = true;
+      }
+      timeToAlarm.value =
+          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
+    });
+
+    daysRepeating.listen((days) {
+      if (initialValues.containsKey('daysRepeating') &&
+          ((initialValues['daysRepeating'] as String).compareTo(days)) == 0) {
+        changedFields['daysRepeating'] = false;
+      } else {
+        changedFields['daysRepeating'] = true;
+      }
+    });
+
+    snoozeDuration.listen((duration) {
+      if (initialValues.containsKey('snoozeDuration') &&
+          ((initialValues['snoozeDuration'] as int).compareTo(duration)) == 0) {
+        changedFields['snoozeDuration'] = false;
+      } else {
+        changedFields['snoozeDuration'] = true;
+      }
+    });
+
+    deleteAfterGoesOff.listen((value) {
+      if (initialValues.containsKey('deleteAfterGoesOff') &&
+          ((initialValues['deleteAfterGoesOff'] as bool) == (value))) {
+        changedFields['deleteAfterGoesOff'] = false;
+      } else {
+        changedFields['deleteAfterGoesOff'] = true;
+      }
+    });
+
+    label.listen((label) {
+      if (initialValues.containsKey('label') &&
+          ((initialValues['label'] as String).compareTo(label) == 0)) {
+        changedFields['label'] = false;
+      } else {
+        changedFields['label'] = true;
+      }
+    });
+
+    note.listen((note) {
+      if (initialValues.containsKey('note') &&
+          ((initialValues['note'] as String).compareTo(note) == 0)) {
+        changedFields['note'] = false;
+      } else {
+        changedFields['note'] = true;
+      }
+    });
+
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
     selectedPoint.listen(
@@ -710,14 +792,6 @@ class AddOrUpdateAlarmController extends GetxController {
       },
     );
 
-    // Updating UI to show time to alarm
-
-    selectedTime.listen((time) {
-      debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
-    });
-
     //Updating UI to show repeated days
     repeatDays.listen((days) {
       daysRepeating.value = Utils.getRepeatDays(days);
@@ -732,13 +806,6 @@ class AddOrUpdateAlarmController extends GetxController {
       }
       weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
     });
-
-    if (await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap) !=
-        null) {
-      weatherApiKeyExists.value = true;
-    }
-
-    // If there's an argument sent, we are in update mode
   }
 
   @override
