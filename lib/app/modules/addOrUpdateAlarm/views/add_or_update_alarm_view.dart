@@ -48,7 +48,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
           if (didPop) {
             return;
           }
-
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(
               vertical: 20,
@@ -125,7 +124,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
         child: Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: (controller.alarmRecord != null &&
+          floatingActionButton: (controller.alarmRecord.value != null &&
                   controller.mutexLock.value == true)
               ? const SizedBox()
               : Padding(
@@ -139,7 +138,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        (controller.alarmRecord == null)
+                        (controller.alarmRecord.value == null)
                             ? 'Save'.tr
                             : 'Update'.tr,
                         style:
@@ -182,11 +181,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           showMotivationalQuote:
                               controller.showMotivationalQuote.value,
                           isOneTime: controller.isOneTime.value,
-                          lastEditedUserId: controller.lastEditedUserId,
+                          lastEditedUserId: controller.lastEditedUserId.value,
                           mutexLock: controller.mutexLock.value,
                           alarmID: controller.alarmID,
-                          ownerId: controller.ownerId,
-                          ownerName: controller.ownerName,
+                          ownerId: controller.ownerId.value,
+                          ownerName: controller.ownerName.value,
                           activityInterval:
                               controller.activityInterval.value * 60000,
                           days: controller.repeatDays.toList(),
@@ -247,9 +246,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ),
                           );
                         }
-
                         try {
-                          if (controller.alarmRecord == null) {
+                          if (controller.alarmRecord.value == null) {
                             await controller.createAlarm(alarmRecord);
                           } else {
                             AlarmModel updatedAlarmModel =
@@ -266,7 +264,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   ),
                 ),
           appBar: AppBar(
-            backgroundColor: (controller.alarmRecord != null &&
+            backgroundColor: (controller.alarmRecord.value != null &&
                     controller.mutexLock.value == true)
                 ? themeController.isLightMode.value
                     ? kLightPrimaryBackgroundColor
@@ -277,7 +275,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
             elevation: 0.0,
             centerTitle: true,
             iconTheme: Theme.of(context).iconTheme,
-            title: (controller.alarmRecord != null &&
+            title: (controller.alarmRecord.value != null &&
                     controller.mutexLock.value == true)
                 ? const Text('')
                 : Obx(
@@ -292,7 +290,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                   ),
           ),
-          body: (controller.alarmRecord != null &&
+          body: (controller.alarmRecord.value != null &&
                   controller.mutexLock.value == true)
               ? Center(
                   child: Column(
@@ -1111,7 +1109,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           Obx(
                             () => Container(
                               child: (controller.isSharedAlarmEnabled.value &&
-                                      controller.alarmRecord != null)
+                                      controller.alarmRecord.value != null)
                                   ? Divider(
                                       color: themeController.isLightMode.value
                                           ? kLightPrimaryDisabledTextColor
