@@ -591,9 +591,32 @@ class AddOrUpdateAlarmController extends GetxController {
       showPhotoDialog();
     }
   }
+//  Future<String?> saveToDocumentsDirectory({
+//     required String filePath,
+//   }) async {
+//     try {
+//       Directory documentsDirectory = await getApplicationDocumentsDirectory();
+//       String ringtonesDirectoryPath = '${documentsDirectory.path}/ringtones';
 
+//       // Create the ringtones directory if it doesn't exist
+//       Directory(ringtonesDirectoryPath).createSync(recursive: true);
+
+//       // Copy the picked audio files to the ringtones directory
+//       File pickedFile = File(filePath);
+//       String newFilePath =
+//           '$ringtonesDirectoryPath/${pickedFile.uri.pathSegments.last}';
+//       pickedFile.copySync(newFilePath);
+
+//       return newFilePath;
+//     } catch (e) {
+//       debugPrint(e.toString());
+//       return null;
+//     }
+//   }
   Future<String> _uploadImageToStorage(File image) async {
-    final firebaseStorage = FirebaseStorage.instance;
+    /* 
+       // Code for storing Photo in firestore
+       final firebaseStorage = FirebaseStorage.instance;
     Reference ref = firebaseStorage.ref().child(alarmID);
 
     UploadTask tsk = ref.putFile(image);
@@ -601,6 +624,33 @@ class AddOrUpdateAlarmController extends GetxController {
     Future<String> dowloadurl = snap.ref.getDownloadURL();
 
     return dowloadurl;
+       
+       
+       */
+    try {
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String photosDirectoryPath = '${documentsDirectory.path}/photos';
+
+      // Create the ringtones directory if it doesn't exist
+      Directory(photosDirectoryPath).createSync(recursive: true);
+
+      // Copy the picked audio files to the ringtones directory
+      String filePath = image.path;
+      File pickedFile = File(filePath);
+      String newFilePath =
+          '$photosDirectoryPath/$alarmID/${pickedFile.uri.pathSegments.last}';
+
+      if (imageurl.value == '') {
+        pickedFile.copySync(newFilePath);
+      } else {
+        pickedFile.copySync(imageurl.value);
+      }
+
+      return newFilePath;
+    } catch (e) {
+      debugPrint(e.toString());
+      return '';
+    }
   }
 
   showPhotoDialog() async {
@@ -625,10 +675,10 @@ class AddOrUpdateAlarmController extends GetxController {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 15.0),
-                child: imageFile.value
-                        .existsSync() // Check if file exists before trying to display
+                child: imageFile.value.existsSync()
+                    // Check if file exists before trying to display
                     ? Image.file(imageFile.value, fit: BoxFit.cover)
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
