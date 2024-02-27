@@ -1,9 +1,13 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -1271,6 +1275,20 @@ class HomeView extends GetView<HomeController> {
                                                                                 if (alarm.isSharedAlarmEnabled == true) {
                                                                                   await FirestoreDb.deleteAlarm(controller.userModel.value, alarm.firestoreId!);
                                                                                 } else {
+                                                                                  // Get the temporary directory
+                                                                                  Directory tempDir = await getTemporaryDirectory();
+
+                                                                                  // Generate a unique filename for the temporary copy
+                                                                                  String tempFileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+                                                                                  // Create a temporary file path
+                                                                                  String tempFilePath = '${tempDir.path}/$tempFileName';
+                                                                                  // Copy the content of the original file to the temporary file
+                                                                                  await File(alarm.imageurl).copy(tempFilePath);
+                                                                                  // Store the temporary file path in the map
+                                                                                  String alarmid = alarm.alarmID;
+                                                                                  controller.deletedAlarmsMap[alarmid] = tempFilePath;
+                                                                                  await controller.deleteFileIfExists(alarm.imageurl);
                                                                                   await IsarDb.deleteAlarm(alarm.isarId);
                                                                                 }
 
@@ -1292,6 +1310,9 @@ class HomeView extends GetView<HomeController> {
                                                                                       if (alarm.isSharedAlarmEnabled == true) {
                                                                                         await FirestoreDb.addAlarm(controller.userModel.value, alarm);
                                                                                       } else {
+                                                                                        await File(controller.deletedAlarmsMap[alarm.alarmID]!).copy(alarm.imageurl);
+                                                                                        // Remove the alarm from the temporary storage
+                                                                                        controller.deletedAlarmsMap.remove(alarm.alarmID);
                                                                                         await IsarDb.addAlarm(alarm);
                                                                                       }
                                                                                     },

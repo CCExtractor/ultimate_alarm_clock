@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart' as rx;
@@ -33,6 +34,7 @@ class HomeController extends GetxController {
   List<AlarmModel> latestFirestoreAlarms = [];
   List<AlarmModel> latestIsarAlarms = [];
   List<AlarmModel> latestSharedAlarms = [];
+  Map<String, String> deletedAlarmsMap = {};
   final alarmTime = 'No upcoming alarms!'.obs;
   bool refreshTimer = false;
   bool isEmpty = true;
@@ -405,6 +407,17 @@ class HomeController extends GetxController {
 
     if (delayToSchedule != null) {
       delayToSchedule!.cancel();
+    }
+  }
+
+  Future<void> deleteFileIfExists(String filePath) async {
+    File file = File(filePath);
+
+    if (await file.exists()) {
+      await file.delete();
+      debugPrint('File deleted successfully.');
+    } else {
+      debugPrint('File does not exist.');
     }
   }
 
