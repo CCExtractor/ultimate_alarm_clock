@@ -160,6 +160,7 @@ class MathsChallenge extends StatelessWidget {
                                 ),
                       ),
                       onPressed: () async {
+                        controller.onChange();
                         Utils.hapticFeedback();
                         controller.isMathsEnabled.value = true;
                         Get.back();

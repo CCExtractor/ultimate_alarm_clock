@@ -108,6 +108,7 @@ class PedometerChallenge extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
+                             controller.onChange();
                             Utils.hapticFeedback();
                             Get.back();
                           },

@@ -90,6 +90,7 @@ class NoteTile extends StatelessWidget {
                   ),
             ),
             onChanged: (text) {
+               controller.onChange();
               if (text.trim().isEmpty) {
                 controller.noteController.text = '';
                 if (text.isNotEmpty) {

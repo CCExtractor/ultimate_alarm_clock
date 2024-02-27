@@ -163,6 +163,7 @@ class LocationTile extends StatelessWidget {
                           ),
                     ),
                     onPressed: () {
+                       controller.onChange();
                       Utils.hapticFeedback();
                       Get.back();
                       controller.isLocationEnabled.value = true;

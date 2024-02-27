@@ -217,7 +217,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     onPressed: () async {
                       Utils.hapticFeedback();
                       controller.previousRingtone =
-                      controller.customRingtoneName.value;
+                          controller.customRingtoneName.value;
                       await controller.saveCustomRingtone();
                     },
                     child: Text(
@@ -232,6 +232,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      controller.onChange();
                       Utils.hapticFeedback();
                       Get.back();
                     },

@@ -39,6 +39,7 @@ class QuoteTile extends StatelessWidget {
           value: controller.showMotivationalQuote.value,
           activeColor: ksecondaryColor,
           onChanged: (value) {
+             controller.onChange();
             controller.showMotivationalQuote.value = value;
           },
         ),

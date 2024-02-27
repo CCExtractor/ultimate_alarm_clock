@@ -34,6 +34,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final mainAlarmTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
+  final hasUnsavedChanges = false.obs;
   final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
@@ -110,6 +111,16 @@ class AddOrUpdateAlarmController extends GetxController {
 
   void toggleIsPlaying() {
     isPlaying.toggle();
+  }
+
+   // Set hasUnsavedChanges to true whenever a change is made
+  void onChange() {
+    hasUnsavedChanges.value = true;
+  }
+
+  // Set hasUnsavedChanges to false whenever changes are saved
+  void onSave() {
+    hasUnsavedChanges.value = false;
   }
 
   void resetIsPlaying() {

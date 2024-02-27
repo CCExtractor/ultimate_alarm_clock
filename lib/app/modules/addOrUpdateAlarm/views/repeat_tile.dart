@@ -88,6 +88,7 @@ class RepeatTile extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
+                             controller.onChange();
                             Utils.hapticFeedback();
                             Get.back();
                           },
