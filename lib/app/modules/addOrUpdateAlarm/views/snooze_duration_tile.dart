@@ -65,6 +65,7 @@ class SnoozeDurationTile extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                     controller.onChange();
                     Utils.hapticFeedback();
                     Get.back();
                   },

@@ -125,6 +125,7 @@ class SharedAlarm extends StatelessWidget {
                     ],
                   ),
                   onTap: () {
+                     controller.onChange();
                     Utils.hapticFeedback();
                     // Toggle the value of isSharedAlarmEnabled
                     controller.isSharedAlarmEnabled.value =

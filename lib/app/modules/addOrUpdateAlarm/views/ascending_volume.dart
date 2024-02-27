@@ -90,6 +90,7 @@ class AscendingVolumeTile extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: () {
+                    controller.onChange();
                     Get.back();
                   },
                   style: ElevatedButton.styleFrom(

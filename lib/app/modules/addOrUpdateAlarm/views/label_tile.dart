@@ -120,6 +120,7 @@ class LabelTile extends StatelessWidget {
                   ),
             ),
             onPressed: () {
+               controller.onChange();
               Utils.hapticFeedback();
               controller.label.value = controller.labelController.text;
               Get.back();

@@ -485,6 +485,7 @@ class WeatherTile extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () {
+                                     controller.onChange();
                                     Utils.hapticFeedback();
                                     Get.back();
                                     Get.toNamed('/settings');

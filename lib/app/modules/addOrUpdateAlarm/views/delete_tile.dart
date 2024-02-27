@@ -58,6 +58,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
                         value: controller.deleteAfterGoesOff.value,
                         activeColor: ksecondaryColor,
                         onChanged: (value) {
+                          controller.onChange();
                           Utils.hapticFeedback();
                           controller.deleteAfterGoesOff.value = value;
                         },
