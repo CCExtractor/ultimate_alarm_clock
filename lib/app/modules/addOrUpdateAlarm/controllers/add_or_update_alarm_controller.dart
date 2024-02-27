@@ -108,6 +108,7 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isCustomSelected = false.obs;
   RxBool isPlaying = false.obs; // Observable boolean to track playing state
 
+  // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
   Map<String, dynamic> changedFields = {};
 
@@ -230,7 +231,6 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void checkUnsavedChangesAndNavigate(BuildContext context) {
-    print(changedFields);
     int numberOfChangesMade =
         changedFields.entries.where((element) => element.value == true).length;
     if (numberOfChangesMade >= 1) {
@@ -769,6 +769,7 @@ class AddOrUpdateAlarmController extends GetxController {
       repeatDays,
     );
 
+    // store initial values of the variables
     initialValues.addAll({
       'selectedTime': selectedTime.value,
       'daysRepeating': daysRepeating.value,
@@ -783,14 +784,17 @@ class AddOrUpdateAlarmController extends GetxController {
       'showMotivationalQuote': showMotivationalQuote.value,
       'activityInterval': activityInterval.value,
       'weatherTypes': weatherTypes.value,
-      // 'location' : ,
+      'location':
+          '${selectedPoint.value.latitude} ${selectedPoint.value.longitude}',
       'shakeTimes': shakeTimes.value,
       'qrValue': qrValue.value,
       'mathsDifficulty': mathsDifficulty.value,
       'mathsSliderValue': mathsSliderValue.value,
+      'numMathsQuestions': numMathsQuestions.value,
       'numberOfSteps': numberOfSteps.value,
       'isSharedAlarmEnabled': isSharedAlarmEnabled.value,
-      'offsetDuration': offsetDuration.value
+      'offsetDuration': offsetDuration.value,
+      'isOffsetBefore': isOffsetBefore.value
     });
 
     addListeners();
@@ -807,121 +811,27 @@ class AddOrUpdateAlarmController extends GetxController {
     // Updating UI to show time to alarm
     selectedTime.listen((time) {
       debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      if (initialValues.containsKey('selectedTime') &&
-          ((initialValues['selectedTime'] as DateTime).compareTo(time)) == 0) {
-        changedFields['selectedTime'] = false;
-      } else {
-        changedFields['selectedTime'] = true;
-      }
       timeToAlarm.value =
           Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
+      _compareAndSetChange('selectedTime', time);
     });
 
     //Updating UI to show repeated days
     repeatDays.listen((days) {
       daysRepeating.value = Utils.getRepeatDays(days);
-
-      if (initialValues.containsKey('daysRepeating') &&
-          ((initialValues['daysRepeating'] as String)
-                  .compareTo(daysRepeating.value)) ==
-              0) {
-        changedFields['daysRepeating'] = false;
-      } else {
-        changedFields['daysRepeating'] = true;
-      }
+      _compareAndSetChange('daysRepeating', daysRepeating.value);
     });
 
-    snoozeDuration.listen((duration) {
-      if (initialValues.containsKey('snoozeDuration') &&
-          ((initialValues['snoozeDuration'] as int).compareTo(duration)) == 0) {
-        changedFields['snoozeDuration'] = false;
-      } else {
-        changedFields['snoozeDuration'] = true;
-      }
-    });
-
-    deleteAfterGoesOff.listen((value) {
-      if (initialValues.containsKey('deleteAfterGoesOff') &&
-          ((initialValues['deleteAfterGoesOff'] as bool) == (value))) {
-        changedFields['deleteAfterGoesOff'] = false;
-      } else {
-        changedFields['deleteAfterGoesOff'] = true;
-      }
-    });
-
-    label.listen((label) {
-      if (initialValues.containsKey('label') &&
-          ((initialValues['label'] as String).compareTo(label) == 0)) {
-        changedFields['label'] = false;
-      } else {
-        changedFields['label'] = true;
-      }
-    });
-
-    note.listen((note) {
-      if (initialValues.containsKey('note') &&
-          ((initialValues['note'] as String).compareTo(note) == 0)) {
-        changedFields['note'] = false;
-      } else {
-        changedFields['note'] = true;
-      }
-    });
-
-    customRingtoneName.listen((ringtone) {
-      if (initialValues.containsKey('customRingtoneName') &&
-          ((initialValues['customRingtoneName'] as String)
-                  .compareTo(ringtone) ==
-              0)) {
-        changedFields['customRingtoneName'] = false;
-      } else {
-        changedFields['customRingtoneName'] = true;
-      }
-    });
-
-    volMin.listen((vol) {
-      if (initialValues.containsKey('volMin') &&
-          ((initialValues['volMin'] as double).compareTo(vol) == 0)) {
-        changedFields['volMin'] = false;
-      } else {
-        changedFields['volMin'] = true;
-      }
-    });
-
-    volMax.listen((vol) {
-      if (initialValues.containsKey('volMax') &&
-          ((initialValues['volMax'] as double).compareTo(vol) == 0)) {
-        changedFields['volMax'] = false;
-      } else {
-        changedFields['volMax'] = true;
-      }
-    });
-
-    gradient.listen((value) {
-      if (initialValues.containsKey('gradient') &&
-          ((initialValues['gradient'] as int).compareTo(value) == 0)) {
-        changedFields['gradient'] = false;
-      } else {
-        changedFields['gradient'] = true;
-      }
-    });
-
-    showMotivationalQuote.listen((value) {
-      if (initialValues.containsKey('showMotivationalQuote') &&
-          ((initialValues['showMotivationalQuote'] == value))) {
-        changedFields['showMotivationalQuote'] = false;
-      } else {
-        changedFields['showMotivationalQuote'] = true;
-      }
-    });
-
-    activityInterval.listen((value) {
-      if (initialValues.containsKey('activityInterval') &&
-          ((initialValues['activityInterval'] as int).compareTo(value) == 0)) {
-        changedFields['activityInterval'] = false;
-      } else {
-        changedFields['activityInterval'] = true;
-      }
-    });
+    setupListener<int>(snoozeDuration, 'snoozeDuration');
+    setupListener<bool>(deleteAfterGoesOff, 'deleteAfterGoesOff');
+    setupListener<String>(label, 'label');
+    setupListener<String>(note, 'note');
+    setupListener<String>(customRingtoneName, 'customRingtoneName');
+    setupListener<double>(volMin, 'volMin');
+    setupListener<double>(volMax, 'volMax');
+    setupListener<int>(gradient, 'gradient');
+    setupListener<bool>(showMotivationalQuote, 'showMotivationalQuote');
+    setupListener<int>(activityInterval, 'activityInterval');
 
     // Updating UI to show weather types
     selectedWeather.listen((weather) {
@@ -931,17 +841,13 @@ class AddOrUpdateAlarmController extends GetxController {
         isWeatherEnabled.value = true;
       }
       weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
-      if (initialValues.containsKey('weatherTypes') &&
-          ((initialValues['weatherTypes'] as String)
-                  .compareTo(weatherTypes.value) ==
-              0)) {
-        changedFields['weatherTypes'] = false;
-      } else {
-        changedFields['weatherTypes'] = true;
+      _compareAndSetChange('weatherTypes', weatherTypes.value);
+      // if location based is disabled and weather based is disabled, reset location
+      if (weatherTypes.value == 'Off' && !isLocationEnabled.value) {
+        selectedPoint.value = LatLng(0, 0);
       }
     });
 
-    // TODO location
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
     selectedPoint.listen(
@@ -958,73 +864,44 @@ class AddOrUpdateAlarmController extends GetxController {
             ),
           ),
         );
+        _compareAndSetChange(
+            'location', '${point.latitude} ${point.longitude}');
       },
     );
 
-    shakeTimes.listen((value) {
-      if (initialValues.containsKey('shakeTimes') &&
-          ((initialValues['shakeTimes'] as int).compareTo(value) == 0)) {
-        changedFields['shakeTimes'] = false;
-      } else {
-        changedFields['shakeTimes'] = true;
+    // reset selectedPoint to default value if isLocationEnabled is false and weather based is off
+    isLocationEnabled.listen((value) {
+      if (!value && weatherTypes.value == 'Off') {
+        selectedPoint.value = LatLng(0, 0);
       }
     });
 
-    qrValue.listen((type) {
-      if (initialValues.containsKey('qrValue') &&
-          ((initialValues['qrValue'] as String).compareTo(type) == 0)) {
-        changedFields['qrValue'] = false;
-      } else {
-        changedFields['qrValue'] = true;
-      }
-    });
+    setupListener<int>(shakeTimes, 'shakeTimes');
+    setupListener<String>(qrValue, 'qrValue');
+    setupListener<double>(mathsSliderValue, 'mathsSliderValue');
+    setupListener<Difficulty>(mathsDifficulty, 'mathsDifficulty');
+    setupListener<int>(numMathsQuestions, 'numMathsQuestions');
+    setupListener<int>(numberOfSteps, 'numberOfSteps');
 
-    mathsSliderValue.listen((value) {
-      if (initialValues.containsKey('mathsSliderValue') &&
-          ((initialValues['mathsSliderValue'] as double).compareTo(value) ==
-              0)) {
-        changedFields['mathsSliderValue'] = false;
-      } else {
-        changedFields['mathsSliderValue'] = true;
-      }
-    });
+    setupListener<bool>(isSharedAlarmEnabled, 'isSharedAlarmEnabled');
+    setupListener<int>(offsetDuration, 'offsetDuration');
+    setupListener<bool>(isOffsetBefore, 'isOffsetBefore');
+  }
 
-    mathsDifficulty.listen((value) {
-      if (initialValues.containsKey('mathsDifficulty') &&
-          ((initialValues['mathsDifficulty'] as Difficulty).name ==
-              value.name)) {
-        changedFields['mathsDifficulty'] = false;
-      } else {
-        changedFields['mathsDifficulty'] = true;
-      }
+  // adds listener to rxVar variable
+  void setupListener<T>(Rx<T> rxVar, String fieldName) {
+    rxVar.listen((value) {
+      _compareAndSetChange(fieldName, value);
     });
+  }
 
-    numberOfSteps.listen((steps) {
-      if (initialValues.containsKey('numberOfSteps') &&
-          ((initialValues['numberOfSteps'] as int).compareTo(steps) == 0)) {
-        changedFields['numberOfSteps'] = false;
-      } else {
-        changedFields['numberOfSteps'] = true;
-      }
-    });
-
-    isSharedAlarmEnabled.listen((value) {
-      if (initialValues.containsKey('isSharedAlarmEnabled') &&
-          ((initialValues['isSharedAlarmEnabled'] == value))) {
-        changedFields['isSharedAlarmEnabled'] = false;
-      } else {
-        changedFields['isSharedAlarmEnabled'] = true;
-      }
-    });
-
-    offsetDuration.listen((value) {
-      if (initialValues.containsKey('offsetDuration') &&
-          (((initialValues['offsetDuration'] as int).compareTo(value) == 0))) {
-        changedFields['offsetDuration'] = false;
-      } else {
-        changedFields['offsetDuration'] = true;
-      }
-    });
+  // if initialValues map contains fieldName and newValue is equal to currentValue
+  // then set changeFields map field to true
+  void _compareAndSetChange(String fieldName, dynamic currentValue) {
+    if (initialValues.containsKey(fieldName)) {
+      bool hasChanged = initialValues[fieldName] != currentValue;
+      changedFields[fieldName] = hasChanged;
+    }
   }
 
   @override
