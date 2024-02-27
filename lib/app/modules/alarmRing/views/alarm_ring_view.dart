@@ -10,7 +10,7 @@ import '../controllers/alarm_ring_controller.dart';
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({super.key});
 
-  final themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {

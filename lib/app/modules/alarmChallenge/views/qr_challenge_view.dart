@@ -12,7 +12,7 @@ import '../controllers/alarm_challenge_controller.dart';
 class QRChallengeView extends GetView<AlarmChallengeController> {
   QRChallengeView({super.key});
 
-  final themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {

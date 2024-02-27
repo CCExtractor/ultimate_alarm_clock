@@ -8,7 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class MathsChallengeView extends GetView<AlarmChallengeController> {
   MathsChallengeView({super.key});
 
-  final themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {

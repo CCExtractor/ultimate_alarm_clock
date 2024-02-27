@@ -7,7 +7,6 @@ import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dar
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
-import 'package:ultimate_alarm_clock/firebase_options.dart';
 import 'app/routes/app_pages.dart';
 
 Locale? loc;
@@ -15,9 +14,7 @@ Locale? loc;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.options,
-  );
+  await Firebase.initializeApp();
   await Get.putAsync(() => GetStorageProvider().init());
   final storage = Get.find<GetStorageProvider>();
   loc = await storage.readLocale();
