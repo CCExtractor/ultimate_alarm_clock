@@ -125,7 +125,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setGradient(int value) {
-    this.gradient.value = value;
+    gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -525,7 +525,7 @@ class AddOrUpdateAlarmController extends GetxController {
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
-            userModel.value, alarmRecord!.firestoreId!);
+            userModel.value, alarmRecord!.firestoreId!,);
         createAlarm(alarmData);
       }
     }
@@ -885,7 +885,7 @@ class AddOrUpdateAlarmController extends GetxController {
           );
           AudioUtils.updateRingtoneCounterOfUsage(
               customRingtoneName: previousRingtone,
-              counterUpdate: CounterUpdate.decrement);
+              counterUpdate: CounterUpdate.decrement,);
           await IsarDb.addCustomRingtone(customRingtone);
         }
       }
@@ -933,8 +933,8 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
-              margin: EdgeInsets.all(15),
-              animationDuration: Duration(seconds: 1),
+              margin: const EdgeInsets.all(15),
+              animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
               barBlur: 15,
               colorText: kprimaryTextColor,
@@ -943,8 +943,8 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
-              margin: EdgeInsets.all(15),
-              animationDuration: Duration(seconds: 1),
+              margin: const EdgeInsets.all(15),
+              animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
               barBlur: 15,
               colorText: kprimaryTextColor,
@@ -955,8 +955,8 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
-            margin: EdgeInsets.all(15),
-            animationDuration: Duration(seconds: 1),
+            margin: const EdgeInsets.all(15),
+            animationDuration: const Duration(seconds: 1),
             snackPosition: SnackPosition.BOTTOM,
             barBlur: 15,
             colorText: kprimaryTextColor,

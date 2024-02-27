@@ -18,8 +18,6 @@ class ScreenActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = Get.height;
-    var width = Get.width;
     int activityInterval;
     bool isActivityEnalbed;
     return InkWell(

@@ -9,13 +9,11 @@ class RussianTranslations extends Translations {
           'StopWatch': 'Секундомер',
           'Enable 24 Hour Format': 'Включить 24-часовой формат',
           'Enable Haptic Feedback': 'Включить тактильную отдачу',
-          'Enable Sorted Alarm List':
-              'Включить отсортированный список будильников',
+          'Enable Sorted Alarm List': 'Включить отсортированный список будильников',
           // google_sign_in.dart
           'Your account is now linked!': 'Ваш аккаунт теперь связан!',
           'Are you sure?': 'Вы уверены?',
-          'unlinkAccount':
-              'Вы действительно хотите отвязать свой аккаунт Google?',
+          'unlinkAccount': 'Вы действительно хотите отвязать свой аккаунт Google?',
           'Unlink': 'Отвязать',
           'Sign-In with Google': 'Вход с помощью Google',
           'Unlink @usermail': 'Отвязать @usermail',
@@ -152,8 +150,7 @@ class RussianTranslations extends Translations {
 //screen_activity_tile.dart
           'Timeout Duration': 'Длительность тайм-аута',
           'Screen Activity': 'Активность экрана',
-          'Screen activity based cancellation':
-              'Отмена на основе активности экрана',
+          'Screen activity based cancellation': 'Отмена на основе активности экрана',
           'screenDescription':
               'Эта функция автоматически отменяет будильник, если вы используете свое устройство в течение установленного количества минут.',
 //shake_to_dismiss_tile.dart
@@ -164,7 +161,6 @@ class RussianTranslations extends Translations {
           'times': 'раз',
           'time': 'раз',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Общий будильник',
           'Shared alarms': 'Общие будильники',
           'sharedDescription':
               'Делитесь будильниками с другими, используя ID будильника. Каждый общий пользователь может выбрать, звонить ли его будильнику до или после установленного времени.',
@@ -216,7 +212,7 @@ class RussianTranslations extends Translations {
           'Shake your phone!': 'Встряхните свой телефон!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Вы не можете вернуться, пока звонит будильник",
+              'Вы не можете вернуться, пока звонит будильник',
           'Start Challenge': 'Начать задание',
           'Dismiss': 'Отклонить',
           'Exit Preview': 'Выйти из предпросмотра',

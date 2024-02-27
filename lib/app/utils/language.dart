@@ -81,13 +81,11 @@ class AppTranslations extends Translations {
           'Leave': 'Leave',
           'Save': 'Save',
           'Update': 'Update',
-          'Rings in @timeToAlarm': 'Rings in @timeToAlarm',
           'Uh-oh!': 'Uh-oh!',
           'alarmEditing': 'This alarm is currently being edited!',
           'Go back': 'Go back',
           'Automatic Cancellation': 'Automatic Cancellation',
           'Challenges': 'Challenges',
-          'Shared Alarm': 'Shared Alarm',
           //alarm_id_tile.dart
           'Success!': 'Success!',
           'Alarm ID has been copied!': 'Alarm ID has been copied!',
@@ -140,8 +138,7 @@ class AppTranslations extends Translations {
           //screen_activity_tile.dart
           'Timeout Duration': 'Timeout Duration',
           'Screen Activity': 'Screen Activity',
-          'Screen activity based cancellation':
-              'Screen activity based cancellation',
+          'Screen activity based cancellation': 'Screen activity based cancellation',
           'screenDescription':
               'This feature will automatically cancel the alarm if you\'ve been using your device for a set number of minutes.',
           //shake_to_dismiss_tile.dart
@@ -214,8 +211,7 @@ class AppTranslations extends Translations {
           'step1.2': 'openweathermap.org',
           'step1.3': ', click on the ',
           'step1.4': 'SignIn',
-          'step1.5':
-              ' button(top right corner) then it ask for login credentials.',
+          'step1.5': ' button(top right corner) then it ask for login credentials.',
           'step2.1':
               'If you already have an account then enter your credentials. Otherwise, click on ',
           'step2.2': 'Create an Account',

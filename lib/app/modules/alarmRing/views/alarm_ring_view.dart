@@ -8,9 +8,9 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/alarm_ring_controller.dart';
 
 class AlarmControlView extends GetView<AlarmControlController> {
-  AlarmControlView({Key? key}) : super(key: key);
+  AlarmControlView({super.key});
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +32,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
       },
       child: SafeArea(
         child: Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -56,14 +55,12 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               )
                                   ? 'Start Challenge'.tr
                                   : 'Dismiss'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
-                                  ),
+                              style:
+                                  Theme.of(context).textTheme.displaySmall!.copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : ksecondaryTextColor,
+                                      ),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
@@ -72,14 +69,13 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               )) {
                                 Get.toNamed(
                                   '/alarm-challenge',
-                                  arguments:
-                                      controller.currentlyRingingAlarm.value,
+                                  arguments: controller.currentlyRingingAlarm.value,
                                 );
                               } else {
                                 Get.offNamed(
                                   '/bottom-navigation-bar',
-                                  arguments: controller.currentlyRingingAlarm
-                                      .value.showMotivationalQuote,
+                                  arguments: controller.currentlyRingingAlarm.value
+                                      .showMotivationalQuote,
                                 );
                               }
                             },
@@ -105,14 +101,12 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             child: Text(
                               'Exit Preview'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
-                                  ),
+                              style:
+                                  Theme.of(context).textTheme.displaySmall!.copyWith(
+                                        color: themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                            : ksecondaryTextColor,
+                                      ),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
@@ -157,8 +151,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 ),
                 Obx(
                   () => Visibility(
-                    visible:
-                        controller.currentlyRingingAlarm.value.note.isNotEmpty,
+                    visible: controller.currentlyRingingAlarm.value.note.isNotEmpty,
                     child: Text(
                       controller.currentlyRingingAlarm.value.note,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(

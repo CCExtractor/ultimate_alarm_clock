@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utils/constants.dart';
@@ -35,7 +34,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
         isLightMode: widget.themeController.isLightMode.value,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30),
+        padding: const EdgeInsets.only(left: 30),
         child: Row(
           children: [
             Obx(
@@ -48,7 +47,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                   ),
                 ),
                 inputDecorationTheme:
-                    InputDecorationTheme(enabledBorder: InputBorder.none),
+                    const InputDecorationTheme(enabledBorder: InputBorder.none),
                 trailingIcon: Icon(
                   Icons.arrow_drop_down_outlined,
                   size: 40.0,
@@ -58,11 +57,11 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 ),
                 width: widget.width * 0.78,
                 initialSelection: widget.controller.currentLanguage.value,
-                label: Text('Change Language'),
+                label: const Text('Change Language'),
                 dropdownMenuEntries:
                     widget.controller.optionslocales.entries.map((e) {
                   return DropdownMenuEntry(
-                    value: "${e.key}",
+                    value: e.key,
                     label: "${e.value['description']}",
                     style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(

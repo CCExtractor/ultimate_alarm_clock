@@ -121,8 +121,7 @@ class GermanTranslations extends Translations {
           'Label': 'Etikett',
           'Add a label': 'Fügen Sie ein Etikett hinzu',
           'Note': 'Hinweis',
-          'noWhitespace':
-              'Bitte geben Sie kein Leerzeichen als ersten Zeichen ein!',
+          'noWhitespace': 'Bitte geben Sie kein Leerzeichen als ersten Zeichen ein!',
 //maths_challenge_tile.dart
           'Maths': 'Mathematik',
           'Math problems': 'Mathematische Probleme',
@@ -143,9 +142,6 @@ class GermanTranslations extends Translations {
           'pedometerDescription':
               'Schreiten Sie voran, um zu entlassen! Setzen Sie ein Schrittziel, um den Wecker auszuschalten und einen aktiven und energiegeladenen Start in den Tag zu fördern.',
 
-          'Solve Maths questions': 'Lösen Sie mathematische Fragen',
-          'questions': 'Fragen',
-          'question': 'Frage',
 //note.dart
           'Add a note': 'Füg ein Notiz hinzu',
 // qr_bar_code_tile.dart
@@ -175,8 +171,6 @@ class GermanTranslations extends Translations {
           'times': 'Mal',
           'time': 'Mal',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Geteilter Alarm',
-
           'Shared alarms': 'Geteilte Alarme',
           'sharedDescription':
               'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',
@@ -201,8 +195,7 @@ class GermanTranslations extends Translations {
           'Windy': 'Windig',
           'Stormy': 'Stürmisch',
           'Weather Condition': 'Wetterbedingung',
-          'Weather based cancellation':
-              'Stornierung aufgrund von Wetterbedingungen',
+          'Weather based cancellation': 'Stornierung aufgrund von Wetterbedingungen',
           'weatherDescription':
               'Diese Funktion storniert den Alarm automatisch, wenn das aktuelle Wetter Ihren ausgewählten Wetterbedingungen entspricht und ermöglicht so einen besseren Schlaf!',
           'To use this feature, you have to add an OpenWeatherMap API key!':
@@ -221,7 +214,7 @@ class GermanTranslations extends Translations {
           'Shake your phone!': 'Schütteln Sie Ihr Telefon!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Sie können nicht zurückgehen, während der Alarm klingelt",
+              'Sie können nicht zurückgehen, während der Alarm klingelt',
           'Start Challenge': 'Herausforderung starten',
           'Dismiss': 'Abbrechen',
           'Exit Preview': 'Vorschau beenden',
@@ -266,7 +259,7 @@ class GermanTranslations extends Translations {
           'Ascending Volume': 'Aufsteigende Lautstärke',
           'Alarm deleted': 'Alarm gelöscht',
           'Undo': 'Rückgängig machen',
-          'The alarm has been deleted': 'Der Alarm wurde gelöscht'
+          'The alarm has been deleted': 'Der Alarm wurde gelöscht',
         },
       };
 }

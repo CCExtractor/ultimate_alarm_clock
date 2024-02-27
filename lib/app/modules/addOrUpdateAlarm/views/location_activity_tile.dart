@@ -122,7 +122,8 @@ class LocationTile extends StatelessWidget {
                   ? kLightSecondaryBackgroundColor
                   : ksecondaryBackgroundColor,
               title: 'Set location to automatically cancel alarm!',
-              titleStyle: Theme.of(context).textTheme.bodyMedium,
+              titleStyle:
+                  context.mounted ? Theme.of(context).textTheme.bodyMedium : null,
               content: Column(
                 children: [
                   SizedBox(
@@ -143,9 +144,11 @@ class LocationTile extends StatelessWidget {
                           urlTemplate:
                               'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
                         ),
-                        Obx(() => MarkerLayer(
-                            markers:
-                                List<Marker>.from(controller.markersList))),
+                        Obx(
+                          () => MarkerLayer(
+                            markers: List<Marker>.from(controller.markersList),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -156,11 +159,13 @@ class LocationTile extends StatelessWidget {
                     ),
                     child: Text(
                       'Save',
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
-                                ? kLightSecondaryTextColor
-                                : ksecondaryTextColor,
-                          ),
+                      style: context.mounted
+                          ? Theme.of(context).textTheme.displaySmall!.copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightSecondaryTextColor
+                                    : ksecondaryTextColor,
+                              )
+                          : null,
                     ),
                     onPressed: () {
                       Utils.hapticFeedback();

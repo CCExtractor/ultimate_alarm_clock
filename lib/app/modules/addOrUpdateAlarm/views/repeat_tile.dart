@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -34,7 +32,7 @@ class RepeatTile extends StatelessWidget {
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
             builder: (BuildContext context) {
-              return Container(
+              return SizedBox(
                 height: height * 0.45,
                 child: Column(
                   children: [
@@ -173,7 +171,7 @@ class RepeatTile extends StatelessWidget {
     required ThemeController themeController,
   }) {
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 10.0),
+      contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
@@ -186,7 +184,7 @@ class RepeatTile extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0), // Adjust the padding as needed
+            padding: const EdgeInsets.all(8.0), // Adjust the padding as needed
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -267,7 +265,7 @@ class RepeatTile extends StatelessWidget {
   }) {
     List<bool> repeatDays = List<bool>.filled(7, false);
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 10.0),
+      contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
@@ -362,7 +360,7 @@ class RepeatTile extends StatelessWidget {
             );
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -398,7 +396,7 @@ class RepeatTile extends StatelessWidget {
     required ThemeController themeController,
   }) {
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 10.0),
+      contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
@@ -414,12 +412,12 @@ class RepeatTile extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0), // Adjust the padding as needed
+            padding: const EdgeInsets.all(8.0), // Adjust the padding as needed
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Weekdays',
                 ),
                 Checkbox.adaptive(
@@ -434,7 +432,7 @@ class RepeatTile extends StatelessWidget {
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     controller.setIsWeekdaysSelected(
-                        !controller.isWeekdaysSelected.value);
+                        !controller.isWeekdaysSelected.value,);
 
                     // Update repeatDays based on isWeekdaysSelected value
                     for (int i = 0; i < controller.repeatDays.length; i++) {

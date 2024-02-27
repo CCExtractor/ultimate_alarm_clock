@@ -261,7 +261,7 @@ class Utils {
       'Thur'.tr,
       'Fri'.tr,
       'Sat'.tr,
-      'Sun'.tr
+      'Sun'.tr,
     ];
     int weekdayCount = 0;
     int weekendCount = 0;

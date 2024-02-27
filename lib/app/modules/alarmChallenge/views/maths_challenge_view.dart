@@ -6,9 +6,9 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class MathsChallengeView extends GetView<AlarmChallengeController> {
-  MathsChallengeView({Key? key}) : super(key: key);
+  MathsChallengeView({super.key});
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                   minHeight: 2,
                   value: controller.progress.value,
                   backgroundColor: Colors.grey,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(kprimaryColor),
+                  valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
                 ),
               ),
               Expanded(
@@ -44,13 +43,22 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                           ? Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16.0,
+                                    16.0,
+                                    16.0,
+                                    30.0,
+                                  ),
                                   child: Obx(
-                                        () => Text(
-                                          'Question @noMathQ'.trParams({
-                                            'noMathQ' :  controller.numMathsQuestions.value.toString(),
-                                          }),
-                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    () => Text(
+                                      'Question @noMathQ'.trParams({
+                                        'noMathQ': controller.numMathsQuestions.value
+                                            .toString(),
+                                      }),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
                                             letterSpacing: 1.5,
                                           ),
                                     ),
@@ -61,9 +69,8 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                                   child: Obx(
                                     () => Text(
                                       controller.questionText.value,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayLarge,
+                                      style:
+                                          Theme.of(context).textTheme.displayLarge,
                                     ),
                                   ),
                                 ),
@@ -72,9 +79,8 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                                   child: Obx(
                                     () => Text(
                                       controller.displayValue.value,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium,
+                                      style:
+                                          Theme.of(context).textTheme.displayMedium,
                                     ),
                                   ),
                                 ),
@@ -102,8 +108,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildNumberButton('7'),
                                   _buildNumberButton('8'),
@@ -112,8 +117,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               ),
                               const SizedBox(height: 8),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildNumberButton('4'),
                                   _buildNumberButton('5'),
@@ -122,8 +126,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               ),
                               const SizedBox(height: 8),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildNumberButton('1'),
                                   _buildNumberButton('2'),
@@ -132,8 +135,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               ),
                               const SizedBox(height: 8),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildClearButton(),
                                   _buildNumberButton('0'),
@@ -203,8 +205,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     return ElevatedButton(
       onPressed: () {
         Utils.hapticFeedback();
-        if (controller.mathsAnswer.toString() ==
-            controller.displayValue.value) {
+        if (controller.mathsAnswer.toString() == controller.displayValue.value) {
           controller.numMathsQuestions.value -= 1;
           controller.isMathsOngoing.value = Status.initialized;
           controller.correctAnswer.value = true;

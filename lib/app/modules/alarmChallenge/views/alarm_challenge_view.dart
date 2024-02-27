@@ -11,9 +11,9 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/alarm_challenge_controller.dart';
 
 class AlarmChallengeView extends GetView<AlarmChallengeController> {
-  AlarmChallengeView({Key? key}) : super(key: key);
+  AlarmChallengeView({super.key});
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +60,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                     controller.alarmRecord.isShakeEnabled) {
                                   controller.shakedCount.value =
                                       controller.alarmRecord.shakeTimes;
-                                  controller.isShakeOngoing.value =
-                                      Status.ongoing;
+                                  controller.isShakeOngoing.value = Status.ongoing;
                                   Get.to(() => ShakeChallengeView());
                                 }
                               },
@@ -77,14 +76,12 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       : ksecondaryBackgroundColor,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Icon(
                                       Icons.vibration,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
+                                          ? kLightPrimaryTextColor.withOpacity(0.8)
                                           : kprimaryTextColor.withOpacity(0.8),
                                       size: 28,
                                     ),
@@ -94,8 +91,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                           .textTheme
                                           .bodyLarge!
                                           .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
+                                            color: themeController.isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : kprimaryTextColor,
                                           ),
@@ -107,10 +103,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                             ? Icons.done
                                             : Icons.arrow_forward_ios_sharp,
                                         color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                            ? kLightPrimaryTextColor.withOpacity(0.4)
+                                            : kprimaryTextColor.withOpacity(0.2),
                                       ),
                                     ),
                                   ],
@@ -128,8 +122,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                 if (controller.isMathsOngoing.value !=
                                         Status.completed &&
                                     controller.alarmRecord.isMathsEnabled) {
-                                  controller.isMathsOngoing.value =
-                                      Status.ongoing;
+                                  controller.isMathsOngoing.value = Status.ongoing;
                                   Get.to(() => MathsChallengeView());
                                 }
                               },
@@ -145,14 +138,12 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       : ksecondaryBackgroundColor,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Icon(
                                       Icons.calculate_sharp,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
+                                          ? kLightPrimaryTextColor.withOpacity(0.8)
                                           : kprimaryTextColor.withOpacity(0.8),
                                       size: 28,
                                     ),
@@ -162,8 +153,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                           .textTheme
                                           .bodyLarge!
                                           .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
+                                            color: themeController.isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : kprimaryTextColor,
                                           ),
@@ -175,10 +165,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                             ? Icons.done
                                             : Icons.arrow_forward_ios_sharp,
                                         color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                            ? kLightPrimaryTextColor.withOpacity(0.4)
+                                            : kprimaryTextColor.withOpacity(0.2),
                                       ),
                                     ),
                                   ],
@@ -211,14 +199,12 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       : ksecondaryBackgroundColor,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Icon(
                                       Icons.qr_code_scanner,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
+                                          ? kLightPrimaryTextColor.withOpacity(0.8)
                                           : kprimaryTextColor.withOpacity(0.8),
                                       size: 28,
                                     ),
@@ -228,8 +214,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                           .textTheme
                                           .bodyLarge!
                                           .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
+                                            color: themeController.isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : kprimaryTextColor,
                                           ),
@@ -241,10 +226,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                             ? Icons.done
                                             : Icons.arrow_forward_ios_sharp,
                                         color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                            ? kLightPrimaryTextColor.withOpacity(0.4)
+                                            : kprimaryTextColor.withOpacity(0.2),
                                       ),
                                     ),
                                   ],
@@ -281,14 +264,12 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       : ksecondaryBackgroundColor,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Icon(
                                       Icons.directions_walk,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
+                                          ? kLightPrimaryTextColor.withOpacity(0.8)
                                           : kprimaryTextColor.withOpacity(0.8),
                                       size: 28,
                                     ),
@@ -298,8 +279,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                           .textTheme
                                           .bodyLarge!
                                           .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
+                                            color: themeController.isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : kprimaryTextColor,
                                           ),
@@ -311,10 +291,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                             ? Icons.done
                                             : Icons.arrow_forward_ios_sharp,
                                         color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                            ? kLightPrimaryTextColor.withOpacity(0.4)
+                                            : kprimaryTextColor.withOpacity(0.2),
                                       ),
                                     ),
                                   ],

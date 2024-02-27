@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -12,8 +12,8 @@ class GetStorageProvider {
   }
 
   Future<String> readCurrentLanguage() async {
-    print(_getStorage.read('currentLanguageKey'));
-    String? language = await _getStorage.read(('currentLanguageKey'));
+    debugPrint(_getStorage.read('currentLanguageKey'));
+    String? language = _getStorage.read(('currentLanguageKey'));
     if (language == null) {
       language = Get.locale.toString();
       writeCurrentLanguage(language);

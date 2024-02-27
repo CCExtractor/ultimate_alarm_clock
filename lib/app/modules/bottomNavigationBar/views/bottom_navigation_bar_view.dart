@@ -6,6 +6,8 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
   final PageController pageController = PageController();
 
+  BottomNavigationBarView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,15 +23,15 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           useLegacyColorScheme: false,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.alarm),
+              icon: const Icon(Icons.alarm),
               label: 'Alarm'.tr,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.timer_outlined),
+              icon: const Icon(Icons.timer_outlined),
               label: 'StopWatch'.tr,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.timelapse_outlined),
+              icon: const Icon(Icons.timelapse_outlined),
               label: 'Timer'.tr,
             ),
           ],
@@ -37,7 +39,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
             Utils.hapticFeedback();
             controller.changeTab(index);
             pageController.animateToPage(index,
-                duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                duration: const Duration(milliseconds: 300), curve: Curves.easeInOut,);
           },
           currentIndex: controller.activeTabIndex.value,
         ),

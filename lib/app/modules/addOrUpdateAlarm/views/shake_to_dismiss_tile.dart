@@ -18,8 +18,6 @@ class ShakeToDismiss extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
     int shakeTimes;
     bool isShakeEnabled;
     return ListTile(
@@ -100,9 +98,9 @@ class ShakeToDismiss extends StatelessWidget {
                           controller.shakeTimes.value = value;
                         },
                       ),
-                      Text(controller.shakeTimes.value > 1
-                          ? 'times'.tr
-                          : 'time'.tr),
+                      Text(
+                        controller.shakeTimes.value > 1 ? 'times'.tr : 'time'.tr,
+                      ),
                     ],
                   ),
                 ),
@@ -124,14 +122,12 @@ class ShakeToDismiss extends StatelessWidget {
                           ),
                           child: Text(
                             'Done'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.displaySmall!.copyWith(
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor
+                                          : ksecondaryTextColor,
+                                    ),
                           ),
                         ),
                       ],

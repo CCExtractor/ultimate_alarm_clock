@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controllers/stopwatch_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 
 class StopwatchView extends GetView<StopwatchController> {
-  StopwatchView({Key? key}) : super(key: key);
-  ThemeController themeController = Get.find<ThemeController>();
+  StopwatchView({super.key});
+  final ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
     var height = Get.height;
     return Scaffold(
       appBar: PreferredSize(
@@ -110,7 +108,7 @@ class StopwatchView extends GetView<StopwatchController> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FloatingActionButton(
-                heroTag: "start",
+                heroTag: 'start',
                 onPressed: controller.toggleTimer,
                 child: Obx(
                   () => Icon(
@@ -123,9 +121,9 @@ class StopwatchView extends GetView<StopwatchController> {
               ),
               // Reset button
               FloatingActionButton(
-                heroTag: "stop",
+                heroTag: 'stop',
                 onPressed: controller.resetTime,
-                child: Icon(
+                child: const Icon(
                   Icons.stop_rounded,
                   size: 33,
                 ),
@@ -134,7 +132,7 @@ class StopwatchView extends GetView<StopwatchController> {
           ),
         ],
       ),
-      endDrawer: buildEndDrawer(context)
+      endDrawer: buildEndDrawer(context),
     );
   }
 }

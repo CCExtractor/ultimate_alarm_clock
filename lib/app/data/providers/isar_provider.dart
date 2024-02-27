@@ -162,7 +162,7 @@ class IsarDb {
       yield* db.alarmModels.where().watch(fireImmediately: true);
     } catch (e) {
       debugPrint(e.toString());
-      throw e;
+      rethrow;
     }
   }
 

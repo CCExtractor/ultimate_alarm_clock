@@ -46,7 +46,7 @@ class InputTimeController extends GetxController {
 
   int convert24(int value) {
     if (!settingsController.is24HrsEnabled.value) {
-      if (addOrUpdateAlarmController.meridiemIndex == 0) {
+      if (addOrUpdateAlarmController.meridiemIndex.value == 0) {
         if (value == 12) {
           value = value - 12;
         }
@@ -78,16 +78,14 @@ class InputTimeController extends GetxController {
       final time = TimeOfDay(hour: hour, minute: minute);
       DateTime today = DateTime.now();
       DateTime tomorrow = today.add(const Duration(days: 1));
-      bool isNextDay =
-          (time.hour == today.hour && time.minute < today.minute) ||
-              (time.hour < today.hour);
+      bool isNextDay = (time.hour == today.hour && time.minute < today.minute) ||
+          (time.hour < today.hour);
       bool isNextMonth = isNextDay && (today.day > tomorrow.day);
       bool isNextYear = isNextMonth && (today.month > tomorrow.month);
       int day = isNextDay ? tomorrow.day : today.day;
       int month = isNextMonth ? tomorrow.month : today.month;
       int year = isNextYear ? tomorrow.month : today.month;
-      selectedDateTime.value =
-          DateTime(year, month, day, time.hour, time.minute);
+      selectedDateTime.value = DateTime(year, month, day, time.hour, time.minute);
       addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
 
       if (!settingsController.is24HrsEnabled.value) {
@@ -95,7 +93,7 @@ class InputTimeController extends GetxController {
           addOrUpdateAlarmController.hours.value = 12;
         } else if (selectedDateTime.value.hour > 12) {
           addOrUpdateAlarmController.hours.value =
-              (selectedDateTime.value.hour-12);
+              (selectedDateTime.value.hour - 12);
         } else {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }

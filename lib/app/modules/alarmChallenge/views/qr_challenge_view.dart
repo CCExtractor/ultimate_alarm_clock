@@ -10,9 +10,9 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/alarm_challenge_controller.dart';
 
 class QRChallengeView extends GetView<AlarmChallengeController> {
-  QRChallengeView({Key? key}) : super(key: key);
+  QRChallengeView({super.key});
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +51,13 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                         children: [
                           Text(
                             'Scan your QR/Bar Code!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor.withOpacity(0.7)
-                                      : kprimaryTextColor.withOpacity(0.7),
-                                ),
+                            style:
+                                Theme.of(context).textTheme.displayMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor.withOpacity(0.7)
+                                          : kprimaryTextColor.withOpacity(0.7),
+                                    ),
                           ),
                           SizedBox(
                             height: height * 0.08,
@@ -67,8 +65,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                           Obx(
                             () => Column(
                               children: [
-                                (controller.isQrOngoing.value ==
-                                        Status.initialized)
+                                (controller.isQrOngoing.value == Status.initialized)
                                     ? SizedBox(
                                         height: 300,
                                         width: 300,
@@ -83,8 +80,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                   barcode.rawValue.toString();
 
                                               if (controller.qrValue.value !=
-                                                  controller
-                                                      .alarmRecord.qrValue) {
+                                                  controller.alarmRecord.qrValue) {
                                                 controller.isQrOngoing.value =
                                                     Status.ongoing;
                                               } else {
@@ -100,8 +96,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                         width: 300,
                                         child: Center(
                                           child: (controller.qrValue.value ==
-                                                  controller
-                                                      .alarmRecord.qrValue)
+                                                  controller.alarmRecord.qrValue)
                                               ? Icon(
                                                   Icons.done,
                                                   size: height * 0.2,
@@ -114,8 +109,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                 )
                                               : Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                      MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Icon(
                                                       Icons.close,
@@ -181,8 +175,8 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             .dispose();
                                                         controller
                                                             .restartQRCodeController();
-                                                        controller.isQrOngoing
-                                                                .value =
+                                                        controller
+                                                                .isQrOngoing.value =
                                                             Status.initialized;
                                                       },
                                                     ),

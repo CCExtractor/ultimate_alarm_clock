@@ -14,8 +14,7 @@ class SpanishTranslations extends Translations {
           // google_sign_in.dart
           'Your account is now linked!': '¡Su cuenta ahora está vinculada!',
           'Are you sure?': '¿Estás seguro?',
-          'unlinkAccount':
-              '¿Seguro que quieres desvincular tu cuenta de Google?',
+          'unlinkAccount': '¿Seguro que quieres desvincular tu cuenta de Google?',
           'Unlink': 'Desvincular',
           'Sign-In with Google': 'Iniciar sesión con Google',
           'Unlink @usermail': 'Desvincular @usermail',
@@ -52,8 +51,7 @@ class SpanishTranslations extends Translations {
           'Create alarm': 'Crear alarma',
           'Join alarm': 'Unirse a alarma',
           'Okay': 'Aceptar',
-          'You cannot join your own alarm!':
-              '¡No puedes unirte a tu propia alarma!',
+          'You cannot join your own alarm!': '¡No puedes unirte a tu propia alarma!',
           'An alarm with this ID doesn\'t exist!':
               '¡Una alarma con este ID no existe!',
           'Error!': '¡Error!',
@@ -134,8 +132,6 @@ class SpanishTranslations extends Translations {
           'Hard': 'Difícil',
 
 //maths_challenge_tile.dart
-          'Maths': 'Matemáticas',
-          'Math problems': 'Problemas matemáticos',
           'mathDescription':
               'Deberá resolver problemas matemáticos simples del nivel de dificultad elegido para desactivar la alarma.',
           'Solve Maths questions': 'Resolver preguntas de matemáticas',
@@ -178,7 +174,6 @@ class SpanishTranslations extends Translations {
           'times': 'veces',
           'time': 'vez',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Alarma compartida',
           'Shared alarms': 'Alarmas compartidas',
           'sharedDescription':
               'Comparta alarmas con otros utilizando el ID de la alarma. Cada usuario compartido puede elegir hacer sonar su alarma antes o después del tiempo establecido.',
@@ -222,7 +217,7 @@ class SpanishTranslations extends Translations {
           'Shake your phone!': '¡Agita tu teléfono!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "No puedes retroceder mientras suena la alarma",
+              'No puedes retroceder mientras suena la alarma',
           'Start Challenge': 'Comenzar el desafío',
           'Dismiss': 'Descartar',
           'Exit Preview': 'Salir de la vista previa',
@@ -265,7 +260,7 @@ class SpanishTranslations extends Translations {
           'Ascending Volume': 'Volumen ascendente',
           'Alarm deleted': 'Alarma eliminada',
           'Undo': 'Deshacer',
-          'The alarm has been deleted': 'La alarma ha sido eliminada'
+          'The alarm has been deleted': 'La alarma ha sido eliminada',
         },
       };
 }

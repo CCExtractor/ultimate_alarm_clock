@@ -6,7 +6,9 @@ import 'package:ultimate_alarm_clock/app/modules/timerRing/controllers/timer_rin
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class TimerRingView extends GetView<TimerRingController> {
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
+
+  TimerRingView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,7 @@ class TimerRingView extends GetView<TimerRingController> {
       },
       child: SafeArea(
         child: Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
             padding: const EdgeInsets.all(18.0),
             child: SizedBox(

@@ -32,7 +32,9 @@ class WeatherTile extends StatelessWidget {
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
                     title: 'Select weather types'.tr,
-                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                    titleStyle: context.mounted
+                        ? Theme.of(context).textTheme.displaySmall
+                        : null,
                     content: Obx(
                       () => Column(
                         children: [
@@ -44,8 +46,7 @@ class WeatherTile extends StatelessWidget {
                                 controller.selectedWeather
                                     .remove(WeatherTypes.sunny);
                               } else {
-                                controller.selectedWeather
-                                    .add(WeatherTypes.sunny);
+                                controller.selectedWeather.add(WeatherTypes.sunny);
                               }
                             },
                             child: Padding(
@@ -58,8 +59,7 @@ class WeatherTile extends StatelessWidget {
                                     side: BorderSide(
                                       width: 1.5,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
+                                          ? kLightPrimaryTextColor.withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -96,8 +96,7 @@ class WeatherTile extends StatelessWidget {
                                 controller.selectedWeather
                                     .remove(WeatherTypes.cloudy);
                               } else {
-                                controller.selectedWeather
-                                    .add(WeatherTypes.cloudy);
+                                controller.selectedWeather.add(WeatherTypes.cloudy);
                               }
                             },
                             child: Padding(
@@ -110,8 +109,7 @@ class WeatherTile extends StatelessWidget {
                                     side: BorderSide(
                                       width: 1.5,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
+                                          ? kLightPrimaryTextColor.withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -149,8 +147,7 @@ class WeatherTile extends StatelessWidget {
                                 controller.selectedWeather
                                     .remove(WeatherTypes.rainy);
                               } else {
-                                controller.selectedWeather
-                                    .add(WeatherTypes.rainy);
+                                controller.selectedWeather.add(WeatherTypes.rainy);
                               }
                             },
                             child: Padding(
@@ -163,8 +160,7 @@ class WeatherTile extends StatelessWidget {
                                     side: BorderSide(
                                       width: 1.5,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
+                                          ? kLightPrimaryTextColor.withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -201,8 +197,7 @@ class WeatherTile extends StatelessWidget {
                                 controller.selectedWeather
                                     .remove(WeatherTypes.windy);
                               } else {
-                                controller.selectedWeather
-                                    .add(WeatherTypes.windy);
+                                controller.selectedWeather.add(WeatherTypes.windy);
                               }
                             },
                             child: Padding(
@@ -215,8 +210,7 @@ class WeatherTile extends StatelessWidget {
                                     side: BorderSide(
                                       width: 1.5,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
+                                          ? kLightPrimaryTextColor.withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -253,8 +247,7 @@ class WeatherTile extends StatelessWidget {
                                 controller.selectedWeather
                                     .remove(WeatherTypes.stormy);
                               } else {
-                                controller.selectedWeather
-                                    .add(WeatherTypes.stormy);
+                                controller.selectedWeather.add(WeatherTypes.stormy);
                               }
                             },
                             child: Padding(
@@ -267,8 +260,7 @@ class WeatherTile extends StatelessWidget {
                                     side: BorderSide(
                                       width: 1.5,
                                       color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
+                                          ? kLightPrimaryTextColor.withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -341,8 +333,7 @@ class WeatherTile extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(25.0),
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Icon(
                                       Icons.cloudy_snowing,
@@ -354,9 +345,8 @@ class WeatherTile extends StatelessWidget {
                                     Text(
                                       'Weather based cancellation'.tr,
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium,
+                                      style:
+                                          Theme.of(context).textTheme.displayMedium,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 15.0),
@@ -367,9 +357,8 @@ class WeatherTile extends StatelessWidget {
                                         // ' weather conditions, allowing you'
                                         // ' to sleep better!',
                                         'weatherDescription'.tr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                                        style:
+                                            Theme.of(context).textTheme.bodyMedium,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -377,8 +366,7 @@ class WeatherTile extends StatelessWidget {
                                       width: width,
                                       child: TextButton(
                                         style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
+                                          backgroundColor: MaterialStateProperty.all(
                                             kprimaryColor,
                                           ),
                                         ),
@@ -392,10 +380,10 @@ class WeatherTile extends StatelessWidget {
                                               .textTheme
                                               .displaySmall!
                                               .copyWith(
-                                                color: themeController
-                                                        .isLightMode.value
-                                                    ? kLightPrimaryTextColor
-                                                    : ksecondaryTextColor,
+                                                color:
+                                                    themeController.isLightMode.value
+                                                        ? kLightPrimaryTextColor
+                                                        : ksecondaryTextColor,
                                               ),
                                         ),
                                       ),
@@ -417,16 +405,12 @@ class WeatherTile extends StatelessWidget {
                       Obx(
                         () => Text(
                           controller.weatherTypes.value,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                color:
-                                    (controller.isWeatherEnabled.value == false)
-                                        ? kprimaryDisabledTextColor
-                                        : themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: (controller.isWeatherEnabled.value == false)
+                                    ? kprimaryDisabledTextColor
+                                    : themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : kprimaryTextColor,
                               ),
                         ),
                       ),
@@ -477,8 +461,7 @@ class WeatherTile extends StatelessWidget {
                                           .textTheme
                                           .displaySmall!
                                           .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
+                                            color: themeController.isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : ksecondaryTextColor,
                                           ),
@@ -500,8 +483,7 @@ class WeatherTile extends StatelessWidget {
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
                                       themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
+                                          ? kLightPrimaryTextColor.withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
                                     ),
                                   ),
@@ -514,8 +496,7 @@ class WeatherTile extends StatelessWidget {
                                           .textTheme
                                           .displaySmall!
                                           .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
+                                            color: themeController.isLightMode.value
                                                 ? kLightPrimaryTextColor
                                                 : kprimaryTextColor,
                                           ),

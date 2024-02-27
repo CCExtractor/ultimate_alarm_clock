@@ -6,9 +6,9 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class PedometerChallengeView extends GetView<AlarmChallengeController> {
-  PedometerChallengeView({Key? key}) : super(key: key);
+  PedometerChallengeView({super.key});
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +45,13 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                         children: [
                           Text(
                             'Walk it Out!',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor.withOpacity(0.7)
-                                      : kprimaryTextColor.withOpacity(0.7),
-                                ),
+                            style:
+                                Theme.of(context).textTheme.displayMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryTextColor.withOpacity(0.7)
+                                          : kprimaryTextColor.withOpacity(0.7),
+                                    ),
                           ),
                           SizedBox(
                             height: height * 0.08,

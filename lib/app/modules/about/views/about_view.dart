@@ -8,7 +8,9 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AboutView extends GetView<AboutController> {
   final AboutController aboutController = Get.find<AboutController>();
-  ThemeController themeController = Get.find<ThemeController>();
+  final themeController = Get.find<ThemeController>();
+
+  AboutView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +54,15 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Text(
               'Ultimate Alarm Clock'.tr,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10),
-             Text(
+            Text(
               'Version: 0.5.0'.tr,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -68,10 +70,11 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child:  Text(
-                'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'.tr,
+              child: Text(
+                """This project was originally developed as part of Google Summer of code under the CCExtractor organization. It's free, the source code is available, and we encourage programmers to contribute"""
+                    .tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
@@ -129,7 +132,8 @@ class AboutView extends GetView<AboutController> {
                         Uri.parse(AboutController.ccExtractorUrl),
                       )) {
                         throw Exception(
-                          'Could not launch ${AboutController.ccExtractorUrl}'.tr,
+                          'Could not launch ${AboutController.ccExtractorUrl}'
+                              .tr,
                         );
                       }
                     },

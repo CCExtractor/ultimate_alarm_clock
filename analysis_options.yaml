@@ -1,3 +1,6 @@
+analyzer:
+  errors:
+    constant_identifier_names: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
@@ -5,4 +8,4 @@ linter:
     avoid_print: true
     prefer_single_quotes: true
     require_trailing_commas: true
-    lines_longer_than_80_chars: true
+    # lines_longer_than_80_chars: true

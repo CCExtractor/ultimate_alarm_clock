@@ -180,7 +180,6 @@ class FrenchTranslations extends Translations {
           'times': 'fois',
           'time': 'fois',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Alarme partagée',
           'Shared alarms': 'Alarmes partagées',
           'sharedDescription':
               'Partagez des alarmes avec d\'autres en utilisant l\'ID de l\'alarme. Chaque utilisateur partagé peut choisir de faire sonner son alarme avant ou après l\'heure définie.',
@@ -262,8 +261,7 @@ class FrenchTranslations extends Translations {
               'Vous disposez désormais de la clé API Météo. Sélectionnez la clé et copiez-la.',
 
           //ascending_volume.dart
-          'Volume will reach maximum in':
-              'Le volume atteindra son maximum dans',
+          'Volume will reach maximum in': 'Le volume atteindra son maximum dans',
           'seconds': 'secondes',
           'Adjust the volume range:': 'Ajustez la plage de volume:',
           'Apply Gradient': 'Appliquer un dégradé',

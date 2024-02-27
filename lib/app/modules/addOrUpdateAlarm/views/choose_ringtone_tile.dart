@@ -64,13 +64,14 @@ class ChooseRingtoneTile extends StatelessWidget {
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
             title: 'Choose Ringtone'.tr,
-            titleStyle: Theme.of(context).textTheme.displaySmall,
+            titleStyle:
+                context.mounted ? Theme.of(context).textTheme.displaySmall : null,
             content: Obx(
               () => Column(
                 children: [
                   Obx(
                     () => Padding(
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       child: SizedBox(
                         width: width * 0.8,
                         height: height * 0.2,
@@ -80,10 +81,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                               ? kLightSecondaryBackgroundColor
                               : ksecondaryBackgroundColor,
                           child: Scrollbar(
-                            radius: Radius.circular(5),
+                            radius: const Radius.circular(5),
                             thumbVisibility: true,
                             child: Padding(
-                              padding: EdgeInsets.only(right: 4),
+                              padding: const EdgeInsets.only(right: 4),
                               child: ListView.separated(
                                 separatorBuilder: (context, index) {
                                   return Divider(
@@ -93,8 +94,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                                     height: 0,
                                   );
                                 },
-                                itemCount:
-                                    controller.customRingtoneNames.length,
+                                itemCount: controller.customRingtoneNames.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
                                   return Obx(
@@ -104,33 +104,27 @@ class ChooseRingtoneTile extends StatelessWidget {
                                             controller.customRingtoneName.value;
 
                                         controller.customRingtoneName.value =
-                                            controller
-                                                .customRingtoneNames[index];
+                                            controller.customRingtoneNames[index];
 
-                                        if (controller
-                                                .customRingtoneName.value !=
+                                        if (controller.customRingtoneName.value !=
                                             controller.previousRingtone) {
                                           await AudioUtils
                                               .updateRingtoneCounterOfUsage(
-                                            customRingtoneName: controller
-                                                .customRingtoneName.value,
-                                            counterUpdate:
-                                                CounterUpdate.increment,
+                                            customRingtoneName:
+                                                controller.customRingtoneName.value,
+                                            counterUpdate: CounterUpdate.increment,
                                           );
 
                                           await AudioUtils
                                               .updateRingtoneCounterOfUsage(
                                             customRingtoneName:
                                                 controller.previousRingtone,
-                                            counterUpdate:
-                                                CounterUpdate.decrement,
+                                            counterUpdate: CounterUpdate.decrement,
                                           );
                                         }
                                       },
-                                      tileColor: controller
-                                                  .customRingtoneName ==
-                                              controller
-                                                  .customRingtoneNames[index]
+                                      tileColor: controller.customRingtoneName ==
+                                              controller.customRingtoneNames[index]
                                           ? themeController.isLightMode.value
                                               ? kLightPrimaryBackgroundColor
                                               : kprimaryBackgroundColor
@@ -150,9 +144,9 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                     .customRingtoneNames[index])
                                               IconButton(
                                                 onPressed: () => onTapPreview(
-                                                    controller
-                                                            .customRingtoneNames[
-                                                        index]),
+                                                  controller
+                                                      .customRingtoneNames[index],
+                                                ),
                                                 icon: Icon(
                                                   (controller.isPlaying.value &&
                                                           controller
@@ -163,8 +157,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                                   index])
                                                       ? Icons.stop
                                                       : Icons.play_arrow,
-                                                  color: (controller.isPlaying
-                                                              .value &&
+                                                  color: (controller
+                                                              .isPlaying.value &&
                                                           controller
                                                                   .customRingtoneName
                                                                   .value ==
@@ -175,20 +169,20 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                           255,
                                                           116,
                                                           111,
-                                                          110) // Change this color to red
+                                                          110,
+                                                        ) // Change this color to red
                                                       : kprimaryColor,
                                                 ),
                                               ),
-                                            if (controller.customRingtoneNames[
-                                                    index] !=
+                                            if (controller
+                                                    .customRingtoneNames[index] !=
                                                 'Default'.tr)
                                               IconButton(
                                                 onPressed: () async {
                                                   await controller
                                                       .deleteCustomRingtone(
                                                     ringtoneName: controller
-                                                            .customRingtoneNames[
-                                                        index],
+                                                        .customRingtoneNames[index],
                                                     ringtoneIndex: index,
                                                   );
                                                 },
@@ -217,7 +211,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     onPressed: () async {
                       Utils.hapticFeedback();
                       controller.previousRingtone =
-                      controller.customRingtoneName.value;
+                          controller.customRingtoneName.value;
                       await controller.saveCustomRingtone();
                     },
                     child: Text(

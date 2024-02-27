@@ -76,10 +76,8 @@ class HomeController extends GetxController {
           if (parts[parts.length - 1].length == 1) {
             lastName = parts[1].toLowerCase().capitalizeFirst.toString();
           } else {
-            lastName = parts[parts.length - 1]
-                .toLowerCase()
-                .capitalizeFirst
-                .toString();
+            lastName =
+                parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
           }
         } else {
           lastName =
@@ -261,8 +259,7 @@ class HomeController extends GetxController {
 
       // Fake object to get latest alarm
       AlarmModel alarmRecord = Utils.genFakeAlarmModel();
-      AlarmModel isarLatestAlarm =
-          await IsarDb.getLatestAlarm(alarmRecord, true);
+      AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
 
       AlarmModel firestoreLatestAlarm =
           await FirestoreDb.getLatestAlarm(userModel.value, alarmRecord, true);
@@ -353,8 +350,7 @@ class HomeController extends GetxController {
     bool isTimer = latestAlarm.isTimer;
 
     if (isTimer) {
-      DateTime? latestAlarmDateTime =
-          Utils.stringToDateTime(latestAlarm.alarmTime);
+      DateTime? latestAlarmDateTime = Utils.stringToDateTime(latestAlarm.alarmTime);
       if (latestAlarmDateTime != null) {
         if (latestAlarm.isEnabled == false) {
           debugPrint(
@@ -368,10 +364,12 @@ class HomeController extends GetxController {
           );
           try {
             await alarmChannel.invokeMethod(
-                'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-            print("Scheduled...");
+              'scheduleAlarm',
+              {'milliSeconds': intervaltoAlarm},
+            );
+            debugPrint('Scheduled...');
           } on PlatformException catch (e) {
-            print("Failed to schedule alarm: ${e.message}");
+            debugPrint('Failed to schedule alarm: ${e.message}');
           }
         }
       }
@@ -391,9 +389,9 @@ class HomeController extends GetxController {
         try {
           await alarmChannel
               .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-          print("Scheduled...");
+          debugPrint('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          debugPrint('Failed to schedule alarm: ${e.message}');
         }
       }
     }
@@ -568,8 +566,7 @@ class HomeController extends GetxController {
       content: Column(
         children: [
           Text(
-            'This action will permanently delete these alarms from your device.'
-                .tr,
+            'This action will permanently delete these alarms from your device.'.tr,
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
