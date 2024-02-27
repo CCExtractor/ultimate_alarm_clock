@@ -1117,6 +1117,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   : const SizedBox(),
                             ),
                           ),
+
                           AlarmOffset(
                             controller: controller,
                             themeController: themeController,

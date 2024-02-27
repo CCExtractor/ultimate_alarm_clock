@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -134,7 +133,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setGradient(int value) {
-    this.gradient.value = value;
+    gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -591,28 +590,7 @@ class AddOrUpdateAlarmController extends GetxController {
       showPhotoDialog();
     }
   }
-//  Future<String?> saveToDocumentsDirectory({
-//     required String filePath,
-//   }) async {
-//     try {
-//       Directory documentsDirectory = await getApplicationDocumentsDirectory();
-//       String ringtonesDirectoryPath = '${documentsDirectory.path}/ringtones';
 
-//       // Create the ringtones directory if it doesn't exist
-//       Directory(ringtonesDirectoryPath).createSync(recursive: true);
-
-//       // Copy the picked audio files to the ringtones directory
-//       File pickedFile = File(filePath);
-//       String newFilePath =
-//           '$ringtonesDirectoryPath/${pickedFile.uri.pathSegments.last}';
-//       pickedFile.copySync(newFilePath);
-
-//       return newFilePath;
-//     } catch (e) {
-//       debugPrint(e.toString());
-//       return null;
-//     }
-//   }
   Future<String> _uploadImageToStorage(File image) async {
     /* 
        // Code for storing Photo in firestore
@@ -637,16 +615,20 @@ class AddOrUpdateAlarmController extends GetxController {
       // Copy the picked audio files to the ringtones directory
       String filePath = image.path;
       File pickedFile = File(filePath);
-      String newFilePath =
-          '$photosDirectoryPath/$alarmID/${pickedFile.uri.pathSegments.last}';
+      String newFilePath = '$photosDirectoryPath/$alarmID';
 
       if (imageurl.value == '') {
         pickedFile.copySync(newFilePath);
+        debugPrint(newFilePath);
+        return newFilePath;
       } else {
-        pickedFile.copySync(imageurl.value);
-      }
+        // Assuming imageurl.value already contains the full path,
+        // so create directories
 
-      return newFilePath;
+        pickedFile.copySync(imageurl.value);
+        debugPrint(imageurl.value);
+        return imageurl.value;
+      }
     } catch (e) {
       debugPrint(e.toString());
       return '';
@@ -677,8 +659,13 @@ class AddOrUpdateAlarmController extends GetxController {
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: imageFile.value.existsSync()
                     // Check if file exists before trying to display
-                    ? Image.file(imageFile.value, fit: BoxFit.cover)
-                    : const SizedBox.shrink(),
+                    ? Image.file(
+                        imageFile.value,
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(Get.context!).size.height * 0.3,
+                        width: MediaQuery.of(Get.context!).size.width,
+                      )
+                    : const CircularProgressIndicator(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -723,7 +710,7 @@ class AddOrUpdateAlarmController extends GetxController {
                     },
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -752,7 +739,9 @@ class AddOrUpdateAlarmController extends GetxController {
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
-            userModel.value, alarmRecord!.firestoreId!);
+          userModel.value,
+          alarmRecord!.firestoreId!,
+        );
         createAlarm(alarmData);
       }
     }
@@ -775,7 +764,8 @@ class AddOrUpdateAlarmController extends GetxController {
       lastEditedUserId = userModel.value!.id;
     }
 
-    // listens to the userModel declared in homeController and updates on signup event
+    // listens to the userModel declared in homeController
+    //and updates on signup event
     homeController.userModel.stream.listen((UserModel? user) {
       userModel.value = user;
       if (user != null) {
@@ -862,6 +852,11 @@ class AddOrUpdateAlarmController extends GetxController {
 
       isQrEnabled.value = alarmRecord!.isQrEnabled;
       qrValue.value = alarmRecord!.qrValue;
+
+      isPhotochallengeEnabled.value = alarmRecord!.isPhotochallengeEnabled;
+      imageurl.value = alarmRecord!.imageurl;
+
+      imageFile.value = File(imageurl.value);
 
       alarmID = alarmRecord!.alarmID;
       ownerId = alarmRecord!.ownerId;

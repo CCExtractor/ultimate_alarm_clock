@@ -24,7 +24,7 @@ class PhotoChallenge extends StatelessWidget {
             alignment: Alignment.centerLeft,
             fit: BoxFit.scaleDown,
             child: Text(
-              'Photo'.tr,
+              'Photo',
               style: TextStyle(
                 color: themeController.isLightMode.value
                     ? kLightPrimaryTextColor
