@@ -21,12 +21,12 @@ class BottomNavigationBarController extends GetxController
     TimerView(),
   ];
 
-  @override
-  void onInit() {
-    super.onInit();
-    WidgetsBinding.instance.addObserver(this);
-    _loadSavedState();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   WidgetsBinding.instance.addObserver(this);
+  //   _loadSavedState();
+  // }
 
   @override
   void onClose() {
@@ -44,9 +44,9 @@ class BottomNavigationBarController extends GetxController
     }
   }
 
-  void _loadSavedState() async {
-    activeTabIndex.value = await _secureStorageProvider.readTabIndex();
-  }
+  // void _loadSavedState() async {
+  //   activeTabIndex.value = await _secureStorageProvider.readTabIndex();
+  // }
 
   void _saveState() async {
     await _secureStorageProvider.writeTabIndex(
