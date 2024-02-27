@@ -1043,10 +1043,24 @@ class AddOrUpdateAlarmController extends GetxController {
 
       if (result != null) {
         customRingtoneName.value = result.files.single.name;
-        customRingtoneNames.add(customRingtoneName.value);
-        return result;
+        if (customRingtoneNames.contains(customRingtoneName.value)) {
+          Get.snackbar(
+            'Duplicate Ringtone'.tr,
+            'Choosen ringtone is already present'.tr,
+            duration: const Duration(seconds: 2),
+            snackPosition: SnackPosition.BOTTOM,
+            barBlur: 15,
+            colorText: kprimaryTextColor,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 15,
+            ),
+          );
+        } else {
+          customRingtoneNames.add(customRingtoneName.value);
+          return result;
+        }
       }
-
       return null;
     } catch (e) {
       debugPrint(e.toString());
@@ -1093,6 +1107,9 @@ class AddOrUpdateAlarmController extends GetxController {
             ringtonePath: savedFilePath,
             currentCounterOfUsage: 1,
           );
+          AudioUtils.updateRingtoneCounterOfUsage(
+              customRingtoneName: previousRingtone,
+              counterUpdate: CounterUpdate.decrement);
           await IsarDb.addCustomRingtone(customRingtone);
         }
       }
