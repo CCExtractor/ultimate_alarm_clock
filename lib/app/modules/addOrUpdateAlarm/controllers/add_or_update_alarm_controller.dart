@@ -229,6 +229,81 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
+  void checkUnsavedChangesAndNavigate(BuildContext context) {
+    print(changedFields);
+    int numberOfChangesMade =
+        changedFields.entries.where((element) => element.value == true).length;
+    if (numberOfChangesMade >= 1) {
+      Get.defaultDialog(
+        titlePadding: const EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: 'Discard Changes?'.tr,
+        titleStyle: Theme.of(context).textTheme.displaySmall,
+        content: Column(
+          children: [
+            Text(
+              'unsavedChanges'.tr,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      'Cancel'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: kprimaryBackgroundColor,
+                          ),
+                    ),
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+                      Get.back(closeOverlays: true);
+                      Get.back();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: themeController.isLightMode.value
+                            ? Colors.red.withOpacity(0.9)
+                            : Colors.red,
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      'Leave'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? Colors.red.withOpacity(0.9)
+                                : Colors.red,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      Get.back();
+    }
+  }
+
   Future<void> getLocation() async {
     if (await _checkAndRequestPermission()) {
       const timeLimit = Duration(seconds: 10);
@@ -701,7 +776,21 @@ class AddOrUpdateAlarmController extends GetxController {
       'deleteAfterGoesOff': deleteAfterGoesOff.value,
       'label': label.value,
       'note': note.value,
-      // 'ringtone' : ,
+      'customRingtoneName': customRingtoneName.value,
+      'volMin': volMin.value,
+      'volMax': volMax.value,
+      'gradient': gradient.value,
+      'showMotivationalQuote': showMotivationalQuote.value,
+      'activityInterval': activityInterval.value,
+      'weatherTypes': weatherTypes.value,
+      // 'location' : ,
+      'shakeTimes': shakeTimes.value,
+      'qrValue': qrValue.value,
+      'mathsDifficulty': mathsDifficulty.value,
+      'mathsSliderValue': mathsSliderValue.value,
+      'numberOfSteps': numberOfSteps.value,
+      'isSharedAlarmEnabled': isSharedAlarmEnabled.value,
+      'offsetDuration': offsetDuration.value
     });
 
     addListeners();
@@ -728,9 +817,14 @@ class AddOrUpdateAlarmController extends GetxController {
           Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
     });
 
-    daysRepeating.listen((days) {
+    //Updating UI to show repeated days
+    repeatDays.listen((days) {
+      daysRepeating.value = Utils.getRepeatDays(days);
+
       if (initialValues.containsKey('daysRepeating') &&
-          ((initialValues['daysRepeating'] as String).compareTo(days)) == 0) {
+          ((initialValues['daysRepeating'] as String)
+                  .compareTo(daysRepeating.value)) ==
+              0) {
         changedFields['daysRepeating'] = false;
       } else {
         changedFields['daysRepeating'] = true;
@@ -773,6 +867,81 @@ class AddOrUpdateAlarmController extends GetxController {
       }
     });
 
+    customRingtoneName.listen((ringtone) {
+      if (initialValues.containsKey('customRingtoneName') &&
+          ((initialValues['customRingtoneName'] as String)
+                  .compareTo(ringtone) ==
+              0)) {
+        changedFields['customRingtoneName'] = false;
+      } else {
+        changedFields['customRingtoneName'] = true;
+      }
+    });
+
+    volMin.listen((vol) {
+      if (initialValues.containsKey('volMin') &&
+          ((initialValues['volMin'] as double).compareTo(vol) == 0)) {
+        changedFields['volMin'] = false;
+      } else {
+        changedFields['volMin'] = true;
+      }
+    });
+
+    volMax.listen((vol) {
+      if (initialValues.containsKey('volMax') &&
+          ((initialValues['volMax'] as double).compareTo(vol) == 0)) {
+        changedFields['volMax'] = false;
+      } else {
+        changedFields['volMax'] = true;
+      }
+    });
+
+    gradient.listen((value) {
+      if (initialValues.containsKey('gradient') &&
+          ((initialValues['gradient'] as int).compareTo(value) == 0)) {
+        changedFields['gradient'] = false;
+      } else {
+        changedFields['gradient'] = true;
+      }
+    });
+
+    showMotivationalQuote.listen((value) {
+      if (initialValues.containsKey('showMotivationalQuote') &&
+          ((initialValues['showMotivationalQuote'] == value))) {
+        changedFields['showMotivationalQuote'] = false;
+      } else {
+        changedFields['showMotivationalQuote'] = true;
+      }
+    });
+
+    activityInterval.listen((value) {
+      if (initialValues.containsKey('activityInterval') &&
+          ((initialValues['activityInterval'] as int).compareTo(value) == 0)) {
+        changedFields['activityInterval'] = false;
+      } else {
+        changedFields['activityInterval'] = true;
+      }
+    });
+
+    // Updating UI to show weather types
+    selectedWeather.listen((weather) {
+      if (weather.toList().isEmpty) {
+        isWeatherEnabled.value = false;
+      } else {
+        isWeatherEnabled.value = true;
+      }
+      weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
+      if (initialValues.containsKey('weatherTypes') &&
+          ((initialValues['weatherTypes'] as String)
+                  .compareTo(weatherTypes.value) ==
+              0)) {
+        changedFields['weatherTypes'] = false;
+      } else {
+        changedFields['weatherTypes'] = true;
+      }
+    });
+
+    // TODO location
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
     selectedPoint.listen(
@@ -792,19 +961,69 @@ class AddOrUpdateAlarmController extends GetxController {
       },
     );
 
-    //Updating UI to show repeated days
-    repeatDays.listen((days) {
-      daysRepeating.value = Utils.getRepeatDays(days);
+    shakeTimes.listen((value) {
+      if (initialValues.containsKey('shakeTimes') &&
+          ((initialValues['shakeTimes'] as int).compareTo(value) == 0)) {
+        changedFields['shakeTimes'] = false;
+      } else {
+        changedFields['shakeTimes'] = true;
+      }
     });
 
-    // Updating UI to show weather types
-    selectedWeather.listen((weather) {
-      if (weather.toList().isEmpty) {
-        isWeatherEnabled.value = false;
+    qrValue.listen((type) {
+      if (initialValues.containsKey('qrValue') &&
+          ((initialValues['qrValue'] as String).compareTo(type) == 0)) {
+        changedFields['qrValue'] = false;
       } else {
-        isWeatherEnabled.value = true;
+        changedFields['qrValue'] = true;
       }
-      weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
+    });
+
+    mathsSliderValue.listen((value) {
+      if (initialValues.containsKey('mathsSliderValue') &&
+          ((initialValues['mathsSliderValue'] as double).compareTo(value) ==
+              0)) {
+        changedFields['mathsSliderValue'] = false;
+      } else {
+        changedFields['mathsSliderValue'] = true;
+      }
+    });
+
+    mathsDifficulty.listen((value) {
+      if (initialValues.containsKey('mathsDifficulty') &&
+          ((initialValues['mathsDifficulty'] as Difficulty).name ==
+              value.name)) {
+        changedFields['mathsDifficulty'] = false;
+      } else {
+        changedFields['mathsDifficulty'] = true;
+      }
+    });
+
+    numberOfSteps.listen((steps) {
+      if (initialValues.containsKey('numberOfSteps') &&
+          ((initialValues['numberOfSteps'] as int).compareTo(steps) == 0)) {
+        changedFields['numberOfSteps'] = false;
+      } else {
+        changedFields['numberOfSteps'] = true;
+      }
+    });
+
+    isSharedAlarmEnabled.listen((value) {
+      if (initialValues.containsKey('isSharedAlarmEnabled') &&
+          ((initialValues['isSharedAlarmEnabled'] == value))) {
+        changedFields['isSharedAlarmEnabled'] = false;
+      } else {
+        changedFields['isSharedAlarmEnabled'] = true;
+      }
+    });
+
+    offsetDuration.listen((value) {
+      if (initialValues.containsKey('offsetDuration') &&
+          (((initialValues['offsetDuration'] as int).compareTo(value) == 0))) {
+        changedFields['offsetDuration'] = false;
+      } else {
+        changedFields['offsetDuration'] = true;
+      }
     });
   }
 
