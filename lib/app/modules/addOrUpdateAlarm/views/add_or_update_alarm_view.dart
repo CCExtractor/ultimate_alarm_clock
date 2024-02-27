@@ -48,7 +48,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
           if (didPop) {
             return;
           }
-
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(
               vertical: 20,
