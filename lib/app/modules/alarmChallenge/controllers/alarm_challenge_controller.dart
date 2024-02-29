@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:image_compare_2/image_compare_2.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,6 +25,10 @@ class AlarmChallengeController extends GetxController {
 
   final qrValue = ''.obs;
   final isQrOngoing = Status.initialized.obs;
+
+  final imageurl = ''.obs;
+  final isPhotoChallengeOngoing = Status.initialized.obs;
+  final imagesimilarity = 0.0.obs;
 
   final isMathsOngoing = Status.initialized.obs;
 
@@ -86,6 +92,30 @@ class AlarmChallengeController extends GetxController {
     }
   }
 
+  Future<double> compareImage(String imagePath1, String imagePath2) async {
+    // Read the images
+
+    // Load images
+    final image1 = File(imagePath1);
+    final image2 = File(imagePath2);
+
+    final chiSquaresimilarity = await compareImages(
+      src1: image1,
+      src2: image2,
+      algorithm: ChiSquareDistanceHistogram(),
+    );
+
+    final perceptualHashsimilarity = await compareImages(
+      src1: image1,
+      src2: image2,
+      algorithm: PerceptualHash(),
+    );
+
+    final result = perceptualHashsimilarity * 0.6 + chiSquaresimilarity * 0.4;
+
+    return result;
+  }
+
   @override
   void onInit() async {
     super.onInit();
@@ -131,6 +161,17 @@ class AlarmChallengeController extends GetxController {
           isQrOngoing.value = Status.completed;
           qrController!.dispose();
           alarmRecord.isQrEnabled = false;
+          Get.back();
+          isChallengesComplete();
+        }
+      });
+    }
+
+    if (alarmRecord.isPhotochallengeEnabled) {
+      imagesimilarity.listen((url) async {
+        if (imagesimilarity.value > 0.7) {
+          isPhotoChallengeOngoing.value = Status.completed;
+          alarmRecord.isPhotochallengeEnabled = false;
           Get.back();
           isChallengesComplete();
         }

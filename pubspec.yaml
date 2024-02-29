@@ -17,6 +17,8 @@ dependencies:
   intl: ^0.18.0
   latlong2: ^0.8.1
   flutter_map: ^4.0.0
+  image: ^4.1.7
+  image_compare_2: ^1.1.7
   fl_location: ^2.0.0+1
   flutter_fgbg: ^0.3.0
   flutter_svg: ^2.0.4

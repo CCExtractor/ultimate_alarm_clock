@@ -8,7 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class MathsChallengeView extends GetView<AlarmChallengeController> {
   MathsChallengeView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +44,19 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                           ? Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      16.0, 16.0, 16.0, 30.0),
                                   child: Obx(
-                                        () => Text(
-                                          'Question @noMathQ'.trParams({
-                                            'noMathQ' :  controller.numMathsQuestions.value.toString(),
-                                          }),
-                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    () => Text(
+                                      'Question @noMathQ'.trParams({
+                                        'noMathQ': controller
+                                            .numMathsQuestions.value
+                                            .toString(),
+                                      }),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
                                             letterSpacing: 1.5,
                                           ),
                                     ),

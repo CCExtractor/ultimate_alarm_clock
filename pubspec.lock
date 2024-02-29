@@ -737,13 +737,21 @@ packages:
     source: hosted
     version: "4.0.2"
   image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image
-      sha256: "004a2e90ce080f8627b5a04aecb4cdfac87d2c3f3b520aa291260be5a32c033d"
+      sha256: "4c68bfd5ae83e700b5204c1e74451e7bf3cf750e6843c6e158289cf56bda018e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.4"
+    version: "4.1.7"
+  image_compare_2:
+    dependency: "direct main"
+    description:
+      name: image_compare_2
+      sha256: "50ff6f6a793f61fc5b19e9ad7bf1bb9507e57b73ec689332eed11c1473954807"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.7"
   image_picker:
     dependency: "direct main"
     description:

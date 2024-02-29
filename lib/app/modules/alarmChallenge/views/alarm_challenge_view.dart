@@ -13,7 +13,7 @@ import '../controllers/alarm_challenge_controller.dart';
 class AlarmChallengeView extends GetView<AlarmChallengeController> {
   AlarmChallengeView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {

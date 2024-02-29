@@ -35,9 +35,10 @@ import '../controllers/add_or_update_alarm_controller.dart';
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
-  InputTimeController inputTimeController = Get.put(InputTimeController());
-  SettingsController settingsController = Get.find<SettingsController>();
+  final ThemeController themeController = Get.find<ThemeController>();
+  final InputTimeController inputTimeController =
+      Get.put(InputTimeController());
+  final SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {
     var width = Get.width;

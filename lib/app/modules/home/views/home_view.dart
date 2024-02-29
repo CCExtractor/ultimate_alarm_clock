@@ -1,6 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
+// import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
@@ -287,8 +287,8 @@ class HomeView extends GetView<HomeController> {
                 : ExpandableFab(
                     initialOpen: false,
                     key: controller.floatingButtonKeyLoggedOut,
-                    child: Icon(Icons.add),
-                    children: [],
+                    child: const Icon(Icons.add),
+                    children: const [],
                     onOpen: () {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
@@ -585,7 +585,7 @@ class HomeView extends GetView<HomeController> {
                                                                   ),
                                                         );
                                                       }),
-                                                      Spacer(),
+                                                      const Spacer(),
                                                       Row(
                                                         children: [
                                                           // All alarm select button
@@ -641,10 +641,12 @@ class HomeView extends GetView<HomeController> {
                                                                           .value
                                                                       ? kLightPrimaryTextColor
                                                                           .withOpacity(
-                                                                              0.75)
+                                                                          0.75,
+                                                                        )
                                                                       : kprimaryTextColor
                                                                           .withOpacity(
-                                                                              0.75),
+                                                                          0.75,
+                                                                        ),
                                                               iconSize: 27 *
                                                                   controller
                                                                       .scalingFactor
@@ -655,7 +657,7 @@ class HomeView extends GetView<HomeController> {
                                                       ),
                                                     ],
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -762,17 +764,19 @@ class HomeView extends GetView<HomeController> {
                                         direction: DismissDirection.startToEnd,
                                         onDismissed: (direction) async {
                                           await controller.swipeToDeleteAlarm(
-                                              controller.userModel.value,
-                                              alarm);
+                                            controller.userModel.value,
+                                            alarm,
+                                          );
                                         },
                                         key: ValueKey(alarms[index]),
                                         background: Container(
                                           color: Colors
                                               .red, // Set the background color to red
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
                                           alignment: Alignment.center,
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.delete,
                                             color: Colors.white,
                                           ),
@@ -1275,20 +1279,24 @@ class HomeView extends GetView<HomeController> {
                                                                                 if (alarm.isSharedAlarmEnabled == true) {
                                                                                   await FirestoreDb.deleteAlarm(controller.userModel.value, alarm.firestoreId!);
                                                                                 } else {
-                                                                                  // Get the temporary directory
-                                                                                  Directory tempDir = await getTemporaryDirectory();
+                                                                                  if (await File(alarm.imageurl).exists()) {
+                                                                                    // Get the temporary directory
 
-                                                                                  // Generate a unique filename for the temporary copy
-                                                                                  String tempFileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+                                                                                    Directory tempDir = await getTemporaryDirectory();
 
-                                                                                  // Create a temporary file path
-                                                                                  String tempFilePath = '${tempDir.path}/$tempFileName';
-                                                                                  // Copy the content of the original file to the temporary file
-                                                                                  await File(alarm.imageurl).copy(tempFilePath);
-                                                                                  // Store the temporary file path in the map
-                                                                                  String alarmid = alarm.alarmID;
-                                                                                  controller.deletedAlarmsMap[alarmid] = tempFilePath;
-                                                                                  await controller.deleteFileIfExists(alarm.imageurl);
+                                                                                    // Generate a unique filename for the temporary copy
+                                                                                    String tempFileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+                                                                                    // Create a temporary file path
+                                                                                    String tempFilePath = '${tempDir.path}/$tempFileName';
+                                                                                    // Copy the content of the original file to the temporary file
+                                                                                    await File(alarm.imageurl).copy(tempFilePath);
+                                                                                    // Store the temporary file path in the map
+                                                                                    String alarmid = alarm.alarmID;
+                                                                                    controller.deletedAlarmsMap[alarmid] = tempFilePath;
+                                                                                    await controller.deleteFileIfExists(alarm.imageurl);
+                                                                                  }
+
                                                                                   await IsarDb.deleteAlarm(alarm.isarId);
                                                                                 }
 
@@ -1310,9 +1318,11 @@ class HomeView extends GetView<HomeController> {
                                                                                       if (alarm.isSharedAlarmEnabled == true) {
                                                                                         await FirestoreDb.addAlarm(controller.userModel.value, alarm);
                                                                                       } else {
-                                                                                        await File(controller.deletedAlarmsMap[alarm.alarmID]!).copy(alarm.imageurl);
-                                                                                        // Remove the alarm from the temporary storage
-                                                                                        controller.deletedAlarmsMap.remove(alarm.alarmID);
+                                                                                        if (controller.deletedAlarmsMap[alarm.alarmID] != null && await File(controller.deletedAlarmsMap[alarm.alarmID]!).exists()) {
+                                                                                          await File(controller.deletedAlarmsMap[alarm.alarmID]!).copy(alarm.imageurl);
+                                                                                          // Remove the alarm from the temporary storage
+                                                                                          controller.deletedAlarmsMap.remove(alarm.alarmID);
+                                                                                        }
                                                                                         await IsarDb.addAlarm(alarm);
                                                                                       }
                                                                                     },

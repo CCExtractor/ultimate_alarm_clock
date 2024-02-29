@@ -8,7 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class PedometerChallengeView extends GetView<AlarmChallengeController> {
   PedometerChallengeView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {

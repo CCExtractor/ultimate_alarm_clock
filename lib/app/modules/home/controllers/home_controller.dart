@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -393,21 +394,26 @@ class HomeController extends GetxController {
         try {
           await alarmChannel
               .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-          print("Scheduled...");
+          debugPrint('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          debugPrint('Failed to schedule alarm: ${e.message}');
         }
       }
     }
   }
 
   @override
-  void onClose() {
-    super.onClose();
-
+  void onClose() async {
+    //Deleting file cache stored in temporary directory
+    for (var filepath in deletedAlarmsMap.values) {
+      await deleteFileIfExists(filepath);
+    }
+    deletedAlarmsMap.clear();
     if (delayToSchedule != null) {
       delayToSchedule!.cancel();
     }
+
+    super.onClose();
   }
 
   Future<void> deleteFileIfExists(String filePath) async {

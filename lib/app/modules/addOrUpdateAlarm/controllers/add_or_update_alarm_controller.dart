@@ -637,11 +637,13 @@ class AddOrUpdateAlarmController extends GetxController {
 
   showPhotoDialog() async {
     if (isPhotochallengeEnabled.value == false) {
-      final pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.camera);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
         imageFile.value = File(pickedFile.path);
         imageurl.value = await _uploadImageToStorage(imageFile.value);
+        //clearing image picker cache
+        await imageFile.value.delete();
+        imageFile.value = File(imageurl.value);
         isPhotochallengeEnabled.value = true;
       } else {}
     } else {
