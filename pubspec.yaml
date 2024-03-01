@@ -28,7 +28,7 @@ dependencies:
   shake: ^2.2.0
   numberpicker: ^2.1.2
   mobile_scanner: 3.5.5
-  permission_handler: ^11.0.1
+  permission_handler: ^11.3.0
   google_sign_in: ^6.0.2
   url_launcher: ^6.1.11
   flutter_expandable_fab: ^1.8.1
