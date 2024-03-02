@@ -273,20 +273,20 @@ class HomeController extends GetxController {
       debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
 
       if (!latestAlarm.isTimer) {
-        String timeToAlarm = Utils.timeUntilAlarm(
-          Utils.stringToTimeOfDay(latestAlarm.alarmTime),
-          latestAlarm.days,
-        );
-        alarmTime.value = 'Rings in $timeToAlarm';
-        // This function is necessary when alarms are deleted/enabled
-        await scheduleNextAlarm(
-          alarmRecord,
-          isarLatestAlarm,
-          firestoreLatestAlarm,
-          latestAlarm,
-        );
-
         if (latestAlarm.minutesSinceMidnight > -1) {
+          String timeToAlarm = Utils.timeUntilAlarm(
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+            latestAlarm.days,
+          );
+          alarmTime.value = 'Rings in $timeToAlarm';
+          // This function is necessary when alarms are deleted/enabled
+          await scheduleNextAlarm(
+            alarmRecord,
+            isarLatestAlarm,
+            firestoreLatestAlarm,
+            latestAlarm,
+          );
+
           // To account for difference between seconds upto the next minute
           DateTime now = DateTime.now();
           DateTime nextMinute =
