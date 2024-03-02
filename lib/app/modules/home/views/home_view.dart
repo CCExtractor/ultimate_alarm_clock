@@ -755,11 +755,13 @@ class HomeView extends GetView<HomeController> {
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
                                       return Dismissible(
-                                        direction: DismissDirection.startToEnd,
+                                        direction: controller.isAnyAlarmHolded
+                                            .value ? DismissDirection.none : DismissDirection.startToEnd,
                                         onDismissed: (direction) async {
-                                          await controller.swipeToDeleteAlarm(
-                                              controller.userModel.value,
-                                              alarm);
+                                          if (!controller.isAnyAlarmHolded
+                                              .value) {
+                                            await controller.swipeToDeleteAlarm(controller.userModel.value, alarm);
+                                          }
                                         },
                                         key: ValueKey(alarms[index]),
                                         background: Container(
