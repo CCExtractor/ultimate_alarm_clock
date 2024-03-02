@@ -137,7 +137,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setIsCustomSelected(bool value) {
-    isCustomSelected.value = true;
+    isCustomSelected.value = value;
     if (value == true) {
       isWeekdaysSelected.value = false;
       isDailySelected.value = false;
@@ -525,7 +525,9 @@ class AddOrUpdateAlarmController extends GetxController {
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
-            userModel.value, alarmRecord!.firestoreId!);
+          userModel.value,
+          alarmRecord!.firestoreId!,
+        );
         createAlarm(alarmData);
       }
     }
