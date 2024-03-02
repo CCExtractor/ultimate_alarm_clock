@@ -16,6 +16,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
   Rx<Timer?> countdownTimer = Rx<Timer?>(null);
+    Rx<Duration> totalTime = Duration.zero.obs;
   AlarmModel alarmRecord = Utils.genFakeAlarmModel();
   late int currentTimerIsarId;
   var hours=0.obs, minutes=1.obs, seconds=0.obs;
@@ -138,7 +139,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
       startTime.value = now.millisecondsSinceEpoch;
       isTimerRunning.value = true;
       isTimerPaused.value = false;
-
+      totalTime.value = remainingTime.value;
       saveTimerStateToStorage();
 
       countdownTimer.value = Timer.periodic(
