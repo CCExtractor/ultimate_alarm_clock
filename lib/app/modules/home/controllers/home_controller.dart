@@ -25,6 +25,7 @@ class Pair<T, U> {
 }
 
 class HomeController extends GetxController {
+
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
@@ -60,6 +61,9 @@ class HomeController extends GetxController {
   Pair<List<AlarmModel>, List<RxBool>> alarmListPairs = Pair([], []);
 
   Set<Pair<dynamic, bool>> selectedAlarmSet = {};
+
+  final RxInt duration = 3.obs;
+  final RxDouble selecteddurationDouble = 0.0.obs;
 
   ThemeController themeController = Get.find<ThemeController>();
 
@@ -534,9 +538,9 @@ class HomeController extends GetxController {
     }
 
     Get.snackbar(
-      'Alarm deleted'.tr,
-      'The alarm has been deleted'.tr,
-      duration: const Duration(seconds: 4),
+      'Alarm deleted',
+      'The alarm has been deleted.',
+      duration: Duration(seconds:  duration.toInt()),
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.symmetric(
         horizontal: 10,
