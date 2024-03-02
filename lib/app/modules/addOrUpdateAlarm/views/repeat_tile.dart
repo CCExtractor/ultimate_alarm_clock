@@ -36,10 +36,7 @@ class RepeatTile extends StatelessWidget {
                 height: height * 0.45,
                 child: Column(
                   children: [
-                    buildDailyTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
+                    buildDailyTile(),
                     Container(
                       color: themeController.isLightMode.value
                           ? kLightSecondaryBackgroundColor
@@ -50,10 +47,7 @@ class RepeatTile extends StatelessWidget {
                             : kprimaryDisabledTextColor,
                       ),
                     ),
-                    buildWeekdaysTile(
-                      controller: controller,
-                      themeController: themeController,
-                    ),
+                    buildWeekdaysTile(),
                     Container(
                       color: themeController.isLightMode.value
                           ? kLightSecondaryBackgroundColor
@@ -65,8 +59,6 @@ class RepeatTile extends StatelessWidget {
                       ),
                     ),
                     buildCustomDaysTile(
-                      controller: controller,
-                      themeController: themeController,
                       context: context,
                     ),
                     const SizedBox(
@@ -166,26 +158,19 @@ class RepeatTile extends StatelessWidget {
     }
   }
 
-  void handleDailyTileTap() {
-    Utils.hapticFeedback();
-    controller.setIsDailySelected(!controller.isDailySelected.value);
-
-    // Update repeatDays based on isDailySelected value
-    for (int i = 0; i < controller.repeatDays.length; i++) {
-      controller.repeatDays[i] = controller.isDailySelected.value;
-    }
-  }
-
-  ListTile buildDailyTile({
-    required AddOrUpdateAlarmController controller,
-    required ThemeController themeController,
-  }) {
+  ListTile buildDailyTile() {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
-            handleDailyTileTap();
+            Utils.hapticFeedback();
+            controller.setIsDailySelected(!controller.isDailySelected.value);
+
+            // Update repeatDays based on isDailySelected value
+            for (int i = 0; i < controller.repeatDays.length; i++) {
+              controller.repeatDays[i] = controller.isDailySelected.value;
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0), // Adjust the padding as needed
@@ -206,7 +191,7 @@ class RepeatTile extends StatelessWidget {
                   activeColor: kprimaryColor.withOpacity(0.8),
                   value: controller.isDailySelected.value,
                   onChanged: (value) {
-                    handleDailyTileTap();
+                    // This onChanged can be empty, as we handle the tap in InkWell
                   },
                 ),
               ],
@@ -262,106 +247,7 @@ class RepeatTile extends StatelessWidget {
     );
   }
 
-  void checkIfAnyDaySelectedInCustomTile() {
-    controller.isCustomSelected.value = false;
-
-    for (bool repeatDay in controller.repeatDays) {
-      if (controller.isCustomSelected.value) {
-        continue;
-      } else if (repeatDay) {
-        controller.isCustomSelected.value = true;
-      }
-    }
-  }
-
-  void showCustomDaySelectionDialog({required BuildContext context}) {
-    Get.defaultDialog(
-      onWillPop: () async {
-        checkIfAnyDaySelectedInCustomTile();
-        return true;
-      },
-      titlePadding: const EdgeInsets.symmetric(vertical: 20),
-      backgroundColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
-      title: 'Days of the week'.tr,
-      titleStyle: TextStyle(
-        color: themeController.isLightMode.value
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor,
-      ),
-      content: Column(
-        children: [
-          dayTile(
-            dayIndex: 0,
-            dayName: 'Monday'.tr,
-            context: context,
-          ),
-          dayTile(
-            dayIndex: 1,
-            dayName: 'Tuesday'.tr,
-            context: context,
-          ),
-          dayTile(
-            dayIndex: 2,
-            dayName: 'Wednesday'.tr,
-            context: context,
-          ),
-          dayTile(
-            dayIndex: 3,
-            dayName: 'Thursday'.tr,
-            context: context,
-          ),
-          dayTile(
-            dayIndex: 4,
-            dayName: 'Friday'.tr,
-            context: context,
-          ),
-          dayTile(
-            dayIndex: 5,
-            dayName: 'Saturday'.tr,
-            context: context,
-          ),
-          dayTile(
-            dayIndex: 6,
-            dayName: 'Sunday'.tr,
-            context: context,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Utils.hapticFeedback();
-                    checkIfAnyDaySelectedInCustomTile();
-                    Get.back();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kprimaryColor,
-                  ),
-                  child: Text(
-                    'Done'.tr,
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : ksecondaryTextColor,
-                        ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   ListTile buildCustomDaysTile({
-    required AddOrUpdateAlarmController controller,
-    required ThemeController themeController,
     required BuildContext context,
   }) {
     List<bool> repeatDays = List<bool>.filled(7, false);
@@ -374,7 +260,91 @@ class RepeatTile extends StatelessWidget {
             _storeOrPreset(repeatDays, controller.repeatDays);
 
             controller.setIsCustomSelected(!controller.isCustomSelected.value);
-            showCustomDaySelectionDialog(context: context);
+            Get.defaultDialog(
+              onWillPop: () async {
+                // presetting values to initial state
+                _storeOrPreset(controller.repeatDays, repeatDays);
+                return true;
+              },
+              titlePadding: const EdgeInsets.symmetric(vertical: 20),
+              backgroundColor: themeController.isLightMode.value
+                  ? kLightSecondaryBackgroundColor
+                  : ksecondaryBackgroundColor,
+              title: 'Days of the week'.tr,
+              titleStyle: TextStyle(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor
+                    : kprimaryTextColor,
+              ),
+              content: Column(
+                children: [
+                  dayTile(
+                    dayIndex: 0,
+                    dayName: 'Monday'.tr,
+                    context: context,
+                  ),
+                  dayTile(
+                    dayIndex: 1,
+                    dayName: 'Tuesday'.tr,
+                    context: context,
+                  ),
+                  dayTile(
+                    dayIndex: 2,
+                    dayName: 'Wednesday'.tr,
+                    context: context,
+                  ),
+                  dayTile(
+                    dayIndex: 3,
+                    dayName: 'Thursday'.tr,
+                    context: context,
+                  ),
+                  dayTile(
+                    dayIndex: 4,
+                    dayName: 'Friday'.tr,
+                    context: context,
+                  ),
+                  dayTile(
+                    dayIndex: 5,
+                    dayName: 'Saturday'.tr,
+                    context: context,
+                  ),
+                  dayTile(
+                    dayIndex: 6,
+                    dayName: 'Sunday'.tr,
+                    context: context,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Utils.hapticFeedback();
+                            Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: kprimaryColor,
+                          ),
+                          child: Text(
+                            'Done'.tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -395,12 +365,9 @@ class RepeatTile extends StatelessWidget {
                   onChanged: (value) {
                     Utils.hapticFeedback();
                     controller.setIsCustomSelected(value!);
+
                     // Update repeatDays based on isCustomSelected value
                     _storeOrPreset(controller.repeatDays, repeatDays);
-
-                    if (value) {
-                      showCustomDaySelectionDialog(context: context);
-                    }
                   },
                 ),
               ],
@@ -411,28 +378,22 @@ class RepeatTile extends StatelessWidget {
     );
   }
 
-  void handleWeekdayTileTap() {
-    Utils.hapticFeedback();
-    controller.setIsWeekdaysSelected(!controller.isWeekdaysSelected.value);
-
-    // Update repeatDays based on isWeekdaysSelected value
-    for (int i = 0; i < controller.repeatDays.length; i++) {
-      // Assuming weekdays are from Monday to Friday (index 0 to 5)
-      controller.repeatDays[i] =
-          controller.isWeekdaysSelected.value && i >= 0 && i < 5;
-    }
-  }
-
-  ListTile buildWeekdaysTile({
-    required AddOrUpdateAlarmController controller,
-    required ThemeController themeController,
-  }) {
+  ListTile buildWeekdaysTile() {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 10.0),
       title: Obx(
         () => InkWell(
           onTap: () {
-            handleWeekdayTileTap();
+            Utils.hapticFeedback();
+            controller
+                .setIsWeekdaysSelected(!controller.isWeekdaysSelected.value);
+
+            // Update repeatDays based on isWeekdaysSelected value
+            for (int i = 0; i < controller.repeatDays.length; i++) {
+              // Assuming weekdays are from Monday to Friday (index 0 to 5)
+              controller.repeatDays[i] =
+                  controller.isWeekdaysSelected.value && i >= 0 && i < 5;
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0), // Adjust the padding as needed
@@ -453,7 +414,19 @@ class RepeatTile extends StatelessWidget {
                   activeColor: kprimaryColor.withOpacity(0.8),
                   value: controller.isWeekdaysSelected.value,
                   onChanged: (value) {
-                    handleWeekdayTileTap();
+                    Utils.hapticFeedback();
+                    controller.setIsWeekdaysSelected(
+                      !controller.isWeekdaysSelected.value,
+                    );
+
+                    // Update repeatDays based on isWeekdaysSelected value
+                    for (int i = 0; i < controller.repeatDays.length; i++) {
+                      // Assuming weekdays are from Monday to Friday (index 1 to 5)
+                      controller.repeatDays[i] =
+                          controller.isWeekdaysSelected.value &&
+                              i >= 1 &&
+                              i <= 5;
+                    }
                   },
                 ),
               ],
