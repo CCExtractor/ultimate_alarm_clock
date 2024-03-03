@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controllers/stopwatch_controller.dart';
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
+import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 
