@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 
 class TimerController extends GetxController with WidgetsBindingObserver {
   final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
+  final storage = Get.find<GetStorageProvider>();
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   final currentTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   final timerStartTime = 0.obs;
@@ -57,7 +58,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     await _secureStorageProvider.writeStartTime(
       startTime: startTime.value,
     );
-    await _secureStorageProvider.writeTimerStartTimeInSeconds(
+    await storage.writeTimerStartTimeInSeconds(
         timerStartTimeInSeconds: (timerStartTime.value).toInt());
     await _secureStorageProvider.writeIsTimerRunning(
       isTimerRunning: isTimerRunning.value,
@@ -73,8 +74,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     final storedStartTime = await _secureStorageProvider.readStartTime();
     isTimerRunning.value = await _secureStorageProvider.readIsTimerRunning();
     isTimerPaused.value = await _secureStorageProvider.readIsTimerPaused();
-    timerStartTime.value =
-        await _secureStorageProvider.readTimerStartTimeInSeconds();
+    timerStartTime.value = await storage.readTimerStartTimeInSeconds();
 
     if (storedRemainingTimeInSeconds != -1 &&
         storedStartTime != -1 &&

@@ -40,4 +40,19 @@ class GetStorageProvider {
     await _getStorage.write('languageCode', lanCode);
     await _getStorage.write('countryCode', countryCode);
   }
+
+  Future<void> writeTimerStartTimeInSeconds({
+    required int timerStartTimeInSeconds,
+  }) async {
+    await _getStorage.write(
+      'timer_start_time_in_seconds',
+      timerStartTimeInSeconds.toString(),
+    );
+  }
+
+  Future<int> readTimerStartTimeInSeconds() async {
+    String timerStartTime =
+        await _getStorage.read('timer_start_time_in_seconds') ?? '-1';
+    return int.parse(timerStartTime);
+  }
 }
