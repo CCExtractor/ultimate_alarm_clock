@@ -3,14 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
 class InputTimeController extends GetxController {
   AddOrUpdateAlarmController addOrUpdateAlarmController =
       Get.find<AddOrUpdateAlarmController>();
+  TimerController timerController = Get.find<TimerController>();
   SettingsController settingsController = Get.find<SettingsController>();
   final isTimePicker = false.obs;
+  final isTimePickerTimer = false.obs;
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
+  TextEditingController inputHoursControllerTimer = TextEditingController();
+  TextEditingController inputMinutesControllerTimer = TextEditingController();
+  TextEditingController inputSecondsControllerTimer = TextEditingController();
   final selectedDateTime = DateTime.now().obs;
   bool isInputtingTime = false;
 
@@ -32,6 +38,9 @@ class InputTimeController extends GetxController {
                 ? (selectedDateTime.value.hour - 12).toString()
                 : selectedDateTime.value.hour.toString()));
     inputMinutesController.text = selectedDateTime.value.minute.toString();
+    inputHoursControllerTimer.text = timerController.hours.value.toString();
+    inputMinutesControllerTimer.text = timerController.minutes.value.toString();
+    inputSecondsControllerTimer.text = timerController.seconds.value.toString();
     super.onInit();
   }
 
@@ -42,6 +51,10 @@ class InputTimeController extends GetxController {
 
   changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
+  }
+
+  changeTimePickerTimer() {
+    isTimePickerTimer.value = !isTimePickerTimer.value;
   }
 
   int convert24(int value) {
@@ -95,7 +108,7 @@ class InputTimeController extends GetxController {
           addOrUpdateAlarmController.hours.value = 12;
         } else if (selectedDateTime.value.hour > 12) {
           addOrUpdateAlarmController.hours.value =
-              (selectedDateTime.value.hour-12);
+              (selectedDateTime.value.hour - 12);
         } else {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }
@@ -114,10 +127,27 @@ class InputTimeController extends GetxController {
     }
   }
 
+  void setTimerTime() {
+    try {
+      int hours = int.parse(inputHoursControllerTimer.text);
+      int minutes = int.parse(inputMinutesControllerTimer.text);
+      int seconds = int.parse(inputSecondsControllerTimer.text);
+
+      timerController.hours.value = hours;
+      timerController.minutes.value = minutes;
+      timerController.seconds.value = seconds;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   void onClose() {
     inputHrsController.dispose();
     inputMinutesController.dispose();
+    inputHoursControllerTimer.dispose();
+    inputMinutesControllerTimer.dispose();
+    inputSecondsControllerTimer.dispose();
     super.onClose();
   }
 }
