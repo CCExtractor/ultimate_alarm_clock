@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-//import 'package:get_storage/get_storage.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controllers/stopwatch_controller.dart';
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
@@ -12,7 +11,7 @@ class StopwatchView extends GetView<StopwatchController> {
   ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-   var width = Get.width;
+    var width = Get.width;
     var height = Get.height;
     return Scaffold(
       appBar: PreferredSize(
