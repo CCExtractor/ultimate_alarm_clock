@@ -53,6 +53,11 @@ class AppTranslations extends Translations {
           'Create alarm': 'Create alarm',
           'Join alarm': 'Join alarm',
           'Okay': 'Okay',
+          'Yes': 'Yes',
+          'No': 'No',
+          'Confirmation': 'Confirmation',
+          'want to delete?': 'Are you sure you want to delete this alarm?',
+
           'You cannot join your own alarm!': 'You cannot join your own alarm!',
           'An alarm with this ID doesn\'t exist!':
               'An alarm with this ID doesn\'t exist!',
