@@ -54,10 +54,9 @@ class TimerView extends GetView<TimerController> {
       body: Obx(
         () => controller.isTimerRunning.value
             ? Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: height * 0.3,
-                  ),
                   Center(
                     child: Obx(
                       () {
@@ -128,15 +127,10 @@ class TimerView extends GetView<TimerController> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    height: height * 0.15,
-                  ),
                   Obx(
                     () => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: width * 0.20,
-                        ),
                         FloatingActionButton.small(
                           heroTag: 'stop',
                           onPressed: () async {
