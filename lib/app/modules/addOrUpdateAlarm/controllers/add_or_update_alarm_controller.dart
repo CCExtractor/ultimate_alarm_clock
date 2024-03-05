@@ -193,24 +193,28 @@ class AddOrUpdateAlarmController extends GetxController {
             onPressed: () async {
               Get.back();
 
-              // // Request overlay permission
-              // if (!(await Permission.systemAlertWindow.isGranted)) {
-              //   final status = await Permission.systemAlertWindow.request();
-              //   if (!status.isGranted) {
-              //     debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
-              //     return;
-              //   }
-              // }
+              if (Platform.isAndroid) {
+                // Request overlay permission
+                if (!(await Permission.systemAlertWindow.isGranted)) {
+                  final status = await Permission.systemAlertWindow.request();
+                  if (!status.isGranted) {
+                    debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                    return;
+                  }
+                }
 
-              // if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
-              //   bool requested = await Permission.ignoreBatteryOptimizations
-              //       .request()
-              //       .isGranted;
-              //   if (!requested) {
-              //     debugPrint('IGNORE_BATTERY_OPTIMIZATION permission denied!');
-              //     return;
-              //   }
-              // }
+                if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
+                  bool requested = await Permission.ignoreBatteryOptimizations
+                      .request()
+                      .isGranted;
+                  if (!requested) {
+                    debugPrint(
+                        'IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                    return;
+                  }
+                }
+              }
+
               // Request notification permission
               if (!await Permission.notification.isGranted) {
                 final status = await Permission.notification.request();
