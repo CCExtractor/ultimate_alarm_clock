@@ -511,7 +511,7 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                           Container(
                                             padding: EdgeInsets.symmetric(
-                                              horizontal: 4 *
+                                              horizontal: 2 *
                                                   controller
                                                       .scalingFactor.value,
                                             ),
@@ -637,10 +637,12 @@ class HomeView extends GetView<HomeController> {
                                                                           .value
                                                                       ? kLightPrimaryTextColor
                                                                           .withOpacity(
-                                                                              0.75,)
+                                                                          0.75,
+                                                                        )
                                                                       : kprimaryTextColor
                                                                           .withOpacity(
-                                                                              0.75,),
+                                                                          0.75,
+                                                                        ),
                                                               iconSize: 27 *
                                                                   controller
                                                                       .scalingFactor
@@ -794,7 +796,8 @@ class HomeView extends GetView<HomeController> {
                                             color: Colors
                                                 .red, // Set the background color to red
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 20,),
+                                              horizontal: 20,
+                                            ),
                                             alignment: Alignment.center,
                                             child: Icon(
                                               Icons.delete,
