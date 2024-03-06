@@ -52,28 +52,28 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void saveTimerStateToStorage() async {
-    await _secureStorageProvider.writeRemainingTimeInSeconds(
+    await storage.writeRemainingTimeInSeconds(
       remainingTimeInSeconds: remainingTime.value.inSeconds,
     );
-    await _secureStorageProvider.writeStartTime(
+    await storage.writeStartTime(
       startTime: startTime.value,
     );
     await storage.writeTimerStartTimeInSeconds(
         timerStartTimeInSeconds: (timerStartTime.value).toInt());
-    await _secureStorageProvider.writeIsTimerRunning(
+    await storage.writeIsTimerRunning(
       isTimerRunning: isTimerRunning.value,
     );
-    await _secureStorageProvider.writeIsTimerPaused(
+    await storage.writeIsTimerPaused(
       isTimerPaused: isTimerPaused.value,
     );
   }
 
   void loadTimerStateFromStorage() async {
     final storedRemainingTimeInSeconds =
-        await _secureStorageProvider.readRemainingTimeInSeconds();
-    final storedStartTime = await _secureStorageProvider.readStartTime();
-    isTimerRunning.value = await _secureStorageProvider.readIsTimerRunning();
-    isTimerPaused.value = await _secureStorageProvider.readIsTimerPaused();
+        await storage.readRemainingTimeInSeconds();
+    final storedStartTime = await storage.readStartTime();
+    isTimerRunning.value = await storage.readIsTimerRunning();
+    isTimerPaused.value = await storage.readIsTimerPaused();
     timerStartTime.value = await storage.readTimerStartTimeInSeconds();
 
     if (storedRemainingTimeInSeconds != -1 &&
@@ -179,10 +179,10 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     currentTime.value = const Duration(hours: 0, minutes: 0, seconds: 0);
     startTime.value = 0;
 
-    await _secureStorageProvider.removeRemainingTimeInSeconds();
-    await _secureStorageProvider.removeStartTime();
-    await _secureStorageProvider.writeIsTimerRunning(isTimerRunning: false);
-    await _secureStorageProvider.writeIsTimerPaused(isTimerPaused: false);
+    await storage.removeRemainingTimeInSeconds();
+    await storage.removeStartTime();
+    await storage.writeIsTimerRunning(isTimerRunning: false);
+    await storage.writeIsTimerPaused(isTimerPaused: false);
   }
 
   void pauseTimer() async {

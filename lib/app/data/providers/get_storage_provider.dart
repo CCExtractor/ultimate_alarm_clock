@@ -55,4 +55,67 @@ class GetStorageProvider {
         await _getStorage.read('timer_start_time_in_seconds') ?? '-1';
     return int.parse(timerStartTime);
   }
+
+  Future<bool> readIsTimerRunning() async {
+    return await _getStorage.read('is_timer_running') == 'true';
+  }
+
+  Future<void> writeIsTimerRunning({
+    required bool isTimerRunning,
+  }) async {
+    await _getStorage.write(
+      'is_timer_running',
+      isTimerRunning.toString(),
+    );
+  }
+
+  Future<bool> readIsTimerPaused() async {
+    return await _getStorage.read('is_timer_paused') == 'true';
+  }
+
+  Future<void> writeIsTimerPaused({
+    required bool isTimerPaused,
+  }) async {
+    await _getStorage.write(
+      'is_timer_paused',
+      isTimerPaused.toString(),
+    );
+  }
+
+  Future<int> readRemainingTimeInSeconds() async {
+    String remainingTime =
+        await _getStorage.read('remaining_time_in_seconds') ?? '-1';
+    return int.parse(remainingTime);
+  }
+
+  Future<void> writeRemainingTimeInSeconds({
+    required int remainingTimeInSeconds,
+  }) async {
+    await _getStorage.write(
+      'remaining_time_in_seconds',
+      remainingTimeInSeconds.toString(),
+    );
+  }
+
+  Future<void> removeRemainingTimeInSeconds() async {
+    await _getStorage.remove('remaining_time_in_seconds');
+  }
+
+  Future<int> readStartTime() async {
+    String startTime = await _getStorage.read('start_time') ?? '-1';
+    return int.parse(startTime);
+  }
+
+  Future<void> writeStartTime({
+    required int startTime,
+  }) async {
+    await _getStorage.write(
+      'start_time',
+      startTime.toString(),
+    );
+  }
+
+  Future<void> removeStartTime() async {
+    await _getStorage.remove('start_time');
+  }
 }
