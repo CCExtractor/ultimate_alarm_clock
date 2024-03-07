@@ -10,7 +10,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
+
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
@@ -755,12 +755,16 @@ class HomeView extends GetView<HomeController> {
                                           Utils.getRepeatDays(alarm.days);
                                       // Main card
                                       return Dismissible(
-                                        direction: controller.isAnyAlarmHolded
-                                            .value ? DismissDirection.none : DismissDirection.startToEnd,
+                                        direction:
+                                            controller.isAnyAlarmHolded.value
+                                                ? DismissDirection.none
+                                                : DismissDirection.startToEnd,
                                         onDismissed: (direction) async {
-                                          if (!controller.isAnyAlarmHolded
-                                              .value) {
-                                            await controller.swipeToDeleteAlarm(controller.userModel.value, alarm);
+                                          if (!controller
+                                              .isAnyAlarmHolded.value) {
+                                            await controller.swipeToDeleteAlarm(
+                                                controller.userModel.value,
+                                                alarm);
                                           }
                                         },
                                         key: ValueKey(alarms[index]),

@@ -87,9 +87,15 @@ class IsarDb {
     }
 
     // Get all enabled alarms
+    List<AlarmModel> exclusiveAlarms = [];
     List<AlarmModel> alarms =
         await db.alarmModels.where().filter().isEnabledEqualTo(true).findAll();
-
+    for (final alarm in alarms) {
+      if (!alarm.isTimer) {
+        exclusiveAlarms.add(alarm);
+      }
+    }
+    alarms = exclusiveAlarms;
     if (alarms.isEmpty) {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;

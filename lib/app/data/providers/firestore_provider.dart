@@ -136,7 +136,13 @@ class FirestoreDb {
     }).toList();
 
     alarms.addAll(z);
-
+    List<AlarmModel> exclusiveAlarms = [];
+    for (final alarm in alarms) {
+      if (!alarm.isTimer) {
+        exclusiveAlarms.add(alarm);
+      }
+    }
+    alarms = exclusiveAlarms;
     if (alarms.isEmpty) {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;

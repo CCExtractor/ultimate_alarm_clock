@@ -25,7 +25,6 @@ class Pair<T, U> {
 }
 
 class HomeController extends GetxController {
-
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
@@ -115,24 +114,41 @@ class HomeController extends GetxController {
       isarStreamAlarms!,
       (firestoreData, sharedData, isarData) {
         List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
-        latestFirestoreAlarms = firestoreDocuments.map((doc) {
-          return AlarmModel.fromDocumentSnapshot(
-            documentSnapshot: doc,
-            user: user,
-          );
-        }).toList();
 
-        List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
-        latestSharedAlarms = sharedAlarmDocuments.map((doc) {
-          return AlarmModel.fromDocumentSnapshot(
+        List<AlarmModel> alarmList = [];
+        firestoreDocuments.map((doc) {
+          AlarmModel alarm = AlarmModel.fromDocumentSnapshot(
             documentSnapshot: doc,
             user: user,
           );
-        }).toList();
+          if (!alarm.isTimer) {
+            alarmList.add(alarm);
+          }
+          ;
+        });
+        latestFirestoreAlarms = alarmList;
+        alarmList = [];
+        List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
+        sharedAlarmDocuments.map((doc) {
+          AlarmModel alarm = AlarmModel.fromDocumentSnapshot(
+            documentSnapshot: doc,
+            user: user,
+          );
+          if (!alarm.isTimer) {
+            alarmList.add(alarm);
+          }
+          ;
+        });
+        latestSharedAlarms = alarmList;
 
         latestFirestoreAlarms += latestSharedAlarms;
-        latestIsarAlarms = isarData as List<AlarmModel>;
+        alarmList = [];
 
+        latestIsarAlarms = isarData as List<AlarmModel>;
+        for (AlarmModel alarm in latestIsarAlarms) {
+          if (!alarm.isTimer) alarmList.add(alarm);
+        }
+        latestIsarAlarms = alarmList;
         List<AlarmModel> alarms = [
           ...latestFirestoreAlarms,
           ...latestIsarAlarms,
@@ -276,75 +292,76 @@ class HomeController extends GetxController {
       debugPrint('ISAR: ${isarLatestAlarm.alarmTime}');
       debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
 
-      if (!latestAlarm.isTimer) {
-        String timeToAlarm = Utils.timeUntilAlarm(
-          Utils.stringToTimeOfDay(latestAlarm.alarmTime),
-          latestAlarm.days,
-        );
-        alarmTime.value = 'Rings in $timeToAlarm';
-        // This function is necessary when alarms are deleted/enabled
-        await scheduleNextAlarm(
-          alarmRecord,
-          isarLatestAlarm,
-          firestoreLatestAlarm,
-          latestAlarm,
-        );
+      // if (!latestAlarm.isTimer) {
+      String timeToAlarm = Utils.timeUntilAlarm(
+        Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+        latestAlarm.days,
+      );
+      alarmTime.value = 'Rings in $timeToAlarm';
+      // This function is necessary when alarms are deleted/enabled
+      await scheduleNextAlarm(
+        alarmRecord,
+        isarLatestAlarm,
+        firestoreLatestAlarm,
+        latestAlarm,
+      );
 
-        if (latestAlarm.minutesSinceMidnight > -1) {
-          // To account for difference between seconds upto the next minute
-          DateTime now = DateTime.now();
-          DateTime nextMinute =
-              DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
-          Duration delay = nextMinute.difference(now).inMilliseconds > 0
-              ? nextMinute.difference(now)
-              : Duration.zero;
+      if (latestAlarm.minutesSinceMidnight > -1) {
+        // To account for difference between seconds upto the next minute
+        DateTime now = DateTime.now();
+        DateTime nextMinute =
+            DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
+        Duration delay = nextMinute.difference(now).inMilliseconds > 0
+            ? nextMinute.difference(now)
+            : Duration.zero;
 
-          // Adding a delay till that difference between seconds upto the next
-          // minute
-          _delayTimer = Timer(delay, () {
-            // Update the value of timeToAlarm only once till it settles it's time
-            // with the upcoming alarm
-            // Doing this because of an bug :
-            // If we are not doing the below three lines of code the
-            // time is not updating for 2 min after running
-            // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
-            // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE
-            // MISCALCULATION FOR INITIAL MINUTES
-            // This is just to make sure that our calculated time-to-alarm is
-            // upto date with the real time for next alarm
+        // Adding a delay till that difference between seconds upto the next
+        // minute
+        _delayTimer = Timer(delay, () {
+          // Update the value of timeToAlarm only once till it settles it's time
+          // with the upcoming alarm
+          // Doing this because of an bug :
+          // If we are not doing the below three lines of code the
+          // time is not updating for 2 min after running
+          // Why is it happening?? -> BECAUSE OUR VALUE WILL BE UPDATED
+          // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE
+          // MISCALCULATION FOR INITIAL MINUTES
+          // This is just to make sure that our calculated time-to-alarm is
+          // upto date with the real time for next alarm
+          timeToAlarm = Utils.timeUntilAlarm(
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime),
+            latestAlarm.days,
+          );
+          alarmTime.value = 'Rings in $timeToAlarm';
+
+          // Running a timer of periodic one minute as it is now in sync with
+          // the current time
+          _timer = Timer.periodic(
+              Duration(
+                milliseconds: Utils.getMillisecondsToAlarm(
+                  DateTime.now(),
+                  DateTime.now().add(const Duration(minutes: 1)),
+                ),
+              ), (timer) {
             timeToAlarm = Utils.timeUntilAlarm(
               Utils.stringToTimeOfDay(latestAlarm.alarmTime),
               latestAlarm.days,
             );
             alarmTime.value = 'Rings in $timeToAlarm';
-
-            // Running a timer of periodic one minute as it is now in sync with
-            // the current time
-            _timer = Timer.periodic(
-                Duration(
-                  milliseconds: Utils.getMillisecondsToAlarm(
-                    DateTime.now(),
-                    DateTime.now().add(const Duration(minutes: 1)),
-                  ),
-                ), (timer) {
-              timeToAlarm = Utils.timeUntilAlarm(
-                Utils.stringToTimeOfDay(latestAlarm.alarmTime),
-                latestAlarm.days,
-              );
-              alarmTime.value = 'Rings in $timeToAlarm';
-            });
           });
-        } else {
-          alarmTime.value = 'No upcoming alarms!';
-        }
+        });
       } else {
-        await scheduleNextAlarm(
-          alarmRecord,
-          isarLatestAlarm,
-          firestoreLatestAlarm,
-          latestAlarm,
-        );
+        alarmTime.value = 'No upcoming alarms!';
       }
+      // }
+      //  else {
+      //   await scheduleNextAlarm(
+      //     alarmRecord,
+      //     isarLatestAlarm,
+      //     firestoreLatestAlarm,
+      //     latestAlarm,
+      //   );
+      // }
     });
   }
 
@@ -540,7 +557,7 @@ class HomeController extends GetxController {
     Get.snackbar(
       'Alarm deleted',
       'The alarm has been deleted.',
-      duration: Duration(seconds:  duration.toInt()),
+      duration: Duration(seconds: duration.toInt()),
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.symmetric(
         horizontal: 10,
