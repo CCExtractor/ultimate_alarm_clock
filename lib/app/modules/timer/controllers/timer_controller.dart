@@ -37,15 +37,6 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     super.onClose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed && !isTimerRunning.value) {
-      loadTimerStateFromStorage();
-    }
-  }
-
   void saveTimerStateToStorage() async {
     await _secureStorageProvider.writeRemainingTimeInSeconds(
       remainingTimeInSeconds: remainingTime.value.inSeconds,
