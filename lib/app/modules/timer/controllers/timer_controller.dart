@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
@@ -20,20 +21,19 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
 
   final _secureStorageProvider = SecureStorageProvider();
-  Timer? _countdownTimer;
 
   String strDigits(int n) => n.toString().padLeft(2, '0');
 
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     loadTimerStateFromStorage();
   }
 
   @override
   void onClose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.onClose();
   }
 
@@ -41,10 +41,8 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    if (state == AppLifecycleState.resumed) {
-      if (isTimerRunning.value && !isTimerPaused.value) {
-        startTimer();
-      }
+    if (state == AppLifecycleState.resumed && !isTimerRunning.value) {
+      loadTimerStateFromStorage();
     }
   }
 
@@ -71,20 +69,44 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     isTimerPaused.value = await _secureStorageProvider.readIsTimerPaused();
 
     if (storedRemainingTimeInSeconds != -1 && storedStartTime != -1) {
-      int hours =
-          storedRemainingTimeInSeconds ~/ 3600; // Calculate the number of hours
-      int remainingSeconds = storedRemainingTimeInSeconds %
-          3600; // Calculate the remaining seconds
-      int minutes = remainingSeconds ~/ 60; // Calculate the number of minutes
-      int seconds = remainingSeconds % 60; // Calculate the number of seconds
-      remainingTime.value = Duration(
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds,
-      );
+      if (!isTimerPaused.value) {
+        final elapsedMilliseconds =
+            DateTime.now().millisecondsSinceEpoch - storedStartTime;
+        final elapsedSeconds = (elapsedMilliseconds / 1000).round();
+        final updatedRemainingTimeInSeconds =
+            storedRemainingTimeInSeconds - elapsedSeconds;
 
-      if (isTimerRunning.value && !isTimerPaused.value) {
-        startTimer();
+        if (updatedRemainingTimeInSeconds > 0) {
+          // Update remaining time and start timer from the correct point
+          int hours = updatedRemainingTimeInSeconds ~/
+              3600; // Calculate the number of hours
+          int remainingSeconds = updatedRemainingTimeInSeconds %
+              3600; // Calculate the remaining seconds
+          int minutes =
+              remainingSeconds ~/ 60; // Calculate the number of minutes
+          int seconds =
+              remainingSeconds % 60; // Calculate the number of seconds
+          remainingTime.value = Duration(
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds,
+          );
+          startTimer();
+        } else {
+          stopTimer();
+        }
+      } else {
+        int hours = storedRemainingTimeInSeconds ~/
+            3600; // Calculate the number of hours
+        int remainingSeconds = storedRemainingTimeInSeconds %
+            3600; // Calculate the remaining seconds
+        int minutes = remainingSeconds ~/ 60; // Calculate the number of minutes
+        int seconds = remainingSeconds % 60; // Calculate the number of seconds
+        remainingTime.value = Duration(
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
+        );
       }
     }
   }
@@ -119,8 +141,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
 
       saveTimerStateToStorage();
 
-      _countdownTimer?.cancel();
-      _countdownTimer = Timer.periodic(
+      countdownTimer.value = Timer.periodic(
         const Duration(seconds: 1),
         (_) => setCountDown(),
       );
@@ -128,7 +149,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void stopTimer() async {
-    _countdownTimer?.cancel();
+    countdownTimer.value?.cancel();
     isTimerPaused.value = false;
     isTimerRunning.value = false;
     initialTime.value = DateTime(0, 0, 0, 0, 1, 0);
@@ -147,15 +168,24 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void pauseTimer() async {
-    _countdownTimer?.cancel();
+    countdownTimer.value?.cancel();
     isTimerPaused.value = true;
 
     saveTimerStateToStorage();
+
+    int timerId = await SecureStorageProvider().readTimerId();
+    await IsarDb.deleteAlarm(timerId);
   }
 
   void resumeTimer() async {
     if (isTimerPaused.value) {
-      startTimer();
+      countdownTimer.value = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) => setCountDown(),
+      );
+      isTimerPaused.value = false;
+
+      createTimer();
     }
   }
 
