@@ -15,7 +15,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
     return Scaffold(
       body: Obx(() {
         return FutureBuilder(
-          future: controller.getSavedState(),
+          future: controller.loadSavedState(),
           builder: (context, snapshot) {
             if (controller.hasloaded.value != false) {
               pageController =

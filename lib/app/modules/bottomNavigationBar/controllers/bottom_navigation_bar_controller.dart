@@ -26,7 +26,7 @@ class BottomNavigationBarController extends GetxController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    _loadSavedState();
+    loadSavedState();
   }
 
   @override
@@ -45,15 +45,10 @@ class BottomNavigationBarController extends GetxController
     }
   }
 
-  Future<int> getSavedState() async {
-    return await _secureStorageProvider.readTabIndex();
-  }
-
-  Future<void> _loadSavedState() async {
-    getSavedState().then((value) {
-      activeTabIndex.value = value;
-      hasloaded.value = true;
-    });
+  Future<void> loadSavedState() async {
+    int value = await _secureStorageProvider.readTabIndex();
+    activeTabIndex.value = value;
+    hasloaded.value = true;
   }
 
   void _saveState() async {
