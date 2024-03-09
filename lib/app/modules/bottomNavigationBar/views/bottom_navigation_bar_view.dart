@@ -6,20 +6,40 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
-  final PageController pageController = PageController();
+  PageController pageController = PageController();
   final ThemeController themeController = Get.find<ThemeController>();
 
   BottomNavigationBarView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: pageController,
-        children: controller.pages,
-        onPageChanged: (index) {
-          controller.changeTab(index);
-        },
-      ),
+      body: Obx(() {
+        return FutureBuilder(
+          future: controller.getSavedState(),
+          builder: (context, snapshot) {
+            if (controller.hasloaded.value != false) {
+              pageController =
+                  PageController(initialPage: controller.activeTabIndex.value);
+              return PageView(
+                controller: pageController,
+                children: controller.pages,
+                onPageChanged: (index) {
+                  controller.changeTab(index);
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation(
+                    kprimaryColor,
+                  ),
+                ),
+              );
+            }
+          },
+        );
+      }),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
           useLegacyColorScheme: false,
@@ -40,10 +60,8 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           onTap: (index) {
             Utils.hapticFeedback();
             controller.changeTab(index);
-            pageController.animateToPage(
+            pageController.jumpToPage(
               index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
             );
           },
           currentIndex: controller.activeTabIndex.value,
