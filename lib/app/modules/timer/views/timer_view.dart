@@ -57,11 +57,16 @@ class TimerView extends GetView<TimerController> {
             ? Column(
                 children: [
                   SizedBox(
-                    height: height * 0.3,
+                    height: height * 0.05,
                   ),
                   Center(
                     child: Obx(
                       () {
+                        final remainingValue =
+                            controller.timerRemainingTime.value.toDouble();
+
+                        final startTime =
+                            controller.timerStartTime.value.toDouble();
                         final hours = controller.strDigits(
                           controller.remainingTime.value.inHours.remainder(24),
                         );
@@ -73,58 +78,54 @@ class TimerView extends GetView<TimerController> {
                           controller.remainingTime.value.inSeconds
                               .remainder(60),
                         );
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  hours,
-                                  style: const TextStyle(
-                                    fontSize: 50.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        return SizedBox(
+                          height: 160,
+                          width: width,
+                          child: SfRadialGauge(
+                            axes: [
+                              RadialAxis(
+                                radiusFactor: 1.5,
+                                showTicks: false,
+                                showLabels: false,
+                                minimum: 0,
+                                maximum: startTime,
+                                startAngle: 270,
+                                endAngle: 270,
+                                axisLineStyle: const AxisLineStyle(
+                                  thickness: 0,
                                 ),
-                              ),
-                            ),
-                            const Text(
-                              ':',
-                              style: TextStyle(
-                                fontSize: 50.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  minutes,
-                                  style: const TextStyle(
-                                    fontSize: 50.0,
-                                    fontWeight: FontWeight.bold,
+                                annotations: [
+                                  GaugeAnnotation(
+                                      widget: SizedBox(
+                                    child: Text(
+                                      '$hours:$minutes:$seconds',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .copyWith(
+                                              color: themeController
+                                                      .isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : kprimaryTextColor),
+                                    ),
+                                  ))
+                                ],
+                                pointers: <GaugePointer>[
+                                  RangePointer(
+                                    color: controller
+                                                .remainingTime.value.inSeconds >
+                                            5
+                                        ? kprimaryColor
+                                        : Colors.red,
+                                    value: remainingValue,
+                                    width: 0.05,
+                                    pointerOffset: 0.07,
+                                    sizeUnit: GaugeSizeUnit.factor,
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                            const Text(
-                              ':',
-                              style: TextStyle(
-                                fontSize: 50.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  seconds,
-                                  style: const TextStyle(
-                                    fontSize: 50.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -650,8 +651,18 @@ class TimerView extends GetView<TimerController> {
                         minutes: controller.minutes.value,
                         seconds: controller.seconds.value,
                       );
-                      controller.startTimer();
+                      controller.timerRemainingTime.value = Duration(
+                        hours: controller.hours.value,
+                        minutes: controller.minutes.value,
+                        seconds: controller.seconds.value,
+                      ).inMilliseconds;
+                      controller.timerStartTime.value = Duration(
+                        hours: controller.hours.value,
+                        minutes: controller.minutes.value,
+                        seconds: controller.seconds.value,
+                      ).inMilliseconds;
                       controller.createTimer();
+                      controller.startTimer();
                     },
                     backgroundColor: controller.hours.value == 0 &&
                             controller.minutes.value == 0 &&
