@@ -52,6 +52,10 @@ class FrenchTranslations extends Translations {
           'Create alarm': 'Créer un réveil',
           'Join alarm': 'Rejoindre un réveil',
           'Okay': 'D\'accord',
+          'Yes': 'Oui',
+          'No': 'Non',
+          'Confirmation': 'Confirmation',
+          'want to delete?': 'Êtes-vous sûr de vouloir supprimer cette alarme ?',
           'You cannot join your own alarm!':
               'Vous ne pouvez pas rejoindre votre propre réveil !',
           'An alarm with this ID doesn\'t exist!':

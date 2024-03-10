@@ -52,6 +52,10 @@ class SpanishTranslations extends Translations {
           'Create alarm': 'Crear alarma',
           'Join alarm': 'Unirse a alarma',
           'Okay': 'Aceptar',
+          'Yes': 'Sí',
+          'No': 'No',
+          'Confirmation': 'Confirmación',
+          'want to delete?': '¿Estás seguro de que deseas eliminar esta alarma?',
           'You cannot join your own alarm!':
               '¡No puedes unirte a tu propia alarma!',
           'An alarm with this ID doesn\'t exist!':
