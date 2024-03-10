@@ -79,7 +79,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                 Get.offNamed(
                                   '/bottom-navigation-bar',
                                   arguments: controller.currentlyRingingAlarm
-                                      .value.showMotivationalQuote,
+                                      .value,
                                 );
                               }
                             },
