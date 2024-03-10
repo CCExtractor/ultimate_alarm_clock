@@ -11,6 +11,7 @@ import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class TimerView extends GetView<TimerController> {
   TimerView({Key? key}) : super(key: key);
