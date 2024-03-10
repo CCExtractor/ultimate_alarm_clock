@@ -1412,12 +1412,12 @@ class HomeView extends GetView<HomeController> {
                     Get.back(result: false);
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
                   ),
                   child: Text(
                     'No'.tr,
                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: kprimaryBackgroundColor,
+                          color: kprimaryTextColor,
                         ),
                   ),
                 ),
