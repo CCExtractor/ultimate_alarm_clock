@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -11,6 +12,32 @@ class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
+
+  TextButton getAddSnoozeButtons(
+      BuildContext context, int snoozeMinutes, String title) {
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(
+          themeController.isLightMode.value
+              ? kLightSecondaryBackgroundColor
+              : ksecondaryBackgroundColor,
+        ),
+      ),
+      child: Text(
+        title.tr,
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: themeController.isLightMode.value
+                  ? kLightPrimaryTextColor
+                  : kprimaryTextColor,
+              fontWeight: FontWeight.w600,
+            ),
+      ),
+      onPressed: () {
+        Utils.hapticFeedback();
+        controller.addMinutes(snoozeMinutes);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +179,23 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             .displayLarge!
                             .copyWith(fontSize: 50),
                       ),
+                      const SizedBox(
+                        height: 20,
+                        width: 0,
+                      ),
+                      Obx(
+                        () => Visibility(
+                          visible: controller.isSnoozing.value,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              getAddSnoozeButtons(context, 1, '+1 min'),
+                              getAddSnoozeButtons(context, 2, '+2 min'),
+                              getAddSnoozeButtons(context, 5, '+5 min'),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -193,13 +237,15 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             child: Text(
                               'Snooze'.tr,
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : kprimaryTextColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
