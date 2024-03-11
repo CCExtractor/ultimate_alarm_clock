@@ -45,6 +45,10 @@ class GermanTranslations extends Translations {
           'Create alarm': 'Alarm erstellen',
           'Join alarm': 'Alarm beitreten',
           'Okay': 'Okay',
+          'Yes': 'Ja',
+          'No': 'Nein',
+          'Confirmation': 'Bestätigung',
+          'want to delete?': 'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
           'You cannot join your own alarm!':
               'Sie können Ihrem eigenen Alarm nicht beitreten!',
           'An alarm with this ID doesn\'t exist!':

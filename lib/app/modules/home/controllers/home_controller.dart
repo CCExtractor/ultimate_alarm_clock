@@ -233,7 +233,7 @@ class HomeController extends GetxController {
     });
 
     if (Get.arguments != null) {
-      bool showMotivationalQuote = Get.arguments;
+      bool showMotivationalQuote = Get.arguments.showMotivationalQuote;
 
       if (showMotivationalQuote) {
         Quote quote = Utils.getRandomQuote();
