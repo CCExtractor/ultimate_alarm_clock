@@ -460,71 +460,80 @@ class WeatherTile extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                width: width * 0.4,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                      kprimaryColor,
+                              Expanded(
+                                flex: 2,
+                                child: SizedBox(
+                                  width: width * 0.4,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                       MaterialStateProperty.all(
+                                        kprimaryColor,
+                                      ),
                                     ),
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Go to settings'.tr,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : ksecondaryTextColor,
-                                          ),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Go to settings'.tr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .copyWith(
+                                              color: themeController
+                                                      .isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : ksecondaryTextColor,
+                                            ),
+                                      ),
                                     ),
+                                    onPressed: () {
+                                      Utils.hapticFeedback();
+                                      Get.back();
+                                      Get.toNamed('/settings');
+                                    },
                                   ),
-                                  onPressed: () {
-                                    Utils.hapticFeedback();
-                                    Get.back();
-                                    Get.toNamed('/settings');
-                                  },
                                 ),
                               ),
                               SizedBox(
                                 width: width * 0.05,
                               ),
-                              SizedBox(
-                                width: width * 0.3,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                      themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
-                                          : kprimaryTextColor.withOpacity(0.5),
+                              Expanded(
+                                flex: 1,
+                                child: SizedBox(
+                                  width: width * 0.3,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                       MaterialStateProperty.all(
+                                        themeController.isLightMode.value
+                                            ? kLightPrimaryTextColor
+                                                .withOpacity(0.5)
+                                            : kprimaryTextColor.
+                                            withOpacity(0.5),
+                                      ),
                                     ),
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Cancel'.tr,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : kprimaryTextColor,
-                                          ),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Cancel'.tr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .copyWith(
+                                              color: themeController
+                                                      .isLightMode.value
+                                                  ? kLightPrimaryTextColor
+                                                  : kprimaryTextColor,
+                                            ),
+                                      ),
                                     ),
+                                    onPressed: () {
+                                      Utils.hapticFeedback();
+                                      Get.back();
+                                    },
                                   ),
-                                  onPressed: () {
-                                    Utils.hapticFeedback();
-                                    Get.back();
-                                  },
                                 ),
                               ),
                             ],

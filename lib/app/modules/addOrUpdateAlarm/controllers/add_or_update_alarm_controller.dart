@@ -61,7 +61,8 @@ class AddOrUpdateAlarmController extends GetxController {
     facing: CameraFacing.back,
     torchEnabled: false,
   );
-  final qrValue = ''.obs;
+  final qrValue = ''.obs; // qrvalue stored in alarm
+  final detectedQrValue = ''.obs; // QR value detected by camera
   final isQrEnabled = false.obs;
 
   final mathsSliderValue = 0.0.obs;
@@ -195,24 +196,28 @@ class AddOrUpdateAlarmController extends GetxController {
             onPressed: () async {
               Get.back();
 
-              // Request overlay permission
-              if (!(await Permission.systemAlertWindow.isGranted)) {
-                final status = await Permission.systemAlertWindow.request();
-                if (!status.isGranted) {
-                  debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
-                  return;
+              if (Platform.isAndroid) {
+                // Request overlay permission
+                if (!(await Permission.systemAlertWindow.isGranted)) {
+                  final status = await Permission.systemAlertWindow.request();
+                  if (!status.isGranted) {
+                    debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                    return;
+                  }
+                }
+
+                if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
+                  bool requested = await Permission.ignoreBatteryOptimizations
+                      .request()
+                      .isGranted;
+                  if (!requested) {
+                    debugPrint(
+                        'IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                    return;
+                  }
                 }
               }
 
-              if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
-                bool requested = await Permission.ignoreBatteryOptimizations
-                    .request()
-                    .isGranted;
-                if (!requested) {
-                  debugPrint('IGNORE_BATTERY_OPTIMIZATION permission denied!');
-                  return;
-                }
-              }
               // Request notification permission
               if (!await Permission.notification.isGranted) {
                 final status = await Permission.notification.request();
@@ -409,7 +414,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   showQRDialog() {
-    restartQRCodeController();
+    restartQRCodeController(false);
     Get.defaultDialog(
       titlePadding: const EdgeInsets.symmetric(vertical: 20),
       backgroundColor: themeController.isLightMode.value
@@ -420,7 +425,7 @@ class AddOrUpdateAlarmController extends GetxController {
       content: Obx(
         () => Column(
           children: [
-            isQrEnabled.value == false
+            detectedQrValue.value.isEmpty
                 ? SizedBox(
                     height: 300,
                     width: 300,
@@ -430,18 +435,17 @@ class AddOrUpdateAlarmController extends GetxController {
                       onDetect: (capture) {
                         final List<Barcode> barcodes = capture.barcodes;
                         for (final barcode in barcodes) {
-                          qrValue.value = barcode.rawValue.toString();
+                          detectedQrValue.value = barcode.rawValue.toString();
                           debugPrint(barcode.rawValue.toString());
-                          isQrEnabled.value = true;
                         }
                       },
                     ),
                   )
                 : Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Text(qrValue.value),
+                    child: Text(detectedQrValue.value),
                   ),
-            isQrEnabled.value == true
+            (detectedQrValue.value.isNotEmpty)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -462,6 +466,8 @@ class AddOrUpdateAlarmController extends GetxController {
                               ),
                         ),
                         onPressed: () {
+                          qrValue.value = detectedQrValue.value;
+                          isQrEnabled.value = true;
                           Get.back();
                         },
                       ),
@@ -483,10 +489,32 @@ class AddOrUpdateAlarmController extends GetxController {
                         ),
                         onPressed: () async {
                           qrController.dispose();
-                          restartQRCodeController();
-                          isQrEnabled.value = false;
+                          restartQRCodeController(true);
                         },
                       ),
+                      if (isQrEnabled.value)
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor),
+                          ),
+                          child: Text(
+                            'Disable',
+                            style: Theme.of(Get.context!)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
+                          ),
+                          onPressed: () {
+                            isQrEnabled.value = false;
+                            qrValue.value = '';
+                            Get.back();
+                          },
+                        ),
                     ],
                   )
                 : const SizedBox(),
@@ -575,7 +603,7 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
-  restartQRCodeController() async {
+  restartQRCodeController(bool retake) async {
     // Camera permission already granted, proceed with QR code scanning
     qrController = MobileScannerController(
       autoStart: true,
@@ -583,6 +611,7 @@ class AddOrUpdateAlarmController extends GetxController {
       facing: CameraFacing.back,
       torchEnabled: false,
     );
+    detectedQrValue.value = retake ? '' : qrValue.value;
   }
 
   updateAlarm(AlarmModel alarmData) async {
@@ -718,6 +747,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
       isQrEnabled.value = alarmRecord.value!.isQrEnabled;
       qrValue.value = alarmRecord.value!.qrValue;
+      detectedQrValue.value = alarmRecord.value!.qrValue;
 
       alarmID = alarmRecord.value!.alarmID;
 
