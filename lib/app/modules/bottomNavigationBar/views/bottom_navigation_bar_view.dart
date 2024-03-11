@@ -68,7 +68,6 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           selectedLabelStyle: TextStyle(
             color: kprimaryColor,
             fontSize: 14,
-            decoration: TextDecoration.underline,
             decorationColor:
                 themeController.isLightMode.value ? Colors.black : Colors.white,
             decorationThickness: 0.8,
