@@ -35,16 +35,6 @@ class BottomNavigationBarController extends GetxController
     super.onClose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
-      _saveState();
-    }
-  }
-
   Future<void> loadSavedState() async {
     int value = await _secureStorageProvider.readTabIndex();
     activeTabIndex.value = value;
@@ -59,6 +49,7 @@ class BottomNavigationBarController extends GetxController
 
   void changeTab(int index) {
     activeTabIndex.value = index;
+    _saveState();
 
     if (index == 0 &&
         (timerController.isTimerRunning.value || isTimerRunning.value)) {
