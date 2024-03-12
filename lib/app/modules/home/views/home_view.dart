@@ -19,8 +19,8 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
-  ThemeController themeController = Get.find<ThemeController>();
-  SettingsController settingsController = Get.find<SettingsController>();
+  final ThemeController themeController = Get.find<ThemeController>();
+  final SettingsController settingsController = Get.find<SettingsController>();
 
   @override
   Widget build(BuildContext context) {

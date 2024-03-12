@@ -25,12 +25,10 @@ class SplashScreenController extends GetxController {
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
@@ -39,12 +37,10 @@ class SplashScreenController extends GetxController {
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
@@ -54,10 +50,8 @@ class SplashScreenController extends GetxController {
     LatLng location,
     List<int> weatherTypeInt,
   ) async {
-    List<WeatherTypes> weatherTypes =
-        Utils.getWeatherTypesFromInt(weatherTypeInt);
-    String? apiKey =
-        await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap);
+    List<WeatherTypes> weatherTypes = Utils.getWeatherTypesFromInt(weatherTypeInt);
+    String? apiKey = await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap);
     WeatherFactory weatherFactory = WeatherFactory(apiKey!);
     try {
       Weather weatherData = await weatherFactory.currentWeatherByLocation(
@@ -68,28 +62,19 @@ class SplashScreenController extends GetxController {
         bool isConditionMet = false;
         switch (weatherType) {
           case WeatherTypes.sunny:
-            isConditionMet =
-                weatherData.weatherMain?.toLowerCase().contains('clear') ??
-                    false;
+            isConditionMet = weatherData.weatherMain?.toLowerCase().contains('clear') ?? false;
             break;
           case WeatherTypes.cloudy:
-            isConditionMet =
-                weatherData.weatherMain?.toLowerCase().contains('cloud') ??
-                    false;
+            isConditionMet = weatherData.weatherMain?.toLowerCase().contains('cloud') ?? false;
             break;
           case WeatherTypes.rainy:
-            isConditionMet =
-                weatherData.weatherMain?.toLowerCase().contains('rain') ??
-                    false;
+            isConditionMet = weatherData.weatherMain?.toLowerCase().contains('rain') ?? false;
             break;
           case WeatherTypes.windy:
-            isConditionMet =
-                weatherData.windSpeed != null && weatherData.windSpeed! >= 15;
+            isConditionMet = weatherData.windSpeed != null && weatherData.windSpeed! >= 15;
             break;
           case WeatherTypes.stormy:
-            isConditionMet =
-                weatherData.weatherMain?.toLowerCase().contains('storm') ??
-                    false;
+            isConditionMet = weatherData.weatherMain?.toLowerCase().contains('storm') ?? false;
             break;
         }
 
@@ -167,12 +152,10 @@ class SplashScreenController extends GetxController {
                 currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
                 // If the alarm is set to NEVER repeat, then it will be chosen as
                 // the next alarm to ring by default as it would ring the next day
-                if (currentlyRingingAlarm.value.days
-                    .every((element) => element == false)) {
+                if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
                   currentlyRingingAlarm.value.isEnabled = false;
 
-                  if (currentlyRingingAlarm.value.isSharedAlarmEnabled ==
-                      false) {
+                  if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
                     IsarDb.updateAlarm(currentlyRingingAlarm.value);
                   } else {
                     FirestoreDb.updateAlarm(
@@ -186,13 +169,11 @@ class SplashScreenController extends GetxController {
                   int currentDay = DateTime.now().weekday - 1;
                   currentlyRingingAlarm.value.days[currentDay] = false;
 
-                  if (currentlyRingingAlarm.value.days
-                      .every((element) => element == false)) {
+                  if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
                     currentlyRingingAlarm.value.isEnabled = false;
                   }
 
-                  if (currentlyRingingAlarm.value.isSharedAlarmEnabled ==
-                      false) {
+                  if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
                     IsarDb.updateAlarm(currentlyRingingAlarm.value);
                   } else {
                     FirestoreDb.updateAlarm(
@@ -204,8 +185,7 @@ class SplashScreenController extends GetxController {
 
                 AlarmModel latestAlarm = await getNextAlarm();
 
-                TimeOfDay latestAlarmTimeOfDay =
-                    Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+                TimeOfDay latestAlarmTimeOfDay = Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 // This condition will never satisfy because this will only occur if fake mode
 // is returned as latest alarm
                 if (latestAlarm.isEnabled == false) {
@@ -220,8 +200,10 @@ class SplashScreenController extends GetxController {
 
                   try {
                     await alarmChannel.invokeMethod(
-                        'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-                    print("Scheduled...");
+                      'scheduleAlarm',
+                      {'milliSeconds': intervaltoAlarm},
+                    );
+                    print('Scheduled...');
                   } on PlatformException catch (e) {
                     print("Failed to schedule alarm: ${e.message}");
                   }

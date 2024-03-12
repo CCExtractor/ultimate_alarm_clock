@@ -39,7 +39,7 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
             : ksecondaryBackgroundColor,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: const EdgeInsets.only(left: 30, right: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

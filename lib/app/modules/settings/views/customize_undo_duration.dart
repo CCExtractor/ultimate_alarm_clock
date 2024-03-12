@@ -6,7 +6,8 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class CustomizeUndoDuration extends StatelessWidget {
-  HomeController homeController = Get.find<HomeController>();
+  final HomeController homeController = Get.find<HomeController>();
+
   CustomizeUndoDuration({
     super.key,
     required this.themeController,

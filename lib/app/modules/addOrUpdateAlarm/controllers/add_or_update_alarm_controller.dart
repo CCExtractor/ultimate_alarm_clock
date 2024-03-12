@@ -129,7 +129,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setGradient(int value) {
-    this.gradient.value = value;
+    gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -796,7 +796,7 @@ class AddOrUpdateAlarmController extends GetxController {
       'numberOfSteps': numberOfSteps.value,
       'isSharedAlarmEnabled': isSharedAlarmEnabled.value,
       'offsetDuration': offsetDuration.value,
-      'isOffsetBefore': isOffsetBefore.value
+      'isOffsetBefore': isOffsetBefore.value,
     });
 
     addListeners();
@@ -1040,7 +1040,9 @@ class AddOrUpdateAlarmController extends GetxController {
             currentCounterOfUsage: 1,
           );
           AudioUtils.updateRingtoneCounterOfUsage(
-              customRingtoneName: previousRingtone, counterUpdate: CounterUpdate.decrement);
+            customRingtoneName: previousRingtone,
+            counterUpdate: CounterUpdate.decrement,
+          );
           await IsarDb.addCustomRingtone(customRingtone);
         }
       }

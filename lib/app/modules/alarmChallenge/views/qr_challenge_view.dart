@@ -12,7 +12,7 @@ import '../controllers/alarm_challenge_controller.dart';
 class QRChallengeView extends GetView<AlarmChallengeController> {
   QRChallengeView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +51,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                         children: [
                           Text(
                             'Scan your QR/Bar Code!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
+                            style: Theme.of(context).textTheme.displayMedium!.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor.withOpacity(0.7)
@@ -67,8 +64,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                           Obx(
                             () => Column(
                               children: [
-                                (controller.isQrOngoing.value ==
-                                        Status.initialized)
+                                (controller.isQrOngoing.value == Status.initialized)
                                     ? SizedBox(
                                         height: 300,
                                         width: 300,
@@ -76,20 +72,16 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                           controller: controller.qrController,
                                           fit: BoxFit.cover,
                                           onDetect: (capture) {
-                                            final List<Barcode> barcodes =
-                                                capture.barcodes;
+                                            final List<Barcode> barcodes = capture.barcodes;
                                             for (final barcode in barcodes) {
                                               controller.qrValue.value =
                                                   barcode.rawValue.toString();
 
                                               if (controller.qrValue.value !=
-                                                  controller
-                                                      .alarmRecord.qrValue) {
-                                                controller.isQrOngoing.value =
-                                                    Status.ongoing;
+                                                  controller.alarmRecord.qrValue) {
+                                                controller.isQrOngoing.value = Status.ongoing;
                                               } else {
-                                                controller.isQrOngoing.value =
-                                                    Status.completed;
+                                                controller.isQrOngoing.value = Status.completed;
                                               }
                                             }
                                           },
@@ -100,32 +92,23 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                         width: 300,
                                         child: Center(
                                           child: (controller.qrValue.value ==
-                                                  controller
-                                                      .alarmRecord.qrValue)
+                                                  controller.alarmRecord.qrValue)
                                               ? Icon(
                                                   Icons.done,
                                                   size: height * 0.2,
-                                                  color: themeController
-                                                          .isLightMode.value
-                                                      ? kLightPrimaryTextColor
-                                                          .withOpacity(0.7)
-                                                      : kprimaryTextColor
-                                                          .withOpacity(0.7),
+                                                  color: themeController.isLightMode.value
+                                                      ? kLightPrimaryTextColor.withOpacity(0.7)
+                                                      : kprimaryTextColor.withOpacity(0.7),
                                                 )
                                               : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Icon(
                                                       Icons.close,
                                                       size: height * 0.2,
-                                                      color: themeController
-                                                              .isLightMode.value
-                                                          ? kLightPrimaryTextColor
-                                                              .withOpacity(0.7)
-                                                          : kprimaryTextColor
-                                                              .withOpacity(
+                                                      color: themeController.isLightMode.value
+                                                          ? kLightPrimaryTextColor.withOpacity(0.7)
+                                                          : kprimaryTextColor.withOpacity(
                                                               0.7,
                                                             ),
                                                     ),
@@ -133,30 +116,21 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                       'Wrong Code Scanned!'.tr,
                                                       style: Theme.of(
                                                         context,
-                                                      )
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: themeController
-                                                                    .isLightMode
-                                                                    .value
+                                                      ).textTheme.bodyMedium!.copyWith(
+                                                            fontWeight: FontWeight.w500,
+                                                            color: themeController.isLightMode.value
                                                                 ? kLightPrimaryTextColor
                                                                     .withOpacity(
                                                                     0.7,
                                                                   )
-                                                                : kprimaryTextColor
-                                                                    .withOpacity(
+                                                                : kprimaryTextColor.withOpacity(
                                                                     0.7,
                                                                   ),
                                                           ),
                                                     ),
                                                     TextButton(
                                                       style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(
+                                                        backgroundColor: MaterialStateProperty.all(
                                                           kprimaryColor,
                                                         ),
                                                       ),
@@ -164,25 +138,18 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                         'Retake'.tr,
                                                         style: Theme.of(
                                                           context,
-                                                        )
-                                                            .textTheme
-                                                            .displaySmall!
-                                                            .copyWith(
-                                                              color: themeController
-                                                                      .isLightMode
-                                                                      .value
-                                                                  ? kLightSecondaryTextColor
-                                                                  : ksecondaryTextColor,
+                                                        ).textTheme.displaySmall!.copyWith(
+                                                              color:
+                                                                  themeController.isLightMode.value
+                                                                      ? kLightSecondaryTextColor
+                                                                      : ksecondaryTextColor,
                                                             ),
                                                       ),
                                                       onPressed: () async {
                                                         Utils.hapticFeedback();
-                                                        controller.qrController!
-                                                            .dispose();
-                                                        controller
-                                                            .restartQRCodeController();
-                                                        controller.isQrOngoing
-                                                                .value =
+                                                        controller.qrController!.dispose();
+                                                        controller.restartQRCodeController();
+                                                        controller.isQrOngoing.value =
                                                             Status.initialized;
                                                       },
                                                     ),

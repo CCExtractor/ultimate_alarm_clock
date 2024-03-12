@@ -26,9 +26,7 @@ class PedometerChallenge extends StatelessWidget {
           Text(
             'Pedometer'.tr,
             style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+              color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
             ),
           ),
           IconButton(
@@ -92,9 +90,7 @@ class PedometerChallenge extends StatelessWidget {
                         },
                       ),
                       Text(
-                        controller.numberOfSteps.value > 1
-                            ? 'steps'.tr
-                            : 'step'.tr,
+                        controller.numberOfSteps.value > 1 ? 'steps'.tr : 'step'.tr,
                       ),
                     ],
                   ),
@@ -117,10 +113,7 @@ class PedometerChallenge extends StatelessWidget {
                           ),
                           child: Text(
                             'Done'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
+                            style: Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
@@ -144,8 +137,8 @@ class PedometerChallenge extends StatelessWidget {
               () => Text(
                 controller.numberOfSteps.value > 0
                     ? controller.numberOfSteps.value > 1
-                        ? '${controller.numberOfSteps.value} ' + 'steps'.tr
-                        : '${controller.numberOfSteps.value} ' + 'step'.tr
+                        ? '${controller.numberOfSteps.value} ${'steps'.tr}'
+                        : '${controller.numberOfSteps.value} ${'step'.tr}'
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isPedometerEnabled.value == false)

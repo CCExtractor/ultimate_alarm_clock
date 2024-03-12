@@ -8,7 +8,8 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class StopwatchView extends GetView<StopwatchController> {
   StopwatchView({Key? key}) : super(key: key);
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;

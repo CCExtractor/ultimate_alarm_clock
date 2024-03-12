@@ -6,8 +6,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_c
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
 class InputTimeController extends GetxController {
-  AddOrUpdateAlarmController addOrUpdateAlarmController =
-      Get.find<AddOrUpdateAlarmController>();
+  AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
   TimerController timerController = Get.find<TimerController>();
   SettingsController settingsController = Get.find<SettingsController>();
   final isTimePicker = false.obs;
@@ -60,7 +59,7 @@ class InputTimeController extends GetxController {
 
   int convert24(int value) {
     if (!settingsController.is24HrsEnabled.value) {
-      if (addOrUpdateAlarmController.meridiemIndex == 0) {
+      if (addOrUpdateAlarmController.meridiemIndex.value == 0) {
         if (value == 12) {
           value = value - 12;
         }
@@ -93,29 +92,25 @@ class InputTimeController extends GetxController {
       DateTime today = DateTime.now();
       DateTime tomorrow = today.add(const Duration(days: 1));
       bool isNextDay =
-          (time.hour == today.hour && time.minute < today.minute) ||
-              (time.hour < today.hour);
+          (time.hour == today.hour && time.minute < today.minute) || (time.hour < today.hour);
       bool isNextMonth = isNextDay && (today.day > tomorrow.day);
       bool isNextYear = isNextMonth && (today.month > tomorrow.month);
       int day = isNextDay ? tomorrow.day : today.day;
       int month = isNextMonth ? tomorrow.month : today.month;
       int year = isNextYear ? tomorrow.month : today.month;
-      selectedDateTime.value =
-          DateTime(year, month, day, time.hour, time.minute);
+      selectedDateTime.value = DateTime(year, month, day, time.hour, time.minute);
       addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
 
       if (!settingsController.is24HrsEnabled.value) {
         if (selectedDateTime.value.hour == 0) {
           addOrUpdateAlarmController.hours.value = 12;
         } else if (selectedDateTime.value.hour > 12) {
-          addOrUpdateAlarmController.hours.value =
-              (selectedDateTime.value.hour - 12);
+          addOrUpdateAlarmController.hours.value = (selectedDateTime.value.hour - 12);
         } else {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }
       } else {
-        addOrUpdateAlarmController.hours.value =
-            convert24(selectedDateTime.value.hour);
+        addOrUpdateAlarmController.hours.value = convert24(selectedDateTime.value.hour);
       }
       addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
       if (selectedDateTime.value.hour >= 12) {

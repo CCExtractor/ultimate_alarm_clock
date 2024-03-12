@@ -25,8 +25,7 @@ class LocationTile extends StatelessWidget {
     return GestureDetector(
       onTapDown: (TapDownDetails details) async {
         Utils.hapticFeedback();
-        final RenderBox overlay =
-            Overlay.of(context).context.findRenderObject() as RenderBox;
+        final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
         final RelativeRect position = RelativeRect.fromRect(
           Rect.fromPoints(
@@ -140,12 +139,13 @@ class LocationTile extends StatelessWidget {
                       ),
                       children: [
                         TileLayer(
-                          urlTemplate:
-                              'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          urlTemplate: 'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
                         ),
-                        Obx(() => MarkerLayer(
-                            markers:
-                                List<Marker>.from(controller.markersList))),
+                        Obx(
+                          () => MarkerLayer(
+                            markers: List<Marker>.from(controller.markersList),
+                          ),
+                        ),
                       ],
                     ),
                   ),

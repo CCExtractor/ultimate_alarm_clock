@@ -18,8 +18,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           future: controller.loadSavedState(),
           builder: (context, snapshot) {
             if (controller.hasloaded.value != false) {
-              pageController =
-                  PageController(initialPage: controller.activeTabIndex.value);
+              pageController = PageController(initialPage: controller.activeTabIndex.value);
               return PageView(
                 controller: pageController,
                 children: controller.pages,
@@ -68,8 +67,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           selectedLabelStyle: TextStyle(
             color: kprimaryColor,
             fontSize: 14,
-            decorationColor:
-                themeController.isLightMode.value ? Colors.black : Colors.white,
+            decorationColor: themeController.isLightMode.value ? Colors.black : Colors.white,
             decorationThickness: 0.8,
           ),
         ),

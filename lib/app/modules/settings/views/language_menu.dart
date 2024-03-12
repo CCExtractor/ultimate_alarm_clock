@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/utils.dart';
-import '../../settings/controllers/theme_controller.dart';
-import '../controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class LanguageMenu extends StatefulWidget {
   const LanguageMenu({
@@ -35,7 +34,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
         isLightMode: widget.themeController.isLightMode.value,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30),
+        padding: const EdgeInsets.only(left: 30),
         child: Row(
           children: [
             Obx(
@@ -47,8 +46,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                         : ksecondaryBackgroundColor,
                   ),
                 ),
-                inputDecorationTheme:
-                    InputDecorationTheme(enabledBorder: InputBorder.none),
+                inputDecorationTheme: const InputDecorationTheme(enabledBorder: InputBorder.none),
                 trailingIcon: Icon(
                   Icons.arrow_drop_down_outlined,
                   size: 40.0,
@@ -58,11 +56,10 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 ),
                 width: widget.width * 0.78,
                 initialSelection: widget.controller.currentLanguage.value,
-                label: Text('Change Language'),
-                dropdownMenuEntries:
-                    widget.controller.optionslocales.entries.map((e) {
+                label: const Text('Change Language'),
+                dropdownMenuEntries: widget.controller.optionslocales.entries.map((e) {
                   return DropdownMenuEntry(
-                    value: "${e.key}",
+                    value: e.key,
                     label: "${e.value['description']}",
                     style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(

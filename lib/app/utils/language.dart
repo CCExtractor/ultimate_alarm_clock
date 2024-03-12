@@ -88,8 +88,6 @@ class AppTranslations extends Translations {
           'Go back': 'Go back',
           'Automatic Cancellation': 'Automatic Cancellation',
           'Challenges': 'Challenges',
-          'Shared Alarm': 'Shared Alarm',
-          //alarm_id_tile.dart
           'Success!': 'Success!',
           'Alarm ID has been copied!': 'Alarm ID has been copied!',
           'Alarm ID': 'Alarm ID',
