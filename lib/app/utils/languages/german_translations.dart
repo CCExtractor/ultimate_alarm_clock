@@ -212,7 +212,7 @@ class GermanTranslations extends Translations {
           'Shake your phone!': 'Schütteln Sie Ihr Telefon!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Sie können nicht zurückgehen, während der Alarm klingelt",
+              'Sie können nicht zurückgehen, während der Alarm klingelt',
           'Start Challenge': 'Herausforderung starten',
           'Dismiss': 'Abbrechen',
           'Exit Preview': 'Vorschau beenden',
@@ -255,7 +255,7 @@ class GermanTranslations extends Translations {
           'Ascending Volume': 'Aufsteigende Lautstärke',
           'Alarm deleted': 'Alarm gelöscht',
           'Undo': 'Rückgängig machen',
-          'The alarm has been deleted': 'Der Alarm wurde gelöscht'
+          'The alarm has been deleted': 'Der Alarm wurde gelöscht',
         },
       };
 }

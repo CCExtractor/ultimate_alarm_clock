@@ -12,7 +12,6 @@ class StopwatchView extends GetView<StopwatchController> {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
     var height = Get.height;
     return Scaffold(
       appBar: PreferredSize(

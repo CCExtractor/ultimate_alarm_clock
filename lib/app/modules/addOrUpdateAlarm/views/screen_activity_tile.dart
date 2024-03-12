@@ -18,8 +18,6 @@ class ScreenActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = Get.height;
-    var width = Get.width;
     int activityInterval;
     bool isActivityEnalbed;
     return InkWell(
@@ -64,9 +62,7 @@ class ScreenActivityTile extends StatelessWidget {
                         },
                       ),
                       Text(
-                        controller.activityInterval.value > 1
-                            ? 'minutes'.tr
-                            : 'minute'.tr,
+                        controller.activityInterval.value > 1 ? 'minutes'.tr : 'minute'.tr,
                       ),
                     ],
                   ),

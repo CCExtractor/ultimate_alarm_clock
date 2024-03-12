@@ -19,7 +19,6 @@ class MathsChallenge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
-    var height = Get.height;
     double sliderValue;
     int noOfMathQues;
     bool isMathsEnabled;

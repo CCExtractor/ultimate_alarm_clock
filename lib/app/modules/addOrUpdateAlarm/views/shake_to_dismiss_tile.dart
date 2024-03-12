@@ -18,8 +18,6 @@ class ShakeToDismiss extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
     int shakeTimes;
     bool isShakeEnabled;
     return ListTile(

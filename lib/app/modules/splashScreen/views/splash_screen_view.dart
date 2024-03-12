@@ -7,7 +7,6 @@ class SplashScreenView extends GetView<SplashScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
     return const Scaffold(
       body: SafeArea(
         child: Center(

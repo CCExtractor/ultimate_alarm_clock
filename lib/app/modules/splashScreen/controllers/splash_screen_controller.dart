@@ -23,11 +23,11 @@ class SplashScreenController extends GetxController {
   final _secureStorageProvider = SecureStorageProvider();
 
   getCurrentlyRingingAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, false);
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, false);
     AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
 
@@ -35,11 +35,11 @@ class SplashScreenController extends GetxController {
   }
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, true);
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
@@ -205,7 +205,7 @@ class SplashScreenController extends GetxController {
                     );
                     print('Scheduled...');
                   } on PlatformException catch (e) {
-                    print("Failed to schedule alarm: ${e.message}");
+                    print('Failed to schedule alarm: ${e.message}');
                   }
                 }
 
