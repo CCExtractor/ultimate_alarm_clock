@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
 import 'app/routes/app_pages.dart';
+
 Locale? loc;
 
 void main() async {
@@ -15,7 +16,7 @@ void main() async {
 
   await Firebase.initializeApp();
   await Get.putAsync(() => GetStorageProvider().init());
-  final storage=Get.find<GetStorageProvider>();
+  final storage = Get.find<GetStorageProvider>();
   loc = await storage.readLocale();
 
   AudioPlayer.global.setAudioContext(
@@ -37,12 +38,13 @@ void main() async {
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
   runApp(
-    UltimateAlarmClockApp(),
+    const UltimateAlarmClockApp(),
   );
 }
 
 class UltimateAlarmClockApp extends StatelessWidget {
-  UltimateAlarmClockApp({super.key});
+  const UltimateAlarmClockApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -54,7 +56,7 @@ class UltimateAlarmClockApp extends StatelessWidget {
       getPages: AppPages.routes,
       translations: AppTranslations(),
       locale: loc,
-      fallbackLocale: Locale('en', 'US'),
+      fallbackLocale: const Locale('en', 'US'),
       builder: (BuildContext context, Widget? error) {
         ErrorWidget.builder = (FlutterErrorDetails? error) {
           return CustomErrorScreen(errorDetails: error!);

@@ -158,7 +158,7 @@ class SharedAlarm extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
+                                horizontal: 8.0, vertical: 4.0,),
                             child: Text(
                               'To use this feature, you have to link your Google account!'
                                   .tr,
@@ -270,6 +270,6 @@ class SharedAlarm extends StatelessWidget {
                     ),
                   ),
                 ),
-        ));
+        ),);
   }
 }

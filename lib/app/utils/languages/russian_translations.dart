@@ -9,18 +9,15 @@ class RussianTranslations extends Translations {
           'StopWatch': 'Секундомер',
           'Enable 24 Hour Format': 'Включить 24-часовой формат',
           'Enable Haptic Feedback': 'Включить тактильную отдачу',
-          'Enable Sorted Alarm List':
-              'Включить отсортированный список будильников',
+          'Enable Sorted Alarm List': 'Включить отсортированный список будильников',
           // google_sign_in.dart
           'Your account is now linked!': 'Ваш аккаунт теперь связан!',
           'Are you sure?': 'Вы уверены?',
-          'unlinkAccount':
-              'Вы действительно хотите отвязать свой аккаунт Google?',
+          'unlinkAccount': 'Вы действительно хотите отвязать свой аккаунт Google?',
           'Unlink': 'Отвязать',
           'Sign-In with Google': 'Вход с помощью Google',
           'Unlink @usermail': 'Отвязать @usermail',
-          'Why do I have to sign in with Google?':
-              'Почему мне нужно войти с помощью Google?',
+          'Why do I have to sign in with Google?': 'Почему мне нужно войти с помощью Google?',
           'Sign-inDescription':
               'Вход необязателен. Он требуется только для функций, использующих облачные службы, таких как:',
           'CollabDescription':
@@ -55,10 +52,8 @@ class RussianTranslations extends Translations {
           'No': 'Нет',
           'Confirmation': 'подтверждение',
           'want to delete?': 'Вы уверены, что хотите удалить этот будильник?',
-          'You cannot join your own alarm!':
-              'Вы не можете присоединиться к собственной тревоге!',
-          'An alarm with this ID doesn\'t exist!':
-              'Тревоги с таким идентификатором не существует!',
+          'You cannot join your own alarm!': 'Вы не можете присоединиться к собственной тревоге!',
+          'An alarm with this ID doesn\'t exist!': 'Тревоги с таким идентификатором не существует!',
           'Error!': 'Ошибка!',
           'Join': 'Присоединиться',
           'Enter Alarm ID': 'Введите идентификатор тревоги',
@@ -90,7 +85,6 @@ class RussianTranslations extends Translations {
           'Go back': 'Назад',
           'Automatic Cancellation': 'Автоматическая отмена',
           'Challenges': 'Задания',
-          'Shared Alarm': 'Общий будильник',
           'Camera Permission': 'Разрешение на камеру',
           'Please allow camera access to scan QR codes.':
               'Пожалуйста, разрешите доступ к камере для сканирования QR-кодов.',
@@ -101,8 +95,7 @@ class RussianTranslations extends Translations {
           'Alarm ID has been copied!': 'ID будильника скопирован!',
           'Alarm ID': 'ID будильника',
           'Disabled!': 'Отключено!',
-          'toCopyAlarm':
-              'Чтобы скопировать ID будильника, вам нужно включить общий будильник!',
+          'toCopyAlarm': 'Чтобы скопировать ID будильника, вам нужно включить общий будильник!',
           'Choose duration': 'Выберите продолжительность',
           'minutes': 'минут',
           'minute': 'минута',
@@ -117,8 +110,7 @@ class RussianTranslations extends Translations {
           'Upload Ringtone': 'Загрузить мелодию',
           'Done': 'Готово',
           'Duplicate Ringtone': 'Дублировать рингтон',
-          'Choosen ringtone is already present':
-              'Выбранный рингтон уже присутствует.',
+          'Choosen ringtone is already present': 'Выбранный рингтон уже присутствует.',
           //delete_tile.dart
           'Delete After Goes Off': 'Удалить после срабатывания',
 
@@ -126,8 +118,7 @@ class RussianTranslations extends Translations {
           'Label': 'Метка',
           'Add a label': 'Добавить ярлык',
           'Note': 'Примечание',
-          'noWhitespace':
-              'Пожалуйста, не вводите пробел в качестве первого символа!',
+          'noWhitespace': 'Пожалуйста, не вводите пробел в качестве первого символа!',
 //maths_challenge_tile.dart
           'Maths': 'Математика',
           'Math problems': 'Математические задачи',
@@ -156,8 +147,7 @@ class RussianTranslations extends Translations {
 //screen_activity_tile.dart
           'Timeout Duration': 'Длительность тайм-аута',
           'Screen Activity': 'Активность экрана',
-          'Screen activity based cancellation':
-              'Отмена на основе активности экрана',
+          'Screen activity based cancellation': 'Отмена на основе активности экрана',
           'screenDescription':
               'Эта функция автоматически отменяет будильник, если вы используете свое устройство в течение установленного количества минут.',
 //shake_to_dismiss_tile.dart
@@ -167,7 +157,6 @@ class RussianTranslations extends Translations {
           'Number of shakes': 'Количество встряхиваний',
           'times': 'раз',
           'time': 'раз',
-//'shared_alarm_tile.dart
           'Shared Alarm': 'Общий будильник',
           'Shared alarms': 'Общие будильники',
           'sharedDescription':
@@ -220,7 +209,7 @@ class RussianTranslations extends Translations {
           'Shake your phone!': 'Встряхните свой телефон!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Вы не можете вернуться, пока звонит будильник",
+              'Вы не можете вернуться, пока звонит будильник',
           'Start Challenge': 'Начать задание',
           'Dismiss': 'Отклонить',
           'Exit Preview': 'Выйти из предпросмотра',
@@ -239,8 +228,7 @@ class RussianTranslations extends Translations {
           'step1.2': 'openweathermap.org',
           'step1.3': ', нажмите на кнопку ',
           'step1.4': 'SignIn',
-          'step1.5':
-              ' (в правом верхнем углу) затем он запрашивает учетные данные для входа.',
+          'step1.5': ' (в правом верхнем углу) затем он запрашивает учетные данные для входа.',
           'step2.1':
               'Если у вас уже есть учетная запись, введите свои учетные данные. В противном случае нажмите на опцию ',
           'step2.2': 'Create an Account',
@@ -250,8 +238,7 @@ class RussianTranslations extends Translations {
               'Как только ваша учетная запись будет создана, вы автоматически будете перенаправлены на страницу OpenWeather. Он спрашивает вас о вашей компании и цели использования платформы., заполните эти данные соответствующим образом.',
           'step4.1': 'Нажмите на ',
           'step4.2': 'Username',
-          'step4.3':
-              '(в правом верхнем углу). Появится раскрывающееся меню. Нажмите на опцию ',
+          'step4.3': '(в правом верхнем углу). Появится раскрывающееся меню. Нажмите на опцию ',
           'step4.4': 'My API',
           'step4.5': '.',
           'step5': 'Теперь у вас есть API. Выберите ключ и скопируйте его.',

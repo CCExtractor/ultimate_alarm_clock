@@ -32,7 +32,7 @@ class RepeatTile extends StatelessWidget {
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
             builder: (BuildContext context) {
-              return Container(
+              return SizedBox(
                 height: height * 0.45,
                 child: Column(
                   children: [
@@ -83,12 +83,8 @@ class RepeatTile extends StatelessWidget {
                           },
                           child: Text(
                             'Done',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: controller
-                                          .themeController.isLightMode.value
+                            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  color: controller.themeController.isLightMode.value
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
@@ -109,8 +105,7 @@ class RepeatTile extends StatelessWidget {
             : ksecondaryBackgroundColor,
         title: Obx(
           () {
-            bool anyDaySelected =
-                controller.repeatDays.any((daySelected) => daySelected);
+            bool anyDaySelected = controller.repeatDays.any((daySelected) => daySelected);
             return FittedBox(
               alignment: Alignment.centerLeft,
               fit: BoxFit.scaleDown,
@@ -120,8 +115,7 @@ class RepeatTile extends StatelessWidget {
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
-                  fontWeight:
-                      anyDaySelected ? FontWeight.w500 : FontWeight.normal,
+                  fontWeight: anyDaySelected ? FontWeight.w500 : FontWeight.normal,
                 ),
               ),
             );
@@ -235,10 +229,7 @@ class RepeatTile extends StatelessWidget {
               ),
               Text(
                 dayName,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(fontSize: 15),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 15),
               ),
             ],
           ),
@@ -272,9 +263,8 @@ class RepeatTile extends StatelessWidget {
                   : ksecondaryBackgroundColor,
               title: 'Days of the week'.tr,
               titleStyle: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color:
+                    themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
               ),
               content: Column(
                 children: [
@@ -329,10 +319,7 @@ class RepeatTile extends StatelessWidget {
                           ),
                           child: Text(
                             'Done'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
+                            style: Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
@@ -385,14 +372,12 @@ class RepeatTile extends StatelessWidget {
         () => InkWell(
           onTap: () {
             Utils.hapticFeedback();
-            controller
-                .setIsWeekdaysSelected(!controller.isWeekdaysSelected.value);
+            controller.setIsWeekdaysSelected(!controller.isWeekdaysSelected.value);
 
             // Update repeatDays based on isWeekdaysSelected value
             for (int i = 0; i < controller.repeatDays.length; i++) {
               // Assuming weekdays are from Monday to Friday (index 0 to 5)
-              controller.repeatDays[i] =
-                  controller.isWeekdaysSelected.value && i >= 0 && i < 5;
+              controller.repeatDays[i] = controller.isWeekdaysSelected.value && i >= 0 && i < 5;
             }
           },
           child: Padding(
@@ -423,9 +408,7 @@ class RepeatTile extends StatelessWidget {
                     for (int i = 0; i < controller.repeatDays.length; i++) {
                       // Assuming weekdays are from Monday to Friday (index 1 to 5)
                       controller.repeatDays[i] =
-                          controller.isWeekdaysSelected.value &&
-                              i >= 1 &&
-                              i <= 5;
+                          controller.isWeekdaysSelected.value && i >= 1 && i <= 5;
                     }
                   },
                 ),

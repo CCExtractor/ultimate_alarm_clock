@@ -121,11 +121,11 @@ ThemeData kThemeData = ThemeData(
     selectedLabelStyle: TextStyle(
       color: kprimaryColor,
       shadows: [
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, -1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, -1), blurRadius: 10.0),
-        ],
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, 1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, -1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, 1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, -1), blurRadius: 10.0),
+      ],
     ),
     unselectedLabelStyle: TextStyle(
       color: kprimaryTextColor,
@@ -133,11 +133,11 @@ ThemeData kThemeData = ThemeData(
     selectedIconTheme: IconThemeData(
       color: kprimaryColor,
       shadows: [
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, -1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, -1), blurRadius: 10.0),
-        ],
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, 1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(1, -1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, 1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(90, 255, 255, 255), offset: Offset(-1, -1), blurRadius: 10.0),
+      ],
     ),
     unselectedIconTheme: IconThemeData(
       color: kprimaryTextColor,
@@ -232,11 +232,11 @@ ThemeData kLightThemeData = ThemeData(
     selectedLabelStyle: TextStyle(
       color: kprimaryColor,
       shadows: [
-          Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(1, -1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(-1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(-1, -1), blurRadius: 10.0),
-        ],
+        Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(1, 1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(1, -1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(-1, 1), blurRadius: 10.0),
+        Shadow(color: Color.fromARGB(120, 0, 0, 0), offset: Offset(-1, -1), blurRadius: 10.0),
+      ],
     ),
     unselectedLabelStyle: TextStyle(
       color: kLightPrimaryTextColor,
@@ -244,11 +244,27 @@ ThemeData kLightThemeData = ThemeData(
     selectedIconTheme: IconThemeData(
       color: kprimaryColor,
       shadows: [
-          Shadow(color: Color.fromARGB(100, 0, 0, 0), offset: Offset(1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(100, 0, 0, 0), offset: Offset(1, -1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(100, 0, 0, 0), offset: Offset(-1, 1), blurRadius: 10.0),
-          Shadow(color: Color.fromARGB(100, 0, 0, 0), offset: Offset(-1, -1), blurRadius: 10.0),
-        ],
+        Shadow(
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(1, 1),
+          blurRadius: 10.0,
+        ),
+        Shadow(
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(1, -1),
+          blurRadius: 10.0,
+        ),
+        Shadow(
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(-1, 1),
+          blurRadius: 10.0,
+        ),
+        Shadow(
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(-1, -1),
+          blurRadius: 10.0,
+        ),
+      ],
     ),
     unselectedIconTheme: IconThemeData(
       color: kLightPrimaryTextColor,

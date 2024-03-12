@@ -54,8 +54,7 @@ class IsarDb {
   static Future<bool> doesAlarmExist(String alarmID) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final alarms =
-        await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
+    final alarms = await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
 
     return alarms.isNotEmpty;
   }
@@ -162,7 +161,7 @@ class IsarDb {
       yield* db.alarmModels.where().watch(fireImmediately: true);
     } catch (e) {
       debugPrint(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -195,11 +194,7 @@ class IsarDb {
     try {
       final isarProvider = IsarDb();
       final db = await isarProvider.db;
-      final query = db.ringtoneModels
-          .where()
-          .filter()
-          .isarIdEqualTo(customRingtoneId)
-          .findFirst();
+      final query = db.ringtoneModels.where().filter().isarIdEqualTo(customRingtoneId).findFirst();
 
       return query;
     } catch (e) {

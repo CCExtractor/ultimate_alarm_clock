@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -8,7 +10,9 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AboutView extends GetView<AboutController> {
   final AboutController aboutController = Get.find<AboutController>();
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
+
+  AboutView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +21,8 @@ class AboutView extends GetView<AboutController> {
         title: Text(
           'About'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color:
+                    themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -28,9 +31,7 @@ class AboutView extends GetView<AboutController> {
         leading: IconButton(
           icon: Icon(
             Icons.adaptive.arrow_back,
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
           ),
           onPressed: () {
             Utils.hapticFeedback();
@@ -52,15 +53,15 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Text(
               'Ultimate Alarm Clock'.tr,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10),
-             Text(
+            Text(
               'Version: 0.5.0'.tr,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -68,10 +69,11 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child:  Text(
-                'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'.tr,
+              child: Text(
+                'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'
+                    .tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
@@ -92,8 +94,9 @@ class AboutView extends GetView<AboutController> {
                       backgroundColor: Colors.white,
                     ),
                     onPressed: () async {
-                      if (!await aboutController
-                          .launchUrl(Uri.parse(AboutController.githubUrl))) {
+                      if (!await aboutController.launchUrl(
+                        Uri.parse(AboutController.githubUrl),
+                      )) {
                         throw Exception(
                           'Could not launch ${AboutController.githubUrl}'.tr,
                         );

@@ -14,13 +14,11 @@ class SpanishTranslations extends Translations {
           // google_sign_in.dart
           'Your account is now linked!': '¡Su cuenta ahora está vinculada!',
           'Are you sure?': '¿Estás seguro?',
-          'unlinkAccount':
-              '¿Seguro que quieres desvincular tu cuenta de Google?',
+          'unlinkAccount': '¿Seguro que quieres desvincular tu cuenta de Google?',
           'Unlink': 'Desvincular',
           'Sign-In with Google': 'Iniciar sesión con Google',
           'Unlink @usermail': 'Desvincular @usermail',
-          'Why do I have to sign in with Google?':
-              '¿Por qué tengo que iniciar sesión con Google?',
+          'Why do I have to sign in with Google?': '¿Por qué tengo que iniciar sesión con Google?',
           'Sign-inDescription':
               'Iniciar sesión es opcional. Solo es necesario para las funciones que utilizan servicios en la nube, como:',
           'CollabDescription':
@@ -56,10 +54,8 @@ class SpanishTranslations extends Translations {
           'No': 'No',
           'Confirmation': 'Confirmación',
           'want to delete?': '¿Estás seguro de que deseas eliminar esta alarma?',
-          'You cannot join your own alarm!':
-              '¡No puedes unirte a tu propia alarma!',
-          'An alarm with this ID doesn\'t exist!':
-              '¡Una alarma con este ID no existe!',
+          'You cannot join your own alarm!': '¡No puedes unirte a tu propia alarma!',
+          'An alarm with this ID doesn\'t exist!': '¡Una alarma con este ID no existe!',
           'Error!': '¡Error!',
           'Join': 'Unirse',
           'Enter Alarm ID': 'Ingresar ID de alarma',
@@ -91,7 +87,6 @@ class SpanishTranslations extends Translations {
           'Go back': 'Volver',
           'Automatic Cancellation': 'Cancelación automática',
           'Challenges': 'Desafíos',
-          'Shared Alarm': 'Alarma compartida',
           'Camera Permission': 'Permiso de cámara',
           'Please allow camera access to scan QR codes.':
               'Por favor, permita el acceso a la cámara para escanear códigos QR.',
@@ -102,8 +97,7 @@ class SpanishTranslations extends Translations {
           'Alarm ID has been copied!': '¡Se ha copiado el ID de la alarma!',
           'Alarm ID': 'ID de la alarma',
           'Disabled!': '¡Desactivado!',
-          'toCopyAlarm':
-              'Para copiar el ID de la alarma, debes habilitar la alarma compartida!',
+          'toCopyAlarm': 'Para copiar el ID de la alarma, debes habilitar la alarma compartida!',
           'Choose duration': 'Elegir duración',
           'minutes': 'minutos',
           'minute': 'minuto',
@@ -118,8 +112,7 @@ class SpanishTranslations extends Translations {
           'Upload Ringtone': 'Subir tono de llamada',
           'Done': 'Hecho',
           'Duplicate Ringtone': 'Tono duplicado',
-          'Choosen ringtone is already present':
-              'El tono de llamada elegido ya está presente',
+          'Choosen ringtone is already present': 'El tono de llamada elegido ya está presente',
           //delete_tile.dart
           'Delete After Goes Off': 'Eliminar después de que expire',
 
@@ -127,8 +120,7 @@ class SpanishTranslations extends Translations {
           'Label': 'Etiqueta',
           'Add a label': 'Agregar una etiqueta',
           'Note': 'Nota',
-          'noWhitespace':
-              'Por favor, no ingrese espacios en blanco como primer carácter!',
+          'noWhitespace': 'Por favor, no ingrese espacios en blanco como primer carácter!',
 
 //maths_challenge_tile.dart
           'Maths': 'Matemáticas',
@@ -138,8 +130,6 @@ class SpanishTranslations extends Translations {
           'Hard': 'Difícil',
 
 //maths_challenge_tile.dart
-          'Maths': 'Matemáticas',
-          'Math problems': 'Problemas matemáticos',
           'mathDescription':
               'Deberá resolver problemas matemáticos simples del nivel de dificultad elegido para desactivar la alarma.',
           'Solve Maths questions': 'Resolver preguntas de matemáticas',
@@ -170,8 +160,7 @@ class SpanishTranslations extends Translations {
 //screen_activity_tile.dart
           'Timeout Duration': 'Duración de tiempo de espera',
           'Screen Activity': 'Actividad de la pantalla',
-          'Screen activity based cancellation':
-              'Cancelación basada en la actividad de la pantalla',
+          'Screen activity based cancellation': 'Cancelación basada en la actividad de la pantalla',
           'screenDescription':
               'Esta función cancelará automáticamente la alarma si ha estado utilizando su dispositivo durante un número determinado de minutos.',
 //shake_to_dismiss_tile.dart
@@ -226,7 +215,7 @@ class SpanishTranslations extends Translations {
           'Shake your phone!': '¡Agita tu teléfono!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "No puedes retroceder mientras suena la alarma",
+              'No puedes retroceder mientras suena la alarma',
           'Start Challenge': 'Comenzar el desafío',
           'Dismiss': 'Descartar',
           'Exit Preview': 'Salir de la vista previa',
@@ -269,7 +258,7 @@ class SpanishTranslations extends Translations {
           'Ascending Volume': 'Volumen ascendente',
           'Alarm deleted': 'Alarma eliminada',
           'Undo': 'Deshacer',
-          'The alarm has been deleted': 'La alarma ha sido eliminada'
+          'The alarm has been deleted': 'La alarma ha sido eliminada',
         },
       };
 }

@@ -24,8 +24,7 @@ class AppTranslations extends Translations {
           'Unlink': 'Unlink',
           'Sign-In with Google': 'Sign-In with Google',
           'Unlink @usermail': 'Unlink @usermail',
-          'Why do I have to sign in with Google?':
-              'Why do I have to sign in with Google?',
+          'Why do I have to sign in with Google?': 'Why do I have to sign in with Google?',
           'Sign-inDescription':
               'Signing in is optional. It is only required for the functionalities that use cloud services to work such as:',
           'CollabDescription':
@@ -59,8 +58,7 @@ class AppTranslations extends Translations {
           'want to delete?': 'Are you sure you want to delete this alarm?',
 
           'You cannot join your own alarm!': 'You cannot join your own alarm!',
-          'An alarm with this ID doesn\'t exist!':
-              'An alarm with this ID doesn\'t exist!',
+          'An alarm with this ID doesn\'t exist!': 'An alarm with this ID doesn\'t exist!',
           'Error!': 'Error!',
           'Join': 'Join',
           'Enter Alarm ID': 'Enter Alarm ID',
@@ -79,21 +77,17 @@ class AppTranslations extends Translations {
           'Could not launch': 'Could not launch',
           //add_or_update_alarm_view.dart
           'Discard Changes?': 'Discard Changes?',
-          'unsavedChanges':
-              'You have unsaved changes. Are you sure you want to leave this '
-                  'page?',
+          'unsavedChanges': 'You have unsaved changes. Are you sure you want to leave this '
+              'page?',
           'Cancel': 'Cancel',
           'Leave': 'Leave',
           'Save': 'Save',
           'Update': 'Update',
-          'Rings in @timeToAlarm': 'Rings in @timeToAlarm',
           'Uh-oh!': 'Uh-oh!',
           'alarmEditing': 'This alarm is currently being edited!',
           'Go back': 'Go back',
           'Automatic Cancellation': 'Automatic Cancellation',
           'Challenges': 'Challenges',
-          'Shared Alarm': 'Shared Alarm',
-          //alarm_id_tile.dart
           'Success!': 'Success!',
           'Alarm ID has been copied!': 'Alarm ID has been copied!',
           'Alarm ID': 'Alarm ID',
@@ -113,8 +107,7 @@ class AppTranslations extends Translations {
           'Upload Ringtone': 'Upload Ringtone',
           'Done': 'Done',
           'Duplicate Ringtone': 'Duplicate Ringtone',
-          'Choosen ringtone is already present':
-              'Choosen ringtone is already present',
+          'Choosen ringtone is already present': 'Choosen ringtone is already present',
           //label_tile.dart
           'Label': 'Label',
           'Add a label': 'Add a label',
@@ -145,8 +138,7 @@ class AppTranslations extends Translations {
           //screen_activity_tile.dart
           'Timeout Duration': 'Timeout Duration',
           'Screen Activity': 'Screen Activity',
-          'Screen activity based cancellation':
-              'Screen activity based cancellation',
+          'Screen activity based cancellation': 'Screen activity based cancellation',
           'screenDescription':
               'This feature will automatically cancel the alarm if you\'ve been using your device for a set number of minutes.',
           //shake_to_dismiss_tile.dart
@@ -219,8 +211,7 @@ class AppTranslations extends Translations {
           'step1.2': 'openweathermap.org',
           'step1.3': ', click on the ',
           'step1.4': 'SignIn',
-          'step1.5':
-              ' button(top right corner) then it ask for login credentials.',
+          'step1.5': ' button(top right corner) then it ask for login credentials.',
           'step2.1':
               'If you already have an account then enter your credentials. Otherwise, click on ',
           'step2.2': 'Create an Account',
