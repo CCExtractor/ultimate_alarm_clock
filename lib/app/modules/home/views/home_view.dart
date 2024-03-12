@@ -586,7 +586,7 @@ class HomeView extends GetView<HomeController> {
                                                         children: [
                                                           // All alarm select button
                                                           ToggleButton(
-                                                            controller:
+                                                              controller:
                                                                 controller,
                                                             isSelected: controller
                                                                 .isAllAlarmsSelected,
@@ -758,7 +758,6 @@ class HomeView extends GetView<HomeController> {
                                           );
                                         }
                                         final AlarmModel alarm = alarms[index];
-
                                         final repeatDays =
                                             Utils.getRepeatDays(alarm.days);
                                         // Main card
