@@ -57,6 +57,7 @@ class AppTranslations extends Translations {
           'No': 'No',
           'Confirmation': 'Confirmation',
           'want to delete?': 'Are you sure you want to delete this alarm?',
+          'delete' : 'Delete',
 
           'You cannot join your own alarm!': 'You cannot join your own alarm!',
           'An alarm with this ID doesn\'t exist!':
