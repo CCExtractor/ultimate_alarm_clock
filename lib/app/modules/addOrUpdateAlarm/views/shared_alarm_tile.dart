@@ -172,8 +172,7 @@ class SharedAlarm extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  width: width * 0.37,
+                                Expanded(
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
@@ -207,8 +206,7 @@ class SharedAlarm extends StatelessWidget {
                                 SizedBox(
                                   width: width * 0.05,
                                 ),
-                                SizedBox(
-                                  width: width * 0.3,
+                                Expanded(
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
