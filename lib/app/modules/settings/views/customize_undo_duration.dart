@@ -1,18 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-import '../../../utils/constants.dart';
-import '../../../utils/utils.dart';
-import '../controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
-
-class CustomizeUndoDuration extends StatelessWidget{
+class CustomizeUndoDuration extends StatelessWidget {
   HomeController homeController = Get.find<HomeController>();
   CustomizeUndoDuration({
-    super.key ,
+    super.key,
     required this.themeController,
     required this.height,
     required this.width,
@@ -42,7 +38,7 @@ class CustomizeUndoDuration extends StatelessWidget{
           title: 'Customize Undo Duration'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
-                () => Column(
+            () => Column(
               children: [
                 Text(
                   '${homeController.duration.value} seconds'.tr,
@@ -53,7 +49,6 @@ class CustomizeUndoDuration extends StatelessWidget{
                   onChanged: (double value) {
                     homeController.selecteddurationDouble.value = value;
                     homeController.duration.value = value.toInt();
-
                   },
                   min: 0.0,
                   max: 20.0,
@@ -91,7 +86,7 @@ class CustomizeUndoDuration extends StatelessWidget{
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10),
             child: ListTile(
               tileColor: themeController.isLightMode.value
                   ? kLightSecondaryBackgroundColor
@@ -102,21 +97,21 @@ class CustomizeUndoDuration extends StatelessWidget{
                   color: themeController.isLightMode.value
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
-                  fontSize: 15
+                  fontSize: 15,
                 ),
               ),
               trailing: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Obx(
-                        () => Text(
+                    () => Text(
                       '${homeController.duration.value.round().toInt()} seconds',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
-                          fontSize: 13
-                      ),
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : kprimaryTextColor,
+                            fontSize: 13,
+                          ),
                     ),
                   ),
                   Icon(
@@ -129,9 +124,8 @@ class CustomizeUndoDuration extends StatelessWidget{
               ),
             ),
           ),
-        )
-      )
+        ),
+      ),
     );
   }
-
 }

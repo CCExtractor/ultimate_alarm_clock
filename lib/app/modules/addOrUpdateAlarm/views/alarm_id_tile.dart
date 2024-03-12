@@ -73,7 +73,7 @@ class AlarmIDTile extends StatelessWidget {
                     content: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(20.0),
                           child: Text(
                             //'To copy Alarm ID you have enable shared alarm!',
                             'toCopyAlarm'.tr,
@@ -89,10 +89,7 @@ class AlarmIDTile extends StatelessWidget {
                             ),
                             child: Text(
                               'Okay'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.displaySmall!.copyWith(
                                     color: themeController.isLightMode.value
                                         ? kLightPrimaryTextColor
                                         : ksecondaryTextColor,

@@ -25,7 +25,6 @@ class Pair<T, U> {
 }
 
 class HomeController extends GetxController {
-
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
@@ -71,8 +70,7 @@ class HomeController extends GetxController {
     // Logging in again to ensure right details if User has linked account
     if (await SecureStorageProvider().retrieveUserModel() != null) {
       if (await _googleSignIn.isSignedIn()) {
-        GoogleSignInAccount? googleSignInAccount =
-            await _googleSignIn.signInSilently();
+        GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signInSilently();
         String fullName = googleSignInAccount!.displayName.toString();
         List<String> parts = fullName.split(' ');
         String lastName = ' ';
@@ -80,14 +78,10 @@ class HomeController extends GetxController {
           if (parts[parts.length - 1].length == 1) {
             lastName = parts[1].toLowerCase().capitalizeFirst.toString();
           } else {
-            lastName = parts[parts.length - 1]
-                .toLowerCase()
-                .capitalizeFirst
-                .toString();
+            lastName = parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
           }
         } else {
-          lastName =
-              parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
+          lastName = parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
         }
         String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
@@ -178,8 +172,7 @@ class HomeController extends GetxController {
             } else {
               // If alarm is one-time and has already passed, set upcoming time
               // to next day
-              if (aUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
+              if (aUpcomingTime <= DateTime.now().hour * 60 + DateTime.now().minute) {
                 aUpcomingTime += Duration.minutesPerDay;
               }
             }
@@ -196,8 +189,7 @@ class HomeController extends GetxController {
             } else {
               // If alarm is one-time and has already passed, set upcoming time
               // to next day
-              if (bUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
+              if (bUpcomingTime <= DateTime.now().hour * 60 + DateTime.now().minute) {
                 bUpcomingTime += Duration.minutesPerDay;
               }
             }
@@ -219,8 +211,8 @@ class HomeController extends GetxController {
 
     if (!isUserSignedIn.value) await loginWithGoogle();
 
-    isSortedAlarmListEnabled.value = await SecureStorageProvider()
-        .readSortedAlarmListValue(key: 'sorted_alarm_list');
+    isSortedAlarmListEnabled.value =
+        await SecureStorageProvider().readSortedAlarmListValue(key: 'sorted_alarm_list');
 
     scrollController.addListener(() {
       final offset = scrollController.offset;
@@ -265,13 +257,11 @@ class HomeController extends GetxController {
 
       // Fake object to get latest alarm
       AlarmModel alarmRecord = Utils.genFakeAlarmModel();
-      AlarmModel isarLatestAlarm =
-          await IsarDb.getLatestAlarm(alarmRecord, true);
+      AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
 
       AlarmModel firestoreLatestAlarm =
           await FirestoreDb.getLatestAlarm(userModel.value, alarmRecord, true);
-      AlarmModel latestAlarm =
-          Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+      AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
       debugPrint('ISAR: ${isarLatestAlarm.alarmTime}');
       debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
@@ -293,8 +283,7 @@ class HomeController extends GetxController {
         if (latestAlarm.minutesSinceMidnight > -1) {
           // To account for difference between seconds upto the next minute
           DateTime now = DateTime.now();
-          DateTime nextMinute =
-              DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
+          DateTime nextMinute = DateTime(now.year, now.month, now.day, now.hour, now.minute + 1);
           Duration delay = nextMinute.difference(now).inMilliseconds > 0
               ? nextMinute.difference(now)
               : Duration.zero;
@@ -357,8 +346,7 @@ class HomeController extends GetxController {
     bool isTimer = latestAlarm.isTimer;
 
     if (isTimer) {
-      DateTime? latestAlarmDateTime =
-          Utils.stringToDateTime(latestAlarm.alarmTime);
+      DateTime? latestAlarmDateTime = Utils.stringToDateTime(latestAlarm.alarmTime);
       if (latestAlarmDateTime != null) {
         if (latestAlarm.isEnabled == false) {
           debugPrint(
@@ -371,8 +359,7 @@ class HomeController extends GetxController {
             latestAlarmDateTime,
           );
           try {
-            await alarmChannel.invokeMethod(
-                'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+            await alarmChannel.invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
             print("Scheduled...");
           } on PlatformException catch (e) {
             print("Failed to schedule alarm: ${e.message}");
@@ -380,8 +367,7 @@ class HomeController extends GetxController {
         }
       }
     } else {
-      TimeOfDay latestAlarmTimeOfDay =
-          Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+      TimeOfDay latestAlarmTimeOfDay = Utils.stringToTimeOfDay(latestAlarm.alarmTime);
       if (latestAlarm.isEnabled == false) {
         debugPrint(
           'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
@@ -393,11 +379,10 @@ class HomeController extends GetxController {
           Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
         );
         try {
-          await alarmChannel
-              .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-          print("Scheduled...");
+          await alarmChannel.invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+          print('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          print('Failed to schedule alarm: ${e.message}');
         }
       }
     }
@@ -465,9 +450,7 @@ class HomeController extends GetxController {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       titleStyle: TextStyle(
-        color: themeController.isLightMode.value
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor,
+        color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
       ),
       contentPadding: const EdgeInsets.all(20),
       content: Column(
@@ -475,9 +458,7 @@ class HomeController extends GetxController {
           Text(
             quote.getQuote(),
             style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+              color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
             ),
           ),
           const SizedBox(
@@ -488,9 +469,8 @@ class HomeController extends GetxController {
             child: Text(
               quote.getAuthor(),
               style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color:
+                    themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.italic,
               ),
@@ -540,7 +520,7 @@ class HomeController extends GetxController {
     Get.snackbar(
       'Alarm deleted',
       'The alarm has been deleted.',
-      duration: Duration(seconds:  duration.toInt()),
+      duration: Duration(seconds: duration.toInt()),
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -572,8 +552,7 @@ class HomeController extends GetxController {
       content: Column(
         children: [
           Text(
-            'This action will permanently delete these alarms from your device.'
-                .tr,
+            'This action will permanently delete these alarms from your device.'.tr,
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),

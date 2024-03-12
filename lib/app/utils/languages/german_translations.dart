@@ -18,8 +18,7 @@ class GermanTranslations extends Translations {
           'Unlink': 'Entknüpfen',
           'Sign-In with Google': 'Mit Google anmelden',
           'Unlink @usermail': 'Entknüpfen von @usermail',
-          'Why do I have to sign in with Google?':
-              'Warum muss ich mich bei Google anmelden?',
+          'Why do I have to sign in with Google?': 'Warum muss ich mich bei Google anmelden?',
           'Sign-inDescription':
               'Die Anmeldung ist optional. Sie ist nur erforderlich für Funktionen, die Cloud-Dienste nutzen, wie zum Beispiel:',
           'CollabDescription':
@@ -49,10 +48,8 @@ class GermanTranslations extends Translations {
           'No': 'Nein',
           'Confirmation': 'Bestätigung',
           'want to delete?': 'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
-          'You cannot join your own alarm!':
-              'Sie können Ihrem eigenen Alarm nicht beitreten!',
-          'An alarm with this ID doesn\'t exist!':
-              'Ein Alarm mit dieser ID existiert nicht!',
+          'You cannot join your own alarm!': 'Sie können Ihrem eigenen Alarm nicht beitreten!',
+          'An alarm with this ID doesn\'t exist!': 'Ein Alarm mit dieser ID existiert nicht!',
           'Error!': 'Fehler!',
           'Join': 'Verbinden',
           'Enter Alarm ID': 'Alarm-ID eingeben.',
@@ -61,8 +58,7 @@ class GermanTranslations extends Translations {
           'No alarm selected': 'Kein Alarm ausgewählt',
           '1 alarm selected': '1 Alarm ausgewählt',
           ' alarms selected': 'Alarm ausgewählt',
-          'Add an alarm to get started!':
-              'Fügen Sie einen Alarm hinzu, um loszulegen!',
+          'Add an alarm to get started!': 'Fügen Sie einen Alarm hinzu, um loszulegen!',
           'Never': 'Niemals',
           'One Time': 'Einmal',
           'Preview Alarm': 'Vorschaualarm',
@@ -89,7 +85,6 @@ class GermanTranslations extends Translations {
           'Go back': 'Zurück gehen',
           'Automatic Cancellation': 'Automatische Stornierung',
           'Challenges': 'Herausforderungen',
-          'Shared Alarm': 'Geteilter Alarm',
           'Camera Permission': 'Kameraberechtigung',
           'Please allow camera access to scan QR codes.':
               'Bitte erlauben Sie den Zugriff auf die Kamera, um QR-Codes zu scannen.',
@@ -117,16 +112,14 @@ class GermanTranslations extends Translations {
           'Upload Ringtone': 'Klingelton hochladen',
           'Done': 'Fertig',
           'Duplicate Ringtone': 'Ringtone duplizieren',
-          'Choosen ringtone is already present':
-              'Der gewählte Klingelton ist bereits vorhanden',
+          'Choosen ringtone is already present': 'Der gewählte Klingelton ist bereits vorhanden',
 //delete_tile.dart
           'Delete After Goes Off': 'Nach dem Ablauf löschen',
 //label_tile.dart
           'Label': 'Etikett',
           'Add a label': 'Fügen Sie ein Etikett hinzu',
           'Note': 'Hinweis',
-          'noWhitespace':
-              'Bitte geben Sie kein Leerzeichen als ersten Zeichen ein!',
+          'noWhitespace': 'Bitte geben Sie kein Leerzeichen als ersten Zeichen ein!',
 //maths_challenge_tile.dart
           'Maths': 'Mathematik',
           'Math problems': 'Mathematische Probleme',
@@ -147,9 +140,6 @@ class GermanTranslations extends Translations {
           'pedometerDescription':
               'Schreiten Sie voran, um zu entlassen! Setzen Sie ein Schrittziel, um den Wecker auszuschalten und einen aktiven und energiegeladenen Start in den Tag zu fördern.',
 
-          'Solve Maths questions': 'Lösen Sie mathematische Fragen',
-          'questions': 'Fragen',
-          'question': 'Frage',
 //note.dart
           'Add a note': 'Füg ein Notiz hinzu',
 // qr_bar_code_tile.dart
@@ -167,8 +157,7 @@ class GermanTranslations extends Translations {
 //screen_activity_tile.dart
           'Timeout Duration': 'Zeitlimit',
           'Screen Activity': 'Bildschirmaktivität',
-          'Screen activity based cancellation':
-              'Stornierung aufgrund von Bildschirmaktivität',
+          'Screen activity based cancellation': 'Stornierung aufgrund von Bildschirmaktivität',
           'screenDescription':
               'Diese Funktion storniert den Alarm automatisch, wenn Sie Ihr Gerät für eine festgelegte Anzahl von Minuten verwenden.',
 //shake_to_dismiss_tile.dart
@@ -178,7 +167,6 @@ class GermanTranslations extends Translations {
           'Number of shakes': 'Anzahl der Schütteln',
           'times': 'Mal',
           'time': 'Mal',
-//'shared_alarm_tile.dart
           'Shared Alarm': 'Geteilter Alarm',
 
           'Shared alarms': 'Geteilte Alarme',
@@ -205,8 +193,7 @@ class GermanTranslations extends Translations {
           'Windy': 'Windig',
           'Stormy': 'Stürmisch',
           'Weather Condition': 'Wetterbedingung',
-          'Weather based cancellation':
-              'Stornierung aufgrund von Wetterbedingungen',
+          'Weather based cancellation': 'Stornierung aufgrund von Wetterbedingungen',
           'weatherDescription':
               'Diese Funktion storniert den Alarm automatisch, wenn das aktuelle Wetter Ihren ausgewählten Wetterbedingungen entspricht und ermöglicht so einen besseren Schlaf!',
           'To use this feature, you have to add an OpenWeatherMap API key!':
@@ -244,8 +231,7 @@ class GermanTranslations extends Translations {
           'step1.2': 'openweathermap.org',
           'step1.3': ', Klicken Sie auf die Schaltfläche ',
           'step1.4': 'SignIn',
-          'step1.5':
-              ' (oben rechts) und Sie werden nach Ihren Anmeldeinformationen gefragt.',
+          'step1.5': ' (oben rechts) und Sie werden nach Ihren Anmeldeinformationen gefragt.',
           'step2.1':
               'Wenn Sie bereits ein Konto haben, geben Sie Ihre Zugangsdaten ein. Andernfalls klicken Sie auf die Option ',
           'step2.2': 'Create an Account',
@@ -255,8 +241,7 @@ class GermanTranslations extends Translations {
               'Sobald Ihr Konto bereit ist, werden Sie automatisch zur OpenWeather-Seite weitergeleitet. Dabei werden Sie nach Ihrem Unternehmen und dem Zweck der Nutzung der Plattform gefragt, Füllen Sie diese Angaben entsprechend aus.',
           'step4.1': 'Klicken Sie auf Ihr ',
           'step4.2': 'Username',
-          'step4.3':
-              '(oben rechts). Es erscheint ein Dropdown-Menü. Klicken Sie auf die Option ',
+          'step4.3': '(oben rechts). Es erscheint ein Dropdown-Menü. Klicken Sie auf die Option ',
           'step4.4': 'My API',
           'step4.5': '.',
           'step5':

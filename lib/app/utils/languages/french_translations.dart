@@ -19,8 +19,7 @@ class FrenchTranslations extends Translations {
           'Unlink': 'Délier',
           'Sign-In with Google': 'Connexion avec Google',
           'Unlink @usermail': 'Délier @usermail',
-          'Why do I have to sign in with Google?':
-              'Pourquoi dois-je me connecter avec Google ?',
+          'Why do I have to sign in with Google?': 'Pourquoi dois-je me connecter avec Google ?',
           'Sign-inDescription':
               'La connexion est facultative. Elle est uniquement nécessaire pour les fonctionnalités qui utilisent des services cloud, tels que :',
           'CollabDescription':
@@ -56,10 +55,8 @@ class FrenchTranslations extends Translations {
           'No': 'Non',
           'Confirmation': 'Confirmation',
           'want to delete?': 'Êtes-vous sûr de vouloir supprimer cette alarme ?',
-          'You cannot join your own alarm!':
-              'Vous ne pouvez pas rejoindre votre propre réveil !',
-          'An alarm with this ID doesn\'t exist!':
-              'Un réveil avec cet identifiant n\'existe pas !',
+          'You cannot join your own alarm!': 'Vous ne pouvez pas rejoindre votre propre réveil !',
+          'An alarm with this ID doesn\'t exist!': 'Un réveil avec cet identifiant n\'existe pas !',
           'Error!': 'Erreur !',
           'Join': 'Rejoindre',
           'Enter Alarm ID': 'Entrer l\'identifiant du réveil',
@@ -96,7 +93,6 @@ class FrenchTranslations extends Translations {
           'Go back': 'Retour',
           'Automatic Cancellation': 'Annulation automatique',
           'Challenges': 'Défis',
-          'Shared Alarm': 'Alarme partagée',
           'Camera Permission': 'Autorisation de la caméra',
           'Please allow camera access to scan QR codes.':
               'Veuillez autoriser l\'accès à la caméra pour scanner les codes QR.',
@@ -106,8 +102,7 @@ class FrenchTranslations extends Translations {
           'Alarm ID has been copied!': "L'ID de l'alarme a été copié !",
           'Alarm ID': "ID de l'alarme",
           'Disabled!': 'Désactivé !',
-          'toCopyAlarm':
-              "Pour copier l'ID de l'alarme, vous devez activer l'alarme partagée !",
+          'toCopyAlarm': "Pour copier l'ID de l'alarme, vous devez activer l'alarme partagée !",
           'Choose duration': 'Choisir la durée',
           'minutes': 'minutes',
           'minute': 'minute',
@@ -122,8 +117,7 @@ class FrenchTranslations extends Translations {
           'Upload Ringtone': 'Télécharger une sonnerie',
           'Done': 'Terminé',
           'Duplicate Ringtone': 'Sonnerie en double',
-          'Choosen ringtone is already present':
-              'La sonnerie choisie est déjà présente',
+          'Choosen ringtone is already present': 'La sonnerie choisie est déjà présente',
 //delete_tile.dart
           'Delete After Goes Off': 'Supprimer après la fin',
 
@@ -132,8 +126,7 @@ class FrenchTranslations extends Translations {
           'Enter a name': 'Entrez un nom',
           'Add a label': 'Ajouter une étiquette',
           'Note': 'Note',
-          'noWhitespace':
-              'Veuillez ne pas entrer d\'espace en tant que premier caractère !',
+          'noWhitespace': 'Veuillez ne pas entrer d\'espace en tant que premier caractère !',
 //maths_challenge_tile.dart
           'Maths': 'Mathématiques',
           'Math problems': 'Problèmes mathématiques',
@@ -172,8 +165,7 @@ class FrenchTranslations extends Translations {
 //screen_activity_tile.dart
           'Timeout Duration': 'Durée d\'expiration',
           'Screen Activity': 'Activité de l\'écran',
-          'Screen activity based cancellation':
-              'Annulation basée sur l\'activité de l\'écran',
+          'Screen activity based cancellation': 'Annulation basée sur l\'activité de l\'écran',
           'screenDescription':
               "Cette fonction annulera automatiquement l'alarme si vous utilisez votre appareil pendant un certain nombre de minutes.",
 //shake_to_dismiss_tile.dart
@@ -247,8 +239,7 @@ class FrenchTranslations extends Translations {
           'step1.2': 'openweathermap.org',
           'step1.3': ', cliquez sur le bouton ',
           'step1.4': 'SignIn',
-          'step1.5':
-              ' (le coin supérieur droit) puis il demande les informations de connexion.',
+          'step1.5': ' (le coin supérieur droit) puis il demande les informations de connexion.',
           'step2.1':
               "Si vous avez déjà un compte, entrez vos identifiants. Sinon, cliquez sur l'option ",
           'step2.2': 'Create an Account',
@@ -258,16 +249,13 @@ class FrenchTranslations extends Translations {
               "Une fois votre compte prêt, vous êtes automatiquement dirigé vers la page OpenWeather. Il vous pose des questions sur votre entreprise et le but de l'utilisation de la plateforme, remplissez ces informations en conséquence.",
           'step4.1': 'Cliquez sur votre ',
           'step4.2': 'Username',
-          'step4.3':
-              "(le coin supérieur droit). Un menu déroulant apparaît. cliquez sur l'option ",
+          'step4.3': "(le coin supérieur droit). Un menu déroulant apparaît. cliquez sur l'option ",
           'step4.4': 'My API',
           'step4.5': '.',
-          'step5':
-              'Vous disposez désormais de la clé API Météo. Sélectionnez la clé et copiez-la.',
+          'step5': 'Vous disposez désormais de la clé API Météo. Sélectionnez la clé et copiez-la.',
 
           //ascending_volume.dart
-          'Volume will reach maximum in':
-              'Le volume atteindra son maximum dans',
+          'Volume will reach maximum in': 'Le volume atteindra son maximum dans',
           'seconds': 'secondes',
           'Adjust the volume range:': 'Ajustez la plage de volume:',
           'Apply Gradient': 'Appliquer un dégradé',

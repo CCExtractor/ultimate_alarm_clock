@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -11,10 +9,13 @@ import '../controllers/alarm_ring_controller.dart';
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   TextButton getAddSnoozeButtons(
-      BuildContext context, int snoozeMinutes, String title) {
+    BuildContext context,
+    int snoozeMinutes,
+    String title,
+  ) {
     return TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
@@ -26,9 +27,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
       child: Text(
         title.tr,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+              color: themeController.isLightMode.value ? kLightPrimaryTextColor : kprimaryTextColor,
               fontWeight: FontWeight.w600,
             ),
       ),
@@ -59,8 +58,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
       },
       child: SafeArea(
         child: Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -83,10 +81,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               )
                                   ? 'Start Challenge'.tr
                                   : 'Dismiss'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.displaySmall!.copyWith(
                                     color: themeController.isLightMode.value
                                         ? kLightPrimaryTextColor
                                         : ksecondaryTextColor,
@@ -99,14 +94,12 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               )) {
                                 Get.toNamed(
                                   '/alarm-challenge',
-                                  arguments:
-                                      controller.currentlyRingingAlarm.value,
+                                  arguments: controller.currentlyRingingAlarm.value,
                                 );
                               } else {
                                 Get.offNamed(
                                   '/bottom-navigation-bar',
-                                  arguments: controller.currentlyRingingAlarm
-                                      .value,
+                                  arguments: controller.currentlyRingingAlarm.value,
                                 );
                               }
                             },
@@ -132,10 +125,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             child: Text(
                               'Exit Preview'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.displaySmall!.copyWith(
                                     color: themeController.isLightMode.value
                                         ? kLightPrimaryTextColor
                                         : ksecondaryTextColor,
@@ -174,10 +164,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                 ":${controller.seconds.toString().padLeft(2, '0')}"
                             : '${controller.timeNow[0]} '
                                 '${controller.timeNow[1]}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge!
-                            .copyWith(fontSize: 50),
+                        style: Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 50),
                       ),
                       const SizedBox(
                         height: 20,
@@ -201,8 +188,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 ),
                 Obx(
                   () => Visibility(
-                    visible:
-                        controller.currentlyRingingAlarm.value.note.isNotEmpty,
+                    visible: controller.currentlyRingingAlarm.value.note.isNotEmpty,
                     child: Text(
                       controller.currentlyRingingAlarm.value.note,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -237,10 +223,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             child: Text(
                               'Snooze'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: themeController.isLightMode.value
                                         ? kLightPrimaryTextColor
                                         : kprimaryTextColor,

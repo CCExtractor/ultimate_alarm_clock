@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/customize_undo_duration.dart';
-
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
-
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_feedback.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/language_menu.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/weather_api.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
-import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
 class SettingsView extends GetView<SettingsController> {
@@ -112,9 +106,9 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 CustomizeUndoDuration(
-                    width: width,
-                    height: height,
-                    themeController: controller.themeController
+                  width: width,
+                  height: height,
+                  themeController: controller.themeController,
                 ),
                 const SizedBox(
                   height: 20,

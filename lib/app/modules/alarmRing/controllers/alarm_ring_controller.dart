@@ -21,7 +21,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
 class AlarmControlController extends GetxController {
-  MethodChannel alarmChannel = MethodChannel('ulticlock');
+  MethodChannel alarmChannel = const MethodChannel('ulticlock');
   RxString note = ''.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
@@ -32,8 +32,7 @@ class AlarmControlController extends GetxController {
   RxBool showButton = false.obs;
   final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
-  final timeNow =
-      Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
+  final timeNow = Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
   Timer? _currentTimeTimer;
   bool isAlarmActive = true;
   late double initialVolume;
@@ -41,12 +40,10 @@ class AlarmControlController extends GetxController {
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
@@ -55,12 +52,10 @@ class AlarmControlController extends GetxController {
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
         await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
@@ -84,8 +79,7 @@ class AlarmControlController extends GetxController {
     _currentTimeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (minutes.value == 0 && seconds.value == 0) {
         timer.cancel();
-        vibrationTimer =
-            Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+        vibrationTimer = Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
         });
 
@@ -112,8 +106,7 @@ class AlarmControlController extends GetxController {
           ),
         ), (timer) {
       formattedDate.value = Utils.getFormattedDate(DateTime.now());
-      timeNow.value =
-          Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
+      timeNow.value = Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
     });
   }
 
@@ -125,9 +118,7 @@ class AlarmControlController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 2000));
 
     double vol = currentlyRingingAlarm.value.volMin / 10.0;
-    double diff = (currentlyRingingAlarm.value.volMax -
-            currentlyRingingAlarm.value.volMin) /
-        10.0;
+    double diff = (currentlyRingingAlarm.value.volMax - currentlyRingingAlarm.value.volMin) / 10.0;
     int len = currentlyRingingAlarm.value.gradient * 1000;
     double steps = (diff / 0.01).abs();
     int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
@@ -180,8 +171,7 @@ class AlarmControlController extends GetxController {
         IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
       }
     }
-    vibrationTimer =
-        Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+    vibrationTimer = Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);
     });
 
@@ -199,8 +189,7 @@ class AlarmControlController extends GetxController {
       // If the alarm is set to NEVER repeat, then it will
       // be chosen as the next alarm to ring by default as
       // it would ring the next day
-      if (currentlyRingingAlarm.value.days
-          .every((element) => element == false)) {
+      if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
         currentlyRingingAlarm.value.isEnabled = false;
 
         if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
@@ -217,8 +206,7 @@ class AlarmControlController extends GetxController {
         int currentDay = DateTime.now().weekday - 1;
         currentlyRingingAlarm.value.days[currentDay] = false;
 
-        if (currentlyRingingAlarm.value.days
-            .every((element) => element == false)) {
+        if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
           currentlyRingingAlarm.value.isEnabled = false;
         }
 
@@ -245,8 +233,7 @@ class AlarmControlController extends GetxController {
     if (Get.arguments == null) {
       // Finding the next alarm to ring
       AlarmModel latestAlarm = await getNextAlarm();
-      TimeOfDay latestAlarmTimeOfDay =
-          Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+      TimeOfDay latestAlarmTimeOfDay = Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 
       // }
       // This condition will never satisfy because this will only
@@ -266,11 +253,10 @@ class AlarmControlController extends GetxController {
         );
 
         try {
-          await alarmChannel
-              .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-          print("Scheduled...");
+          await alarmChannel.invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+          print('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          print('Failed to schedule alarm: ${e.message}');
         }
       }
     }

@@ -10,7 +10,7 @@ import '../controllers/alarm_challenge_controller.dart';
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
   ShakeChallengeView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +49,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                         children: [
                           Text(
                             'Shake your phone!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
+                            style: Theme.of(context).textTheme.displayMedium!.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: themeController.isLightMode.value
                                       ? kLightPrimaryTextColor.withOpacity(0.7)

@@ -166,8 +166,7 @@ class Utils {
     var lat1 = deg2rad(source.latitude);
     var lat2 = deg2rad(destination.latitude);
 
-    var a = sin(dLat / 2) * sin(dLat / 2) +
-        sin(dLon / 2) * sin(dLon / 2) * cos(lat1) * cos(lat2);
+    var a = sin(dLat / 2) * sin(dLat / 2) + sin(dLon / 2) * sin(dLon / 2) * cos(lat1) * cos(lat2);
     var c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     var d = R * c;
@@ -240,9 +239,7 @@ class Utils {
       } else if (minutes == 0) {
         return hours == 1 ? '$hours hour' : '$hours hours';
       } else if (hours == 1) {
-        return minutes == 1
-            ? '$hours hour $minutes minute'
-            : '$hours hour $minutes minutes';
+        return minutes == 1 ? '$hours hour $minutes minute' : '$hours hour $minutes minutes';
       } else {
         return '$hours hour $minutes minutes';
       }
@@ -261,7 +258,7 @@ class Utils {
       'Thur'.tr,
       'Fri'.tr,
       'Sat'.tr,
-      'Sun'.tr
+      'Sun'.tr,
     ];
     int weekdayCount = 0;
     int weekendCount = 0;
@@ -308,8 +305,7 @@ class Utils {
     num timeUntilNextOccurrence(AlarmModel alarm) {
       // Check if the alarm is a one-time alarm
       if (alarm.days.every((day) => !day)) {
-        int timeUntilNextAlarm =
-            alarm.minutesSinceMidnight - currentTimeInMinutes;
+        int timeUntilNextAlarm = alarm.minutesSinceMidnight - currentTimeInMinutes;
         if (timeUntilNextAlarm < 0) {
           // Schedule the alarm for the next day
           timeUntilNextAlarm += 24 * 60;
@@ -319,22 +315,17 @@ class Utils {
 
       // Check if the alarm repeats every day
       if (alarm.days.every((day) => day)) {
-        int timeUntilNextAlarm =
-            alarm.minutesSinceMidnight - currentTimeInMinutes;
-        return timeUntilNextAlarm < 0
-            ? timeUntilNextAlarm + 24 * 60
-            : timeUntilNextAlarm;
+        int timeUntilNextAlarm = alarm.minutesSinceMidnight - currentTimeInMinutes;
+        return timeUntilNextAlarm < 0 ? timeUntilNextAlarm + 24 * 60 : timeUntilNextAlarm;
       }
 
       // Calculate the time until the next occurrence for repeatable alarms
-      int dayDifference =
-          alarm.days.indexWhere((day) => day, currentDay) - currentDay;
+      int dayDifference = alarm.days.indexWhere((day) => day, currentDay) - currentDay;
       if (dayDifference < 0) {
         dayDifference += 7;
       }
       int timeUntilNextDay = dayDifference * 24 * 60;
-      int timeUntilNextAlarm =
-          alarm.minutesSinceMidnight - currentTimeInMinutes;
+      int timeUntilNextAlarm = alarm.minutesSinceMidnight - currentTimeInMinutes;
       if (timeUntilNextAlarm < 0) {
         timeUntilNextAlarm += 24 * 60;
         timeUntilNextDay += 24 * 60;
@@ -343,9 +334,7 @@ class Utils {
     }
 
     // Compare the time until the next occurrence for each alarm
-    return timeUntilNextOccurrence(alarm1) < timeUntilNextOccurrence(alarm2)
-        ? alarm1
-        : alarm2;
+    return timeUntilNextOccurrence(alarm1) < timeUntilNextOccurrence(alarm2) ? alarm1 : alarm2;
   }
 
   // Utility function to create a dummy model to pass to functions
@@ -399,8 +388,7 @@ class Utils {
     }
 
     const allWeatherTypes = WeatherTypes.values;
-    final hasAllTypes =
-        allWeatherTypes.every((type) => weatherTypes.contains(type));
+    final hasAllTypes = allWeatherTypes.every((type) => weatherTypes.contains(type));
 
     if (hasAllTypes) {
       return 'All';
@@ -483,9 +471,7 @@ class Utils {
       result = (operator == '+') ? operand1 + operand2 : operand1 * operand2;
     } else {
       expression = '$operand1 $operator $operand2 $operator $operand3 = ?';
-      result = (operator == '+')
-          ? operand1 + operand2 + operand3
-          : operand1 * operand2 * operand3;
+      result = (operator == '+') ? operand1 + operand2 + operand3 : operand1 * operand2 * operand3;
     }
 
     return [expression, result];
@@ -525,8 +511,8 @@ class Utils {
   }
 
   static void hapticFeedback() async {
-    bool hapticFeedbackValue = await SecureStorageProvider()
-        .readHapticFeedbackValue(key: 'haptic_feedback');
+    bool hapticFeedbackValue =
+        await SecureStorageProvider().readHapticFeedbackValue(key: 'haptic_feedback');
 
     if (hapticFeedbackValue) {
       // Trigger haptic feedback if it's enabled in settings
@@ -542,9 +528,7 @@ class Utils {
       borderRadius: const BorderRadius.all(
         Radius.circular(18),
       ),
-      color: isLightMode
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      color: isLightMode ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
     );
   }
 
@@ -558,9 +542,7 @@ class Utils {
     Utils.hapticFeedback();
     showModalBottomSheet(
       context: context,
-      backgroundColor: isLightMode
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      backgroundColor: isLightMode ? kLightSecondaryBackgroundColor : ksecondaryBackgroundColor,
       builder: (context) {
         return Center(
           child: Padding(
@@ -570,8 +552,7 @@ class Utils {
               children: [
                 Icon(
                   iconData,
-                  color:
-                      isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
+                  color: isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
                   size: MediaQuery.of(context).size.height * 0.1,
                 ),
                 Text(
@@ -602,9 +583,7 @@ class Utils {
                     child: Text(
                       'Understood'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: isLightMode
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
+                            color: isLightMode ? kLightPrimaryTextColor : ksecondaryTextColor,
                           ),
                     ),
                   ),
