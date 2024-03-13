@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/services/local_notification.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -169,7 +170,12 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void resumeTimer() async {
+    final seconds = remainingTime.value.inSeconds - 1;
     if (isTimerPaused.value) {
+      LocalNotificationService.showNotificationWithCountdown(
+        Duration(milliseconds: seconds),
+        'Timer',
+      );
       countdownTimer.value = Timer.periodic(
         const Duration(seconds: 1),
         (_) => setCountDown(),
@@ -184,6 +190,10 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     const reduceSecondsBy = 1;
     final seconds = remainingTime.value.inSeconds - reduceSecondsBy;
     if (seconds < 0) {
+      LocalNotificationService.showLocalNotification(
+        title: 'Ultimate Alarm',
+        value: 'Your timer is ended',
+      );
       stopTimer();
     } else {
       remainingTime.value = Duration(seconds: seconds);
