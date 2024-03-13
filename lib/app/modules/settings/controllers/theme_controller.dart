@@ -9,7 +9,6 @@ class ThemeController extends GetxController {
   var isLightMode = true.obs;
   final _secureStorageProvider = SecureStorageProvider();
 
-  late Timer _brightnessCheckTimer;
   bool isSystemModeActive = false;
 
   @override
@@ -20,7 +19,6 @@ class ThemeController extends GetxController {
 
   @override
   void onClose() {
-    // _brightnessCheckTimer.cancel();
     super.onClose();
   }
 
