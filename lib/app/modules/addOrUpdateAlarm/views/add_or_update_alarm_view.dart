@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -48,79 +50,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
           if (didPop) {
             return;
           }
-
-          Get.defaultDialog(
-            titlePadding: const EdgeInsets.symmetric(
-              vertical: 20,
-            ),
-            backgroundColor: themeController.isLightMode.value
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
-            title: 'Discard Changes?'.tr,
-            titleStyle: Theme.of(context).textTheme.displaySmall,
-            content: Column(
-              children: [
-                Text(
-                  'unsavedChanges'.tr,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Cancel'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: kprimaryBackgroundColor,
-                              ),
-                        ),
-                      ),
-                      OutlinedButton(
-                        onPressed: () {
-                          Get.back(closeOverlays: true);
-                          Get.back();
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: themeController.isLightMode.value
-                                ? Colors.red.withOpacity(0.9)
-                                : Colors.red,
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          'Leave'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? Colors.red.withOpacity(0.9)
-                                    : Colors.red,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
+          controller.checkUnsavedChangesAndNavigate(context);
         },
         child: Scaffold(
           floatingActionButtonLocation:

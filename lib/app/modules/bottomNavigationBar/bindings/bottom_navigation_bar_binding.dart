@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/controllers/bottom_navigation_bar_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
@@ -19,5 +20,6 @@ class BottomNavigationBarBinding extends Bindings {
     );
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
     Get.lazyPut(() => HomeController());
+    Get.lazyPut(() => AddOrUpdateAlarmController());
   }
 }

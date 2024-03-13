@@ -59,7 +59,8 @@ class AddOrUpdateAlarmController extends GetxController {
     facing: CameraFacing.back,
     torchEnabled: false,
   );
-  final qrValue = ''.obs;
+  final qrValue = ''.obs; // qrvalue stored in alarm
+  final detectedQrValue = ''.obs; // QR value detected by camera
   final isQrEnabled = false.obs;
 
   final mathsSliderValue = 0.0.obs;
@@ -108,6 +109,10 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isCustomSelected = false.obs;
   RxBool isPlaying = false.obs; // Observable boolean to track playing state
 
+  // to check whether alarm data is updated or not
+  Map<String, dynamic> initialValues = {};
+  Map<String, dynamic> changedFields = {};
+
   void toggleIsPlaying() {
     isPlaying.toggle();
   }
@@ -137,7 +142,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setIsCustomSelected(bool value) {
-    isCustomSelected.value = true;
+    isCustomSelected.value = value;
     if (value == true) {
       isWeekdaysSelected.value = false;
       isDailySelected.value = false;
@@ -189,24 +194,28 @@ class AddOrUpdateAlarmController extends GetxController {
             onPressed: () async {
               Get.back();
 
-              // Request overlay permission
-              if (!(await Permission.systemAlertWindow.isGranted)) {
-                final status = await Permission.systemAlertWindow.request();
-                if (!status.isGranted) {
-                  debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
-                  return;
+              if (Platform.isAndroid) {
+                // Request overlay permission
+                if (!(await Permission.systemAlertWindow.isGranted)) {
+                  final status = await Permission.systemAlertWindow.request();
+                  if (!status.isGranted) {
+                    debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                    return;
+                  }
+                }
+
+                if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
+                  bool requested = await Permission.ignoreBatteryOptimizations
+                      .request()
+                      .isGranted;
+                  if (!requested) {
+                    debugPrint(
+                        'IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                    return;
+                  }
                 }
               }
 
-              if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
-                bool requested = await Permission.ignoreBatteryOptimizations
-                    .request()
-                    .isGranted;
-                if (!requested) {
-                  debugPrint('IGNORE_BATTERY_OPTIMIZATION permission denied!');
-                  return;
-                }
-              }
               // Request notification permission
               if (!await Permission.notification.isGranted) {
                 final status = await Permission.notification.request();
@@ -220,6 +229,80 @@ class AddOrUpdateAlarmController extends GetxController {
             },
           ),
         ],
+      );
+    } else {
+      Get.back();
+    }
+  }
+
+  void checkUnsavedChangesAndNavigate(BuildContext context) {
+    int numberOfChangesMade =
+        changedFields.entries.where((element) => element.value == true).length;
+    if (numberOfChangesMade >= 1) {
+      Get.defaultDialog(
+        titlePadding: const EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: 'Discard Changes?'.tr,
+        titleStyle: Theme.of(context).textTheme.displaySmall,
+        content: Column(
+          children: [
+            Text(
+              'unsavedChanges'.tr,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      'Cancel'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: kprimaryBackgroundColor,
+                          ),
+                    ),
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+                      Get.back(closeOverlays: true);
+                      Get.back();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: themeController.isLightMode.value
+                            ? Colors.red.withOpacity(0.9)
+                            : Colors.red,
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      'Leave'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? Colors.red.withOpacity(0.9)
+                                : Colors.red,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       );
     } else {
       Get.back();
@@ -328,7 +411,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   showQRDialog() {
-    restartQRCodeController();
+    restartQRCodeController(false);
     Get.defaultDialog(
       titlePadding: const EdgeInsets.symmetric(vertical: 20),
       backgroundColor: themeController.isLightMode.value
@@ -339,7 +422,7 @@ class AddOrUpdateAlarmController extends GetxController {
       content: Obx(
         () => Column(
           children: [
-            isQrEnabled.value == false
+            detectedQrValue.value.isEmpty
                 ? SizedBox(
                     height: 300,
                     width: 300,
@@ -349,18 +432,17 @@ class AddOrUpdateAlarmController extends GetxController {
                       onDetect: (capture) {
                         final List<Barcode> barcodes = capture.barcodes;
                         for (final barcode in barcodes) {
-                          qrValue.value = barcode.rawValue.toString();
+                          detectedQrValue.value = barcode.rawValue.toString();
                           debugPrint(barcode.rawValue.toString());
-                          isQrEnabled.value = true;
                         }
                       },
                     ),
                   )
                 : Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Text(qrValue.value),
+                    child: Text(detectedQrValue.value),
                   ),
-            isQrEnabled.value == true
+            (detectedQrValue.value.isNotEmpty)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -381,6 +463,8 @@ class AddOrUpdateAlarmController extends GetxController {
                               ),
                         ),
                         onPressed: () {
+                          qrValue.value = detectedQrValue.value;
+                          isQrEnabled.value = true;
                           Get.back();
                         },
                       ),
@@ -402,10 +486,32 @@ class AddOrUpdateAlarmController extends GetxController {
                         ),
                         onPressed: () async {
                           qrController.dispose();
-                          restartQRCodeController();
-                          isQrEnabled.value = false;
+                          restartQRCodeController(true);
                         },
                       ),
+                      if (isQrEnabled.value)
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor),
+                          ),
+                          child: Text(
+                            'Disable',
+                            style: Theme.of(Get.context!)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor
+                                      : ksecondaryTextColor,
+                                ),
+                          ),
+                          onPressed: () {
+                            isQrEnabled.value = false;
+                            qrValue.value = '';
+                            Get.back();
+                          },
+                        ),
                     ],
                   )
                 : const SizedBox(),
@@ -494,7 +600,7 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
-  restartQRCodeController() async {
+  restartQRCodeController(bool retake) async {
     // Camera permission already granted, proceed with QR code scanning
     qrController = MobileScannerController(
       autoStart: true,
@@ -502,6 +608,7 @@ class AddOrUpdateAlarmController extends GetxController {
       facing: CameraFacing.back,
       torchEnabled: false,
     );
+    detectedQrValue.value = retake ? '' : qrValue.value;
   }
 
   updateAlarm(AlarmModel alarmData) async {
@@ -525,7 +632,9 @@ class AddOrUpdateAlarmController extends GetxController {
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
-            userModel.value, alarmRecord!.firestoreId!);
+          userModel.value,
+          alarmRecord!.firestoreId!,
+        );
         createAlarm(alarmData);
       }
     }
@@ -635,6 +744,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
       isQrEnabled.value = alarmRecord!.isQrEnabled;
       qrValue.value = alarmRecord!.qrValue;
+      detectedQrValue.value = alarmRecord!.qrValue;
 
       alarmID = alarmRecord!.alarmID;
       ownerId = alarmRecord!.ownerId;
@@ -691,6 +801,85 @@ class AddOrUpdateAlarmController extends GetxController {
       repeatDays,
     );
 
+    // store initial values of the variables
+    initialValues.addAll({
+      'selectedTime': selectedTime.value,
+      'daysRepeating': daysRepeating.value,
+      'snoozeDuration': snoozeDuration.value,
+      'deleteAfterGoesOff': deleteAfterGoesOff.value,
+      'label': label.value,
+      'note': note.value,
+      'customRingtoneName': customRingtoneName.value,
+      'volMin': volMin.value,
+      'volMax': volMax.value,
+      'gradient': gradient.value,
+      'showMotivationalQuote': showMotivationalQuote.value,
+      'activityInterval': activityInterval.value,
+      'weatherTypes': weatherTypes.value,
+      'location':
+          '${selectedPoint.value.latitude} ${selectedPoint.value.longitude}',
+      'shakeTimes': shakeTimes.value,
+      'qrValue': qrValue.value,
+      'mathsDifficulty': mathsDifficulty.value,
+      'mathsSliderValue': mathsSliderValue.value,
+      'numMathsQuestions': numMathsQuestions.value,
+      'numberOfSteps': numberOfSteps.value,
+      'isSharedAlarmEnabled': isSharedAlarmEnabled.value,
+      'offsetDuration': offsetDuration.value,
+      'isOffsetBefore': isOffsetBefore.value
+    });
+
+    addListeners();
+
+    if (await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap) !=
+        null) {
+      weatherApiKeyExists.value = true;
+    }
+
+    // If there's an argument sent, we are in update mode
+  }
+
+  void addListeners() {
+    // Updating UI to show time to alarm
+    selectedTime.listen((time) {
+      debugPrint('CHANGED CHANGED CHANGED CHANGED');
+      timeToAlarm.value =
+          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
+      _compareAndSetChange('selectedTime', time);
+    });
+
+    //Updating UI to show repeated days
+    repeatDays.listen((days) {
+      daysRepeating.value = Utils.getRepeatDays(days);
+      _compareAndSetChange('daysRepeating', daysRepeating.value);
+    });
+
+    setupListener<int>(snoozeDuration, 'snoozeDuration');
+    setupListener<bool>(deleteAfterGoesOff, 'deleteAfterGoesOff');
+    setupListener<String>(label, 'label');
+    setupListener<String>(note, 'note');
+    setupListener<String>(customRingtoneName, 'customRingtoneName');
+    setupListener<double>(volMin, 'volMin');
+    setupListener<double>(volMax, 'volMax');
+    setupListener<int>(gradient, 'gradient');
+    setupListener<bool>(showMotivationalQuote, 'showMotivationalQuote');
+    setupListener<int>(activityInterval, 'activityInterval');
+
+    // Updating UI to show weather types
+    selectedWeather.listen((weather) {
+      if (weather.toList().isEmpty) {
+        isWeatherEnabled.value = false;
+      } else {
+        isWeatherEnabled.value = true;
+      }
+      weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
+      _compareAndSetChange('weatherTypes', weatherTypes.value);
+      // if location based is disabled and weather based is disabled, reset location
+      if (weatherTypes.value == 'Off' && !isLocationEnabled.value) {
+        selectedPoint.value = LatLng(0, 0);
+      }
+    });
+
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
     selectedPoint.listen(
@@ -707,38 +896,44 @@ class AddOrUpdateAlarmController extends GetxController {
             ),
           ),
         );
+        _compareAndSetChange(
+            'location', '${point.latitude} ${point.longitude}');
       },
     );
 
-    // Updating UI to show time to alarm
-
-    selectedTime.listen((time) {
-      debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
-    });
-
-    //Updating UI to show repeated days
-    repeatDays.listen((days) {
-      daysRepeating.value = Utils.getRepeatDays(days);
-    });
-
-    // Updating UI to show weather types
-    selectedWeather.listen((weather) {
-      if (weather.toList().isEmpty) {
-        isWeatherEnabled.value = false;
-      } else {
-        isWeatherEnabled.value = true;
+    // reset selectedPoint to default value if isLocationEnabled is false and weather based is off
+    isLocationEnabled.listen((value) {
+      if (!value && weatherTypes.value == 'Off') {
+        selectedPoint.value = LatLng(0, 0);
       }
-      weatherTypes.value = Utils.getFormattedWeatherTypes(weather);
     });
 
-    if (await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap) !=
-        null) {
-      weatherApiKeyExists.value = true;
-    }
+    setupListener<int>(shakeTimes, 'shakeTimes');
+    setupListener<String>(qrValue, 'qrValue');
+    setupListener<double>(mathsSliderValue, 'mathsSliderValue');
+    setupListener<Difficulty>(mathsDifficulty, 'mathsDifficulty');
+    setupListener<int>(numMathsQuestions, 'numMathsQuestions');
+    setupListener<int>(numberOfSteps, 'numberOfSteps');
 
-    // If there's an argument sent, we are in update mode
+    setupListener<bool>(isSharedAlarmEnabled, 'isSharedAlarmEnabled');
+    setupListener<int>(offsetDuration, 'offsetDuration');
+    setupListener<bool>(isOffsetBefore, 'isOffsetBefore');
+  }
+
+  // adds listener to rxVar variable
+  void setupListener<T>(Rx<T> rxVar, String fieldName) {
+    rxVar.listen((value) {
+      _compareAndSetChange(fieldName, value);
+    });
+  }
+
+  // if initialValues map contains fieldName and newValue is equal to currentValue
+  // then set changeFields map field to true
+  void _compareAndSetChange(String fieldName, dynamic currentValue) {
+    if (initialValues.containsKey(fieldName)) {
+      bool hasChanged = initialValues[fieldName] != currentValue;
+      changedFields[fieldName] = hasChanged;
+    }
   }
 
   @override
