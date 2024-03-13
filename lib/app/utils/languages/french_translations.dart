@@ -41,39 +41,43 @@ class FrenchTranslations extends Translations {
           'French': 'Français',
           'Russian': 'Russe',
 
+          'No upcoming alarms!': 'Pas d\'alarmes à venir !',
+          'Next alarm': 'Prochain réveil',
+          'Show Motivational Quote': 'Afficher une citation motivante',
+          //home_view.dart
+          'About': 'À propos',
+          'Settings': 'Paramètres',
+          'v0.5.0': 'v0.5.0',
+          'Ultimate Alarm Clock': 'Réveil Ultime',
+          'Create alarm': 'Créer un réveil',
+          'Join alarm': 'Rejoindre un réveil',
+          'Okay': 'D\'accord',
+          'You cannot join your own alarm!':
+              'Vous ne pouvez pas rejoindre votre propre réveil !',
+          'An alarm with this ID doesn\'t exist!':
+              'Un réveil avec cet identifiant n\'existe pas !',
+          'Error!': 'Erreur !',
+          'Join': 'Rejoindre',
+          'Enter Alarm ID': 'Entrer l\'identifiant du réveil',
+          'Join an alarm': 'Rejoindre un réveil',
+          'Select alarms to delete': 'Sélectionnez les réveils à supprimer',
+          'No alarm selected': 'Aucun réveil sélectionné',
+          '1 alarm selected': '1 réveil sélectionné',
+          ' alarms selected': ' réveils sélectionnés',
+          'Add an alarm to get started!': 'Ajoutez un réveil pour commencer !',
+          'Never': 'Jamais',
+          'One Time': 'Une fois',
+          'Preview Alarm': 'Aperçu du réveil',
+          'Delete Alarm': 'Supprimer le réveil',
+          'Are you sure you want to delete these alarms?':
+              'Êtes-vous sûr(e) de vouloir supprimer ces alarmes ?',
+          'This action will permanently delete these alarms from your device.':
+              'Cette action supprimera définitivement ces alarmes de votre appareil.',
 
-  'No upcoming alarms!' : 'Pas d\'alarmes à venir !',
-  'Next alarm' : 'Prochain réveil',
-  'Show Motivational Quote' : 'Afficher une citation motivante',
-  //home_view.dart
-  'About' : 'À propos',
-  'Settings' : 'Paramètres',
-  'v0.5.0' : 'v0.5.0',
-  'Ultimate Alarm Clock' : 'Réveil Ultime',
-  'Create alarm' : 'Créer un réveil',
-  'Join alarm' : 'Rejoindre un réveil',
-  'Okay' : 'D\'accord',
-  'You cannot join your own alarm!' : 'Vous ne pouvez pas rejoindre votre propre réveil !',
-  'An alarm with this ID doesn\'t exist!' : 'Un réveil avec cet identifiant n\'existe pas !',
-  'Error!' : 'Erreur !',
-  'Join' : 'Rejoindre',
-  'Enter Alarm ID' : 'Entrer l\'identifiant du réveil',
-  'Join an alarm' : 'Rejoindre un réveil',
-  'Select alarms to delete' : 'Sélectionnez les réveils à supprimer',
-  'No alarm selected' : 'Aucun réveil sélectionné',
-  '1 alarm selected' : '1 réveil sélectionné',
-  ' alarms selected' : ' réveils sélectionnés',
-  'Add an alarm to get started!' : 'Ajoutez un réveil pour commencer !',
-  'Never' : 'Jamais',
-  'One Time' : 'Une fois',
-  'Preview Alarm' : 'Aperçu du réveil',
-  'Delete Alarm' : 'Supprimer le réveil',
-   'Are you sure you want to delete these alarms?': 'Êtes-vous sûr(e) de vouloir supprimer ces alarmes ?',
-    'This action will permanently delete these alarms from your device.': 'Cette action supprimera définitivement ces alarmes de votre appareil.',
-
-  //about_view.dart texts
-  'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute' : 'Ce projet a été initialement développé dans le cadre du Google Summer of Code sous l\'organisation CCExtractor. Il est gratuit, le code source est disponible et nous encourageons les programmeurs à contribuer.',
-  'Could not launch' : 'Impossible de lancer',
+          //about_view.dart texts
+          'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute':
+              'Ce projet a été initialement développé dans le cadre du Google Summer of Code sous l\'organisation CCExtractor. Il est gratuit, le code source est disponible et nous encourageons les programmeurs à contribuer.',
+          'Could not launch': 'Impossible de lancer',
 //add_or_update_alarm_view.dart
           'Discard Changes?': 'Ignorer les modifications ?',
           'unsavedChanges':
@@ -113,6 +117,9 @@ class FrenchTranslations extends Translations {
           'Default': 'Par défaut',
           'Upload Ringtone': 'Télécharger une sonnerie',
           'Done': 'Terminé',
+          'Duplicate Ringtone': 'Sonnerie en double',
+          'Choosen ringtone is already present':
+              'La sonnerie choisie est déjà présente',
 //delete_tile.dart
           'Delete After Goes Off': 'Supprimer après la fin',
 

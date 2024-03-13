@@ -107,6 +107,9 @@ class AppTranslations extends Translations {
           'Default': 'Default',
           'Upload Ringtone': 'Upload Ringtone',
           'Done': 'Done',
+          'Duplicate Ringtone': 'Duplicate Ringtone',
+          'Choosen ringtone is already present':
+              'Choosen ringtone is already present',
           //label_tile.dart
           'Label': 'Label',
           'Add a label': 'Add a label',
@@ -239,4 +242,3 @@ class AppTranslations extends Translations {
         'es_ES': SpanishTranslations().keys['es_ES']!,
       };
 }
-
