@@ -28,18 +28,7 @@ class ThemeController extends GetxController {
     final storedTheme = await _secureStorageProvider.readThemeValue();
     dev.log(storedTheme.toString());
     if (storedTheme == AppTheme.system) {
-      _startBrightnessCheckTimer();
-      final systemBrightness = Get.mediaQuery.platformBrightness;
-      isSystemModeActive = true;
-      if (systemBrightness == Brightness.light) {
-        isLightMode.value = true;
-        Get.changeThemeMode(ThemeMode.light);
-        onClose();
-      } else {
-        isLightMode.value = false;
-        Get.changeThemeMode(ThemeMode.dark);
-        onClose();
-      }
+      _startBrightnessCheck();
     } else {
       onClose();
       isLightMode.value = storedTheme == AppTheme.light;
@@ -47,10 +36,16 @@ class ThemeController extends GetxController {
     }
   }
 
-  void _startBrightnessCheckTimer() {
-    _brightnessCheckTimer = Timer.periodic(Duration(seconds: 2), (timer) {
-      _updateThemeFromSystemBrightness();
-    });
+  void _startBrightnessCheck() {
+    final systemBrightness = Get.mediaQuery.platformBrightness;
+    isSystemModeActive = true;
+    if (systemBrightness == Brightness.light) {
+      isLightMode.value = true;
+      Get.changeThemeMode(ThemeMode.light);
+    } else {
+      isLightMode.value = false;
+      Get.changeThemeMode(ThemeMode.dark);
+    }
   }
 
   void _updateThemeFromSystemBrightness() {
@@ -81,7 +76,7 @@ class ThemeController extends GetxController {
 
   void toggleSystemTheme() {
     isSystemModeActive = true;
-    _startBrightnessCheckTimer();
+    _startBrightnessCheck();
     final systemBrightness = Get.mediaQuery.platformBrightness;
     print("System Brightness: $systemBrightness");
 

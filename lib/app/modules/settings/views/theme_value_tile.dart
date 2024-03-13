@@ -26,115 +26,109 @@ class ThemeValueTile extends StatefulWidget {
 }
 
 class _ThemeValueTileState extends State<ThemeValueTile> {
-    final _secureStorageProvider = SecureStorageProvider();
-    String appTheme = '';
-@override
+  final _secureStorageProvider = SecureStorageProvider();
+  RxString appTheme = ''.obs;
+
+  @override
   void initState() {
     getAppTheme();
-        super.initState();
+    super.initState();
   }
 
-  void getAppTheme()async{
-if(await _secureStorageProvider.readThemeValue() == AppTheme.system){
- setState(() {
-    appTheme = 'System Mode';
- });
-}
-if(await _secureStorageProvider.readThemeValue() == AppTheme.light){
-  setState(() {
-    appTheme = 'Light Mode';
-  });
-}
-if(await _secureStorageProvider.readThemeValue() == AppTheme.dark){
-  setState(() {
-    appTheme = 'Dark Mode';
-  });
-}
-
-
+  void getAppTheme() async {
+    var storedTheme = await _secureStorageProvider.readThemeValue();
+    if (storedTheme == AppTheme.system) {
+      appTheme.value = 'System Mode';
+    } else if (storedTheme == AppTheme.light) {
+      appTheme.value = 'Light Mode';
+    } else if (storedTheme == AppTheme.dark) {
+      appTheme.value = 'Dark Mode';
+    }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width * 0.91,
-      height: widget.height * 0.1,
-      decoration: Utils.getCustomTileBoxDecoration(
-        isLightMode: widget.themeController.isLightMode.value,
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(left: 30),
-        child: Row(
-          children: [
-            DropdownMenu(
-              menuStyle: MenuStyle(
-                backgroundColor: MaterialStatePropertyAll(
-                  widget.themeController.isLightMode.value
-                      ? kLightSecondaryBackgroundColor
-                      : ksecondaryBackgroundColor,
+    return Obx(
+      () => Container(
+        width: widget.width * 0.91,
+        height: widget.height * 0.1,
+        decoration: Utils.getCustomTileBoxDecoration(
+          isLightMode: widget.themeController.isLightMode.value,
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(left: 30),
+          child: Row(
+            children: [
+              DropdownMenu(
+                menuStyle: MenuStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                    widget.themeController.isLightMode.value
+                        ? kLightSecondaryBackgroundColor
+                        : ksecondaryBackgroundColor,
+                  ),
                 ),
+                inputDecorationTheme:
+                    InputDecorationTheme(enabledBorder: InputBorder.none),
+                trailingIcon: Icon(
+                  Icons.arrow_drop_down_outlined,
+                  size: 40.0,
+                  color: widget.themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(0.8)
+                      : kprimaryTextColor.withOpacity(0.8),
+                ),
+                width: widget.width * 0.78,
+                initialSelection: appTheme.value,
+                label: Text('Select Theme'),
+                dropdownMenuEntries: [
+                  DropdownMenuEntry(
+                    value: 'System Mode',
+                    label: 'System Mode',
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStatePropertyAll(
+                        widget.themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
+                    ),
+                  ),
+                  DropdownMenuEntry(
+                    value: 'Light Mode',
+                    label: 'Light Mode',
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStatePropertyAll(
+                        widget.themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
+                    ),
+                  ),
+                  DropdownMenuEntry(
+                    value: 'Dark Mode',
+                    label: 'Dark Mode',
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStatePropertyAll(
+                        widget.themeController.isLightMode.value
+                            ? kLightPrimaryTextColor
+                            : kprimaryTextColor,
+                      ),
+                    ),
+                  ),
+                ],
+                onSelected: (newValue) {
+                  if (newValue == 'System Mode') {
+                    widget.themeController.toggleSystemTheme();
+                  } else if (newValue == 'Light Mode') {
+                    widget.themeController.toggleThemeValue(true);
+                    Get.changeThemeMode(ThemeMode.light);
+                  } else {
+                    widget.themeController.toggleThemeValue(false);
+                    Get.changeThemeMode(ThemeMode.dark);
+                  }
+                  Utils.hapticFeedback();
+                },
               ),
-              inputDecorationTheme:
-                  InputDecorationTheme(enabledBorder: InputBorder.none),
-              trailingIcon: Icon(
-                Icons.arrow_drop_down_outlined,
-                size: 40.0,
-                color: widget.themeController.isLightMode.value
-                    ? kLightPrimaryTextColor.withOpacity(0.8)
-                    : kprimaryTextColor.withOpacity(0.8),
-              ),
-              width: widget.width * 0.78,
-              initialSelection: appTheme,
-              label: Text('Select Theme'),
-              dropdownMenuEntries: [
-                DropdownMenuEntry(
-                  value: 'System Mode',
-                  label: 'System Mode',
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(
-                      widget.themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
-                    ),
-                  ),
-                ),
-                DropdownMenuEntry(
-                  value: 'Light Mode',
-                  label: 'Light Mode',
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(
-                      widget.themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
-                    ),
-                  ),
-                ),
-                DropdownMenuEntry(
-                  value: 'Dark Mode',
-                  label: 'Dark Mode',
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(
-                      widget.themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
-                    ),
-                  ),
-                ),
-              ],
-              onSelected: (newValue) {
-                if (newValue == 'System Mode') {
-                  widget.themeController.toggleSystemTheme();
-                } else if (newValue == 'Light Mode') {
-                  widget.themeController.toggleThemeValue(true);
-                  Get.changeThemeMode(ThemeMode.light);
-                } else {
-                  widget.themeController.toggleThemeValue(false);
-                  Get.changeThemeMode(ThemeMode.dark);
-                }
-                Utils.hapticFeedback();
-                
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
