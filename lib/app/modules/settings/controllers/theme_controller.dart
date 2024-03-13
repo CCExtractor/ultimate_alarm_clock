@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
@@ -15,11 +14,6 @@ class ThemeController extends GetxController {
   void onInit() {
     _loadThemeValue();
     super.onInit();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   void _loadThemeValue() async {
