@@ -474,195 +474,142 @@ class HomeView extends GetView<HomeController> {
                         centerTitle: true,
                         flexibleSpace: LayoutBuilder(
                           builder: (context, constraints) {
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // Center everything vertically
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              // On pressing the close button, we're closing the multiple select mode, and clearing the select alarm set
-                                              controller.inMultipleSelectMode
-                                                  .value = false;
-                                              controller.isAnyAlarmHolded
-                                                  .value = false;
-                                              controller.isAllAlarmsSelected
-                                                  .value = false;
-                                              controller.numberOfAlarmsSelected
-                                                  .value = 0;
-                                              controller.selectedAlarmSet
-                                                  .clear();
-                                            },
-                                            icon: const Icon(Icons.close),
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    // On pressing the close button, we're closing the multiple select mode, and clearing the select alarm set
+                                    controller.inMultipleSelectMode.value =
+                                        false;
+                                    controller.isAnyAlarmHolded.value = false;
+                                    controller.isAllAlarmsSelected.value =
+                                        false;
+                                    controller.numberOfAlarmsSelected.value = 0;
+                                    controller.selectedAlarmSet.clear();
+                                  },
+                                  icon: const Icon(Icons.close),
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryTextColor.withOpacity(0.75)
+                                      : kprimaryTextColor.withOpacity(0.75),
+                                  iconSize: 25 * controller.scalingFactor.value,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Select alarms to delete'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
                                             color: themeController
                                                     .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                    .withOpacity(0.75)
-                                                : kprimaryTextColor
-                                                    .withOpacity(0.75),
-                                            iconSize: 27 *
+                                                ? kLightPrimaryDisabledTextColor
+                                                : kprimaryDisabledTextColor,
+                                            fontSize: 16 *
                                                 controller.scalingFactor.value,
                                           ),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 2 *
-                                                  controller
-                                                      .scalingFactor.value,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Select alarms to delete'.tr,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .copyWith(
-                                                        color: themeController
-                                                                .isLightMode
-                                                                .value
-                                                            ? kLightPrimaryDisabledTextColor
-                                                            : kprimaryDisabledTextColor,
-                                                        fontSize: 16 *
-                                                            controller
-                                                                .scalingFactor
-                                                                .value,
-                                                      ),
-                                                ),
-                                                Container(
-                                                  height: 35,
-                                                  width: 340,
-                                                  child: Row(
-                                                    children: [
-                                                      Obx(() {
-                                                        // Storing the number of selected alarms
-                                                        int numberOfAlarmsSelected =
-                                                            controller
-                                                                .numberOfAlarmsSelected
-                                                                .value;
-                                                        return Text(
-                                                          numberOfAlarmsSelected ==
-                                                                  0
-                                                              ? 'No alarm selected'
-                                                                  .tr
-                                                              : '@noofAlarm alarms selected'
-                                                                  .trParams({
-                                                                  'noofAlarm':
-                                                                      numberOfAlarmsSelected
-                                                                          .toString(),
-                                                                }),
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .displaySmall!
-                                                                  .copyWith(
-                                                                    color: themeController
-                                                                            .isLightMode
-                                                                            .value
-                                                                        ? kLightPrimaryTextColor
-                                                                            .withOpacity(
-                                                                            0.75,
-                                                                          )
-                                                                        : kprimaryTextColor
-                                                                            .withOpacity(
-                                                                            0.75,
-                                                                          ),
-                                                                    fontSize: 14 *
-                                                                        controller
-                                                                            .scalingFactor
-                                                                            .value,
-                                                                  ),
-                                                        );
+                                    ),
+                                    Row(
+                                      children: [
+                                        Obx(
+                                          () {
+                                            // Storing the number of selected alarms
+                                            int numberOfAlarmsSelected =
+                                                controller
+                                                    .numberOfAlarmsSelected
+                                                    .value;
+                                            return SizedBox(
+                                              width: 244,
+                                              child: Text(
+                                                numberOfAlarmsSelected == 0
+                                                    ? 'No alarm selected'.tr
+                                                    : '@noofAlarm alarms selected'
+                                                        .trParams({
+                                                        'noofAlarm':
+                                                            numberOfAlarmsSelected
+                                                                .toString(),
                                                       }),
-                                                      Spacer(),
-                                                      Row(
-                                                        children: [
-                                                          // All alarm select button
-                                                          ToggleButton(
-                                                            controller:
-                                                                controller,
-                                                            isSelected: controller
-                                                                .isAllAlarmsSelected,
-                                                          ),
-
-                                                          // Delete button
-                                                          Obx(
-                                                            () => IconButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                // Deleting the alarms
-                                                                await controller
-                                                                    .deleteAlarms();
-
-                                                                // Closing the multiple select mode
-                                                                controller
-                                                                    .inMultipleSelectMode
-                                                                    .value = false;
-                                                                controller
-                                                                    .isAnyAlarmHolded
-                                                                    .value = false;
-                                                                controller
-                                                                    .isAllAlarmsSelected
-                                                                    .value = false;
-                                                                controller
-                                                                    .numberOfAlarmsSelected
-                                                                    .value = 0;
-                                                                controller
-                                                                    .selectedAlarmSet
-                                                                    .clear();
-                                                                // After deleting alarms, refreshing to schedule latest one
-                                                                controller
-                                                                        .refreshTimer =
-                                                                    true;
-                                                                controller
-                                                                    .refreshUpcomingAlarms();
-                                                              },
-                                                              icon: const Icon(
-                                                                Icons.delete,
-                                                              ),
-                                                              color: controller
-                                                                          .numberOfAlarmsSelected
-                                                                          .value >
-                                                                      0
-                                                                  ? Colors.red
-                                                                  : themeController
-                                                                          .isLightMode
-                                                                          .value
-                                                                      ? kLightPrimaryTextColor
-                                                                          .withOpacity(
-                                                                          0.75,
-                                                                        )
-                                                                      : kprimaryTextColor
-                                                                          .withOpacity(
-                                                                          0.75,
-                                                                        ),
-                                                              iconSize: 27 *
-                                                                  controller
-                                                                      .scalingFactor
-                                                                      .value,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall!
+                                                    .copyWith(
+                                                      color: themeController
+                                                              .isLightMode.value
+                                                          ? kLightPrimaryTextColor
+                                                              .withOpacity(
+                                                              0.75,
+                                                            )
+                                                          : kprimaryTextColor
+                                                              .withOpacity(
+                                                              0.75,
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                                      fontSize: 15 *
+                                                          controller
+                                                              .scalingFactor
+                                                              .value,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        ToggleButton(
+                                          controller: controller,
+                                          isSelected:
+                                              controller.isAllAlarmsSelected,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                // Delete button
+                                Obx(
+                                  () => Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 23.0,
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        // Deleting the alarms
+                                        await controller.deleteAlarms();
+                                        // Closing the multiple select mode
+                                        controller.inMultipleSelectMode.value =
+                                            false;
+                                        controller.isAnyAlarmHolded.value =
+                                            false;
+                                        controller.isAllAlarmsSelected.value =
+                                            false;
+                                        controller
+                                            .numberOfAlarmsSelected.value = 0;
+                                        controller.selectedAlarmSet.clear();
+                                        // After deleting alarms, refreshing to schedule latest one
+                                        controller.refreshTimer = true;
+                                        controller.refreshUpcomingAlarms();
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
                                       ),
-                                    ],
+                                      color: controller.numberOfAlarmsSelected
+                                                  .value >
+                                              0
+                                          ? Colors.red
+                                          : themeController.isLightMode.value
+                                              ? kLightPrimaryTextColor
+                                                  .withOpacity(
+                                                  0.75,
+                                                )
+                                              : kprimaryTextColor.withOpacity(
+                                                  0.75,
+                                                ),
+                                      iconSize:
+                                          25 * controller.scalingFactor.value,
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             );
                           },
                         ),
