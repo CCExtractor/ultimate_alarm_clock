@@ -1,9 +1,7 @@
 import 'package:isar/isar.dart';
 
-@collection
 class TimerModel {
   Id isarId = Isar.autoIncrement;
-
   late String timerTime;
   late String mainTimerTime;
   late int intervalToAlarm;
