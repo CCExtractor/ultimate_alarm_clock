@@ -83,20 +83,18 @@ class LocalNotificationService {
       priority: Priority.high,
       color: Colors.blue,
       onlyAlertOnce: true,
-      when: when,
-      usesChronometer: true,
       chronometerCountDown: true,
       visibility: NotificationVisibility.public,
       ongoing: true,
       channelShowBadge: true,
-      ticker: 'sample_vehicle',
+
     );
     final NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       1,
       title,
-      when.toString(),
+      body,
       platformChannelSpecifics,
     );
   }

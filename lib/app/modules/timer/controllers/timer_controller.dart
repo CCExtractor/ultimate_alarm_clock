@@ -170,15 +170,12 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void resumeTimer() async {
-    final seconds = remainingTime.value.inSeconds - 1;
     if (isTimerPaused.value) {
-      LocalNotificationService.showNotificationWithCountdown(
-        Duration(milliseconds: seconds),
-        'Timer',
-      );
       countdownTimer.value = Timer.periodic(
         const Duration(seconds: 1),
-        (_) => setCountDown(),
+        (_) {
+          setCountDown();
+        },
       );
       isTimerPaused.value = false;
 
@@ -196,7 +193,21 @@ class TimerController extends GetxController with WidgetsBindingObserver {
       );
       stopTimer();
     } else {
+      // ignore: lines_longer_than_80_chars
+      LocalNotificationService.showNotificationWithChronometer(
+        seconds,
+        'Timer',
+        _printDuration(remainingTime.value),
+      );
       remainingTime.value = Duration(seconds: seconds);
     }
+  }
+
+  String _printDuration(Duration duration) {
+    String negativeSign = duration.isNegative ? '-' : '';
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
+    return "$negativeSign${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 }
