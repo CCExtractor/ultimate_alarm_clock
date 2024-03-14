@@ -26,9 +26,12 @@ import android.net.Uri
 class MainActivity : FlutterActivity() {
 
     companion object {
-        const val CHANNEL = "ulticlock"
+        const val CHANNEL1 = "ulticlock"
+        const val CHANNEL2 = "timer"
         const val ACTION_START_FLUTTER_APP = "com.example.ultimate_alarm_clock"
         const val EXTRA_KEY = "alarmRing"
+        const val ALARM_TYPE = "isAlarm"
+        private var isAlarm :String? = "true"
         val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
         private var ringtone: Ringtone? = null
     }
@@ -38,12 +41,15 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
-        var methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        var methodChannel1 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL1)
+        var methodChannel2 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL2)
 
         val intent = intent
+
         if (intent != null && intent.hasExtra(EXTRA_KEY)) {
             val receivedData = intent.getStringExtra(EXTRA_KEY)
             alarmConfig["shouldAlarmRing"] = true
+            isAlarm = intent.getStringExtra(ALARM_TYPE)
             val cleanIntent = Intent(intent)
             cleanIntent.removeExtra(EXTRA_KEY)
             setIntent(cleanIntent)
@@ -51,8 +57,40 @@ class MainActivity : FlutterActivity() {
         } else {
             println("NATIVE SAID NO")
         }
-        methodChannel.invokeMethod("appStartup", alarmConfig)
-        methodChannel.setMethodCallHandler { call, result ->
+
+        if(isAlarm == "true")
+        {
+            methodChannel1.invokeMethod("appStartup", alarmConfig)
+        }
+        else if(isAlarm == "false")
+        {
+            methodChannel2.invokeMethod("appStartup", alarmConfig)
+        }
+        methodChannel2.setMethodCallHandler{ call, result ->
+          if(call.method == "scheduleTimer")
+          {
+              val seconds = call.argument<Int>("milliSeconds")
+              scheduleTimer(seconds ?: 0)
+              result.success(null)
+          } else if (call.method == "cancelTimer") {
+              println("FLUTTER CALLED CANCEL ALARMS")
+              cancelAllScheduledTimers()
+              result.success(null)
+          } else if (call.method == "bringAppToForeground") {
+              bringAppToForeground(this)
+              result.success(null)
+          } else if (call.method == "playDefaultAlarm") {
+              playDefaultAlarm(this)
+              result.success(null)
+          } else if (call.method == "stopDefaultAlarm") {
+              stopDefaultAlarm()
+              result.success(null)
+          } else
+          {
+              result.notImplemented()
+          }
+        }
+        methodChannel1.setMethodCallHandler { call, result ->
             if (call.method == "scheduleAlarm") {
                 val seconds = call.argument<Int>("milliSeconds")
                 println("FLUTTER CALLED SCHEDULE")
@@ -112,12 +150,43 @@ class MainActivity : FlutterActivity() {
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
 
+    private fun scheduleTimer(milliSeconds: Int) {
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, TimerReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+        // Schedule the alarm
+        val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+    }
+
+
     private fun cancelAllScheduledAlarms() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             this,
             0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+        // Cancel any existing alarms by providing the same pending intent
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+    }
+    private fun cancelAllScheduledTimers() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, TimerReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            1,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
