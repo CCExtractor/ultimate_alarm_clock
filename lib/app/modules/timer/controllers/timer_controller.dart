@@ -194,6 +194,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
       stopTimer();
     } else {
       // ignore: lines_longer_than_80_chars
+
       LocalNotificationService.showNotificationWithChronometer(
         seconds,
         'Timer',

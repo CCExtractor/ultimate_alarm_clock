@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationService {
@@ -74,22 +73,20 @@ class LocalNotificationService {
     String title,
     String body,
   ) async {
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
       channelName,
       channelDescription: channelDescription,
-      importance: Importance.max,
-      priority: Priority.high,
-      color: Colors.blue,
       onlyAlertOnce: true,
-      chronometerCountDown: true,
-      visibility: NotificationVisibility.public,
+      silent: true,
       ongoing: true,
-      channelShowBadge: true,
-
+      importance: Importance.min,
+      priority: Priority.low,
+      playSound: false,
+      enableVibration: false,
     );
-    final NotificationDetails platformChannelSpecifics =
+    const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       1,
@@ -98,41 +95,5 @@ class LocalNotificationService {
       platformChannelSpecifics,
     );
   }
-  static Future<void> showNotificationWithCountdown(
-      Duration initialDuration,
-      String title,
-      ) async {
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      channelId,
-      channelName,
-      channelDescription: channelDescription,
-      importance: Importance.max,
-      priority: Priority.high,
-      color: Colors.blue,
-      onlyAlertOnce: true,
-      usesChronometer: true,
-      chronometerCountDown: true,
-      visibility: NotificationVisibility.public,
-      ongoing: true,
-      channelShowBadge: true,
-      ticker: 'sample_vehicle',
-    );
-    final NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      final remaining = initialDuration - Duration(milliseconds:timer.tick);
-      flutterLocalNotificationsPlugin.show(
-        1,
-        title,
-        'Time remaining: ${remaining.inMinutes} minutes ${remaining.inSeconds % 60} seconds',
-        platformChannelSpecifics,
-      );
 
-      if (remaining <= Duration.zero) {
-        timer.cancel();
-        // Handle countdown completion (e.g., dismiss notification)
-      }
-    });
-  }
 }
