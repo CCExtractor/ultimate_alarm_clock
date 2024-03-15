@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/services/local_notification.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -172,7 +173,9 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     if (isTimerPaused.value) {
       countdownTimer.value = Timer.periodic(
         const Duration(seconds: 1),
-        (_) => setCountDown(),
+        (_) {
+          setCountDown();
+        },
       );
       isTimerPaused.value = false;
 
@@ -184,9 +187,28 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     const reduceSecondsBy = 1;
     final seconds = remainingTime.value.inSeconds - reduceSecondsBy;
     if (seconds < 0) {
+      LocalNotificationService.showLocalNotification(
+        title: 'Ultimate Alarm',
+        value: 'Your timer is ended',
+      );
       stopTimer();
     } else {
+      // ignore: lines_longer_than_80_chars
+
+      LocalNotificationService.showNotificationWithChronometer(
+        seconds,
+        'Timer',
+        _printDuration(remainingTime.value),
+      );
       remainingTime.value = Duration(seconds: seconds);
     }
+  }
+
+  String _printDuration(Duration duration) {
+    String negativeSign = duration.isNegative ? '-' : '';
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
+    return "$negativeSign${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 }

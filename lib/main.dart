@@ -8,10 +8,12 @@ import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
 import 'app/routes/app_pages.dart';
+import 'app/services/local_notification.dart';
 Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotificationService().init();
 
   await Firebase.initializeApp();
   await Get.putAsync(() => GetStorageProvider().init());
