@@ -208,6 +208,8 @@ class TimerView extends GetView<TimerController> {
                                     onChanged: (value) {
                                       Utils.hapticFeedback();
                                       controller.hours.value = value;
+                                      inputTimeController.
+                                      setTextFieldTimerTime();
                                     },
                                     infiniteLoop: true,
                                     itemWidth: width * 0.17,
@@ -294,6 +296,8 @@ class TimerView extends GetView<TimerController> {
                                     value: controller.minutes.value,
                                     onChanged: (value) {
                                       controller.minutes.value = value;
+                                      inputTimeController.
+                                      setTextFieldTimerTime();
                                     },
                                     infiniteLoop: true,
                                     itemWidth: width * 0.17,
@@ -380,6 +384,8 @@ class TimerView extends GetView<TimerController> {
                                     value: controller.seconds.value,
                                     onChanged: (value) {
                                       controller.seconds.value = value;
+                                      inputTimeController.
+                                      setTextFieldTimerTime();
                                     },
                                     infiniteLoop: true,
                                     itemWidth: width * 0.17,
