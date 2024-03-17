@@ -26,7 +26,9 @@
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />
 
-        
+        <service
+            android:name="com.requiemz.overlay_pop_up.OverlayService"
+            android:exported="false" />
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
