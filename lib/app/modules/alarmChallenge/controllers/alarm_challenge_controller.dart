@@ -99,20 +99,14 @@ class AlarmChallengeController extends GetxController {
     final image1 = File(imagePath1);
     final image2 = File(imagePath2);
 
-    final chiSquaresimilarity = await compareImages(
+    final similarity = await compareImages(
       src1: image1,
       src2: image2,
-      algorithm: ChiSquareDistanceHistogram(),
+      algorithm: IntersectionHistogram(),
     );
 
-    final perceptualHashsimilarity = await compareImages(
-      src1: image1,
-      src2: image2,
-      algorithm: PerceptualHash(),
-    );
-
-    final result = perceptualHashsimilarity * 0.6 + chiSquaresimilarity * 0.4;
-
+    final result = similarity;
+    Get.log('${result}');
     return result;
   }
 
@@ -168,8 +162,8 @@ class AlarmChallengeController extends GetxController {
     }
 
     if (alarmRecord.isPhotochallengeEnabled) {
-      imagesimilarity.listen((url) async {
-        if (imagesimilarity.value > 0.7) {
+      imagesimilarity.listen((value) async {
+        if (value <= 0.36) {
           isPhotoChallengeOngoing.value = Status.completed;
           alarmRecord.isPhotochallengeEnabled = false;
           Get.back();

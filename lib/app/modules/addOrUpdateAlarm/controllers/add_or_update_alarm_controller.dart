@@ -639,10 +639,11 @@ class AddOrUpdateAlarmController extends GetxController {
     if (isPhotochallengeEnabled.value == false) {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
-        imageFile.value = File(pickedFile.path);
-        imageurl.value = await _uploadImageToStorage(imageFile.value);
-        //clearing image picker cache
-        await imageFile.value.delete();
+        File imagepickedfile = File(pickedFile.path);
+        imageurl.value = await _uploadImageToStorage(imagepickedfile);
+
+        //clear image chache
+        await imagepickedfile.delete();
         imageFile.value = File(imageurl.value);
         isPhotochallengeEnabled.value = true;
       } else {}
@@ -658,17 +659,13 @@ class AddOrUpdateAlarmController extends GetxController {
           () => Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: imageFile.value.existsSync()
-                    // Check if file exists before trying to display
-                    ? Image.file(
-                        imageFile.value,
-                        fit: BoxFit.cover,
-                        height: MediaQuery.of(Get.context!).size.height * 0.3,
-                        width: MediaQuery.of(Get.context!).size.width,
-                      )
-                    : const CircularProgressIndicator(),
-              ),
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Image.file(
+                    File(imageurl.value),
+                    fit: BoxFit.cover,
+                    height: MediaQuery.of(Get.context!).size.height * 0.3,
+                    width: MediaQuery.of(Get.context!).size.width,
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -707,8 +704,19 @@ class AddOrUpdateAlarmController extends GetxController {
                           ),
                     ),
                     onPressed: () async {
-                      showPhotoDialog();
-                      isPhotochallengeEnabled.value = false;
+                      // showPhotoDialog();
+                      final pickedFile =
+                          await picker.pickImage(source: ImageSource.camera);
+                      if (pickedFile != null) {
+                        File imagepickedfile = File(pickedFile.path);
+
+                        imageurl.value =
+                            await _uploadImageToStorage(imagepickedfile);
+
+                        //clear image chache
+                        await imagepickedfile.delete();
+                        isPhotochallengeEnabled.value = true;
+                      } else {}
                     },
                   ),
                 ],

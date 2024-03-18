@@ -53,7 +53,7 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Match the Photo'.tr,
+                            'Match the Photo',
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
@@ -93,8 +93,9 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                         ).size.height *
                                                         0.3,
                                                     width: MediaQuery.of(
-                                                      Get.context!,
-                                                    ).size.width,
+                                                          Get.context!,
+                                                        ).size.width *
+                                                        0.81,
                                                   )
                                                 : const CircularProgressIndicator(),
                                           ),
@@ -133,15 +134,19 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                   controller.imageurl.value =
                                                       imageFile.path;
 
-                                                  await controller.compareImage(
-                                                    controller.imageurl.value,
+                                                  controller.imagesimilarity
+                                                          .value =
+                                                      await controller
+                                                          .compareImage(
                                                     controller
                                                         .alarmRecord.imageurl,
+                                                    controller.imageurl.value,
                                                   );
-
+                                                  Get.log(
+                                                      '${controller.imagesimilarity.value}');
                                                   if (controller.imagesimilarity
-                                                          .value >
-                                                      0.7) {
+                                                          .value <=
+                                                      0.36) {
                                                     controller
                                                         .isPhotoChallengeOngoing
                                                         .value = Status.completed;
@@ -151,7 +156,7 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                         .value = Status.ongoing;
                                                   }
 
-                                                  await imageFile.delete();
+                                                  // await imageFile.delete();
                                                 } else {}
                                                 // Process the image as needed
                                               } else {}
@@ -164,8 +169,8 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                         width: 300,
                                         child: Center(
                                           child: (controller
-                                                      .imagesimilarity.value >
-                                                  0.7)
+                                                      .imagesimilarity.value <=
+                                                  0.36)
                                               ? Icon(
                                                   Icons.done,
                                                   size: height * 0.2,
@@ -194,7 +199,7 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                             ),
                                                     ),
                                                     Text(
-                                                      'Wrong Photo Captured'.tr,
+                                                      'Wrong Photo Captured',
                                                       style: Theme.of(
                                                         context,
                                                       )
@@ -225,7 +230,7 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                         ),
                                                       ),
                                                       child: Text(
-                                                        'Retake'.tr,
+                                                        'Retake',
                                                         style: Theme.of(
                                                           context,
                                                         )

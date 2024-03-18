@@ -511,9 +511,11 @@ class Utils {
     if (alarmRecord.isMathsEnabled ||
         alarmRecord.isQrEnabled ||
         alarmRecord.isShakeEnabled ||
-        alarmRecord.isPedometerEnabled) {
+        alarmRecord.isPedometerEnabled ||
+        alarmRecord.isPhotochallengeEnabled) {
       return true;
     }
+
     return false;
   }
 

@@ -10,7 +10,7 @@ import '../controllers/alarm_ring_controller.dart';
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
+  final ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -193,13 +193,15 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             child: Text(
                               'Snooze'.tr,
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : kprimaryTextColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();

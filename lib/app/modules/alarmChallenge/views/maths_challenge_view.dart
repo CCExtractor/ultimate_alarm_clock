@@ -209,6 +209,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     return ElevatedButton(
       onPressed: () {
         Utils.hapticFeedback();
+
         if (controller.mathsAnswer.toString() ==
             controller.displayValue.value) {
           controller.numMathsQuestions.value -= 1;
