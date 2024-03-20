@@ -727,6 +727,7 @@ class AddOrUpdateAlarmController extends GetxController {
       if (imageurl.value == '') {
         pickedFile.copySync(newFilePath);
         debugPrint(newFilePath);
+
         return newFilePath;
       } else {
         // Assuming imageurl.value already contains the full path,
@@ -765,14 +766,17 @@ class AddOrUpdateAlarmController extends GetxController {
         content: Obx(
           () => Column(
             children: [
-              Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: Image.file(
-                    File(imageurl.value),
-                    fit: BoxFit.cover,
-                    height: MediaQuery.of(Get.context!).size.height * 0.3,
-                    width: MediaQuery.of(Get.context!).size.width,
-                  )),
+              (isPhotochallengeEnabled.value)
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: Image.file(
+                        File(imageurl.value),
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(Get.context!).size.height * 0.3,
+                        width: MediaQuery.of(Get.context!).size.width,
+                      ),
+                    )
+                  : const Text('Photo Challenge Disabled'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -814,6 +818,10 @@ class AddOrUpdateAlarmController extends GetxController {
                       // showPhotoDialog();
                       final pickedFile =
                           await picker.pickImage(source: ImageSource.camera);
+
+                      if (await File(imageurl.value).exists()) {
+                        await File(imageurl.value).delete();
+                      }
                       if (pickedFile != null) {
                         File imagepickedfile = File(pickedFile.path);
 
@@ -823,9 +831,41 @@ class AddOrUpdateAlarmController extends GetxController {
                         //clear image chache
                         await imagepickedfile.delete();
                         isPhotochallengeEnabled.value = true;
+                        Get.back();
                       } else {}
                     },
                   ),
+                  if (isPhotochallengeEnabled.value)
+                    TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(kprimaryColor),
+                      ),
+                      child: Text(
+                        'Disable',
+                        style: Theme.of(Get.context!)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryTextColor
+                                  : ksecondaryTextColor,
+                            ),
+                      ),
+                      onPressed: () async {
+                        isPhotochallengeEnabled.value = false;
+                        File file = File(imageurl.value);
+
+                        if (await file.exists()) {
+                          await file.delete();
+                          debugPrint('File deleted successfully.');
+                        } else {
+                          debugPrint('File does not exist.');
+                        }
+                        imageurl.value = '';
+                        Get.back();
+                      },
+                    ),
                 ],
               ),
             ],

@@ -87,11 +87,11 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                       controller
                                                           .alarmRecord.imageurl,
                                                     ),
-                                                    fit: BoxFit.cover,
+                                                    fit: BoxFit.contain,
                                                     height: MediaQuery.of(
                                                           Get.context!,
                                                         ).size.height *
-                                                        0.3,
+                                                        0.36,
                                                     width: MediaQuery.of(
                                                           Get.context!,
                                                         ).size.width *
@@ -143,7 +143,8 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                                     controller.imageurl.value,
                                                   );
                                                   Get.log(
-                                                      '${controller.imagesimilarity.value}');
+                                                    '${controller.imagesimilarity.value}',
+                                                  );
                                                   if (controller.imagesimilarity
                                                           .value <=
                                                       0.36) {

@@ -47,7 +47,7 @@ class PhotoChallenge extends StatelessWidget {
                 // description:
                 //     'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
                 description: 'qrDescription'.tr,
-                iconData: Icons.qr_code_scanner,
+                iconData: Icons.camera_alt,
                 isLightMode: themeController.isLightMode.value,
               );
             },

@@ -1143,6 +1143,24 @@ class HomeView extends GetView<HomeController> {
                                                                               ),
                                                                             ),
                                                                           if (alarm
+                                                                              .isPhotochallengeEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(
+                                                                                horizontal: 3.0,
+                                                                              ),
+                                                                              child: Icon(
+                                                                                Icons.camera_alt,
+                                                                                size: 24,
+                                                                                color: alarm.isEnabled == true
+                                                                                    ? themeController.isLightMode.value
+                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
+                                                                                        : kprimaryTextColor.withOpacity(0.5)
+                                                                                    : themeController.isLightMode.value
+                                                                                        ? kLightPrimaryDisabledTextColor
+                                                                                        : kprimaryDisabledTextColor,
+                                                                              ),
+                                                                            ),
+                                                                          if (alarm
                                                                               .isShakeEnabled)
                                                                             Padding(
                                                                               padding: const EdgeInsets.symmetric(
