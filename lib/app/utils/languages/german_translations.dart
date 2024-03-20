@@ -48,7 +48,8 @@ class GermanTranslations extends Translations {
           'Yes': 'Ja',
           'No': 'Nein',
           'Confirmation': 'Bestätigung',
-          'want to delete?': 'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
+          'want to delete?':
+              'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
           'You cannot join your own alarm!':
               'Sie können Ihrem eigenen Alarm nicht beitreten!',
           'An alarm with this ID doesn\'t exist!':
@@ -156,6 +157,15 @@ class GermanTranslations extends Translations {
           'QR/Bar Code': 'QR-/Strichcode',
           'qrDescription':
               'Scannen Sie den QR-/Strichcode auf einem Objekt wie einem Buch und verschieben Sie es in einen anderen Raum. Zum Deaktivieren des Alarms scannen Sie einfach denselben QR-/Strichcode erneut.',
+//photo_challenge_tile.dart
+
+          'Take': 'Aufnehmen',
+          'Retake': 'Erneut aufnehmen',
+          'Disable': 'Deaktivieren',
+          'Photo': 'Foto',
+          'photoDescription':
+              'Die ultimative Foto-Challenge-App, die das Erfassen von Momenten in ein aufregendes Spiel verwandelt! Machen Sie ein Foto, um die Herausforderung zu starten, und versuchen Sie dann, es schnellstmöglich nachzustellen, um den Alarm zu stoppen. Sind Sie bereit für die Herausforderung?',
+
 //repeat_once_tile.dart
           'Repeat only once': 'Nur einmal wiederholen',
 //repeat_tile.dart

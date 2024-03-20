@@ -134,6 +134,13 @@ class AppTranslations extends Translations {
           'QR/Bar Code': 'QR/Bar Code',
           'qrDescription':
               'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
+          //photo_challenge_tile.dart
+          'Take': 'Take',
+          'Retake': 'Retake',
+          'Disable': 'Disable',
+          'Photo': 'Photo',
+          'photoDescription':
+              'The ultimate photo challenge app that turns capturing moments into an exhilarating game! Snap a shot to kickstart the challenge, then race against the clock to recreate it and silence the alarm. Are you up for the challenge?',
           //repeat_once_tile.dart
           'Repeat only once': 'Repeat only once',
           //repeat_tile.dart

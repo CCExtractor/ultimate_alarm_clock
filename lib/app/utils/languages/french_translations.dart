@@ -55,7 +55,8 @@ class FrenchTranslations extends Translations {
           'Yes': 'Oui',
           'No': 'Non',
           'Confirmation': 'Confirmation',
-          'want to delete?': 'Êtes-vous sûr de vouloir supprimer cette alarme ?',
+          'want to delete?':
+              'Êtes-vous sûr de vouloir supprimer cette alarme ?',
           'You cannot join your own alarm!':
               'Vous ne pouvez pas rejoindre votre propre réveil !',
           'An alarm with this ID doesn\'t exist!':
@@ -161,6 +162,15 @@ class FrenchTranslations extends Translations {
           'QR/Bar Code': 'QR/Code-barres',
           'qrDescription':
               'Scannez le QR/Code-barres sur n\'importe quel objet, comme un livre, et déplacez-le dans une pièce différente. Pour désactiver l\'alarme, scannez à nouveau le même QR/Code-barres.',
+
+//photo_challenge_tile.dart
+          'Take': 'Prendre',
+          'Retake': 'Reprendre',
+          'Disable': 'Désactiver',
+          'Photo': 'Photo',
+          'photoDescription':
+              "L'application ultime de défi photo qui transforme la capture de moments en un jeu palpitant ! Prenez une photo pour lancer le défi, puis défiez le temps pour la recréer et arrêter l'alarme. Êtes-vous prêt pour le défi ?",
+
 //repeat_once_tile.dart
           'Repeat only once': 'Répéter une seule fois',
 //repeat_tile.dart
