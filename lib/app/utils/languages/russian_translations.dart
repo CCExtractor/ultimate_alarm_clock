@@ -51,6 +51,10 @@ class RussianTranslations extends Translations {
           'Create alarm': 'Создать будильник',
           'Join alarm': 'Присоединиться к будильнику',
           'Okay': 'Хорошо',
+          'Yes': 'Да',
+          'No': 'Нет',
+          'Confirmation': 'подтверждение',
+          'want to delete?': 'Вы уверены, что хотите удалить этот будильник?',
           'You cannot join your own alarm!':
               'Вы не можете присоединиться к собственной тревоге!',
           'An alarm with this ID doesn\'t exist!':

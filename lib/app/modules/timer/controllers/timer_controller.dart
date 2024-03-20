@@ -18,7 +18,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   Rx<Timer?> countdownTimer = Rx<Timer?>(null);
   AlarmModel alarmRecord = Utils.genFakeAlarmModel();
   late int currentTimerIsarId;
-  var hours=0.obs, minutes=1.obs, seconds=0.obs;
+  var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
 
   final _secureStorageProvider = SecureStorageProvider();
 
@@ -35,15 +35,6 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
     super.onClose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      loadTimerStateFromStorage();
-    }
   }
 
   void saveTimerStateToStorage() async {

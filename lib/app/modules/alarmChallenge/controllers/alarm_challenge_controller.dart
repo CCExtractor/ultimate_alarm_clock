@@ -106,7 +106,7 @@ class AlarmChallengeController extends GetxController {
     );
 
     final result = similarity;
-    Get.log('${result}');
+    // Get.log('${result}');
     return result;
   }
 

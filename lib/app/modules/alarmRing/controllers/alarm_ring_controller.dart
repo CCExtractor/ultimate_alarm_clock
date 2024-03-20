@@ -66,6 +66,10 @@ class AlarmControlController extends GetxController {
     return latestAlarm;
   }
 
+  void addMinutes(int incrementMinutes) {
+    minutes.value += incrementMinutes;
+  }
+
   void startSnooze() async {
     Vibration.cancel();
     vibrationTimer!.cancel();
