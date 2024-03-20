@@ -761,7 +761,7 @@ class AddOrUpdateAlarmController extends GetxController {
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
-        title: 'Capture a Photo',
+        title: 'Capture a Photo'.tr,
         titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
         content: Obx(
           () => Column(
@@ -785,7 +785,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
-                      'Save',
+                      'Save'.tr,
                       style: Theme.of(Get.context!)
                           .textTheme
                           .displaySmall!
@@ -804,7 +804,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
-                      'Retake',
+                      'Retake'.tr,
                       style: Theme.of(Get.context!)
                           .textTheme
                           .displaySmall!
@@ -842,7 +842,7 @@ class AddOrUpdateAlarmController extends GetxController {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        'Disable',
+                        'Disable'.tr,
                         style: Theme.of(Get.context!)
                             .textTheme
                             .displaySmall!

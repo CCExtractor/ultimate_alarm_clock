@@ -167,6 +167,8 @@ class SpanishTranslations extends Translations {
           'Foto': 'Foto',
           'photoDescription':
               '¡La aplicación definitiva de desafío fotográfico que convierte la captura de momentos en un emocionante juego! Toma una foto para comenzar el desafío, luego compite contra el reloj para recrearla y silenciar la alarma. ¿Estás listo para el desafío?',
+          'Take Photo': 'Tomar foto',
+          'Capture a Photo': 'Capturar una foto',
 
 //repeat_once_tile.dart
           'Repeat only once': 'Repetir solo una vez',

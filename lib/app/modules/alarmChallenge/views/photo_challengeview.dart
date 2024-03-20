@@ -107,7 +107,7 @@ class PhotoChallengeView extends GetView<AlarmChallengeController> {
                                               ),
                                             ),
                                             child: Text(
-                                              'Take Photo',
+                                              'Take Photo'.tr,
                                               style: Theme.of(Get.context!)
                                                   .textTheme
                                                   .displaySmall!

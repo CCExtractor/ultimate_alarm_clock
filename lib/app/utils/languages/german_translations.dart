@@ -165,6 +165,8 @@ class GermanTranslations extends Translations {
           'Photo': 'Foto',
           'photoDescription':
               'Die ultimative Foto-Challenge-App, die das Erfassen von Momenten in ein aufregendes Spiel verwandelt! Machen Sie ein Foto, um die Herausforderung zu starten, und versuchen Sie dann, es schnellstmöglich nachzustellen, um den Alarm zu stoppen. Sind Sie bereit für die Herausforderung?',
+          'Take Photo': 'Foto machen',
+          'Capture a Photo': 'Foto aufnehmen',
 
 //repeat_once_tile.dart
           'Repeat only once': 'Nur einmal wiederholen',

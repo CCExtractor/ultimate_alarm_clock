@@ -86,7 +86,7 @@ class AppTranslations extends Translations {
           'Leave': 'Leave',
           'Save': 'Save',
           'Update': 'Update',
-          'Rings in @timeToAlarm': 'Rings in @timeToAlarm',
+          // 'Rings in @timeToAlarm': 'Rings in @timeToAlarm',
           'Uh-oh!': 'Uh-oh!',
           'alarmEditing': 'This alarm is currently being edited!',
           'Go back': 'Go back',
@@ -141,6 +141,10 @@ class AppTranslations extends Translations {
           'Photo': 'Photo',
           'photoDescription':
               'The ultimate photo challenge app that turns capturing moments into an exhilarating game! Snap a shot to kickstart the challenge, then race against the clock to recreate it and silence the alarm. Are you up for the challenge?',
+
+          'Take Photo': 'Tak1 Photo',
+          'Capture a Photo': 'Capture a Photo',
+
           //repeat_once_tile.dart
           'Repeat only once': 'Repeat only once',
           //repeat_tile.dart
@@ -164,7 +168,7 @@ class AppTranslations extends Translations {
           'times': 'times',
           'time': 'time',
           //'shared_alarm_tile.dart
-          'Shared Alarm': 'Shared Alarm',
+          // 'Shared Alarm': 'Shared Alarm',
           'Shared alarms': 'Shared alarms',
           'sharedDescription':
               'Share alarms with others using the Alarm ID. Each shared user can choose to have their alarm ring before or after the set time.',
@@ -203,7 +207,7 @@ class AppTranslations extends Translations {
           //qr_challenge_view.dart
           'Scan your QR/Bar Code!': 'Scan your QR/Bar Code!',
           'Wrong Code Scanned!': 'Wrong Code Scanned!',
-          'Retake': 'Retake',
+
           //shake_challenge_view.dart
           'Shake your phone!': 'Shake your phone!',
           //alarm_ring_view.dart

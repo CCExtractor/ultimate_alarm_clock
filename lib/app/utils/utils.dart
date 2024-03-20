@@ -566,6 +566,7 @@ class Utils {
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       builder: (context) {
+        Get.log(description.tr);
         return Center(
           child: Padding(
             padding: const EdgeInsets.all(25.0),

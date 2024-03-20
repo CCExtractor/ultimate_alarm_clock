@@ -170,7 +170,8 @@ class FrenchTranslations extends Translations {
           'Photo': 'Photo',
           'photoDescription':
               "L'application ultime de défi photo qui transforme la capture de moments en un jeu palpitant ! Prenez une photo pour lancer le défi, puis défiez le temps pour la recréer et arrêter l'alarme. Êtes-vous prêt pour le défi ?",
-
+          'Take Photo': 'Prendre une photo',
+          'Capture a Photo': 'Capturer une photo',
 //repeat_once_tile.dart
           'Repeat only once': 'Répéter une seule fois',
 //repeat_tile.dart
