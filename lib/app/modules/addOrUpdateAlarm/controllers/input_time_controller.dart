@@ -28,6 +28,7 @@ class InputTimeController extends GetxController {
   @override
   void onInit() {
     isTimePicker.value = true;
+    isTimePickerTimer.value = true;
     selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
     isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
     inputHrsController.text = settingsController.is24HrsEnabled.value
