@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -190,7 +190,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           debugPrint(e.toString());
                         }
 
-                        await controller.checkOverlayPermissionAndNavigate();
+                        if(Platform.isAndroid){
+                          await controller.checkOverlayPermissionAndNavigate();
+                        }
+                        else{
+                          Get.back();
+                        }
                       },
                     ),
                   ),
