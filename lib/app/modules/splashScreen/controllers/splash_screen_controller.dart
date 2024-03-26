@@ -14,6 +14,7 @@ import 'package:weather/weather.dart';
 
 class SplashScreenController extends GetxController {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
+  MethodChannel timerChannel = const MethodChannel('timer');
 
   bool shouldAlarmRing = true;
   bool shouldNavigate = true;
@@ -107,9 +108,21 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    timerChannel.setMethodCallHandler((call) async {
+      if (call.method == 'appStartup') {
+        bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
+
+        bool isAlarmIgnored = call.arguments['alarmIgnore'];
+        if (shouldAlarmRing == true) {
+          shouldNavigate = false;
+          Get.offNamed('/timer-ring');
+        }
+      }
+    });
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
+
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
           shouldNavigate = false;
@@ -154,83 +167,73 @@ class SplashScreenController extends GetxController {
               }
             }
 
-            bool isTimer = latestAlarm.isTimer;
-
-            if (isTimer) {
-              int timerId = await _secureStorageProvider.readTimerId();
-              await IsarDb.deleteAlarm(timerId);
-              Get.offNamed('/timer-ring');
+            if (shouldAlarmRing) {
+              Get.offNamed('/alarm-ring');
             } else {
-              if (shouldAlarmRing) {
-                Get.offNamed('/alarm-ring');
-              } else {
-                currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
-                // If the alarm is set to NEVER repeat, then it will be chosen as
-                // the next alarm to ring by default as it would ring the next day
+              currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+              // If the alarm is set to NEVER repeat, then it will be chosen as
+              // the next alarm to ring by default as it would ring the next day
+              if (currentlyRingingAlarm.value.days
+                  .every((element) => element == false)) {
+                currentlyRingingAlarm.value.isEnabled = false;
+
+                if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+                  IsarDb.updateAlarm(currentlyRingingAlarm.value);
+                } else {
+                  FirestoreDb.updateAlarm(
+                    currentlyRingingAlarm.value.ownerId,
+                    currentlyRingingAlarm.value,
+                  );
+                }
+              } else if (currentlyRingingAlarm.value.isOneTime == true) {
+                // If the alarm has to repeat on one day, but ring just once,
+                // we will keep seting its days to false until it will never ring
+                int currentDay = DateTime.now().weekday - 1;
+                currentlyRingingAlarm.value.days[currentDay] = false;
+
                 if (currentlyRingingAlarm.value.days
                     .every((element) => element == false)) {
                   currentlyRingingAlarm.value.isEnabled = false;
-
-                  if (currentlyRingingAlarm.value.isSharedAlarmEnabled ==
-                      false) {
-                    IsarDb.updateAlarm(currentlyRingingAlarm.value);
-                  } else {
-                    FirestoreDb.updateAlarm(
-                      currentlyRingingAlarm.value.ownerId,
-                      currentlyRingingAlarm.value,
-                    );
-                  }
-                } else if (currentlyRingingAlarm.value.isOneTime == true) {
-                  // If the alarm has to repeat on one day, but ring just once,
-                  // we will keep seting its days to false until it will never ring
-                  int currentDay = DateTime.now().weekday - 1;
-                  currentlyRingingAlarm.value.days[currentDay] = false;
-
-                  if (currentlyRingingAlarm.value.days
-                      .every((element) => element == false)) {
-                    currentlyRingingAlarm.value.isEnabled = false;
-                  }
-
-                  if (currentlyRingingAlarm.value.isSharedAlarmEnabled ==
-                      false) {
-                    IsarDb.updateAlarm(currentlyRingingAlarm.value);
-                  } else {
-                    FirestoreDb.updateAlarm(
-                      currentlyRingingAlarm.value.ownerId,
-                      currentlyRingingAlarm.value,
-                    );
-                  }
                 }
 
-                AlarmModel latestAlarm = await getNextAlarm();
+                if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+                  IsarDb.updateAlarm(currentlyRingingAlarm.value);
+                } else {
+                  FirestoreDb.updateAlarm(
+                    currentlyRingingAlarm.value.ownerId,
+                    currentlyRingingAlarm.value,
+                  );
+                }
+              }
 
-                TimeOfDay latestAlarmTimeOfDay =
-                    Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+              AlarmModel latestAlarm = await getNextAlarm();
+
+              TimeOfDay latestAlarmTimeOfDay =
+                  Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 // This condition will never satisfy because this will only occur if fake mode
 // is returned as latest alarm
-                if (latestAlarm.isEnabled == false) {
-                  debugPrint('STOPPED IF CONDITION with latest = '
-                      '${latestAlarmTimeOfDay.toString()} and ');
-                  await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
-                } else {
-                  int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-                    DateTime.now(),
-                    Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-                  );
+              if (latestAlarm.isEnabled == false) {
+                debugPrint('STOPPED IF CONDITION with latest = '
+                    '${latestAlarmTimeOfDay.toString()} and ');
+                await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+              } else {
+                int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+                  DateTime.now(),
+                  Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+                );
 
-                  try {
-                    await alarmChannel.invokeMethod(
-                        'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
-                    print("Scheduled...");
-                  } on PlatformException catch (e) {
-                    print("Failed to schedule alarm: ${e.message}");
-                  }
+                try {
+                  await alarmChannel.invokeMethod(
+                      'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+                  print("Scheduled...");
+                } on PlatformException catch (e) {
+                  print("Failed to schedule alarm: ${e.message}");
                 }
-
-                Get.offNamed('/bottom-navigation-bar');
-
-                alarmChannel.invokeMethod('minimizeApp');
               }
+
+              Get.offNamed('/bottom-navigation-bar');
+
+              alarmChannel.invokeMethod('minimizeApp');
             }
           }
         }

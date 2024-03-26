@@ -9,6 +9,7 @@ import 'dart:math';
 
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
@@ -86,6 +87,11 @@ class Utils {
   }
 
 // Adding an extra day since this function is used for scheduling service
+  static int getMillisecondsToTimer(DateTime now, DateTime timerTime) {
+    int milliseconds = timerTime.difference(now).inMilliseconds;
+    return milliseconds;
+  }
+
   static int getMillisecondsToAlarm(DateTime now, DateTime alarmTime) {
     if (alarmTime.isBefore(now)) {
       alarmTime = alarmTime.add(const Duration(days: 1));
@@ -349,6 +355,15 @@ class Utils {
   }
 
   // Utility function to create a dummy model to pass to functions
+  static TimerModel genFakeTimerModel() {
+    return TimerModel(
+      intervalToAlarm: 0,
+      mainTimerTime: '',
+      ringtoneName: '',
+      timerTime: Utils.timeOfDayToString(TimeOfDay.now()),
+    );
+  }
+
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
       volMax: 1.0,
@@ -389,7 +404,6 @@ class Utils {
       ringtoneName: 'Default',
       note: '',
       showMotivationalQuote: false,
-      isTimer: false,
     );
   }
 

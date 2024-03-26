@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class IsarDb {
@@ -41,6 +42,7 @@ class IsarDb {
   static Future<AlarmModel> getTriggeredAlarm(String time) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
+
     final alarms = await db.alarmModels
         .where()
         .filter()
@@ -105,10 +107,10 @@ class IsarDb {
 
         // If alarm is one-time and has already passed or is happening now,
         // set time until next alarm to next day
-        if (!aRepeats && aTimeUntilNextAlarm < 0 && !a.isTimer) {
+        if (!aRepeats && aTimeUntilNextAlarm < 0) {
           aTimeUntilNextAlarm += Duration.minutesPerDay;
         }
-        if (!bRepeats && bTimeUntilNextAlarm < 0 && !b.isTimer) {
+        if (!bRepeats && bTimeUntilNextAlarm < 0) {
           bTimeUntilNextAlarm += Duration.minutesPerDay;
         }
 

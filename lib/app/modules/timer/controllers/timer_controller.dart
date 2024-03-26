@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
 class TimerController extends GetxController with WidgetsBindingObserver {
+  MethodChannel timerChannel = const MethodChannel('timer');
   final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   final currentTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
@@ -16,7 +19,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
   Rx<Timer?> countdownTimer = Rx<Timer?>(null);
-  AlarmModel alarmRecord = Utils.genFakeAlarmModel();
+  TimerModel timerRecord = Utils.genFakeTimerModel();
   late int currentTimerIsarId;
   var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
 
@@ -103,24 +106,20 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void createTimer() async {
-    alarmRecord.label = 'Timer';
-    alarmRecord.isOneTime = true;
-    alarmRecord.alarmID = const Uuid().v4();
-    alarmRecord.alarmTime = Utils.formatDateTimeToHHMMSS(
+    timerRecord.timerTime = Utils.formatDateTimeToHHMMSS(
       DateTime.now().add(remainingTime.value),
     );
-    alarmRecord.mainAlarmTime = Utils.formatDateTimeToHHMMSS(
+    timerRecord.mainTimerTime = Utils.formatDateTimeToHHMMSS(
       DateTime.now().add(remainingTime.value),
     );
-    alarmRecord.intervalToAlarm = Utils.getMillisecondsToAlarm(
+    timerRecord.intervalToAlarm = Utils.getMillisecondsToAlarm(
       DateTime.now(),
       DateTime.now().add(remainingTime.value),
     );
-    alarmRecord.ringtoneName = 'Default';
-    alarmRecord.isEnabled = true;
-    alarmRecord.isTimer = true;
-    await IsarDb.addAlarm(alarmRecord);
-    await _secureStorageProvider.writeTimerId(timerId: alarmRecord.isarId);
+    timerRecord.ringtoneName = 'Default';
+    scheduleTimer(timerRecord);
+
+    await _secureStorageProvider.writeTimerId(timerId: timerRecord.isarId);
   }
 
   void startTimer() async {
@@ -139,6 +138,27 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     }
   }
 
+  scheduleTimer(TimerModel timerRecord) async {
+    DateTime? timerDateTime = Utils.stringToDateTime(timerRecord.timerTime);
+    if (timerDateTime != null) {
+      await timerChannel.invokeMethod('cancelTimer');
+      int intervaltoTimer = Utils.getMillisecondsToTimer(
+        DateTime.now(),
+        timerDateTime,
+      );
+      try {
+        await timerChannel
+            .invokeMethod('scheduleTimer', {'milliSeconds': intervaltoTimer});
+      } on PlatformException catch (e) {
+        print("Failed to schedule alarm: ${e.message}");
+      }
+    }
+  }
+
+  cancelTimer() async {
+    await timerChannel.invokeMethod('cancelTimer');
+  }
+
   void stopTimer() async {
     countdownTimer.value?.cancel();
     isTimerPaused.value = false;
@@ -151,7 +171,6 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     );
     currentTime.value = const Duration(hours: 0, minutes: 0, seconds: 0);
     startTime.value = 0;
-
     await _secureStorageProvider.removeRemainingTimeInSeconds();
     await _secureStorageProvider.removeStartTime();
     await _secureStorageProvider.writeIsTimerRunning(isTimerRunning: false);
@@ -163,7 +182,7 @@ class TimerController extends GetxController with WidgetsBindingObserver {
     isTimerPaused.value = true;
 
     saveTimerStateToStorage();
-
+    await cancelTimer();
     int timerId = await SecureStorageProvider().readTimerId();
     await IsarDb.deleteAlarm(timerId);
   }

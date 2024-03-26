@@ -20,7 +20,7 @@ class ChooseRingtoneTile extends StatelessWidget {
   final double height;
   final double width;
 
- void onTapPreview(String ringtonePath) async {
+  void onTapPreview(String ringtonePath) async {
     Utils.hapticFeedback();
 
     // Stop the currently playing audio before starting the preview for the new
@@ -217,7 +217,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     onPressed: () async {
                       Utils.hapticFeedback();
                       controller.previousRingtone =
-                      controller.customRingtoneName.value;
+                          controller.customRingtoneName.value;
                       await controller.saveCustomRingtone();
                     },
                     child: Text(

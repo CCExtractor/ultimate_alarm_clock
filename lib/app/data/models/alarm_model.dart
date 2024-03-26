@@ -48,7 +48,7 @@ class AlarmModel {
   late String note;
   late bool deleteAfterGoesOff;
   late bool showMotivationalQuote;
-  late bool isTimer;
+
   late double volMax;
   late double volMin;
 
@@ -93,7 +93,6 @@ class AlarmModel {
     required this.note,
     required this.deleteAfterGoesOff,
     required this.showMotivationalQuote,
-    required this.isTimer,
     required this.volMax,
     required this.volMin,
   });
@@ -154,7 +153,7 @@ class AlarmModel {
     note = documentSnapshot['note'];
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
     showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
-    isTimer = documentSnapshot['isTimer'];
+
     volMax = documentSnapshot['volMax'];
     volMin = documentSnapshot['volMin'];
   }
@@ -200,7 +199,7 @@ class AlarmModel {
     note = alarmData['note'];
     deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
     showMotivationalQuote = alarmData['showMotivationalQuote'];
-    isTimer = alarmData['isTimer'];
+
     volMin = alarmData['volMin'];
     volMax = alarmData['volMax'];
   }
@@ -251,7 +250,6 @@ class AlarmModel {
       'note': alarmRecord.note,
       'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
       'showMotivationalQuote': alarmRecord.showMotivationalQuote,
-      'isTimer': alarmRecord.isTimer,
       'volMin': alarmRecord.volMin,
       'volMax': alarmRecord.volMax,
     };
