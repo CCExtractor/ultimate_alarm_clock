@@ -526,75 +526,85 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
-        title: 'Camera Permission'.tr,
-        titleStyle: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : Colors.white,
+  backgroundColor: themeController.isLightMode.value
+      ? kLightSecondaryBackgroundColor
+      : ksecondaryBackgroundColor,
+  title: 'Camera Permission'.tr,
+  titleStyle: TextStyle(
+    color: themeController.isLightMode.value
+        ? kLightPrimaryTextColor
+        : Colors.white,
+  ),
+  titlePadding: const EdgeInsets.only(
+    top: 25,
+    left: 10,
+  ),
+  contentPadding: const EdgeInsets.only(top: 20, left: 20, right: 20,bottom: 23),
+  content: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Center(
+        child: Text(
+          'Please allow camera access to scan QR codes.'.tr,
+          textAlign: TextAlign.center,
         ),
-        titlePadding: const EdgeInsets.only(
-          top: 25,
-          left: 10,
-        ),
-        contentPadding: const EdgeInsets.only(top: 20, left: 20, bottom: 23),
-        content: Text('Please allow camera access to scan QR codes.'.tr),
-        onCancel: () {
-          Get.back(); // Close the alert box
-        },
-        onConfirm: () async {
-          Get.back(); // Close the alert box
-          PermissionStatus permissionStatus = await Permission.camera.request();
-          if (permissionStatus.isGranted) {
-            // Permission granted, proceed with QR code scanning
-            showQRDialog();
-          }
-        },
-        confirm: TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+      ),
+    ],
+  ),
+  onCancel: () {
+    Get.back(); // Close the alert box
+  },
+  onConfirm: () async {
+    Get.back(); // Close the alert box
+    PermissionStatus permissionStatus = await Permission.camera.request();
+    if (permissionStatus.isGranted) {
+      // Permission granted, proceed with QR code scanning
+      showQRDialog();
+    }
+  },
+  confirm: TextButton(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+    ),
+    child: Text(
+      'OK',
+      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : ksecondaryTextColor,
           ),
-          child: Text(
-            'OK',
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : ksecondaryTextColor,
-                ),
+    ),
+    onPressed: () async {
+      Get.back(); // Close the alert box
+      PermissionStatus permissionStatus =
+          await Permission.camera.request();
+      if (permissionStatus.isGranted) {
+        // Permission granted, proceed with QR code scanning
+        showQRDialog();
+      }
+    },
+  ),
+  cancel: TextButton(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(
+        themeController.isLightMode.value
+            ? kLightPrimaryTextColor.withOpacity(0.5)
+            : kprimaryTextColor.withOpacity(0.5),
+      ),
+    ),
+    child: Text(
+      'Cancel',
+      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+            color: themeController.isLightMode.value
+                ? kLightPrimaryTextColor
+                : kprimaryTextColor,
           ),
-          onPressed: () async {
-            Get.back(); // Close the alert box
-            PermissionStatus permissionStatus =
-                await Permission.camera.request();
-            if (permissionStatus.isGranted) {
-              // Permission granted, proceed with QR code scanning
-              showQRDialog();
-            }
-          },
-        ),
-        cancel: TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              themeController.isLightMode.value
-                  ? kLightPrimaryTextColor.withOpacity(0.5)
-                  : kprimaryTextColor.withOpacity(0.5),
-            ),
-          ),
-          child: Text(
-            'Cancel',
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
-                ),
-          ),
-          onPressed: () {
-            Get.back(); // Close the alert box
-          },
-        ),
-      );
+    ),
+    onPressed: () {
+      Get.back(); // Close the alert box
+    },
+  ),
+);
     } else {
       showQRDialog();
     }
