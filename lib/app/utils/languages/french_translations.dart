@@ -56,6 +56,7 @@ class FrenchTranslations extends Translations {
           'No': 'Non',
           'Confirmation': 'Confirmation',
           'want to delete?': 'Êtes-vous sûr de vouloir supprimer cette alarme ?',
+          'delete' : 'supprimer',
           'You cannot join your own alarm!':
               'Vous ne pouvez pas rejoindre votre propre réveil !',
           'An alarm with this ID doesn\'t exist!':

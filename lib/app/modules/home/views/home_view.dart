@@ -1411,15 +1411,15 @@ class HomeView extends GetView<HomeController> {
                     Get.back(result: false);
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: MaterialStateProperty.all(
+                      kprimaryTextColor.withOpacity(0.5),
+                    )),
+                    child: Text(
+                      'Cancel'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!,
+                    ),
                   ),
-                  child: Text(
-                    'No'.tr,
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: kprimaryBackgroundColor,
-                        ),
-                  ),
-                ),
+
                 TextButton(
                   onPressed: () {
                     Get.back(result: true); // User confirmed
@@ -1428,7 +1428,7 @@ class HomeView extends GetView<HomeController> {
                     backgroundColor: MaterialStateProperty.all(kprimaryColor),
                   ),
                   child: Text(
-                    'Yes'.tr,
+                    'delete'.tr,
                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
                           color: kprimaryBackgroundColor,
                         ),
