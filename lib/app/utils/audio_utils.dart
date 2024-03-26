@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -12,6 +13,7 @@ class AudioUtils {
   static final audioPlayer = audioplayer.AudioPlayer();
 
   static MethodChannel alarmChannel = const MethodChannel('ulticlock');
+  static MethodChannel timerChannel = const MethodChannel('timer');
 
   static AudioSession? audioSession;
 
@@ -92,10 +94,55 @@ class AudioUtils {
     }
   }
 
+  static void playTimer({
+    required TimerModel alarmRecord,
+  }) async {
+    try {
+      if (audioSession == null) {
+        await initializeAudioSession();
+      }
+
+      await audioSession!.setActive(true);
+
+      String ringtoneName = alarmRecord.ringtoneName;
+
+      if (ringtoneName == 'Default') {
+        await alarmChannel.invokeMethod('playDefaultAlarm');
+      } else {
+        int customRingtoneId = fastHash(ringtoneName);
+        RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+          customRingtoneId: customRingtoneId,
+        );
+
+        if (customRingtone != null) {
+          String customRingtonePath = customRingtone.ringtonePath;
+          await playCustomSound(customRingtonePath);
+        } else {
+          await timerChannel.invokeMethod('playDefaultAlarm');
+
+          alarmRecord.ringtoneName = 'Default';
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   static Future<void> stopDefaultAlarm() async {
     try {
       if (audioSession != null) {
         await alarmChannel.invokeMethod('stopDefaultAlarm');
+        await audioSession!.setActive(false);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> stopDefaultTimer() async {
+    try {
+      if (audioSession != null) {
+        await timerChannel.invokeMethod('stopDefaultAlarm');
         await audioSession!.setActive(false);
       }
     } catch (e) {
@@ -127,7 +174,7 @@ class AudioUtils {
           await audioSession!.setActive(true);
           await playCustomSound(customRingtonePath);
           isPreviewing = true;
-        } 
+        }
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -154,6 +201,24 @@ class AudioUtils {
       if (audioSession != null) {
         if (ringtoneName == 'Default') {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
+        } else {
+          await audioPlayer.stop();
+        }
+
+        await audioSession!.setActive(false);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static void stopTimer({
+    required String ringtoneName,
+  }) async {
+    try {
+      if (audioSession != null) {
+        if (ringtoneName == 'Default') {
+          await timerChannel.invokeMethod('stopDefaultAlarm');
         } else {
           await audioPlayer.stop();
         }

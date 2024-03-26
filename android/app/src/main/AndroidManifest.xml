@@ -37,7 +37,15 @@
             </intent-filter>
         </receiver>
 
-
+        <receiver
+            android:name=".TimerReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- Other necessary actions -->
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"

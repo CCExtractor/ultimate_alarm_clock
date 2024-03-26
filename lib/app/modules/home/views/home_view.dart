@@ -586,7 +586,7 @@ class HomeView extends GetView<HomeController> {
                                                         children: [
                                                           // All alarm select button
                                                           ToggleButton(
-                                                              controller:
+                                                            controller:
                                                                 controller,
                                                             isSelected: controller
                                                                 .isAllAlarmsSelected,
@@ -709,9 +709,7 @@ class HomeView extends GetView<HomeController> {
                                   } else {
                                     List<AlarmModel> alarms = snapshot.data;
 
-                                    alarms = alarms
-                                        .where((alarm) => !alarm.isTimer)
-                                        .toList();
+                                    alarms = alarms.toList();
                                     controller.refreshTimer = true;
                                     controller.refreshUpcomingAlarms();
                                     if (alarms.isEmpty) {
