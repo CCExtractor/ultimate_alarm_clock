@@ -155,6 +155,8 @@ class SharedAlarm extends StatelessWidget {
                       title: 'Disabled!'.tr,
                       titleStyle: Theme.of(context).textTheme.displaySmall,
                       content: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -162,12 +164,11 @@ class SharedAlarm extends StatelessWidget {
                             child: Text(
                               'To use this feature, you have to link your Google account!'
                                   .tr,
+                              textAlign: TextAlign.center,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10.0,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
