@@ -24,8 +24,8 @@ class SharedUsers extends StatelessWidget {
     return Obx(
       () => Container(
         child: (controller.isSharedAlarmEnabled.value &&
-                controller.alarmRecord != null)
-            ? (controller.alarmRecord!.ownerId !=
+                controller.alarmRecord.value != null)
+            ? (controller.alarmRecord.value!.ownerId !=
                     controller.userModel.value!.id)
                 ? ListTile(
                     title: Text(
@@ -37,7 +37,7 @@ class SharedUsers extends StatelessWidget {
                       ),
                     ),
                     trailing: Text(
-                      controller.alarmRecord!.ownerName,
+                      controller.alarmRecord.value!.ownerName,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: themeController.isLightMode.value
                                 ? kLightPrimaryDisabledTextColor
