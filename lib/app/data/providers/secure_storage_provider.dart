@@ -136,69 +136,6 @@ class SecureStorageProvider {
     );
   }
 
-  Future<bool> readIsTimerRunning() async {
-    return await _secureStorage.read(key: 'is_timer_running') == 'true';
-  }
-
-  Future<void> writeIsTimerRunning({
-    required bool isTimerRunning,
-  }) async {
-    await _secureStorage.write(
-      key: 'is_timer_running',
-      value: isTimerRunning.toString(),
-    );
-  }
-
-  Future<bool> readIsTimerPaused() async {
-    return await _secureStorage.read(key: 'is_timer_paused') == 'true';
-  }
-
-  Future<void> writeIsTimerPaused({
-    required bool isTimerPaused,
-  }) async {
-    await _secureStorage.write(
-      key: 'is_timer_paused',
-      value: isTimerPaused.toString(),
-    );
-  }
-
-  Future<int> readRemainingTimeInSeconds() async {
-    String remainingTime =
-        await _secureStorage.read(key: 'remaining_time_in_seconds') ?? '-1';
-    return int.parse(remainingTime);
-  }
-
-  Future<void> writeRemainingTimeInSeconds({
-    required int remainingTimeInSeconds,
-  }) async {
-    await _secureStorage.write(
-      key: 'remaining_time_in_seconds',
-      value: remainingTimeInSeconds.toString(),
-    );
-  }
-
-  Future<void> removeRemainingTimeInSeconds() async {
-    await _secureStorage.delete(key: 'remaining_time_in_seconds');
-  }
-
-  Future<int> readStartTime() async {
-    String startTime = await _secureStorage.read(key: 'start_time') ?? '-1';
-    return int.parse(startTime);
-  }
-
-  Future<void> writeStartTime({
-    required int startTime,
-  }) async {
-    await _secureStorage.write(
-      key: 'start_time',
-      value: startTime.toString(),
-    );
-  }
-
-  Future<void> removeStartTime() async {
-    await _secureStorage.delete(key: 'start_time');
-  }
-
   Future<int> readTimerId() async {
     String timerId = await _secureStorage.read(key: 'timer_id') ?? '-1';
     return int.parse(timerId);
