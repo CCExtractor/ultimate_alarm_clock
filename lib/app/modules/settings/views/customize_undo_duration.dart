@@ -49,7 +49,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 Slider(
-                  value: homeController.selecteddurationDouble.value,
+                  value: homeController.duration.value.toDouble(),
                   onChanged: (double value) {
                     homeController.selecteddurationDouble.value = value;
                     homeController.duration.value = value.toInt();
