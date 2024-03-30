@@ -685,11 +685,7 @@ class HomeView extends GetView<HomeController> {
                       axisDirection: AxisDirection.down,
                       child: Obx(() {
                         return FutureBuilder(
-                          future: controller.isUserSignedIn.value
-                              ? controller
-                                  .initStream(controller.userModel.value)
-                              : controller
-                                  .initStream(controller.userModel.value),
+                          future: controller.initStream(controller.userModel.value),
                           builder: (context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
                               final Stream streamAlarms = snapshot.data;
