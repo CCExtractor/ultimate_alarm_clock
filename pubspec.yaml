@@ -33,7 +33,7 @@ dependencies:
   url_launcher: ^6.1.11
   flutter_expandable_fab: ^1.8.1
   vibration: ^1.8.1
-  file_picker: ^6.1.1
+  file_picker: ^8.0.0+1
   audioplayers: ^5.2.1
   rxdart: ^0.27.7
   flutter:
