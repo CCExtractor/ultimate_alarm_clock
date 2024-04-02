@@ -49,6 +49,7 @@ class GermanTranslations extends Translations {
           'No': 'Nein',
           'Confirmation': 'Bestätigung',
           'want to delete?': 'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
+          'delete' : 'löschen',
           'You cannot join your own alarm!':
               'Sie können Ihrem eigenen Alarm nicht beitreten!',
           'An alarm with this ID doesn\'t exist!':

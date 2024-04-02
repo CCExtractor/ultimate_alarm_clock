@@ -71,12 +71,15 @@ class AlarmIDTile extends StatelessWidget {
                     title: 'Disabled!'.tr,
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: EdgeInsets.all(10.0),
                           child: Text(
                             //'To copy Alarm ID you have enable shared alarm!',
                             'toCopyAlarm'.tr,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         Padding(

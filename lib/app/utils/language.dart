@@ -57,6 +57,7 @@ class AppTranslations extends Translations {
           'No': 'No',
           'Confirmation': 'Confirmation',
           'want to delete?': 'Are you sure you want to delete this alarm?',
+          'delete' : 'Delete',
 
           'You cannot join your own alarm!': 'You cannot join your own alarm!',
           'An alarm with this ID doesn\'t exist!':
@@ -128,6 +129,9 @@ class AppTranslations extends Translations {
           'Solve Maths questions': 'Solve Maths questions',
           'questions': 'questions',
           'question': 'question',
+          //pedometer_challenge_tile.dart
+          'Pedometer': 'Pedometer',
+          'pedometerDescription': 'You will have to walk a set number of steps to dismiss the alarm.',
           //note.dart
           'Add a note': 'Add a note',
           // qr_bar_code_tile.dart

@@ -450,13 +450,16 @@ class WeatherTile extends StatelessWidget {
                     title: 'Disabled!'.tr,
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           'To use this feature, you have to add an OpenWeatherMap API key!'
                               .tr,
+                          textAlign: TextAlign.center,
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -467,7 +470,7 @@ class WeatherTile extends StatelessWidget {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                       MaterialStateProperty.all(
+                                          MaterialStateProperty.all(
                                         kprimaryColor,
                                       ),
                                     ),
@@ -505,12 +508,12 @@ class WeatherTile extends StatelessWidget {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                       MaterialStateProperty.all(
+                                          MaterialStateProperty.all(
                                         themeController.isLightMode.value
                                             ? kLightPrimaryTextColor
                                                 .withOpacity(0.5)
-                                            : kprimaryTextColor.
-                                            withOpacity(0.5),
+                                            : kprimaryTextColor
+                                                .withOpacity(0.5),
                                       ),
                                     ),
                                     child: FittedBox(

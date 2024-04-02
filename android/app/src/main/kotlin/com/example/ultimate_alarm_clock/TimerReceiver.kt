@@ -9,7 +9,7 @@ import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle
 
 
-class AlarmReceiver : BroadcastReceiver() {
+class TimerReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) {
             return
@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             putExtra("initialRoute", "/")
             putExtra("alarmRing", "true")
-            putExtra("isAlarm","true")
+            putExtra("isAlarm", "false")
         }
 
         println("ANDROID STARTING APP")

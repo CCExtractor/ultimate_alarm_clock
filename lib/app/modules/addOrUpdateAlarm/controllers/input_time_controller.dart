@@ -142,6 +142,20 @@ class InputTimeController extends GetxController {
     }
   }
 
+  void setTextFieldTimerTime() {
+    try {
+      String hours = timerController.hours.value.toString();
+      String minutes = timerController.minutes.value.toString();
+      String seconds = timerController.seconds.value.toString();
+
+      inputHoursControllerTimer.text = hours ;
+      inputMinutesControllerTimer.text=minutes;
+      inputSecondsControllerTimer.text = seconds ;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   void onClose() {
     inputHrsController.dispose();
