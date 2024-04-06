@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
-class InputTimeController extends GetxController {
+class AlarmInputTimeController extends GetxController {
   AddOrUpdateAlarmController addOrUpdateAlarmController =
       Get.find<AddOrUpdateAlarmController>();
-  TimerController timerController = Get.find<TimerController>();
   SettingsController settingsController = Get.find<SettingsController>();
-  final isTimePicker = false.obs;
-  final isTimePickerTimer = false.obs;
+
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
-  TextEditingController inputHoursControllerTimer = TextEditingController();
-  TextEditingController inputMinutesControllerTimer = TextEditingController();
-  TextEditingController inputSecondsControllerTimer = TextEditingController();
   final selectedDateTime = DateTime.now().obs;
-  bool isInputtingTime = false;
+  final isTimePicker = false.obs;
+  final isAM = true.obs;
 
   void confirmTimeInput() {
     setTime();
@@ -28,7 +22,6 @@ class InputTimeController extends GetxController {
   @override
   void onInit() {
     isTimePicker.value = true;
-    isTimePickerTimer.value = true;
     selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
     isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
     inputHrsController.text = settingsController.is24HrsEnabled.value
@@ -39,23 +32,16 @@ class InputTimeController extends GetxController {
                 ? (selectedDateTime.value.hour - 12).toString()
                 : selectedDateTime.value.hour.toString()));
     inputMinutesController.text = selectedDateTime.value.minute.toString();
-    inputHoursControllerTimer.text = timerController.hours.value.toString();
-    inputMinutesControllerTimer.text = timerController.minutes.value.toString();
-    inputSecondsControllerTimer.text = timerController.seconds.value.toString();
     super.onInit();
   }
 
-  final isAM = true.obs;
+  
   changePeriod(String period) {
     isAM.value = period == 'AM';
   }
 
   changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
-  }
-
-  changeTimePickerTimer() {
-    isTimePickerTimer.value = !isTimePickerTimer.value;
   }
 
   int convert24(int value) {
@@ -128,72 +114,11 @@ class InputTimeController extends GetxController {
     }
   }
 
-  void setTimerTime() {
-    try {
-      int hours = int.parse(inputHoursControllerTimer.text);
-      int minutes = int.parse(inputMinutesControllerTimer.text);
-      int seconds = int.parse(inputSecondsControllerTimer.text);
-
-      timerController.hours.value = hours;
-      timerController.minutes.value = minutes;
-      timerController.seconds.value = seconds;
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  void setTextFieldTimerTime() {
-    try {
-      String hours = timerController.hours.value.toString();
-      String minutes = timerController.minutes.value.toString();
-      String seconds = timerController.seconds.value.toString();
-
-      inputHoursControllerTimer.text = hours ;
-      inputMinutesControllerTimer.text=minutes;
-      inputSecondsControllerTimer.text = seconds ;
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
   @override
   void onClose() {
     inputHrsController.dispose();
     inputMinutesController.dispose();
-    inputHoursControllerTimer.dispose();
-    inputMinutesControllerTimer.dispose();
-    inputSecondsControllerTimer.dispose();
     super.onClose();
   }
 }
 
-class LimitRange extends TextInputFormatter {
-  LimitRange(
-    this.minRange,
-    this.maxRange,
-  ) : assert(
-          minRange < maxRange,
-        );
-
-  final int minRange;
-  final int maxRange;
-
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    try {
-      var value = int.parse(newValue.text);
-      if (value < minRange) {
-        return TextEditingValue(text: minRange.toString());
-      } else if (value > maxRange) {
-        return TextEditingValue(text: maxRange.toString());
-      }
-      return newValue;
-    } catch (e) {
-      debugPrint(e.toString());
-      return newValue;
-    }
-  }
-}

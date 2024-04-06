@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/alarm_input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/ascending_volume.dart';
@@ -31,6 +31,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_c
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/limit_range.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 
@@ -38,7 +39,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
-  InputTimeController inputTimeController = Get.put(InputTimeController());
+  AlarmInputTimeController inputTimeController =
+      Get.find<AlarmInputTimeController>();
   SettingsController settingsController = Get.find<SettingsController>();
   @override
   Widget build(BuildContext context) {

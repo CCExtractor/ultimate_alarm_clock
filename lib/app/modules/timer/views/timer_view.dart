@@ -4,19 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
+import 'package:ultimate_alarm_clock/app/utils/limit_range.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class TimerView extends GetView<TimerController> {
   TimerView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
-  InputTimeController inputTimeController = Get.put(InputTimeController());
+  TimerInputTimeController inputTimeController =
+      Get.put(TimerInputTimeController());
 
   @override
   Widget build(BuildContext context) {
@@ -208,8 +210,8 @@ class TimerView extends GetView<TimerController> {
                                     onChanged: (value) {
                                       Utils.hapticFeedback();
                                       controller.hours.value = value;
-                                      inputTimeController.
-                                      setTextFieldTimerTime();
+                                      inputTimeController
+                                          .setTextFieldTimerTime();
                                     },
                                     infiniteLoop: true,
                                     itemWidth: width * 0.17,
@@ -296,8 +298,8 @@ class TimerView extends GetView<TimerController> {
                                     value: controller.minutes.value,
                                     onChanged: (value) {
                                       controller.minutes.value = value;
-                                      inputTimeController.
-                                      setTextFieldTimerTime();
+                                      inputTimeController
+                                          .setTextFieldTimerTime();
                                     },
                                     infiniteLoop: true,
                                     itemWidth: width * 0.17,
@@ -384,8 +386,8 @@ class TimerView extends GetView<TimerController> {
                                     value: controller.seconds.value,
                                     onChanged: (value) {
                                       controller.seconds.value = value;
-                                      inputTimeController.
-                                      setTextFieldTimerTime();
+                                      inputTimeController
+                                          .setTextFieldTimerTime();
                                     },
                                     infiniteLoop: true,
                                     itemWidth: width * 0.17,
