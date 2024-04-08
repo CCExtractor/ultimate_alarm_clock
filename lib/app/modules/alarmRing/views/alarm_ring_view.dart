@@ -92,7 +92,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                         : ksecondaryTextColor,
                                   ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               Utils.hapticFeedback();
                               if (Utils.isChallengeEnabled(
                                 controller.currentlyRingingAlarm.value,
@@ -103,10 +103,12 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       controller.currentlyRingingAlarm.value,
                                 );
                               } else {
+                                await controller.deleteOneTimeAlarm(
+                                    controller.currentlyRingingAlarm.value);
                                 Get.offNamed(
                                   '/bottom-navigation-bar',
-                                  arguments: controller.currentlyRingingAlarm
-                                      .value,
+                                  arguments:
+                                      controller.currentlyRingingAlarm.value,
                                 );
                               }
                             },
