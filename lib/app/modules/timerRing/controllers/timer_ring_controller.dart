@@ -19,7 +19,6 @@ class TimerRingController extends GetxController {
   RxBool showButton = false.obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   Timer? _currentTimeTimer;
-  bool isAlarmActive = true;
 
   void addMinutes(int incrementMinutes) {
     minutes.value += incrementMinutes;
@@ -95,7 +94,6 @@ class TimerRingController extends GetxController {
     super.onClose();
     Vibration.cancel();
     vibrationTimer!.cancel();
-    isAlarmActive = false;
     AudioUtils.stopTimer(
       ringtoneName: currentlyRingingAlarm.value.ringtoneName,
     );
