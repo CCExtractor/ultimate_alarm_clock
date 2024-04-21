@@ -120,7 +120,7 @@ class SplashScreenController extends GetxController {
       }
     });
     alarmChannel.setMethodCallHandler((call) async {
-      if (call.method == 'appStartup') {
+      if (call.method == 'appStartup' && call.arguments['isboot'] == false) {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
 
         // This indicates the app was started through native code
@@ -235,6 +235,53 @@ class SplashScreenController extends GetxController {
 
               alarmChannel.invokeMethod('minimizeApp');
             }
+          }
+        }
+      } else if (call.method == 'appStartup' &&
+          call.arguments['isboot'] == true) {
+        TimeOfDay currentTime = TimeOfDay.now();
+        getNextAlarm() async {
+          UserModel? _userModel =
+              await SecureStorageProvider().retrieveUserModel();
+          AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+          AlarmModel isarLatestAlarm =
+              await IsarDb.getLatestAlarm(_alarmRecord, true);
+          AlarmModel firestoreLatestAlarm =
+              await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+          AlarmModel latestAlarm = Utils.getFirstScheduledAlarm(
+              isarLatestAlarm, firestoreLatestAlarm);
+          debugPrint('LATEST : ${latestAlarm.alarmTime}');
+
+          return latestAlarm;
+        }
+
+        AlarmModel latestAlarm = await getNextAlarm();
+        TimeOfDay latestAlarmTimeOfDay =
+            Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+
+        // }
+        // This condition will never satisfy because this will only
+        // occur if fake model is returned as latest alarm
+        if (latestAlarm.isEnabled == false) {
+          debugPrint(
+            'STOPPED IF CONDITION with latest = '
+            '${latestAlarmTimeOfDay.toString()} and '
+            'current = ${currentTime.toString()}',
+          );
+
+          await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+        } else {
+          int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+            DateTime.now(),
+            Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+          );
+
+          try {
+            await alarmChannel.invokeMethod(
+                'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+            print("Scheduled...");
+          } on PlatformException catch (e) {
+            print("Failed to schedule alarm: ${e.message}");
           }
         }
       }

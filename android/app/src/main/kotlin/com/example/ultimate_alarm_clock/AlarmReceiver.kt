@@ -18,9 +18,25 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val flutterIntent = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            putExtra("initialRoute", "/")
-            putExtra("alarmRing", "true")
-            putExtra("isAlarm","true")
+
+            if (intent.action == Intent.ACTION_BOOT_COMPLETED)
+            {
+                putExtra("initialRoute", "/")
+                putExtra("alarmRing", null as String?)
+                putExtra("isAlarm",null as String?)
+                putExtra("isBoot",true)
+            }
+            else
+            {
+
+                    putExtra("initialRoute", "/")
+                    putExtra("alarmRing", "true")
+                    putExtra("isAlarm","true")
+                    putExtra("isBoot",false)
+
+
+            }
+
         }
 
         println("ANDROID STARTING APP")

@@ -5,6 +5,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:sqflite/sqflite.dart';
 
 class IsarDb {
   static final IsarDb _instance = IsarDb._internal();
@@ -16,6 +17,72 @@ class IsarDb {
 
   IsarDb._internal() {
     db = openDB();
+  }
+
+  Future<Database?> getSQLiteDatabase() async {
+    Database? db;
+
+    final dir = await getApplicationDocumentsDirectory();
+    final dbPath = '${dir.path}/alarms.db';
+    db = await openDatabase(dbPath,version: 1, onCreate: _onCreate);
+
+    return db;
+  }
+
+  void _onCreate(Database db, int version) async {
+    // Create tables for alarms and ringtones (modify column types as needed)
+    await db.execute('''
+      CREATE TABLE alarms (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        firestoreId TEXT,
+        alarmTime TEXT NOT NULL,
+        alarmID TEXT NOT NULL UNIQUE,
+        isEnabled INTEGER NOT NULL DEFAULT 1,
+        isLocationEnabled INTEGER NOT NULL DEFAULT 0,
+        isSharedAlarmEnabled INTEGER NOT NULL DEFAULT 0,
+        isWeatherEnabled INTEGER NOT NULL DEFAULT 0,
+        location TEXT,
+        activityInterval INTEGER,
+        minutesSinceMidnight INTEGER NOT NULL,
+        days TEXT NOT NULL,
+        weatherTypes TEXT NOT NULL,
+        isMathsEnabled INTEGER NOT NULL DEFAULT 0,
+        mathsDifficulty INTEGER,
+        numMathsQuestions INTEGER,
+        isShakeEnabled INTEGER NOT NULL DEFAULT 0,
+        shakeTimes INTEGER,
+        isQrEnabled INTEGER NOT NULL DEFAULT 0,
+        qrValue TEXT,
+        isPedometerEnabled INTEGER NOT NULL DEFAULT 0,
+        numberOfSteps INTEGER,
+        intervalToAlarm INTEGER,
+        isActivityEnabled INTEGER NOT NULL DEFAULT 0,
+        sharedUserIds TEXT,
+        ownerId TEXT NOT NULL,
+        ownerName TEXT NOT NULL,
+        lastEditedUserId TEXT,
+        mutexLock INTEGER NOT NULL DEFAULT 0,
+        mainAlarmTime TEXT,
+        label TEXT,
+        isOneTime INTEGER NOT NULL DEFAULT 0,
+        snoozeDuration INTEGER,
+        gradient INTEGER,
+        ringtoneName TEXT,
+        note TEXT,
+        deleteAfterGoesOff INTEGER NOT NULL DEFAULT 0,
+        showMotivationalQuote INTEGER NOT NULL DEFAULT 0,
+        volMin REAL,
+        volMax REAL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE ringtones (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ringtoneName TEXT NOT NULL,
+        ringtonePath TEXT NOT NULL,
+        currentCounterOfUsage INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
   }
 
   Future<Isar> openDB() async {
@@ -32,10 +99,14 @@ class IsarDb {
 
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
+    final sql = await IsarDb().getSQLiteDatabase();
     final db = await isarProvider.db;
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    await sql!
+        .insert('alarms', alarmRecord.toSQFliteMap())
+        .then((value) => print("insert success"));
     return alarmRecord;
   }
 
@@ -145,10 +216,17 @@ class IsarDb {
 
   static Future<void> updateAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
+    final sql = await IsarDb().getSQLiteDatabase();
     final db = await isarProvider.db;
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    await sql!.update(
+      'alarms',
+      alarmRecord.toSQFliteMap(),
+      where: 'alarmID = ?',
+      whereArgs: [alarmRecord.alarmID],
+    );
   }
 
   static Future<AlarmModel?> getAlarm(int id) async {
@@ -171,10 +249,11 @@ class IsarDb {
   static Future<void> deleteAlarm(int id) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-
+    final sql = await IsarDb().getSQLiteDatabase();
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
+    sql!.delete('alarms', where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<void> addCustomRingtone(
