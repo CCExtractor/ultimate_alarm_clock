@@ -22,6 +22,7 @@
     import android.media.Ringtone
     import android.media.RingtoneManager
     import android.net.Uri
+    import java.time.LocalTime
 
     class MainActivity : FlutterActivity() {
 
@@ -96,8 +97,26 @@
             }
             methodChannel1.setMethodCallHandler { call, result ->
                 if (call.method == "scheduleAlarm") {
-                    val seconds = call.argument<Int>("milliSeconds")
+                         val seconds = call.argument<Int>("milliSeconds")
+
+                        println("Aryan")
+                        val dbHelper = DatabaseHelper(context)
+                        val db = dbHelper.readableDatabase
+
+                        // Get the latest alarm
+                        val alarm = getLatestAlarm(db, true)
+                    db.close()
+
+                    // Schedule the alarm
+                    if (alarm != null) {
+                        val latestAlarmTimeOftheDay = stringToTimeOfDay(alarm.alarmTime)
+                        val intervaltoAlarm = getMillisecondsToAlarm(LocalTime.now(),latestAlarmTimeOftheDay)
+                        println(intervaltoAlarm);
+                    }
+
+                    println("Aryan")
                     println("FLUTTER CALLED SCHEDULE")
+                    println(seconds)
                     scheduleAlarm(seconds ?: 0)
                     result.success(null)
                 } else if (call.method == "cancelAllScheduledAlarms") {
@@ -140,6 +159,7 @@
 
 
         private fun scheduleAlarm(milliSeconds: Int) {
+
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(this, AlarmReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(
@@ -167,6 +187,7 @@
 
             // Schedule the alarm
             val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
+            println(triggerTime)
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
         }
 

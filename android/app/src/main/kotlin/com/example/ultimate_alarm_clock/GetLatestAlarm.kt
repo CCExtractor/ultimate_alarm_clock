@@ -1,8 +1,8 @@
 package com.example.ultimate_alarm_clock
-
-import android.annotation.SuppressLint
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import java.time.Duration
+import java.time.LocalTime
 import java.util.*
 
 
@@ -34,14 +34,29 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): AlarmModel? {
         null
     }
 }
+fun stringToTimeOfDay(time: String): LocalTime {
+    val parts = time.split(":")
+    val hour = parts[0].toInt()
+    val minute = parts[1].toInt()
+    return LocalTime.of(hour, minute)
+}
+fun getMillisecondsToAlarm(now: LocalTime, alarmTime: LocalTime): Long {
+    var adjustedAlarmTime = alarmTime
+    if (adjustedAlarmTime.isBefore(now)) {
+        adjustedAlarmTime = adjustedAlarmTime.plusHours(24) // Add a day in hours
+    }
 
-data class AlarmModel(val id: Int, val minutesSinceMidnight: Int) {
+    val duration = Duration.between(now, adjustedAlarmTime)
+    return duration.toMillis()
+}
+
+data class AlarmModel(val id: Int, val minutesSinceMidnight: Int, val alarmTime: String) {
     companion object {
         fun fromCursor(cursor: Cursor): AlarmModel {
             val id = cursor.getInt(cursor.getColumnIndex("id"))
             val minutesSinceMidnight = cursor.getInt(cursor.getColumnIndex("minutesSinceMidnight"))
-
-            return AlarmModel(id, minutesSinceMidnight)
+            val alarmTime = cursor.getString(cursor.getColumnIndex("alarmTime"))
+            return AlarmModel(id, minutesSinceMidnight,alarmTime)
         }
     }
 }

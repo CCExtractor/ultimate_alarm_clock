@@ -1,16 +1,16 @@
 package com.example.ultimate_alarm_clock
-
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
+import java.time.LocalTime
+import java.time.Duration
+
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == "android.intent.action.BOOT_COMPLETED") {
             // Open the database
             val dbHelper = DatabaseHelper(context)
             val db = dbHelper.readableDatabase
@@ -23,13 +23,16 @@ class BootReceiver : BroadcastReceiver() {
 
             // Schedule the alarm
             if (alarm != null) {
-                scheduleTimer(alarm.minutesSinceMidnight * 60 * 1000, context)
+                val latestAlarmTimeOftheDay = stringToTimeOfDay(alarm.alarmTime)
+                val intervaltoAlarm = getMillisecondsToAlarm(LocalTime.now(),latestAlarmTimeOftheDay)
+
+                scheduleAlarm(intervaltoAlarm, context)
             }
-        }
+
     }
-    fun scheduleTimer(milliSeconds: Int, context: Context) {
+    fun scheduleAlarm(milliSeconds: Long, context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, TimerReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             1,
@@ -41,4 +44,7 @@ class BootReceiver : BroadcastReceiver() {
         val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
+
+
+
 }

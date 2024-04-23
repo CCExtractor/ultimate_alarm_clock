@@ -22,10 +22,10 @@ class IsarDb {
   Future<Database?> getSQLiteDatabase() async {
     Database? db;
 
-    final dir = await getApplicationDocumentsDirectory();
-    final dbPath = '${dir.path}/alarms.db';
+    final dir = await getDatabasesPath();
+    final dbPath = '${dir}/alarms.db';
+    print(dir);
     db = await openDatabase(dbPath,version: 1, onCreate: _onCreate);
-
     return db;
   }
 
