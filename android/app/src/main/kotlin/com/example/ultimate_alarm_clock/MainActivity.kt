@@ -32,10 +32,8 @@
             const val ACTION_START_FLUTTER_APP = "com.example.ultimate_alarm_clock"
             const val EXTRA_KEY = "alarmRing"
             const val ALARM_TYPE = "isAlarm"
-            const val IS_BOOT = "isBoot"
             private var isAlarm :String? = "true"
-            private var isBoot = false
-            val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false, "isBoot" to false)
+            val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
             private var ringtone: Ringtone? = null
         }
 
@@ -53,8 +51,6 @@
                 val receivedData = intent.getStringExtra(EXTRA_KEY)
                 alarmConfig["shouldAlarmRing"] = true
                 isAlarm = intent.getStringExtra(ALARM_TYPE)
-                isBoot = intent.getBooleanExtra(IS_BOOT,false)
-                alarmConfig["isBoot"] = isBoot
                 val cleanIntent = Intent(intent)
                 cleanIntent.removeExtra(EXTRA_KEY)
                 setIntent(cleanIntent)
@@ -97,26 +93,8 @@
             }
             methodChannel1.setMethodCallHandler { call, result ->
                 if (call.method == "scheduleAlarm") {
-                         val seconds = call.argument<Int>("milliSeconds")
-
-                        println("Aryan")
-                        val dbHelper = DatabaseHelper(context)
-                        val db = dbHelper.readableDatabase
-
-                        // Get the latest alarm
-                        val alarm = getLatestAlarm(db, true)
-                    db.close()
-
-                    // Schedule the alarm
-                    if (alarm != null) {
-                        val latestAlarmTimeOftheDay = stringToTimeOfDay(alarm.alarmTime)
-                        val intervaltoAlarm = getMillisecondsToAlarm(LocalTime.now(),latestAlarmTimeOftheDay)
-                        println(intervaltoAlarm);
-                    }
-
-                    println("Aryan")
+                    val seconds = call.argument<Int>("milliSeconds")
                     println("FLUTTER CALLED SCHEDULE")
-                    println(seconds)
                     scheduleAlarm(seconds ?: 0)
                     result.success(null)
                 } else if (call.method == "cancelAllScheduledAlarms") {
