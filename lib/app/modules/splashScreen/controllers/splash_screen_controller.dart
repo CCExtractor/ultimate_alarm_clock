@@ -230,7 +230,7 @@ class SplashScreenController extends GetxController {
                   print("Failed to schedule alarm: ${e.message}");
                 }
               }
-
+              SystemNavigator.pop();
               Get.offNamed('/bottom-navigation-bar');
 
               alarmChannel.invokeMethod('minimizeApp');

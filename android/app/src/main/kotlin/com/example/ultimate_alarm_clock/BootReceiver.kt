@@ -1,4 +1,5 @@
 package com.example.ultimate_alarm_clock
+
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -7,6 +8,9 @@ import android.content.Intent
 import android.os.SystemClock
 import java.time.LocalTime
 import java.time.Duration
+import org.json.JSONArray
+import java.util.*
+
 
 
 class BootReceiver : BroadcastReceiver() {
@@ -16,17 +20,16 @@ class BootReceiver : BroadcastReceiver() {
             val db = dbHelper.readableDatabase
 
             // Get the latest alarm
-            val alarm = getLatestAlarm(db, true)
+            val ringTime = getLatestAlarm(db, true)
 
             // Close the database
             db.close()
 
             // Schedule the alarm
-            if (alarm != null) {
-                val latestAlarmTimeOftheDay = stringToTimeOfDay(alarm.alarmTime)
-                val intervaltoAlarm = getMillisecondsToAlarm(LocalTime.now(),latestAlarmTimeOftheDay)
+            if (ringTime != null) {
 
-                scheduleAlarm(intervaltoAlarm, context)
+                 scheduleAlarm(ringTime, context)
+
             }
 
     }

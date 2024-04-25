@@ -25,7 +25,7 @@ class IsarDb {
     final dir = await getDatabasesPath();
     final dbPath = '${dir}/alarms.db';
     print(dir);
-    db = await openDatabase(dbPath,version: 1, onCreate: _onCreate);
+    db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
     return db;
   }
 
@@ -104,8 +104,12 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    final sqlmap = alarmRecord.toSQFliteMap();
+    print(alarmRecord.days);
+    print(sqlmap['days']);
+    print(sqlmap['isOneTime']);
     await sql!
-        .insert('alarms', alarmRecord.toSQFliteMap())
+        .insert('alarms', sqlmap)
         .then((value) => print("insert success"));
     return alarmRecord;
   }
@@ -250,10 +254,11 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final sql = await IsarDb().getSQLiteDatabase();
+    final tobedeleted = await  db.alarmModels.get(id);
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
-    sql!.delete('alarms', where: 'id = ?', whereArgs: [id]);
+    sql!.delete('alarms', where: 'alarmID = ?', whereArgs: [tobedeleted!.alarmID]);
   }
 
   static Future<void> addCustomRingtone(

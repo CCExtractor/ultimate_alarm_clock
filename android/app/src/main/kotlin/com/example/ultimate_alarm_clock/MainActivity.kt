@@ -1,6 +1,6 @@
-    package com.example.ultimate_alarm_clock
+package com.example.ultimate_alarm_clock
 
-    import android.os.Bundle
+import android.os.Bundle
     import androidx.annotation.NonNull
     import io.flutter.embedding.android.FlutterActivity
     import io.flutter.embedding.engine.FlutterEngine
@@ -93,7 +93,16 @@
             }
             methodChannel1.setMethodCallHandler { call, result ->
                 if (call.method == "scheduleAlarm") {
+                    val dbHelper = DatabaseHelper(context)
+                    val db = dbHelper.readableDatabase
+
+                    // Get the latest alarm
+                    val t = getLatestAlarm(db, true)
+
+                    println(t)
+
                     val seconds = call.argument<Int>("milliSeconds")
+                    println(seconds)
                     println("FLUTTER CALLED SCHEDULE")
                     scheduleAlarm(seconds ?: 0)
                     result.success(null)
