@@ -98,9 +98,6 @@ class FirestoreDb {
     final sql = await FirestoreDb().getSQLiteDatabase();
 
     if (user == null) {
-      await sql!
-          .insert('alarms', alarmRecord.toSQFliteMap())
-          .then((value) => print("insert success"));
       return alarmRecord;
     }
     await sql!

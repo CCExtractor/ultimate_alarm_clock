@@ -105,9 +105,6 @@ class IsarDb {
       await db.alarmModels.put(alarmRecord);
     });
     final sqlmap = alarmRecord.toSQFliteMap();
-    print(alarmRecord.days);
-    print(sqlmap['days']);
-    print(sqlmap['isOneTime']);
     await sql!
         .insert('alarms', sqlmap)
         .then((value) => print("insert success"));

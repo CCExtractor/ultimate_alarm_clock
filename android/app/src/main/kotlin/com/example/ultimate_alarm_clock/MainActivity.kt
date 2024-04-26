@@ -38,7 +38,6 @@ import android.os.Bundle
         }
 
 
-
         override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
             super.configureFlutterEngine(flutterEngine)
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
@@ -93,16 +92,7 @@ import android.os.Bundle
             }
             methodChannel1.setMethodCallHandler { call, result ->
                 if (call.method == "scheduleAlarm") {
-                    val dbHelper = DatabaseHelper(context)
-                    val db = dbHelper.readableDatabase
-
-                    // Get the latest alarm
-                    val t = getLatestAlarm(db, true)
-
-                    println(t)
-
                     val seconds = call.argument<Int>("milliSeconds")
-                    println(seconds)
                     println("FLUTTER CALLED SCHEDULE")
                     scheduleAlarm(seconds ?: 0)
                     result.success(null)
