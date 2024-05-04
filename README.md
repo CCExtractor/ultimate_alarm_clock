@@ -154,6 +154,16 @@ The key reasons for utilizing IsarDb are as follows:
 
 The schema for this data is already described above.
 
+### SQFLITE
+
+SQFLite is a Flutter plugin that allows you to use SQLite databases in your Flutter applications. Using SQLite database we can share alarm data between dart and kotlin or other native languages without the need for calling method channels. 
+
+- **Cross Communication Between Dart and Native**: SqLite database can be accessed by any native language with ease, allowing for seamless flow of data between the two.
+
+- **Performance Optimization**: Performance and data retrieval times are improved as need for method channels for fetching data is eliminated.
+
+The schema is same as described above.
+
 ### Flutter Secure Storage
 
 The Flutter Secure Storage library is utilized in the "Ultimate Alarm Clock" project for securely storing various settings and preferences. This storage solution employs key-value pairs to manage and access data. Below are the keys and their associated purposes:

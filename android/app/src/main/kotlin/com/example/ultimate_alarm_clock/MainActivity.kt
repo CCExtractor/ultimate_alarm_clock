@@ -22,6 +22,7 @@ import android.view.WindowManager
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
+import java.time.LocalTime
 
 class MainActivity : FlutterActivity() {
 
@@ -35,7 +36,6 @@ class MainActivity : FlutterActivity() {
         val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
         private var ringtone: Ringtone? = null
     }
-
 
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -105,7 +105,7 @@ class MainActivity : FlutterActivity() {
                 result.success(null)
             } else if (call.method == "minimizeApp" ) {
                 minimizeApp()
-                result.success(null)   
+                result.success(null)
             } else if (call.method == "playDefaultAlarm") {
                 playDefaultAlarm(this)
                 result.success(null)
@@ -136,6 +136,7 @@ class MainActivity : FlutterActivity() {
 
 
     private fun scheduleAlarm(milliSeconds: Int) {
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -163,6 +164,7 @@ class MainActivity : FlutterActivity() {
 
         // Schedule the alarm
         val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
+        println(triggerTime)
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
 
