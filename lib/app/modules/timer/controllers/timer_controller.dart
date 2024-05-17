@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rxdart/rxdart.dart' as rx;
+import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -10,7 +12,8 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
-class TimerController extends GetxController with WidgetsBindingObserver {
+class TimerController extends GetxController
+    with WidgetsBindingObserver, GetTickerProviderStateMixin {
   MethodChannel timerChannel = const MethodChannel('timer');
   final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
@@ -18,8 +21,41 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   RxInt startTime = 0.obs;
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
+  RxBool isbottom = false.obs;
   Rx<Timer?> countdownTimer = Rx<Timer?>(null);
-  TimerModel timerRecord = Utils.genFakeTimerModel();
+  RxInt timerCount = 0.obs;
+  Stream? isarTimers;
+  ScrollController scrollController = ScrollController();
+  RxList timers = [].obs;
+  RxList pausedTimers = [].obs;
+  RxList timerAnimationControllerList = [].obs;
+  RxList timeLeft = [].obs;
+  late AnimationController _controller;
+
+  getFakeTimerModel() async {
+    TimerModel fakeTimer = await Utils.genFakeTimerModel();
+    return fakeTimer;
+  }
+
+  updateTimerInfo() async {
+    timerList.value = await IsarDb.getAllTimers();
+    timerCount.value = await IsarDb.getNumberOfTimers();
+  }
+
+  initializeTempTimerVariables() {
+    pausedTimers.value = timerList.map((pause) => pause.isPaused).toList();
+    timeLeft.value = timerList.map((time) => time.intervalToAlarm).toList();
+
+  }
+
+  void toggleAnimation(int index) {
+    pausedTimers[index] == 0
+        ? pausedTimers[index] = 1
+        : pausedTimers[index] = 0;
+
+    print(pausedTimers);
+  }
+
   late int currentTimerIsarId;
   var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
 
@@ -27,16 +63,27 @@ class TimerController extends GetxController with WidgetsBindingObserver {
 
   String strDigits(int n) => n.toString().padLeft(2, '0');
 
+  final RxList timerList = [].obs;
+
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
     loadTimerStateFromStorage();
+    isarTimers = IsarDb.getTimers();
+    updateTimerInfo();
+    scrollController.addListener(() {
+      if (scrollController.offset < scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        isbottom.value = true;
+      } else {
+        isbottom.value = false;
+      }
+    });
   }
 
   @override
   void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.onClose();
   }
 
@@ -106,6 +153,9 @@ class TimerController extends GetxController with WidgetsBindingObserver {
   }
 
   void createTimer() async {
+    TimerModel timerRecord = await getFakeTimerModel();
+    print("${DateTime.now().toString()}");
+    print("${DateTime.now().add(remainingTime.value).toString()}");
     timerRecord.timerTime = Utils.formatDateTimeToHHMMSS(
       DateTime.now().add(remainingTime.value),
     );
@@ -117,9 +167,20 @@ class TimerController extends GetxController with WidgetsBindingObserver {
       DateTime.now().add(remainingTime.value),
     );
     timerRecord.ringtoneName = 'Default';
-    scheduleTimer(timerRecord);
-
-    await _secureStorageProvider.writeTimerId(timerId: timerRecord.isarId);
+    IsarDb.insertTimer(timerRecord).then((value) {
+      updateTimerInfo();
+      Get.back();
+    });
+    timerRecord.timerName = "${timerRecord.timerTime} Timer";
+    timerList.forEach((timer) {
+      print('Timer ID: ${timer.timerId}');
+      print('Timer Time: ${timer.timerTime}');
+      print('Main Timer Time: ${timer.mainTimerTime}');
+      print('Interval to Alarm: ${timer.intervalToAlarm}');
+      print('Ringtone Name: ${timer.ringtoneName}');
+      print('Timer Name: ${timer.timerName}');
+      print('Is Paused: ${timer.isPaused}');
+    });
   }
 
   void startTimer() async {
@@ -153,6 +214,10 @@ class TimerController extends GetxController with WidgetsBindingObserver {
         print("Failed to schedule alarm: ${e.message}");
       }
     }
+  }
+
+  deleteTimer(int id) async {
+    await IsarDb.deleteTimer(id).then((value) => updateTimerInfo());
   }
 
   cancelTimer() async {

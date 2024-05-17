@@ -10,6 +10,7 @@ import 'dart:math';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
@@ -99,6 +100,27 @@ class Utils {
 
     int milliseconds = alarmTime.difference(now).inMilliseconds;
     return milliseconds;
+  }
+
+  static String formatMilliseconds(int milliseconds) {
+    final Duration duration = Duration(milliseconds: milliseconds);
+    final int seconds = duration.inSeconds;
+    final int minutes = duration.inMinutes;
+    final int hours = duration.inHours;
+
+    if (seconds < 10) {
+      return "${seconds}";
+    } else if (seconds < 60) {
+      return "${seconds}";
+    } else if (minutes < 10) {
+      return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+    } else if (minutes < 60) {
+      return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+    } else if (hours < 10) {
+      return "${hours}:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+    } else {
+      return "${hours}:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+    }
   }
 
   static List<String> convertTo12HourFormat(String time) {
@@ -355,12 +377,13 @@ class Utils {
   }
 
   // Utility function to create a dummy model to pass to functions
-  static TimerModel genFakeTimerModel() {
+  static Future<TimerModel> genFakeTimerModel() async {
     return TimerModel(
       intervalToAlarm: 0,
       mainTimerTime: '',
       ringtoneName: '',
       timerTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      timerName: '',
     );
   }
 
