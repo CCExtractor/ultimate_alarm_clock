@@ -40,9 +40,9 @@ class IsarDb {
         await db.execute('''
           create table timers ( 
             id integer primary key autoincrement, 
-            timerTime text not null,
-            mainTimerTime text not null,
-            intervalToAlarm integer not null,
+            startedOn text not null,
+            timerValue integer not null,
+            timeElapsed integer not null,
             ringtoneName text not null,
             timerName text not null,
             isPaused integer not null)
@@ -373,19 +373,37 @@ class IsarDb {
     final sql = await IsarDb().getTimerSQLiteDatabase();
     List<Map<String, dynamic>> maps = await sql!.query('timers', columns: [
       'id',
-      'timerTime',
-      'mainTimerTime',
-      'intervalToAlarm',
+      'startedOn',
+      'timerValue',
+      'timeElapsed',
       'ringtoneName',
       'timerName',
-      'isPaused'
+      'isPaused',
     ]);
     if (maps.length > 0) {
       return maps.map((timer) => TimerModel.fromMap(timer)).toList();
     }
     return [];
   }
-
+  static Future updateTimerTick(int id, TimerModel timer) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    await db.writeTxn(() async {
+      await db.timerModels.put(timer);
+    });
+    final sql = await IsarDb().getTimerSQLiteDatabase();
+     await sql!
+        .update(
+      'timers',
+      {'timeElapsed': timer.timeElapsed},
+      where: 'id = ?',
+      whereArgs: [id],
+    )
+        .then((value) {
+      sql.close();
+      return value;
+    });
+  }
   static Stream<List<TimerModel>> getTimers() {
     final isarProvider = IsarDb();
     final controller = StreamController<List<TimerModel>>.broadcast();

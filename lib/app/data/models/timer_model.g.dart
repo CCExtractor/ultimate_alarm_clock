@@ -17,40 +17,35 @@ const TimerModelSchema = CollectionSchema(
   name: r'TimerModel',
   id: 1326376837060457485,
   properties: {
-    r'intervalToAlarm': PropertySchema(
-      id: 0,
-      name: r'intervalToAlarm',
-      type: IsarType.long,
-    ),
     r'isPaused': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'isPaused',
       type: IsarType.long,
     ),
-    r'mainTimerTime': PropertySchema(
-      id: 2,
-      name: r'mainTimerTime',
-      type: IsarType.string,
-    ),
     r'ringtoneName': PropertySchema(
-      id: 3,
+      id: 1,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
-    r'timeElapsed': PropertySchema(
-      id: 4,
-      name: r'timeElapsed',
+    r'startedOn': PropertySchema(
+      id: 2,
+      name: r'startedOn',
       type: IsarType.string,
     ),
+    r'timeElapsed': PropertySchema(
+      id: 3,
+      name: r'timeElapsed',
+      type: IsarType.long,
+    ),
     r'timerName': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'timerName',
       type: IsarType.string,
     ),
-    r'timerTime': PropertySchema(
-      id: 6,
-      name: r'timerTime',
-      type: IsarType.string,
+    r'timerValue': PropertySchema(
+      id: 5,
+      name: r'timerValue',
+      type: IsarType.long,
     )
   },
   estimateSize: _timerModelEstimateSize,
@@ -73,11 +68,9 @@ int _timerModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.mainTimerTime.length * 3;
   bytesCount += 3 + object.ringtoneName.length * 3;
-  bytesCount += 3 + object.timeElapsed.length * 3;
+  bytesCount += 3 + object.startedOn.length * 3;
   bytesCount += 3 + object.timerName.length * 3;
-  bytesCount += 3 + object.timerTime.length * 3;
   return bytesCount;
 }
 
@@ -87,13 +80,12 @@ void _timerModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.intervalToAlarm);
-  writer.writeLong(offsets[1], object.isPaused);
-  writer.writeString(offsets[2], object.mainTimerTime);
-  writer.writeString(offsets[3], object.ringtoneName);
-  writer.writeString(offsets[4], object.timeElapsed);
-  writer.writeString(offsets[5], object.timerName);
-  writer.writeString(offsets[6], object.timerTime);
+  writer.writeLong(offsets[0], object.isPaused);
+  writer.writeString(offsets[1], object.ringtoneName);
+  writer.writeString(offsets[2], object.startedOn);
+  writer.writeLong(offsets[3], object.timeElapsed);
+  writer.writeString(offsets[4], object.timerName);
+  writer.writeLong(offsets[5], object.timerValue);
 }
 
 TimerModel _timerModelDeserialize(
@@ -103,13 +95,12 @@ TimerModel _timerModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TimerModel(
-    intervalToAlarm: reader.readLong(offsets[0]),
-    isPaused: reader.readLongOrNull(offsets[1]) ?? 0,
-    mainTimerTime: reader.readString(offsets[2]),
-    ringtoneName: reader.readString(offsets[3]),
-    timeElapsed: reader.readStringOrNull(offsets[4]) ?? '00:00:00',
-    timerName: reader.readString(offsets[5]),
-    timerTime: reader.readString(offsets[6]),
+    isPaused: reader.readLongOrNull(offsets[0]) ?? 0,
+    ringtoneName: reader.readString(offsets[1]),
+    startedOn: reader.readString(offsets[2]),
+    timeElapsed: reader.readLongOrNull(offsets[3]) ?? 0,
+    timerName: reader.readString(offsets[4]),
+    timerValue: reader.readLong(offsets[5]),
   );
   object.timerId = id;
   return object;
@@ -123,19 +114,17 @@ P _timerModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
-    case 1:
       return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 4:
-      return (reader.readStringOrNull(offset) ?? '00:00:00') as P;
+      return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
-    case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -236,62 +225,6 @@ extension TimerModelQueryWhere
 
 extension TimerModelQueryFilter
     on QueryBuilder<TimerModel, TimerModel, QFilterCondition> {
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      intervalToAlarmEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'intervalToAlarm',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      intervalToAlarmGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'intervalToAlarm',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      intervalToAlarmLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'intervalToAlarm',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      intervalToAlarmBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'intervalToAlarm',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> isPausedEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -342,142 +275,6 @@ extension TimerModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mainTimerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'mainTimerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'mainTimerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'mainTimerTime',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'mainTimerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'mainTimerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'mainTimerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'mainTimerTime',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mainTimerTime',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      mainTimerTimeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'mainTimerTime',
-        value: '',
       ));
     });
   }
@@ -618,14 +415,13 @@ extension TimerModelQueryFilter
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedEqualTo(
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> startedOnEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -633,7 +429,7 @@ extension TimerModelQueryFilter
   }
 
   QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedGreaterThan(
+      startedOnGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -641,15 +437,14 @@ extension TimerModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedLessThan(
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> startedOnLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -657,15 +452,14 @@ extension TimerModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedBetween(
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> startedOnBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -674,7 +468,7 @@ extension TimerModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'timeElapsed',
+        property: r'startedOn',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -685,49 +479,50 @@ extension TimerModelQueryFilter
   }
 
   QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedStartsWith(
+      startedOnStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedEndsWith(
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> startedOnEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> startedOnContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> startedOnMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'timeElapsed',
+        property: r'startedOn',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -735,21 +530,77 @@ extension TimerModelQueryFilter
   }
 
   QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedIsEmpty() {
+      startedOnIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: '',
       ));
     });
   }
 
   QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timeElapsedIsNotEmpty() {
+      startedOnIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'timeElapsed',
+        property: r'startedOn',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
+      timeElapsedEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'timeElapsed',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
+      timeElapsedGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'timeElapsed',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
+      timeElapsedLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'timeElapsed',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
+      timeElapsedBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'timeElapsed',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -942,136 +793,57 @@ extension TimerModelQueryFilter
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerTimeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerValueEqualTo(
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'timerTime',
+        property: r'timerValue',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timerTimeGreaterThan(
-    String value, {
+      timerValueGreaterThan(
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'timerTime',
+        property: r'timerValue',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerTimeLessThan(
-    String value, {
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
+      timerValueLessThan(
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'timerTime',
+        property: r'timerValue',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerTimeBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerValueBetween(
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'timerTime',
+        property: r'timerValue',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timerTimeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'timerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerTimeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'timerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerTimeContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'timerTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition> timerTimeMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'timerTime',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timerTimeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'timerTime',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterFilterCondition>
-      timerTimeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'timerTime',
-        value: '',
       ));
     });
   }
@@ -1085,19 +857,6 @@ extension TimerModelQueryLinks
 
 extension TimerModelQuerySortBy
     on QueryBuilder<TimerModel, TimerModel, QSortBy> {
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByIntervalToAlarm() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'intervalToAlarm', Sort.asc);
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy>
-      sortByIntervalToAlarmDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'intervalToAlarm', Sort.desc);
-    });
-  }
-
   QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByIsPaused() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPaused', Sort.asc);
@@ -1110,18 +869,6 @@ extension TimerModelQuerySortBy
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByMainTimerTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mainTimerTime', Sort.asc);
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByMainTimerTimeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mainTimerTime', Sort.desc);
-    });
-  }
-
   QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.asc);
@@ -1131,6 +878,18 @@ extension TimerModelQuerySortBy
   QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByRingtoneNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByStartedOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startedOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByStartedOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startedOn', Sort.desc);
     });
   }
 
@@ -1158,34 +917,21 @@ extension TimerModelQuerySortBy
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByTimerTime() {
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByTimerValue() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'timerTime', Sort.asc);
+      return query.addSortBy(r'timerValue', Sort.asc);
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByTimerTimeDesc() {
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> sortByTimerValueDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'timerTime', Sort.desc);
+      return query.addSortBy(r'timerValue', Sort.desc);
     });
   }
 }
 
 extension TimerModelQuerySortThenBy
     on QueryBuilder<TimerModel, TimerModel, QSortThenBy> {
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByIntervalToAlarm() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'intervalToAlarm', Sort.asc);
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy>
-      thenByIntervalToAlarmDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'intervalToAlarm', Sort.desc);
-    });
-  }
-
   QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByIsPaused() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPaused', Sort.asc);
@@ -1198,18 +944,6 @@ extension TimerModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByMainTimerTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mainTimerTime', Sort.asc);
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByMainTimerTimeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mainTimerTime', Sort.desc);
-    });
-  }
-
   QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.asc);
@@ -1219,6 +953,18 @@ extension TimerModelQuerySortThenBy
   QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByRingtoneNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByStartedOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startedOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByStartedOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startedOn', Sort.desc);
     });
   }
 
@@ -1258,38 +1004,24 @@ extension TimerModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByTimerTime() {
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByTimerValue() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'timerTime', Sort.asc);
+      return query.addSortBy(r'timerValue', Sort.asc);
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByTimerTimeDesc() {
+  QueryBuilder<TimerModel, TimerModel, QAfterSortBy> thenByTimerValueDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'timerTime', Sort.desc);
+      return query.addSortBy(r'timerValue', Sort.desc);
     });
   }
 }
 
 extension TimerModelQueryWhereDistinct
     on QueryBuilder<TimerModel, TimerModel, QDistinct> {
-  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByIntervalToAlarm() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'intervalToAlarm');
-    });
-  }
-
   QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByIsPaused() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isPaused');
-    });
-  }
-
-  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByMainTimerTime(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'mainTimerTime',
-          caseSensitive: caseSensitive);
     });
   }
 
@@ -1300,10 +1032,16 @@ extension TimerModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByTimeElapsed(
+  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByStartedOn(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'timeElapsed', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'startedOn', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByTimeElapsed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'timeElapsed');
     });
   }
 
@@ -1314,10 +1052,9 @@ extension TimerModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByTimerTime(
-      {bool caseSensitive = true}) {
+  QueryBuilder<TimerModel, TimerModel, QDistinct> distinctByTimerValue() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'timerTime', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'timerValue');
     });
   }
 }
@@ -1330,21 +1067,9 @@ extension TimerModelQueryProperty
     });
   }
 
-  QueryBuilder<TimerModel, int, QQueryOperations> intervalToAlarmProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'intervalToAlarm');
-    });
-  }
-
   QueryBuilder<TimerModel, int, QQueryOperations> isPausedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isPaused');
-    });
-  }
-
-  QueryBuilder<TimerModel, String, QQueryOperations> mainTimerTimeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mainTimerTime');
     });
   }
 
@@ -1354,7 +1079,13 @@ extension TimerModelQueryProperty
     });
   }
 
-  QueryBuilder<TimerModel, String, QQueryOperations> timeElapsedProperty() {
+  QueryBuilder<TimerModel, String, QQueryOperations> startedOnProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'startedOn');
+    });
+  }
+
+  QueryBuilder<TimerModel, int, QQueryOperations> timeElapsedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'timeElapsed');
     });
@@ -1366,9 +1097,9 @@ extension TimerModelQueryProperty
     });
   }
 
-  QueryBuilder<TimerModel, String, QQueryOperations> timerTimeProperty() {
+  QueryBuilder<TimerModel, int, QQueryOperations> timerValueProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'timerTime');
+      return query.addPropertyName(r'timerValue');
     });
   }
 }

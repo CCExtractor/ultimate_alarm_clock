@@ -4,30 +4,27 @@ part 'timer_model.g.dart';
 @collection
 class TimerModel {
   Id timerId = Isar.autoIncrement;
-  late String timerTime;
-  late String mainTimerTime;
-  late String timeElapsed ;
-  late int intervalToAlarm;
-  late String ringtoneName;
   late String timerName;
-  late int isPaused ;
+  late int timerValue;
+  late String startedOn;
+  late int timeElapsed;
+  late String ringtoneName;
+  late int isPaused;
 
   TimerModel(
-      {
-      required this.intervalToAlarm,
-      required this.mainTimerTime,
+      {required this.timerValue,
+      required this.startedOn,
       required this.ringtoneName,
-      required this.timerTime,
       required this.timerName,
       this.isPaused = 0,
-      this.timeElapsed = '00:00:00'});
+      this.timeElapsed = 0});
 
   Map<String, dynamic> toMap() {
     return {
       'id': timerId,
-      'timerTime': timerTime,
-      'mainTimerTime': mainTimerTime,
-      'intervalToAlarm': intervalToAlarm,
+      'startedOn': startedOn,
+      'timerValue': timerValue,
+      'timeElapsed': timeElapsed,
       'ringtoneName': ringtoneName,
       'timerName': timerName,
       'isPaused': isPaused,
@@ -37,9 +34,9 @@ class TimerModel {
   // Extract a TimerModel object from a Map object.
   TimerModel.fromMap(Map<String, dynamic> map) {
     timerId = map['id'];
-    timerTime = map['timerTime'];
-    mainTimerTime = map['mainTimerTime'];
-    intervalToAlarm = map['intervalToAlarm'];
+    startedOn = map['startedOn'];
+    timerValue = map['timerValue'];
+    timeElapsed= map['timeElapsed'];
     ringtoneName = map['ringtoneName'];
     timerName = map['timerName'];
     isPaused = map['isPaused'];

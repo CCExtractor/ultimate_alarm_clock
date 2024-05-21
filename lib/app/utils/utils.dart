@@ -379,10 +379,10 @@ class Utils {
   // Utility function to create a dummy model to pass to functions
   static Future<TimerModel> genFakeTimerModel() async {
     return TimerModel(
-      intervalToAlarm: 0,
-      mainTimerTime: '',
+      timerValue: 0,
+      timeElapsed :0,
+      startedOn: '',
       ringtoneName: '',
-      timerTime: Utils.timeOfDayToString(TimeOfDay.now()),
       timerName: '',
     );
   }

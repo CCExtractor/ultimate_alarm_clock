@@ -12,8 +12,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
-class TimerController extends GetxController
-    with WidgetsBindingObserver, GetTickerProviderStateMixin {
+class TimerController extends GetxController with WidgetsBindingObserver {
   MethodChannel timerChannel = const MethodChannel('timer');
   final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
@@ -22,14 +21,13 @@ class TimerController extends GetxController
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
   RxBool isbottom = false.obs;
-  Rx<Timer?> countdownTimer = Rx<Timer?>(null);
-  RxInt timerCount = 0.obs;
   Stream? isarTimers;
   ScrollController scrollController = ScrollController();
   RxList timers = [].obs;
   RxList pausedTimers = [].obs;
+  RxList timeElapsedList = [].obs;
   RxList timerAnimationControllerList = [].obs;
-  RxList timeLeft = [].obs;
+
   late AnimationController _controller;
 
   getFakeTimerModel() async {
@@ -39,13 +37,11 @@ class TimerController extends GetxController
 
   updateTimerInfo() async {
     timerList.value = await IsarDb.getAllTimers();
-    timerCount.value = await IsarDb.getNumberOfTimers();
   }
 
   initializeTempTimerVariables() {
     pausedTimers.value = timerList.map((pause) => pause.isPaused).toList();
-    timeLeft.value = timerList.map((time) => time.intervalToAlarm).toList();
-
+    timeElapsedList.value = timerList.map((time) => time.timeElapsed).toList();
   }
 
   void toggleAnimation(int index) {
@@ -132,7 +128,6 @@ class TimerController extends GetxController
             minutes: minutes,
             seconds: seconds,
           );
-          startTimer();
         } else {
           stopTimer();
         }
@@ -154,53 +149,36 @@ class TimerController extends GetxController
 
   void createTimer() async {
     TimerModel timerRecord = await getFakeTimerModel();
-    print("${DateTime.now().toString()}");
-    print("${DateTime.now().add(remainingTime.value).toString()}");
-    timerRecord.timerTime = Utils.formatDateTimeToHHMMSS(
-      DateTime.now().add(remainingTime.value),
+
+    timerRecord.startedOn = Utils.formatDateTimeToHHMMSS(
+      DateTime.now(),
     );
-    timerRecord.mainTimerTime = Utils.formatDateTimeToHHMMSS(
-      DateTime.now().add(remainingTime.value),
-    );
-    timerRecord.intervalToAlarm = Utils.getMillisecondsToAlarm(
+    timerRecord.timerValue = Utils.getMillisecondsToAlarm(
       DateTime.now(),
       DateTime.now().add(remainingTime.value),
     );
     timerRecord.ringtoneName = 'Default';
+    timerRecord.timerName =
+        "${Utils.formatMilliseconds(timerRecord.timerValue)} Timer";
+
     IsarDb.insertTimer(timerRecord).then((value) {
       updateTimerInfo();
+      initializeTempTimerVariables();
+      timerList.forEach((timer) {
+        print('Timer ID: ${timer.timerId}');
+        print('Main Timer Time: ${timer.startedOn}');
+        print('Interval to Alarm: ${timer.timerValue}');
+        print('Ringtone Name: ${timer.ringtoneName}');
+        print('Timer Name: ${timer.timerName}');
+        print('Is Paused: ${timer.isPaused}');
+      });
       Get.back();
     });
-    timerRecord.timerName = "${timerRecord.timerTime} Timer";
-    timerList.forEach((timer) {
-      print('Timer ID: ${timer.timerId}');
-      print('Timer Time: ${timer.timerTime}');
-      print('Main Timer Time: ${timer.mainTimerTime}');
-      print('Interval to Alarm: ${timer.intervalToAlarm}');
-      print('Ringtone Name: ${timer.ringtoneName}');
-      print('Timer Name: ${timer.timerName}');
-      print('Is Paused: ${timer.isPaused}');
-    });
-  }
 
-  void startTimer() async {
-    if (remainingTime.value.inSeconds > 0) {
-      final now = DateTime.now();
-      startTime.value = now.millisecondsSinceEpoch;
-      isTimerRunning.value = true;
-      isTimerPaused.value = false;
-
-      saveTimerStateToStorage();
-
-      countdownTimer.value = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => setCountDown(),
-      );
-    }
   }
 
   scheduleTimer(TimerModel timerRecord) async {
-    DateTime? timerDateTime = Utils.stringToDateTime(timerRecord.timerTime);
+    DateTime? timerDateTime = Utils.stringToDateTime(timerRecord.startedOn);
     if (timerDateTime != null) {
       await timerChannel.invokeMethod('cancelTimer');
       int intervaltoTimer = Utils.getMillisecondsToTimer(
@@ -218,6 +196,7 @@ class TimerController extends GetxController
 
   deleteTimer(int id) async {
     await IsarDb.deleteTimer(id).then((value) => updateTimerInfo());
+    updateTimerInfo();
   }
 
   cancelTimer() async {
@@ -225,7 +204,6 @@ class TimerController extends GetxController
   }
 
   void stopTimer() async {
-    countdownTimer.value?.cancel();
     isTimerPaused.value = false;
     isTimerRunning.value = false;
     initialTime.value = DateTime(0, 0, 0, 0, 1, 0);
@@ -243,25 +221,12 @@ class TimerController extends GetxController
   }
 
   void pauseTimer() async {
-    countdownTimer.value?.cancel();
     isTimerPaused.value = true;
 
     saveTimerStateToStorage();
     await cancelTimer();
     int timerId = await SecureStorageProvider().readTimerId();
     await IsarDb.deleteAlarm(timerId);
-  }
-
-  void resumeTimer() async {
-    if (isTimerPaused.value) {
-      countdownTimer.value = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => setCountDown(),
-      );
-      isTimerPaused.value = false;
-
-      createTimer();
-    }
   }
 
   void setCountDown() {

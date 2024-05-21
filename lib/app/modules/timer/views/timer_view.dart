@@ -65,12 +65,12 @@ class TimerView extends GetView<TimerController> {
           ],
         ),
       ),
-      body: Obx(() => controller.timerCount.value == 0
+      body: Obx(() => controller.timerList.value.length == 0
           ? addATimerSpace(context)
           : StreamBuilder(
               stream: IsarDb.getTimers(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (!snapshot.hasData && snapshot.data!=[]) {
                   return const Center(
                     child: CircularProgressIndicator.adaptive(
                       backgroundColor: Colors.transparent,
@@ -81,21 +81,18 @@ class TimerView extends GetView<TimerController> {
                   );
                 } else {
                   // list of pause values of timers
-                  List<TimerModel>? timerList = snapshot.data;
-                  controller.timerList.value = timerList!;
                   controller.initializeTempTimerVariables();
-
-
-                  return ListView.builder(
+                  List<TimerModel>? listOfTimers = snapshot.data;
+                    return ListView.builder(
                     controller: controller.scrollController,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
-                    itemCount: timerList.length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
-                          TimerAnimatedCard(timerList[index], index),
-                          if (index == timerList.length - 1)
+                          TimerAnimatedCard(listOfTimers![index]),
+                          if (index == snapshot.data!.length - 1)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: addATimerSpace(context),

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
@@ -11,66 +12,59 @@ import '../../../utils/utils.dart';
 import '../../settings/controllers/theme_controller.dart';
 
 class TimerAnimatedCard extends StatefulWidget {
-  TimerModel timer;
-  int index;
+  final TimerModel timer;
 
-  TimerAnimatedCard(this.timer, this.index);
+  const TimerAnimatedCard(this.timer, {super.key});
   @override
   _TimerAnimatedCardState createState() => _TimerAnimatedCardState();
 }
 
 class _TimerAnimatedCardState extends State<TimerAnimatedCard>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late AnimationController _controller;
   TimerController controller = Get.find<TimerController>();
   ThemeController themeController = Get.find<ThemeController>();
 
   bool isPlaying = false;
-  Timer? timerCounter;
-  late int milliseconds;
-  late int progressCounter;
+  Timer? _timerCounter;
+  late int _progressCounter;
   void startTimer() {
-    milliseconds = widget.timer.intervalToAlarm;
-    timerCounter = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (milliseconds > 0) {
+    _timerCounter = Timer.periodic(Duration(seconds: 1), (timer) {
+      print("${widget.timer.timerName}");
+      if (widget.timer.timeElapsed < widget.timer.timerValue) {
         setState(() {
-          milliseconds -= 1000;
-          progressCounter += 1000;
+          widget.timer.timeElapsed += 1000;
+          _progressCounter += 1000;
+          IsarDb.updateTimerTick(widget.timer.timerId, widget.timer);
         });
       }
     });
   }
 
   void stopTimer() {
-    timerCounter!.cancel();
+    _timerCounter!.cancel();
   }
 
   @override
   void initState() {
     super.initState();
-    progressCounter = 0;
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(
-          milliseconds: widget.timer
-              .intervalToAlarm), // Replace x with your duration in milliseconds
-    );
-    if (controller.pausedTimers.value[widget.index] == 0) {
+    setState(() {
+      _progressCounter = 0;
+    });
+
+    if (widget.timer.isPaused == 0) {
       startTimer();
-      _controller.forward();
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _timerCounter!.cancel();
     super.dispose();
   }
 
   void _toggleAnimation() {
     setState(() {
       isPlaying = !isPlaying;
-      isPlaying ? _controller.forward() : _controller.stop();
     });
   }
 
@@ -102,7 +96,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 duration: Duration(milliseconds: 1000),
                 height: context.height / 3.3,
                 width: context.width *
-                    (progressCounter / (widget.timer.intervalToAlarm)),
+                    (_progressCounter / (widget.timer.timerValue)),
               ),
               Center(
                 child: Padding(
@@ -145,7 +139,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                         color: kprimaryBackgroundColor,
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    child: const  Padding(
+                                    child: const Padding(
                                       padding: EdgeInsets.all(4.0),
                                       child: Icon(
                                         Icons.close,
@@ -157,56 +151,57 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 40),
+                              padding: const EdgeInsets.symmetric(vertical: 20),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    Utils.formatMilliseconds(milliseconds),
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.displayLarge!.copyWith(
-                                          color:
-                                              themeController.isLightMode.value
-                                                  ? kLightPrimaryTextColor
-                                                  : kprimaryTextColor,
-                                          fontSize: 50,
-                                        ),
+                                  AnimatedContainer(
+                                    duration: Duration(seconds: 1),
+                                    child: Text(
+                                      "${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayLarge!.copyWith(
+                                            color: themeController
+                                                    .isLightMode.value
+                                                ? kLightPrimaryTextColor
+                                                : kprimaryTextColor,
+                                            fontSize: 50,
+                                          ),
+                                    ),
                                   ),
                                   InkWell(
                                     customBorder: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(80),
                                     ),
                                     onTap: () {
-                                      controller.toggleAnimation(widget.index);
+                                      setState(() {
+                                        widget.timer.isPaused == 0
+                                            ? stopTimer()
+                                            : startTimer();
+                                        widget.timer.isPaused =
+                                            widget.timer.isPaused == 0 ? 1 : 0;
+                                      });
                                     },
                                     child: Padding(
-                                        padding: EdgeInsets.all(25.0),
+                                        padding: EdgeInsets.all(20),
                                         child: GestureDetector(
                                           onTap: _toggleAnimation,
-                                          child: AnimatedBuilder(
-                                            animation: _controller,
-                                            builder: (context, child) {
-                                              return CustomPaint(
-                                                painter: CirclePainter(
-                                                    _controller.value),
-                                                child: Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  child: Icon(
-                                                    controller.pausedTimers[
-                                                                widget.index] ==
-                                                            0
-                                                        ? Icons.pause
-                                                        : Icons.play_arrow,
-                                                    size: 30,
-                                                    color:
-                                                        kLightPrimaryDisabledTextColor,
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: kprimaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(80)),
+                                            width: 80,
+                                            height: 80,
+                                            child: Icon(
+                                              widget.timer.isPaused == 0
+                                                  ? Icons.pause
+                                                  : Icons.play_arrow,
+                                              size: 30,
+                                              color: ksecondaryBackgroundColor,
+                                            ),
                                           ),
                                         )),
                                   )
@@ -230,34 +225,4 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-}
-
-class CirclePainter extends CustomPainter {
-  final double progress;
-
-  CirclePainter(this.progress);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = kprimaryColor
-      ..strokeWidth = 50
-      ..style = PaintingStyle.stroke;
-
-    double angle = 2 * math.pi * progress;
-
-    canvas.drawArc(
-      Rect.fromCenter(
-          center: Offset(size.width / 2, size.height / 2),
-          width: size.width / 2,
-          height: size.height / 2),
-      -math.pi / 2,
-      angle,
-      false,
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
