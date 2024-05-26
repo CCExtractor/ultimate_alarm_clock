@@ -26,6 +26,7 @@ class TimerView extends GetView<TimerController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height / 8.9),
         child: AppBar(
@@ -117,11 +118,12 @@ class TimerView extends GetView<TimerController> {
               child: FloatingActionButton(
                 onPressed: () {
                   Utils.hapticFeedback();
+                  TimerSelector(context);
                 },
-                backgroundColor: ksecondaryBackgroundColor,
+                backgroundColor: kprimaryColor,
                 child: const Icon(
                   Icons.add_alarm,
-                  color: kprimaryColor,
+                  color: ksecondaryBackgroundColor,
                   size: 26,
                 ),
               ),
@@ -201,21 +203,23 @@ class TimerView extends GetView<TimerController> {
                               ),
                         fontSize: 15,
                       ),
-                ),Spacer(),
+                ),
+                Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () {
                       inputTimeController.changeTimePickerTimer();
                     },
-                    child:  Icon(
-                      Icons.keyboard,color: themeController.isLightMode.value
-                        ? kLightPrimaryTextColor.withOpacity(
-                      0.5,
-                    )
-                        : kprimaryTextColor.withOpacity(
-                      0.5,
-                    ),
+                    child: Icon(
+                      Icons.keyboard,
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor.withOpacity(
+                              0.5,
+                            )
+                          : kprimaryTextColor.withOpacity(
+                              0.5,
+                            ),
                       size: 20,
                     ),
                   ),
@@ -678,7 +682,8 @@ class TimerView extends GetView<TimerController> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: InkWell(borderRadius: BorderRadius.circular(18),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
                     onTap: () {
                       Get.back();
                     },
@@ -687,17 +692,19 @@ class TimerView extends GetView<TimerController> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Cancel',
-                          style:
-                              Theme.of(context).textTheme.displayMedium!.copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor.withOpacity(
-                                            0.5,
-                                          )
-                                        : kprimaryTextColor.withOpacity(
-                                            0.5,
-                                          ),
-                                    fontSize: 15,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor.withOpacity(
+                                        0.5,
+                                      )
+                                    : kprimaryTextColor.withOpacity(
+                                        0.5,
+                                      ),
+                                fontSize: 15,
+                              ),
                         ),
                       ),
                     ),
@@ -705,31 +712,40 @@ class TimerView extends GetView<TimerController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: InkWell(borderRadius: BorderRadius.circular(18),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
                     onTap: () {
                       controller.remainingTime.value = Duration(
                         hours: controller.hours.value,
                         minutes: controller.minutes.value,
                         seconds: controller.seconds.value,
                       );
+                      if(controller.hours.value != 0 ||
+                      controller.minutes.value != 0||
+                      controller.seconds.value != 0)
                       controller.createTimer();
+                      controller.hours.value = 0;
+                      controller.minutes.value = 1;
+                      controller.seconds.value = 0;
                     },
                     child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'OK',
-                          style:
-                              Theme.of(context).textTheme.displayMedium!.copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor.withOpacity(
-                                            0.5,
-                                          )
-                                        : kprimaryTextColor.withOpacity(
-                                            0.5,
-                                          ),
-                                    fontSize: 15,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor.withOpacity(
+                                        0.5,
+                                      )
+                                    : kprimaryTextColor.withOpacity(
+                                        0.5,
+                                      ),
+                                fontSize: 15,
+                              ),
                         ),
                       ),
                     ),

@@ -8,9 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   MethodChannel timerChannel = const MethodChannel('timer');
-  final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
-  final currentTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   RxInt startTime = 0.obs;
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
@@ -20,7 +18,6 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   RxList timers = [].obs;
   RxList isRinging = [].obs;
 
-  late AnimationController _controller;
 
   getFakeTimerModel() async {
     TimerModel fakeTimer = await Utils.genFakeTimerModel();
@@ -29,14 +26,6 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
 
   updateTimerInfo() async {
     timerList.value = await IsarDb.getAllTimers();
-    for (var timer in timerList) {
-      print('Timer ID: ${timer.timerId}');
-      print('Started on: ${timer.startedOn}');
-      print('timer value: ${timer.timerValue}');
-      print('Ringtone Name: ${timer.ringtoneName}');
-      print('Timer Name: ${timer.timerName}');
-      print('Is Paused: ${timer.isPaused}');
-    }
   }
 
   late int currentTimerIsarId;
@@ -63,7 +52,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   }
 
   @override
-  void onClose() {
+  Future<void> onClose() async {
     super.onClose();
   }
 

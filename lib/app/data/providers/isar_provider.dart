@@ -128,9 +128,7 @@ class IsarDb {
       await db.alarmModels.put(alarmRecord);
     });
     final sqlmap = alarmRecord.toSQFliteMap();
-    await sql!.insert('alarms', sqlmap).then((value) {
-      sql.close();
-    });
+    await sql!.insert('alarms', sqlmap);
     return alarmRecord;
   }
 
@@ -294,13 +292,8 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.timerModels.put(timer);
     });
-    try {
-      await sql!.insert('timers', timer.toMap()).then((value) {
-        sql.close();
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+
+    await sql!.insert('timers', timer.toMap());
     return timer;
   }
 
@@ -311,22 +304,17 @@ class IsarDb {
       timer.toMap(),
       where: 'id = ?',
       whereArgs: [timer.timerId],
-    ).then((value) {
-      sql.close();
-      return value;
-    });
+    );
   }
 
   static Future<int> updateTimerName(int id, String newTimerName) async {
     final sql = await IsarDb().getTimerSQLiteDatabase();
-    return await sql!
-        .update(
+    return await sql!.update(
       'timers',
       {'timerName': newTimerName},
       where: 'id = ?',
       whereArgs: [id],
-    )
-      ;
+    );
   }
 
   static Future<int> deleteTimer(int id) async {
@@ -336,12 +324,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.timerModels.delete(id);
     });
-    return await sql!
-        .delete('timers', where: 'id = ?', whereArgs: [id]).then((value) {
-          print("$value ss");
-      sql.close();
-      return value;
-    });
+    return await sql!.delete('timers', where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<List<TimerModel>> getAllTimers() async {
@@ -368,15 +351,14 @@ class IsarDb {
       await db.timerModels.put(timer);
     });
     final sql = await IsarDb().getTimerSQLiteDatabase();
-     await sql!
-        .update(
+    await sql!.update(
       'timers',
       {'timeElapsed': timer.timeElapsed},
       where: 'id = ?',
       whereArgs: [timer.timerId],
-    )
-     ;
+    );
   }
+
   static Stream<List<TimerModel>> getTimers() {
     final isarProvider = IsarDb();
     final controller = StreamController<List<TimerModel>>.broadcast();
@@ -384,7 +366,7 @@ class IsarDb {
     isarProvider.db.then((db) {
       final stream = db.timerModels.where().watch(fireImmediately: true);
       stream.listen(
-            (data) => controller.add(data),
+        (data) => controller.add(data),
         onError: (error) => controller.addError(error),
         onDone: () => controller.close(),
       );
@@ -403,16 +385,13 @@ class IsarDb {
       await db.timerModels.put(timer);
     });
     final sql = await IsarDb().getTimerSQLiteDatabase();
-    await sql!
-        .update(
+    await sql!.update(
       'timers',
       {'isPaused': timer.isPaused},
       where: 'id = ?',
       whereArgs: [timer.timerId],
     );
-
   }
-
 
   static Future<int> getNumberOfTimers() async {
     final sql = await IsarDb().getTimerSQLiteDatabase();

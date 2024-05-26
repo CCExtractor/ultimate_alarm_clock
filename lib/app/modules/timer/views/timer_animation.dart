@@ -112,7 +112,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                   duration: Duration(milliseconds: 1000),
                   height: context.height / 3.3,
                   width: context.width *
-                      ((widget.timer.timeElapsed + 500) /
+                      ((widget.timer.timeElapsed) /
                           (widget.timer.timerValue)),
                 ),
                 Center(
