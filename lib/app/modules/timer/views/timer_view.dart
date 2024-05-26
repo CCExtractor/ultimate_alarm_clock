@@ -19,7 +19,8 @@ class TimerView extends GetView<TimerController> {
   TimerView({Key? key}) : super(key: key);
 
   final ThemeController themeController = Get.find<ThemeController>();
-  final InputTimeController inputTimeController = Get.put(InputTimeController());
+  final InputTimeController inputTimeController =
+      Get.put(InputTimeController());
   var width = Get.width;
   var height = Get.height;
   @override
@@ -70,7 +71,7 @@ class TimerView extends GetView<TimerController> {
           : StreamBuilder(
               stream: IsarDb.getTimers(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData && snapshot.data!=[]) {
+                if (!snapshot.hasData && snapshot.data != []) {
                   return const Center(
                     child: CircularProgressIndicator.adaptive(
                       backgroundColor: Colors.transparent,
@@ -81,9 +82,8 @@ class TimerView extends GetView<TimerController> {
                   );
                 } else {
                   // list of pause values of timers
-                  controller.initializeTempTimerVariables();
                   List<TimerModel>? listOfTimers = snapshot.data;
-                    return ListView.builder(
+                  return ListView.builder(
                     controller: controller.scrollController,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
@@ -91,7 +91,11 @@ class TimerView extends GetView<TimerController> {
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
-                          TimerAnimatedCard(listOfTimers![index]),
+                          TimerAnimatedCard(
+                            key: ValueKey(listOfTimers![index].timerId),
+                            index: index,
+                            timer: listOfTimers![index],
+                          ),
                           if (index == snapshot.data!.length - 1)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -197,6 +201,24 @@ class TimerView extends GetView<TimerController> {
                               ),
                         fontSize: 15,
                       ),
+                ),Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      inputTimeController.changeTimePickerTimer();
+                    },
+                    child:  Icon(
+                      Icons.keyboard,color: themeController.isLightMode.value
+                        ? kLightPrimaryTextColor.withOpacity(
+                      0.5,
+                    )
+                        : kprimaryTextColor.withOpacity(
+                      0.5,
+                    ),
+                      size: 20,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -204,7 +226,6 @@ class TimerView extends GetView<TimerController> {
           InkWell(
             onTap: () {
               Utils.hapticFeedback();
-              inputTimeController.changeTimePickerTimer();
             },
             child: Obx(
               () => Container(
@@ -657,29 +678,34 @@ class TimerView extends GetView<TimerController> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: InkWell(
+                  child: InkWell(borderRadius: BorderRadius.circular(18),
                     onTap: () {
                       Get.back();
                     },
-                    child: Text(
-                      'Cancel',
-                      style:
-                          Theme.of(context).textTheme.displayMedium!.copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor.withOpacity(
-                                        0.5,
-                                      )
-                                    : kprimaryTextColor.withOpacity(
-                                        0.5,
-                                      ),
-                                fontSize: 15,
-                              ),
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Cancel',
+                          style:
+                              Theme.of(context).textTheme.displayMedium!.copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor.withOpacity(
+                                            0.5,
+                                          )
+                                        : kprimaryTextColor.withOpacity(
+                                            0.5,
+                                          ),
+                                    fontSize: 15,
+                                  ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: InkWell(
+                  child: InkWell(borderRadius: BorderRadius.circular(18),
                     onTap: () {
                       controller.remainingTime.value = Duration(
                         hours: controller.hours.value,
@@ -688,19 +714,24 @@ class TimerView extends GetView<TimerController> {
                       );
                       controller.createTimer();
                     },
-                    child: Text(
-                      'OK',
-                      style:
-                          Theme.of(context).textTheme.displayMedium!.copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor.withOpacity(
-                                        0.5,
-                                      )
-                                    : kprimaryTextColor.withOpacity(
-                                        0.5,
-                                      ),
-                                fontSize: 15,
-                              ),
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'OK',
+                          style:
+                              Theme.of(context).textTheme.displayMedium!.copyWith(
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor.withOpacity(
+                                            0.5,
+                                          )
+                                        : kprimaryTextColor.withOpacity(
+                                            0.5,
+                                          ),
+                                    fontSize: 15,
+                                  ),
+                        ),
+                      ),
                     ),
                   ),
                 ),

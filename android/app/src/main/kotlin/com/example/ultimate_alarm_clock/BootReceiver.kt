@@ -6,32 +6,27 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
-import java.time.LocalTime
-import java.time.Duration
-import org.json.JSONArray
-import java.util.*
-
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import android.os.CountDownTimer
+import androidx.core.app.NotificationCompat
 
 
 class BootReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
-            // Open the database
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED){
+
             val dbHelper = DatabaseHelper(context)
             val db = dbHelper.readableDatabase
-
-            // Get the latest alarm
             val ringTime = getLatestAlarm(db, true)
-
-            // Close the database
             db.close()
-
-            // Schedule the alarm
             if (ringTime != null) {
-
-                 scheduleAlarm(ringTime, context)
-
+                scheduleAlarm(ringTime, context)
             }
 
+        }
     }
     fun scheduleAlarm(milliSeconds: Long, context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -47,6 +42,9 @@ class BootReceiver : BroadcastReceiver() {
         val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
+
+
+
 
 
 

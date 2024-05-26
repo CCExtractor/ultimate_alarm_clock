@@ -666,4 +666,15 @@ class Utils {
       );
     }
   }
+  static int getDifferenceMillisFromNow(String datetimeString, int milliseconds) {
+    try {
+      final providedDatetime = DateTime.parse(datetimeString);
+      final updatedDatetime = providedDatetime.add(Duration(milliseconds: milliseconds));
+      final currentDatetime = DateTime.now();
+      final difference = updatedDatetime.difference(currentDatetime);
+      return difference.inMilliseconds;
+    } catch (e) {
+      return 0;
+    }
+  }
 }
