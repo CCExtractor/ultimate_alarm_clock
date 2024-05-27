@@ -20,7 +20,6 @@ fun getLatestTimer(db: SQLiteDatabase): Triple<Int, Long, String>? {
         """, null
     )
 
-
     return if (cursor.moveToFirst()) {
         val timer = TimerModel.fromCursor(cursor)
         cursor.close()
@@ -41,6 +40,7 @@ fun pauseTimer(db: SQLiteDatabase, timerId: Int): Boolean {
 
     return rowsAffected > 0
 }
+
 fun isFutureDatetimeWithMillis(datetimeString: String, milliseconds: Long): Long {
     try {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS")

@@ -37,7 +37,6 @@ class MainActivity : FlutterActivity()  {
         var intentFilter = IntentFilter()
         intentFilter.addAction("com.example.ultimate_alarm_clock.START_TIMERNOTIF")
         intentFilter.addAction("com.example.ultimate_alarm_clock.STOP_TIMERNOTIF")
-        intentFilter.addAction(Intent.ACTION_BOOT_COMPLETED)
         context.registerReceiver(TimerNotification(),intentFilter)
     }
 

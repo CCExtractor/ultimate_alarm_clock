@@ -16,9 +16,7 @@ class TimerNotification: BroadcastReceiver() {
         var notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
             override fun onTick(millisUntilFinished: Long) {
-                println(millisUntilFinished)
                     showTimerNotification(millisUntilFinished,"Timer",context)
-
             }
 
             override fun onFinish() {
