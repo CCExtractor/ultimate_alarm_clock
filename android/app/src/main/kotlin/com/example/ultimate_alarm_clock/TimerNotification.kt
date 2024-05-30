@@ -1,41 +1,22 @@
 package com.example.ultimate_alarm_clock
-
-import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.SystemClock
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.os.Build
-import android.os.CountDownTimer
 import androidx.core.app.NotificationCompat
 
-
-class BootReceiver : BroadcastReceiver() {
-
+class TimerNotification: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED){
-
-            val dbHelper = DatabaseHelper(context)
-            val db = dbHelper.readableDatabase
-            val ringTime = getLatestAlarm(db, true)
-            db.close()
-            if (ringTime != null) {
-                scheduleAlarm(ringTime, context)
-            }
-
         val timerdbhelper = TimerDatabaseHelper(context)
         val timerdb = timerdbhelper.readableDatabase
         val time = getLatestTimer(timerdb)
-        timerdb.close()
         var notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
             override fun onTick(millisUntilFinished: Long) {
-                println(millisUntilFinished)
-                showTimerNotification(millisUntilFinished,"Timer",context)
-
+                    showTimerNotification(millisUntilFinished,"Timer",context)
             }
 
             override fun onFinish() {
@@ -43,7 +24,8 @@ class BootReceiver : BroadcastReceiver() {
             }
         })
 
-
+        if(intent.action =="com.example.ultimate_alarm_clock.START_TIMERNOTIF" || intent.action == Intent.ACTION_BOOT_COMPLETED )
+        {
             createNotificationChannel(context)
 
 
@@ -55,23 +37,16 @@ class BootReceiver : BroadcastReceiver() {
 
             }
 
+        }
+        if(intent.action=="com.example.ultimate_alarm_clock.STOP_TIMERNOTIF"){
 
-    }}
-    fun scheduleAlarm(milliSeconds: Long, context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
+        commonTimer.stopTimer()
 
-        // Schedule the alarm
-        val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
-        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+        }
+
+
     }
-    private fun createNotificationChannel(context: Context) {
+private fun createNotificationChannel(context: Context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -91,7 +66,7 @@ class BootReceiver : BroadcastReceiver() {
         val deleteIntent = Intent(context,TimerNotification::class.java)
         deleteIntent.action = "com.example.ultimate_alarm_clock.STOP_TIMERNOTIF"
         val deletePendingIntent = PendingIntent.getBroadcast(context, 5, deleteIntent,
-            PendingIntent.FLAG_IMMUTABLE)
+             PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(context, TimerService.TIMER_CHANNEL_ID)
             .setSmallIcon(R.mipmap.launcher_icon)
             .setContentText("$timerName")
@@ -103,7 +78,7 @@ class BootReceiver : BroadcastReceiver() {
         notificationManager.notify(1,notification)
     }
 
-    private fun formatDuration(milliseconds: Long): String {
+   private fun formatDuration(milliseconds: Long): String {
         val seconds = (milliseconds / 1000) % 60
         val minutes = (milliseconds / (1000 * 60)) % 60
         val hours = (milliseconds / (1000 * 60 * 60)) % 24
@@ -114,8 +89,6 @@ class BootReceiver : BroadcastReceiver() {
             String.format("%02d:%02d", minutes, seconds)
         }
     }
-
-
 
 
 

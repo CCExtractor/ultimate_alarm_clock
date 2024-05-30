@@ -25,7 +25,7 @@ class Pair<T, U> {
   Pair(this.first, this.second);
 }
 
-class HomeController extends GetxController {
+class HomeController extends GetxController  {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   Stream<QuerySnapshot>? firestoreStreamAlarms;

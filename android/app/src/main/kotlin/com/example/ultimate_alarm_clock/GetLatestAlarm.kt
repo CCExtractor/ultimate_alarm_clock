@@ -81,18 +81,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Long? {
     }
 }
 
-fun calculatePriority(days: String, currentDay: Int): Int {
-    if (days == "0000000") {
-        return 0
-    }
-    for (i in 1..7) {
-        val dayIndex = (currentDay + i) % 7
-        if (days[dayIndex] == '1') {
-            return i
-        }
-    }
-    return 7
-}
+
 
 fun stringToTimeOfDay(time: String): LocalTime {
     val parts = time.split(":")

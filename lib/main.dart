@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
@@ -14,7 +15,11 @@ Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  });
   await Firebase.initializeApp();
   await Get.putAsync(() => GetStorageProvider().init());
 

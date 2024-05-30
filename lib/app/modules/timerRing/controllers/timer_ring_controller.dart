@@ -11,9 +11,12 @@ import 'package:vibration/vibration.dart';
 
 class TimerRingController extends GetxController {
   MethodChannel timerChannel = const MethodChannel('timer');
-  final Rx<TimerModel> currentlyRingingAlarm = Utils.genFakeTimerModel().obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
+   getFakeTimerModel()async {
+   TimerModel fakeTimer = await Utils.genFakeTimerModel();
+   return fakeTimer;
+  }
   @override
   void onInit() async {
     super.onInit();
@@ -28,17 +31,17 @@ class TimerRingController extends GetxController {
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);
     });
-    AudioUtils.playTimer(alarmRecord: currentlyRingingAlarm.value);
+    AudioUtils.playTimer(alarmRecord: await getFakeTimerModel().value);
 
     await timerChannel.invokeMethod('cancelTimer');
   }
 
   @override
-  void onClose() {
+  onClose() async {
     Vibration.cancel();
     vibrationTimer!.cancel();
     AudioUtils.stopTimer(
-      ringtoneName: currentlyRingingAlarm.value.ringtoneName,
+      ringtoneName: await getFakeTimerModel().ringtoneName,
     );
     _subscription.cancel();
     super.onClose();
