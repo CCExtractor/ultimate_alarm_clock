@@ -34,6 +34,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final selectedTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final mainAlarmTime = DateTime.now().add(const Duration(minutes: 1)).obs;
   final isActivityenabled = false.obs;
+  final isActivityMonitorenabled = 0.obs;
   final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
@@ -88,6 +89,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final deleteAfterGoesOff = false.obs;
 
   final RxBool showMotivationalQuote = false.obs;
+  final RxBool useScreenActivity = false.obs;
   final RxInt gradient = 0.obs;
   final RxDouble selectedGradientDouble = 0.0.obs;
   final RxDouble volMin = 0.0.obs;
@@ -1036,6 +1038,7 @@ class AddOrUpdateAlarmController extends GetxController {
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
+      activityMonitor: isActivityMonitorenabled.value
     );
   }
 

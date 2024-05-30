@@ -427,6 +427,7 @@ class Utils {
       ringtoneName: 'Default',
       note: '',
       showMotivationalQuote: false,
+      activityMonitor: 0
     );
   }
 

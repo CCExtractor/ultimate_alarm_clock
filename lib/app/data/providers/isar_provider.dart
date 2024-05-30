@@ -38,7 +38,7 @@ class IsarDb {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute('''
-          create table timers ( 
+          CREATE TABLE timers ( 
             id integer primary key autoincrement, 
             startedOn text not null,
             timerValue integer not null,
@@ -95,7 +95,8 @@ class IsarDb {
         deleteAfterGoesOff INTEGER NOT NULL DEFAULT 0,
         showMotivationalQuote INTEGER NOT NULL DEFAULT 0,
         volMin REAL,
-        volMax REAL
+        volMax REAL,
+        activityMonitor INTEGER
       )
     ''');
     await db.execute('''
@@ -338,7 +339,7 @@ class IsarDb {
       'timerName',
       'isPaused',
     ]);
-    if (maps.length > 0) {
+    if ( maps.length > 0) {
       return maps.map((timer) => TimerModel.fromMap(timer)).toList();
     }
     return [];

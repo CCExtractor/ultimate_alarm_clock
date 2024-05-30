@@ -24,8 +24,13 @@ class AlarmReceiver : BroadcastReceiver() {
             putExtra("isAlarm","true")
 
         }
+        val sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
 
-        println("ANDROID STARTING APP")
-        context.startActivity(flutterIntent)
+        val screenOnTimeInMillis = sharedPreferences.getLong("flutter.is_screen_on", 0L)
+        val screenOffTimeInMillis = sharedPreferences.getLong("flutter.is_screen_off", 0L)
+        if(screenOnTimeInMillis-screenOffTimeInMillis>180000 || screenOnTimeInMillis-screenOffTimeInMillis== 0L) {
+            println("ANDROID STARTING APP")
+            context.startActivity(flutterIntent)
+        }
     }
 }

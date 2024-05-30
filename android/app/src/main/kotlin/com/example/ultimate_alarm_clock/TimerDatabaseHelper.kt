@@ -11,14 +11,7 @@ class TimerDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.rawQuery(""" create table timers ( 
-            id integer primary key autoincrement, 
-            startedOn text not null,
-            timerValue integer not null,
-            timeElapsed integer not null,
-            ringtoneName text not null,
-            timerName text not null,
-            isPaused integer not null)""",null)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

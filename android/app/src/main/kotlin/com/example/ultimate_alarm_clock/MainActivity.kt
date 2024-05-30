@@ -10,8 +10,10 @@ import android.content.IntentFilter
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import android.view.WindowManager
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
@@ -19,7 +21,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 
-class MainActivity : FlutterActivity()  {
+class MainActivity : FlutterActivity() {
 
     companion object {
         const val CHANNEL1 = "ulticlock"
@@ -27,7 +29,7 @@ class MainActivity : FlutterActivity()  {
         const val ACTION_START_FLUTTER_APP = "com.example.ultimate_alarm_clock"
         const val EXTRA_KEY = "alarmRing"
         const val ALARM_TYPE = "isAlarm"
-        private var isAlarm :String? = "true"
+        private var isAlarm: String? = "true"
         val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
         private var ringtone: Ringtone? = null
     }
@@ -37,11 +39,8 @@ class MainActivity : FlutterActivity()  {
         var intentFilter = IntentFilter()
         intentFilter.addAction("com.example.ultimate_alarm_clock.START_TIMERNOTIF")
         intentFilter.addAction("com.example.ultimate_alarm_clock.STOP_TIMERNOTIF")
-        context.registerReceiver(TimerNotification(),intentFilter)
+        context.registerReceiver(TimerNotification(), intentFilter)
     }
-
-
-
 
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -64,54 +63,42 @@ class MainActivity : FlutterActivity()  {
             println("NATIVE SAID NO")
         }
 
-        if(isAlarm == "true")
-        {
+        if (isAlarm == "true") {
             methodChannel1.invokeMethod("appStartup", alarmConfig)
         }
-        else if(isAlarm == "false")
-        {
-            methodChannel2.invokeMethod("appStartup", alarmConfig)
-        }
-        methodChannel2.setMethodCallHandler{ call, result ->
-          if(call.method == "scheduleTimer")
-          {
-              val seconds = call.argument<Int>("milliSeconds")
-              scheduleTimer(seconds ?: 0)
-              result.success(null)
-          } else if (call.method == "cancelTimer") {
-              println("FLUTTER CALLED CANCEL ALARMS")
-              cancelAllScheduledTimers()
-              result.success(null)
-          } else if (call.method == "bringAppToForeground") {
-              bringAppToForeground(this)
-              result.success(null)
-          } else if (call.method == "playDefaultAlarm") {
-              playDefaultAlarm(this)
-              result.success(null)
-          } else if (call.method == "stopDefaultAlarm") {
-              stopDefaultAlarm()
-              result.success(null)
-          } else if(call.method == "runtimerNotif")
-          {
-              val startTimerIntent = Intent("com.example.ultimate_alarm_clock.START_TIMERNOTIF")
-              context.sendBroadcast(startTimerIntent)
+        methodChannel2.setMethodCallHandler { call, result ->
+            if (call.method == "playDefaultAlarm") {
+                playDefaultAlarm(this)
+                result.success(null)
+            } else if (call.method == "stopDefaultAlarm") {
+                stopDefaultAlarm()
+                result.success(null)
+            } else if (call.method == "runtimerNotif") {
+                val startTimerIntent = Intent("com.example.ultimate_alarm_clock.START_TIMERNOTIF")
+                context.sendBroadcast(startTimerIntent)
 
-          }else if(call.method == "clearTimerNotif"){
-              val stopTimerIntent = Intent("com.example.ultimate_alarm_clock.STOP_TIMERNOTIF")
-              context.sendBroadcast(stopTimerIntent)
-              var notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-              notificationManager.cancel(1)
-          }
-            else
-          {
-              result.notImplemented()
-          }
+            } else if (call.method == "clearTimerNotif") {
+                val stopTimerIntent = Intent("com.example.ultimate_alarm_clock.STOP_TIMERNOTIF")
+                context.sendBroadcast(stopTimerIntent)
+                var notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(1)
+            } else {
+                result.notImplemented()
+            }
         }
         methodChannel1.setMethodCallHandler { call, result ->
             if (call.method == "scheduleAlarm") {
                 val seconds = call.argument<Int>("milliSeconds")
+                val activityCheck = call.argument<Int>("activityMonitor")
                 println("FLUTTER CALLED SCHEDULE")
-                scheduleAlarm(seconds ?: 0)
+                if (activityCheck == 1) {
+                    val settingPermCheck = Settings.System.canWrite(this)
+                    if (!settingPermCheck) {
+                        openAndroidPermissionsMenu()
+                    }
+                }
+                scheduleAlarm(seconds ?: 0, activityCheck ?: 0)
                 result.success(null)
             } else if (call.method == "cancelAllScheduledAlarms") {
                 println("FLUTTER CALLED CANCEL ALARMS")
@@ -120,7 +107,7 @@ class MainActivity : FlutterActivity()  {
             } else if (call.method == "bringAppToForeground") {
                 bringAppToForeground(this)
                 result.success(null)
-            } else if (call.method == "minimizeApp" ) {
+            } else if (call.method == "minimizeApp") {
                 minimizeApp()
                 result.success(null)
             } else if (call.method == "playDefaultAlarm") {
@@ -134,10 +121,6 @@ class MainActivity : FlutterActivity()  {
             }
         }
     }
-
-
-
-
 
 
     fun bringAppToForeground(context: Context) {
@@ -157,7 +140,7 @@ class MainActivity : FlutterActivity()  {
     }
 
 
-    private fun scheduleAlarm(milliSeconds: Int) {
+    private fun scheduleAlarm(milliSeconds: Int, activityMonitor: Int) {
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
@@ -167,26 +150,33 @@ class MainActivity : FlutterActivity()  {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
-
-        // Schedule the alarm
-        val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
-        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
-    }
-
-    private fun scheduleTimer(milliSeconds: Int) {
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, TimerReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val activityCheckIntent = Intent(this, ScreenMonitorService::class.java)
+        val pendingActivityCheckIntent = PendingIntent.getService(
             this,
-            1,
-            intent,
+            4,
+            activityCheckIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
-
         // Schedule the alarm
+        val tenMinutesInMilliseconds = 600000L
+        val preTriggerTime =
+            SystemClock.elapsedRealtime() + (milliSeconds - tenMinutesInMilliseconds)
         val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
-        println(triggerTime)
+        if (activityMonitor == 1) {
+            alarmManager.setExact(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                preTriggerTime,
+                pendingActivityCheckIntent
+            )
+        } else {
+            val sharedPreferences =
+                getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putLong("flutter.is_screen_off", 0L)
+            editor.apply()
+            editor.putLong("flutter.is_screen_on", 0L)
+            editor.apply()
+        }
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
 
@@ -201,23 +191,20 @@ class MainActivity : FlutterActivity()  {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
-        // Cancel any existing alarms by providing the same pending intent
-        alarmManager.cancel(pendingIntent)
-        pendingIntent.cancel()
-    }
-    private fun cancelAllScheduledTimers() {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, TimerReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val activityCheckIntent = Intent(this, ScreenMonitorService::class.java)
+        val pendingActivityCheckIntent = PendingIntent.getService(
             this,
-            1,
-            intent,
+            4,
+            activityCheckIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
         // Cancel any existing alarms by providing the same pending intent
         alarmManager.cancel(pendingIntent)
         pendingIntent.cancel()
+        alarmManager.cancel(pendingActivityCheckIntent)
+        pendingActivityCheckIntent.cancel()
+
     }
 
     private fun playDefaultAlarm(context: Context) {
@@ -228,5 +215,11 @@ class MainActivity : FlutterActivity()  {
 
     private fun stopDefaultAlarm() {
         ringtone?.stop()
+    }
+
+    private fun openAndroidPermissionsMenu() {
+        val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
+        intent.data = Uri.parse("package:${packageName}")
+        startActivity(intent)
     }
 }
