@@ -69,7 +69,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        (controller.alarmRecord.value == null)
+
+                        (controller.alarmRecord.value = Get.arguments) == null ||
+                                (controller.alarmRecord.value!.alarmID.isEmpty)
                             ? 'Save'.tr
                             : 'Update'.tr,
                         style:
@@ -177,7 +179,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           );
                         }
                         try {
-                          if (controller.alarmRecord.value == null) {
+                          controller.alarmRecord.value = Get.arguments;
+                          if (controller.alarmRecord.value == null|| controller.
+                          alarmRecord.value!.alarmID.isEmpty) {
                             await controller.createAlarm(alarmRecord);
                           } else {
                             AlarmModel updatedAlarmModel =
