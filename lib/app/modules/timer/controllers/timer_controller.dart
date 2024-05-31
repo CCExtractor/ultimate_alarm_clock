@@ -1,211 +1,141 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:uuid/uuid.dart';
 
-class TimerController extends GetxController with WidgetsBindingObserver {
+class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   MethodChannel timerChannel = const MethodChannel('timer');
-  final initialTime = DateTime(0, 0, 0, 0, 1, 0).obs;
   final remainingTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
-  final currentTime = const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   RxInt startTime = 0.obs;
   RxBool isTimerPaused = false.obs;
   RxBool isTimerRunning = false.obs;
-  Rx<Timer?> countdownTimer = Rx<Timer?>(null);
-  TimerModel timerRecord = Utils.genFakeTimerModel();
+  RxBool isbottom = false.obs;
+  Stream? isarTimers;
+  ScrollController scrollController = ScrollController();
+  RxList timers = [].obs;
+  RxList isRinging = [].obs;
+
+
+  getFakeTimerModel() async {
+    TimerModel fakeTimer = await Utils.genFakeTimerModel();
+    return fakeTimer;
+  }
+
+  updateTimerInfo() async {
+    timerList.value = await IsarDb.getAllTimers();
+  }
+
   late int currentTimerIsarId;
   var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
 
-  final _secureStorageProvider = SecureStorageProvider();
-
   String strDigits(int n) => n.toString().padLeft(2, '0');
 
+  final RxList timerList = [].obs;
+
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    loadTimerStateFromStorage();
+    isarTimers = IsarDb.getTimers();
+    updateTimerInfo();
+    scrollController.addListener(() {
+      if (scrollController.offset < scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        isbottom.value = true;
+      } else {
+        isbottom.value = false;
+      }
+    });
   }
 
   @override
-  void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
+  Future<void> onClose() async {
     super.onClose();
   }
 
-  void saveTimerStateToStorage() async {
-    await _secureStorageProvider.writeRemainingTimeInSeconds(
-      remainingTimeInSeconds: remainingTime.value.inSeconds,
-    );
-    await _secureStorageProvider.writeStartTime(
-      startTime: startTime.value,
-    );
-    await _secureStorageProvider.writeIsTimerRunning(
-      isTimerRunning: isTimerRunning.value,
-    );
-    await _secureStorageProvider.writeIsTimerPaused(
-      isTimerPaused: isTimerPaused.value,
-    );
+  void startRinger(int id) async {
+    try {
+      isRinging.value.add(id);
+      print(isRinging.value);
+      if (isRinging.value.length == 1) {
+        await timerChannel.invokeMethod('playDefaultAlarm');
+      }
+    } on PlatformException catch (e) {
+      print('Failed to schedule alarm: ${e.message}');
+    }
   }
 
-  void loadTimerStateFromStorage() async {
-    final storedRemainingTimeInSeconds =
-        await _secureStorageProvider.readRemainingTimeInSeconds();
-    final storedStartTime = await _secureStorageProvider.readStartTime();
-    isTimerRunning.value = await _secureStorageProvider.readIsTimerRunning();
-    isTimerPaused.value = await _secureStorageProvider.readIsTimerPaused();
-
-    if (storedRemainingTimeInSeconds != -1 && storedStartTime != -1) {
-      if (!isTimerPaused.value) {
-        final elapsedMilliseconds =
-            DateTime.now().millisecondsSinceEpoch - storedStartTime;
-        final elapsedSeconds = (elapsedMilliseconds / 1000).round();
-        final updatedRemainingTimeInSeconds =
-            storedRemainingTimeInSeconds - elapsedSeconds;
-
-        if (updatedRemainingTimeInSeconds > 0) {
-          // Update remaining time and start timer from the correct point
-          int hours = updatedRemainingTimeInSeconds ~/
-              3600; // Calculate the number of hours
-          int remainingSeconds = updatedRemainingTimeInSeconds %
-              3600; // Calculate the remaining seconds
-          int minutes =
-              remainingSeconds ~/ 60; // Calculate the number of minutes
-          int seconds =
-              remainingSeconds % 60; // Calculate the number of seconds
-          remainingTime.value = Duration(
-            hours: hours,
-            minutes: minutes,
-            seconds: seconds,
-          );
-          startTimer();
-        } else {
-          stopTimer();
-        }
-      } else {
-        int hours = storedRemainingTimeInSeconds ~/
-            3600; // Calculate the number of hours
-        int remainingSeconds = storedRemainingTimeInSeconds %
-            3600; // Calculate the remaining seconds
-        int minutes = remainingSeconds ~/ 60; // Calculate the number of minutes
-        int seconds = remainingSeconds % 60; // Calculate the number of seconds
-        remainingTime.value = Duration(
-          hours: hours,
-          minutes: minutes,
-          seconds: seconds,
-        );
+  void stopRinger(int id) async {
+    try {
+      isRinging.value.remove(id);
+      print(isRinging.value);
+      if (isRinging.value.length == 0) {
+        await timerChannel.invokeMethod('stopDefaultAlarm');
       }
+    } on PlatformException catch (e) {
+      print('Failed to schedule alarm: ${e.message}');
     }
   }
 
   void createTimer() async {
-    timerRecord.timerTime = Utils.formatDateTimeToHHMMSS(
-      DateTime.now().add(remainingTime.value),
-    );
-    timerRecord.mainTimerTime = Utils.formatDateTimeToHHMMSS(
-      DateTime.now().add(remainingTime.value),
-    );
-    timerRecord.intervalToAlarm = Utils.getMillisecondsToAlarm(
+    TimerModel timerRecord = await getFakeTimerModel();
+
+    timerRecord.startedOn = DateTime.now().toString();
+    ;
+    timerRecord.timerValue = Utils.getMillisecondsToAlarm(
       DateTime.now(),
       DateTime.now().add(remainingTime.value),
     );
     timerRecord.ringtoneName = 'Default';
-    scheduleTimer(timerRecord);
+    timerRecord.timerName =
+        '${Utils.formatMilliseconds(timerRecord.timerValue)} Timer';
 
-    await _secureStorageProvider.writeTimerId(timerId: timerRecord.isarId);
+    IsarDb.insertTimer(timerRecord).then((value) async {
+      updateTimerInfo();
+    });
+    Get.back();
   }
 
-  void startTimer() async {
-    if (remainingTime.value.inSeconds > 0) {
-      final now = DateTime.now();
-      startTime.value = now.millisecondsSinceEpoch;
-      isTimerRunning.value = true;
-      isTimerPaused.value = false;
-
-      saveTimerStateToStorage();
-
-      countdownTimer.value = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => setCountDown(),
-      );
-    }
-  }
-
-  scheduleTimer(TimerModel timerRecord) async {
-    DateTime? timerDateTime = Utils.stringToDateTime(timerRecord.timerTime);
-    if (timerDateTime != null) {
-      await timerChannel.invokeMethod('cancelTimer');
-      int intervaltoTimer = Utils.getMillisecondsToTimer(
-        DateTime.now(),
-        timerDateTime,
-      );
-      try {
-        await timerChannel
-            .invokeMethod('scheduleTimer', {'milliSeconds': intervaltoTimer});
-      } on PlatformException catch (e) {
-        print("Failed to schedule alarm: ${e.message}");
-      }
-    }
+  deleteTimer(int id) async {
+    await IsarDb.deleteTimer(id).then((value) => updateTimerInfo());
+    updateTimerInfo();
   }
 
   cancelTimer() async {
     await timerChannel.invokeMethod('cancelTimer');
   }
 
-  void stopTimer() async {
-    countdownTimer.value?.cancel();
-    isTimerPaused.value = false;
-    isTimerRunning.value = false;
-    initialTime.value = DateTime(0, 0, 0, 0, 1, 0);
-    remainingTime.value = Duration(
-      hours: initialTime.value.hour,
-      minutes: initialTime.value.minute,
-      seconds: initialTime.value.second,
-    );
-    currentTime.value = const Duration(hours: 0, minutes: 0, seconds: 0);
-    startTime.value = 0;
-    await _secureStorageProvider.removeRemainingTimeInSeconds();
-    await _secureStorageProvider.removeStartTime();
-    await _secureStorageProvider.writeIsTimerRunning(isTimerRunning: false);
-    await _secureStorageProvider.writeIsTimerPaused(isTimerPaused: false);
-  }
+  @override
+  void onDetached() {}
 
-  void pauseTimer() async {
-    countdownTimer.value?.cancel();
-    isTimerPaused.value = true;
-
-    saveTimerStateToStorage();
-    await cancelTimer();
-    int timerId = await SecureStorageProvider().readTimerId();
-    await IsarDb.deleteAlarm(timerId);
-  }
-
-  void resumeTimer() async {
-    if (isTimerPaused.value) {
-      countdownTimer.value = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => setCountDown(),
-      );
-      isTimerPaused.value = false;
-
-      createTimer();
+  @override
+  Future<void> onHidden() async {
+    try {
+      await timerChannel.invokeMethod('runtimerNotif');
+      Get.back();
+    } on PlatformException catch (e) {
+      print('Failed to schedule alarm: ${e.message}');
+      Get.back();
     }
   }
 
-  void setCountDown() {
-    const reduceSecondsBy = 1;
-    final seconds = remainingTime.value.inSeconds - reduceSecondsBy;
-    if (seconds < 0) {
-      stopTimer();
-    } else {
-      remainingTime.value = Duration(seconds: seconds);
+  @override
+  onInactive() {}
+
+  @override
+  void onPaused() {}
+
+  @override
+  onResumed() async {
+    try {
+      await timerChannel.invokeMethod('clearTimerNotif');
+      Get.back();
+    } on PlatformException catch (e) {
+      print('Failed to schedule alarm: ${e.message}');
+      Get.back();
     }
   }
 }

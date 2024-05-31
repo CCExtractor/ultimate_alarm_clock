@@ -1,34 +1,50 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
+import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_animation.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'dart:math' as math;
+
+import '../../../data/models/timer_model.dart';
 
 class TimerView extends GetView<TimerController> {
   TimerView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
-  InputTimeController inputTimeController = Get.put(InputTimeController());
-
+  final ThemeController themeController = Get.find<ThemeController>();
+  final InputTimeController inputTimeController =
+      Get.put(InputTimeController());
+  var width = Get.width;
+  var height = Get.height;
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height / 7.9),
+        preferredSize: Size.fromHeight(height / 8.9),
         child: AppBar(
           toolbarHeight: height / 7.9,
           elevation: 0.0,
-          centerTitle: true,
+          title: Text(
+            'Timer',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor.withOpacity(
+                          0.75,
+                        )
+                      : kprimaryTextColor.withOpacity(
+                          0.75,
+                        ),
+                  fontSize: 26,
+                ),
+          ),
           actions: [
             LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -51,621 +67,695 @@ class TimerView extends GetView<TimerController> {
           ],
         ),
       ),
-      body: Obx(
-        () => controller.isTimerRunning.value
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Obx(
-                      () {
-                        final hours = controller.strDigits(
-                          controller.remainingTime.value.inHours.remainder(24),
-                        );
-                        final minutes = controller.strDigits(
-                          controller.remainingTime.value.inMinutes
-                              .remainder(60),
-                        );
-                        final seconds = controller.strDigits(
-                          controller.remainingTime.value.inSeconds
-                              .remainder(60),
-                        );
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  hours,
-                                  style: const TextStyle(
-                                    fontSize: 50.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Text(
-                              ':',
-                              style: TextStyle(
-                                fontSize: 50.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  minutes,
-                                  style: const TextStyle(
-                                    fontSize: 50.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Text(
-                              ':',
-                              style: TextStyle(
-                                fontSize: 50.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  seconds,
-                                  style: const TextStyle(
-                                    fontSize: 50.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+      body: Obx(() => controller.timerList.value.length == 0
+          ? addATimerSpace(context)
+          : StreamBuilder(
+              stream: IsarDb.getTimers(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData && snapshot.data != []) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation(
+                        kprimaryColor,
+                      ),
                     ),
-                  ),
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FloatingActionButton.small(
-                          heroTag: 'stop',
-                          onPressed: () async {
-                            Utils.hapticFeedback();
-                            controller.stopTimer();
-                            int timerId =
-                                await SecureStorageProvider().readTimerId();
-                            await IsarDb.deleteAlarm(timerId);
-                          },
-                          child: const Icon(Icons.close_rounded),
-                        ),
-                        SizedBox(
-                          width: width * 0.11,
-                        ),
-                        FloatingActionButton(
-                          heroTag: 'pause',
-                          onPressed: () {
-                            Utils.hapticFeedback();
-                            controller.isTimerPaused.value
-                                ? controller.resumeTimer()
-                                : controller.pauseTimer();
-                          },
-                          child: Icon(
-                            controller.isTimerPaused.value
-                                ? Icons.play_arrow_rounded
-                                : Icons.pause_rounded,
-                            size: 33,
+                  );
+                } else {
+                  // list of pause values of timers
+                  List<TimerModel>? listOfTimers = snapshot.data;
+                  return ListView.builder(
+                    controller: controller.scrollController,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          TimerAnimatedCard(
+                            key: ValueKey(listOfTimers![index].timerId),
+                            index: index,
+                            timer: listOfTimers![index],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            : InkWell(
-                onTap: () {
+                          if (index == snapshot.data!.length - 1)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: addATimerSpace(context),
+                            )
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            )),
+      floatingActionButton: Obx(
+        () => Visibility(
+          visible: controller.isbottom.value,
+          child: Container(
+            height: 85,
+            child: FittedBox(
+              child: FloatingActionButton(
+                onPressed: () {
                   Utils.hapticFeedback();
-                  inputTimeController.changeTimePickerTimer();
+                  TimerSelector(context);
                 },
-                child: Obx(
-                  () => Container(
-                    color: themeController.isLightMode.value
-                        ? kLightPrimaryBackgroundColor
-                        : kprimaryBackgroundColor,
-                    height: height * 0.32,
-                    width: width,
-                    child: inputTimeController.isTimePickerTimer.value
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Hours',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.008,
-                                  ),
-                                  NumberPicker(
-                                    minValue: 0,
-                                    maxValue: 23,
-                                    value: controller.hours.value,
-                                    onChanged: (value) {
-                                      Utils.hapticFeedback();
-                                      controller.hours.value = value;
-                                      inputTimeController.
-                                      setTextFieldTimerTime();
-                                    },
-                                    infiniteLoop: true,
-                                    itemWidth: width * 0.17,
-                                    zeroPad: true,
-                                    selectedTextStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: kprimaryColor,
-                                        ),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          fontSize: 20,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        top: BorderSide(
-                                          width: width * 0.005,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                        bottom: BorderSide(
-                                          width: width * 0.005,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: width * 0.02,
-                                  right: width * 0.02,
-                                  top: height * 0.035,
-                                ),
-                                child: Text(
-                                  ':',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
-                                      ),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Minutes',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.008,
-                                  ),
-                                  NumberPicker(
-                                    minValue: 0,
-                                    maxValue: 59,
-                                    value: controller.minutes.value,
-                                    onChanged: (value) {
-                                      controller.minutes.value = value;
-                                      inputTimeController.
-                                      setTextFieldTimerTime();
-                                    },
-                                    infiniteLoop: true,
-                                    itemWidth: width * 0.17,
-                                    zeroPad: true,
-                                    selectedTextStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: kprimaryColor,
-                                        ),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          fontSize: 20,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        top: BorderSide(
-                                          width: width * 0.005,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                        bottom: BorderSide(
-                                          width: width * 0.005,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: width * 0.02,
-                                  right: width * 0.02,
-                                  top: height * 0.035,
-                                ),
-                                child: Text(
-                                  ':',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
-                                      ),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Seconds',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.008,
-                                  ),
-                                  NumberPicker(
-                                    minValue: 0,
-                                    maxValue: 59,
-                                    value: controller.seconds.value,
-                                    onChanged: (value) {
-                                      controller.seconds.value = value;
-                                      inputTimeController.
-                                      setTextFieldTimerTime();
-                                    },
-                                    infiniteLoop: true,
-                                    itemWidth: width * 0.17,
-                                    zeroPad: true,
-                                    selectedTextStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: kprimaryColor,
-                                        ),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          fontSize: 20,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        top: BorderSide(
-                                          width: width * 0.005,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                        bottom: BorderSide(
-                                          width: width * 0.005,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Hours',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.008,
-                                  ),
-                                  SizedBox(
-                                    width: 80,
-                                    child: TextField(
-                                      onChanged: (_) {
-                                        inputTimeController.setTimerTime();
-                                      },
-                                      decoration: const InputDecoration(
-                                        hintText: 'HH',
-                                        border: InputBorder.none,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      controller: inputTimeController
-                                          .inputHoursControllerTimer,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(
-                                            '[1,2,3,4,5,6,7,8,9,0]',
-                                          ),
-                                        ),
-                                        LengthLimitingTextInputFormatter(
-                                          2,
-                                        ),
-                                        LimitRange(
-                                          0,
-                                          23,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: width * 0.02,
-                                  right: width * 0.02,
-                                  top: height * 0.035,
-                                ),
-                                child: Text(
-                                  ':',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
-                                      ),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Minutes',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.008,
-                                  ),
-                                  SizedBox(
-                                    width: 80,
-                                    child: TextField(
-                                      onChanged: (_) {
-                                        inputTimeController.setTimerTime();
-                                      },
-                                      decoration: const InputDecoration(
-                                        hintText: 'MM',
-                                        border: InputBorder.none,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      controller: inputTimeController
-                                          .inputMinutesControllerTimer,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(
-                                            '[1,2,3,4,5,6,7,8,9,0]',
-                                          ),
-                                        ),
-                                        LengthLimitingTextInputFormatter(
-                                          2,
-                                        ),
-                                        LimitRange(
-                                          0,
-                                          59,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: width * 0.02,
-                                  right: width * 0.02,
-                                  top: height * 0.035,
-                                ),
-                                child: Text(
-                                  ':',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
-                                      ),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Seconds',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeController
-                                                  .isLightMode.value
-                                              ? kLightPrimaryDisabledTextColor
-                                              : kprimaryDisabledTextColor,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.008,
-                                  ),
-                                  SizedBox(
-                                    width: 80,
-                                    child: TextField(
-                                      onChanged: (_) {
-                                        inputTimeController.setTimerTime();
-                                      },
-                                      decoration: const InputDecoration(
-                                        hintText: 'SS',
-                                        border: InputBorder.none,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      controller: inputTimeController
-                                          .inputSecondsControllerTimer,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(
-                                            '[1,2,3,4,5,6,7,8,9,0]',
-                                          ),
-                                        ),
-                                        LengthLimitingTextInputFormatter(
-                                          2,
-                                        ),
-                                        LimitRange(
-                                          0,
-                                          59,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                  ),
+                backgroundColor: kprimaryColor,
+                child: const Icon(
+                  Icons.add_alarm,
+                  color: ksecondaryBackgroundColor,
+                  size: 26,
                 ),
               ),
+            ),
+          ),
+        ),
       ),
-      floatingActionButton: Obx(
-        () => controller.isTimerRunning.value
-            ? const SizedBox()
-            : Obx(
-                () => AbsorbPointer(
-                  absorbing: controller.hours.value == 0 &&
-                          controller.minutes.value == 0 &&
-                          controller.seconds.value == 0
-                      ? true
-                      : false,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Utils.hapticFeedback();
+      endDrawer: buildEndDrawer(context),
+    );
+  }
+
+  Widget addATimerSpace(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Utils.hapticFeedback();
+        TimerSelector(context);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.add_alarm_outlined,
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryTextColor.withOpacity(
+                        0.75,
+                      )
+                    : kprimaryTextColor.withOpacity(
+                        0.75,
+                      ),
+                size: 30,
+              ),
+            ),
+          ),
+          Text(
+            'Tap here to add a timer',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryDisabledTextColor
+                      : kprimaryDisabledTextColor,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void TimerSelector(BuildContext context) {
+    Get.defaultDialog(
+      title: '',
+      titlePadding: const EdgeInsets.all(0),
+      backgroundColor: kprimaryBackgroundColor,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 20),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.timer,
+                  size: 20,
+                ),
+                Text(
+                  '  Add timer',
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryTextColor.withOpacity(
+                                0.5,
+                              )
+                            : kprimaryTextColor.withOpacity(
+                                0.5,
+                              ),
+                        fontSize: 15,
+                      ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      inputTimeController.changeTimePickerTimer();
+                    },
+                    child: Icon(
+                      Icons.keyboard,
+                      color: themeController.isLightMode.value
+                          ? kLightPrimaryTextColor.withOpacity(
+                              0.5,
+                            )
+                          : kprimaryTextColor.withOpacity(
+                              0.5,
+                            ),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Utils.hapticFeedback();
+            },
+            child: Obx(
+              () => Container(
+                color: themeController.isLightMode.value
+                    ? kLightPrimaryBackgroundColor
+                    : kprimaryBackgroundColor,
+                width: width,
+                child: inputTimeController.isTimePickerTimer.value
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Hours',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              NumberPicker(
+                                minValue: 0,
+                                maxValue: 99,
+                                value: controller.hours.value,
+                                onChanged: (value) {
+                                  Utils.hapticFeedback();
+                                  controller.hours.value = value;
+                                  inputTimeController.setTextFieldTimerTime();
+                                },
+                                infiniteLoop: true,
+                                itemWidth: width * 0.17,
+                                zeroPad: true,
+                                selectedTextStyle: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: kprimaryColor,
+                                    ),
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      fontSize: 18,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      width: width * 0.005,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                    bottom: BorderSide(
+                                      width: width * 0.005,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: width * 0.02,
+                              right: width * 0.02,
+                              top: height * 0.035,
+                            ),
+                            child: Text(
+                              ':',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryDisabledTextColor
+                                        : kprimaryDisabledTextColor,
+                                  ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Minutes',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              NumberPicker(
+                                minValue: 0,
+                                maxValue: 59,
+                                value: controller.minutes.value,
+                                onChanged: (value) {
+                                  controller.minutes.value = value;
+                                  inputTimeController.setTextFieldTimerTime();
+                                },
+                                infiniteLoop: true,
+                                itemWidth: width * 0.17,
+                                zeroPad: true,
+                                selectedTextStyle: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: kprimaryColor,
+                                    ),
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      fontSize: 18,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      width: width * 0.005,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                    bottom: BorderSide(
+                                      width: width * 0.005,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: width * 0.02,
+                              right: width * 0.02,
+                              top: height * 0.035,
+                            ),
+                            child: Text(
+                              ':',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryDisabledTextColor
+                                        : kprimaryDisabledTextColor,
+                                  ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Seconds',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              NumberPicker(
+                                minValue: 0,
+                                maxValue: 59,
+                                value: controller.seconds.value,
+                                onChanged: (value) {
+                                  controller.seconds.value = value;
+                                  inputTimeController.setTextFieldTimerTime();
+                                },
+                                infiniteLoop: true,
+                                itemWidth: width * 0.17,
+                                zeroPad: true,
+                                selectedTextStyle: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: kprimaryColor,
+                                    ),
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      fontSize: 18,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      width: width * 0.005,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                    bottom: BorderSide(
+                                      width: width * 0.005,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Hours',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              SizedBox(
+                                width: 80,
+                                child: TextField(
+                                  onChanged: (_) {
+                                    inputTimeController.setTimerTime();
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: 'HH',
+                                    border: InputBorder.none,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: inputTimeController
+                                      .inputHoursControllerTimer,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(
+                                        '[1,2,3,4,5,6,7,8,9,0]',
+                                      ),
+                                    ),
+                                    LengthLimitingTextInputFormatter(
+                                      2,
+                                    ),
+                                    LimitRange(
+                                      0,
+                                      99,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: width * 0.02,
+                              right: width * 0.02,
+                              top: height * 0.035,
+                            ),
+                            child: Text(
+                              ':',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryDisabledTextColor
+                                        : kprimaryDisabledTextColor,
+                                  ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Minutes',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              SizedBox(
+                                width: 80,
+                                child: TextField(
+                                  onChanged: (_) {
+                                    inputTimeController.setTimerTime();
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: 'MM',
+                                    border: InputBorder.none,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: inputTimeController
+                                      .inputMinutesControllerTimer,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(
+                                        '[1,2,3,4,5,6,7,8,9,0]',
+                                      ),
+                                    ),
+                                    LengthLimitingTextInputFormatter(
+                                      2,
+                                    ),
+                                    LimitRange(
+                                      0,
+                                      59,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: width * 0.02,
+                              right: width * 0.02,
+                              top: height * 0.035,
+                            ),
+                            child: Text(
+                              ':',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryDisabledTextColor
+                                        : kprimaryDisabledTextColor,
+                                  ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Seconds',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeController.isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
+                                    ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              SizedBox(
+                                width: 80,
+                                child: TextField(
+                                  onChanged: (_) {
+                                    inputTimeController.setTimerTime();
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: 'SS',
+                                    border: InputBorder.none,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: inputTimeController
+                                      .inputSecondsControllerTimer,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(
+                                        '[1,2,3,4,5,6,7,8,9,0]',
+                                      ),
+                                    ),
+                                    LengthLimitingTextInputFormatter(
+                                      2,
+                                    ),
+                                    LimitRange(
+                                      0,
+                                      59,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20.0, 20.00, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Cancel',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor.withOpacity(
+                                        0.5,
+                                      )
+                                    : kprimaryTextColor.withOpacity(
+                                        0.5,
+                                      ),
+                                fontSize: 15,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () {
                       controller.remainingTime.value = Duration(
                         hours: controller.hours.value,
                         minutes: controller.minutes.value,
                         seconds: controller.seconds.value,
                       );
-                      controller.startTimer();
+                      if(controller.hours.value != 0 ||
+                      controller.minutes.value != 0||
+                      controller.seconds.value != 0)
                       controller.createTimer();
+                      controller.hours.value = 0;
+                      controller.minutes.value = 1;
+                      controller.seconds.value = 0;
                     },
-                    backgroundColor: controller.hours.value == 0 &&
-                            controller.minutes.value == 0 &&
-                            controller.seconds.value == 0
-                        ? kprimaryDisabledTextColor
-                        : kprimaryColor,
-                    child: const Icon(
-                      Icons.play_arrow_rounded,
-                      size: 33,
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'OK',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor.withOpacity(
+                                        0.5,
+                                      )
+                                    : kprimaryTextColor.withOpacity(
+                                        0.5,
+                                      ),
+                                fontSize: 15,
+                              ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
+            ),
+          ),
+        ],
       ),
-      endDrawer: buildEndDrawer(context),
     );
   }
 }
