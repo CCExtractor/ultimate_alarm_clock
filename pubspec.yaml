@@ -30,7 +30,7 @@ dependencies:
   mobile_scanner: 3.5.5
   permission_handler: ^11.0.1
   google_sign_in: ^6.0.2
-  url_launcher: ^6.1.11
+  url_launcher: ^6.2.6
   flutter_expandable_fab: ^1.8.1
   vibration: ^1.8.1
   file_picker: ^6.1.1
