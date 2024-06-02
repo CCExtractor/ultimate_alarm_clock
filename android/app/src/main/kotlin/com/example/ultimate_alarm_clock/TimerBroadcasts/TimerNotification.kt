@@ -1,5 +1,4 @@
 package com.example.ultimate_alarm_clock
-
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,12 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.example.ultimate_alarm_clocks.getLatestTimer
+
 
 class TimerNotification : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val timerdbhelper = TimerDatabaseHelper(context)
         val timerdb = timerdbhelper.readableDatabase
         val time = getLatestTimer(timerdb)
+        timerdb.close()
         var notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {

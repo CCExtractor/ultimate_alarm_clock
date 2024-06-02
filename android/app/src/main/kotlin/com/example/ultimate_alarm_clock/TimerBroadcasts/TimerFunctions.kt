@@ -1,5 +1,4 @@
-package com.example.ultimate_alarm_clock
-
+package com.example.ultimate_alarm_clocks
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase

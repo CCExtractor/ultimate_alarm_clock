@@ -3,10 +3,6 @@ package com.example.ultimate_alarm_clock
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import io.flutter.embedding.android.FlutterActivity
-import android.os.Bundle
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -21,14 +17,17 @@ class AlarmReceiver : BroadcastReceiver() {
 
             putExtra("initialRoute", "/")
             putExtra("alarmRing", "true")
-            putExtra("isAlarm","true")
+            putExtra("isAlarm", "true")
 
         }
-        val sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
 
         val screenOnTimeInMillis = sharedPreferences.getLong("flutter.is_screen_on", 0L)
         val screenOffTimeInMillis = sharedPreferences.getLong("flutter.is_screen_off", 0L)
-        if(screenOnTimeInMillis-screenOffTimeInMillis>180000 || screenOnTimeInMillis-screenOffTimeInMillis== 0L) {
+        val activityCheckIntent = Intent(context, ScreenMonitorService::class.java)
+        context.stopService(activityCheckIntent)
+        if (Math.abs(screenOnTimeInMillis - screenOffTimeInMillis) < 180000 || screenOnTimeInMillis - screenOffTimeInMillis == 0L) {
             println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)
         }

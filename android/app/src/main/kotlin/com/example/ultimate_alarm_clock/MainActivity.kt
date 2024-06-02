@@ -22,7 +22,6 @@ import io.flutter.plugin.common.MethodChannel
 
 
 class MainActivity : FlutterActivity() {
-
     companion object {
         const val CHANNEL1 = "ulticlock"
         const val CHANNEL2 = "timer"
@@ -92,12 +91,6 @@ class MainActivity : FlutterActivity() {
                 val seconds = call.argument<Int>("milliSeconds")
                 val activityCheck = call.argument<Int>("activityMonitor")
                 println("FLUTTER CALLED SCHEDULE")
-                if (activityCheck == 1) {
-                    val settingPermCheck = Settings.System.canWrite(this)
-                    if (!settingPermCheck) {
-                        openAndroidPermissionsMenu()
-                    }
-                }
                 scheduleAlarm(seconds ?: 0, activityCheck ?: 0)
                 result.success(null)
             } else if (call.method == "cancelAllScheduledAlarms") {
@@ -222,4 +215,6 @@ class MainActivity : FlutterActivity() {
         intent.data = Uri.parse("package:${packageName}")
         startActivity(intent)
     }
+
+
 }
