@@ -1,4 +1,4 @@
-package com.example.ultimate_alarm_clock
+package com.ccextractor.ultimate_alarm_clock
 
 import android.app.Service
 import android.content.BroadcastReceiver

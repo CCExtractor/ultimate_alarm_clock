@@ -1,4 +1,4 @@
-package com.example.ultimate_alarm_clock
+package com.ccextractor.ultimate_alarm_clock
 
 import android.app.ActivityManager
 import android.app.AlarmManager
@@ -25,7 +25,7 @@ class MainActivity : FlutterActivity() {
     companion object {
         const val CHANNEL1 = "ulticlock"
         const val CHANNEL2 = "timer"
-        const val ACTION_START_FLUTTER_APP = "com.example.ultimate_alarm_clock"
+        const val ACTION_START_FLUTTER_APP = "com.ccextractor.ultimate_alarm_clock"
         const val EXTRA_KEY = "alarmRing"
         const val ALARM_TYPE = "isAlarm"
         private var isAlarm: String? = "true"
@@ -36,8 +36,8 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var intentFilter = IntentFilter()
-        intentFilter.addAction("com.example.ultimate_alarm_clock.START_TIMERNOTIF")
-        intentFilter.addAction("com.example.ultimate_alarm_clock.STOP_TIMERNOTIF")
+        intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.START_TIMERNOTIF")
+        intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF")
         context.registerReceiver(TimerNotification(), intentFilter)
     }
 
@@ -73,11 +73,11 @@ class MainActivity : FlutterActivity() {
                 stopDefaultAlarm()
                 result.success(null)
             } else if (call.method == "runtimerNotif") {
-                val startTimerIntent = Intent("com.example.ultimate_alarm_clock.START_TIMERNOTIF")
+                val startTimerIntent = Intent("com.ccextractor.ultimate_alarm_clock.START_TIMERNOTIF")
                 context.sendBroadcast(startTimerIntent)
 
             } else if (call.method == "clearTimerNotif") {
-                val stopTimerIntent = Intent("com.example.ultimate_alarm_clock.STOP_TIMERNOTIF")
+                val stopTimerIntent = Intent("com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF")
                 context.sendBroadcast(stopTimerIntent)
                 var notificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

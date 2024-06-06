@@ -1,34 +1,51 @@
-package com.example.ultimate_alarm_clock
-import android.app.NotificationChannel
-import android.app.NotificationManager
+package com.ccextractor.ultimate_alarm_clock
+
+import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.SystemClock
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Build
+import android.os.CountDownTimer
 import androidx.core.app.NotificationCompat
-import com.example.ultimate_alarm_clocks.getLatestTimer
+import com.ccextractor.ultimate_alarm_clocks.getLatestTimer
 
 
-class TimerNotification : BroadcastReceiver() {
+class BootReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
-        val timerdbhelper = TimerDatabaseHelper(context)
-        val timerdb = timerdbhelper.readableDatabase
-        val time = getLatestTimer(timerdb)
-        timerdb.close()
-        var notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
-            override fun onTick(millisUntilFinished: Long) {
-                showTimerNotification(millisUntilFinished, "Timer", context)
+
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+
+            val dbHelper = DatabaseHelper(context)
+            val db = dbHelper.readableDatabase
+            val ringTime = getLatestAlarm(db, true)
+            db.close()
+            if (ringTime != null) {
+                scheduleAlarm(ringTime, context)
             }
 
-            override fun onFinish() {
-                notificationManager.cancel(1)
-            }
-        })
+            val timerdbhelper = TimerDatabaseHelper(context)
+            val timerdb = timerdbhelper.readableDatabase
+            val time = getLatestTimer(timerdb)
+            timerdb.close()
+            var notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
+                override fun onTick(millisUntilFinished: Long) {
+                    println(millisUntilFinished)
+                    showTimerNotification(millisUntilFinished, "Timer", context)
 
-        if (intent.action == "com.example.ultimate_alarm_clock.START_TIMERNOTIF" || intent.action == Intent.ACTION_BOOT_COMPLETED) {
+                }
+
+                override fun onFinish() {
+                    notificationManager.cancel(1)
+                }
+            })
             createNotificationChannel(context)
 
 
@@ -40,14 +57,23 @@ class TimerNotification : BroadcastReceiver() {
 
             }
 
-        }
-        if (intent.action == "com.example.ultimate_alarm_clock.STOP_TIMERNOTIF") {
-
-            commonTimer.stopTimer()
 
         }
+    }
 
+    fun scheduleAlarm(milliSeconds: Long, context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
 
+        // Schedule the alarm
+        val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -69,7 +95,7 @@ class TimerNotification : BroadcastReceiver() {
         var notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val deleteIntent = Intent(context, TimerNotification::class.java)
-        deleteIntent.action = "com.example.ultimate_alarm_clock.STOP_TIMERNOTIF"
+        deleteIntent.action = "com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF"
         val deletePendingIntent = PendingIntent.getBroadcast(
             context, 5, deleteIntent,
             PendingIntent.FLAG_IMMUTABLE
