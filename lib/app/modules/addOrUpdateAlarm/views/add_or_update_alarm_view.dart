@@ -166,6 +166,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.isPedometerEnabled.value,
                           numberOfSteps: controller.numberOfSteps.value,
                           ringtoneName: controller.customRingtoneName.value,
+                          activityMonitor: controller.isActivityMonitorenabled.value
                         );
 
                         // Adding offset details to the database if

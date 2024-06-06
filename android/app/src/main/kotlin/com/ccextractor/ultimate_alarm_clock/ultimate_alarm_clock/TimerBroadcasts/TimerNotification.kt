@@ -1,4 +1,4 @@
-package com.example.ultimate_alarm_clock
+package com.ccextractor.ultimate_alarm_clock
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,16 +7,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.ccextractor.ultimate_alarm_clocks.getLatestTimer
 
-class TimerNotification: BroadcastReceiver() {
+
+class TimerNotification : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val timerdbhelper = TimerDatabaseHelper(context)
         val timerdb = timerdbhelper.readableDatabase
         val time = getLatestTimer(timerdb)
-        var notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        timerdb.close()
+        var notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
             override fun onTick(millisUntilFinished: Long) {
-                    showTimerNotification(millisUntilFinished,"Timer",context)
+                showTimerNotification(millisUntilFinished, "Timer", context)
             }
 
             override fun onFinish() {
@@ -24,13 +28,12 @@ class TimerNotification: BroadcastReceiver() {
             }
         })
 
-        if(intent.action =="com.example.ultimate_alarm_clock.START_TIMERNOTIF" || intent.action == Intent.ACTION_BOOT_COMPLETED )
-        {
+        if (intent.action == "com.ccextractor.ultimate_alarm_clock.START_TIMERNOTIF" || intent.action == Intent.ACTION_BOOT_COMPLETED) {
             createNotificationChannel(context)
 
 
 
-            if (time!=null){
+            if (time != null) {
 
                 // Start or stop the timer based on your requirements
                 commonTimer.startTimer(time.second)
@@ -38,15 +41,16 @@ class TimerNotification: BroadcastReceiver() {
             }
 
         }
-        if(intent.action=="com.example.ultimate_alarm_clock.STOP_TIMERNOTIF"){
+        if (intent.action == "com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF") {
 
-        commonTimer.stopTimer()
+            commonTimer.stopTimer()
 
         }
 
 
     }
-private fun createNotificationChannel(context: Context) {
+
+    private fun createNotificationChannel(context: Context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -61,24 +65,26 @@ private fun createNotificationChannel(context: Context) {
     }
 
 
-    private fun showTimerNotification(milliseconds: Long,timerName:String,context: Context){
-        var notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val deleteIntent = Intent(context,TimerNotification::class.java)
-        deleteIntent.action = "com.example.ultimate_alarm_clock.STOP_TIMERNOTIF"
-        val deletePendingIntent = PendingIntent.getBroadcast(context, 5, deleteIntent,
-             PendingIntent.FLAG_IMMUTABLE)
+    private fun showTimerNotification(milliseconds: Long, timerName: String, context: Context) {
+        var notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val deleteIntent = Intent(context, TimerNotification::class.java)
+        deleteIntent.action = "com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF"
+        val deletePendingIntent = PendingIntent.getBroadcast(
+            context, 5, deleteIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         val notification = NotificationCompat.Builder(context, TimerService.TIMER_CHANNEL_ID)
             .setSmallIcon(R.mipmap.launcher_icon)
             .setContentText("$timerName")
             .setContentText(formatDuration(milliseconds))
             .setOnlyAlertOnce(true)
             .setDeleteIntent(deletePendingIntent)
-            .
-            build()
-        notificationManager.notify(1,notification)
+            .build()
+        notificationManager.notify(1, notification)
     }
 
-   private fun formatDuration(milliseconds: Long): String {
+    private fun formatDuration(milliseconds: Long): String {
         val seconds = (milliseconds / 1000) % 60
         val minutes = (milliseconds / (1000 * 60)) % 60
         val hours = (milliseconds / (1000 * 60 * 60)) % 24
@@ -89,8 +95,6 @@ private fun createNotificationChannel(context: Context) {
             String.format("%02d:%02d", minutes, seconds)
         }
     }
-
-
 
 
 }

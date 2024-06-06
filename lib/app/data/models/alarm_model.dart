@@ -50,51 +50,51 @@ class AlarmModel {
   late bool showMotivationalQuote;
   late double volMax;
   late double volMin;
-
+  late int activityMonitor;
   @ignore
   Map? offsetDetails;
 
-  AlarmModel({
-    required this.alarmTime,
-    required this.alarmID,
-    this.sharedUserIds = const [],
-    required this.ownerId,
-    required this.ownerName,
-    required this.lastEditedUserId,
-    required this.mutexLock,
-    this.isEnabled = true,
-    required this.days,
-    required this.intervalToAlarm,
-    required this.isActivityEnabled,
-    required this.minutesSinceMidnight,
-    required this.isLocationEnabled,
-    required this.isSharedAlarmEnabled,
-    required this.isWeatherEnabled,
-    required this.location,
-    required this.weatherTypes,
-    required this.isMathsEnabled,
-    required this.mathsDifficulty,
-    required this.numMathsQuestions,
-    required this.isShakeEnabled,
-    required this.shakeTimes,
-    required this.isQrEnabled,
-    required this.qrValue,
-    required this.isPedometerEnabled,
-    required this.numberOfSteps,
-    required this.activityInterval,
-    this.offsetDetails = const {},
-    required this.mainAlarmTime,
-    required this.label,
-    required this.isOneTime,
-    required this.snoozeDuration,
-    required this.gradient,
-    required this.ringtoneName,
-    required this.note,
-    required this.deleteAfterGoesOff,
-    required this.showMotivationalQuote,
-    required this.volMax,
-    required this.volMin,
-  });
+  AlarmModel(
+      {required this.alarmTime,
+      required this.alarmID,
+      this.sharedUserIds = const [],
+      required this.ownerId,
+      required this.ownerName,
+      required this.lastEditedUserId,
+      required this.mutexLock,
+      this.isEnabled = true,
+      required this.days,
+      required this.intervalToAlarm,
+      required this.isActivityEnabled,
+      required this.minutesSinceMidnight,
+      required this.isLocationEnabled,
+      required this.isSharedAlarmEnabled,
+      required this.isWeatherEnabled,
+      required this.location,
+      required this.weatherTypes,
+      required this.isMathsEnabled,
+      required this.mathsDifficulty,
+      required this.numMathsQuestions,
+      required this.isShakeEnabled,
+      required this.shakeTimes,
+      required this.isQrEnabled,
+      required this.qrValue,
+      required this.isPedometerEnabled,
+      required this.numberOfSteps,
+      required this.activityInterval,
+      this.offsetDetails = const {},
+      required this.mainAlarmTime,
+      required this.label,
+      required this.isOneTime,
+      required this.snoozeDuration,
+      required this.gradient,
+      required this.ringtoneName,
+      required this.note,
+      required this.deleteAfterGoesOff,
+      required this.showMotivationalQuote,
+      required this.volMax,
+      required this.volMin,
+      required this.activityMonitor});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -155,50 +155,52 @@ class AlarmModel {
 
     volMax = documentSnapshot['volMax'];
     volMin = documentSnapshot['volMin'];
+
+    activityMonitor = documentSnapshot['activityMonitor'];
   }
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
     return AlarmModel(
-      alarmTime: map['alarmTime'],
-      alarmID: map['alarmID'],
-      isEnabled: map['isEnabled'] == 1,
-      isLocationEnabled: map['isLocationEnabled'] == 1,
-      isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
-      isWeatherEnabled: map['isWeatherEnabled'] == 1,
-      location: map['location'],
-      activityInterval: map['activityInterval'],
-      minutesSinceMidnight: map['minutesSinceMidnight'],
-      days: stringToBoolList(map['days']),
-      weatherTypes: List<int>.from(jsonDecode(map['weatherTypes'])),
-      isMathsEnabled: map['isMathsEnabled'] == 1,
-      mathsDifficulty: map['mathsDifficulty'],
-      numMathsQuestions: map['numMathsQuestions'],
-      isShakeEnabled: map['isShakeEnabled'] == 1,
-      shakeTimes: map['shakeTimes'],
-      isQrEnabled: map['isQrEnabled'] == 1,
-      qrValue: map['qrValue'],
-      isPedometerEnabled: map['isPedometerEnabled'] == 1,
-      numberOfSteps: map['numberOfSteps'],
-      intervalToAlarm: map['intervalToAlarm'],
-      isActivityEnabled: map['isActivityEnabled'] == 1,
-      sharedUserIds: map['sharedUserIds'] != null
-          ? List<String>.from(jsonDecode(map['sharedUserIds']))
-          : null,
-      ownerId: map['ownerId'],
-      ownerName: map['ownerName'],
-      lastEditedUserId: map['lastEditedUserId'],
-      mutexLock: map['mutexLock'] == 1,
-      mainAlarmTime: map['mainAlarmTime'],
-      label: map['label'],
-      isOneTime: map['isOneTime'] == 1,
-      snoozeDuration: map['snoozeDuration'],
-      gradient: map['gradient'],
-      ringtoneName: map['ringtoneName'],
-      note: map['note'],
-      deleteAfterGoesOff: map['deleteAfterGoesOff'] == 1,
-      showMotivationalQuote: map['showMotivationalQuote'] == 1,
-      volMin: map['volMin'],
-      volMax: map['volMax'],
-    );
+        alarmTime: map['alarmTime'],
+        alarmID: map['alarmID'],
+        isEnabled: map['isEnabled'] == 1,
+        isLocationEnabled: map['isLocationEnabled'] == 1,
+        isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
+        isWeatherEnabled: map['isWeatherEnabled'] == 1,
+        location: map['location'],
+        activityInterval: map['activityInterval'],
+        minutesSinceMidnight: map['minutesSinceMidnight'],
+        days: stringToBoolList(map['days']),
+        weatherTypes: List<int>.from(jsonDecode(map['weatherTypes'])),
+        isMathsEnabled: map['isMathsEnabled'] == 1,
+        mathsDifficulty: map['mathsDifficulty'],
+        numMathsQuestions: map['numMathsQuestions'],
+        isShakeEnabled: map['isShakeEnabled'] == 1,
+        shakeTimes: map['shakeTimes'],
+        isQrEnabled: map['isQrEnabled'] == 1,
+        qrValue: map['qrValue'],
+        isPedometerEnabled: map['isPedometerEnabled'] == 1,
+        numberOfSteps: map['numberOfSteps'],
+        intervalToAlarm: map['intervalToAlarm'],
+        isActivityEnabled: map['isActivityEnabled'] == 1,
+        sharedUserIds: map['sharedUserIds'] != null
+            ? List<String>.from(jsonDecode(map['sharedUserIds']))
+            : null,
+        ownerId: map['ownerId'],
+        ownerName: map['ownerName'],
+        lastEditedUserId: map['lastEditedUserId'],
+        mutexLock: map['mutexLock'] == 1,
+        mainAlarmTime: map['mainAlarmTime'],
+        label: map['label'],
+        isOneTime: map['isOneTime'] == 1,
+        snoozeDuration: map['snoozeDuration'],
+        gradient: map['gradient'],
+        ringtoneName: map['ringtoneName'],
+        note: map['note'],
+        deleteAfterGoesOff: map['deleteAfterGoesOff'] == 1,
+        showMotivationalQuote: map['showMotivationalQuote'] == 1,
+        volMin: map['volMin'],
+        volMax: map['volMax'],
+        activityMonitor: map['activityMonitor']);
   }
 
   Map<String, dynamic> toSQFliteMap() {
@@ -242,6 +244,7 @@ class AlarmModel {
       'showMotivationalQuote': showMotivationalQuote ? 1 : 0,
       'volMin': volMin,
       'volMax': volMax,
+      'activityMonitor' : activityMonitor
     };
   }
 
@@ -289,6 +292,7 @@ class AlarmModel {
 
     volMin = alarmData['volMin'];
     volMax = alarmData['volMax'];
+    activityMonitor = alarmData['activityMonitor'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -339,6 +343,7 @@ class AlarmModel {
       'showMotivationalQuote': alarmRecord.showMotivationalQuote,
       'volMin': alarmRecord.volMin,
       'volMax': alarmRecord.volMax,
+      'activityMonitor' : alarmRecord.activityMonitor
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
@@ -347,17 +352,19 @@ class AlarmModel {
     }
     return alarmMap;
   }
+
   String boolListToString(List<bool> boolList) {
     // Rotate the list to start with Sunday
-    var rotatedList = [boolList.last] + boolList.sublist(0, boolList.length - 1);
+    var rotatedList =
+        [boolList.last] + boolList.sublist(0, boolList.length - 1);
     // Convert the list of bools to a string of 1s and 0s
     return rotatedList.map((b) => b ? '1' : '0').join();
   }
+
   List<bool> stringToBoolList(String s) {
     // Rotate the string to start with Monday
     final rotatedString = s.substring(1) + s[0];
     // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
   }
-
 }

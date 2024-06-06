@@ -1,4 +1,4 @@
-package com.example.ultimate_alarm_clock
+package com.ccextractor.ultimate_alarm_clock
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -20,7 +20,7 @@ class TimerReceiver : BroadcastReceiver() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             putExtra("initialRoute", "/")
             putExtra("alarmRing", "false")
-            putExtra("isAlarm","true")
+            putExtra("isAlarm", "true")
         }
 
         println("ANDROID STARTING APP")

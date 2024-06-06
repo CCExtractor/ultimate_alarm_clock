@@ -1,4 +1,4 @@
-package com.example.ultimate_alarm_clock
+package com.ccextractor.ultimate_alarm_clock
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper

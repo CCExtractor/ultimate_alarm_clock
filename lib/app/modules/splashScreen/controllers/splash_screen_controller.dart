@@ -27,11 +27,11 @@ class SplashScreenController extends GetxController {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-    await IsarDb.getLatestAlarm(_alarmRecord, false);
+        await IsarDb.getLatestAlarm(_alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
-    await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
     AlarmModel latestAlarm =
-    Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
@@ -41,24 +41,24 @@ class SplashScreenController extends GetxController {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-    await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-    await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
     AlarmModel latestAlarm =
-    Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
   }
 
   Future<bool> checkWeatherCondition(
-      LatLng location,
-      List<int> weatherTypeInt,
-      ) async {
+    LatLng location,
+    List<int> weatherTypeInt,
+  ) async {
     List<WeatherTypes> weatherTypes =
-    Utils.getWeatherTypesFromInt(weatherTypeInt);
+        Utils.getWeatherTypesFromInt(weatherTypeInt);
     String? apiKey =
-    await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap);
+        await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap);
     WeatherFactory weatherFactory = WeatherFactory(apiKey!);
     try {
       Weather weatherData = await weatherFactory.currentWeatherByLocation(
@@ -140,9 +140,9 @@ class SplashScreenController extends GetxController {
               LatLng source = Utils.stringToLatLng(latestAlarm.location);
               destination = await FlLocation.getLocationStream().first.then(
                     (value) => Utils.stringToLatLng(
-                  '${value.latitude}, ${value.longitude}',
-                ),
-              );
+                      '${value.latitude}, ${value.longitude}',
+                    ),
+                  );
 
               if (Utils.isWithinRadius(source, destination, 500)) {
                 shouldAlarmRing = false;
@@ -155,9 +155,9 @@ class SplashScreenController extends GetxController {
 
               currentLocation = await FlLocation.getLocationStream().first.then(
                     (value) => Utils.stringToLatLng(
-                  '${value.latitude}, ${value.longitude}',
-                ),
-              );
+                      '${value.latitude}, ${value.longitude}',
+                    ),
+                  );
               bool isWeatherTypeMatching = await checkWeatherCondition(
                 currentLocation,
                 latestAlarm.weatherTypes,
@@ -209,7 +209,7 @@ class SplashScreenController extends GetxController {
               AlarmModel latestAlarm = await getNextAlarm();
 
               TimeOfDay latestAlarmTimeOfDay =
-              Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+                  Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 // This condition will never satisfy because this will only occur if fake mode
 // is returned as latest alarm
               if (latestAlarm.isEnabled == false) {
@@ -223,8 +223,10 @@ class SplashScreenController extends GetxController {
                 );
 
                 try {
-                  await alarmChannel.invokeMethod(
-                      'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+                  await alarmChannel.invokeMethod('scheduleAlarm', {
+                    'milliSeconds': intervaltoAlarm,
+                    'activityMonitor': latestAlarm.activityMonitor
+                  });
                   print("Scheduled...");
                 } on PlatformException catch (e) {
                   print("Failed to schedule alarm: ${e.message}");

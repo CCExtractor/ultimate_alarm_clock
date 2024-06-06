@@ -25,7 +25,7 @@ class Pair<T, U> {
   Pair(this.first, this.second);
 }
 
-class HomeController extends GetxController  {
+class HomeController extends GetxController {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   Stream<QuerySnapshot>? firestoreStreamAlarms;
@@ -359,8 +359,10 @@ class HomeController extends GetxController  {
         Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
       );
       try {
-        await alarmChannel
-            .invokeMethod('scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+        await alarmChannel.invokeMethod('scheduleAlarm', {
+          'milliSeconds': intervaltoAlarm,
+          'activityMonitor': latestAlarm.activityMonitor,
+        });
         print("Scheduled...");
       } on PlatformException catch (e) {
         print("Failed to schedule alarm: ${e.message}");
