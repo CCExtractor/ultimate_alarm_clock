@@ -6,9 +6,6 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_c
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
 class InputTimeController extends GetxController {
-  AddOrUpdateAlarmController addOrUpdateAlarmController =
-      Get.find<AddOrUpdateAlarmController>();
-  TimerController timerController = Get.find<TimerController>();
   SettingsController settingsController = Get.find<SettingsController>();
   final isTimePicker = false.obs;
   final isTimePickerTimer = false.obs;
@@ -29,19 +26,6 @@ class InputTimeController extends GetxController {
   void onInit() {
     isTimePicker.value = true;
     isTimePickerTimer.value = true;
-    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
-    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
-    inputHrsController.text = settingsController.is24HrsEnabled.value
-        ? selectedDateTime.value.hour.toString()
-        : (selectedDateTime.value.hour == 0
-            ? 12.toString()
-            : (selectedDateTime.value.hour > 12
-                ? (selectedDateTime.value.hour - 12).toString()
-                : selectedDateTime.value.hour.toString()));
-    inputMinutesController.text = selectedDateTime.value.minute.toString();
-    inputHoursControllerTimer.text = timerController.hours.value.toString();
-    inputMinutesControllerTimer.text = timerController.minutes.value.toString();
-    inputSecondsControllerTimer.text = timerController.seconds.value.toString();
     super.onInit();
   }
 
@@ -58,9 +42,9 @@ class InputTimeController extends GetxController {
     isTimePickerTimer.value = !isTimePickerTimer.value;
   }
 
-  int convert24(int value) {
+  int convert24(int value, int meridiemIndex) {
     if (!settingsController.is24HrsEnabled.value) {
-      if (addOrUpdateAlarmController.meridiemIndex == 0) {
+      if (meridiemIndex == 0) {
         if (value == 12) {
           value = value - 12;
         }
@@ -74,6 +58,18 @@ class InputTimeController extends GetxController {
   }
 
   void setTime() {
+    AddOrUpdateAlarmController addOrUpdateAlarmController =
+        Get.find<AddOrUpdateAlarmController>();
+    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+    inputHrsController.text = settingsController.is24HrsEnabled.value
+        ? selectedDateTime.value.hour.toString()
+        : (selectedDateTime.value.hour == 0
+            ? 12.toString()
+            : (selectedDateTime.value.hour > 12
+                ? (selectedDateTime.value.hour - 12).toString()
+                : selectedDateTime.value.hour.toString()));
+    inputMinutesController.text = selectedDateTime.value.minute.toString();
     try {
       int hour = int.parse(inputHrsController.text);
       if (!settingsController.is24HrsEnabled.value) {
@@ -114,8 +110,9 @@ class InputTimeController extends GetxController {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }
       } else {
-        addOrUpdateAlarmController.hours.value =
-            convert24(selectedDateTime.value.hour);
+        addOrUpdateAlarmController.hours.value = convert24(
+            selectedDateTime.value.hour,
+            addOrUpdateAlarmController.meridiemIndex.value);
       }
       addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
       if (selectedDateTime.value.hour >= 12) {
@@ -129,6 +126,8 @@ class InputTimeController extends GetxController {
   }
 
   void setTimerTime() {
+    TimerController timerController = Get.find<TimerController>();
+
     try {
       int hours = int.parse(inputHoursControllerTimer.text);
       int minutes = int.parse(inputMinutesControllerTimer.text);
@@ -143,14 +142,20 @@ class InputTimeController extends GetxController {
   }
 
   void setTextFieldTimerTime() {
+    TimerController timerController = Get.find<TimerController>();
+
+    inputHoursControllerTimer.text = timerController.hours.value.toString();
+    inputMinutesControllerTimer.text = timerController.minutes.value.toString();
+    inputSecondsControllerTimer.text = timerController.seconds.value.toString();
+
     try {
       String hours = timerController.hours.value.toString();
       String minutes = timerController.minutes.value.toString();
       String seconds = timerController.seconds.value.toString();
 
-      inputHoursControllerTimer.text = hours ;
-      inputMinutesControllerTimer.text=minutes;
-      inputSecondsControllerTimer.text = seconds ;
+      inputHoursControllerTimer.text = hours;
+      inputMinutesControllerTimer.text = minutes;
+      inputSecondsControllerTimer.text = seconds;
     } catch (e) {
       debugPrint(e.toString());
     }
