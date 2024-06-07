@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
@@ -83,6 +84,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                       onPressed: () async {
                         Utils.hapticFeedback();
+                        await controller.checkOverlayPermissionAndNavigate();
+
                         if (controller.userModel.value != null) {
                           controller
                               .offsetDetails[controller.userModel.value!.id] = {
@@ -193,7 +196,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           debugPrint(e.toString());
                         }
 
-                        await controller.checkOverlayPermissionAndNavigate();
                       },
                     ),
                   ),
@@ -333,7 +335,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   .selectedTime.value.month,
                                               controller.selectedTime.value.day,
                                               inputTimeController
-                                                  .convert24(value),
+                                                  .convert24(value,controller.meridiemIndex.value),
                                               controller
                                                   .selectedTime.value.minute,
                                             );
@@ -533,7 +535,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 controller
                                                     .selectedTime.value.day,
                                                 inputTimeController.convert24(
-                                                    controller.hours.value),
+                                                    controller.hours.value,controller.meridiemIndex.value),
                                                 controller.minutes.value,
                                               );
                                               inputTimeController

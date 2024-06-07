@@ -47,7 +47,7 @@ class FrenchTranslations extends Translations {
           //home_view.dart
           'About': 'À propos',
           'Settings': 'Paramètres',
-          'v0.5.0': 'v0.5.0',
+          'v0.1.0': 'v0.1.0',
           'Ultimate Alarm Clock': 'Réveil Ultime',
           'Create alarm': 'Créer un réveil',
           'Join alarm': 'Rejoindre un réveil',

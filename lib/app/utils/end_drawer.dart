@@ -61,7 +61,7 @@ Widget buildEndDrawer(BuildContext context) {
                         SizedBox(
                           width: Get.width * 0.5,
                           child: Text(
-                            'v0.5.0'.tr,
+                            'v0.1.0'.tr,
                             softWrap: true,
                             style: Theme.of(context)
                                 .textTheme

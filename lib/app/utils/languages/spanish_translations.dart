@@ -47,7 +47,7 @@ class SpanishTranslations extends Translations {
           //home_view.dart
           'About': 'Acerca de',
           'Settings': 'Configuración',
-          'v0.5.0': 'v0.5.0',
+          'v0.1.0': 'v0.1.0',
           'Ultimate Alarm Clock': 'Reloj Despertador Definitivo',
           'Create alarm': 'Crear alarma',
           'Join alarm': 'Unirse a alarma',
