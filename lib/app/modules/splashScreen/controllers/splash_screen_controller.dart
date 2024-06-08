@@ -223,14 +223,16 @@ class SplashScreenController extends GetxController {
                 );
 
                 try {
-                  await alarmChannel.invokeMethod(
-                      'scheduleAlarm', {'milliSeconds': intervaltoAlarm});
+                  await alarmChannel.invokeMethod('scheduleAlarm', {
+                    'milliSeconds': intervaltoAlarm,
+                    'activityMonitor': latestAlarm.activityMonitor
+                  });
                   print("Scheduled...");
                 } on PlatformException catch (e) {
                   print("Failed to schedule alarm: ${e.message}");
                 }
               }
-
+              SystemNavigator.pop();
               Get.offNamed('/bottom-navigation-bar');
 
               alarmChannel.invokeMethod('minimizeApp');

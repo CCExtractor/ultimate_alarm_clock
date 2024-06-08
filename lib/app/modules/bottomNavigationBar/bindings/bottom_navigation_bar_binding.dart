@@ -20,6 +20,5 @@ class BottomNavigationBarBinding extends Bindings {
     );
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
     Get.lazyPut(() => HomeController());
-    Get.lazyPut(() => AddOrUpdateAlarmController());
   }
 }

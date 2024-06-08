@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:sqflite/sqflite.dart';
 
 class FirestoreDb {
   static final FirebaseFirestore _firebaseFirestore =
@@ -10,6 +11,72 @@ class FirestoreDb {
 
   static final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
+  Future<Database?> getSQLiteDatabase() async {
+    Database? db;
+
+    final dir = await getDatabasesPath();
+    final dbPath = '${dir}/alarms.db';
+    print(dir);
+    db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
+    return db;
+  }
+
+  void _onCreate(Database db, int version) async {
+    // Create tables for alarms and ringtones (modify column types as needed)
+    await db.execute('''
+       CREATE TABLE alarms (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        firestoreId TEXT,
+        alarmTime TEXT NOT NULL,
+        alarmID TEXT NOT NULL UNIQUE,
+        isEnabled INTEGER NOT NULL DEFAULT 1,
+        isLocationEnabled INTEGER NOT NULL DEFAULT 0,
+        isSharedAlarmEnabled INTEGER NOT NULL DEFAULT 0,
+        isWeatherEnabled INTEGER NOT NULL DEFAULT 0,
+        location TEXT,
+        activityInterval INTEGER,
+        minutesSinceMidnight INTEGER NOT NULL,
+        days TEXT NOT NULL,
+        weatherTypes TEXT NOT NULL,
+        isMathsEnabled INTEGER NOT NULL DEFAULT 0,
+        mathsDifficulty INTEGER,
+        numMathsQuestions INTEGER,
+        isShakeEnabled INTEGER NOT NULL DEFAULT 0,
+        shakeTimes INTEGER,
+        isQrEnabled INTEGER NOT NULL DEFAULT 0,
+        qrValue TEXT,
+        isPedometerEnabled INTEGER NOT NULL DEFAULT 0,
+        numberOfSteps INTEGER,
+        intervalToAlarm INTEGER,
+        isActivityEnabled INTEGER NOT NULL DEFAULT 0,
+        sharedUserIds TEXT,
+        ownerId TEXT NOT NULL,
+        ownerName TEXT NOT NULL,
+        lastEditedUserId TEXT,
+        mutexLock INTEGER NOT NULL DEFAULT 0,
+        mainAlarmTime TEXT,
+        label TEXT,
+        isOneTime INTEGER NOT NULL DEFAULT 0,
+        snoozeDuration INTEGER,
+        gradient INTEGER,
+        ringtoneName TEXT,
+        note TEXT,
+        deleteAfterGoesOff INTEGER NOT NULL DEFAULT 0,
+        showMotivationalQuote INTEGER NOT NULL DEFAULT 0,
+        volMin REAL,
+        volMax REAL,
+        activityMonitor INTEGER
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE ringtones (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ringtoneName TEXT NOT NULL,
+        ringtonePath TEXT NOT NULL,
+        currentCounterOfUsage INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+  }
 
   static CollectionReference _alarmsCollection(UserModel? user) {
     if (user == null) {
@@ -29,7 +96,14 @@ class FirestoreDb {
   }
 
   static addAlarm(UserModel? user, AlarmModel alarmRecord) async {
-    if (user == null) return alarmRecord;
+    final sql = await FirestoreDb().getSQLiteDatabase();
+
+    if (user == null) {
+      return alarmRecord;
+    }
+    await sql!
+        .insert('alarms', alarmRecord.toSQFliteMap())
+        .then((value) => print("insert success"));
     await _alarmsCollection(user)
         .add(AlarmModel.toMap(alarmRecord))
         .then((value) => alarmRecord.firestoreId = value.id);
@@ -189,6 +263,13 @@ class FirestoreDb {
   }
 
   static updateAlarm(String? userId, AlarmModel alarmRecord) async {
+    final sql = await FirestoreDb().getSQLiteDatabase();
+    await sql!.update(
+      'alarms',
+      alarmRecord.toSQFliteMap(),
+      where: 'alarmID = ?',
+      whereArgs: [alarmRecord.alarmID],
+    );
     await _firebaseFirestore
         .collection('users')
         .doc(userId)
@@ -201,6 +282,8 @@ class FirestoreDb {
     String? ownerId,
     String? firestoreId,
   ) async {
+    final sql = await FirestoreDb().getSQLiteDatabase();
+
     try {
       // Delete alarm remotely (from Firestore)
       await FirebaseFirestore.instance
@@ -209,6 +292,7 @@ class FirestoreDb {
           .collection('alarms')
           .doc(firestoreId)
           .delete();
+      sql!.delete('alarms', where: 'firestoreId = ?', whereArgs: [firestoreId]);
 
       debugPrint('Alarm deleted successfully from Firestore.');
     } catch (e) {
@@ -256,6 +340,8 @@ class FirestoreDb {
   }
 
   static deleteAlarm(UserModel? user, String id) async {
+    final sql = await FirestoreDb().getSQLiteDatabase();
+    sql!.delete('alarms', where: 'firestoreId = ?', whereArgs: [id]);
     await _alarmsCollection(user).doc(id).delete();
   }
 

@@ -49,6 +49,16 @@ class ScreenActivityTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Switch.adaptive(
+                        value: controller.useScreenActivity.value,
+                        activeColor: ksecondaryColor,
+                        onChanged: (value) {
+                          if (value == false)
+                            controller.isActivityMonitorenabled.value = 0;
+                          else
+                            controller.isActivityMonitorenabled.value = 1;
+                        },
+                      ),
                       NumberPicker(
                         value: controller.activityInterval.value,
                         minValue: 0,
@@ -96,6 +106,7 @@ class ScreenActivityTile extends StatelessWidget {
       },
       child: ListTile(
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FittedBox(
               alignment: Alignment.centerLeft,
@@ -109,54 +120,19 @@ class ScreenActivityTile extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(
-                Icons.info_sharp,
-                size: 21,
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor.withOpacity(0.45)
-                    : kprimaryTextColor.withOpacity(0.3),
-              ),
-              onPressed: () {
-                Utils.showModal(
-                  context: context,
-                  title: 'Screen activity based cancellation'.tr,
-                  // description: 'This feature will automatically cancel'
-                  //     " the alarm if you've been using your device"
-                  //     ' for a set number of minutes.',
-                  description: 'screenDescription'.tr,
-                  iconData: Icons.screen_lock_portrait_outlined,
-                  isLightMode: themeController.isLightMode.value,
-                );
-              },
-            ),
-          ],
-        ),
-        trailing: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
             Obx(
-              () => Text(
-                controller.activityInterval.value > 0
-                    ? '${controller.activityInterval.value} min'
-                    : 'Off'.tr,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: (controller.isActivityenabled.value == false)
-                          ? themeController.isLightMode.value
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
-                    ),
+              () => Switch.adaptive(
+                value: controller.useScreenActivity.value,
+                activeColor: ksecondaryColor,
+                onChanged: (value) {
+                  controller.useScreenActivity.value = value;
+                  if (value == false)
+                    controller.isActivityMonitorenabled.value = 0;
+                  else
+                    controller.isActivityMonitorenabled.value = 1;
+                },
               ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
-            ),
+            )
           ],
         ),
       ),

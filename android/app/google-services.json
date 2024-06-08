@@ -1,41 +1,86 @@
 {
   "project_info": {
-    "project_number": "951082036741",
-    "project_id": "ulticock-c13a2",
-    "storage_bucket": "ulticock-c13a2.appspot.com"
+    "project_number": "127901953489",
+    "project_id": "uac2-7d0f9",
+    "storage_bucket": "uac2-7d0f9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:951082036741:android:45bc3756a62c480f71766c",
+        "mobilesdk_app_id": "1:127901953489:android:1c0dea09b93c2b573fc4f0",
         "android_client_info": {
-          "package_name": "com.example.ultimate_alarm_clock"
+          "package_name": "com.ccextractor.ultimate_alarm_clock"
         }
       },
       "oauth_client": [
         {
-          "client_id": "951082036741-q9jfduqcvikipre5ubf7774o9b2l822h.apps.googleusercontent.com",
+          "client_id": "127901953489-132kstrs7vl5j5jnubjktu0qodgcn9ml.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ultimate_alarm_clock",
-            "certificate_hash": "af289e1ac935477a575746d95dea1c78156db532"
+            "package_name": "com.ccextractor.ultimate_alarm_clock",
+            "certificate_hash": "30bf4033c248d9a3ecccbe3615c8baec5f4ed31a"
           }
         },
         {
-          "client_id": "951082036741-5c8vh71vidd27rjihimnemnbdquq1tp2.apps.googleusercontent.com",
+          "client_id": "127901953489-hgjdtpa0jo2gdrh5vl3s0km66g81v66o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ccextractor.ultimate_alarm_clock",
+            "certificate_hash": "5463a1d268da62e33b869a41760d31cd5ffc1e5d"
+          }
+        },
+        {
+          "client_id": "127901953489-lnsmj324f5eutudkjvaidotj99bq1l47.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCEgfAAOgj5oLlX7LtXn_vCoW7AkMj7Qv4"
+          "current_key": "AIzaSyCEaWUdYF_PnGFu0uJL8Zl_BlT8knDVeHg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "951082036741-5c8vh71vidd27rjihimnemnbdquq1tp2.apps.googleusercontent.com",
+              "client_id": "127901953489-lnsmj324f5eutudkjvaidotj99bq1l47.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127901953489:android:02cb55ff82004bb03fc4f0",
+        "android_client_info": {
+          "package_name": "com.example.ultimate_alarm_clock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127901953489-09r774m4cup6mlt341i2v9fpbhngmq2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ultimate_alarm_clock",
+            "certificate_hash": "30bf4033c248d9a3ecccbe3615c8baec5f4ed31a"
+          }
+        },
+        {
+          "client_id": "127901953489-lnsmj324f5eutudkjvaidotj99bq1l47.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEaWUdYF_PnGFu0uJL8Zl_BlT8knDVeHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127901953489-lnsmj324f5eutudkjvaidotj99bq1l47.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

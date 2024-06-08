@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
@@ -69,7 +70,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        (controller.alarmRecord.value == null)
+
+                        (controller.alarmRecord.value = Get.arguments) == null ||
+                                (controller.alarmRecord.value!.alarmID.isEmpty)
                             ? 'Save'.tr
                             : 'Update'.tr,
                         style:
@@ -81,6 +84,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                       onPressed: () async {
                         Utils.hapticFeedback();
+                        await controller.checkOverlayPermissionAndNavigate();
+
                         if (controller.userModel.value != null) {
                           controller
                               .offsetDetails[controller.userModel.value!.id] = {
@@ -164,6 +169,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.isPedometerEnabled.value,
                           numberOfSteps: controller.numberOfSteps.value,
                           ringtoneName: controller.customRingtoneName.value,
+                          activityMonitor: controller.isActivityMonitorenabled.value
                         );
 
                         // Adding offset details to the database if
@@ -177,7 +183,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           );
                         }
                         try {
-                          if (controller.alarmRecord.value == null) {
+                          controller.alarmRecord.value = Get.arguments;
+                          if (controller.alarmRecord.value == null|| controller.
+                          alarmRecord.value!.alarmID.isEmpty) {
                             await controller.createAlarm(alarmRecord);
                           } else {
                             AlarmModel updatedAlarmModel =
@@ -188,7 +196,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           debugPrint(e.toString());
                         }
 
-                        await controller.checkOverlayPermissionAndNavigate();
                       },
                     ),
                   ),
@@ -328,7 +335,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   .selectedTime.value.month,
                                               controller.selectedTime.value.day,
                                               inputTimeController
-                                                  .convert24(value),
+                                                  .convert24(value,controller.meridiemIndex.value),
                                               controller
                                                   .selectedTime.value.minute,
                                             );
@@ -528,7 +535,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 controller
                                                     .selectedTime.value.day,
                                                 inputTimeController.convert24(
-                                                    controller.hours.value),
+                                                    controller.hours.value,controller.meridiemIndex.value),
                                                 controller.minutes.value,
                                               );
                                               inputTimeController
