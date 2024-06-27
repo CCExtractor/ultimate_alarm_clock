@@ -29,7 +29,7 @@ class SharedAlarm extends StatelessWidget {
                         child: Text(
                           'Shared Alarm'.tr,
                           style: TextStyle(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryTextColor
                                 : kprimaryTextColor,
                           ),
@@ -39,7 +39,7 @@ class SharedAlarm extends StatelessWidget {
                         icon: Icon(
                           Icons.info_sharp,
                           size: 21,
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor.withOpacity(0.45)
                               : kprimaryTextColor.withOpacity(0.3),
                         ),
@@ -47,7 +47,7 @@ class SharedAlarm extends StatelessWidget {
                           Utils.hapticFeedback();
                           showModalBottomSheet(
                             context: context,
-                            backgroundColor: themeController.isLightMode.value
+                            backgroundColor: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightSecondaryBackgroundColor
                                 : ksecondaryBackgroundColor,
                             builder: (context) {
@@ -60,7 +60,7 @@ class SharedAlarm extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.share_arrival_time,
-                                        color: themeController.isLightMode.value
+                                        color: themeController.currentTheme.value == ThemeMode.light
                                             ? kLightPrimaryTextColor
                                             : kprimaryTextColor,
                                         size: height * 0.1,
@@ -149,7 +149,7 @@ class SharedAlarm extends StatelessWidget {
                     Get.defaultDialog(
                       contentPadding: const EdgeInsets.all(10.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                      backgroundColor: themeController.isLightMode.value
+                      backgroundColor: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       title: 'Disabled!'.tr,
@@ -212,7 +212,7 @@ class SharedAlarm extends StatelessWidget {
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                        themeController.isLightMode.value
+                                        themeController.currentTheme.value == ThemeMode.light
                                             ? kLightPrimaryTextColor
                                                 .withOpacity(0.5)
                                             : kprimaryTextColor
@@ -254,7 +254,7 @@ class SharedAlarm extends StatelessWidget {
                     child: Text(
                       'Enable Shared Alarm'.tr,
                       style: TextStyle(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
                       ),
@@ -263,7 +263,7 @@ class SharedAlarm extends StatelessWidget {
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryTextColor.withOpacity(0.7)
                           : kprimaryTextColor.withOpacity(0.7),
                     ),

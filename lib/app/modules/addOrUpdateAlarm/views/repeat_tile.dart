@@ -28,7 +28,7 @@ class RepeatTile extends StatelessWidget {
             onClosing: () async {
               _storeOrPreset(controller.repeatDays, repeatDays);
             },
-            backgroundColor: themeController.isLightMode.value
+            backgroundColor: themeController.currentTheme.value == ThemeMode.light
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
             builder: (BuildContext context) {
@@ -38,22 +38,22 @@ class RepeatTile extends StatelessWidget {
                   children: [
                     buildDailyTile(),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
                     ),
                     buildWeekdaysTile(),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -88,7 +88,7 @@ class RepeatTile extends StatelessWidget {
                                 .displaySmall!
                                 .copyWith(
                                   color: controller
-                                          .themeController.isLightMode.value
+                                          .themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
@@ -104,7 +104,7 @@ class RepeatTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.isLightMode.value
+        tileColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: Obx(
@@ -117,7 +117,7 @@ class RepeatTile extends StatelessWidget {
               child: Text(
                 'Repeat'.tr,
                 style: TextStyle(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
                   fontWeight:
@@ -134,7 +134,7 @@ class RepeatTile extends StatelessWidget {
               () => Text(
                 controller.daysRepeating.value.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryTextColor
                           : kprimaryTextColor,
                     ),
@@ -142,7 +142,7 @@ class RepeatTile extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
             ),
@@ -184,7 +184,7 @@ class RepeatTile extends StatelessWidget {
                 Checkbox.adaptive(
                   side: BorderSide(
                     width: 1.5,
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.5)
                         : kprimaryTextColor.withOpacity(0.5),
                   ),
@@ -222,7 +222,7 @@ class RepeatTile extends StatelessWidget {
               Checkbox.adaptive(
                 side: BorderSide(
                   width: 1.5,
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor.withOpacity(0.5)
                       : kprimaryTextColor.withOpacity(0.5),
                 ),
@@ -267,12 +267,12 @@ class RepeatTile extends StatelessWidget {
                 return true;
               },
               titlePadding: const EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: themeController.isLightMode.value
+              backgroundColor: themeController.currentTheme.value == ThemeMode.light
                   ? kLightSecondaryBackgroundColor
                   : ksecondaryBackgroundColor,
               title: 'Days of the week'.tr,
               titleStyle: TextStyle(
-                color: themeController.isLightMode.value
+                color: themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryTextColor
                     : kprimaryTextColor,
               ),
@@ -333,7 +333,7 @@ class RepeatTile extends StatelessWidget {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
@@ -356,7 +356,7 @@ class RepeatTile extends StatelessWidget {
                 Checkbox.adaptive(
                   side: BorderSide(
                     width: 1.5,
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.5)
                         : kprimaryTextColor.withOpacity(0.5),
                   ),
@@ -407,7 +407,7 @@ class RepeatTile extends StatelessWidget {
                 Checkbox.adaptive(
                   side: BorderSide(
                     width: 1.5,
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.5)
                         : kprimaryTextColor.withOpacity(0.5),
                   ),

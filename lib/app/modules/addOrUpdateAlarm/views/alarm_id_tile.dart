@@ -32,7 +32,7 @@ class AlarmIDTile extends StatelessWidget {
                     'Alarm ID has been copied!'.tr,
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.green,
-                    colorText: themeController.isLightMode.value
+                    colorText: themeController.currentTheme.value == ThemeMode.light
                         ? kLightSecondaryTextColor
                         : ksecondaryTextColor,
                     maxWidth: width,
@@ -45,7 +45,7 @@ class AlarmIDTile extends StatelessWidget {
                   child: Text(
                     'Alarm ID'.tr,
                     style: TextStyle(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryTextColor
                           : kprimaryTextColor,
                     ),
@@ -54,7 +54,7 @@ class AlarmIDTile extends StatelessWidget {
                 trailing: InkWell(
                   child: Icon(
                     Icons.copy,
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.7)
                         : kprimaryTextColor.withOpacity(0.7),
                   ),
@@ -65,7 +65,7 @@ class AlarmIDTile extends StatelessWidget {
                   Utils.hapticFeedback();
                   Get.defaultDialog(
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                    backgroundColor: themeController.isLightMode.value
+                    backgroundColor: themeController.currentTheme.value == ThemeMode.light
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
                     title: 'Disabled!'.tr,
@@ -96,7 +96,7 @@ class AlarmIDTile extends StatelessWidget {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.isLightMode.value
+                                    color: themeController.currentTheme.value == ThemeMode.light
                                         ? kLightPrimaryTextColor
                                         : ksecondaryTextColor,
                                   ),
@@ -114,7 +114,7 @@ class AlarmIDTile extends StatelessWidget {
                 title: Text(
                   'Alarm ID'.tr,
                   style: TextStyle(
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor
                         : kprimaryTextColor,
                   ),
@@ -122,7 +122,7 @@ class AlarmIDTile extends StatelessWidget {
                 trailing: InkWell(
                   child: Icon(
                     Icons.lock,
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.7)
                         : kprimaryTextColor.withOpacity(0.7),
                   ),

@@ -77,7 +77,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             : 'Update'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
@@ -203,10 +203,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
           appBar: AppBar(
             backgroundColor: (controller.alarmRecord.value != null &&
                     controller.mutexLock.value == true)
-                ? themeController.isLightMode.value
+                ? themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryBackgroundColor
                     : kprimaryBackgroundColor
-                : themeController.isLightMode.value
+                : themeController.currentTheme.value == ThemeMode.light
                     ? kLightSecondaryBackgroundColor
                     : ksecondaryBackgroundColor,
             elevation: 0.0,
@@ -241,7 +241,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .textTheme
                               .displayMedium!
                               .copyWith(
-                                color: themeController.isLightMode.value
+                                color: themeController.currentTheme.value == ThemeMode.light
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
@@ -261,7 +261,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.isLightMode.value
+                                color: themeController.currentTheme.value == ThemeMode.light
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
@@ -278,7 +278,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.isLightMode.value
+                                color: themeController.currentTheme.value == ThemeMode.light
                                     ? kLightSecondaryTextColor
                                     : ksecondaryTextColor,
                               ),
@@ -294,7 +294,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               : ListView(
                   children: [
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       height: height * 0.32,
@@ -683,7 +683,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               ? 'AM'
                                               : 'PM',
                                           dropdownColor:
-                                              themeController.isLightMode.value
+                                              themeController.currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryBackgroundColor
                                                   : kprimaryBackgroundColor,
                                           items:
@@ -741,11 +741,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -763,11 +763,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       () => (!controller.repeatDays
                               .every((element) => element == false))
                           ? Container(
-                              color: themeController.isLightMode.value
+                              color: themeController.currentTheme.value == ThemeMode.light
                                   ? kLightSecondaryBackgroundColor
                                   : ksecondaryBackgroundColor,
                               child: Divider(
-                                color: themeController.isLightMode.value
+                                color: themeController.currentTheme.value == ThemeMode.light
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
@@ -779,11 +779,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -802,11 +802,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -816,11 +816,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -832,11 +832,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       width: width,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -846,11 +846,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Divider(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor,
                       ),
@@ -860,14 +860,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       themeController: themeController,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryBackgroundColor
                           : ksecondaryTextColor,
                       height: 10,
                       width: width,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Column(
@@ -883,7 +883,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     .titleMedium!
                                     .copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.85)
                                           : kprimaryTextColor.withOpacity(0.85),
@@ -896,7 +896,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             themeController: themeController,
                           ),
                           Divider(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -905,7 +905,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             themeController: themeController,
                           ),
                           Divider(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -919,14 +919,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryBackgroundColor
                           : ksecondaryTextColor,
                       height: 10,
                       width: width,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Column(
@@ -941,7 +941,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   context,
                                 ).textTheme.titleMedium!.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.85)
                                           : kprimaryTextColor.withOpacity(0.85),
@@ -954,7 +954,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             themeController: themeController,
                           ),
                           Divider(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -963,7 +963,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             themeController: themeController,
                           ),
                           Divider(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -972,7 +972,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             themeController: themeController,
                           ),
                           Divider(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -984,14 +984,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       ),
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryBackgroundColor
                           : ksecondaryTextColor,
                       height: 10,
                       width: width,
                     ),
                     Container(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryBackgroundColor
                           : ksecondaryBackgroundColor,
                       child: Column(
@@ -1006,7 +1006,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   context,
                                 ).textTheme.titleMedium!.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.85)
                                           : kprimaryTextColor.withOpacity(0.85),
@@ -1019,7 +1019,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             themeController: themeController,
                           ),
                           Divider(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -1032,7 +1032,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             () => Container(
                               child: (controller.isSharedAlarmEnabled.value)
                                   ? Divider(
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryDisabledTextColor
                                           : kprimaryDisabledTextColor,
                                     )
@@ -1048,7 +1048,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               child: (controller.isSharedAlarmEnabled.value &&
                                       controller.alarmRecord.value != null)
                                   ? Divider(
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryDisabledTextColor
                                           : kprimaryDisabledTextColor,
                                     )

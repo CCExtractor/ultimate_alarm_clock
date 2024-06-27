@@ -31,7 +31,7 @@ class SharedUsers extends StatelessWidget {
                     title: Text(
                       'Alarm Owner'.tr,
                       style: TextStyle(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
                       ),
@@ -39,7 +39,7 @@ class SharedUsers extends StatelessWidget {
                     trailing: Text(
                       controller.alarmRecord.value!.ownerName,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor,
                           ),
@@ -49,7 +49,7 @@ class SharedUsers extends StatelessWidget {
                     title: Text(
                       'Shared Users'.tr,
                       style: TextStyle(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
                       ),
@@ -59,7 +59,7 @@ class SharedUsers extends StatelessWidget {
                         Utils.hapticFeedback();
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: themeController.isLightMode.value
+                          backgroundColor: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryBackgroundColor
                               : kprimaryBackgroundColor,
                           builder: (BuildContext context) {
@@ -204,7 +204,7 @@ class SharedUsers extends StatelessWidget {
                       },
                       child: Icon(
                         Icons.chevron_right,
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor.withOpacity(0.7)
                             : kprimaryTextColor.withOpacity(0.7),
                       ),

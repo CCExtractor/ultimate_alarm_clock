@@ -34,7 +34,7 @@ class AscendingVolumeTile extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-          backgroundColor: themeController.isLightMode.value
+          backgroundColor: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           title: 'Volume will reach maximum in'.tr,
@@ -98,7 +98,7 @@ class AscendingVolumeTile extends StatelessWidget {
                   child: Text(
                     'Apply Gradient'.tr,
                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : ksecondaryTextColor,
                         ),
@@ -110,13 +110,13 @@ class AscendingVolumeTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.isLightMode.value
+        tileColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: Text(
           'Ascending Volume'.tr,
           style: TextStyle(
-            color: themeController.isLightMode.value
+            color: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryTextColor
                 : kprimaryTextColor,
           ),
@@ -128,7 +128,7 @@ class AscendingVolumeTile extends StatelessWidget {
               () => Text(
                 '${controller.gradient.value.round().toInt()} seconds',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightPrimaryTextColor
                           : kprimaryTextColor,
                     ),
@@ -136,7 +136,7 @@ class AscendingVolumeTile extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
             ),

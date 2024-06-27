@@ -19,7 +19,7 @@ class QuoteTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value
+      tileColor: themeController.currentTheme.value == ThemeMode.light
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: FittedBox(
@@ -28,7 +28,7 @@ class QuoteTile extends StatelessWidget {
         child: Text(
           'Show Motivational Quote'.tr,
           style: TextStyle(
-            color: themeController.isLightMode.value
+            color: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryTextColor
                 : kprimaryTextColor,
           ),
