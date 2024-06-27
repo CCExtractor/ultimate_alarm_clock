@@ -4,7 +4,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class ThemeController extends GetxController {
-  var isLightMode = true.obs;
+  var isLightMode = false.obs;
   final _secureStorageProvider = SecureStorageProvider();
 
   @override
@@ -13,20 +13,32 @@ class ThemeController extends GetxController {
     super.onInit();
   }
 
+  Rx<ThemeMode> currentTheme = ThemeMode.system.obs;
+
+  void switchTheme() {
+    currentTheme.value = currentTheme.value == ThemeMode.light
+        ? ThemeMode.dark
+        : ThemeMode.light;
+  }
+
   void _loadThemeValue() async {
-    isLightMode.value =
-        await _secureStorageProvider.readThemeValue() == AppTheme.light;
-    Get.changeThemeMode(isLightMode.value ? ThemeMode.light : ThemeMode.dark);
+    currentTheme.value =
+        await _secureStorageProvider.readThemeValue() == AppTheme.light
+            ? ThemeMode.light
+            : ThemeMode.dark;
+    Get.changeThemeMode(currentTheme.value);
   }
 
   void _saveThemeValuePreference() async {
     await _secureStorageProvider.writeThemeValue(
-      theme: isLightMode.value ? AppTheme.light : AppTheme.dark,
+      theme: currentTheme.value == ThemeMode.light
+          ? AppTheme.light
+          : AppTheme.dark,
     );
   }
 
   void toggleThemeValue(bool enabled) {
-    isLightMode.value = enabled;
+    currentTheme.value = enabled ? ThemeMode.light : ThemeMode.dark;
     _saveThemeValuePreference();
   }
 }
