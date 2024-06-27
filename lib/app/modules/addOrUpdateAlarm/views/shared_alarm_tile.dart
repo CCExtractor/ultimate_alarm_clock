@@ -107,7 +107,7 @@ class SharedAlarm extends StatelessWidget {
                                                 .displaySmall!
                                                 .copyWith(
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryTextColor
                                                       : ksecondaryTextColor,
                                                 ),
@@ -191,7 +191,7 @@ class SharedAlarm extends StatelessWidget {
                                             .displaySmall!
                                             .copyWith(
                                               color: themeController
-                                                      .isLightMode.value
+                                                      .currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryTextColor
                                                   : ksecondaryTextColor,
                                             ),
@@ -229,7 +229,7 @@ class SharedAlarm extends StatelessWidget {
                                             .displaySmall!
                                             .copyWith(
                                               color: themeController
-                                                      .isLightMode.value
+                                                      .currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryTextColor
                                                   : kprimaryTextColor,
                                             ),

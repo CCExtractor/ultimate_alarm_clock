@@ -115,7 +115,7 @@ class SharedUsers extends StatelessWidget {
                                                   user!.fullName,
                                                   style: TextStyle(
                                                     color: themeController
-                                                            .isLightMode.value
+                                                            .currentTheme.value == ThemeMode.light
                                                         ? kLightPrimaryTextColor
                                                         : kprimaryTextColor,
                                                   ),
@@ -187,7 +187,7 @@ class SharedUsers extends StatelessWidget {
                                               ),
                                               Divider(
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),

@@ -371,7 +371,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               .copyWith(
                                                 fontSize: 20,
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),
@@ -380,14 +380,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               top: BorderSide(
                                                 width: width * 0.005,
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),
                                               bottom: BorderSide(
                                                 width: width * 0.005,
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),
@@ -406,7 +406,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 .copyWith(
                                                   fontWeight: FontWeight.bold,
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryDisabledTextColor
                                                       : kprimaryDisabledTextColor,
                                                 ),
@@ -462,7 +462,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               .copyWith(
                                                 fontSize: 20,
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),
@@ -471,14 +471,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               top: BorderSide(
                                                 width: width * 0.005,
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),
                                               bottom: BorderSide(
                                                 width: width * 0.005,
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryDisabledTextColor
                                                     : kprimaryDisabledTextColor,
                                               ),
@@ -502,7 +502,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   .copyWith(
                                                     fontWeight: FontWeight.bold,
                                                     color: themeController
-                                                            .isLightMode.value
+                                                            .currentTheme.value == ThemeMode.light
                                                         ? kLightPrimaryDisabledTextColor
                                                         : kprimaryDisabledTextColor,
                                                   ),
@@ -575,7 +575,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 .copyWith(
                                                   fontSize: 20,
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryDisabledTextColor
                                                       : kprimaryDisabledTextColor,
                                                 ),
@@ -584,14 +584,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 top: BorderSide(
                                                   width: width * 0.005,
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryDisabledTextColor
                                                       : kprimaryDisabledTextColor,
                                                 ),
                                                 bottom: BorderSide(
                                                   width: width * 0.005,
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryDisabledTextColor
                                                       : kprimaryDisabledTextColor,
                                                 ),

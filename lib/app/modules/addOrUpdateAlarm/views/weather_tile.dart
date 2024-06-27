@@ -393,7 +393,7 @@ class WeatherTile extends StatelessWidget {
                                               .displaySmall!
                                               .copyWith(
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryTextColor
                                                     : ksecondaryTextColor,
                                               ),
@@ -484,7 +484,7 @@ class WeatherTile extends StatelessWidget {
                                             .displaySmall!
                                             .copyWith(
                                               color: themeController
-                                                      .isLightMode.value
+                                                      .currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryTextColor
                                                   : ksecondaryTextColor,
                                             ),
@@ -526,7 +526,7 @@ class WeatherTile extends StatelessWidget {
                                             .displaySmall!
                                             .copyWith(
                                               color: themeController
-                                                      .isLightMode.value
+                                                      .currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryTextColor
                                                   : kprimaryTextColor,
                                             ),
