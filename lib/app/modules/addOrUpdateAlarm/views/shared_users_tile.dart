@@ -154,8 +154,7 @@ class SharedUsers extends StatelessWidget {
                                                         .bodyLarge!
                                                         .copyWith(
                                                           color: themeController
-                                                                  .isLightMode
-                                                                  .value
+                                                                  .currentTheme.value == ThemeMode.light
                                                               ? kLightPrimaryTextColor
                                                                   .withOpacity(
                                                                   0.9,

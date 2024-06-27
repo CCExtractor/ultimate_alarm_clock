@@ -122,7 +122,7 @@ class _ToggleButtonState extends State<ToggleButton> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightSecondaryTextColor
                   : kprimaryTextColor,
               width: 1,
@@ -155,7 +155,7 @@ class _ToggleButtonState extends State<ToggleButton> {
         width: 10 * widget.controller.scalingFactor.value,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: themeController.isLightMode.value
+          color: themeController.currentTheme.value == ThemeMode.light
               ? kLightPrimaryTextColor
               : kprimaryTextColor,
         ),

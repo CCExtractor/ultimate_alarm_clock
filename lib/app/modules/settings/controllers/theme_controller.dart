@@ -4,7 +4,6 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class ThemeController extends GetxController {
-  var isLightMode = false.obs;
   final _secureStorageProvider = SecureStorageProvider();
 
   @override

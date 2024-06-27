@@ -90,10 +90,10 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         child: Card(
           margin: const EdgeInsets.all(5),
           color: widget.timer.timeElapsed < widget.timer.timerValue
-              ? themeController.isLightMode.value
+              ? themeController.currentTheme.value == ThemeMode.light
                   ? kLightSecondaryBackgroundColor
                   : ksecondaryBackgroundColor
-              : themeController.isLightMode.value
+              : themeController.currentTheme.value == ThemeMode.light
                   ? kLightSecondaryColor
                   : ksecondaryColor,
           shape: RoundedRectangleBorder(
@@ -220,8 +220,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                         style: Theme.of(
                                           context,
                                         ).textTheme.displayLarge!.copyWith(
-                                              color: themeController
-                                                      .isLightMode.value
+                                              color: themeController.currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryTextColor
                                                   : kprimaryTextColor,
                                               fontSize: 44,
