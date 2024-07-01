@@ -26,7 +26,7 @@ class QrBarCode extends StatelessWidget {
             child: Text(
               'QR/Bar Code'.tr,
               style: TextStyle(
-                color: themeController.isLightMode.value
+                color: themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryTextColor
                     : kprimaryTextColor,
               ),
@@ -36,7 +36,7 @@ class QrBarCode extends StatelessWidget {
             icon: Icon(
               Icons.info_sharp,
               size: 21,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor.withOpacity(0.45)
                   : kprimaryTextColor.withOpacity(0.3),
             ),
@@ -48,7 +48,7 @@ class QrBarCode extends StatelessWidget {
                 //     'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
                 description: 'qrDescription'.tr,
                 iconData: Icons.qr_code_scanner,
-                isLightMode: themeController.isLightMode.value,
+                isLightMode: themeController.currentTheme.value == ThemeMode.light,
               );
             },
           ),
@@ -67,10 +67,10 @@ class QrBarCode extends StatelessWidget {
                 controller.isQrEnabled.value == true ? 'Enabled'.tr : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isQrEnabled.value == false)
-                          ? themeController.isLightMode.value
+                          ? themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
+                          : themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : kprimaryTextColor,
                     ),
@@ -78,7 +78,7 @@ class QrBarCode extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
             ),

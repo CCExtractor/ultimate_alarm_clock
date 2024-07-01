@@ -39,13 +39,13 @@ class ChooseRingtoneTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-        tileColor: themeController.isLightMode.value
+        tileColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(
-            color: themeController.isLightMode.value
+            color: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryTextColor
                 : kprimaryTextColor,
           ),
@@ -60,7 +60,7 @@ class ChooseRingtoneTile extends StatelessWidget {
 
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: themeController.isLightMode.value
+            backgroundColor: themeController.currentTheme.value == ThemeMode.light
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
             title: 'Choose Ringtone'.tr,
@@ -76,7 +76,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                         height: height * 0.2,
                         child: Card(
                           elevation: 0,
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightSecondaryBackgroundColor
                               : ksecondaryBackgroundColor,
                           child: Scrollbar(
@@ -87,7 +87,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                               child: ListView.separated(
                                 separatorBuilder: (context, index) {
                                   return Divider(
-                                    color: themeController.isLightMode.value
+                                    color: themeController.currentTheme.value == ThemeMode.light
                                         ? ksecondaryBackgroundColor
                                         : kLightSecondaryBackgroundColor,
                                     height: 0,
@@ -131,10 +131,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                   .customRingtoneName ==
                                               controller
                                                   .customRingtoneNames[index]
-                                          ? themeController.isLightMode.value
+                                          ? themeController.currentTheme.value == ThemeMode.light
                                               ? kLightPrimaryBackgroundColor
                                               : kprimaryBackgroundColor
-                                          : themeController.isLightMode.value
+                                          : themeController.currentTheme.value == ThemeMode.light
                                               ? kLightSecondaryBackgroundColor
                                               : ksecondaryBackgroundColor,
                                       title: Text(
@@ -241,7 +241,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     child: Text(
                       'Done'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryTextColor
                                 : ksecondaryTextColor,
                           ),
@@ -265,10 +265,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: (controller.label.value.trim().isEmpty)
-                              ? themeController.isLightMode.value
+                              ? themeController.currentTheme.value == ThemeMode.light
                                   ? kLightPrimaryDisabledTextColor
                                   : kprimaryDisabledTextColor
-                              : themeController.isLightMode.value
+                              : themeController.currentTheme.value == ThemeMode.light
                                   ? kLightPrimaryTextColor
                                   : kprimaryTextColor,
                         ),
@@ -278,10 +278,10 @@ class ChooseRingtoneTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 color: (controller.label.value.trim().isEmpty)
-                    ? themeController.isLightMode.value
+                    ? themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryDisabledTextColor
                         : kprimaryDisabledTextColor
-                    : themeController.isLightMode.value
+                    : themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor
                         : kprimaryTextColor,
               ),

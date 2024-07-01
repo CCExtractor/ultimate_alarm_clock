@@ -18,7 +18,7 @@ class LabelTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value
+      tileColor: themeController.currentTheme.value == ThemeMode.light
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: FittedBox(
@@ -27,7 +27,7 @@ class LabelTile extends StatelessWidget {
         child: Text(
           'Label'.tr,
           style: TextStyle(
-            color: themeController.isLightMode.value
+            color: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryTextColor
                 : kprimaryTextColor,
           ),
@@ -38,11 +38,11 @@ class LabelTile extends StatelessWidget {
         Get.defaultDialog(
           title: 'Add a label'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
-          backgroundColor: themeController.isLightMode.value
+          backgroundColor: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           titleStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                color: themeController.isLightMode.value
+                color: themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryTextColor
                     : kprimaryTextColor,
               ),
@@ -51,13 +51,13 @@ class LabelTile extends StatelessWidget {
             autofocus: true,
             controller: controller.labelController,
             style: Theme.of(context).textTheme.bodyLarge,
-            cursorColor: themeController.isLightMode.value
+            cursorColor: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryTextColor.withOpacity(0.75)
                 : kprimaryTextColor.withOpacity(0.75),
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor.withOpacity(0.75)
                       : kprimaryTextColor.withOpacity(0.75),
                   width: 1,
@@ -66,7 +66,7 @@ class LabelTile extends StatelessWidget {
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor.withOpacity(0.75)
                       : kprimaryTextColor.withOpacity(0.75),
                   width: 1,
@@ -75,7 +75,7 @@ class LabelTile extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor.withOpacity(0.75)
                       : kprimaryTextColor.withOpacity(0.75),
                   width: 1,
@@ -84,7 +84,7 @@ class LabelTile extends StatelessWidget {
               ),
               hintText: 'Enter a label'.tr,
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryDisabledTextColor
                         : kprimaryDisabledTextColor,
                   ),
@@ -104,7 +104,7 @@ class LabelTile extends StatelessWidget {
               }
             },
           ),
-          buttonColor: themeController.isLightMode.value
+          buttonColor: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           confirm: TextButton(
@@ -114,7 +114,7 @@ class LabelTile extends StatelessWidget {
             child: Text(
               'Save'.tr,
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor
                         : ksecondaryTextColor,
                   ),
@@ -142,10 +142,10 @@ class LabelTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.label.value.trim().isEmpty)
-                            ? themeController.isLightMode.value
+                            ? themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryDisabledTextColor
                                 : kprimaryDisabledTextColor
-                            : themeController.isLightMode.value
+                            : themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryTextColor
                                 : kprimaryTextColor,
                       ),
@@ -155,10 +155,10 @@ class LabelTile extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               color: (controller.label.value.trim().isEmpty)
-                  ? themeController.isLightMode.value
+                  ? themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryDisabledTextColor
                       : kprimaryDisabledTextColor
-                  : themeController.isLightMode.value
+                  : themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
             ),

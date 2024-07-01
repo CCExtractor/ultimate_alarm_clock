@@ -32,7 +32,7 @@ class SnoozeDurationTile extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.only(top: 20),
-          backgroundColor: themeController.isLightMode.value
+          backgroundColor: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           title: 'Select duration'.tr,
@@ -74,7 +74,7 @@ class SnoozeDurationTile extends StatelessWidget {
                   child: Text(
                     'Done'.tr,
                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : ksecondaryTextColor,
                         ),
@@ -86,7 +86,7 @@ class SnoozeDurationTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.isLightMode.value
+        tileColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightSecondaryBackgroundColor
             : ksecondaryBackgroundColor,
         title: FittedBox(
@@ -95,7 +95,7 @@ class SnoozeDurationTile extends StatelessWidget {
           child: Text(
             'Snooze Duration'.tr,
             style: TextStyle(
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor
                   : kprimaryTextColor,
             ),
@@ -111,10 +111,10 @@ class SnoozeDurationTile extends StatelessWidget {
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.snoozeDuration.value <= 0)
-                          ? themeController.isLightMode.value
+                          ? themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
+                          : themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : kprimaryTextColor,
                     ),
@@ -122,7 +122,7 @@ class SnoozeDurationTile extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryDisabledTextColor
                   : kprimaryDisabledTextColor,
             ),

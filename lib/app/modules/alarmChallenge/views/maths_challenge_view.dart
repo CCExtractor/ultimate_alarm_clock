@@ -162,10 +162,10 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         controller.onButtonPressed(number);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: themeController.isLightMode.value
+        backgroundColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightPrimaryTextColor.withOpacity(0.10)
             : kprimaryTextColor.withOpacity(0.08),
-        foregroundColor: themeController.isLightMode.value
+        foregroundColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightPrimaryTextColor
             : kprimaryTextColor,
         padding: const EdgeInsets.all(16),
@@ -182,7 +182,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         controller.displayValue.value = '';
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: themeController.isLightMode.value
+        backgroundColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightPrimaryTextColor.withOpacity(0.40)
             : kprimaryTextColor.withOpacity(0.5),
         foregroundColor: Colors.black,
@@ -192,7 +192,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
       child: Icon(
         Icons.backspace,
         size: 32,
-        color: themeController.isLightMode.value
+        color: themeController.currentTheme.value == ThemeMode.light
             ? kLightPrimaryTextColor.withOpacity(0.7)
             : kprimaryTextColor.withOpacity(0.7),
       ),
@@ -216,7 +216,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: kprimaryColor.withOpacity(0.8),
-        foregroundColor: themeController.isLightMode.value
+        foregroundColor: themeController.currentTheme.value == ThemeMode.light
             ? kLightSecondaryTextColor
             : ksecondaryTextColor,
         padding: const EdgeInsets.all(16),

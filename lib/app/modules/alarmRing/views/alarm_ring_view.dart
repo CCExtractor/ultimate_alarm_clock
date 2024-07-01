@@ -18,7 +18,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
     return TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
-          themeController.isLightMode.value
+          themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
         ),
@@ -26,7 +26,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
       child: Text(
         title.tr,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor
                   : kprimaryTextColor,
               fontWeight: FontWeight.w600,
@@ -87,7 +87,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.isLightMode.value
+                                    color: themeController.currentTheme.value == ThemeMode.light
                                         ? kLightPrimaryTextColor
                                         : ksecondaryTextColor,
                                   ),
@@ -125,7 +125,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                themeController.isLightMode.value
+                                themeController.currentTheme.value == ThemeMode.light
                                     ? kLightPrimaryTextColor.withOpacity(0.7)
                                     : kprimaryTextColor.withOpacity(0.7),
                               ),
@@ -136,7 +136,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.isLightMode.value
+                                    color: themeController.currentTheme.value == ThemeMode.light
                                         ? kLightPrimaryTextColor
                                         : ksecondaryTextColor,
                                   ),
@@ -206,7 +206,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                     child: Text(
                       controller.currentlyRingingAlarm.value.note,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryTextColor
                                 : kprimaryTextColor,
                             fontSize: 20,
@@ -230,7 +230,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                themeController.isLightMode.value
+                                themeController.currentTheme.value == ThemeMode.light
                                     ? kLightSecondaryBackgroundColor
                                     : ksecondaryBackgroundColor,
                               ),
@@ -241,7 +241,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(
-                                    color: themeController.isLightMode.value
+                                    color: themeController.currentTheme.value == ThemeMode.light
                                         ? kLightPrimaryTextColor
                                         : kprimaryTextColor,
                                     fontWeight: FontWeight.w600,

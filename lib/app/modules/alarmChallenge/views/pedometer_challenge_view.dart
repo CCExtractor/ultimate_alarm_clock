@@ -50,7 +50,7 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor.withOpacity(0.7)
                                       : kprimaryTextColor.withOpacity(0.7),
                                 ),
@@ -61,7 +61,7 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                           Icon(
                             Icons.directions_walk,
                             size: height * 0.2,
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightPrimaryTextColor.withOpacity(0.7)
                                 : kprimaryTextColor.withOpacity(0.7),
                           ),

@@ -15,7 +15,7 @@ Widget buildEndDrawer(BuildContext context) {
           bottomLeft: Radius.circular(10),
         ),
       ),
-      backgroundColor: themeController.isLightMode.value
+      backgroundColor: themeController.currentTheme.value == ThemeMode.light
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       child: Column(
@@ -51,7 +51,7 @@ Widget buildEndDrawer(BuildContext context) {
                                 .textTheme
                                 .displayMedium!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kprimaryTextColor
                                       : ksecondaryTextColor,
                                   fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ Widget buildEndDrawer(BuildContext context) {
                                 .textTheme
                                 .titleLarge!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kprimaryTextColor
                                       : ksecondaryTextColor,
                                   fontWeight: FontWeight.bold,
@@ -91,7 +91,7 @@ Widget buildEndDrawer(BuildContext context) {
             title: Text(
               'Settings'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.8)
                         : kprimaryTextColor.withOpacity(0.8),
                   ),
@@ -99,7 +99,7 @@ Widget buildEndDrawer(BuildContext context) {
             leading: Icon(
               Icons.settings,
               size: 26,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor.withOpacity(0.8)
                   : kprimaryTextColor.withOpacity(0.8),
             ),
@@ -114,7 +114,7 @@ Widget buildEndDrawer(BuildContext context) {
             title: Text(
               'About'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor.withOpacity(0.8)
                         : kprimaryTextColor.withOpacity(0.8),
                   ),
@@ -122,7 +122,7 @@ Widget buildEndDrawer(BuildContext context) {
             leading: Icon(
               Icons.info_outline,
               size: 26,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor.withOpacity(0.8)
                   : kprimaryTextColor.withOpacity(0.8),
             ),

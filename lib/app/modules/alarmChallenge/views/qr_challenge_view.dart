@@ -56,7 +56,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor.withOpacity(0.7)
                                       : kprimaryTextColor.withOpacity(0.7),
                                 ),
@@ -106,7 +106,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                   Icons.done,
                                                   size: height * 0.2,
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryTextColor
                                                           .withOpacity(0.7)
                                                       : kprimaryTextColor
@@ -121,7 +121,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                       Icons.close,
                                                       size: height * 0.2,
                                                       color: themeController
-                                                              .isLightMode.value
+                                                              .currentTheme.value == ThemeMode.light
                                                           ? kLightPrimaryTextColor
                                                               .withOpacity(0.7)
                                                           : kprimaryTextColor
@@ -140,8 +140,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             color: themeController
-                                                                    .isLightMode
-                                                                    .value
+                                                                    .currentTheme.value == ThemeMode.light
                                                                 ? kLightPrimaryTextColor
                                                                     .withOpacity(
                                                                     0.7,
@@ -169,8 +168,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             .displaySmall!
                                                             .copyWith(
                                                               color: themeController
-                                                                      .isLightMode
-                                                                      .value
+                                                                      .currentTheme.value == ThemeMode.light
                                                                   ? kLightSecondaryTextColor
                                                                   : ksecondaryTextColor,
                                                             ),

@@ -28,7 +28,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
         Visibility(
           visible: isVisible,
           child: ListTile(
-            tileColor: themeController.isLightMode.value
+            tileColor: themeController.currentTheme.value == ThemeMode.light
                 ? kLightSecondaryBackgroundColor
                 : ksecondaryBackgroundColor,
             title: FittedBox(
@@ -37,7 +37,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
               child: Text(
                 'Delete After Goes Off'.tr,
                 style: TextStyle(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
                 ),
@@ -70,11 +70,11 @@ class DeleteAfterGoesOff extends StatelessWidget {
           ),
         ),
         Container(
-          color: themeController.isLightMode.value
+          color: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           child: Divider(
-            color: themeController.isLightMode.value
+            color: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryDisabledTextColor
                 : kprimaryDisabledTextColor,
           ),

@@ -36,7 +36,7 @@ class CustomizeUndoDuration extends StatelessWidget{
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-          backgroundColor: themeController.isLightMode.value
+          backgroundColor: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           title: 'Customize Undo Duration'.tr,
@@ -72,7 +72,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                   child: Text(
                     'Apply Duration'.tr,
                     style: TextStyle(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? kLightSecondaryTextColor
                           : ksecondaryTextColor,
                     ),
@@ -87,19 +87,19 @@ class CustomizeUndoDuration extends StatelessWidget{
         width: width * 0.91,
         height: height * 0.09,
         decoration: Utils.getCustomTileBoxDecoration(
-          isLightMode: themeController.isLightMode.value,
+          isLightMode: themeController.currentTheme.value == ThemeMode.light,
         ),
         child: Center(
           child: Padding(
             padding: EdgeInsets.only(left: 10, right: 10),
             child: ListTile(
-              tileColor: themeController.isLightMode.value
+              tileColor: themeController.currentTheme.value == ThemeMode.light
                   ? kLightSecondaryBackgroundColor
                   : ksecondaryBackgroundColor,
               title: Text(
                 'Undo Duration'.tr,
                 style: TextStyle(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
                   fontSize: 15
@@ -112,7 +112,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                         () => Text(
                       '${homeController.duration.value.round().toInt()} seconds',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
                           fontSize: 13
@@ -121,7 +121,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                   ),
                   Icon(
                     Icons.chevron_right,
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryDisabledTextColor
                         : kprimaryDisabledTextColor,
                   ),

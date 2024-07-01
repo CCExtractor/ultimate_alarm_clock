@@ -32,7 +32,8 @@ class _LanguageMenuState extends State<LanguageMenu> {
       width: widget.width * 0.91,
       height: widget.height * 0.1,
       decoration: Utils.getCustomTileBoxDecoration(
-        isLightMode: widget.themeController.isLightMode.value,
+        isLightMode:
+            widget.themeController.currentTheme.value == ThemeMode.light,
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 30),
@@ -42,7 +43,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
               () => DropdownMenu(
                 menuStyle: MenuStyle(
                   backgroundColor: MaterialStatePropertyAll(
-                    widget.themeController.isLightMode.value
+                    widget.themeController.currentTheme.value == ThemeMode.light
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
                   ),
@@ -52,7 +53,8 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 trailingIcon: Icon(
                   Icons.arrow_drop_down_outlined,
                   size: 40.0,
-                  color: widget.themeController.isLightMode.value
+                  color: widget.themeController.currentTheme.value ==
+                          ThemeMode.light
                       ? kLightPrimaryTextColor.withOpacity(0.8)
                       : kprimaryTextColor.withOpacity(0.8),
                 ),
@@ -66,7 +68,8 @@ class _LanguageMenuState extends State<LanguageMenu> {
                     label: "${e.value['description']}",
                     style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(
-                        widget.themeController.isLightMode.value
+                        widget.themeController.currentTheme.value ==
+                                ThemeMode.light
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
                       ),

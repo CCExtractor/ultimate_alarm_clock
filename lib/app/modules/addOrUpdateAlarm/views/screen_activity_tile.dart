@@ -35,7 +35,7 @@ class ScreenActivityTile extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.only(top: 20),
-          backgroundColor: themeController.isLightMode.value
+          backgroundColor: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           title: 'Timeout Duration'.tr,
@@ -93,7 +93,7 @@ class ScreenActivityTile extends StatelessWidget {
                   child: Text(
                     'Done'.tr,
                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : ksecondaryTextColor,
                         ),
@@ -114,7 +114,7 @@ class ScreenActivityTile extends StatelessWidget {
               child: Text(
                 'Screen Activity'.tr,
                 style: TextStyle(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
                 ),

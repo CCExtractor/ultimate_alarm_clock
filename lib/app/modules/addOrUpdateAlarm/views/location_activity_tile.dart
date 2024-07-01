@@ -37,7 +37,7 @@ class LocationTile extends StatelessWidget {
         );
 
         await showMenu(
-          color: themeController.isLightMode.value
+          color: themeController.currentTheme.value == ThemeMode.light
               ? kLightSecondaryBackgroundColor
               : ksecondaryBackgroundColor,
           context: context,
@@ -52,10 +52,10 @@ class LocationTile extends StatelessWidget {
                     'Off',
                     style: TextStyle(
                       color: (controller.isLocationEnabled.value == true)
-                          ? themeController.isLightMode.value
+                          ? themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
+                          : themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : kprimaryTextColor,
                     ),
@@ -63,7 +63,7 @@ class LocationTile extends StatelessWidget {
                   Radio(
                     fillColor: MaterialStateProperty.all(
                       (controller.isLocationEnabled.value == true)
-                          ? themeController.isLightMode.value
+                          ? themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
                           : kprimaryColor,
@@ -86,10 +86,10 @@ class LocationTile extends StatelessWidget {
                     'Choose location',
                     style: TextStyle(
                       color: (controller.isLocationEnabled.value == false)
-                          ? themeController.isLightMode.value
+                          ? themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
+                          : themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : kprimaryTextColor,
                     ),
@@ -97,10 +97,10 @@ class LocationTile extends StatelessWidget {
                   Icon(
                     Icons.chevron_right,
                     color: (controller.isLocationEnabled.value == false)
-                        ? themeController.isLightMode.value
+                        ? themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryDisabledTextColor
                             : kprimaryDisabledTextColor
-                        : themeController.isLightMode.value
+                        : themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor
                             : kprimaryTextColor,
                   ),
@@ -118,7 +118,7 @@ class LocationTile extends StatelessWidget {
             }
 
             Get.defaultDialog(
-              backgroundColor: themeController.isLightMode.value
+              backgroundColor: themeController.currentTheme.value == ThemeMode.light
                   ? kLightSecondaryBackgroundColor
                   : ksecondaryBackgroundColor,
               title: 'Set location to automatically cancel alarm!',
@@ -157,7 +157,7 @@ class LocationTile extends StatelessWidget {
                     child: Text(
                       'Save',
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? kLightSecondaryTextColor
                                 : ksecondaryTextColor,
                           ),
@@ -183,7 +183,7 @@ class LocationTile extends StatelessWidget {
               child: Text(
                 'Location Based'.tr,
                 style: TextStyle(
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor
                       : kprimaryTextColor,
                 ),
@@ -193,7 +193,7 @@ class LocationTile extends StatelessWidget {
               icon: Icon(
                 Icons.info_sharp,
                 size: 21,
-                color: themeController.isLightMode.value
+                color: themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryTextColor.withOpacity(0.45)
                     : kprimaryTextColor.withOpacity(0.3),
               ),
@@ -205,7 +205,7 @@ class LocationTile extends StatelessWidget {
                       ' alarm if you are within 500m of'
                       ' the chosen location!',
                   iconData: Icons.info_sharp,
-                  isLightMode: themeController.isLightMode.value,
+                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
                 );
               },
             ),
@@ -219,10 +219,10 @@ class LocationTile extends StatelessWidget {
                 controller.isLocationEnabled.value == false ? 'Off' : 'Enabled',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isLocationEnabled.value == false)
-                          ? themeController.isLightMode.value
+                          ? themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryDisabledTextColor
                               : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
+                          : themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : kprimaryTextColor,
                     ),
@@ -230,10 +230,10 @@ class LocationTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 color: (controller.isLocationEnabled.value == false)
-                    ? themeController.isLightMode.value
+                    ? themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryDisabledTextColor
                         : kprimaryDisabledTextColor
-                    : themeController.isLightMode.value
+                    : themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor
                         : kprimaryTextColor,
               ),

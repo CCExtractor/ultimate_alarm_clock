@@ -32,7 +32,7 @@ class StopwatchView extends GetView<StopwatchController> {
                   icon: const Icon(
                     Icons.menu,
                   ),
-                  color: themeController.isLightMode.value
+                  color: themeController.currentTheme.value == ThemeMode.light
                       ? kLightPrimaryTextColor.withOpacity(0.75)
                       : kprimaryTextColor.withOpacity(0.75),
                   iconSize: 27,

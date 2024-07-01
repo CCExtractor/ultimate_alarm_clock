@@ -428,11 +428,11 @@ class HomeController extends GetxController {
         top: 20,
         bottom: 10,
       ),
-      backgroundColor: themeController.isLightMode.value
+      backgroundColor: themeController.currentTheme.value == ThemeMode.light
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       titleStyle: TextStyle(
-        color: themeController.isLightMode.value
+        color: themeController.currentTheme.value == ThemeMode.light
             ? kLightPrimaryTextColor
             : kprimaryTextColor,
       ),
@@ -442,7 +442,7 @@ class HomeController extends GetxController {
           Text(
             quote.getQuote(),
             style: TextStyle(
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor
                   : kprimaryTextColor,
             ),
@@ -455,7 +455,7 @@ class HomeController extends GetxController {
             child: Text(
               quote.getAuthor(),
               style: TextStyle(
-                color: themeController.isLightMode.value
+                color: themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryTextColor
                     : kprimaryTextColor,
                 fontWeight: FontWeight.w600,
@@ -478,7 +478,7 @@ class HomeController extends GetxController {
             child: Text(
               'Dismiss',
               style: TextStyle(
-                color: themeController.isLightMode.value
+                color: themeController.currentTheme.value == ThemeMode.light
                     ? kLightPrimaryTextColor
                     : ksecondaryTextColor,
               ),
@@ -531,7 +531,7 @@ class HomeController extends GetxController {
       titlePadding: const EdgeInsets.symmetric(
         vertical: 20,
       ),
-      backgroundColor: themeController.isLightMode.value
+      backgroundColor: themeController.currentTheme.value == ThemeMode.light
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
       title: 'Are you sure you want to delete these alarms?'.tr,
@@ -587,7 +587,7 @@ class HomeController extends GetxController {
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: themeController.isLightMode.value
+                      color: themeController.currentTheme.value == ThemeMode.light
                           ? Colors.red.withOpacity(0.9)
                           : Colors.red,
                       width: 1,
@@ -596,7 +596,7 @@ class HomeController extends GetxController {
                   child: Text(
                     'Okay'.tr,
                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? Colors.red.withOpacity(0.9)
                               : Colors.red,
                         ),

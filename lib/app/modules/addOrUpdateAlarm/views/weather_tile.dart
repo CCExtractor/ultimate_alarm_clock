@@ -27,7 +27,7 @@ class WeatherTile extends StatelessWidget {
                   await controller.getLocation();
                   Get.defaultDialog(
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                    backgroundColor: themeController.isLightMode.value
+                    backgroundColor: themeController.currentTheme.value == ThemeMode.light
                         ? kLightSecondaryBackgroundColor
                         : ksecondaryBackgroundColor,
                     title: 'Select weather types'.tr,
@@ -56,7 +56,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
@@ -108,7 +108,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
@@ -161,7 +161,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
@@ -213,7 +213,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
@@ -265,7 +265,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                               .withOpacity(0.5)
                                           : kprimaryTextColor.withOpacity(0.5),
@@ -302,7 +302,7 @@ class WeatherTile extends StatelessWidget {
                     ),
                   );
                 },
-                tileColor: themeController.isLightMode.value
+                tileColor: themeController.currentTheme.value == ThemeMode.light
                     ? kLightSecondaryBackgroundColor
                     : ksecondaryBackgroundColor,
                 title: Row(
@@ -313,7 +313,7 @@ class WeatherTile extends StatelessWidget {
                       child: Text(
                         'Weather Condition'.tr,
                         style: TextStyle(
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor
                               : kprimaryTextColor,
                           fontWeight: FontWeight.w500,
@@ -324,7 +324,7 @@ class WeatherTile extends StatelessWidget {
                       icon: Icon(
                         Icons.info_sharp,
                         size: 21,
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? kLightPrimaryTextColor.withOpacity(0.3)
                             : kprimaryTextColor.withOpacity(0.3),
                       ),
@@ -332,7 +332,7 @@ class WeatherTile extends StatelessWidget {
                         Utils.hapticFeedback();
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: themeController.isLightMode.value
+                          backgroundColor: themeController.currentTheme.value == ThemeMode.light
                               ? kLightSecondaryBackgroundColor
                               : ksecondaryBackgroundColor,
                           builder: (context) {
@@ -345,7 +345,7 @@ class WeatherTile extends StatelessWidget {
                                   children: [
                                     Icon(
                                       Icons.cloudy_snowing,
-                                      color: themeController.isLightMode.value
+                                      color: themeController.currentTheme.value == ThemeMode.light
                                           ? kLightPrimaryTextColor
                                           : kprimaryTextColor,
                                       size: height * 0.1,
@@ -392,7 +392,7 @@ class WeatherTile extends StatelessWidget {
                                               .displaySmall!
                                               .copyWith(
                                                 color: themeController
-                                                        .isLightMode.value
+                                                        .currentTheme.value == ThemeMode.light
                                                     ? kLightPrimaryTextColor
                                                     : ksecondaryTextColor,
                                               ),
@@ -423,7 +423,7 @@ class WeatherTile extends StatelessWidget {
                                 color:
                                     (controller.isWeatherEnabled.value == false)
                                         ? kprimaryDisabledTextColor
-                                        : themeController.isLightMode.value
+                                        : themeController.currentTheme.value == ThemeMode.light
                                             ? kLightPrimaryTextColor
                                             : kprimaryTextColor,
                               ),
