@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.ccextractor.ultimate_alarm_clocks.getLatestTimer
+import com.ccextractor.ultimate_alarm_clock.getLatestTimer
 
 
 class TimerNotification : BroadcastReceiver() {

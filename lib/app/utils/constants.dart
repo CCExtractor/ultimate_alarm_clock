@@ -143,6 +143,7 @@ ThemeData kThemeData = ThemeData(
       color: kprimaryTextColor,
     ),
   ),
+
 );
 
 // Light ThemeData

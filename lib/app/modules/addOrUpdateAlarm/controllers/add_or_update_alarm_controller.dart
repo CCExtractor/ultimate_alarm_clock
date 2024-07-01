@@ -353,7 +353,7 @@ class AddOrUpdateAlarmController extends GetxController {
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
-        content: const Text('This app needs access to your location.'),
+        content: const Text('To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.'),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
