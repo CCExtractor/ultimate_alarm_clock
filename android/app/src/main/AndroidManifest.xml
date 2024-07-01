@@ -19,7 +19,8 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
     <queries>
@@ -37,11 +38,22 @@
 
     <application
         android:name="${applicationName}"
+        android:allowBackup="true"
         android:icon="@mipmap/launcher_icon"
         android:label="Ultimate Alarm Clock"
         tools:replace="android:label">
         <service
-            android:name=".ScreenMonitorService"
+            android:name="com.ccextractor.ultimate_alarm_clock.ScreenMonitorService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".WeatherFetcherService"
+            android:foregroundServiceType="location"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".LocationFetcherService"
+            android:foregroundServiceType="location"
             android:enabled="true"
             android:exported="true"></service>
         <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />

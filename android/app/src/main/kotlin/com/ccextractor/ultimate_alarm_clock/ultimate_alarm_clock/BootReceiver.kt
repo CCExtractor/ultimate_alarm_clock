@@ -12,7 +12,7 @@ import android.app.NotificationManager
 import android.os.Build
 import android.os.CountDownTimer
 import androidx.core.app.NotificationCompat
-import com.ccextractor.ultimate_alarm_clocks.getLatestTimer
+import com.ccextractor.ultimate_alarm_clock.getLatestTimer
 
 
 class BootReceiver : BroadcastReceiver() {
@@ -26,7 +26,7 @@ class BootReceiver : BroadcastReceiver() {
             val ringTime = getLatestAlarm(db, true)
             db.close()
             if (ringTime != null) {
-                scheduleAlarm(ringTime, context)
+                scheduleAlarm(ringTime["interval"]!! as Long, context, ringTime["isActivity"]!!)
             }
 
             val timerdbhelper = TimerDatabaseHelper(context)
@@ -61,7 +61,7 @@ class BootReceiver : BroadcastReceiver() {
         }
     }
 
-    fun scheduleAlarm(milliSeconds: Long, context: Context) {
+    fun scheduleAlarm(milliSeconds: Long, context: Context, activityMonitor: Any) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -70,11 +70,41 @@ class BootReceiver : BroadcastReceiver() {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
+        val activityCheckIntent = Intent(context, ScreenMonitorService::class.java)
+        val pendingActivityCheckIntent = PendingIntent.getService(
+            context,
+            4,
+            activityCheckIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+        // Schedule the alarm
+        val tenMinutesInMilliseconds = 600000L
+        val preTriggerTime =
+            SystemClock.elapsedRealtime() + (milliSeconds - tenMinutesInMilliseconds)
 
         // Schedule the alarm
         val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
+        if (activityMonitor == 1) {
+            alarmManager.setExact(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                preTriggerTime,
+                pendingActivityCheckIntent
+            )
+        } else {
+            val sharedPreferences =
+                context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putLong("flutter.is_screen_off", 0L)
+            editor.apply()
+            editor.putLong("flutter.is_screen_on", 0L)
+            editor.apply()
+        }
+
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+
     }
+
+
 
     private fun createNotificationChannel(context: Context) {
 
