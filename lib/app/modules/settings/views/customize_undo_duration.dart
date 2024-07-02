@@ -98,12 +98,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                   : ksecondaryBackgroundColor,
               title: Text(
                 'Undo Duration'.tr,
-                style: TextStyle(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
-                  fontSize: 15
-                ),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               trailing: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
