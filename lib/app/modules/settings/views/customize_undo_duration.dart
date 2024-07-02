@@ -91,7 +91,7 @@ class CustomizeUndoDuration extends StatelessWidget{
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
+            padding: EdgeInsets.only(left: 15, right: 10),
             child: ListTile(
               tileColor: themeController.isLightMode.value
                   ? kLightSecondaryBackgroundColor
