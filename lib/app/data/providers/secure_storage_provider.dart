@@ -95,7 +95,13 @@ class SecureStorageProvider {
   Future<AppTheme> readThemeValue() async {
     String themeValue =
         await _secureStorage.read(key: 'theme_value') ?? 'AppTheme.dark';
-    return themeValue == 'AppTheme.dark' ? AppTheme.dark : AppTheme.light;
+    if (themeValue == 'AppTheme.system') {
+      return AppTheme.system;
+    } else if (themeValue == 'AppTheme.light') {
+      return AppTheme.light;
+    } else {
+      return AppTheme.dark;
+    }
   }
 
   Future<void> writeThemeValue({

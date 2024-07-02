@@ -4,7 +4,7 @@ enum ApiKeys {
   openWeatherMap,
 }
 
-enum AppTheme { light, dark }
+enum AppTheme { light, dark, system }
 
 enum Status { initialized, ongoing, completed }
 
