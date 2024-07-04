@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/calendar/v3.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -14,6 +15,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
 
 import '../../../data/providers/get_storage_provider.dart';
+import '../../../utils/GoogleHttpClient.dart';
 
 class SettingsController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
@@ -28,7 +30,9 @@ class SettingsController extends GetxController {
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
+    CalendarApi.calendarScope,
+  ]);
   late GoogleSignInAccount? googleSignInAccount;
   final RxBool isUserLoggedIn = false.obs;
   final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
@@ -81,7 +85,18 @@ class SettingsController extends GetxController {
   // Logins user using GoogleSignIn
   loginWithGoogle() async {
     try {
-      googleSignInAccount = await _googleSignIn.signIn();
+      googleSignInAccount = await _googleSignIn.signIn().then((value) async {
+        final authHeaders = await  _googleSignIn.currentUser!.authHeaders;
+        // custom IOClient from below
+        final httpClient = GoogleHttpClient(authHeaders);
+        var dataList = await CalendarApi(httpClient).events.list('aryansarafdev@gmail.com');
+        for (final event in dataList.items??[]) {
+          print('Event Summary: ${event.summary}');
+          print('Start Time: ${event.start.dateTime}');
+          print('End Time: ${event.end.dateTime}');
+          print('---');
+        }
+      });
 
       if (googleSignInAccount != null) {
         // Process successful sign-in
@@ -292,3 +307,4 @@ class SettingsController extends GetxController {
     storage.writeLocale(languageCode, countryCode);
   }
 }
+
