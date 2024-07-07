@@ -1,4 +1,4 @@
-class UserModel {
+class  UserModel {
   final String fullName;
   final String firstName;
   final String lastName;

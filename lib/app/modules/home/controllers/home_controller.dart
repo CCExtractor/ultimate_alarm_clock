@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:googleapis/calendar/v3.dart' as CalendarApi;
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +20,8 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+
+import '../../../data/providers/google_cloud_api_provider.dart';
 
 class Pair<T, U> {
   final T first;
@@ -41,9 +46,12 @@ class HomeController extends GetxController {
   Timer? _delayTimer;
   Timer _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
+
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
+    CalendarApi.CalendarApi.calendarScope,
+  ]);
   final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   final RxBool isUserSignedIn = false.obs;
   final floatingButtonKey = GlobalKey<ExpandableFabState>();
@@ -67,6 +75,11 @@ class HomeController extends GetxController {
   final RxDouble selecteddurationDouble = 0.0.obs;
 
   ThemeController themeController = Get.find<ThemeController>();
+  RxList Calendars = [].obs;
+  RxList Events = [].obs;
+  final RxString calendarFetchStatus = "Loading".obs;
+  final RxString selectedCalendar = "".obs;
+  RxBool isCalender = true.obs;
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -109,12 +122,10 @@ class HomeController extends GetxController {
     firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
     isarStreamAlarms = IsarDb.getAlarms();
     sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
-
-    Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest3(
+    Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest2(
       firestoreStreamAlarms!,
-      sharedAlarmsStream!,
       isarStreamAlarms!,
-      (firestoreData, sharedData, isarData) {
+      (firestoreData, isarData) {
         List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
         latestFirestoreAlarms = firestoreDocuments.map((doc) {
           return AlarmModel.fromDocumentSnapshot(
@@ -123,15 +134,6 @@ class HomeController extends GetxController {
           );
         }).toList();
 
-        List<DocumentSnapshot> sharedAlarmDocuments = sharedData.docs;
-        latestSharedAlarms = sharedAlarmDocuments.map((doc) {
-          return AlarmModel.fromDocumentSnapshot(
-            documentSnapshot: doc,
-            user: user,
-          );
-        }).toList();
-
-        latestFirestoreAlarms += latestSharedAlarms;
         latestIsarAlarms = isarData as List<AlarmModel>;
 
         List<AlarmModel> alarms = [
@@ -377,6 +379,42 @@ class HomeController extends GetxController {
     if (delayToSchedule != null) {
       delayToSchedule!.cancel();
     }
+  }
+
+  Future<void> fetchGoogleCalendars() async {
+    Calendars.value = (await GoogleCloudApiProvider.getCalenders()) ?? [];
+    if (Calendars.value == []) {
+      calendarFetchStatus.value = "Empty";
+    } else {
+      calendarFetchStatus.value = "Loaded";
+    }
+  }
+
+  Future<void> fetchEvents(String calenderId) async {
+    Events.value = await GoogleCloudApiProvider.getEvents(calenderId) ?? [];
+    if (Events.value == []) {
+      calendarFetchStatus.value = "Empty";
+      Get.snackbar("Events", "No events available");
+    } else {
+      calendarFetchStatus.value = "Loaded";
+      isCalender.value = false;
+    }
+    print(Events.value);
+  }
+
+  Future<void> setAlarmFromEvent(CalendarApi.Event event) async {
+    AlarmModel alarmModel = Utils.genFakeAlarmModel();
+    alarmModel.alarmTime = Utils.formatDateTimeToHHMMSS(
+        event.start?.dateTime?.toLocal() ?? event.start!.date!.toLocal());
+    alarmModel.isEnabled = true;
+    alarmModel.intervalToAlarm = Utils.calculateTimeDifference(
+        event.start?.dateTime ?? event.start!.date!);
+    alarmModel.label = event.summary!;
+    alarmModel.isOneTime = true;
+    Get.toNamed(
+      '/add-update-alarm',
+      arguments: alarmModel,
+    );
   }
 
   // Add all alarms to seleted alarm set

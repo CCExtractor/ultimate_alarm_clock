@@ -380,7 +380,7 @@ class Utils {
   static Future<TimerModel> genFakeTimerModel() async {
     return TimerModel(
       timerValue: 0,
-      timeElapsed :0,
+      timeElapsed: 0,
       startedOn: '',
       ringtoneName: '',
       timerName: '',
@@ -389,46 +389,45 @@ class Utils {
 
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
-      volMax: 1.0,
-      volMin: 0.0,
-      snoozeDuration: 0,
-      gradient: 1,
-      label: '',
-      isOneTime: false,
-      deleteAfterGoesOff: false,
-      offsetDetails: {},
-      mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-      lastEditedUserId: '',
-      mutexLock: false,
-      ownerName: '',
-      ownerId: '',
-      alarmID: '',
-      activityInterval: 0,
-      isMathsEnabled: false,
-      numMathsQuestions: 0,
-      mathsDifficulty: 0,
-      qrValue: '',
-      isQrEnabled: false,
-      isShakeEnabled: false,
-      shakeTimes: 0,
-      isPedometerEnabled: false,
-      numberOfSteps: 0,
-      days: [false, false, false, false, false, false, false],
-      weatherTypes: [],
-      isWeatherEnabled: false,
-      isEnabled: false,
-      isActivityEnabled: false,
-      isLocationEnabled: false,
-      isSharedAlarmEnabled: false,
-      intervalToAlarm: 0,
-      location: '',
-      alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
-      ringtoneName: 'Default',
-      note: '',
-      showMotivationalQuote: false,
-      activityMonitor: 0
-    );
+        volMax: 1.0,
+        volMin: 0.0,
+        snoozeDuration: 0,
+        gradient: 1,
+        label: '',
+        isOneTime: false,
+        deleteAfterGoesOff: false,
+        offsetDetails: {},
+        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+        lastEditedUserId: '',
+        mutexLock: false,
+        ownerName: '',
+        ownerId: '',
+        alarmID: '',
+        activityInterval: 0,
+        isMathsEnabled: false,
+        numMathsQuestions: 0,
+        mathsDifficulty: 0,
+        qrValue: '',
+        isQrEnabled: false,
+        isShakeEnabled: false,
+        shakeTimes: 0,
+        isPedometerEnabled: false,
+        numberOfSteps: 0,
+        days: [false, false, false, false, false, false, false],
+        weatherTypes: [],
+        isWeatherEnabled: false,
+        isEnabled: false,
+        isActivityEnabled: false,
+        isLocationEnabled: false,
+        isSharedAlarmEnabled: false,
+        intervalToAlarm: 0,
+        location: '0.0,0.0',
+        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+        ringtoneName: 'Default',
+        note: '',
+        showMotivationalQuote: false,
+        activityMonitor: 0);
   }
 
   static String getFormattedWeatherTypes(List weatherTypes) {
@@ -667,10 +666,26 @@ class Utils {
       );
     }
   }
-  static int getDifferenceMillisFromNow(String datetimeString, int milliseconds) {
+
+  static int calculateTimeDifference(DateTime targetDateTime) {
+    targetDateTime = targetDateTime.toLocal();
+    var currentTime = DateTime.now();
+    currentTime = currentTime.subtract(Duration(
+        milliseconds: currentTime.millisecond,
+        microseconds: currentTime.microsecond));
+    final difference = targetDateTime.difference(currentTime);
+    final milliseconds = difference.inHours * 60 * 60 * 1000 +
+        difference.inMinutes * 60 * 1000 +
+        difference.inSeconds * 1000;
+    return milliseconds;
+  }
+
+  static int getDifferenceMillisFromNow(
+      String datetimeString, int milliseconds) {
     try {
       final providedDatetime = DateTime.parse(datetimeString);
-      final updatedDatetime = providedDatetime.add(Duration(milliseconds: milliseconds));
+      final updatedDatetime =
+          providedDatetime.add(Duration(milliseconds: milliseconds));
       final currentDatetime = DateTime.now();
       final difference = updatedDatetime.difference(currentDatetime);
       return difference.inMilliseconds;
@@ -679,4 +694,14 @@ class Utils {
     }
   }
 
+  static String formatDateTimeToStandard(DateTime dateTime) {
+    dateTime = dateTime.toLocal();
+    final formattedDate =
+        '${dateTime.year}-${_twoDigits(dateTime.month)}-${_twoDigits(dateTime.day)}';
+    final formattedTime =
+        '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}';
+    return '$formattedDate ($formattedTime)';
+  }
+
+  static String _twoDigits(int n) => n.toString().padLeft(2, '0');
 }

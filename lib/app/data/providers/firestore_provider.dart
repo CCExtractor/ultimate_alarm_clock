@@ -24,7 +24,7 @@ class FirestoreDb {
   void _onCreate(Database db, int version) async {
     // Create tables for alarms and ringtones (modify column types as needed)
     await db.execute('''
-       CREATE TABLE alarms (
+      CREATE TABLE alarms (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         firestoreId TEXT,
         alarmTime TEXT NOT NULL,

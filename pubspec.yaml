@@ -1,5 +1,5 @@
 name: ultimate_alarm_clock
-version: 0.1.0
+version: 0.2.0
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -7,7 +7,7 @@ environment:
   flutter: 3.16.0
 
 dependencies:
-  firebase_core: ^2.8.0
+  firebase_core: ^2.27.0
   screen_state: ^2.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.6
@@ -29,7 +29,7 @@ dependencies:
   numberpicker: ^2.1.2
   mobile_scanner: 3.5.5
   permission_handler: ^11.0.1
-  google_sign_in: ^6.0.2
+  google_sign_in: ^6.2.1
   url_launcher: ^6.1.11
   flutter_expandable_fab: ^1.8.1
   vibration: ^1.8.1
@@ -48,6 +48,8 @@ dependencies:
   sqflite: ^2.3.2
   googleapis: ^13.1.0
   googleapis_auth: ^1.4.1
+  firebase_auth: ^4.17.8
+  extension_google_sign_in_as_googleapis_auth: ^2.0.12
 
 dev_dependencies:
   flutter_lints: ^2.0.3
