@@ -48,9 +48,7 @@ void main() async {
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       systemNavigationBarColor:
-          themeController.currentTheme.value == ThemeMode.light
-              ? kLightPrimaryBackgroundColor
-              : kprimaryBackgroundColor,
+      themeController.getColor("primaryBackgroundColor"),
     ),
   );
   runApp(

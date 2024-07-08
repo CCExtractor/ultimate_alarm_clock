@@ -31,17 +31,13 @@ class SharedUsers extends StatelessWidget {
                     title: Text(
                       'Alarm Owner'.tr,
                       style: TextStyle(
-                        color: themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor("primaryTextColor"),
                       ),
                     ),
                     trailing: Text(
                       controller.alarmRecord.value!.ownerName,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor,
+                            color: themeController.getColor('primaryDisabledTextColor'),
                           ),
                     ),
                   )
@@ -49,9 +45,7 @@ class SharedUsers extends StatelessWidget {
                     title: Text(
                       'Shared Users'.tr,
                       style: TextStyle(
-                        color: themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor("primaryTextColor"),
                       ),
                     ),
                     trailing: InkWell(
@@ -59,9 +53,7 @@ class SharedUsers extends StatelessWidget {
                         Utils.hapticFeedback();
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryBackgroundColor
-                              : kprimaryBackgroundColor,
+                          backgroundColor: themeController.getColor("primaryBackgroundColor"),
                           builder: (BuildContext context) {
                             final userDetails = RxList<UserModel?>([]);
 
@@ -114,10 +106,7 @@ class SharedUsers extends StatelessWidget {
                                                 title: Text(
                                                   user!.fullName,
                                                   style: TextStyle(
-                                                    color: themeController
-                                                            .currentTheme.value == ThemeMode.light
-                                                        ? kLightPrimaryTextColor
-                                                        : kprimaryTextColor,
+                                                    color: themeController.getColor('primaryTextColor'),
                                                   ),
                                                 ),
                                                 trailing: TextButton(
@@ -153,14 +142,7 @@ class SharedUsers extends StatelessWidget {
                                                         .textTheme
                                                         .bodyLarge!
                                                         .copyWith(
-                                                          color: themeController
-                                                                  .currentTheme.value == ThemeMode.light
-                                                              ? kLightPrimaryTextColor
-                                                                  .withOpacity(
-                                                                  0.9,
-                                                                )
-                                                              : kprimaryTextColor
-                                                                  .withOpacity(
+                                                          color: themeController.getColor('primaryTextColor').withOpacity(
                                                                   0.9,
                                                                 ),
                                                         ),
@@ -185,10 +167,7 @@ class SharedUsers extends StatelessWidget {
                                                 ),
                                               ),
                                               Divider(
-                                                color: themeController
-                                                        .currentTheme.value == ThemeMode.light
-                                                    ? kLightPrimaryDisabledTextColor
-                                                    : kprimaryDisabledTextColor,
+                                                color: themeController.getColor('primaryDisabledTextColor'),
                                               ),
                                             ],
                                           ),
@@ -203,9 +182,7 @@ class SharedUsers extends StatelessWidget {
                       },
                       child: Icon(
                         Icons.chevron_right,
-                        color: themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryTextColor.withOpacity(0.7)
-                            : kprimaryTextColor.withOpacity(0.7),
+                        color: themeController.getColor('primaryTextColor').withOpacity(0.7),
                       ),
                     ),
                   )

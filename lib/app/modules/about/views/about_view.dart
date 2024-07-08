@@ -17,9 +17,7 @@ class AboutView extends GetView<AboutController> {
         title: Text(
           'About'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor("primaryTextColor"),
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -28,9 +26,7 @@ class AboutView extends GetView<AboutController> {
         leading: IconButton(
           icon: Icon(
             Icons.adaptive.arrow_back,
-            color: themeController.currentTheme.value == ThemeMode.light
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.getColor("primaryTextColor"),
           ),
           onPressed: () {
             Utils.hapticFeedback();

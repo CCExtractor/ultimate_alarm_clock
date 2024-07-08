@@ -54,31 +54,22 @@ class HomeView extends GetView<HomeController> {
                             title: 'Join an alarm'.tr,
                             titlePadding:
                                 const EdgeInsets.fromLTRB(0, 21, 0, 0),
-                            backgroundColor: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
+                            backgroundColor: themeController.getColor('secondaryBackgroundColor'),
                             titleStyle: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.currentTheme.value == ThemeMode.light
-                                      ? kLightPrimaryTextColor
-                                      : kprimaryTextColor,
+                                  color: themeController.getColor('primaryTextColor'),
                                 ),
                             contentPadding: const EdgeInsets.all(21),
                             content: TextField(
                               controller: controller.alarmIdController,
                               style: Theme.of(context).textTheme.bodyLarge,
-                              cursorColor: themeController.currentTheme.value == ThemeMode.light
-                                  ? kLightPrimaryTextColor.withOpacity(0.75)
-                                  : kprimaryTextColor.withOpacity(0.75),
+                              cursorColor: themeController.getColor('primaryTextColor').withOpacity(0.75),
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.75)
-                                        : kprimaryTextColor.withOpacity(0.75),
+                                    color: themeController.getColor('primaryTextColor').withOpacity(0.75),
                                     width: 1,
                                   ),
                                   borderRadius: const BorderRadius.all(
@@ -87,10 +78,7 @@ class HomeView extends GetView<HomeController> {
                                 ),
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.75)
-                                        : kprimaryTextColor.withOpacity(0.75),
+                                    color: themeController.getColor('primaryTextColor').withOpacity(0.75),
                                     width: 1,
                                   ),
                                   borderRadius: const BorderRadius.all(
@@ -99,10 +87,7 @@ class HomeView extends GetView<HomeController> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.75)
-                                        : kprimaryTextColor.withOpacity(0.75),
+                                    color: themeController.getColor('primaryTextColor').withOpacity(0.75),
                                     width: 1,
                                   ),
                                   borderRadius: const BorderRadius.all(
@@ -114,15 +99,11 @@ class HomeView extends GetView<HomeController> {
                                     .textTheme
                                     .bodyLarge!
                                     .copyWith(
-                                      color: themeController.currentTheme.value == ThemeMode.light
-                                          ? kLightPrimaryDisabledTextColor
-                                          : kprimaryDisabledTextColor,
+                                      color: themeController.getColor('primaryDisabledTextColor'),
                                     ),
                               ),
                             ),
-                            buttonColor: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
+                            buttonColor: themeController.getColor('secondaryBackgroundColor'),
                             confirm: TextButton(
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
@@ -135,9 +116,7 @@ class HomeView extends GetView<HomeController> {
                                     .textTheme
                                     .displaySmall!
                                     .copyWith(
-                                      color: themeController.currentTheme.value == ThemeMode.light
-                                          ? kLightSecondaryTextColor
-                                          : ksecondaryTextColor,
+                                      color: themeController.getColor('secondaryTextColor'),
                                     ),
                               ),
                               onPressed: () async {
@@ -154,9 +133,7 @@ class HomeView extends GetView<HomeController> {
                                       vertical: 20,
                                     ),
                                     backgroundColor:
-                                        themeController.currentTheme.value == ThemeMode.light
-                                            ? kLightSecondaryBackgroundColor
-                                            : ksecondaryBackgroundColor,
+                                        themeController.getColor('secondaryBackgroundColor'),
                                     title: 'Error!'.tr,
                                     titleStyle: Theme.of(context)
                                         .textTheme
@@ -225,9 +202,7 @@ class HomeView extends GetView<HomeController> {
                           children: [
                             Icon(
                               Icons.alarm,
-                              color: themeController.currentTheme.value == ThemeMode.light
-                                  ? kLightSecondaryTextColor
-                                  : ksecondaryTextColor,
+                              color: themeController.getColor('secondaryTextColor'),
                             ),
                             const SizedBox(width: 8.0),
                             Text(
@@ -236,9 +211,7 @@ class HomeView extends GetView<HomeController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightSecondaryTextColor
-                                        : ksecondaryTextColor,
+                                    color: themeController.getColor('secondaryTextColor'),
                                   ),
                             ),
                           ],
@@ -259,9 +232,7 @@ class HomeView extends GetView<HomeController> {
                           children: [
                             Icon(
                               Icons.add,
-                              color: themeController.currentTheme.value == ThemeMode.light
-                                  ? kLightSecondaryTextColor
-                                  : ksecondaryTextColor,
+                              color: themeController.getColor('secondaryTextColor'),
                             ),
                             const SizedBox(width: 8.0),
                             Text(
@@ -270,9 +241,7 @@ class HomeView extends GetView<HomeController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightSecondaryTextColor
-                                        : ksecondaryTextColor,
+                                    color: themeController.getColor('secondaryTextColor'),
                                   ),
                             ),
                           ],
@@ -339,10 +308,7 @@ class HomeView extends GetView<HomeController> {
                                                   .textTheme
                                                   .displaySmall!
                                                   .copyWith(
-                                                    color: themeController
-                                                            .currentTheme.value == ThemeMode.light
-                                                        ? kLightPrimaryDisabledTextColor
-                                                        : kprimaryDisabledTextColor,
+                                                    color: themeController.getColor('primaryDisabledTextColor'),
                                                     fontSize: 16 *
                                                         controller.scalingFactor
                                                             .value,
@@ -355,13 +321,7 @@ class HomeView extends GetView<HomeController> {
                                                     .textTheme
                                                     .displaySmall!
                                                     .copyWith(
-                                                      color: themeController
-                                                              .currentTheme.value == ThemeMode.light
-                                                          ? kLightPrimaryTextColor
-                                                              .withOpacity(
-                                                              0.75,
-                                                            )
-                                                          : kprimaryTextColor
+                                                      color: themeController.getColor('primaryTextColor')
                                                               .withOpacity(
                                                               0.75,
                                                             ),
@@ -390,11 +350,7 @@ class HomeView extends GetView<HomeController> {
                                             icon: const Icon(
                                               Icons.menu,
                                             ),
-                                            color: themeController
-                                                    .currentTheme.value == ThemeMode.light
-                                                ? kLightPrimaryTextColor
-                                                    .withOpacity(0.75)
-                                                : kprimaryTextColor
+                                            color: themeController.getColor('primaryTextColor')
                                                     .withOpacity(0.75),
                                             iconSize: 27 *
                                                 controller.scalingFactor.value,
@@ -500,11 +456,7 @@ class HomeView extends GetView<HomeController> {
                                                   .clear();
                                             },
                                             icon: const Icon(Icons.close),
-                                            color: themeController
-                                                    .currentTheme.value == ThemeMode.light
-                                                ? kLightPrimaryTextColor
-                                                    .withOpacity(0.75)
-                                                : kprimaryTextColor
+                                            color: themeController.getColor('primaryTextColor')
                                                     .withOpacity(0.75),
                                             iconSize: 27 *
                                                 controller.scalingFactor.value,
@@ -525,10 +477,7 @@ class HomeView extends GetView<HomeController> {
                                                       .textTheme
                                                       .displaySmall!
                                                       .copyWith(
-                                                        color: themeController
-                                                                .currentTheme.value == ThemeMode.light
-                                                            ? kLightPrimaryDisabledTextColor
-                                                            : kprimaryDisabledTextColor,
+                                                        color: themeController.getColor('primaryDisabledTextColor'),
                                                         fontSize: 16 *
                                                             controller
                                                                 .scalingFactor
@@ -562,13 +511,7 @@ class HomeView extends GetView<HomeController> {
                                                                   .textTheme
                                                                   .displaySmall!
                                                                   .copyWith(
-                                                                    color: themeController
-                                                                            .currentTheme.value == ThemeMode.light
-                                                                        ? kLightPrimaryTextColor
-                                                                            .withOpacity(
-                                                                            0.75,
-                                                                          )
-                                                                        : kprimaryTextColor
+                                                                    color: themeController.getColor('primaryTextColor')
                                                                             .withOpacity(
                                                                             0.75,
                                                                           ),
@@ -630,14 +573,7 @@ class HomeView extends GetView<HomeController> {
                                                                           .value >
                                                                       0
                                                                   ? Colors.red
-                                                                  : themeController
-                                                                          .currentTheme.value == ThemeMode.light
-                                                                      ? kLightPrimaryTextColor
-                                                                          .withOpacity(
-                                                                          0.75,
-                                                                        )
-                                                                      : kprimaryTextColor
-                                                                          .withOpacity(
+                                                                  : themeController.getColor('primaryTextColor').withOpacity(
                                                                           0.75,
                                                                         ),
                                                               iconSize: 27 *
@@ -676,9 +612,7 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   Expanded(
                     child: GlowingOverscrollIndicator(
-                      color: themeController.currentTheme.value == ThemeMode.light
-                          ? kLightPrimaryDisabledTextColor
-                          : kprimaryDisabledTextColor,
+                      color: themeController.getColor('primaryDisabledTextColor'),
                       axisDirection: AxisDirection.down,
                       child: Obx(() {
                         return FutureBuilder(
@@ -728,10 +662,7 @@ class HomeView extends GetView<HomeController> {
                                                   .textTheme
                                                   .displaySmall!
                                                   .copyWith(
-                                                    color: themeController
-                                                            .currentTheme.value == ThemeMode.light
-                                                        ? kLightPrimaryDisabledTextColor
-                                                        : kprimaryDisabledTextColor,
+                                                    color: themeController.getColor('primaryDisabledTextColor'),
                                                   ),
                                             ),
                                           ],
@@ -854,10 +785,7 @@ class HomeView extends GetView<HomeController> {
                                                       horizontal: 10.0,
                                                     ),
                                                     child: Card(
-                                                      color: themeController
-                                                              .currentTheme.value == ThemeMode.light
-                                                          ? kLightSecondaryBackgroundColor
-                                                          : ksecondaryBackgroundColor,
+                                                      color: themeController.getColor('secondaryBackgroundColor'),
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
@@ -943,9 +871,7 @@ class HomeView extends GetView<HomeController> {
                                                                                   fontWeight: FontWeight.w500,
                                                                                   color: alarm.isEnabled == true
                                                                                       ? kprimaryColor
-                                                                                      : themeController.currentTheme.value == ThemeMode.light
-                                                                                          ? kLightPrimaryDisabledTextColor
-                                                                                          : kprimaryDisabledTextColor,
+                                                                                      : themeController.getColor('primaryDisabledTextColor'),
                                                                                 ),
                                                                           ),
                                                                           if (alarm
@@ -954,9 +880,7 @@ class HomeView extends GetView<HomeController> {
                                                                             VerticalDivider(
                                                                               color: alarm.isEnabled == true
                                                                                   ? kprimaryColor
-                                                                                  : themeController.currentTheme.value == ThemeMode.light
-                                                                                      ? kLightPrimaryDisabledTextColor
-                                                                                      : kprimaryDisabledTextColor,
+                                                                                  : themeController.getColor('primaryDisabledTextColor'),
                                                                               thickness: 1.4,
                                                                               width: 6,
                                                                               indent: 3.1,
@@ -973,9 +897,7 @@ class HomeView extends GetView<HomeController> {
                                                                                       fontWeight: FontWeight.w500,
                                                                                       color: alarm.isEnabled == true
                                                                                           ? kprimaryColor
-                                                                                          : themeController.currentTheme.value == ThemeMode.light
-                                                                                              ? kLightPrimaryDisabledTextColor
-                                                                                              : kprimaryDisabledTextColor,
+                                                                                          : themeController.getColor('primaryDisabledTextColor'),
                                                                                     ),
                                                                               ),
                                                                             ),
@@ -995,12 +917,8 @@ class HomeView extends GetView<HomeController> {
                                                                             context,
                                                                           ).textTheme.displayLarge!.copyWith(
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor
-                                                                                        : kprimaryTextColor
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor')
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                         ),
                                                                         Padding(
@@ -1018,12 +936,8 @@ class HomeView extends GetView<HomeController> {
                                                                                   ))[1],
                                                                             style: Theme.of(context).textTheme.displayMedium!.copyWith(
                                                                                   color: alarm.isEnabled == true
-                                                                                      ? themeController.currentTheme.value == ThemeMode.light
-                                                                                          ? kLightPrimaryTextColor
-                                                                                          : kprimaryTextColor
-                                                                                      : themeController.currentTheme.value == ThemeMode.light
-                                                                                          ? kLightPrimaryDisabledTextColor
-                                                                                          : kprimaryDisabledTextColor,
+                                                                                      ? themeController.getColor('primaryTextColor')
+                                                                                      : themeController.getColor('primaryDisabledTextColor'),
                                                                                 ),
                                                                           ),
                                                                         ),
@@ -1053,12 +967,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.share_arrival_time,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1071,12 +981,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.location_pin,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1089,12 +995,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.screen_lock_portrait,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1107,12 +1009,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.cloudy_snowing,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1125,12 +1023,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.qr_code_scanner,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1143,12 +1037,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.vibration,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1161,12 +1051,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.calculate,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1179,12 +1065,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.directions_walk,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor.withOpacity(0.5)
-                                                                                        : kprimaryTextColor.withOpacity(0.5)
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                             ),
                                                                         ],
@@ -1298,16 +1180,12 @@ class HomeView extends GetView<HomeController> {
                                                                                   controller.refreshUpcomingAlarms();
                                                                                 }
                                                                               },
-                                                                              color: themeController.currentTheme.value == ThemeMode.light ? kLightPrimaryBackgroundColor : kprimaryBackgroundColor,
+                                                                              color: themeController.getColor('primaryBackgroundColor'),
                                                                               icon: Icon(
                                                                                 Icons.more_vert,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryTextColor
-                                                                                        : kprimaryTextColor
-                                                                                    : themeController.currentTheme.value == ThemeMode.light
-                                                                                        ? kLightPrimaryDisabledTextColor
-                                                                                        : kprimaryDisabledTextColor,
+                                                                                    ? themeController.getColor('primaryTextColor')
+                                                                                    : themeController.getColor('primaryDisabledTextColor'),
                                                                               ),
                                                                               itemBuilder: (context) {
                                                                                 return [
@@ -1382,9 +1260,7 @@ class HomeView extends GetView<HomeController> {
       titlePadding: const EdgeInsets.symmetric(
         vertical: 20,
       ),
-      backgroundColor: themeController.currentTheme.value == ThemeMode.light
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
       title: 'Confirmation'.tr,
       titleStyle: Theme.of(context).textTheme.displaySmall,
       content: Column(
@@ -1408,7 +1284,7 @@ class HomeView extends GetView<HomeController> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                       kprimaryTextColor.withOpacity(0.5),
-                    )),
+                    ),),
                     child: Text(
                       'Cancel'.tr,
                       style: Theme.of(context).textTheme.displaySmall!,

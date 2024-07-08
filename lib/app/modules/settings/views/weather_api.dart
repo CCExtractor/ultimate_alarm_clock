@@ -30,9 +30,7 @@ class WeatherApi extends StatelessWidget {
         Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor('secondaryBackgroundColor'),
           title: 'API Key',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           onWillPop: () async {
@@ -236,11 +234,7 @@ class WeatherApi extends StatelessWidget {
                                         .textTheme
                                         .displaySmall!
                                         .copyWith(
-                                          color: themeController
-                                                      .currentTheme.value ==
-                                                  ThemeMode.light
-                                              ? kLightSecondaryTextColor
-                                              : ksecondaryTextColor,
+                                          color: themeController.getColor('secondaryTextColor')
                                         ),
                                   ),
                                   onPressed: () {
@@ -282,10 +276,7 @@ class WeatherApi extends StatelessWidget {
                                     .displaySmall!
                                     .copyWith(
                                       color:
-                                          themeController.currentTheme.value ==
-                                                  ThemeMode.light
-                                              ? kLightSecondaryTextColor
-                                              : ksecondaryTextColor,
+                                      themeController.getColor('secondaryTextColor'),
                                     ),
                               ),
                               onPressed: () {
@@ -334,18 +325,14 @@ class WeatherApi extends StatelessWidget {
                 icon: Icon(
                   Icons.info_sharp,
                   size: 21,
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor.withOpacity(0.3)
-                      : kprimaryTextColor.withOpacity(0.3),
+                  color: themeController.getColor('primaryTextColor').withOpacity(0.3),
                 ),
                 onPressed: () => {
                   Utils.hapticFeedback(),
                   showBottomSheet(
                     context: context,
                     backgroundColor:
-                        themeController.currentTheme.value == ThemeMode.light
-                            ? kLightSecondaryBackgroundColor
-                            : ksecondaryBackgroundColor,
+                    themeController.getColor('secondaryBackgroundColor'),
                     builder: (context) {
                       return Padding(
                         padding: EdgeInsets.symmetric(

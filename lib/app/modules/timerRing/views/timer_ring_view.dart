@@ -71,9 +71,7 @@ class TimerRingView extends GetView<TimerRingController> {
                 Text(
                   'Time\'s up!',
                   style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                        color: themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor("primaryTextColor"),
                         fontWeight: FontWeight.bold,
                       ),
                 ),

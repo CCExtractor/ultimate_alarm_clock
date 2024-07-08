@@ -54,9 +54,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.currentTheme.value == ThemeMode.light
-                                      ? kLightPrimaryTextColor.withOpacity(0.7)
-                                      : kprimaryTextColor.withOpacity(0.7),
+                                  color: themeController.getColor('primaryTextColor').withOpacity(0.7),
                                 ),
                           ),
                           SizedBox(
@@ -67,9 +65,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                             child: Icon(
                               Icons.vibration,
                               size: height * 0.2,
-                              color: themeController.currentTheme.value == ThemeMode.light
-                                  ? kLightPrimaryTextColor.withOpacity(0.7)
-                                  : kprimaryTextColor.withOpacity(0.7),
+                              color: themeController.getColor('primaryTextColor').withOpacity(0.7),
                             ),
                           ),
                           SizedBox(

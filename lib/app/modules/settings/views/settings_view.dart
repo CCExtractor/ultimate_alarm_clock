@@ -30,10 +30,7 @@ class SettingsView extends GetView<SettingsController> {
         title: Text(
           'Settings'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: controller.themeController.currentTheme.value ==
-                        ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: controller.themeController.getColor('primaryTextColor'),
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -43,9 +40,7 @@ class SettingsView extends GetView<SettingsController> {
           icon: Icon(
             Icons.adaptive.arrow_back,
             color:
-                controller.themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                controller.themeController.getColor("primaryTextColor"),
           ),
           onPressed: () {
             Utils.hapticFeedback();

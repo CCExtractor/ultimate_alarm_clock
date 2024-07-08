@@ -39,15 +39,11 @@ class ChooseRingtoneTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-        tileColor: themeController.currentTheme.value == ThemeMode.light
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        tileColor: themeController.getColor('secondaryBackgroundColor'),
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(
-            color: themeController.currentTheme.value == ThemeMode.light
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.getColor('primaryTextColor'),
           ),
         ),
         onTap: () async {
@@ -60,9 +56,7 @@ class ChooseRingtoneTile extends StatelessWidget {
 
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: themeController.currentTheme.value == ThemeMode.light
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
+            backgroundColor: themeController.getColor('secondaryBackgroundColor'),
             title: 'Choose Ringtone'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Obx(
@@ -76,9 +70,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                         height: height * 0.2,
                         child: Card(
                           elevation: 0,
-                          color: themeController.currentTheme.value == ThemeMode.light
-                              ? kLightSecondaryBackgroundColor
-                              : ksecondaryBackgroundColor,
+                          color: themeController.getColor('secondaryBackgroundColor'),
                           child: Scrollbar(
                             radius: Radius.circular(5),
                             thumbVisibility: true,
@@ -87,9 +79,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                               child: ListView.separated(
                                 separatorBuilder: (context, index) {
                                   return Divider(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? ksecondaryBackgroundColor
-                                        : kLightSecondaryBackgroundColor,
+                                    color: themeController.getColor('secondaryBackgroundColor'),
                                     height: 0,
                                   );
                                 },
@@ -131,12 +121,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                   .customRingtoneName ==
                                               controller
                                                   .customRingtoneNames[index]
-                                          ? themeController.currentTheme.value == ThemeMode.light
-                                              ? kLightPrimaryBackgroundColor
-                                              : kprimaryBackgroundColor
-                                          : themeController.currentTheme.value == ThemeMode.light
-                                              ? kLightSecondaryBackgroundColor
-                                              : ksecondaryBackgroundColor,
+                                          ? themeController.getColor('primaryBackgroundColor')
+                                          : themeController.getColor('secondaryBackgroundColor'),
                                       title: Text(
                                         controller.customRingtoneNames[index],
                                         overflow: TextOverflow.ellipsis,
@@ -241,9 +227,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     child: Text(
                       'Done'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
+                            color: themeController.getColor('secondaryTextColor'),
                           ),
                     ),
                   ),
@@ -265,12 +249,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: (controller.label.value.trim().isEmpty)
-                              ? themeController.currentTheme.value == ThemeMode.light
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor
-                              : themeController.currentTheme.value == ThemeMode.light
-                                  ? kLightPrimaryTextColor
-                                  : kprimaryTextColor,
+                              ? themeController.getColor('primaryDisabledTextColor')
+                              : themeController.getColor('primaryTextColor'),
                         ),
                   ),
                 ),
@@ -278,12 +258,8 @@ class ChooseRingtoneTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 color: (controller.label.value.trim().isEmpty)
-                    ? themeController.currentTheme.value == ThemeMode.light
-                        ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor
-                    : themeController.currentTheme.value == ThemeMode.light
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
+                    ? themeController.getColor('primaryDisabledTextColor')
+                    : themeController.getColor('primaryTextColor'),
               ),
             ],
           ),

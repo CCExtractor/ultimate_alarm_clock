@@ -20,6 +20,34 @@ class ThemeController extends GetxController {
         : ThemeMode.light;
   }
 
+  final Map<String, Color> lightThemeColors = {
+    'primaryColor': kprimaryColor,
+    'secondaryColor': kLightSecondaryColor,
+    'primaryBackgroundColor': kLightPrimaryBackgroundColor,
+    'secondaryBackgroundColor': kLightSecondaryBackgroundColor,
+    'primaryTextColor': kLightPrimaryTextColor,
+    'secondaryTextColor': kLightSecondaryTextColor,
+    'primaryDisabledTextColor': kLightPrimaryDisabledTextColor,
+  };
+
+  final Map<String, Color> darkThemeColors = {
+    'primary': kprimaryColor, // Left
+    'secondaryColor': ksecondaryColor, // Done
+    'primaryBackgroundColor': kprimaryBackgroundColor, // Done
+    'secondaryBackgroundColor': ksecondaryBackgroundColor, // Done
+    'primaryTextColor': kprimaryTextColor, // Done
+    'secondaryTextColor': ksecondaryTextColor, // Done
+    'primaryDisabledTextColor': kprimaryDisabledTextColor, // Done
+  };
+
+  Color getColor(String color) {
+    if (currentTheme.value == ThemeMode.light) {
+      return lightThemeColors[color]!;
+    } else {
+      return darkThemeColors[color]!;
+    }
+  }
+
   void _loadThemeValue() async {
     currentTheme.value =
         await _secureStorageProvider.readThemeValue() == AppTheme.light

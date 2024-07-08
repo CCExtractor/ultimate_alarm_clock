@@ -34,9 +34,7 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
         borderRadius: const BorderRadius.all(
           Radius.circular(18),
         ),
-        color: widget.themeController.currentTheme.value == ThemeMode.light
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        color: widget.themeController.getColor('secondaryBackgroundColor'),
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 30, right: 20),
@@ -47,10 +45,7 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
               child: Text(
                 'Enable Sorted Alarm List'.tr,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: widget.themeController.currentTheme.value ==
-                              ThemeMode.light
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+                      color: widget.themeController.getColor('primaryTextColor')
                     ),
               ),
             ),

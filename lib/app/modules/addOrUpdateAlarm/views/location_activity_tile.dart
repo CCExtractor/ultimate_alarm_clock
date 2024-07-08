@@ -37,9 +37,7 @@ class LocationTile extends StatelessWidget {
         );
 
         await showMenu(
-          color: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          color: themeController.getColor("secondaryBackgroundColor"),
           context: context,
           position: position,
           items: [
@@ -52,20 +50,14 @@ class LocationTile extends StatelessWidget {
                     'Off',
                     style: TextStyle(
                       color: (controller.isLocationEnabled.value == true)
-                          ? themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.getColor('primaryDisabledTextColor')
+                          : themeController.getColor("primaryTextColor"),
                     ),
                   ),
                   Radio(
                     fillColor: MaterialStateProperty.all(
                       (controller.isLocationEnabled.value == true)
-                          ? themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
+                          ? themeController.getColor('primaryDisabledTextColor')
                           : kprimaryColor,
                     ),
                     value: !controller.isLocationEnabled.value,
@@ -86,23 +78,15 @@ class LocationTile extends StatelessWidget {
                     'Choose location',
                     style: TextStyle(
                       color: (controller.isLocationEnabled.value == false)
-                          ? themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.getColor('primaryDisabledTextColor')
+                          : themeController.getColor("primaryTextColor"),
                     ),
                   ),
                   Icon(
                     Icons.chevron_right,
                     color: (controller.isLocationEnabled.value == false)
-                        ? themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryDisabledTextColor
-                            : kprimaryDisabledTextColor
-                        : themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        ? themeController.getColor('primaryDisabledTextColor')
+                        : themeController.getColor("primaryTextColor"),
                   ),
                 ],
               ),
@@ -118,9 +102,7 @@ class LocationTile extends StatelessWidget {
             }
 
             Get.defaultDialog(
-              backgroundColor: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightSecondaryBackgroundColor
-                  : ksecondaryBackgroundColor,
+              backgroundColor: themeController.getColor("secondaryBackgroundColor"),
               title: 'Set location to automatically cancel alarm!',
               titleStyle: Theme.of(context).textTheme.bodyMedium,
               content: Column(
@@ -157,9 +139,7 @@ class LocationTile extends StatelessWidget {
                     child: Text(
                       'Save',
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightSecondaryTextColor
-                                : ksecondaryTextColor,
+                            color: themeController.getColor('secondaryTextColor'),
                           ),
                     ),
                     onPressed: () {
@@ -183,9 +163,7 @@ class LocationTile extends StatelessWidget {
               child: Text(
                 'Location Based'.tr,
                 style: TextStyle(
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+                  color: themeController.getColor("primaryTextColor"),
                 ),
               ),
             ),
@@ -219,23 +197,15 @@ class LocationTile extends StatelessWidget {
                 controller.isLocationEnabled.value == false ? 'Off' : 'Enabled',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isLocationEnabled.value == false)
-                          ? themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.getColor('primaryDisabledTextColor')
+                          : themeController.getColor("primaryTextColor"),
                     ),
               ),
               Icon(
                 Icons.chevron_right,
                 color: (controller.isLocationEnabled.value == false)
-                    ? themeController.currentTheme.value == ThemeMode.light
-                        ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor
-                    : themeController.currentTheme.value == ThemeMode.light
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
+                    ? themeController.getColor('primaryDisabledTextColor')
+                    : themeController.getColor("primaryTextColor"),
               ),
             ],
           ),

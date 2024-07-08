@@ -35,9 +35,7 @@ class GoogleSignIn extends StatelessWidget {
             Get.defaultDialog(
               titlePadding: const EdgeInsets.symmetric(vertical: 20),
               backgroundColor:
-                  themeController.currentTheme.value == ThemeMode.light
-                      ? kLightSecondaryBackgroundColor
-                      : ksecondaryBackgroundColor,
+                  themeController.getColor('secondaryBackgroundColor'),
               title: 'Success!'.tr,
               titleStyle: Theme.of(context).textTheme.displaySmall,
               content: Column(
@@ -77,16 +75,14 @@ class GoogleSignIn extends StatelessWidget {
               ),
             );
           } else {
-            Get.snackbar("Error", "Sign-In attempt failed!");
+            Get.snackbar('Error', 'Sign-In attempt failed!');
           }
         } else {
           Get.defaultDialog(
             contentPadding: const EdgeInsets.all(10.0),
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
             backgroundColor:
-                themeController.currentTheme.value == ThemeMode.light
-                    ? kLightSecondaryBackgroundColor
-                    : ksecondaryBackgroundColor,
+                themeController.getColor('secondaryBackgroundColor'),
             title: 'Are you sure?'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Column(
@@ -180,9 +176,7 @@ class GoogleSignIn extends StatelessWidget {
                   showBottomSheet(
                     context: context,
                     backgroundColor:
-                        themeController.currentTheme.value == ThemeMode.light
-                            ? kLightSecondaryBackgroundColor
-                            : ksecondaryBackgroundColor,
+                    themeController.getColor('secondaryBackgroundColor'),
                     builder: (context) {
                       return Padding(
                         padding: const EdgeInsets.all(25.0),
@@ -297,9 +291,7 @@ class GoogleSignIn extends StatelessWidget {
                 icon: Icon(
                   Icons.info_sharp,
                   size: 21,
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor.withOpacity(0.3)
-                      : kprimaryTextColor.withOpacity(0.3),
+                  color: themeController.getColor('primaryTextColor').withOpacity(0.3),
                 ),
               ),
               Spacer(),
@@ -308,9 +300,7 @@ class GoogleSignIn extends StatelessWidget {
                   (controller.isUserLoggedIn.value)
                       ? Icons.close
                       : Icons.arrow_forward_ios_sharp,
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor.withOpacity(0.4)
-                      : kprimaryTextColor.withOpacity(0.2),
+                  color: themeController.getColor('primaryTextColor').withOpacity(0.2),
                 ),
               ),
             ],

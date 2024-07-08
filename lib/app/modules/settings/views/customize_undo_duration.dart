@@ -36,9 +36,7 @@ class CustomizeUndoDuration extends StatelessWidget{
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor('secondaryBackgroundColor'),
           title: 'Customize Undo Duration'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
@@ -72,9 +70,7 @@ class CustomizeUndoDuration extends StatelessWidget{
                   child: Text(
                     'Apply Duration'.tr,
                     style: TextStyle(
-                      color: themeController.currentTheme.value == ThemeMode.light
-                          ? kLightSecondaryTextColor
-                          : ksecondaryTextColor,
+                      color: themeController.getColor('secondaryTextColor'),
                     ),
                   ),
                 ),
@@ -93,15 +89,11 @@ class CustomizeUndoDuration extends StatelessWidget{
           child: Padding(
             padding: EdgeInsets.only(left: 10, right: 10),
             child: ListTile(
-              tileColor: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightSecondaryBackgroundColor
-                  : ksecondaryBackgroundColor,
+              tileColor: themeController.getColor('secondaryBackgroundColor'),
               title: Text(
                 'Undo Duration'.tr,
                 style: TextStyle(
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+                  color: themeController.getColor('primaryTextColor'),
                   fontSize: 15
                 ),
               ),
@@ -112,18 +104,14 @@ class CustomizeUndoDuration extends StatelessWidget{
                         () => Text(
                       '${homeController.duration.value.round().toInt()} seconds',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: themeController.currentTheme.value == ThemeMode.light
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor('primaryTextColor'),
                           fontSize: 13
                       ),
                     ),
                   ),
                   Icon(
                     Icons.chevron_right,
-                    color: themeController.currentTheme.value == ThemeMode.light
-                        ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor,
+                    color: themeController.getColor('primaryDisabledTextColor'),
                   ),
                 ],
               ),

@@ -18,18 +18,14 @@ class LabelTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.currentTheme.value == ThemeMode.light
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      tileColor: themeController.getColor('secondaryBackgroundColor'),
       title: FittedBox(
         alignment: Alignment.centerLeft,
         fit: BoxFit.scaleDown,
         child: Text(
           'Label'.tr,
           style: TextStyle(
-            color: themeController.currentTheme.value == ThemeMode.light
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.getColor('primaryTextColor'),
           ),
         ),
       ),
@@ -38,55 +34,48 @@ class LabelTile extends StatelessWidget {
         Get.defaultDialog(
           title: 'Add a label'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor('secondaryBackgroundColor'),
           titleStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor('primaryTextColor'),
               ),
           contentPadding: const EdgeInsets.all(21),
           content: TextField(
             autofocus: true,
             controller: controller.labelController,
             style: Theme.of(context).textTheme.bodyLarge,
-            cursorColor: themeController.currentTheme.value == ThemeMode.light
-                ? kLightPrimaryTextColor.withOpacity(0.75)
-                : kprimaryTextColor.withOpacity(0.75),
+            cursorColor:
+                themeController.getColor('primaryTextColor').withOpacity(0.75),
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor.withOpacity(0.75)
-                      : kprimaryTextColor.withOpacity(0.75),
+                  color: themeController
+                      .getColor('primaryTextColor')
+                      .withOpacity(0.75),
                   width: 1,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor.withOpacity(0.75)
-                      : kprimaryTextColor.withOpacity(0.75),
+                  color: themeController
+                      .getColor('primaryTextColor')!
+                      .withOpacity(0.75),
                   width: 1,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor.withOpacity(0.75)
-                      : kprimaryTextColor.withOpacity(0.75),
+                  color: themeController
+                      .getColor('primaryTextColor')!
+                      .withOpacity(0.75),
                   width: 1,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
               hintText: 'Enter a label'.tr,
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: themeController.currentTheme.value == ThemeMode.light
-                        ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor,
+                    color: themeController.getColor('primaryDisabledTextColor'),
                   ),
             ),
             onChanged: (text) {
@@ -104,9 +93,7 @@ class LabelTile extends StatelessWidget {
               }
             },
           ),
-          buttonColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          buttonColor: themeController.getColor('secondaryBackgroundColor'),
           confirm: TextButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(kprimaryColor),
@@ -142,12 +129,9 @@ class LabelTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.label.value.trim().isEmpty)
-                            ? themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor
-                            : themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryTextColor
-                                : kprimaryTextColor,
+                            ? themeController
+                                .getColor('primaryDisabledTextColor')
+                            : themeController.getColor('primaryTextColor'),
                       ),
                 ),
               ),
@@ -155,12 +139,8 @@ class LabelTile extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               color: (controller.label.value.trim().isEmpty)
-                  ? themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryDisabledTextColor
-                      : kprimaryDisabledTextColor
-                  : themeController.currentTheme.value == ThemeMode.light
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+                  ? themeController.getColor('primaryDisabledTextColor')
+                  : themeController.getColor('primaryTextColor'),
             ),
           ],
         ),

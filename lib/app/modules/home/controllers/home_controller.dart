@@ -428,13 +428,9 @@ class HomeController extends GetxController {
         top: 20,
         bottom: 10,
       ),
-      backgroundColor: themeController.currentTheme.value == ThemeMode.light
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
       titleStyle: TextStyle(
-        color: themeController.currentTheme.value == ThemeMode.light
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor,
+        color: themeController.getColor('primaryTextColor'),
       ),
       contentPadding: const EdgeInsets.all(20),
       content: Column(
@@ -442,9 +438,7 @@ class HomeController extends GetxController {
           Text(
             quote.getQuote(),
             style: TextStyle(
-              color: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+              color: themeController.getColor('primaryTextColor'),
             ),
           ),
           const SizedBox(
@@ -455,9 +449,7 @@ class HomeController extends GetxController {
             child: Text(
               quote.getAuthor(),
               style: TextStyle(
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor('primaryTextColor'),
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.italic,
               ),
@@ -531,9 +523,7 @@ class HomeController extends GetxController {
       titlePadding: const EdgeInsets.symmetric(
         vertical: 20,
       ),
-      backgroundColor: themeController.currentTheme.value == ThemeMode.light
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
       title: 'Are you sure you want to delete these alarms?'.tr,
       titleStyle: Theme.of(context).textTheme.displaySmall,
       content: Column(

@@ -32,9 +32,7 @@ class MathsChallenge extends StatelessWidget {
             child: Text(
               'Maths'.tr,
               style: TextStyle(
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor("primaryTextColor"),
               ),
             ),
           ),
@@ -75,9 +73,7 @@ class MathsChallenge extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.only(top: 20),
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor("secondaryBackgroundColor"),
           title: 'Solve Maths questions'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
@@ -96,9 +92,7 @@ class MathsChallenge extends StatelessWidget {
                         controller.mathsDifficulty.value,
                       )[0],
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryTextColor.withOpacity(0.78)
-                                : kprimaryTextColor.withOpacity(0.78),
+                            color: themeController.getColor("primaryTextColor")?.withOpacity(0.78),
                           ),
                     ),
                     Slider.adaptive(
@@ -171,18 +165,14 @@ class MathsChallenge extends StatelessWidget {
                     TextButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                          themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor.withOpacity(0.5)
-                              : kprimaryTextColor.withOpacity(0.5),
+                          themeController.getColor("primaryTextColor")?.withOpacity(0.5),
                         ),
                       ),
                       child: Text(
                         'Cancel'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController.currentTheme.value == ThemeMode.light
-                                      ? kLightPrimaryTextColor
-                                      : kprimaryTextColor,
+                                  color: themeController.getColor("primaryTextColor"),
                                 ),
                       ),
                       onPressed: () {
@@ -210,20 +200,14 @@ class MathsChallenge extends StatelessWidget {
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: (controller.isMathsEnabled.value == false)
-                          ? themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.getColor('primaryDisabledTextColor')
+                          : themeController.getColor("primaryTextColor"),
                     ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
+              color: themeController.getColor('primaryDisabledTextColor'),
             ),
           ],
         ),

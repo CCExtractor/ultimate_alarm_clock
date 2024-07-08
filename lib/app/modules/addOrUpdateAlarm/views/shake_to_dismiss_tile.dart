@@ -31,9 +31,7 @@ class ShakeToDismiss extends StatelessWidget {
             child: Text(
               'Shake to dismiss'.tr,
               style: TextStyle(
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor("primaryTextColor"),
               ),
             ),
           ),
@@ -72,9 +70,7 @@ class ShakeToDismiss extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.only(top: 20),
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor("secondaryBackgroundColor"),
           title: 'Number of shakes'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
@@ -156,20 +152,14 @@ class ShakeToDismiss extends StatelessWidget {
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isShakeEnabled.value == false)
-                          ? themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.getColor('primaryDisabledTextColor')
+                          : themeController.getColor("primaryTextColor"),
                     ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
+              color: themeController.getColor('primaryDisabledTextColor'),
             ),
           ],
         ),

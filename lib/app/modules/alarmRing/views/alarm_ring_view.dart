@@ -18,17 +18,13 @@ class AlarmControlView extends GetView<AlarmControlController> {
     return TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
-          themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          themeController.getColor('secondaryBackgroundColor'),
         ),
       ),
       child: Text(
         title.tr,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+              color: themeController.getColor('primaryTextColor'),
               fontWeight: FontWeight.w600,
             ),
       ),
@@ -125,9 +121,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                themeController.currentTheme.value == ThemeMode.light
-                                    ? kLightPrimaryTextColor.withOpacity(0.7)
-                                    : kprimaryTextColor.withOpacity(0.7),
+                                themeController.getColor('primaryTextColor').withOpacity(0.7),
                               ),
                             ),
                             child: Text(
@@ -206,9 +200,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                     child: Text(
                       controller.currentlyRingingAlarm.value.note,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryTextColor
-                                : kprimaryTextColor,
+                            color: themeController.getColor('primaryTextColor'),
                             fontSize: 20,
                             fontWeight: FontWeight.w100,
                             fontStyle: FontStyle.italic,
@@ -230,9 +222,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                themeController.currentTheme.value == ThemeMode.light
-                                    ? kLightSecondaryBackgroundColor
-                                    : ksecondaryBackgroundColor,
+                                themeController.getColor('secondaryBackgroundColor'),
                               ),
                             ),
                             child: Text(
@@ -241,9 +231,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                        : kprimaryTextColor,
+                                    color: themeController.getColor('primaryTextColor'),
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),

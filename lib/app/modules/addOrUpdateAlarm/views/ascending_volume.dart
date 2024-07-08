@@ -34,9 +34,7 @@ class AscendingVolumeTile extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor('secondaryBackgroundColor'),
           title: 'Volume will reach maximum in'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
@@ -110,15 +108,11 @@ class AscendingVolumeTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.currentTheme.value == ThemeMode.light
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        tileColor: themeController.getColor('secondaryBackgroundColor'),
         title: Text(
           'Ascending Volume'.tr,
           style: TextStyle(
-            color: themeController.currentTheme.value == ThemeMode.light
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.getColor('primaryTextColor'),
           ),
         ),
         trailing: Wrap(
@@ -128,17 +122,13 @@ class AscendingVolumeTile extends StatelessWidget {
               () => Text(
                 '${controller.gradient.value.round().toInt()} seconds',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: themeController.currentTheme.value == ThemeMode.light
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+                      color: themeController.getColor('primaryTextColor'),
                     ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.currentTheme.value == ThemeMode.light
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
+              color: themeController.getColor('primaryDisabledTextColor'),
             ),
           ],
         ),

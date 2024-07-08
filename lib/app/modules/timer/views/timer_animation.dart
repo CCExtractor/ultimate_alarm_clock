@@ -32,7 +32,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
   Timer? _timerCounter;
   void startTimer() {
     _timerCounter = Timer.periodic(Duration(seconds: 1), (timer) {
-      print("${widget.timer.timerName}");
+      print('${widget.timer.timerName}');
       if (widget.timer.timeElapsed < widget.timer.timerValue) {
         setState(() {
           widget.timer.timeElapsed += 1000;
@@ -90,12 +90,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         child: Card(
           margin: const EdgeInsets.all(5),
           color: widget.timer.timeElapsed < widget.timer.timerValue
-              ? themeController.currentTheme.value == ThemeMode.light
-                  ? kLightSecondaryBackgroundColor
-                  : ksecondaryBackgroundColor
-              : themeController.currentTheme.value == ThemeMode.light
-                  ? kLightSecondaryColor
-                  : ksecondaryColor,
+              ? themeController.getColor('secondaryBackgroundColor')
+              : themeController.getColor('secondaryColor'),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               18,
@@ -216,13 +212,11 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     AnimatedContainer(
                                       duration: Duration(seconds: 1),
                                       child: Text(
-                                        "${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}",
+                                        '${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}',
                                         style: Theme.of(
                                           context,
                                         ).textTheme.displayLarge!.copyWith(
-                                              color: themeController.currentTheme.value == ThemeMode.light
-                                                  ? kLightPrimaryTextColor
-                                                  : kprimaryTextColor,
+                                              color: themeController.getColor('primaryTextColor'),
                                               fontSize: 44,
                                             ),
                                       ),

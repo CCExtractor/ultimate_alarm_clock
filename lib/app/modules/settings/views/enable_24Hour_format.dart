@@ -34,7 +34,7 @@ class _Enable24HourFormatState extends State<Enable24HourFormat> {
         isLightMode: widget.themeController.currentTheme.value == ThemeMode.light,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: const EdgeInsets.only(left: 30, right: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
