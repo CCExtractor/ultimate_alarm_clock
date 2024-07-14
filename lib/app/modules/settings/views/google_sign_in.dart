@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -148,26 +150,23 @@ class GoogleSignIn extends StatelessWidget {
           isLightMode: themeController.isLightMode.value,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: const EdgeInsets.only(left: 30, right: 30),
           child: Row(
             children: [
-              Obx(
-                () => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      (controller.isUserLoggedIn.value)
-                          ?
-                          // 'Unlink ${controller.userModel!.email}'
-                          'Unlink @usermail'.trParams(
-                              {'usermail': controller.userModel!.email})
-                          : 'Sign-In with Google'.tr,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            overflow: TextOverflow.ellipsis,
-                          ),
+              Expanded(
+                child: Obx(
+                  () =>Text(
+                    overflow:TextOverflow.ellipsis ,
+                    (controller.isUserLoggedIn.value)
+                        ?
+                    // 'Unlink ${controller.userModel!.email}'
+                    'Unlink @usermail'.trParams(
+                        {'usermail': controller.userModel!.email})
+                        : 'Sign-In with Google'.tr,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ],
+                  ),
                 ),
               ),
               IconButton(
@@ -295,7 +294,6 @@ class GoogleSignIn extends StatelessWidget {
                       : kprimaryTextColor.withOpacity(0.3),
                 ),
               ),
-              Spacer(),
               Obx(
                 () => Icon(
                   (controller.isUserLoggedIn.value)
