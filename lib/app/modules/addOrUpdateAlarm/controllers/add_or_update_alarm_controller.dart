@@ -158,12 +158,10 @@ class AddOrUpdateAlarmController extends GetxController {
         !(await Permission.ignoreBatteryOptimizations.isGranted) ||
         !(await Permission.systemAlertWindow.isGranted)) {
       Get.defaultDialog(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
         title: 'Permission Required',
         titleStyle: TextStyle(
-          color: themeController.isLightMode.value
+          color: themeController.currentTheme.value == ThemeMode.light
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
@@ -247,9 +245,7 @@ class AddOrUpdateAlarmController extends GetxController {
         titlePadding: const EdgeInsets.symmetric(
           vertical: 20,
         ),
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
         title: 'Discard Changes?'.tr,
         titleStyle: Theme.of(context).textTheme.displaySmall,
         content: Column(
@@ -287,7 +283,7 @@ class AddOrUpdateAlarmController extends GetxController {
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                        color: themeController.isLightMode.value
+                        color: themeController.currentTheme.value == ThemeMode.light
                             ? Colors.red.withOpacity(0.9)
                             : Colors.red,
                         width: 1,
@@ -296,7 +292,7 @@ class AddOrUpdateAlarmController extends GetxController {
                     child: Text(
                       'Leave'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
+                            color: themeController.currentTheme.value == ThemeMode.light
                                 ? Colors.red.withOpacity(0.9)
                                 : Colors.red,
                           ),
@@ -340,16 +336,14 @@ class AddOrUpdateAlarmController extends GetxController {
       return false;
     } else if (locationPermission == LocationPermission.denied) {
       bool? shouldAskPermission = await Get.defaultDialog<bool>(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
         barrierDismissible: false,
         title: 'Location Permission',
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(
-          color: themeController.isLightMode.value
+          color: themeController.currentTheme.value == ThemeMode.light
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
@@ -419,9 +413,7 @@ class AddOrUpdateAlarmController extends GetxController {
     restartQRCodeController(false);
     Get.defaultDialog(
       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-      backgroundColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
       title: 'Scan a QR/Bar Code',
       titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
       content: Obx(
@@ -462,7 +454,7 @@ class AddOrUpdateAlarmController extends GetxController {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.isLightMode.value
+                                color: themeController.currentTheme.value == ThemeMode.light
                                     ? kLightPrimaryTextColor
                                     : ksecondaryTextColor,
                               ),
@@ -484,7 +476,7 @@ class AddOrUpdateAlarmController extends GetxController {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.isLightMode.value
+                                color: themeController.currentTheme.value == ThemeMode.light
                                     ? kLightPrimaryTextColor
                                     : ksecondaryTextColor,
                               ),
@@ -506,7 +498,7 @@ class AddOrUpdateAlarmController extends GetxController {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
@@ -531,12 +523,10 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-  backgroundColor: themeController.isLightMode.value
-      ? kLightSecondaryBackgroundColor
-      : ksecondaryBackgroundColor,
+  backgroundColor: themeController.getColor('secondaryBackgroundColor'),
   title: 'Camera Permission'.tr,
   titleStyle: TextStyle(
-    color: themeController.isLightMode.value
+    color: themeController.currentTheme.value == ThemeMode.light
         ? kLightPrimaryTextColor
         : Colors.white,
   ),
@@ -574,7 +564,7 @@ class AddOrUpdateAlarmController extends GetxController {
     child: Text(
       'OK',
       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.isLightMode.value
+            color: themeController.currentTheme.value == ThemeMode.light
                 ? kLightPrimaryTextColor
                 : ksecondaryTextColor,
           ),
@@ -592,17 +582,13 @@ class AddOrUpdateAlarmController extends GetxController {
   cancel: TextButton(
     style: ButtonStyle(
       backgroundColor: MaterialStateProperty.all(
-        themeController.isLightMode.value
-            ? kLightPrimaryTextColor.withOpacity(0.5)
-            : kprimaryTextColor.withOpacity(0.5),
+        themeController.getColor('primaryTextColor').withOpacity(0.5),
       ),
     ),
     child: Text(
       'Cancel',
       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.getColor('primaryTextColor'),
           ),
     ),
     onPressed: () {
@@ -1165,8 +1151,8 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
-              margin: EdgeInsets.all(15),
-              animationDuration: Duration(seconds: 1),
+              margin: const EdgeInsets.all(15),
+              animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
               barBlur: 15,
               colorText: kprimaryTextColor,
@@ -1175,8 +1161,8 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
-              margin: EdgeInsets.all(15),
-              animationDuration: Duration(seconds: 1),
+              margin: const EdgeInsets.all(15),
+              animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
               barBlur: 15,
               colorText: kprimaryTextColor,
@@ -1187,8 +1173,8 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
-            margin: EdgeInsets.all(15),
-            animationDuration: Duration(seconds: 1),
+            margin: const EdgeInsets.all(15),
+            animationDuration: const Duration(seconds: 1),
             snackPosition: SnackPosition.BOTTOM,
             barBlur: 15,
             colorText: kprimaryTextColor,
@@ -1212,12 +1198,8 @@ class AddOrUpdateAlarmController extends GetxController {
       Fluttertoast.showToast(
         msg: 'Rings in $timeToAlarm',
         toastLength: Toast.LENGTH_LONG,
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
-        textColor: themeController.isLightMode.value
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor,
+        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+        textColor: themeController.getColor('primaryTextColor'),
       );
     } catch (e) {
       debugPrint(e.toString());

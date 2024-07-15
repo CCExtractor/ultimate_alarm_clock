@@ -25,9 +25,7 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
     var height = Get.height;
     var width = Get.width;
     return Scaffold(
-      backgroundColor: themeController.isLightMode.value
-          ? kLightPrimaryBackgroundColor
-          : kprimaryBackgroundColor,
+      backgroundColor: themeController.getColor('primaryBackgroundColor'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -38,9 +36,7 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
                 Text(
                   'Error Occurred',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor('primaryTextColor'),
                       ),
                 ),
                 SizedBox(
@@ -61,9 +57,7 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
                           'working on it!',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor('primaryTextColor'),
                       ),
                 ),
                 const SizedBox(

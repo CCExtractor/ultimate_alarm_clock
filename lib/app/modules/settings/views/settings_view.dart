@@ -30,9 +30,7 @@ class SettingsView extends GetView<SettingsController> {
         title: Text(
           'Settings'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: controller.themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: controller.themeController.getColor('primaryTextColor'),
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -41,9 +39,8 @@ class SettingsView extends GetView<SettingsController> {
         leading: IconButton(
           icon: Icon(
             Icons.adaptive.arrow_back,
-            color: controller.themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color:
+                controller.themeController.getColor("primaryTextColor"),
           ),
           onPressed: () {
             Utils.hapticFeedback();
@@ -114,8 +111,7 @@ class SettingsView extends GetView<SettingsController> {
                 CustomizeUndoDuration(
                     width: width,
                     height: height,
-                    themeController: controller.themeController
-                ),
+                    themeController: controller.themeController),
                 const SizedBox(
                   height: 20,
                 ),

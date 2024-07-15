@@ -29,9 +29,7 @@ class SharedAlarm extends StatelessWidget {
                         child: Text(
                           'Shared Alarm'.tr,
                           style: TextStyle(
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryTextColor
-                                : kprimaryTextColor,
+                            color: themeController.getColor("primaryTextColor"),
                           ),
                         ),
                       ),
@@ -39,7 +37,7 @@ class SharedAlarm extends StatelessWidget {
                         icon: Icon(
                           Icons.info_sharp,
                           size: 21,
-                          color: themeController.isLightMode.value
+                          color: themeController.currentTheme.value == ThemeMode.light
                               ? kLightPrimaryTextColor.withOpacity(0.45)
                               : kprimaryTextColor.withOpacity(0.3),
                         ),
@@ -47,9 +45,7 @@ class SharedAlarm extends StatelessWidget {
                           Utils.hapticFeedback();
                           showModalBottomSheet(
                             context: context,
-                            backgroundColor: themeController.isLightMode.value
-                                ? kLightSecondaryBackgroundColor
-                                : ksecondaryBackgroundColor,
+                            backgroundColor: themeController.getColor("secondaryBackgroundColor"),
                             builder: (context) {
                               return Center(
                                 child: Padding(
@@ -60,9 +56,7 @@ class SharedAlarm extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.share_arrival_time,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
+                                        color: themeController.getColor('primaryTextColor'),
                                         size: height * 0.1,
                                       ),
                                       Text(
@@ -107,7 +101,7 @@ class SharedAlarm extends StatelessWidget {
                                                 .displaySmall!
                                                 .copyWith(
                                                   color: themeController
-                                                          .isLightMode.value
+                                                          .currentTheme.value == ThemeMode.light
                                                       ? kLightPrimaryTextColor
                                                       : ksecondaryTextColor,
                                                 ),
@@ -149,9 +143,7 @@ class SharedAlarm extends StatelessWidget {
                     Get.defaultDialog(
                       contentPadding: const EdgeInsets.all(10.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                      backgroundColor: themeController.isLightMode.value
-                          ? kLightSecondaryBackgroundColor
-                          : ksecondaryBackgroundColor,
+                      backgroundColor: themeController.getColor("secondaryBackgroundColor"),
                       title: 'Disabled!'.tr,
                       titleStyle: Theme.of(context).textTheme.displaySmall,
                       content: Column(
@@ -191,7 +183,7 @@ class SharedAlarm extends StatelessWidget {
                                             .displaySmall!
                                             .copyWith(
                                               color: themeController
-                                                      .isLightMode.value
+                                                      .currentTheme.value == ThemeMode.light
                                                   ? kLightPrimaryTextColor
                                                   : ksecondaryTextColor,
                                             ),
@@ -212,10 +204,7 @@ class SharedAlarm extends StatelessWidget {
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                        themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.5)
-                                            : kprimaryTextColor
+                                            themeController.getColor('primaryTextColor')
                                                 .withOpacity(0.5),
                                       ),
                                     ),
@@ -228,10 +217,7 @@ class SharedAlarm extends StatelessWidget {
                                             .textTheme
                                             .displaySmall!
                                             .copyWith(
-                                              color: themeController
-                                                      .isLightMode.value
-                                                  ? kLightPrimaryTextColor
-                                                  : kprimaryTextColor,
+                                              color: themeController.getColor('primaryTextColor'),
                                             ),
                                       ),
                                     ),
@@ -254,18 +240,14 @@ class SharedAlarm extends StatelessWidget {
                     child: Text(
                       'Enable Shared Alarm'.tr,
                       style: TextStyle(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                        color: themeController.getColor("primaryTextColor"),
                       ),
                     ),
                   ),
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor.withOpacity(0.7)
-                          : kprimaryTextColor.withOpacity(0.7),
+                      color: themeController.getColor('primaryTextColor').withOpacity(0.7),
                     ),
                   ),
                 ),

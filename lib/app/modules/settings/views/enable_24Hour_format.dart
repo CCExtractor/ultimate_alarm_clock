@@ -31,10 +31,10 @@ class _Enable24HourFormatState extends State<Enable24HourFormat> {
       width: widget.width * 0.91,
       height: widget.height * 0.1,
       decoration: Utils.getCustomTileBoxDecoration(
-        isLightMode: widget.themeController.isLightMode.value,
+        isLightMode: widget.themeController.currentTheme.value == ThemeMode.light,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30, right: 20),
+        padding: const EdgeInsets.only(left: 30, right: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

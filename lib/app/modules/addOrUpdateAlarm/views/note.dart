@@ -18,18 +18,14 @@ class NoteTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      tileColor: themeController.getColor("secondaryBackgroundColor"),
       title: FittedBox(
         fit: BoxFit.scaleDown,
         alignment: Alignment.centerLeft,
         child: Text(
           'Note'.tr,
           style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.getColor("primaryTextColor"),
           ),
         ),
       ),
@@ -38,55 +34,41 @@ class NoteTile extends StatelessWidget {
         Get.defaultDialog(
           title: 'Add a note'.tr,
           titlePadding: const EdgeInsets.fromLTRB(0, 21, 0, 0),
-          backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor("secondaryBackgroundColor"),
           titleStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor("primaryTextColor"),
               ),
           contentPadding: const EdgeInsets.all(21),
           content: TextField(
             autofocus: true,
             controller: controller.noteController,
             style: Theme.of(context).textTheme.bodyLarge,
-            cursorColor: themeController.isLightMode.value
-                ? kLightPrimaryTextColor.withOpacity(0.75)
-                : kprimaryTextColor.withOpacity(0.75),
+            cursorColor: themeController.getColor('primaryTextColor').withOpacity(0.75),
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.75)
-                      : kprimaryTextColor.withOpacity(0.75),
+                  color: themeController.getColor('primaryTextColor').withOpacity(0.75),
                   width: 1,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.75)
-                      : kprimaryTextColor.withOpacity(0.75),
+                  color: themeController.getColor('primaryTextColor').withOpacity(0.75),
                   width: 1,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.75)
-                      : kprimaryTextColor.withOpacity(0.75),
+                  color: themeController.getColor('primaryTextColor').withOpacity(0.75),
                   width: 1,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
               hintText: 'Enter a note'.tr,
               hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: themeController.isLightMode.value
-                        ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor,
+                    color: themeController.getColor('primaryDisabledTextColor'),
                   ),
             ),
             onChanged: (text) {
@@ -104,9 +86,7 @@ class NoteTile extends StatelessWidget {
               }
             },
           ),
-          buttonColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          buttonColor: themeController.getColor("secondaryBackgroundColor"),
           confirm: TextButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(kprimaryColor),
@@ -114,7 +94,7 @@ class NoteTile extends StatelessWidget {
             child: Text(
               'Save'.tr,
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.isLightMode.value
+                    color: themeController.currentTheme.value == ThemeMode.light
                         ? kLightPrimaryTextColor
                         : ksecondaryTextColor,
                   ),
@@ -142,12 +122,8 @@ class NoteTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.note.value.trim().isEmpty)
-                            ? themeController.isLightMode.value
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor
-                            : themeController.isLightMode.value
-                                ? kLightPrimaryTextColor
-                                : kprimaryTextColor,
+                            ? themeController.getColor('primaryDisabledTextColor')
+                            : themeController.getColor("primaryTextColor"),
                       ),
                 ),
               ),
@@ -155,12 +131,8 @@ class NoteTile extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               color: (controller.note.value.trim().isEmpty)
-                  ? themeController.isLightMode.value
-                      ? kLightPrimaryDisabledTextColor
-                      : kprimaryDisabledTextColor
-                  : themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+                  ? themeController.getColor('primaryDisabledTextColor')
+                  : themeController.getColor("primaryTextColor"),
             ),
           ],
         ),

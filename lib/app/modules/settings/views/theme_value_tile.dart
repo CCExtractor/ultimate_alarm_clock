@@ -26,13 +26,19 @@ class ThemeValueTile extends StatefulWidget {
 
 class _ThemeValueTileState extends State<ThemeValueTile> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
         width: widget.width * 0.91,
         height: widget.height * 0.1,
         decoration: Utils.getCustomTileBoxDecoration(
-          isLightMode: widget.themeController.isLightMode.value,
+          isLightMode:
+              widget.themeController.currentTheme.value == ThemeMode.light,
         ),
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 20),
@@ -47,14 +53,13 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
               ),
               Obx(
                 () => Switch.adaptive(
-                  value: widget.themeController.isLightMode.value,
+                  value: widget.themeController.currentTheme.value ==
+                      ThemeMode.light,
                   activeColor: ksecondaryColor,
                   onChanged: (bool value) async {
                     widget.themeController.toggleThemeValue(value);
                     Get.changeThemeMode(
-                      widget.themeController.isLightMode.value
-                          ? ThemeMode.light
-                          : ThemeMode.dark,
+                      widget.themeController.currentTheme.value,
                     );
                     Utils.hapticFeedback();
                   },

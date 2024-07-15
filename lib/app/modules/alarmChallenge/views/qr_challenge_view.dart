@@ -56,9 +56,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor.withOpacity(0.7)
-                                      : kprimaryTextColor.withOpacity(0.7),
+                                  color: themeController.getColor('primaryTextColor').withOpacity(0.7),
                                 ),
                           ),
                           SizedBox(
@@ -105,11 +103,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icon(
                                                   Icons.done,
                                                   size: height * 0.2,
-                                                  color: themeController
-                                                          .isLightMode.value
-                                                      ? kLightPrimaryTextColor
-                                                          .withOpacity(0.7)
-                                                      : kprimaryTextColor
+                                                  color: themeController.getColor('primaryTextColor')
                                                           .withOpacity(0.7),
                                                 )
                                               : Column(
@@ -120,11 +114,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                     Icon(
                                                       Icons.close,
                                                       size: height * 0.2,
-                                                      color: themeController
-                                                              .isLightMode.value
-                                                          ? kLightPrimaryTextColor
-                                                              .withOpacity(0.7)
-                                                          : kprimaryTextColor
+                                                      color: themeController.getColor('primaryTextColor')
                                                               .withOpacity(
                                                               0.7,
                                                             ),
@@ -139,14 +129,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           .copyWith(
                                                             fontWeight:
                                                                 FontWeight.w500,
-                                                            color: themeController
-                                                                    .isLightMode
-                                                                    .value
-                                                                ? kLightPrimaryTextColor
-                                                                    .withOpacity(
-                                                                    0.7,
-                                                                  )
-                                                                : kprimaryTextColor
+                                                            color: themeController.getColor('primaryTextColor')
                                                                     .withOpacity(
                                                                     0.7,
                                                                   ),
@@ -168,11 +151,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             .textTheme
                                                             .displaySmall!
                                                             .copyWith(
-                                                              color: themeController
-                                                                      .isLightMode
-                                                                      .value
-                                                                  ? kLightSecondaryTextColor
-                                                                  : ksecondaryTextColor,
+                                                              color: themeController.getColor('secondaryTextColor'),
                                                             ),
                                                       ),
                                                       onPressed: () async {

@@ -31,9 +31,7 @@ class ShakeToDismiss extends StatelessWidget {
             child: Text(
               'Shake to dismiss'.tr,
               style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+                color: themeController.getColor("primaryTextColor"),
               ),
             ),
           ),
@@ -41,7 +39,7 @@ class ShakeToDismiss extends StatelessWidget {
             icon: Icon(
               Icons.info_sharp,
               size: 21,
-              color: themeController.isLightMode.value
+              color: themeController.currentTheme.value == ThemeMode.light
                   ? kLightPrimaryTextColor.withOpacity(0.45)
                   : kprimaryTextColor.withOpacity(0.3),
             ),
@@ -54,7 +52,7 @@ class ShakeToDismiss extends StatelessWidget {
                 //     ' - no more lazy snoozing :)',
                 description: 'shakeDescription'.tr,
                 iconData: Icons.vibration_sharp,
-                isLightMode: themeController.isLightMode.value,
+                isLightMode: themeController.currentTheme.value == ThemeMode.light,
               );
             },
           ),
@@ -72,9 +70,7 @@ class ShakeToDismiss extends StatelessWidget {
             return true;
           },
           titlePadding: const EdgeInsets.only(top: 20),
-          backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+          backgroundColor: themeController.getColor("secondaryBackgroundColor"),
           title: 'Number of shakes'.tr,
           titleStyle: Theme.of(context).textTheme.displaySmall,
           content: Obx(
@@ -128,7 +124,7 @@ class ShakeToDismiss extends StatelessWidget {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
+                                  color: themeController.currentTheme.value == ThemeMode.light
                                       ? kLightPrimaryTextColor
                                       : ksecondaryTextColor,
                                 ),
@@ -156,20 +152,14 @@ class ShakeToDismiss extends StatelessWidget {
                     : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isShakeEnabled.value == false)
-                          ? themeController.isLightMode.value
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.getColor('primaryDisabledTextColor')
+                          : themeController.getColor("primaryTextColor"),
                     ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
+              color: themeController.getColor('primaryDisabledTextColor'),
             ),
           ],
         ),
