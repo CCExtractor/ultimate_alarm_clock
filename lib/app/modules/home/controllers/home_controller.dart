@@ -80,6 +80,7 @@ class HomeController extends GetxController {
   final RxString calendarFetchStatus = "Loading".obs;
   final RxString selectedCalendar = "".obs;
   RxBool isCalender = true.obs;
+  RxBool expandProfile = false.obs;
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account

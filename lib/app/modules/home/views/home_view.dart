@@ -9,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/google_cloud_api_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/google_calender_dialog.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/views/profile_config.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -383,11 +384,13 @@ class HomeView extends GetView<HomeController> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: InkWell(
                                               onTap: () async {
-                                                controller.isCalender.value = true;
-                                                Get.dialog(await googleCalenderDialog(
-                                                    controller,
-                                                    themeController,
-                                                    context));
+                                                controller.isCalender.value =
+                                                    true;
+                                                Get.dialog(
+                                                    await googleCalenderDialog(
+                                                        controller,
+                                                        themeController,
+                                                        context));
                                               },
                                               child: SvgPicture.asset(
                                                 'assets/images/GC.svg',
@@ -708,7 +711,9 @@ class HomeView extends GetView<HomeController> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ProfileSelect(),
                   Expanded(
                     child: GlowingOverscrollIndicator(
                       color: themeController.isLightMode.value
@@ -822,8 +827,8 @@ class HomeView extends GetView<HomeController> {
                                           },
                                           key: ValueKey(alarms[index]),
                                           background: Container(
-                                            color: Colors
-                                                .red, // Set the background color to red
+                                            color: Colors.red,
+                                            // Set the background color to red
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 20,
                                             ),

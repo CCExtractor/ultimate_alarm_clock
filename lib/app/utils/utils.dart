@@ -427,7 +427,10 @@ class Utils {
         ringtoneName: 'Default',
         note: '',
         showMotivationalQuote: false,
-        activityMonitor: 0);
+        activityMonitor: 0,
+        alarmDate: DateTime.now().toString().substring(0, 11),
+        profile: "Default"
+    );
   }
 
   static String getFormattedWeatherTypes(List weatherTypes) {

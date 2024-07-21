@@ -34,6 +34,7 @@ import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
+import 'alarm_date_tile.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
@@ -41,6 +42,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   ThemeController themeController = Get.find<ThemeController>();
   InputTimeController inputTimeController = Get.put(InputTimeController());
   SettingsController settingsController = Get.find<SettingsController>();
+
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
@@ -70,8 +72,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-
-                        (controller.alarmRecord.value = Get.arguments) == null ||
+                        (controller.alarmRecord.value = Get.arguments) ==
+                                    null ||
                                 (controller.alarmRecord.value!.alarmID.isEmpty)
                             ? 'Save'.tr
                             : 'Update'.tr,
@@ -169,7 +171,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                               controller.isPedometerEnabled.value,
                           numberOfSteps: controller.numberOfSteps.value,
                           ringtoneName: controller.customRingtoneName.value,
-                          activityMonitor: controller.isActivityMonitorenabled.value
+                          activityMonitor:
+                              controller.isActivityMonitorenabled.value,
+                          alarmDate: controller.selectedDate.value
+                              .toString()
+                              .substring(0, 11),
+                          profile: controller.currentProfile.value,
                         );
 
                         // Adding offset details to the database if
@@ -184,8 +191,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         }
                         try {
                           controller.alarmRecord.value = Get.arguments;
-                          if (controller.alarmRecord.value == null|| controller.
-                          alarmRecord.value!.alarmID.isEmpty) {
+                          if (controller.alarmRecord.value == null ||
+                              controller.alarmRecord.value!.alarmID.isEmpty) {
                             await controller.createAlarm(alarmRecord);
                           } else {
                             AlarmModel updatedAlarmModel =
@@ -195,7 +202,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         } catch (e) {
                           debugPrint(e.toString());
                         }
-
                       },
                     ),
                   ),
@@ -334,8 +340,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               controller
                                                   .selectedTime.value.month,
                                               controller.selectedTime.value.day,
-                                              inputTimeController
-                                                  .convert24(value,controller.meridiemIndex.value),
+                                              inputTimeController.convert24(
+                                                  value,
+                                                  controller
+                                                      .meridiemIndex.value),
                                               controller
                                                   .selectedTime.value.minute,
                                             );
@@ -535,7 +543,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 controller
                                                     .selectedTime.value.day,
                                                 inputTimeController.convert24(
-                                                    controller.hours.value,controller.meridiemIndex.value),
+                                                    controller.hours.value,
+                                                    controller
+                                                        .meridiemIndex.value),
                                                 controller.minutes.value,
                                               );
                                               inputTimeController
@@ -734,6 +744,20 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   ),
                           );
                         },
+                      ),
+                    ),
+                    AlarmDateTile(
+                      controller: controller,
+                      themeController: themeController,
+                    ),
+                    Container(
+                      color: themeController.isLightMode.value
+                          ? kLightSecondaryBackgroundColor
+                          : ksecondaryBackgroundColor,
+                      child: Divider(
+                        color: themeController.isLightMode.value
+                            ? kLightPrimaryDisabledTextColor
+                            : kprimaryDisabledTextColor,
                       ),
                     ),
                     RepeatTile(

@@ -5,7 +5,6 @@ import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controlle
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-import '../../../data/providers/google_cloud_api_provider.dart';
 import '../../../utils/constants.dart';
 
 Future<Widget> googleCalenderDialog(
@@ -16,7 +15,7 @@ Future<Widget> googleCalenderDialog(
   controller.fetchGoogleCalendars();
   return Obx(() => Dialog(
         backgroundColor: kprimaryBackgroundColor,
-        child: Container(
+        child: SizedBox(
           height: controller.scalingFactor.value * 350,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -40,7 +39,7 @@ Future<Widget> googleCalenderDialog(
                           SvgPicture.asset(
                             'assets/images/GC.svg',
                             colorFilter: const ColorFilter.mode(
-                                kprimaryColor, BlendMode.srcIn),
+                                kprimaryColor, BlendMode.srcIn,),
                             height: 30 * controller.scalingFactor.value,
                             width: 30 * controller.scalingFactor.value,
                           ),
@@ -49,7 +48,7 @@ Future<Widget> googleCalenderDialog(
                               8.0,
                             ),
                             child: Text(
-                              "Google Calender",
+                              'Google Calender',
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -78,7 +77,7 @@ Future<Widget> googleCalenderDialog(
                                           controller.calendarFetchStatus.value =
                                               'Loading';
                                           controller.fetchEvents(controller
-                                              .Calendars.value[index].id);
+                                              .Calendars.value[index].id,);
                                         },
                                         child: Card(
                                           color: themeController
@@ -110,7 +109,7 @@ Future<Widget> googleCalenderDialog(
                                                     ),
                                                   ),
                                                   Text(
-                                                    "${controller.Calendars.value[index].summary}",
+                                                    '${controller.Calendars.value[index].summary}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .displaySmall!
@@ -133,7 +132,7 @@ Future<Widget> googleCalenderDialog(
                                         ),
                                       ),
                                     );
-                                  }),
+                                  },),
                             )
                           : Expanded(
                               child: ListView.builder(
@@ -200,7 +199,7 @@ Future<Widget> googleCalenderDialog(
                                                           Padding(
                                                             padding:
                                                                 const EdgeInsets.all(
-                                                                    8.0),
+                                                                    8.0,),
                                                             child: Icon(
                                                               Icons
                                                                   .watch_later_outlined,
@@ -208,10 +207,10 @@ Future<Widget> googleCalenderDialog(
                                                             ),
                                                           ),
                                                           Text(
-                                                              '${Utils.formatDateTimeToStandard(controller.Events.value[index].start.dateTime ?? controller.Events.value[index].start.date)}'),
+                                                              '${Utils.formatDateTimeToStandard(controller.Events.value[index].start.dateTime ?? controller.Events.value[index].start.date)}',),
                                                         ],
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -227,13 +226,13 @@ Future<Widget> googleCalenderDialog(
                                                       BorderRadius.circular(
                                                         16,
                                                       ),
-                                                      color: kprimaryColor),
+                                                      color: kprimaryColor,),
 
                                                   child: Padding(
                                                     padding: const EdgeInsets.all(8.0),
                                                     child: Center(
                                                       child: Icon(Icons
-                                                          .arrow_forward_ios_rounded),
+                                                          .arrow_forward_ios_rounded,),
                                                     ),
                                                   ),
                                                 ),
@@ -244,11 +243,11 @@ Future<Widget> googleCalenderDialog(
                                         ),
                                       ),
                                     );
-                                  }),
-                            )
+                                  },),
+                            ),
                     ],
                   ),
           ),
         ),
-      ));
+      ),);
 }

@@ -94,6 +94,9 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxDouble selectedGradientDouble = 0.0.obs;
   final RxDouble volMin = 0.0.obs;
   final RxDouble volMax = 10.0.obs;
+  var selectedDate = DateTime.now().obs;
+  final RxBool isFutureDate = false.obs;
+  final RxString currentProfile = "Default".obs;
 
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
@@ -353,7 +356,8 @@ class AddOrUpdateAlarmController extends GetxController {
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
-        content: const Text('To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.'),
+        content: const Text(
+            'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.'),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
@@ -531,85 +535,86 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-  backgroundColor: themeController.isLightMode.value
-      ? kLightSecondaryBackgroundColor
-      : ksecondaryBackgroundColor,
-  title: 'Camera Permission'.tr,
-  titleStyle: TextStyle(
-    color: themeController.isLightMode.value
-        ? kLightPrimaryTextColor
-        : Colors.white,
-  ),
-  titlePadding: const EdgeInsets.only(
-    top: 25,
-    left: 10,
-  ),
-  contentPadding: const EdgeInsets.only(top: 20, left: 20, right: 20,bottom: 23),
-  content: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Center(
-        child: Text(
-          'Please allow camera access to scan QR codes.'.tr,
-          textAlign: TextAlign.center,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: 'Camera Permission'.tr,
+        titleStyle: TextStyle(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : Colors.white,
         ),
-      ),
-    ],
-  ),
-  onCancel: () {
-    Get.back(); // Close the alert box
-  },
-  onConfirm: () async {
-    Get.back(); // Close the alert box
-    PermissionStatus permissionStatus = await Permission.camera.request();
-    if (permissionStatus.isGranted) {
-      // Permission granted, proceed with QR code scanning
-      showQRDialog();
-    }
-  },
-  confirm: TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-    ),
-    child: Text(
-      'OK',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : ksecondaryTextColor,
+        titlePadding: const EdgeInsets.only(
+          top: 25,
+          left: 10,
+        ),
+        contentPadding:
+            const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 23),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                'Please allow camera access to scan QR codes.'.tr,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+        onCancel: () {
+          Get.back(); // Close the alert box
+        },
+        onConfirm: () async {
+          Get.back(); // Close the alert box
+          PermissionStatus permissionStatus = await Permission.camera.request();
+          if (permissionStatus.isGranted) {
+            // Permission granted, proceed with QR code scanning
+            showQRDialog();
+          }
+        },
+        confirm: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(kprimaryColor),
           ),
-    ),
-    onPressed: () async {
-      Get.back(); // Close the alert box
-      PermissionStatus permissionStatus =
-          await Permission.camera.request();
-      if (permissionStatus.isGranted) {
-        // Permission granted, proceed with QR code scanning
-        showQRDialog();
-      }
-    },
-  ),
-  cancel: TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(
-        themeController.isLightMode.value
-            ? kLightPrimaryTextColor.withOpacity(0.5)
-            : kprimaryTextColor.withOpacity(0.5),
-      ),
-    ),
-    child: Text(
-      'Cancel',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+          child: Text(
+            'OK',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : ksecondaryTextColor,
+                ),
           ),
-    ),
-    onPressed: () {
-      Get.back(); // Close the alert box
-    },
-  ),
-);
+          onPressed: () async {
+            Get.back(); // Close the alert box
+            PermissionStatus permissionStatus =
+                await Permission.camera.request();
+            if (permissionStatus.isGranted) {
+              // Permission granted, proceed with QR code scanning
+              showQRDialog();
+            }
+          },
+        ),
+        cancel: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.5)
+                  : kprimaryTextColor.withOpacity(0.5),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
+          ),
+          onPressed: () {
+            Get.back(); // Close the alert box
+          },
+        ),
+      );
     } else {
       showQRDialog();
     }
@@ -994,52 +999,53 @@ class AddOrUpdateAlarmController extends GetxController {
       _ownerName = alarmRecord.value!.ownerName;
     }
     return AlarmModel(
-      snoozeDuration: snoozeDuration.value,
-      volMax: volMax.value,
-      volMin: volMin.value,
-      gradient: gradient.value,
-      label: label.value,
-      isOneTime: isOneTime.value,
-      deleteAfterGoesOff: deleteAfterGoesOff.value,
-      mainAlarmTime:
-          Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
-      offsetDetails: offsetDetails,
-      sharedUserIds: sharedUserIds,
-      lastEditedUserId: lastEditedUserId.value,
-      mutexLock: mutexLock.value,
-      alarmID: alarmID,
-      ownerId: _ownerId,
-      ownerName: _ownerName,
-      activityInterval: activityInterval.value * 60000,
-      days: repeatDays.toList(),
-      alarmTime:
-          Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
-      intervalToAlarm:
-          Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value),
-      isActivityEnabled: isActivityenabled.value,
-      minutesSinceMidnight:
-          Utils.timeOfDayToInt(TimeOfDay.fromDateTime(selectedTime.value)),
-      isLocationEnabled: isLocationEnabled.value,
-      weatherTypes: Utils.getIntFromWeatherTypes(selectedWeather.toList()),
-      isWeatherEnabled: isWeatherEnabled.value,
-      location: Utils.geoPointToString(
-        Utils.latLngToGeoPoint(selectedPoint.value),
-      ),
-      isSharedAlarmEnabled: isSharedAlarmEnabled.value,
-      isQrEnabled: isQrEnabled.value,
-      qrValue: qrValue.value,
-      isMathsEnabled: isMathsEnabled.value,
-      numMathsQuestions: numMathsQuestions.value,
-      mathsDifficulty: mathsDifficulty.value.index,
-      isShakeEnabled: isShakeEnabled.value,
-      shakeTimes: shakeTimes.value,
-      isPedometerEnabled: isPedometerEnabled.value,
-      numberOfSteps: numberOfSteps.value,
-      ringtoneName: customRingtoneName.value,
-      note: note.value,
-      showMotivationalQuote: showMotivationalQuote.value,
-      activityMonitor: isActivityMonitorenabled.value
-    );
+        snoozeDuration: snoozeDuration.value,
+        volMax: volMax.value,
+        volMin: volMin.value,
+        gradient: gradient.value,
+        label: label.value,
+        isOneTime: isOneTime.value,
+        deleteAfterGoesOff: deleteAfterGoesOff.value,
+        mainAlarmTime:
+            Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
+        offsetDetails: offsetDetails,
+        sharedUserIds: sharedUserIds,
+        lastEditedUserId: lastEditedUserId.value,
+        mutexLock: mutexLock.value,
+        alarmID: alarmID,
+        ownerId: _ownerId,
+        ownerName: _ownerName,
+        activityInterval: activityInterval.value * 60000,
+        days: repeatDays.toList(),
+        alarmTime:
+            Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
+        intervalToAlarm:
+            Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value),
+        isActivityEnabled: isActivityenabled.value,
+        minutesSinceMidnight:
+            Utils.timeOfDayToInt(TimeOfDay.fromDateTime(selectedTime.value)),
+        isLocationEnabled: isLocationEnabled.value,
+        weatherTypes: Utils.getIntFromWeatherTypes(selectedWeather.toList()),
+        isWeatherEnabled: isWeatherEnabled.value,
+        location: Utils.geoPointToString(
+          Utils.latLngToGeoPoint(selectedPoint.value),
+        ),
+        isSharedAlarmEnabled: isSharedAlarmEnabled.value,
+        isQrEnabled: isQrEnabled.value,
+        qrValue: qrValue.value,
+        isMathsEnabled: isMathsEnabled.value,
+        numMathsQuestions: numMathsQuestions.value,
+        mathsDifficulty: mathsDifficulty.value.index,
+        isShakeEnabled: isShakeEnabled.value,
+        shakeTimes: shakeTimes.value,
+        isPedometerEnabled: isPedometerEnabled.value,
+        numberOfSteps: numberOfSteps.value,
+        ringtoneName: customRingtoneName.value,
+        note: note.value,
+        showMotivationalQuote: showMotivationalQuote.value,
+        activityMonitor: isActivityMonitorenabled.value,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
+        profile: currentProfile.value);
   }
 
   Future<FilePickerResult?> openFilePicker() async {
@@ -1198,6 +1204,27 @@ class AddOrUpdateAlarmController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  datePicker(BuildContext context) async {
+    selectedDate.value = (await showDatePicker(
+            builder: (BuildContext context, Widget? child) {
+              return Theme(
+                data: ThemeData.dark().copyWith(
+                  colorScheme: ColorScheme.dark(
+                    primary: kprimaryColor,
+                  ),
+                ),
+                child: child!,
+              );
+            },
+            context: context,
+            currentDate: selectedDate.value,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(Duration(days: 355)))) ??
+        DateTime.now();
+    isFutureDate.value =
+        selectedDate.value.difference(DateTime.now()).inDays > 0;
   }
 
   void showToast({

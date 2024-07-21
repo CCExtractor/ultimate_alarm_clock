@@ -5,16 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-
-part 'alarm_model.g.dart';
+part 'profile_model.g.dart';
 
 @collection
-class AlarmModel {
+class ProfileModel {
   Id isarId = Isar.autoIncrement;
-
+  late String profileName;
   String? firestoreId;
-  late String alarmTime;
-  late String alarmID;
   late bool isEnabled;
   late bool isLocationEnabled;
   late bool isSharedAlarmEnabled;
@@ -40,7 +37,6 @@ class AlarmModel {
   late String ownerName;
   late String lastEditedUserId;
   late bool mutexLock;
-  String? mainAlarmTime;
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
@@ -52,75 +48,65 @@ class AlarmModel {
   late double volMax;
   late double volMin;
   late int activityMonitor;
-  late String alarmDate;
-  late String profile;
   @ignore
   Map? offsetDetails;
 
-  AlarmModel(
-      {required this.alarmTime,
-      required this.alarmID,
-      this.sharedUserIds = const [],
-      required this.ownerId,
-      required this.ownerName,
-      required this.lastEditedUserId,
-      required this.mutexLock,
-      this.isEnabled = true,
-      required this.days,
-      required this.intervalToAlarm,
-      required this.isActivityEnabled,
-      required this.minutesSinceMidnight,
-      required this.isLocationEnabled,
-      required this.isSharedAlarmEnabled,
-      required this.isWeatherEnabled,
-      required this.location,
-      required this.weatherTypes,
-      required this.isMathsEnabled,
-      required this.mathsDifficulty,
-      required this.numMathsQuestions,
-      required this.isShakeEnabled,
-      required this.shakeTimes,
-      required this.isQrEnabled,
-      required this.qrValue,
-      required this.isPedometerEnabled,
-      required this.numberOfSteps,
-      required this.activityInterval,
-      this.offsetDetails = const {},
-      required this.mainAlarmTime,
-      required this.label,
-      required this.isOneTime,
-      required this.snoozeDuration,
-      required this.gradient,
-      required this.ringtoneName,
-      required this.note,
-      required this.deleteAfterGoesOff,
-      required this.showMotivationalQuote,
-      required this.volMax,
-      required this.volMin,
-      required this.activityMonitor,
-      required this.alarmDate,
-      required this.profile});
+  ProfileModel(
+      {
+        required this.profileName,
+        this.sharedUserIds = const [],
+        required this.ownerId,
+        required this.ownerName,
+        required this.lastEditedUserId,
+        required this.mutexLock,
+        this.isEnabled = true,
+        required this.days,
+        required this.intervalToAlarm,
+        required this.isActivityEnabled,
+        required this.minutesSinceMidnight,
+        required this.isLocationEnabled,
+        required this.isSharedAlarmEnabled,
+        required this.isWeatherEnabled,
+        required this.location,
+        required this.weatherTypes,
+        required this.isMathsEnabled,
+        required this.mathsDifficulty,
+        required this.numMathsQuestions,
+        required this.isShakeEnabled,
+        required this.shakeTimes,
+        required this.isQrEnabled,
+        required this.qrValue,
+        required this.isPedometerEnabled,
+        required this.numberOfSteps,
+        required this.activityInterval,
+        this.offsetDetails = const {},
+        required this.label,
+        required this.isOneTime,
+        required this.snoozeDuration,
+        required this.gradient,
+        required this.ringtoneName,
+        required this.note,
+        required this.deleteAfterGoesOff,
+        required this.showMotivationalQuote,
+        required this.volMax,
+        required this.volMin,
+        required this.activityMonitor});
 
-  AlarmModel.fromDocumentSnapshot({
+  ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
     required UserModel? user,
   }) {
-    // Making sure the alarms work with the offsets
+    // Making sure the profiles work with the offsets
     isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
     offsetDetails = documentSnapshot['offsetDetails'];
 
     if (isSharedAlarmEnabled && user != null) {
-      mainAlarmTime = documentSnapshot['alarmTime'];
       // Using offsetted time only if it is enabled
 
-      alarmTime = (offsetDetails![user.id]['offsetDuration'] != 0)
-          ? offsetDetails![user.id]['offsettedTime']
-          : documentSnapshot['alarmTime'];
       minutesSinceMidnight = Utils.timeOfDayToInt(
         Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']),
       );
     } else {
-      alarmTime = documentSnapshot['alarmTime'];
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
@@ -128,7 +114,6 @@ class AlarmModel {
     label = documentSnapshot['label'];
     isOneTime = documentSnapshot['isOneTime'];
     firestoreId = documentSnapshot.id;
-    alarmID = documentSnapshot['alarmID'];
     sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
     lastEditedUserId = documentSnapshot['lastEditedUserId'];
     mutexLock = documentSnapshot['mutexLock'];
@@ -162,14 +147,10 @@ class AlarmModel {
     volMin = documentSnapshot['volMin'];
 
     activityMonitor = documentSnapshot['activityMonitor'];
-    alarmDate = documentSnapshot['alarmDate'];
-    profile = documentSnapshot['profile'];
   }
-
-  AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
-    return AlarmModel(
-        alarmTime: map['alarmTime'],
-        alarmID: map['alarmID'],
+  ProfileModel fromMapSQFlite(Map<String, dynamic> map) {
+    return ProfileModel(
+        profileName: map['profileName'],
         isEnabled: map['isEnabled'] == 1,
         isLocationEnabled: map['isLocationEnabled'] == 1,
         isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
@@ -197,7 +178,6 @@ class AlarmModel {
         ownerName: map['ownerName'],
         lastEditedUserId: map['lastEditedUserId'],
         mutexLock: map['mutexLock'] == 1,
-        mainAlarmTime: map['mainAlarmTime'],
         label: map['label'],
         isOneTime: map['isOneTime'] == 1,
         snoozeDuration: map['snoozeDuration'],
@@ -208,16 +188,13 @@ class AlarmModel {
         showMotivationalQuote: map['showMotivationalQuote'] == 1,
         volMin: map['volMin'],
         volMax: map['volMax'],
-        activityMonitor: map['activityMonitor'],
-        alarmDate: map['alarmDate'],
-        profile: map['profile']);
+        activityMonitor: map['activityMonitor']);
   }
 
   Map<String, dynamic> toSQFliteMap() {
     return {
+      'profileName': profileName,
       'firestoreId': firestoreId,
-      'alarmTime': alarmTime,
-      'alarmID': alarmID,
       'isEnabled': isEnabled ? 1 : 0,
       'isLocationEnabled': isLocationEnabled ? 1 : 0,
       'isSharedAlarmEnabled': isSharedAlarmEnabled ? 1 : 0,
@@ -243,7 +220,6 @@ class AlarmModel {
       'ownerName': ownerName,
       'lastEditedUserId': lastEditedUserId,
       'mutexLock': mutexLock ? 1 : 0,
-      'mainAlarmTime': mainAlarmTime,
       'label': label,
       'isOneTime': isOneTime ? 1 : 0,
       'snoozeDuration': snoozeDuration,
@@ -254,119 +230,110 @@ class AlarmModel {
       'showMotivationalQuote': showMotivationalQuote ? 1 : 0,
       'volMin': volMin,
       'volMax': volMax,
-      'activityMonitor': activityMonitor,
-      'alarmDate': alarmDate,
-      'profile':profile
+      'activityMonitor' : activityMonitor
     };
   }
 
-  AlarmModel.fromMap(Map<String, dynamic> alarmData) {
-    // Making sure the alarms work with the offsets
-    snoozeDuration = alarmData['snoozeDuration'];
-    gradient = alarmData['gradient'];
-    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
-    minutesSinceMidnight = alarmData['minutesSinceMidnight'];
-    alarmTime = alarmData['alarmTime'];
-    firestoreId = alarmData['firestoreId'];
-    alarmID = alarmData['alarmID'];
-    sharedUserIds = alarmData['sharedUserIds'];
-    lastEditedUserId = alarmData['lastEditedUserId'];
-    mutexLock = alarmData['mutexLock'];
-    ownerId = alarmData['ownerId'];
-    ownerName = alarmData['ownerName'];
-    days = alarmData['days'];
-    isEnabled = alarmData['isEnabled'];
-    intervalToAlarm = alarmData['intervalToAlarm'];
-    isActivityEnabled = alarmData['isActivityEnabled'];
-    isWeatherEnabled = alarmData['isWeatherEnabled'];
-    weatherTypes = alarmData['weatherTypes'];
+  ProfileModel.fromMap(Map<String, dynamic> profileData) {
+    // Making sure the profiles work with the offsets
+    profileName = profileData['profileName'];
+    snoozeDuration = profileData['snoozeDuration'];
+    gradient = profileData['gradient'];
+    isSharedAlarmEnabled = profileData['isSharedAlarmEnabled'];
+    minutesSinceMidnight = profileData['minutesSinceMidnight'];
+    firestoreId = profileData['firestoreId'];
+    sharedUserIds = profileData['sharedUserIds'];
+    lastEditedUserId = profileData['lastEditedUserId'];
+    mutexLock = profileData['mutexLock'];
+    ownerId = profileData['ownerId'];
+    ownerName = profileData['ownerName'];
+    days = profileData['days'];
+    isEnabled = profileData['isEnabled'];
+    intervalToAlarm = profileData['intervalToAlarm'];
+    isActivityEnabled = profileData['isActivityEnabled'];
+    isWeatherEnabled = profileData['isWeatherEnabled'];
+    weatherTypes = profileData['weatherTypes'];
 
-    activityInterval = alarmData['activityInterval'];
-    isLocationEnabled = alarmData['isLocationEnabled'];
-    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
-    location = alarmData['location'];
+    activityInterval = profileData['activityInterval'];
+    isLocationEnabled = profileData['isLocationEnabled'];
+    isSharedAlarmEnabled = profileData['isSharedAlarmEnabled'];
+    location = profileData['location'];
 
-    isMathsEnabled = alarmData['isMathsEnabled'];
-    mathsDifficulty = alarmData['mathsDifficulty'];
-    numMathsQuestions = alarmData['numMathsQuestions'];
-    isQrEnabled = alarmData['isQrEnabled'];
-    qrValue = alarmData['qrValue'];
-    isShakeEnabled = alarmData['isShakeEnabled'];
-    shakeTimes = alarmData['shakeTimes'];
-    isPedometerEnabled = alarmData['isPedometerEnabled'];
-    numberOfSteps = alarmData['numberOfSteps'];
-    label = alarmData['label'];
-    isOneTime = alarmData['isOneTime'];
-    ringtoneName = alarmData['ringtoneName'];
-    note = alarmData['note'];
-    deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
-    showMotivationalQuote = alarmData['showMotivationalQuote'];
+    isMathsEnabled = profileData['isMathsEnabled'];
+    mathsDifficulty = profileData['mathsDifficulty'];
+    numMathsQuestions = profileData['numMathsQuestions'];
+    isQrEnabled = profileData['isQrEnabled'];
+    qrValue = profileData['qrValue'];
+    isShakeEnabled = profileData['isShakeEnabled'];
+    shakeTimes = profileData['shakeTimes'];
+    isPedometerEnabled = profileData['isPedometerEnabled'];
+    numberOfSteps = profileData['numberOfSteps'];
+    label = profileData['label'];
+    isOneTime = profileData['isOneTime'];
+    ringtoneName = profileData['ringtoneName'];
+    note = profileData['note'];
+    deleteAfterGoesOff = profileData['deleteAfterGoesOff'];
+    showMotivationalQuote = profileData['showMotivationalQuote'];
 
-    volMin = alarmData['volMin'];
-    volMax = alarmData['volMax'];
-    activityMonitor = alarmData['activityMonitor'];
-    alarmDate = alarmData['alarmDate'];
-    profile = alarmData['profile'];
+    volMin = profileData['volMin'];
+    volMax = profileData['volMax'];
+    activityMonitor = profileData['activityMonitor'];
   }
 
-  AlarmModel.fromJson(String alarmData, UserModel? user) {
-    AlarmModel.fromMap(jsonDecode(alarmData));
+  ProfileModel.fromJson(String profileData, UserModel? user) {
+    ProfileModel.fromMap(jsonDecode(profileData));
   }
 
-  static String toJson(AlarmModel alarmRecord) {
-    return jsonEncode(AlarmModel.toMap(alarmRecord));
+  static String toJson(ProfileModel profileRecord) {
+    return jsonEncode(ProfileModel.toMap(profileRecord));
   }
 
-  static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
-    final alarmMap = <String, dynamic>{
-      'firestoreId': alarmRecord.firestoreId,
-      'alarmID': alarmRecord.alarmID,
-      'ownerId': alarmRecord.ownerId,
-      'lastEditedUserId': alarmRecord.lastEditedUserId,
-      'mutexLock': alarmRecord.mutexLock,
-      'isOneTime': alarmRecord.isOneTime,
-      'label': alarmRecord.label,
-      'ownerName': alarmRecord.ownerName,
-      'sharedUserIds': alarmRecord.sharedUserIds,
-      'days': alarmRecord.days,
-      'alarmTime': alarmRecord.alarmTime,
-      'intervalToAlarm': alarmRecord.intervalToAlarm,
-      'isEnabled': alarmRecord.isEnabled,
-      'isActivityEnabled': alarmRecord.isActivityEnabled,
-      'weatherTypes': alarmRecord.weatherTypes,
-      'isWeatherEnabled': alarmRecord.isWeatherEnabled,
-      'activityInterval': alarmRecord.activityInterval,
-      'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
-      'isLocationEnabled': alarmRecord.isLocationEnabled,
-      'location': alarmRecord.location,
-      'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled,
-      'isMathsEnabled': alarmRecord.isMathsEnabled,
-      'mathsDifficulty': alarmRecord.mathsDifficulty,
-      'numMathsQuestions': alarmRecord.numMathsQuestions,
-      'isQrEnabled': alarmRecord.isQrEnabled,
-      'qrValue': alarmRecord.qrValue,
-      'isShakeEnabled': alarmRecord.isShakeEnabled,
-      'shakeTimes': alarmRecord.shakeTimes,
-      'isPedometerEnabled': alarmRecord.isPedometerEnabled,
-      'numberOfSteps': alarmRecord.numberOfSteps,
-      'snoozeDuration': alarmRecord.snoozeDuration,
-      'gradient': alarmRecord.gradient,
-      'ringtoneName': alarmRecord.ringtoneName,
-      'note': alarmRecord.note,
-      'deleteAfterGoesOff': alarmRecord.deleteAfterGoesOff,
-      'showMotivationalQuote': alarmRecord.showMotivationalQuote,
-      'volMin': alarmRecord.volMin,
-      'volMax': alarmRecord.volMax,
-      'activityMonitor': alarmRecord.activityMonitor,
-      'alarmDate': alarmRecord.alarmDate,
-      'profile': alarmRecord.profile
+  static Map<String, dynamic> toMap(ProfileModel profileRecord) {
+    final profileMap = <String, dynamic>{
+      'profileName' : profileRecord.profileName,
+      'firestoreId': profileRecord.firestoreId,
+      'ownerId': profileRecord.ownerId,
+      'lastEditedUserId': profileRecord.lastEditedUserId,
+      'mutexLock': profileRecord.mutexLock,
+      'isOneTime': profileRecord.isOneTime,
+      'label': profileRecord.label,
+      'ownerName': profileRecord.ownerName,
+      'sharedUserIds': profileRecord.sharedUserIds,
+      'days': profileRecord.days,
+      'intervalToAlarm': profileRecord.intervalToAlarm,
+      'isEnabled': profileRecord.isEnabled,
+      'isActivityEnabled': profileRecord.isActivityEnabled,
+      'weatherTypes': profileRecord.weatherTypes,
+      'isWeatherEnabled': profileRecord.isWeatherEnabled,
+      'activityInterval': profileRecord.activityInterval,
+      'minutesSinceMidnight': profileRecord.minutesSinceMidnight,
+      'isLocationEnabled': profileRecord.isLocationEnabled,
+      'location': profileRecord.location,
+      'isSharedAlarmEnabled': profileRecord.isSharedAlarmEnabled,
+      'isMathsEnabled': profileRecord.isMathsEnabled,
+      'mathsDifficulty': profileRecord.mathsDifficulty,
+      'numMathsQuestions': profileRecord.numMathsQuestions,
+      'isQrEnabled': profileRecord.isQrEnabled,
+      'qrValue': profileRecord.qrValue,
+      'isShakeEnabled': profileRecord.isShakeEnabled,
+      'shakeTimes': profileRecord.shakeTimes,
+      'isPedometerEnabled': profileRecord.isPedometerEnabled,
+      'numberOfSteps': profileRecord.numberOfSteps,
+      'snoozeDuration': profileRecord.snoozeDuration,
+      'gradient': profileRecord.gradient,
+      'ringtoneName': profileRecord.ringtoneName,
+      'note': profileRecord.note,
+      'deleteAfterGoesOff': profileRecord.deleteAfterGoesOff,
+      'showMotivationalQuote': profileRecord.showMotivationalQuote,
+      'volMin': profileRecord.volMin,
+      'volMax': profileRecord.volMax,
+      'activityMonitor' : profileRecord.activityMonitor
     };
 
-    if (alarmRecord.isSharedAlarmEnabled) {
-      alarmMap['mainAlarmTime'] = alarmRecord.mainAlarmTime;
-      alarmMap['offsetDetails'] = alarmRecord.offsetDetails;
+    if (profileRecord.isSharedAlarmEnabled) {
+      profileMap['offsetDetails'] = profileRecord.offsetDetails;
     }
-    return alarmMap;
+    return profileMap;
   }
 
   String boolListToString(List<bool> boolList) {
