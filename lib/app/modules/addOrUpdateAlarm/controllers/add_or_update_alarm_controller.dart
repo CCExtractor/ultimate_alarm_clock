@@ -98,6 +98,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxBool isFutureDate = false.obs;
   final RxString currentProfile = "Default".obs;
 
+  late TextEditingController profileTextEditingController = TextEditingController();
+
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
@@ -119,6 +121,8 @@ class AddOrUpdateAlarmController extends GetxController {
   // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
   Map<String, dynamic> changedFields = {};
+
+  RxInt alarmSettingType = 0.obs;
 
   void toggleIsPlaying() {
     isPlaying.toggle();

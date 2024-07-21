@@ -86,9 +86,7 @@ class SnoozeDurationTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+
         title: FittedBox(
           alignment: Alignment.centerLeft,
           fit: BoxFit.scaleDown,

@@ -18,9 +18,7 @@ class LabelTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+
       title: FittedBox(
         alignment: Alignment.centerLeft,
         fit: BoxFit.scaleDown,

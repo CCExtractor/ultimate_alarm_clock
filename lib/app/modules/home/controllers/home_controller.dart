@@ -82,6 +82,8 @@ class HomeController extends GetxController {
   RxBool isCalender = true.obs;
   RxBool expandProfile = false.obs;
 
+  RxBool isProfile = false.obs;
+
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
     if (await SecureStorageProvider().retrieveUserModel() != null) {
@@ -412,6 +414,7 @@ class HomeController extends GetxController {
         event.start?.dateTime ?? event.start!.date!);
     alarmModel.label = event.summary!;
     alarmModel.isOneTime = true;
+    isProfile.value = false;
     Get.toNamed(
       '/add-update-alarm',
       arguments: alarmModel,

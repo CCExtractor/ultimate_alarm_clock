@@ -104,9 +104,7 @@ class RepeatTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+
         title: Obx(
           () {
             bool anyDaySelected =

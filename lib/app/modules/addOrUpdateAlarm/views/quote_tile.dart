@@ -19,9 +19,7 @@ class QuoteTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+
       title: FittedBox(
         fit: BoxFit.scaleDown,
         alignment: Alignment.centerLeft,

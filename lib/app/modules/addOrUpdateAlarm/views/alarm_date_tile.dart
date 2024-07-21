@@ -22,9 +22,7 @@ class AlarmDateTile extends StatelessWidget {
             controller.datePicker(context);
           },
           child: ListTile(
-            tileColor: themeController.isLightMode.value
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
+
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

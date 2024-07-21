@@ -14,6 +14,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
+import '../data/models/profile_model.dart';
 import 'constants.dart';
 
 class Utils {
@@ -109,9 +110,9 @@ class Utils {
     final int hours = duration.inHours;
 
     if (seconds < 10) {
-      return "${seconds}";
+      return '${seconds}';
     } else if (seconds < 60) {
-      return "${seconds}";
+      return '${seconds}';
     } else if (minutes < 10) {
       return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else if (minutes < 60) {
@@ -387,6 +388,90 @@ class Utils {
     );
   }
 
+  static ProfileModel genDefaultProfileModel() {
+    return ProfileModel(
+      volMax: 1.0,
+      volMin: 0.0,
+      snoozeDuration: 0,
+      gradient: 1,
+      label: '',
+      isOneTime: false,
+      deleteAfterGoesOff: false,
+      offsetDetails: {},
+      lastEditedUserId: '',
+      mutexLock: false,
+      ownerName: '',
+      ownerId: '',
+      activityInterval: 0,
+      isMathsEnabled: false,
+      numMathsQuestions: 0,
+      mathsDifficulty: 0,
+      qrValue: '',
+      isQrEnabled: false,
+      isShakeEnabled: false,
+      shakeTimes: 0,
+      isPedometerEnabled: false,
+      numberOfSteps: 0,
+      days: [false, false, false, false, false, false, false],
+      weatherTypes: [],
+      isWeatherEnabled: false,
+      isEnabled: false,
+      isActivityEnabled: false,
+      isLocationEnabled: false,
+      isSharedAlarmEnabled: false,
+      intervalToAlarm: 0,
+      location: '0.0,0.0',
+      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+      ringtoneName: 'Default',
+      note: '',
+      showMotivationalQuote: false,
+      activityMonitor: 0,
+      profileName: 'Default',
+    );
+  }
+
+  static ProfileModel genProfileModel(String profile) {
+    return ProfileModel(
+      volMax: 1.0,
+      volMin: 0.0,
+      snoozeDuration: 0,
+      gradient: 1,
+      label: '',
+      isOneTime: false,
+      deleteAfterGoesOff: false,
+      offsetDetails: {},
+      lastEditedUserId: '',
+      mutexLock: false,
+      ownerName: '',
+      ownerId: '',
+      activityInterval: 0,
+      isMathsEnabled: false,
+      numMathsQuestions: 0,
+      mathsDifficulty: 0,
+      qrValue: '',
+      isQrEnabled: false,
+      isShakeEnabled: false,
+      shakeTimes: 0,
+      isPedometerEnabled: false,
+      numberOfSteps: 0,
+      days: [false, false, false, false, false, false, false],
+      weatherTypes: [],
+      isWeatherEnabled: false,
+      isEnabled: false,
+      isActivityEnabled: false,
+      isLocationEnabled: false,
+      isSharedAlarmEnabled: false,
+      intervalToAlarm: 0,
+      location: '0.0,0.0',
+      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+      ringtoneName: 'Default',
+      note: '',
+      showMotivationalQuote: false,
+      activityMonitor: 0,
+      profileName: 'Default',
+    );
+  }
+
   static AlarmModel genFakeAlarmModel() {
     return AlarmModel(
         volMax: 1.0,
@@ -429,8 +514,7 @@ class Utils {
         showMotivationalQuote: false,
         activityMonitor: 0,
         alarmDate: DateTime.now().toString().substring(0, 11),
-        profile: "Default"
-    );
+        profile: 'Default');
   }
 
   static String getFormattedWeatherTypes(List weatherTypes) {

@@ -4,8 +4,6 @@ import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
 import '../modules/addOrUpdateAlarm/bindings/add_or_update_alarm_binding.dart';
 import '../modules/addOrUpdateAlarm/views/add_or_update_alarm_view.dart';
-import '../modules/addOrUpdateProfile/bindings/add_or_update_profile_binding.dart';
-import '../modules/addOrUpdateProfile/views/add_or_update_profile_view.dart';
 import '../modules/alarmChallenge/bindings/alarm_challenge_binding.dart';
 import '../modules/alarmChallenge/views/alarm_challenge_view.dart';
 import '../modules/alarmRing/bindings/alarm_ring_binding.dart';
@@ -77,15 +75,12 @@ class AppPages {
       page: () => TimerRingView(),
       binding: TimerRingBinding(),
     ),
+
     GetPage(
       name: _Paths.STOPWATCH,
       page: () => StopwatchView(),
       binding: StopwatchBinding(),
     ),
-    GetPage(
-      name: _Paths.ADD_OR_UPDATE_PROFILE,
-      page: () => const AddOrUpdateProfileView(),
-      binding: AddOrUpdateProfileBinding(),
-    ),
+
   ];
 }

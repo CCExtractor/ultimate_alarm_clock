@@ -255,7 +255,10 @@ class HomeView extends GetView<HomeController> {
                         onPressed: () {
                           Utils.hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
-                          Get.toNamed('/add-update-alarm');
+                          controller.isProfile.value = false;
+                          Get.toNamed(
+                            '/add-update-alarm',
+                          );
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -292,7 +295,10 @@ class HomeView extends GetView<HomeController> {
                       controller.floatingButtonKeyLoggedOut.currentState!
                           .toggle();
                       Utils.hapticFeedback();
-                      Get.toNamed('/add-update-alarm');
+                      controller.isProfile.value = false;
+                      Get.toNamed(
+                        '/add-update-alarm',
+                      );
                     },
                   ),
           ),
@@ -847,8 +853,12 @@ class HomeView extends GetView<HomeController> {
                                                 if (!controller
                                                     .inMultipleSelectMode
                                                     .value) {
+                                                  controller.isProfile.value = false;
                                                   Get.toNamed(
                                                     '/add-update-alarm',
+                                                    parameters: {
+                                                      "type": "alarm"
+                                                    },
                                                     arguments: alarm,
                                                   );
                                                 }

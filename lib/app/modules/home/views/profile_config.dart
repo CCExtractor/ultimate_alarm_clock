@@ -84,7 +84,11 @@ class _ProfileSelectState extends State<ProfileSelect> {
                     ),
                     InkWell(
                       borderRadius: BorderRadius.circular(28),
-                      onTap: () {},
+                      onTap: () {
+                        controller.isProfile.value = true;
+                        Get.toNamed('/add-update-alarm',
+                            );
+                      },
                       child: Container(
                           child: Padding(
                         padding: const EdgeInsets.all(8.0),
