@@ -908,10 +908,10 @@ packages:
     dependency: "direct main"
     description:
       name: pedometer
-      sha256: e8c574dae778276fa848873c6ea2015a636a91e8572a4a652b04a4fcd6c54259
+      sha256: "11cfba2de961893d79e65b7773b9462bc53979626b49a86972d63b40217969ee"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   permission_handler:
     dependency: "direct main"
     description:
