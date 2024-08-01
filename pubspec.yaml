@@ -17,7 +17,7 @@ dependencies:
   intl: ^0.18.0
   latlong2: ^0.8.1
   flutter_map: ^4.0.0
-  fl_location: ^2.0.0+1
+  fl_location: ^3.1.0
   flutter_fgbg: ^0.3.0
   flutter_svg: ^2.0.4
   isar: ^3.1.0+1

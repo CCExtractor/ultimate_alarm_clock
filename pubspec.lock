@@ -389,26 +389,26 @@ packages:
     dependency: "direct main"
     description:
       name: fl_location
-      sha256: "011d99a483bdb0e8fcef673d8991dce871ee91d37f5bdbadbe86ab06a38000fd"
+      sha256: ef65db6ab481df98b22b81985a4dfb1f9348968c1a974f75ca91d8d7b5292e0d
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "3.1.0"
   fl_location_platform_interface:
     dependency: transitive
     description:
       name: fl_location_platform_interface
-      sha256: "2e51523d4ebbee57212891f1d9674a179a2af3500b67e64d4af2ba040b952614"
+      sha256: ffb84044f1791ec719477bf43a26b6d347af697dacf624a25f5c28721d3a0ce1
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "3.0.0"
   fl_location_web:
     dependency: transitive
     description:
       name: fl_location_web
-      sha256: "576e64609517c524fbc6b0f221e0170a9020244cccc40e5b612612a3fb5edded"
+      sha256: db4cecc6e120dff002339e350be6a9e59e311925802bfd8c648c8789ed2c1003
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "3.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
