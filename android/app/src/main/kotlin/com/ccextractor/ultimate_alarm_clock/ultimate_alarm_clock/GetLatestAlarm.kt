@@ -49,6 +49,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Map<String,*>? {
             "weatherTypes" to alarm.weatherTypes
         )
     } else {
+        Log.d("cssss","xxxx")
         cursor.close()
         val selectAllQuery = """
             SELECT * FROM alarms

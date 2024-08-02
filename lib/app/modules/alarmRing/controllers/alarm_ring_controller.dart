@@ -20,6 +20,8 @@ import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../home/controllers/home_controller.dart';
+
 class AlarmControlController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
   RxString note = ''.obs;
@@ -30,7 +32,8 @@ class AlarmControlController extends GetxController {
   RxInt minutes = 1.obs;
   RxInt seconds = 0.obs;
   RxBool showButton = false.obs;
-  final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
+  HomeController homeController = Get.find<HomeController>();
+  Rx<AlarmModel> currentlyRingingAlarm = Utils.alarmModelInit.obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
@@ -40,7 +43,7 @@ class AlarmControlController extends GetxController {
 
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
         await IsarDb.getLatestAlarm(_alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
@@ -54,7 +57,7 @@ class AlarmControlController extends GetxController {
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
         await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
@@ -162,6 +165,8 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    currentlyRingingAlarm.value = Get.arguments;
+    showButton.value = true;
     initialVolume = await FlutterVolumeController.getVolume(
       stream: AudioStream.alarm,
     ) as double;
@@ -193,48 +198,48 @@ class AlarmControlController extends GetxController {
     });
 
     startTimer();
-    if (Get.arguments == null) {
-      currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
-      showButton.value = true;
-      // If the alarm is set to NEVER repeat, then it will
-      // be chosen as the next alarm to ring by default as
-      // it would ring the next day
-      if (currentlyRingingAlarm.value.days
-          .every((element) => element == false)) {
-        currentlyRingingAlarm.value.isEnabled = false;
-
-        if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-          IsarDb.updateAlarm(currentlyRingingAlarm.value);
-        } else {
-          FirestoreDb.updateAlarm(
-            currentlyRingingAlarm.value.ownerId,
-            currentlyRingingAlarm.value,
-          );
-        }
-      } else if (currentlyRingingAlarm.value.isOneTime == true) {
-        // If the alarm has to repeat on one day, but ring just once, we will
-        // keep seting its days to false until it will never ring
-        int currentDay = DateTime.now().weekday - 1;
-        currentlyRingingAlarm.value.days[currentDay] = false;
-
-        if (currentlyRingingAlarm.value.days
-            .every((element) => element == false)) {
-          currentlyRingingAlarm.value.isEnabled = false;
-        }
-
-        if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-          IsarDb.updateAlarm(currentlyRingingAlarm.value);
-        } else {
-          FirestoreDb.updateAlarm(
-            currentlyRingingAlarm.value.ownerId,
-            currentlyRingingAlarm.value,
-          );
-        }
-      }
-    } else {
-      currentlyRingingAlarm.value = Get.arguments;
-      showButton.value = true;
-    }
+    // if (Get.arguments == null) {
+    //   currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+    //   showButton.value = true;
+    //   // If the alarm is set to NEVER repeat, then it will
+    //   // be chosen as the next alarm to ring by default as
+    //   // it would ring the next day
+    //   if (currentlyRingingAlarm.value.days
+    //       .every((element) => element == false)) {
+    //     currentlyRingingAlarm.value.isEnabled = false;
+    //
+    //     if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+    //       IsarDb.updateAlarm(currentlyRingingAlarm.value);
+    //     } else {
+    //       FirestoreDb.updateAlarm(
+    //         currentlyRingingAlarm.value.ownerId,
+    //         currentlyRingingAlarm.value,
+    //       );
+    //     }
+    //   } else if (currentlyRingingAlarm.value.isOneTime == true) {
+    //     // If the alarm has to repeat on one day, but ring just once, we will
+    //     // keep seting its days to false until it will never ring
+    //     int currentDay = DateTime.now().weekday - 1;
+    //     currentlyRingingAlarm.value.days[currentDay] = false;
+    //
+    //     if (currentlyRingingAlarm.value.days
+    //         .every((element) => element == false)) {
+    //       currentlyRingingAlarm.value.isEnabled = false;
+    //     }
+    //
+    //     if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+    //       IsarDb.updateAlarm(currentlyRingingAlarm.value);
+    //     } else {
+    //       FirestoreDb.updateAlarm(
+    //         currentlyRingingAlarm.value.ownerId,
+    //         currentlyRingingAlarm.value,
+    //       );
+    //     }
+    //   }
+    // } else {
+    //   currentlyRingingAlarm.value = Get.arguments;
+    //   showButton.value = true;
+    // }
 
     AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 

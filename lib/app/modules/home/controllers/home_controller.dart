@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:flutter/services.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart' as rx;
@@ -12,15 +10,16 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+import '../../../data/models/profile_model.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
 
 class Pair<T, U> {
@@ -49,9 +48,11 @@ class HomeController extends GetxController {
 
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
-    CalendarApi.CalendarApi.calendarScope,
-  ]);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      CalendarApi.CalendarApi.calendarScope,
+    ],
+  );
   final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   final RxBool isUserSignedIn = false.obs;
   final floatingButtonKey = GlobalKey<ExpandableFabState>();
@@ -77,12 +78,15 @@ class HomeController extends GetxController {
   ThemeController themeController = Get.find<ThemeController>();
   RxList Calendars = [].obs;
   RxList Events = [].obs;
-  final RxString calendarFetchStatus = "Loading".obs;
-  final RxString selectedCalendar = "".obs;
+  final RxString calendarFetchStatus = 'Loading'.obs;
+  final RxString selectedCalendar = ''.obs;
   RxBool isCalender = true.obs;
   RxBool expandProfile = false.obs;
 
   RxBool isProfile = false.obs;
+  RxString selectedProfile = ''.obs;
+  Rx<ProfileModel> profileModel = Utils.genDefaultProfileModel().obs;
+  final storage = Get.find<GetStorageProvider>();
 
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
@@ -123,7 +127,7 @@ class HomeController extends GetxController {
 
   initStream(UserModel? user) async {
     firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
-    isarStreamAlarms = IsarDb.getAlarms();
+    isarStreamAlarms = IsarDb.getAlarms(selectedProfile.value);
     sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
     Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest2(
       firestoreStreamAlarms!,
@@ -219,9 +223,30 @@ class HomeController extends GetxController {
     return streamAlarms;
   }
 
+  void readProfileName() async {
+    String profileName = await storage.readProfile();
+    selectedProfile.value = profileName;
+    ProfileModel? p = await IsarDb.getProfile(profileName);
+    profileModel.value = p!;
+  }
+
+  void writeProfileName(String name) async {
+    await storage.writeProfile(name);
+    selectedProfile.value = name;
+    ProfileModel? p = await IsarDb.getProfile(name);
+    profileModel.value = p!;
+  }
+
   @override
   void onInit() async {
     super.onInit();
+    final checkDefault = await IsarDb.getProfile('Default');
+    if (checkDefault == null) {
+      IsarDb.addProfile(Utils.genDefaultProfileModel());
+      await storage.writeProfile("Default");
+      profileModel.value = Utils.genDefaultProfileModel();
+    }
+    readProfileName();
 
     if (!isUserSignedIn.value) await loginWithGoogle();
 
@@ -270,7 +295,7 @@ class HomeController extends GetxController {
       }
 
       // Fake object to get latest alarm
-      AlarmModel alarmRecord = Utils.genFakeAlarmModel();
+      AlarmModel alarmRecord = genFakeAlarmModel();
       AlarmModel isarLatestAlarm =
           await IsarDb.getLatestAlarm(alarmRecord, true);
 
@@ -368,9 +393,9 @@ class HomeController extends GetxController {
           'milliSeconds': intervaltoAlarm,
           'activityMonitor': latestAlarm.activityMonitor,
         });
-        print("Scheduled...");
+        print('Scheduled...');
       } on PlatformException catch (e) {
-        print("Failed to schedule alarm: ${e.message}");
+        print('Failed to schedule alarm: ${e.message}');
       }
     }
   }
@@ -387,31 +412,33 @@ class HomeController extends GetxController {
   Future<void> fetchGoogleCalendars() async {
     Calendars.value = (await GoogleCloudApiProvider.getCalenders()) ?? [];
     if (Calendars.value == []) {
-      calendarFetchStatus.value = "Empty";
+      calendarFetchStatus.value = 'Empty';
     } else {
-      calendarFetchStatus.value = "Loaded";
+      calendarFetchStatus.value = 'Loaded';
     }
   }
 
   Future<void> fetchEvents(String calenderId) async {
     Events.value = await GoogleCloudApiProvider.getEvents(calenderId) ?? [];
     if (Events.value == []) {
-      calendarFetchStatus.value = "Empty";
-      Get.snackbar("Events", "No events available");
+      calendarFetchStatus.value = 'Empty';
+      Get.snackbar('Events', 'No events available');
     } else {
-      calendarFetchStatus.value = "Loaded";
+      calendarFetchStatus.value = 'Loaded';
       isCalender.value = false;
     }
     print(Events.value);
   }
 
   Future<void> setAlarmFromEvent(CalendarApi.Event event) async {
-    AlarmModel alarmModel = Utils.genFakeAlarmModel();
+    AlarmModel alarmModel = genFakeAlarmModel();
     alarmModel.alarmTime = Utils.formatDateTimeToHHMMSS(
-        event.start?.dateTime?.toLocal() ?? event.start!.date!.toLocal());
+      event.start?.dateTime?.toLocal() ?? event.start!.date!.toLocal(),
+    );
     alarmModel.isEnabled = true;
     alarmModel.intervalToAlarm = Utils.calculateTimeDifference(
-        event.start?.dateTime ?? event.start!.date!);
+      event.start?.dateTime ?? event.start!.date!,
+    );
     alarmModel.label = event.summary!;
     alarmModel.isOneTime = true;
     isProfile.value = false;
@@ -650,5 +677,59 @@ class HomeController extends GetxController {
         ],
       ),
     );
+  }
+
+  getCurrentProfileModel() async {
+    profileModel.value = (await IsarDb.getProfile(selectedProfile.value))!;
+
+  }
+
+  AlarmModel genFakeAlarmModel() {
+    if(selectedProfile.value==null)
+      {
+        readProfileName();
+      }
+    return AlarmModel(
+        volMax: profileModel.value.volMax,
+        volMin: profileModel.value.volMin,
+        snoozeDuration: profileModel.value.snoozeDuration,
+        gradient: profileModel.value.gradient,
+        label: profileModel.value.label,
+        isOneTime: profileModel.value.isOneTime,
+        deleteAfterGoesOff: profileModel.value.deleteAfterGoesOff,
+        offsetDetails: profileModel.value.offsetDetails,
+        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+        lastEditedUserId: profileModel.value.lastEditedUserId,
+        mutexLock: profileModel.value.mutexLock,
+        ownerName: profileModel.value.ownerName,
+        ownerId: profileModel.value.ownerId,
+        alarmID: '',
+        activityInterval: profileModel.value.activityInterval,
+        isMathsEnabled: profileModel.value.isMathsEnabled,
+        numMathsQuestions: profileModel.value.numMathsQuestions,
+        mathsDifficulty: profileModel.value.mathsDifficulty,
+        qrValue: profileModel.value.qrValue,
+        isQrEnabled: profileModel.value.isQrEnabled,
+        isShakeEnabled: profileModel.value.isShakeEnabled,
+        shakeTimes: profileModel.value.shakeTimes,
+        isPedometerEnabled: profileModel.value.isPedometerEnabled,
+        numberOfSteps: profileModel.value.numberOfSteps,
+        days: profileModel.value.days,
+        weatherTypes: profileModel.value.weatherTypes,
+        isWeatherEnabled: profileModel.value.isWeatherEnabled,
+        isEnabled: profileModel.value.isEnabled,
+        isActivityEnabled: profileModel.value.isActivityEnabled,
+        isLocationEnabled: profileModel.value.isLocationEnabled,
+        isSharedAlarmEnabled: profileModel.value.isSharedAlarmEnabled,
+        intervalToAlarm: 0,
+        location: profileModel.value.location,
+        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+        ringtoneName: profileModel.value.ringtoneName,
+        note: profileModel.value.note,
+        showMotivationalQuote: profileModel.value.showMotivationalQuote,
+        activityMonitor: profileModel.value.activityMonitor,
+        alarmDate: profileModel.value.alarmDate,
+        profile: profileModel.value.profileName);
   }
 }

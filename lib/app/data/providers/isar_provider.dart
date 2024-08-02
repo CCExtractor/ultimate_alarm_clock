@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -96,7 +97,9 @@ class IsarDb {
         showMotivationalQuote INTEGER NOT NULL DEFAULT 0,
         volMin REAL,
         volMax REAL,
-        activityMonitor INTEGER
+        activityMonitor INTEGER,
+        alarmDate TEXT NOT NULL,
+        profile TEXT NOT NULL
       )
     ''');
     await db.execute('''
@@ -113,7 +116,12 @@ class IsarDb {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
-        [AlarmModelSchema, RingtoneModelSchema, TimerModelSchema],
+        [
+          AlarmModelSchema,
+          RingtoneModelSchema,
+          TimerModelSchema,
+          ProfileModelSchema
+        ],
         directory: dir.path,
         inspector: true,
       );
@@ -132,6 +140,34 @@ class IsarDb {
     print(sqlmap);
     await sql!.insert('alarms', sqlmap);
     return alarmRecord;
+  }
+
+  static Future<ProfileModel> addProfile(ProfileModel profileModel) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    await db.writeTxn(() async {
+      await db.profileModels.put(profileModel);
+    });
+    return profileModel;
+  }
+
+  static Stream<List<ProfileModel>> getProfiles() async* {
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
+      yield* db.profileModels.where().watch(fireImmediately: true);
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  static Future<ProfileModel?> getProfile(String name) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final a = db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    print("$a appkle");
+    return a;
   }
 
   static Future<AlarmModel> getTriggeredAlarm(String time) async {
@@ -153,6 +189,7 @@ class IsarDb {
     final db = await isarProvider.db;
     final alarms =
         await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
+    print("checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}");
 
     return alarms.isNotEmpty;
   }
@@ -259,11 +296,14 @@ class IsarDb {
     return db.alarmModels.get(id);
   }
 
-  static getAlarms() async* {
+  static getAlarms(String name) async* {
     try {
       final isarProvider = IsarDb();
       final db = await isarProvider.db;
-      yield* db.alarmModels.where().watch(fireImmediately: true);
+      yield* db.alarmModels
+          .filter()
+          .profileEqualTo(name)
+          .watch(fireImmediately: true);
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
@@ -340,7 +380,7 @@ class IsarDb {
       'timerName',
       'isPaused',
     ]);
-    if ( maps.length > 0) {
+    if (maps.length > 0) {
       return maps.map((timer) => TimerModel.fromMap(timer)).toList();
     }
     return [];

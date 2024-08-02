@@ -8,19 +8,21 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+import '../../home/controllers/home_controller.dart';
+
 class SplashScreenController extends GetxController {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
   MethodChannel timerChannel = const MethodChannel('timer');
 
   bool shouldAlarmRing = true;
   bool shouldNavigate = true;
-
-  final Rx<AlarmModel> currentlyRingingAlarm = Utils.genFakeAlarmModel().obs;
-
+  HomeController homeController = Get.find<HomeController>();
+  late Rx<AlarmModel> currentlyRingingAlarm =
+      homeController.genFakeAlarmModel().obs;
 
   getCurrentlyRingingAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
         await IsarDb.getLatestAlarm(_alarmRecord, false);
     AlarmModel firestoreLatestAlarm =
@@ -34,7 +36,7 @@ class SplashScreenController extends GetxController {
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = Utils.genFakeAlarmModel();
+    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
         await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
@@ -103,6 +105,7 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
@@ -152,7 +155,8 @@ class SplashScreenController extends GetxController {
             // }
 
             if (shouldAlarmRing) {
-              Get.offNamed('/alarm-ring');
+              currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+              Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               // If the alarm is set to NEVER repeat, then it will be chosen as

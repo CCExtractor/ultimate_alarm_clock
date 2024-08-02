@@ -1,3 +1,4 @@
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,14 +8,18 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
+import 'package:telephony/telephony.dart';
+
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
 import '../data/models/profile_model.dart';
+import '../data/providers/get_storage_provider.dart';
 import 'constants.dart';
 
 class Utils {
@@ -23,6 +28,52 @@ class Utils {
     final minutes = time.minute.toString().padLeft(2, '0');
     return '$hours:$minutes';
   }
+
+  static final storage = Get.find<GetStorageProvider>();
+
+  static AlarmModel alarmModelInit = AlarmModel(
+    volMax: 1.0,
+    volMin: 0.0,
+    snoozeDuration: 0,
+    gradient: 1,
+    label: '',
+    isOneTime: false,
+    deleteAfterGoesOff: false,
+    offsetDetails: {},
+    lastEditedUserId: '',
+    mutexLock: false,
+    ownerName: '',
+    ownerId: '',
+    activityInterval: 0,
+    isMathsEnabled: false,
+    numMathsQuestions: 0,
+    mathsDifficulty: 0,
+    qrValue: '',
+    isQrEnabled: false,
+    isShakeEnabled: false,
+    shakeTimes: 0,
+    isPedometerEnabled: false,
+    numberOfSteps: 0,
+    days: [false, false, false, false, false, false, false],
+    weatherTypes: [],
+    isWeatherEnabled: false,
+    isEnabled: false,
+    isActivityEnabled: false,
+    isLocationEnabled: false,
+    isSharedAlarmEnabled: false,
+    intervalToAlarm: 0,
+    location: '0.0,0.0',
+    minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+    ringtoneName: 'Default',
+    note: '',
+    showMotivationalQuote: false,
+    activityMonitor: 0,
+    profile: 'Default',
+    alarmDate: DateTime.now().toString().substring(0, 11),
+    alarmTime: '',
+    alarmID: '',
+    mainAlarmTime: '',
+  );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {
     // Extract hours, minutes, and seconds from the DateTime
@@ -427,6 +478,7 @@ class Utils {
       showMotivationalQuote: false,
       activityMonitor: 0,
       profileName: 'Default',
+      alarmDate: DateTime.now().toString().substring(0, 11),
     );
   }
 
@@ -469,52 +521,8 @@ class Utils {
       showMotivationalQuote: false,
       activityMonitor: 0,
       profileName: 'Default',
+      alarmDate: DateTime.now().toString().substring(0, 11),
     );
-  }
-
-  static AlarmModel genFakeAlarmModel() {
-    return AlarmModel(
-        volMax: 1.0,
-        volMin: 0.0,
-        snoozeDuration: 0,
-        gradient: 1,
-        label: '',
-        isOneTime: false,
-        deleteAfterGoesOff: false,
-        offsetDetails: {},
-        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        lastEditedUserId: '',
-        mutexLock: false,
-        ownerName: '',
-        ownerId: '',
-        alarmID: '',
-        activityInterval: 0,
-        isMathsEnabled: false,
-        numMathsQuestions: 0,
-        mathsDifficulty: 0,
-        qrValue: '',
-        isQrEnabled: false,
-        isShakeEnabled: false,
-        shakeTimes: 0,
-        isPedometerEnabled: false,
-        numberOfSteps: 0,
-        days: [false, false, false, false, false, false, false],
-        weatherTypes: [],
-        isWeatherEnabled: false,
-        isEnabled: false,
-        isActivityEnabled: false,
-        isLocationEnabled: false,
-        isSharedAlarmEnabled: false,
-        intervalToAlarm: 0,
-        location: '0.0,0.0',
-        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
-        ringtoneName: 'Default',
-        note: '',
-        showMotivationalQuote: false,
-        activityMonitor: 0,
-        alarmDate: DateTime.now().toString().substring(0, 11),
-        profile: 'Default');
   }
 
   static String getFormattedWeatherTypes(List weatherTypes) {
@@ -788,6 +796,31 @@ class Utils {
     final formattedTime =
         '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}';
     return '$formattedDate ($formattedTime)';
+  }
+
+  static dialNumber(String phoneNo) async {
+    AndroidIntent intent = AndroidIntent(
+      action: 'android.intent.action.CALL',
+      data: 'tel:$phoneNo',
+    );
+    await intent.launch();
+  }
+
+  static spotifyPlay(String url) async {
+    AndroidIntent intent = AndroidIntent(
+      action: 'android.intent.action.VIEW',
+      data: 'spotify:track:3Pzh926pXggbMe2ZpXyMV7',
+    );
+    await intent.launch();
+  }
+
+  static sendSMS(String phoneNo, String text) async {
+    final Telephony telephony = Telephony.instance;
+    await telephony.requestPhoneAndSmsPermissions.then((value) {
+      if (value == true) {
+        telephony.sendSms(to: phoneNo, message: text);
+      }
+    });
   }
 
   static String _twoDigits(int n) => n.toString().padLeft(2, '0');

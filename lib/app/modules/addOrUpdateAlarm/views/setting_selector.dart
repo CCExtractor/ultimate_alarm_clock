@@ -18,7 +18,7 @@ class SettingSelector extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Option(0, Icons.alarm, "Alarm"),
-          Option(1, Icons.auto_awesome, "Auto-Cancel"),
+          Option(1, Icons.auto_awesome, "Smart-Controls"),
           Option(2, Icons.checklist_rounded, "Challenges"),
           Option(3, Icons.share, "Share")
         ],

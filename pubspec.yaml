@@ -30,7 +30,7 @@ dependencies:
   mobile_scanner: 3.5.5
   permission_handler: ^11.0.1
   google_sign_in: ^6.2.1
-  url_launcher: ^6.1.11
+  url_launcher: ^6.3.0
   flutter_expandable_fab: ^1.8.1
   vibration: ^1.8.1
   file_picker: ^6.1.1
@@ -50,6 +50,8 @@ dependencies:
   googleapis_auth: ^1.4.1
   firebase_auth: ^4.17.8
   extension_google_sign_in_as_googleapis_auth: ^2.0.12
+  android_intent_plus: ^5.0.2
+  telephony: ^0.2.0
 
 dev_dependencies:
   flutter_lints: ^2.0.3

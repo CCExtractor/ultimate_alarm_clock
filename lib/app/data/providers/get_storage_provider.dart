@@ -40,4 +40,13 @@ class GetStorageProvider {
     await _getStorage.write('languageCode', lanCode);
     await _getStorage.write('countryCode', countryCode);
   }
+
+  Future<void> writeProfile(String profile) async {
+    await _getStorage.write('profile', profile);
+  }
+
+  Future<String> readProfile() async {
+    String profile = await _getStorage.read('profile') ?? 'Default';
+    return profile;
+  }
 }

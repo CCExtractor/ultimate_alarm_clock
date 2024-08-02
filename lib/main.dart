@@ -19,6 +19,12 @@ void main() async {
     if (value) {
       Permission.notification.request();
     }
+
+  });
+  await Permission.phone.isDenied.then((value){
+    if(value){
+      Permission.phone.request();
+    }
   });
   await Firebase.initializeApp();
   await Get.putAsync(() => GetStorageProvider().init());

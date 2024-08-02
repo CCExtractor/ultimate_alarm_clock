@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../modules/home/controllers/home_controller.dart';
 
 class FirestoreDb {
   static final FirebaseFirestore _firebaseFirestore =
@@ -65,7 +68,8 @@ class FirestoreDb {
         showMotivationalQuote INTEGER NOT NULL DEFAULT 0,
         volMin REAL,
         volMax REAL,
-        activityMonitor INTEGER
+        activityMonitor INTEGER,
+        profile TEXT NOT NULL
       )
     ''');
     await db.execute('''
@@ -136,7 +140,8 @@ class FirestoreDb {
     UserModel? user,
     String time,
   ) async {
-    if (user == null) return Utils.genFakeAlarmModel();
+    HomeController homeController = Get.find<HomeController>();
+    if (user == null) return homeController.genFakeAlarmModel();
     QuerySnapshot snapshot = await _alarmsCollection(user)
         .where('isEnabled', isEqualTo: true)
         .where('alarmTime', isEqualTo: time)

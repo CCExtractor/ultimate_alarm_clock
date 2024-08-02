@@ -9,8 +9,8 @@ part 'profile_model.g.dart';
 
 @collection
 class ProfileModel {
-  Id isarId = Isar.autoIncrement;
   late String profileName;
+  Id get isarId => fastHash(profileName);
   String? firestoreId;
   late bool isEnabled;
   late bool isLocationEnabled;
@@ -47,50 +47,51 @@ class ProfileModel {
   late bool showMotivationalQuote;
   late double volMax;
   late double volMin;
+  late String alarmDate;
   late int activityMonitor;
   @ignore
   Map? offsetDetails;
 
   ProfileModel(
-      {
-        required this.profileName,
-        this.sharedUserIds = const [],
-        required this.ownerId,
-        required this.ownerName,
-        required this.lastEditedUserId,
-        required this.mutexLock,
-        this.isEnabled = true,
-        required this.days,
-        required this.intervalToAlarm,
-        required this.isActivityEnabled,
-        required this.minutesSinceMidnight,
-        required this.isLocationEnabled,
-        required this.isSharedAlarmEnabled,
-        required this.isWeatherEnabled,
-        required this.location,
-        required this.weatherTypes,
-        required this.isMathsEnabled,
-        required this.mathsDifficulty,
-        required this.numMathsQuestions,
-        required this.isShakeEnabled,
-        required this.shakeTimes,
-        required this.isQrEnabled,
-        required this.qrValue,
-        required this.isPedometerEnabled,
-        required this.numberOfSteps,
-        required this.activityInterval,
-        this.offsetDetails = const {},
-        required this.label,
-        required this.isOneTime,
-        required this.snoozeDuration,
-        required this.gradient,
-        required this.ringtoneName,
-        required this.note,
-        required this.deleteAfterGoesOff,
-        required this.showMotivationalQuote,
-        required this.volMax,
-        required this.volMin,
-        required this.activityMonitor});
+      {required this.profileName,
+      this.sharedUserIds = const [],
+      required this.ownerId,
+      required this.ownerName,
+      required this.lastEditedUserId,
+      required this.mutexLock,
+      this.isEnabled = true,
+      required this.days,
+      required this.intervalToAlarm,
+      required this.isActivityEnabled,
+      required this.minutesSinceMidnight,
+      required this.isLocationEnabled,
+      required this.isSharedAlarmEnabled,
+      required this.isWeatherEnabled,
+      required this.location,
+      required this.weatherTypes,
+      required this.isMathsEnabled,
+      required this.mathsDifficulty,
+      required this.numMathsQuestions,
+      required this.isShakeEnabled,
+      required this.shakeTimes,
+      required this.isQrEnabled,
+      required this.qrValue,
+      required this.isPedometerEnabled,
+      required this.numberOfSteps,
+      required this.activityInterval,
+      this.offsetDetails = const {},
+      required this.label,
+      required this.isOneTime,
+      required this.snoozeDuration,
+      required this.gradient,
+      required this.ringtoneName,
+      required this.note,
+      required this.deleteAfterGoesOff,
+      required this.showMotivationalQuote,
+      required this.volMax,
+      required this.volMin,
+      required this.activityMonitor,
+      required this.alarmDate});
 
   ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -147,6 +148,8 @@ class ProfileModel {
     volMin = documentSnapshot['volMin'];
 
     activityMonitor = documentSnapshot['activityMonitor'];
+
+    alarmDate = documentSnapshot['alarmDate'];
   }
   ProfileModel fromMapSQFlite(Map<String, dynamic> map) {
     return ProfileModel(
@@ -188,7 +191,8 @@ class ProfileModel {
         showMotivationalQuote: map['showMotivationalQuote'] == 1,
         volMin: map['volMin'],
         volMax: map['volMax'],
-        activityMonitor: map['activityMonitor']);
+        activityMonitor: map['activityMonitor'],
+        alarmDate: map['alarmDate']);
   }
 
   Map<String, dynamic> toSQFliteMap() {
@@ -230,7 +234,8 @@ class ProfileModel {
       'showMotivationalQuote': showMotivationalQuote ? 1 : 0,
       'volMin': volMin,
       'volMax': volMax,
-      'activityMonitor' : activityMonitor
+      'activityMonitor': activityMonitor,
+      'alarmDate': alarmDate
     };
   }
 
@@ -278,6 +283,7 @@ class ProfileModel {
     volMin = profileData['volMin'];
     volMax = profileData['volMax'];
     activityMonitor = profileData['activityMonitor'];
+    alarmDate = profileData['alarmDate'];
   }
 
   ProfileModel.fromJson(String profileData, UserModel? user) {
@@ -290,7 +296,7 @@ class ProfileModel {
 
   static Map<String, dynamic> toMap(ProfileModel profileRecord) {
     final profileMap = <String, dynamic>{
-      'profileName' : profileRecord.profileName,
+      'profileName': profileRecord.profileName,
       'firestoreId': profileRecord.firestoreId,
       'ownerId': profileRecord.ownerId,
       'lastEditedUserId': profileRecord.lastEditedUserId,
@@ -327,7 +333,8 @@ class ProfileModel {
       'showMotivationalQuote': profileRecord.showMotivationalQuote,
       'volMin': profileRecord.volMin,
       'volMax': profileRecord.volMax,
-      'activityMonitor' : profileRecord.activityMonitor
+      'activityMonitor': profileRecord.activityMonitor,
+      'alarmDate': profileRecord.alarmDate
     };
 
     if (profileRecord.isSharedAlarmEnabled) {
@@ -350,4 +357,19 @@ class ProfileModel {
     // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
   }
+}
+
+int fastHash(String string) {
+  var hash = 0xcbf29ce484222325;
+
+  var i = 0;
+  while (i < string.length) {
+    final codeUnit = string.codeUnitAt(i++);
+    hash ^= codeUnit >> 8;
+    hash *= 0x100000001b3;
+    hash ^= codeUnit & 0xFF;
+    hash *= 0x100000001b3;
+  }
+
+  return hash;
 }
