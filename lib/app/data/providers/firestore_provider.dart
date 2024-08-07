@@ -69,7 +69,10 @@ class FirestoreDb {
         volMin REAL,
         volMax REAL,
         activityMonitor INTEGER,
-        profile TEXT NOT NULL
+        profile TEXT NOT NULL,
+        isGuardian INTEGER,
+        guardianTimer INTEGER,
+        guardian TEXT
       )
     ''');
     await db.execute('''
@@ -95,7 +98,7 @@ class FirestoreDb {
   }
 
   static Future<void> addUser(UserModel userModel) async {
-    final DocumentReference docRef = _usersCollection.doc(userModel.id);
+    final DocumentReference docRef = _usersCollection.doc(userModel.email);
     await docRef.set(userModel.toJson());
   }
 

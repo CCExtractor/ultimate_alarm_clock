@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
@@ -31,290 +28,283 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_d
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
+import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
 
-  ThemeController themeController = Get.find<ThemeController>();
-  InputTimeController inputTimeController = Get.put(InputTimeController());
-  SettingsController settingsController = Get.find<SettingsController>();
+  final ThemeController themeController = Get.find<ThemeController>();
+  final InputTimeController inputTimeController =
+      Get.put(InputTimeController());
+  final SettingsController settingsController = Get.find<SettingsController>();
 
   @override
   Widget build(BuildContext context) {
     var width = Get.width;
     var height = Get.height;
     return PopScope(
-        canPop: false,
-        onPopInvoked: (bool didPop) {
-          if (didPop) {
-            return;
-          }
-          controller.checkUnsavedChangesAndNavigate(context);
-        },
-        child: Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: (controller.alarmRecord.value != null &&
-                  controller.mutexLock.value == true)
-              ? const SizedBox()
-              : Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: SizedBox(
-                    height: height * 0.06,
-                    width: width * 0.8,
-                    child: TextButton(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        if (didPop) {
+          return;
+        }
+        controller.checkUnsavedChangesAndNavigate(context);
+      },
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: (controller.mutexLock.value == true)
+            ? const SizedBox()
+            : Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: SizedBox(
+                  height: height * 0.06,
+                  width: width * 0.8,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      (controller.alarmRecord.value.alarmID == '')
+                          ? 'Save'.tr
+                          : 'Update'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: themeController.isLightMode.value
+                                ? kLightPrimaryTextColor
+                                : ksecondaryTextColor,
+                          ),
+                    ),
+                    onPressed: () async {
+                      Utils.hapticFeedback();
+                      await controller.checkOverlayPermissionAndNavigate();
+
+                      if (!controller.homeController.isProfile.value) {
+                        print('aryan');
+                        if (controller.userModel.value != null) {
+                          controller
+                              .offsetDetails[controller.userModel.value!.id] = {
+                            'offsettedTime': Utils.timeOfDayToString(
+                              TimeOfDay.fromDateTime(
+                                Utils.calculateOffsetAlarmTime(
+                                  controller.selectedTime.value,
+                                  controller.isOffsetBefore.value,
+                                  controller.offsetDuration.value,
+                                ),
+                              ),
+                            ),
+                            'offsetDuration': controller.offsetDuration.value,
+                            'isOffsetBefore': controller.isOffsetBefore.value,
+                          };
+                        } else {
+                          controller.offsetDetails.value = {};
+                        }
+                        AlarmModel alarmRecord = AlarmModel(
+                          deleteAfterGoesOff:
+                              controller.deleteAfterGoesOff.value,
+                          snoozeDuration: controller.snoozeDuration.value,
+                          volMax: controller.volMax.value,
+                          volMin: controller.volMin.value,
+                          gradient: controller.gradient.value,
+                          offsetDetails: controller.offsetDetails,
+                          label: controller.label.value,
+                          note: controller.note.value,
+                          showMotivationalQuote:
+                              controller.showMotivationalQuote.value,
+                          isOneTime: controller.isOneTime.value,
+                          lastEditedUserId: controller.lastEditedUserId.value,
+                          mutexLock: controller.mutexLock.value,
+                          alarmID: controller.alarmID,
+                          ownerId: controller.ownerId.value,
+                          ownerName: controller.ownerName.value,
+                          activityInterval:
+                              controller.activityInterval.value * 60000,
+                          days: controller.repeatDays.toList(),
+                          alarmTime: Utils.timeOfDayToString(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          ),
+                          mainAlarmTime: Utils.timeOfDayToString(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          ),
+                          intervalToAlarm: Utils.getMillisecondsToAlarm(
+                            DateTime.now(),
+                            controller.selectedTime.value,
+                          ),
+                          isActivityEnabled: controller.isActivityenabled.value,
+                          minutesSinceMidnight: Utils.timeOfDayToInt(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          ),
+                          isLocationEnabled: controller.isLocationEnabled.value,
+                          weatherTypes: Utils.getIntFromWeatherTypes(
+                            controller.selectedWeather.toList(),
+                          ),
+                          isWeatherEnabled: controller.isWeatherEnabled.value,
+                          location: Utils.geoPointToString(
+                            Utils.latLngToGeoPoint(
+                              controller.selectedPoint.value,
+                            ),
+                          ),
+                          isSharedAlarmEnabled:
+                              controller.isSharedAlarmEnabled.value,
+                          isQrEnabled: controller.isQrEnabled.value,
+                          qrValue: controller.qrValue.value,
+                          isMathsEnabled: controller.isMathsEnabled.value,
+                          numMathsQuestions: controller.numMathsQuestions.value,
+                          mathsDifficulty:
+                              controller.mathsDifficulty.value.index,
+                          isShakeEnabled: controller.isShakeEnabled.value,
+                          shakeTimes: controller.shakeTimes.value,
+                          isPedometerEnabled:
+                              controller.isPedometerEnabled.value,
+                          numberOfSteps: controller.numberOfSteps.value,
+                          ringtoneName: controller.customRingtoneName.value,
+                          activityMonitor:
+                              controller.isActivityMonitorenabled.value,
+                          alarmDate: controller.selectedDate.value
+                              .toString()
+                              .substring(0, 11),
+                          profile:
+                              controller.homeController.selectedProfile.value,
+                          isGuardian: false,
+                          guardianTimer: 0,
+                          guardian: '', isCall: controller.isCall.value,
+                        );
+
+                        // Adding offset details to the database if
+                        // its a shared alarm
+                        if (controller.isSharedAlarmEnabled.value) {
+                          alarmRecord.offsetDetails = controller.offsetDetails;
+                          alarmRecord.mainAlarmTime = Utils.timeOfDayToString(
+                            TimeOfDay.fromDateTime(
+                              controller.selectedTime.value,
+                            ),
+                          );
+                        }
+                        try {
+                          if (controller.alarmRecord.value.alarmID == '') {
+                            await controller.createAlarm(alarmRecord);
+                          } else {
+                            AlarmModel updatedAlarmModel =
+                                controller.updatedAlarmModel();
+                            await controller.updateAlarm(updatedAlarmModel);
+                          }
+                        } catch (e) {
+                          debugPrint(e.toString());
+                        }
+                      }
+                      else {
+                        if (controller.profileTextEditingController.text
+                            .isNotEmpty)
+                          controller.createProfile();
+                      }
+                    },
+                  ),
+                ),
+              ),
+        appBar: AppBar(
+          backgroundColor: themeController.isLightMode.value
+              ? kLightPrimaryBackgroundColor
+              : kprimaryBackgroundColor,
+          elevation: 0.0,
+          centerTitle: true,
+          iconTheme: Theme.of(context).iconTheme,
+          title: (controller.mutexLock.value == true)
+              ? const Text('')
+              : controller.homeController.isProfile.value
+                  ? const Text('Edit Profile')
+                  : Obx(
+                      () => Text(
+                        'Rings in @timeToAlarm'.trParams(
+                          {
+                            'timeToAlarm':
+                                controller.timeToAlarm.value.toString(),
+                          },
+                        ),
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    ),
+        ),
+        body: (controller.mutexLock.value == true)
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'Uh-oh!'.tr,
+                        style:
+                            Theme.of(context).textTheme.displayMedium!.copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      'assets/images/locked.svg',
+                      height: height * 0.24,
+                      width: width * 0.5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        // 'This alarm is currently being edited!',
+                        'alarmEditing'.tr,
+                        style:
+                            Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  color: themeController.isLightMode.value
+                                      ? kLightPrimaryDisabledTextColor
+                                      : kprimaryDisabledTextColor,
+                                ),
+                      ),
+                    ),
+                    TextButton(
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
-                        (controller.alarmRecord.value!.alarmID == '')
-                            ? 'Save'.tr
-                            : 'Update'.tr,
+                        'Go back'.tr,
                         style:
                             Theme.of(context).textTheme.displaySmall!.copyWith(
                                   color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
+                                      ? kLightSecondaryTextColor
                                       : ksecondaryTextColor,
                                 ),
                       ),
-                      onPressed: () async {
+                      onPressed: () {
                         Utils.hapticFeedback();
-                        await controller.checkOverlayPermissionAndNavigate();
-
-                        if (!controller.homeController.isProfile.value) {
-                          print("aryan");
-                          if (controller.userModel.value != null) {
-                            controller.offsetDetails[
-                                controller.userModel.value!.id] = {
-                              'offsettedTime': Utils.timeOfDayToString(
-                                TimeOfDay.fromDateTime(
-                                  Utils.calculateOffsetAlarmTime(
-                                    controller.selectedTime.value,
-                                    controller.isOffsetBefore.value,
-                                    controller.offsetDuration.value,
-                                  ),
-                                ),
-                              ),
-                              'offsetDuration': controller.offsetDuration.value,
-                              'isOffsetBefore': controller.isOffsetBefore.value,
-                            };
-                          } else {
-                            controller.offsetDetails.value = {};
-                          }
-                          AlarmModel alarmRecord = AlarmModel(
-                            deleteAfterGoesOff:
-                                controller.deleteAfterGoesOff.value,
-                            snoozeDuration: controller.snoozeDuration.value,
-                            volMax: controller.volMax.value,
-                            volMin: controller.volMin.value,
-                            gradient: controller.gradient.value,
-                            offsetDetails: controller.offsetDetails,
-                            label: controller.label.value,
-                            note: controller.note.value,
-                            showMotivationalQuote:
-                                controller.showMotivationalQuote.value,
-                            isOneTime: controller.isOneTime.value,
-                            lastEditedUserId: controller.lastEditedUserId.value,
-                            mutexLock: controller.mutexLock.value,
-                            alarmID: controller.alarmID,
-                            ownerId: controller.ownerId.value,
-                            ownerName: controller.ownerName.value,
-                            activityInterval:
-                                controller.activityInterval.value * 60000,
-                            days: controller.repeatDays.toList(),
-                            alarmTime: Utils.timeOfDayToString(
-                              TimeOfDay.fromDateTime(
-                                controller.selectedTime.value,
-                              ),
-                            ),
-                            mainAlarmTime: Utils.timeOfDayToString(
-                              TimeOfDay.fromDateTime(
-                                controller.selectedTime.value,
-                              ),
-                            ),
-                            intervalToAlarm: Utils.getMillisecondsToAlarm(
-                              DateTime.now(),
-                              controller.selectedTime.value,
-                            ),
-                            isActivityEnabled:
-                                controller.isActivityenabled.value,
-                            minutesSinceMidnight: Utils.timeOfDayToInt(
-                              TimeOfDay.fromDateTime(
-                                controller.selectedTime.value,
-                              ),
-                            ),
-                            isLocationEnabled:
-                                controller.isLocationEnabled.value,
-                            weatherTypes: Utils.getIntFromWeatherTypes(
-                              controller.selectedWeather.toList(),
-                            ),
-                            isWeatherEnabled: controller.isWeatherEnabled.value,
-                            location: Utils.geoPointToString(
-                              Utils.latLngToGeoPoint(
-                                controller.selectedPoint.value,
-                              ),
-                            ),
-                            isSharedAlarmEnabled:
-                                controller.isSharedAlarmEnabled.value,
-                            isQrEnabled: controller.isQrEnabled.value,
-                            qrValue: controller.qrValue.value,
-                            isMathsEnabled: controller.isMathsEnabled.value,
-                            numMathsQuestions:
-                                controller.numMathsQuestions.value,
-                            mathsDifficulty:
-                                controller.mathsDifficulty.value.index,
-                            isShakeEnabled: controller.isShakeEnabled.value,
-                            shakeTimes: controller.shakeTimes.value,
-                            isPedometerEnabled:
-                                controller.isPedometerEnabled.value,
-                            numberOfSteps: controller.numberOfSteps.value,
-                            ringtoneName: controller.customRingtoneName.value,
-                            activityMonitor:
-                                controller.isActivityMonitorenabled.value,
-                            alarmDate: controller.selectedDate.value
-                                .toString()
-                                .substring(0, 11),
-                            profile:
-                                controller.homeController.selectedProfile.value,
-                          );
-
-                          // Adding offset details to the database if
-                          // its a shared alarm
-                          if (controller.isSharedAlarmEnabled.value) {
-                            alarmRecord.offsetDetails =
-                                controller.offsetDetails;
-                            alarmRecord.mainAlarmTime = Utils.timeOfDayToString(
-                              TimeOfDay.fromDateTime(
-                                controller.selectedTime.value,
-                              ),
-                            );
-                          }
-                          try {
-                            if (controller.alarmRecord.value!.alarmID == '') {
-                              await controller.createAlarm(alarmRecord);
-                            } else {
-                              AlarmModel updatedAlarmModel =
-                                  controller.updatedAlarmModel();
-                              await controller.updateAlarm(updatedAlarmModel);
-                            }
-                          } catch (e) {
-                            debugPrint(e.toString());
-                          }
-                        } else {
-                          if (controller.profileTextEditingController.text
-                              .isNotEmpty) controller.createProfile();
-                        }
+                        Get.back();
                       },
                     ),
-                  ),
+                  ],
                 ),
-          appBar: AppBar(
-            backgroundColor: themeController.isLightMode.value
-                ? kLightPrimaryBackgroundColor
-                : kprimaryBackgroundColor,
-            elevation: 0.0,
-            centerTitle: true,
-            iconTheme: Theme.of(context).iconTheme,
-            title: (controller.alarmRecord.value != null &&
-                    controller.mutexLock.value == true)
-                ? const Text('')
-                : controller.homeController.isProfile.value
-                    ? Text("Edit Profile")
-                    : Obx(
-                        () => Text(
-                          'Rings in @timeToAlarm'.trParams(
-                            {
-                              'timeToAlarm':
-                                  controller.timeToAlarm.value.toString(),
-                            },
-                          ),
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      ),
-          ),
-          body: (controller.alarmRecord.value != null &&
-                  controller.mutexLock.value == true)
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Uh-oh!'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryDisabledTextColor
-                                    : kprimaryDisabledTextColor,
-                              ),
-                        ),
-                      ),
-                      SvgPicture.asset(
-                        'assets/images/locked.svg',
-                        height: height * 0.24,
-                        width: width * 0.5,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          // 'This alarm is currently being edited!',
-                          'alarmEditing'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryDisabledTextColor
-                                    : kprimaryDisabledTextColor,
-                              ),
-                        ),
-                      ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Go back'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightSecondaryTextColor
-                                    : ksecondaryTextColor,
-                              ),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          Get.back();
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              : ListView(children: [
+              )
+            : ListView(
+                children: [
                   !controller.homeController.isProfile.value
                       ? Padding(
                           padding: EdgeInsets.only(
-                              top: height * 0.02,
-                              left: width * 0.04,
-                              right: width * 0.04),
+                            top: height * 0.02,
+                            left: width * 0.04,
+                            right: width * 0.04,
+                          ),
                           child: Container(
                             decoration: BoxDecoration(
-                                color: themeController.isLightMode.value
-                                    ? kLightSecondaryBackgroundColor
-                                    : ksecondaryBackgroundColor,
-                                borderRadius: BorderRadius.circular(500)),
+                              color: themeController.isLightMode.value
+                                  ? kLightSecondaryBackgroundColor
+                                  : ksecondaryBackgroundColor,
+                              borderRadius: BorderRadius.circular(500),
+                            ),
                             height: height * 0.25,
                             child: Obx(
                               () {
@@ -355,10 +345,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         .selectedTime.value.day,
                                                     inputTimeController
                                                         .convert24(
-                                                            value,
-                                                            controller
-                                                                .meridiemIndex
-                                                                .value),
+                                                      value,
+                                                      controller
+                                                          .meridiemIndex.value,
+                                                    ),
                                                     controller.selectedTime
                                                         .value.minute,
                                                   );
@@ -557,11 +547,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           .value.day,
                                                       inputTimeController
                                                           .convert24(
-                                                              controller
-                                                                  .hours.value,
-                                                              controller
-                                                                  .meridiemIndex
-                                                                  .value),
+                                                        controller.hours.value,
+                                                        controller.meridiemIndex
+                                                            .value,
+                                                      ),
                                                       controller.minutes.value,
                                                     );
                                                     inputTimeController
@@ -586,7 +575,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   textMapper: (numberText) {
                                                     return controller
                                                         .meridiem[int.parse(
-                                                            numberText)]
+                                                      numberText,
+                                                    )]
                                                         .value;
                                                   },
                                                   itemWidth: width * 0.17,
@@ -618,7 +608,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                             ? kLightPrimaryDisabledTextColor
                                                             : kprimaryDisabledTextColor
                                                                 .withOpacity(
-                                                                    0.5),
+                                                                0.5,
+                                                              ),
                                                       ),
                                                 ),
                                               ),
@@ -653,7 +644,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     ),
                                                   ),
                                                   LengthLimitingTextInputFormatter(
-                                                      2),
+                                                    2,
+                                                  ),
                                                   LimitRange(
                                                     0,
                                                     settingsController
@@ -699,7 +691,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     ),
                                                   ),
                                                   LengthLimitingTextInputFormatter(
-                                                      2),
+                                                    2,
+                                                  ),
                                                   LimitRange(00, 59),
                                                 ],
                                               ),
@@ -752,14 +745,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            50.0),
+                                                      50.0,
+                                                    ),
                                                     border: Border.all(
                                                       color: kprimaryColor,
                                                       width: 1.0,
                                                     ),
                                                   ),
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Icon(
+                                                  padding: const EdgeInsets.all(5.0),
+                                                  child: const Icon(
                                                     Icons.done,
                                                     color: kprimaryColor,
                                                   ),
@@ -776,7 +770,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       : Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: TextField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Profile Name',
                               fillColor: ksecondaryBackgroundColor,
                               filled: true,
@@ -785,252 +779,253 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                           ),
                         ),
                   SettingSelector(),
-                  Obx(() => controller.alarmSettingType.value == 0
-                      ? Column(
-                          children: [
-                            AlarmDateTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Container(
-                              child: Divider(
+                  Obx(
+                    () => controller.alarmSettingType.value == 0
+                        ? Column(
+                            children: [
+                              AlarmDateTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            RepeatTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Container(
-                              child: Divider(
+                              RepeatTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            Obx(
-                              () => (!controller.repeatDays
-                                      .every((element) => element == false))
-                                  ? RepeatOnceTile(
-                                      controller: controller,
-                                      themeController: themeController,
+                              Obx(
+                                () => (!controller.repeatDays
+                                        .every((element) => element == false))
+                                    ? RepeatOnceTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      )
+                                    : const SizedBox(),
+                              ),
+                              Obx(
+                                () => (!controller.repeatDays
+                                        .every((element) => element == false))
+                                    ? Divider(
+                                      color: themeController
+                                              .isLightMode.value
+                                          ? kLightPrimaryDisabledTextColor
+                                          : kprimaryDisabledTextColor,
                                     )
-                                  : const SizedBox(),
-                            ),
-                            Obx(
-                              () => (!controller.repeatDays
-                                      .every((element) => element == false))
-                                  ? Container(
-                                      child: Divider(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryDisabledTextColor
-                                            : kprimaryDisabledTextColor,
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                            ),
-                            SnoozeDurationTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Container(
-                              child: Divider(
+                                    : const SizedBox(),
+                              ),
+                              SnoozeDurationTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            Obx(
-                              () => (controller.repeatDays
-                                      .every((element) => element == false))
-                                  ? DeleteAfterGoesOff(
-                                      controller: controller,
-                                      themeController: themeController,
-                                    )
-                                  : const SizedBox(),
-                            ),
-                            LabelTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Container(
-                              child: Divider(
+                              Obx(
+                                () => (controller.repeatDays
+                                        .every((element) => element == false))
+                                    ? DeleteAfterGoesOff(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      )
+                                    : const SizedBox(),
+                              ),
+                              LabelTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            NoteTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Container(
-                              child: Divider(
+                              NoteTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            ChooseRingtoneTile(
-                              controller: controller,
-                              themeController: themeController,
-                              height: height,
-                              width: width,
-                            ),
-                            Container(
-                              child: Divider(
+                              ChooseRingtoneTile(
+                                controller: controller,
+                                themeController: themeController,
+                                height: height,
+                                width: width,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            AscendingVolumeTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Container(
-                              child: Divider(
+                              AscendingVolumeTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
                                 color: themeController.isLightMode.value
                                     ? kLightPrimaryDisabledTextColor
                                     : kprimaryDisabledTextColor,
                               ),
-                            ),
-                            QuoteTile(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                          ],
-                        )
-                      : SizedBox()),
-                  Obx(() => controller.alarmSettingType.value == 1
-                      ? Column(children: [
-                          ScreenActivityTile(
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                          Divider(
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor,
-                          ),
-                          WeatherTile(
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                          Divider(
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryDisabledTextColor
-                                : kprimaryDisabledTextColor,
-                          ),
-                          LocationTile(
-                            controller: controller,
-                            height: height,
-                            width: width,
-                            themeController: themeController,
-                          ),
-                        ])
-                      : SizedBox()),
-                  Obx(() => controller.alarmSettingType.value == 2
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ShakeToDismiss(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Divider(
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
-                            QrBarCode(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Divider(
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
-                            MathsChallenge(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                            Divider(
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor,
-                            ),
-                            PedometerChallenge(
-                              controller: controller,
-                              themeController: themeController,
-                            ),
-                          ],
-                        )
-                      : SizedBox()),
+                              QuoteTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                  ),
+                  Obx(
+                    () => controller.alarmSettingType.value == 1
+                        ? Column(
+                            children: [
+                              ScreenActivityTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              WeatherTile(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              LocationTile(
+                                controller: controller,
+                                height: height,
+                                width: width,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              GaurdianAngel(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                  ),
+                  Obx(
+                    () => controller.alarmSettingType.value == 2
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ShakeToDismiss(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              QrBarCode(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              MathsChallenge(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              PedometerChallenge(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                  ),
                   Obx(
                     () => controller.alarmSettingType.value == 3
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                                SharedAlarm(
-                                  controller: controller,
-                                  themeController: themeController,
+                              SharedAlarm(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryDisabledTextColor
+                                    : kprimaryDisabledTextColor,
+                              ),
+                              AlarmIDTile(
+                                controller: controller,
+                                width: width,
+                                themeController: themeController,
+                              ),
+                              Obx(
+                                () => Container(
+                                  child: (controller.isSharedAlarmEnabled.value)
+                                      ? Divider(
+                                          color: themeController
+                                                  .isLightMode.value
+                                              ? kLightPrimaryDisabledTextColor
+                                              : kprimaryDisabledTextColor,
+                                        )
+                                      : const SizedBox(),
                                 ),
-                                Divider(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor,
+                              ),
+                              AlarmOffset(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Obx(
+                                () => Container(
+                                  child: (controller.isSharedAlarmEnabled.value)
+                                      ? Divider(
+                                          color: themeController
+                                                  .isLightMode.value
+                                              ? kLightPrimaryDisabledTextColor
+                                              : kprimaryDisabledTextColor,
+                                        )
+                                      : const SizedBox(),
                                 ),
-                                AlarmIDTile(
-                                  controller: controller,
-                                  width: width,
-                                  themeController: themeController,
-                                ),
-                                Obx(
-                                  () => Container(
-                                    child:
-                                        (controller.isSharedAlarmEnabled.value)
-                                            ? Divider(
-                                                color: themeController
-                                                        .isLightMode.value
-                                                    ? kLightPrimaryDisabledTextColor
-                                                    : kprimaryDisabledTextColor,
-                                              )
-                                            : const SizedBox(),
-                                  ),
-                                ),
-                                AlarmOffset(
-                                  controller: controller,
-                                  themeController: themeController,
-                                ),
-                                Obx(
-                                  () => Container(
-                                    child: (controller
-                                                .isSharedAlarmEnabled.value &&
-                                            controller.alarmRecord.value !=
-                                                null)
-                                        ? Divider(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryDisabledTextColor
-                                                : kprimaryDisabledTextColor,
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                                SharedUsers(
-                                  controller: controller,
-                                  themeController: themeController,
-                                )
-                              ])
+                              ),
+                              SharedUsers(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                            ],
+                          )
                         : SizedBox(
                             height: height * 0.15,
                           ),
-                  )
-                ]),
-        ));
+                  ),
+                ],
+              ),
+      ),
+    );
   }
 }

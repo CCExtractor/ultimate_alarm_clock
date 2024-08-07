@@ -33,6 +33,9 @@ class _ProfileSelectState extends State<ProfileSelect> {
         child: !controller.expandProfile.value
             ? InkWell(
                 onTap: () async {
+                  controller.isProfile.value = true;
+                  Get.toNamed('/add-update-alarm',
+                      arguments: controller.genFakeAlarmModel());
                 },
                 child: Container(
                   key: ValueKey(1),
@@ -158,6 +161,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
         borderRadius: BorderRadius.circular(18),
         onTap: () {
           controller.writeProfileName(profile.profileName);
+
           controller.expandProfile.value = !controller.expandProfile.value;
         },
         child: Obx(() => Container(

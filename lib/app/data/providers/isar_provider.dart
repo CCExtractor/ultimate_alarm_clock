@@ -99,7 +99,10 @@ class IsarDb {
         volMax REAL,
         activityMonitor INTEGER,
         alarmDate TEXT NOT NULL,
-        profile TEXT NOT NULL
+        profile TEXT NOT NULL,
+        isGuardian INTEGER,
+        guardianTimer INTEGER,
+        guardian TEXT
       )
     ''');
     await db.execute('''

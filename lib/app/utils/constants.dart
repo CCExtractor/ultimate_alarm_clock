@@ -36,6 +36,7 @@ const Color kLightPrimaryDisabledTextColor = Color(0xffACACAB);
 
 // Dark ThemeData
 ThemeData kThemeData = ThemeData(
+  canvasColor: kprimaryBackgroundColor,
   useMaterial3: false,
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(foregroundColor: ksecondaryColor),
@@ -122,21 +123,25 @@ ThemeData kThemeData = ThemeData(
       color: kprimaryColor,
       shadows: [
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(1, -1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(-1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(-1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(-1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(-1, -1),
+          blurRadius: 10.0,
+        ),
       ],
     ),
     unselectedLabelStyle: TextStyle(
@@ -146,21 +151,25 @@ ThemeData kThemeData = ThemeData(
       color: kprimaryColor,
       shadows: [
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(1, -1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(-1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(-1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(90, 255, 255, 255),
-            offset: Offset(-1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(90, 255, 255, 255),
+          offset: Offset(-1, -1),
+          blurRadius: 10.0,
+        ),
       ],
     ),
     unselectedIconTheme: IconThemeData(
@@ -171,7 +180,7 @@ ThemeData kThemeData = ThemeData(
 
 // Light ThemeData
 ThemeData kLightThemeData = ThemeData(
-  useMaterial3: false,
+  useMaterial3: true,
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(foregroundColor: kprimaryColor),
   ),
@@ -257,21 +266,25 @@ ThemeData kLightThemeData = ThemeData(
       color: kprimaryColor,
       shadows: [
         Shadow(
-            color: Color.fromARGB(120, 0, 0, 0),
-            offset: Offset(1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(120, 0, 0, 0),
+          offset: Offset(1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(120, 0, 0, 0),
-            offset: Offset(1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(120, 0, 0, 0),
+          offset: Offset(1, -1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(120, 0, 0, 0),
-            offset: Offset(-1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(120, 0, 0, 0),
+          offset: Offset(-1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(120, 0, 0, 0),
-            offset: Offset(-1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(120, 0, 0, 0),
+          offset: Offset(-1, -1),
+          blurRadius: 10.0,
+        ),
       ],
     ),
     unselectedLabelStyle: TextStyle(
@@ -281,21 +294,25 @@ ThemeData kLightThemeData = ThemeData(
       color: kprimaryColor,
       shadows: [
         Shadow(
-            color: Color.fromARGB(100, 0, 0, 0),
-            offset: Offset(1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(100, 0, 0, 0),
-            offset: Offset(1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(1, -1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(100, 0, 0, 0),
-            offset: Offset(-1, 1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(-1, 1),
+          blurRadius: 10.0,
+        ),
         Shadow(
-            color: Color.fromARGB(100, 0, 0, 0),
-            offset: Offset(-1, -1),
-            blurRadius: 10.0,),
+          color: Color.fromARGB(100, 0, 0, 0),
+          offset: Offset(-1, -1),
+          blurRadius: 10.0,
+        ),
       ],
     ),
     unselectedIconTheme: IconThemeData(

@@ -49,6 +49,10 @@ class ProfileModel {
   late double volMin;
   late String alarmDate;
   late int activityMonitor;
+  late bool isGuardian;
+  late int guardianTimer;
+  late String guardian;
+  late bool isCall;
   @ignore
   Map? offsetDetails;
 
@@ -91,7 +95,11 @@ class ProfileModel {
       required this.volMax,
       required this.volMin,
       required this.activityMonitor,
-      required this.alarmDate});
+      required this.alarmDate,
+      required this.isGuardian,
+      required this.guardianTimer,
+      required this.guardian,
+      required this.isCall});
 
   ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -150,49 +158,61 @@ class ProfileModel {
     activityMonitor = documentSnapshot['activityMonitor'];
 
     alarmDate = documentSnapshot['alarmDate'];
+    isGuardian = documentSnapshot['isGuardian'];
+    guardianTimer = documentSnapshot['guardianTimer'];
+    guardian = documentSnapshot['guardian'];
+    isGuardian = documentSnapshot['isGuardian'];
+    guardianTimer = documentSnapshot['guardianTimer'];
+    guardian = documentSnapshot['guardian'];
+    isCall = documentSnapshot['isCall'];
   }
   ProfileModel fromMapSQFlite(Map<String, dynamic> map) {
     return ProfileModel(
-        profileName: map['profileName'],
-        isEnabled: map['isEnabled'] == 1,
-        isLocationEnabled: map['isLocationEnabled'] == 1,
-        isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
-        isWeatherEnabled: map['isWeatherEnabled'] == 1,
-        location: map['location'],
-        activityInterval: map['activityInterval'],
-        minutesSinceMidnight: map['minutesSinceMidnight'],
-        days: stringToBoolList(map['days']),
-        weatherTypes: List<int>.from(jsonDecode(map['weatherTypes'])),
-        isMathsEnabled: map['isMathsEnabled'] == 1,
-        mathsDifficulty: map['mathsDifficulty'],
-        numMathsQuestions: map['numMathsQuestions'],
-        isShakeEnabled: map['isShakeEnabled'] == 1,
-        shakeTimes: map['shakeTimes'],
-        isQrEnabled: map['isQrEnabled'] == 1,
-        qrValue: map['qrValue'],
-        isPedometerEnabled: map['isPedometerEnabled'] == 1,
-        numberOfSteps: map['numberOfSteps'],
-        intervalToAlarm: map['intervalToAlarm'],
-        isActivityEnabled: map['isActivityEnabled'] == 1,
-        sharedUserIds: map['sharedUserIds'] != null
-            ? List<String>.from(jsonDecode(map['sharedUserIds']))
-            : null,
-        ownerId: map['ownerId'],
-        ownerName: map['ownerName'],
-        lastEditedUserId: map['lastEditedUserId'],
-        mutexLock: map['mutexLock'] == 1,
-        label: map['label'],
-        isOneTime: map['isOneTime'] == 1,
-        snoozeDuration: map['snoozeDuration'],
-        gradient: map['gradient'],
-        ringtoneName: map['ringtoneName'],
-        note: map['note'],
-        deleteAfterGoesOff: map['deleteAfterGoesOff'] == 1,
-        showMotivationalQuote: map['showMotivationalQuote'] == 1,
-        volMin: map['volMin'],
-        volMax: map['volMax'],
-        activityMonitor: map['activityMonitor'],
-        alarmDate: map['alarmDate']);
+      profileName: map['profileName'],
+      isEnabled: map['isEnabled'] == 1,
+      isLocationEnabled: map['isLocationEnabled'] == 1,
+      isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
+      isWeatherEnabled: map['isWeatherEnabled'] == 1,
+      location: map['location'],
+      activityInterval: map['activityInterval'],
+      minutesSinceMidnight: map['minutesSinceMidnight'],
+      days: stringToBoolList(map['days']),
+      weatherTypes: List<int>.from(jsonDecode(map['weatherTypes'])),
+      isMathsEnabled: map['isMathsEnabled'] == 1,
+      mathsDifficulty: map['mathsDifficulty'],
+      numMathsQuestions: map['numMathsQuestions'],
+      isShakeEnabled: map['isShakeEnabled'] == 1,
+      shakeTimes: map['shakeTimes'],
+      isQrEnabled: map['isQrEnabled'] == 1,
+      qrValue: map['qrValue'],
+      isPedometerEnabled: map['isPedometerEnabled'] == 1,
+      numberOfSteps: map['numberOfSteps'],
+      intervalToAlarm: map['intervalToAlarm'],
+      isActivityEnabled: map['isActivityEnabled'] == 1,
+      sharedUserIds: map['sharedUserIds'] != null
+          ? List<String>.from(jsonDecode(map['sharedUserIds']))
+          : null,
+      ownerId: map['ownerId'],
+      ownerName: map['ownerName'],
+      lastEditedUserId: map['lastEditedUserId'],
+      mutexLock: map['mutexLock'] == 1,
+      label: map['label'],
+      isOneTime: map['isOneTime'] == 1,
+      snoozeDuration: map['snoozeDuration'],
+      gradient: map['gradient'],
+      ringtoneName: map['ringtoneName'],
+      note: map['note'],
+      deleteAfterGoesOff: map['deleteAfterGoesOff'] == 1,
+      showMotivationalQuote: map['showMotivationalQuote'] == 1,
+      volMin: map['volMin'],
+      volMax: map['volMax'],
+      activityMonitor: map['activityMonitor'],
+      alarmDate: map['alarmDate'],
+      isGuardian: map['isGuardian'],
+      guardianTimer: map['guardianTimer'],
+      guardian: map['guardian'],
+      isCall: map['isCall'],
+    );
   }
 
   Map<String, dynamic> toSQFliteMap() {
@@ -235,7 +255,11 @@ class ProfileModel {
       'volMin': volMin,
       'volMax': volMax,
       'activityMonitor': activityMonitor,
-      'alarmDate': alarmDate
+      'alarmDate': alarmDate,
+      'isGuardian': isGuardian,
+      'guardianTimer': guardianTimer,
+      'guardian': guardian,
+      'isCall': isCall
     };
   }
 
@@ -284,6 +308,10 @@ class ProfileModel {
     volMax = profileData['volMax'];
     activityMonitor = profileData['activityMonitor'];
     alarmDate = profileData['alarmDate'];
+    isGuardian = profileData['isGuardian'];
+    guardianTimer = profileData['guardianTimer'];
+    guardian = profileData['guardian'];
+    isCall = profileData['isCall'];
   }
 
   ProfileModel.fromJson(String profileData, UserModel? user) {
@@ -334,7 +362,11 @@ class ProfileModel {
       'volMin': profileRecord.volMin,
       'volMax': profileRecord.volMax,
       'activityMonitor': profileRecord.activityMonitor,
-      'alarmDate': profileRecord.alarmDate
+      'alarmDate': profileRecord.alarmDate,
+      'isGuardian': profileRecord.isGuardian,
+      'guardianTimer': profileRecord.guardianTimer,
+      'guardian': profileRecord.guardian,
+      'isCall': profileRecord.isCall
     };
 
     if (profileRecord.isSharedAlarmEnabled) {

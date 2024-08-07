@@ -2,7 +2,7 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -13,9 +13,7 @@ import 'package:telephony/telephony.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
 import '../data/models/profile_model.dart';
@@ -73,6 +71,10 @@ class Utils {
     alarmTime: '',
     alarmID: '',
     mainAlarmTime: '',
+    isGuardian: false,
+    guardianTimer: 0,
+    guardian: '',
+    isCall: false,
   );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {
@@ -161,17 +163,17 @@ class Utils {
     final int hours = duration.inHours;
 
     if (seconds < 10) {
-      return '${seconds}';
+      return '$seconds';
     } else if (seconds < 60) {
-      return '${seconds}';
+      return '$seconds';
     } else if (minutes < 10) {
-      return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$minutes:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else if (minutes < 60) {
-      return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$minutes:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else if (hours < 10) {
-      return "${hours}:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$hours:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else {
-      return "${hours}:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$hours:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     }
   }
 
@@ -341,7 +343,7 @@ class Utils {
       'Thur'.tr,
       'Fri'.tr,
       'Sat'.tr,
-      'Sun'.tr
+      'Sun'.tr,
     ];
     int weekdayCount = 0;
     int weekendCount = 0;
@@ -479,49 +481,10 @@ class Utils {
       activityMonitor: 0,
       profileName: 'Default',
       alarmDate: DateTime.now().toString().substring(0, 11),
-    );
-  }
-
-  static ProfileModel genProfileModel(String profile) {
-    return ProfileModel(
-      volMax: 1.0,
-      volMin: 0.0,
-      snoozeDuration: 0,
-      gradient: 1,
-      label: '',
-      isOneTime: false,
-      deleteAfterGoesOff: false,
-      offsetDetails: {},
-      lastEditedUserId: '',
-      mutexLock: false,
-      ownerName: '',
-      ownerId: '',
-      activityInterval: 0,
-      isMathsEnabled: false,
-      numMathsQuestions: 0,
-      mathsDifficulty: 0,
-      qrValue: '',
-      isQrEnabled: false,
-      isShakeEnabled: false,
-      shakeTimes: 0,
-      isPedometerEnabled: false,
-      numberOfSteps: 0,
-      days: [false, false, false, false, false, false, false],
-      weatherTypes: [],
-      isWeatherEnabled: false,
-      isEnabled: false,
-      isActivityEnabled: false,
-      isLocationEnabled: false,
-      isSharedAlarmEnabled: false,
-      intervalToAlarm: 0,
-      location: '0.0,0.0',
-      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
-      ringtoneName: 'Default',
-      note: '',
-      showMotivationalQuote: false,
-      activityMonitor: 0,
-      profileName: 'Default',
-      alarmDate: DateTime.now().toString().substring(0, 11),
+      isGuardian: false,
+      guardianTimer: 0,
+      guardian: '',
+      isCall: false,
     );
   }
 
@@ -765,9 +728,12 @@ class Utils {
   static int calculateTimeDifference(DateTime targetDateTime) {
     targetDateTime = targetDateTime.toLocal();
     var currentTime = DateTime.now();
-    currentTime = currentTime.subtract(Duration(
+    currentTime = currentTime.subtract(
+      Duration(
         milliseconds: currentTime.millisecond,
-        microseconds: currentTime.microsecond));
+        microseconds: currentTime.microsecond,
+      ),
+    );
     final difference = targetDateTime.difference(currentTime);
     final milliseconds = difference.inHours * 60 * 60 * 1000 +
         difference.inMinutes * 60 * 1000 +
@@ -776,7 +742,9 @@ class Utils {
   }
 
   static int getDifferenceMillisFromNow(
-      String datetimeString, int milliseconds) {
+    String datetimeString,
+    int milliseconds,
+  ) {
     try {
       final providedDatetime = DateTime.parse(datetimeString);
       final updatedDatetime =
@@ -799,15 +767,21 @@ class Utils {
   }
 
   static dialNumber(String phoneNo) async {
-    AndroidIntent intent = AndroidIntent(
-      action: 'android.intent.action.CALL',
-      data: 'tel:$phoneNo',
-    );
-    await intent.launch();
+    await Permission.phone.isDenied.then((value) async {
+      if (value) {
+        Permission.phone.request();
+      } else {
+        AndroidIntent intent = AndroidIntent(
+          action: 'android.intent.action.CALL',
+          data: 'tel:$phoneNo',
+        );
+        await intent.launch();
+      }
+    });
   }
 
   static spotifyPlay(String url) async {
-    AndroidIntent intent = AndroidIntent(
+    AndroidIntent intent = const AndroidIntent(
       action: 'android.intent.action.VIEW',
       data: 'spotify:track:3Pzh926pXggbMe2ZpXyMV7',
     );

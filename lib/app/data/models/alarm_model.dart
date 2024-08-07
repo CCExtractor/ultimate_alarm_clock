@@ -54,6 +54,10 @@ class AlarmModel {
   late int activityMonitor;
   late String alarmDate;
   late String profile;
+  late bool isGuardian;
+  late int guardianTimer;
+  late String guardian;
+  late bool isCall;
   @ignore
   Map? offsetDetails;
 
@@ -99,7 +103,11 @@ class AlarmModel {
       required this.volMin,
       required this.activityMonitor,
       required this.alarmDate,
-      required this.profile});
+      required this.profile,
+      required this.isGuardian,
+      required this.guardianTimer,
+      required this.guardian,
+      required this.isCall});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -164,6 +172,11 @@ class AlarmModel {
     activityMonitor = documentSnapshot['activityMonitor'];
     alarmDate = documentSnapshot['alarmDate'];
     profile = documentSnapshot['profile'];
+
+    isGuardian = documentSnapshot['isGuardian'];
+    guardianTimer = documentSnapshot['guardianTimer'];
+    guardian = documentSnapshot['guardian'];
+    isCall = documentSnapshot['isCall'];
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -210,7 +223,11 @@ class AlarmModel {
         volMax: map['volMax'],
         activityMonitor: map['activityMonitor'],
         alarmDate: map['alarmDate'],
-        profile: map['profile']);
+        profile: map['profile'],
+        isGuardian: map['isGuardian'],
+        guardianTimer: map['guardianTimer'],
+        guardian: map['guardian'],
+        isCall: map['isCall']);
   }
 
   Map<String, dynamic> toSQFliteMap() {
@@ -256,7 +273,11 @@ class AlarmModel {
       'volMax': volMax,
       'activityMonitor': activityMonitor,
       'alarmDate': alarmDate,
-      'profile':profile
+      'profile': profile,
+      'isGuardian': isGuardian,
+      'guardianTimer': guardianTimer,
+      'guardian': guardian,
+      'isCall' : isCall
     };
   }
 
@@ -307,6 +328,10 @@ class AlarmModel {
     activityMonitor = alarmData['activityMonitor'];
     alarmDate = alarmData['alarmDate'];
     profile = alarmData['profile'];
+    isGuardian = alarmData['isGuardian'];
+    guardianTimer = alarmData['guardianTimer'];
+    guardian = alarmData['guardian'];
+    isCall = alarmData['isCall'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -359,7 +384,11 @@ class AlarmModel {
       'volMax': alarmRecord.volMax,
       'activityMonitor': alarmRecord.activityMonitor,
       'alarmDate': alarmRecord.alarmDate,
-      'profile': alarmRecord.profile
+      'profile': alarmRecord.profile,
+      'isGuardian': alarmRecord.isGuardian,
+      'guardianTimer': alarmRecord.guardianTimer,
+      'guardian': alarmRecord.guardian,
+      'isCall': alarmRecord.isCall,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

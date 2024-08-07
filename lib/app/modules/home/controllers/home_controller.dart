@@ -329,7 +329,7 @@ class HomeController extends GetxController {
             ? nextMinute.difference(now)
             : Duration.zero;
 
-        // Adding a delay till that difference between seconds upto the next
+        // Adding a delay till that difference between seconds up to the next
         // minute
         _delayTimer = Timer(delay, () {
           // Update the value of timeToAlarm only once till it settles it's time
@@ -341,7 +341,7 @@ class HomeController extends GetxController {
           // AFTER 1 MIN ACCORDING TO BELOW TIMER WHICH WILL CAUSE
           // MISCALCULATION FOR INITIAL MINUTES
           // This is just to make sure that our calculated time-to-alarm is
-          // upto date with the real time for next alarm
+          // up to date with the real time for next alarm
           timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime),
             latestAlarm.days,
@@ -681,14 +681,9 @@ class HomeController extends GetxController {
 
   getCurrentProfileModel() async {
     profileModel.value = (await IsarDb.getProfile(selectedProfile.value))!;
-
   }
 
   AlarmModel genFakeAlarmModel() {
-    if(selectedProfile.value==null)
-      {
-        readProfileName();
-      }
     return AlarmModel(
         volMax: profileModel.value.volMax,
         volMin: profileModel.value.volMin,
@@ -730,6 +725,10 @@ class HomeController extends GetxController {
         showMotivationalQuote: profileModel.value.showMotivationalQuote,
         activityMonitor: profileModel.value.activityMonitor,
         alarmDate: profileModel.value.alarmDate,
-        profile: profileModel.value.profileName);
+        profile: profileModel.value.profileName,
+        isGuardian: profileModel.value.isGuardian,
+        guardianTimer: profileModel.value.guardianTimer,
+        guardian: profileModel.value.guardian,
+        isCall: profileModel.value.isCall);
   }
 }

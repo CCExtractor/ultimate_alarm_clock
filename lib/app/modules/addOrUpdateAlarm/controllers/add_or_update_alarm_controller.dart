@@ -103,13 +103,16 @@ class AddOrUpdateAlarmController extends GetxController {
   late TextEditingController profileTextEditingController =
       TextEditingController();
 
+  late TextEditingController contactTextEditingController =
+      TextEditingController();
+
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
-    for (String userId in alarmRecord.value?.sharedUserIds ?? []) {
+    for (String userId in alarmRecord.value.sharedUserIds ?? []) {
       userDetails.add(await FirestoreDb.fetchUserDetails(userId));
     }
 
@@ -129,6 +132,13 @@ class AddOrUpdateAlarmController extends GetxController {
 
   late ProfileModel profileModel;
   final storage = Get.find<GetStorageProvider>();
+
+  final RxBool isGuardian = false.obs;
+  final RxInt guardianTimer = 0.obs;
+  final RxString guardian = ''.obs;
+  final RxBool isCall = false.obs;
+
+
   void createProfile() {
     profileModel = ProfileModel(
       profileName: profileTextEditingController.text,
@@ -181,6 +191,10 @@ class AddOrUpdateAlarmController extends GetxController {
       ringtoneName: customRingtoneName.value,
       activityMonitor: isActivityMonitorenabled.value,
       alarmDate: selectedDate.value.toString().substring(0, 11),
+      isGuardian: isGuardian.value,
+      guardianTimer: guardianTimer.value,
+      guardian: guardian.value,
+      isCall: isCall.value,
     );
     IsarDb.addProfile(profileModel);
     homeController.selectedProfile.value = profileModel.profileName;
@@ -204,7 +218,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setGradient(int value) {
-    this.gradient.value = value;
+    gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -705,25 +719,25 @@ class AddOrUpdateAlarmController extends GetxController {
     if (isSharedAlarmEnabled.value == true) {
       // Making sure the alarm wasn't suddenly updated to be an
       // online (shared) alarm
-      if (await IsarDb.doesAlarmExist(alarmRecord.value!.alarmID) == false) {
-        alarmData.firestoreId = alarmRecord.value!.firestoreId;
-        await FirestoreDb.updateAlarm(alarmRecord.value!.ownerId, alarmData);
+      if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == false) {
+        alarmData.firestoreId = alarmRecord.value.firestoreId;
+        await FirestoreDb.updateAlarm(alarmRecord.value.ownerId, alarmData);
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
-        await IsarDb.deleteAlarm(alarmRecord.value!.isarId);
+        await IsarDb.deleteAlarm(alarmRecord.value.isarId);
         createAlarm(alarmData);
       }
     } else {
       // Making sure the alarm wasn't suddenly updated to be an offline alarm
-      print("aid = ${alarmRecord.value!.alarmID}");
-      if (await IsarDb.doesAlarmExist(alarmRecord.value!.alarmID) == true) {
-        alarmData.isarId = alarmRecord.value!.isarId;
+      print('aid = ${alarmRecord.value.alarmID}');
+      if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
+        alarmData.isarId = alarmRecord.value.isarId;
         await IsarDb.updateAlarm(alarmData);
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
           userModel.value,
-          alarmRecord.value!.firestoreId!,
+          alarmRecord.value.firestoreId!,
         );
         createAlarm(alarmData);
       }
@@ -739,8 +753,8 @@ class AddOrUpdateAlarmController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
-    alarmRecord.value = Get.arguments;
+    profileTextEditingController.text = homeController.selectedProfile.value;
+    if(Get.arguments!=null)alarmRecord.value = Get.arguments;
     userModel.value = homeController.userModel.value;
     if (userModel.value != null) {
       userId.value = userModel.value!.id;
@@ -759,23 +773,26 @@ class AddOrUpdateAlarmController extends GetxController {
     });
 
     if (Get.arguments != null || homeController.isProfile.value) {
+      isGuardian.value = alarmRecord.value.isGuardian;
+      guardian.value = alarmRecord.value.guardian;
+      guardianTimer.value = alarmRecord.value.guardianTimer;
       isActivityMonitorenabled.value =
-          alarmRecord.value!.isActivityEnabled ? 1 : 0;
-      snoozeDuration.value = alarmRecord.value!.snoozeDuration;
-      gradient.value = alarmRecord.value!.gradient;
-      volMin.value = alarmRecord.value!.volMin;
-      volMax.value = alarmRecord.value!.volMax;
-      isOneTime.value = alarmRecord.value!.isOneTime;
-      deleteAfterGoesOff.value = alarmRecord.value!.deleteAfterGoesOff;
-      label.value = alarmRecord.value!.label;
-      customRingtoneName.value = alarmRecord.value!.ringtoneName;
-      note.value = alarmRecord.value!.note;
-      showMotivationalQuote.value = alarmRecord.value!.showMotivationalQuote;
+          alarmRecord.value.isActivityEnabled ? 1 : 0;
+      snoozeDuration.value = alarmRecord.value.snoozeDuration;
+      gradient.value = alarmRecord.value.gradient;
+      volMin.value = alarmRecord.value.volMin;
+      volMax.value = alarmRecord.value.volMax;
+      isOneTime.value = alarmRecord.value.isOneTime;
+      deleteAfterGoesOff.value = alarmRecord.value.deleteAfterGoesOff;
+      label.value = alarmRecord.value.label;
+      customRingtoneName.value = alarmRecord.value.ringtoneName;
+      note.value = alarmRecord.value.note;
+      showMotivationalQuote.value = alarmRecord.value.showMotivationalQuote;
 
-      sharedUserIds.value = alarmRecord.value!.sharedUserIds!;
+      sharedUserIds.value = alarmRecord.value.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
-        Utils.stringToTimeOfDay(alarmRecord.value!.alarmTime),
+        Utils.stringToTimeOfDay(alarmRecord.value.alarmTime),
       );
       hours.value = selectedTime.value.hour;
       minutes.value = selectedTime.value.minute;
@@ -799,17 +816,17 @@ class AddOrUpdateAlarmController extends GetxController {
         repeatDays,
       );
 
-      repeatDays.value = alarmRecord.value!.days;
+      repeatDays.value = alarmRecord.value.days;
       // Shows the selected days in UI
       daysRepeating.value = Utils.getRepeatDays(repeatDays);
 
       // Setting the old values for all the auto dismissal
-      isActivityenabled.value = alarmRecord.value!.isActivityEnabled;
-      useScreenActivity.value = alarmRecord.value!.isActivityEnabled;
-      activityInterval.value = alarmRecord.value!.activityInterval ~/ 60000;
+      isActivityenabled.value = alarmRecord.value.isActivityEnabled;
+      useScreenActivity.value = alarmRecord.value.isActivityEnabled;
+      activityInterval.value = alarmRecord.value.activityInterval ~/ 60000;
 
-      isLocationEnabled.value = alarmRecord.value!.isLocationEnabled;
-      selectedPoint.value = Utils.stringToLatLng(alarmRecord.value!.location);
+      isLocationEnabled.value = alarmRecord.value.isLocationEnabled;
+      selectedPoint.value = Utils.stringToLatLng(alarmRecord.value.location);
       // Shows the marker in UI
       markersList.add(
         Marker(
@@ -822,67 +839,67 @@ class AddOrUpdateAlarmController extends GetxController {
         ),
       );
 
-      isWeatherEnabled.value = alarmRecord.value!.isWeatherEnabled;
+      isWeatherEnabled.value = alarmRecord.value.isWeatherEnabled;
       weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
 
-      isMathsEnabled.value = alarmRecord.value!.isMathsEnabled;
-      numMathsQuestions.value = alarmRecord.value!.numMathsQuestions;
+      isMathsEnabled.value = alarmRecord.value.isMathsEnabled;
+      numMathsQuestions.value = alarmRecord.value.numMathsQuestions;
       mathsDifficulty.value =
-          Difficulty.values[alarmRecord.value!.mathsDifficulty];
-      mathsSliderValue.value = alarmRecord.value!.mathsDifficulty.toDouble();
+          Difficulty.values[alarmRecord.value.mathsDifficulty];
+      mathsSliderValue.value = alarmRecord.value.mathsDifficulty.toDouble();
 
-      isShakeEnabled.value = alarmRecord.value!.isShakeEnabled;
-      shakeTimes.value = alarmRecord.value!.shakeTimes;
+      isShakeEnabled.value = alarmRecord.value.isShakeEnabled;
+      shakeTimes.value = alarmRecord.value.shakeTimes;
 
-      isPedometerEnabled.value = alarmRecord.value!.isPedometerEnabled;
-      numberOfSteps.value = alarmRecord.value!.numberOfSteps;
+      isPedometerEnabled.value = alarmRecord.value.isPedometerEnabled;
+      numberOfSteps.value = alarmRecord.value.numberOfSteps;
 
-      isQrEnabled.value = alarmRecord.value!.isQrEnabled;
-      qrValue.value = alarmRecord.value!.qrValue;
-      detectedQrValue.value = alarmRecord.value!.qrValue;
+      isQrEnabled.value = alarmRecord.value.isQrEnabled;
+      qrValue.value = alarmRecord.value.qrValue;
+      detectedQrValue.value = alarmRecord.value.qrValue;
 
-      alarmID = alarmRecord.value!.alarmID == ''
-          ? Uuid().v4()
-          : alarmRecord.value!.alarmID;
+      alarmID = alarmRecord.value.alarmID == ''
+          ? const Uuid().v4()
+          : alarmRecord.value.alarmID;
 
       // if alarmRecord is null or alarmRecord.ownerId is null,
       // then assign the current logged-in user as the owner.
-      if (alarmRecord.value == null || alarmRecord.value!.ownerId.isEmpty) {
+      if (alarmRecord.value.ownerId.isEmpty) {
         ownerId.value = userId.value;
         ownerName.value = userName.value;
       } else {
-        ownerId.value = alarmRecord.value!.ownerId;
-        ownerName.value = alarmRecord.value!.ownerName;
+        ownerId.value = alarmRecord.value.ownerId;
+        ownerName.value = alarmRecord.value.ownerName;
       }
 
-      mutexLock.value = alarmRecord.value!.mutexLock;
-      isSharedAlarmEnabled.value = alarmRecord.value!.isSharedAlarmEnabled;
+      mutexLock.value = alarmRecord.value.mutexLock;
+      isSharedAlarmEnabled.value = alarmRecord.value.isSharedAlarmEnabled;
 
       if (isSharedAlarmEnabled.value) {
         selectedTime.value = Utils.timeOfDayToDateTime(
-          Utils.stringToTimeOfDay(alarmRecord.value!.mainAlarmTime!),
+          Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
         );
 
         mainAlarmTime.value = Utils.timeOfDayToDateTime(
-          Utils.stringToTimeOfDay(alarmRecord.value!.mainAlarmTime!),
+          Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
         );
-        offsetDetails.value = alarmRecord.value!.offsetDetails!;
+        offsetDetails.value = alarmRecord.value.offsetDetails!;
         offsetDuration.value = alarmRecord
-            .value!.offsetDetails![userModel.value!.id]['offsetDuration'];
+            .value.offsetDetails![userModel.value!.id]['offsetDuration'];
         isOffsetBefore.value = alarmRecord
-            .value!.offsetDetails![userModel.value!.id]['isOffsetBefore'];
+            .value.offsetDetails![userModel.value!.id]['isOffsetBefore'];
       }
 
       // Set lock only if its not locked
       if (isSharedAlarmEnabled.value == true &&
-          alarmRecord.value!.mutexLock == false) {
-        alarmRecord.value!.mutexLock = true;
-        alarmRecord.value!.lastEditedUserId = userModel.value!.id;
+          alarmRecord.value.mutexLock == false) {
+        alarmRecord.value.mutexLock = true;
+        alarmRecord.value.lastEditedUserId = userModel.value!.id;
         await FirestoreDb.updateAlarm(
-          alarmRecord.value!.ownerId,
-          alarmRecord.value!,
+          alarmRecord.value.ownerId,
+          alarmRecord.value,
         );
-        alarmRecord.value!.mutexLock = false;
+        alarmRecord.value.mutexLock = false;
         mutexLock.value = false;
       }
     } else {
@@ -1056,28 +1073,28 @@ class AddOrUpdateAlarmController extends GetxController {
       // We also make sure the doc was not already locked
       // If it was suddenly enabled, it will be created newly anyway
       if (isSharedAlarmEnabled.value == true &&
-          alarmRecord.value!.isSharedAlarmEnabled == true &&
-          alarmRecord.value!.mutexLock == false) {
+          alarmRecord.value.isSharedAlarmEnabled == true &&
+          alarmRecord.value.mutexLock == false) {
         AlarmModel updatedModel = updatedAlarmModel();
-        updatedModel.firestoreId = alarmRecord.value!.firestoreId;
+        updatedModel.firestoreId = alarmRecord.value.firestoreId;
         await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
       }
     }
   }
 
   AlarmModel updatedAlarmModel() {
-    String _ownerId = '';
-    String _ownerName = '';
+    String ownerId = '';
+    String ownerName = '';
 
     // if alarmRecord is null or alarmRecord.ownerId is null,
     // then assign the current logged-in user as the owner.
 
-    if (alarmRecord.value == null || alarmRecord.value!.ownerId.isEmpty) {
-      _ownerId = userId.value;
-      _ownerName = userName.value;
+    if (alarmRecord.value.ownerId.isEmpty) {
+      ownerId = userId.value;
+      ownerName = userName.value;
     } else {
-      _ownerId = alarmRecord.value!.ownerId;
-      _ownerName = alarmRecord.value!.ownerName;
+      ownerId = alarmRecord.value.ownerId;
+      ownerName = alarmRecord.value.ownerName;
     }
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
@@ -1094,8 +1111,8 @@ class AddOrUpdateAlarmController extends GetxController {
       lastEditedUserId: lastEditedUserId.value,
       mutexLock: mutexLock.value,
       alarmID: alarmID,
-      ownerId: _ownerId,
-      ownerName: _ownerName,
+      ownerId: ownerId,
+      ownerName: ownerName,
       activityInterval: activityInterval.value * 60000,
       days: repeatDays.toList(),
       alarmTime:
@@ -1127,6 +1144,10 @@ class AddOrUpdateAlarmController extends GetxController {
       activityMonitor: isActivityMonitorenabled.value,
       alarmDate: selectedDate.value.toString().substring(0, 11),
       profile: homeController.selectedProfile.value,
+      isGuardian: isGuardian.value,
+      guardianTimer: guardianTimer.value,
+      guardian: guardian.value,
+      isCall: isCall.value,
     );
   }
 
