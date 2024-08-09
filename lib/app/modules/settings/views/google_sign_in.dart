@@ -31,7 +31,7 @@ class GoogleSignIn extends StatelessWidget {
       onTap: () async {
         Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
-          var isSuccessfulLogin = await GoogleCloudApiProvider.getInstance();
+          var isSuccessfulLogin = await GoogleCloudProvider.getInstance();
 
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(

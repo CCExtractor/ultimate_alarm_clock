@@ -73,7 +73,7 @@ class SettingsController extends GetxController {
   void onInit() async {
     super.onInit();
     userModel.value = homeController.userModel.value;
-    isUserLoggedIn.value = await GoogleCloudApiProvider.isUserLoggedin();
+    isUserLoggedIn.value = await GoogleCloudProvider.isUserLoggedin();
     if (isUserLoggedIn.value) {
       userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
@@ -83,7 +83,7 @@ class SettingsController extends GetxController {
   // Logins user using GoogleSignIn
 
   Future<void> logoutGoogle() async {
-    await GoogleCloudApiProvider.logoutGoogle();
+    await GoogleCloudProvider.logoutGoogle();
     await SecureStorageProvider().deleteUserModel();
     userModel.value = null;
     isUserLoggedIn.value = false;

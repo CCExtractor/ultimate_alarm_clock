@@ -798,4 +798,22 @@ class Utils {
   }
 
   static String _twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  static String getInitials(String username) {
+    // Split the username into parts
+    List<String> parts = username.split(' ');
+
+    // Get the first two letters of the first name
+    String firstNameInitials = parts[0].substring(0, 1);
+
+    // Check if there is a last name
+    if (parts.length > 1) {
+      // Get the first two letters of the last name
+      String lastNameInitials = parts[1].substring(0, 1);
+      return firstNameInitials + lastNameInitials;
+    } else {
+      // Return only the first two letters of the first name
+      return  parts[0].substring(0,2);
+    }
+  }
 }

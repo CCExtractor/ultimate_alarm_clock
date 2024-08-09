@@ -1,12 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/saved_emails.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -21,6 +26,7 @@ class IsarDb {
   IsarDb._internal() {
     db = openDB();
   }
+  static final storage = Get.find<GetStorageProvider>();
 
   Future<Database?> getAlarmSQLiteDatabase() async {
     Database? db;
@@ -102,7 +108,9 @@ class IsarDb {
         profile TEXT NOT NULL,
         isGuardian INTEGER,
         guardianTimer INTEGER,
-        guardian TEXT
+        guardian TEXT,
+        isCall INTEGER
+        
       )
     ''');
     await db.execute('''
@@ -123,7 +131,8 @@ class IsarDb {
           AlarmModelSchema,
           RingtoneModelSchema,
           TimerModelSchema,
-          ProfileModelSchema
+          ProfileModelSchema,
+          Saved_EmailsSchema,
         ],
         directory: dir.path,
         inspector: true,
@@ -169,7 +178,7 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final a = db.profileModels.filter().profileNameEqualTo(name).findFirst();
-    print("$a appkle");
+    print('$a appkle');
     return a;
   }
 
@@ -192,7 +201,7 @@ class IsarDb {
     final db = await isarProvider.db;
     final alarms =
         await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
-    print("checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}");
+    print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
 
     return alarms.isNotEmpty;
   }
@@ -204,6 +213,7 @@ class IsarDb {
     int nowInMinutes = 0;
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
+    final currentProfile = await storage.readProfile();
 
 // Increasing a day since we need alarms AFTER the current time
 // Logically, alarms at current time will ring in the future ;-;
@@ -224,8 +234,12 @@ class IsarDb {
     }
 
     // Get all enabled alarms
-    List<AlarmModel> alarms =
-        await db.alarmModels.where().filter().isEnabledEqualTo(true).findAll();
+    List<AlarmModel> alarms = await db.alarmModels
+        .where()
+        .filter()
+        .isEnabledEqualTo(true)
+        .profileEqualTo(currentProfile)
+        .findAll();
 
     if (alarms.isEmpty) {
       alarmRecord.minutesSinceMidnight = -1;
@@ -313,6 +327,28 @@ class IsarDb {
     }
   }
 
+  static Future<Map<String, dynamic>> getProfileAlarms() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final currentProfileName = await storage.readProfile();
+    final currentProfile = await IsarDb.getProfile(currentProfileName);
+    List<AlarmModel> alarmsModels = await db.alarmModels
+        .where()
+        .filter()
+        .profileEqualTo(currentProfileName)
+        .findAll();
+    List alarmMaps = [];
+    for (final item in alarmsModels) {
+      alarmMaps.add(AlarmModel.toMap(item));
+    }
+    final Map<String, dynamic> profileSet = {
+      'profileName' : currentProfileName,
+      'profileData': ProfileModel.toMap(currentProfile!),
+      'alarmData': alarmMaps,
+    };
+    return profileSet;
+  }
+
   static Future<void> deleteAlarm(int id) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
@@ -374,16 +410,19 @@ class IsarDb {
 
   static Future<List<TimerModel>> getAllTimers() async {
     final sql = await IsarDb().getTimerSQLiteDatabase();
-    List<Map<String, dynamic>> maps = await sql!.query('timers', columns: [
-      'id',
-      'startedOn',
-      'timerValue',
-      'timeElapsed',
-      'ringtoneName',
-      'timerName',
-      'isPaused',
-    ]);
-    if (maps.length > 0) {
+    List<Map<String, dynamic>> maps = await sql!.query(
+      'timers',
+      columns: [
+        'id',
+        'startedOn',
+        'timerValue',
+        'timeElapsed',
+        'ringtoneName',
+        'timerName',
+        'isPaused',
+      ],
+    );
+    if (maps.isNotEmpty) {
       return maps.map((timer) => TimerModel.fromMap(timer)).toList();
     }
     return [];
@@ -507,6 +546,39 @@ class IsarDb {
       });
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> addEmail(String email) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final userInDb = await db.saved_Emails
+        .filter()
+        .emailEqualTo(email, caseSensitive: false)
+        .findFirst();
+    if (userInDb != null) {
+      Get.snackbar('Error', 'Email already exists');
+    } else {
+      final username = await FirestoreDb.userExists(email);
+      if (username == 'error') {
+        Get.snackbar('Error', 'User not available');
+      } else {
+        await db.writeTxn(() async {
+          await db.saved_Emails
+              .put(Saved_Emails(email: email, username: username));
+        }).then((value) => Get.snackbar('Success', 'Email Added'));
+      }
+    }
+  }
+
+  static Stream<List<Saved_Emails>> getEmails() async* {
+    try {
+      final isarProvider = IsarDb();
+      final db = await isarProvider.db;
+      yield* db.saved_Emails.where().watch(fireImmediately: true);
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
     }
   }
 }

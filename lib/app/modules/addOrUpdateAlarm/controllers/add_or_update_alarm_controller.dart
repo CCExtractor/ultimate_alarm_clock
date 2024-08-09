@@ -100,11 +100,15 @@ class AddOrUpdateAlarmController extends GetxController {
   var selectedDate = DateTime.now().obs;
   final RxBool isFutureDate = false.obs;
 
-  late TextEditingController profileTextEditingController =
-      TextEditingController();
+  final RxBool isAddUser = false.obs;
 
-  late TextEditingController contactTextEditingController =
-      TextEditingController();
+  final RxList selectedEmails = [].obs;
+
+  TextEditingController profileTextEditingController = TextEditingController();
+
+  TextEditingController contactTextEditingController = TextEditingController();
+
+  TextEditingController emailTextEditingController = TextEditingController();
 
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
@@ -137,69 +141,6 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt guardianTimer = 0.obs;
   final RxString guardian = ''.obs;
   final RxBool isCall = false.obs;
-
-
-  void createProfile() {
-    profileModel = ProfileModel(
-      profileName: profileTextEditingController.text,
-      deleteAfterGoesOff: deleteAfterGoesOff.value,
-      snoozeDuration: snoozeDuration.value,
-      volMax: volMax.value,
-      volMin: volMin.value,
-      gradient: gradient.value,
-      offsetDetails: offsetDetails,
-      label: label.value,
-      note: note.value,
-      showMotivationalQuote: showMotivationalQuote.value,
-      isOneTime: isOneTime.value,
-      lastEditedUserId: lastEditedUserId.value,
-      mutexLock: mutexLock.value,
-      ownerId: ownerId.value,
-      ownerName: ownerName.value,
-      activityInterval: activityInterval.value * 60000,
-      days: repeatDays.toList(),
-      intervalToAlarm: Utils.getMillisecondsToAlarm(
-        DateTime.now(),
-        selectedTime.value,
-      ),
-      isActivityEnabled: isActivityenabled.value,
-      minutesSinceMidnight: Utils.timeOfDayToInt(
-        TimeOfDay.fromDateTime(
-          selectedTime.value,
-        ),
-      ),
-      isLocationEnabled: isLocationEnabled.value,
-      weatherTypes: Utils.getIntFromWeatherTypes(
-        selectedWeather.toList(),
-      ),
-      isWeatherEnabled: isWeatherEnabled.value,
-      location: Utils.geoPointToString(
-        Utils.latLngToGeoPoint(
-          selectedPoint.value,
-        ),
-      ),
-      isSharedAlarmEnabled: isSharedAlarmEnabled.value,
-      isQrEnabled: isQrEnabled.value,
-      qrValue: qrValue.value,
-      isMathsEnabled: isMathsEnabled.value,
-      numMathsQuestions: numMathsQuestions.value,
-      mathsDifficulty: mathsDifficulty.value.index,
-      isShakeEnabled: isShakeEnabled.value,
-      shakeTimes: shakeTimes.value,
-      isPedometerEnabled: isPedometerEnabled.value,
-      numberOfSteps: numberOfSteps.value,
-      ringtoneName: customRingtoneName.value,
-      activityMonitor: isActivityMonitorenabled.value,
-      alarmDate: selectedDate.value.toString().substring(0, 11),
-      isGuardian: isGuardian.value,
-      guardianTimer: guardianTimer.value,
-      guardian: guardian.value,
-      isCall: isCall.value,
-    );
-    IsarDb.addProfile(profileModel);
-    homeController.selectedProfile.value = profileModel.profileName;
-    storage.writeProfile(profileModel.profileName);
-  }
 
   void toggleIsPlaying() {
     isPlaying.toggle();
@@ -753,9 +694,16 @@ class AddOrUpdateAlarmController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
     profileTextEditingController.text = homeController.selectedProfile.value;
-    if(Get.arguments!=null)alarmRecord.value = Get.arguments;
+    emailTextEditingController.text = '';
+
+    if (Get.arguments != null) {
+      alarmRecord.value = Get.arguments;
+    }
+
     userModel.value = homeController.userModel.value;
+
     if (userModel.value != null) {
       userId.value = userModel.value!.id;
       userName.value = userModel.value!.fullName;
@@ -1354,5 +1302,67 @@ class AddOrUpdateAlarmController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  void createProfile() {
+    profileModel = ProfileModel(
+      profileName: profileTextEditingController.text,
+      deleteAfterGoesOff: deleteAfterGoesOff.value,
+      snoozeDuration: snoozeDuration.value,
+      volMax: volMax.value,
+      volMin: volMin.value,
+      gradient: gradient.value,
+      offsetDetails: offsetDetails,
+      label: label.value,
+      note: note.value,
+      showMotivationalQuote: showMotivationalQuote.value,
+      isOneTime: isOneTime.value,
+      lastEditedUserId: lastEditedUserId.value,
+      mutexLock: mutexLock.value,
+      ownerId: ownerId.value,
+      ownerName: ownerName.value,
+      activityInterval: activityInterval.value * 60000,
+      days: repeatDays.toList(),
+      intervalToAlarm: Utils.getMillisecondsToAlarm(
+        DateTime.now(),
+        selectedTime.value,
+      ),
+      isActivityEnabled: isActivityenabled.value,
+      minutesSinceMidnight: Utils.timeOfDayToInt(
+        TimeOfDay.fromDateTime(
+          selectedTime.value,
+        ),
+      ),
+      isLocationEnabled: isLocationEnabled.value,
+      weatherTypes: Utils.getIntFromWeatherTypes(
+        selectedWeather.toList(),
+      ),
+      isWeatherEnabled: isWeatherEnabled.value,
+      location: Utils.geoPointToString(
+        Utils.latLngToGeoPoint(
+          selectedPoint.value,
+        ),
+      ),
+      isSharedAlarmEnabled: isSharedAlarmEnabled.value,
+      isQrEnabled: isQrEnabled.value,
+      qrValue: qrValue.value,
+      isMathsEnabled: isMathsEnabled.value,
+      numMathsQuestions: numMathsQuestions.value,
+      mathsDifficulty: mathsDifficulty.value.index,
+      isShakeEnabled: isShakeEnabled.value,
+      shakeTimes: shakeTimes.value,
+      isPedometerEnabled: isPedometerEnabled.value,
+      numberOfSteps: numberOfSteps.value,
+      ringtoneName: customRingtoneName.value,
+      activityMonitor: isActivityMonitorenabled.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
+      isGuardian: isGuardian.value,
+      guardianTimer: guardianTimer.value,
+      guardian: guardian.value,
+      isCall: isCall.value,
+    );
+    IsarDb.addProfile(profileModel);
+    homeController.selectedProfile.value = profileModel.profileName;
+    storage.writeProfile(profileModel.profileName);
   }
 }

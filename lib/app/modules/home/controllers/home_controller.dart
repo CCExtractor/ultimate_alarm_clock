@@ -410,7 +410,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchGoogleCalendars() async {
-    Calendars.value = (await GoogleCloudApiProvider.getCalenders()) ?? [];
+    Calendars.value = (await GoogleCloudProvider.getCalenders()) ?? [];
     if (Calendars.value == []) {
       calendarFetchStatus.value = 'Empty';
     } else {
@@ -419,7 +419,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchEvents(String calenderId) async {
-    Events.value = await GoogleCloudApiProvider.getEvents(calenderId) ?? [];
+    Events.value = await GoogleCloudProvider.getEvents(calenderId) ?? [];
     if (Events.value == []) {
       calendarFetchStatus.value = 'Empty';
       Get.snackbar('Events', 'No events available');

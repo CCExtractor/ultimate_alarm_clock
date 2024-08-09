@@ -10,20 +10,20 @@ import '../../utils/GoogleHttpClient.dart';
 import '../models/user_model.dart';
 import 'firestore_provider.dart';
 
-class GoogleCloudApiProvider {
+class GoogleCloudProvider {
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       CalendarApi.calendarScope,
     ],
   );
-  static final firebaseInstace = FirebaseAuth.instance;
+  static final _firebaseAuthInstance = FirebaseAuth.instance;
 
   static getInstance() async {
     HomeController homeController = Get.find<HomeController>();
     Get.put(SettingsController());
     SettingsController settingsController = Get.find<SettingsController>();
 
-    if (await firebaseInstace.currentUser == null) {
+    if (await _firebaseAuthInstance.currentUser == null) {
       var googleSignInAccount = await _googleSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
           await googleSignInAccount?.authentication;
@@ -31,7 +31,7 @@ class GoogleCloudApiProvider {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      await firebaseInstace.signInWithCredential(credential);
+      await _firebaseAuthInstance.signInWithCredential(credential);
 
       if (googleSignInAccount != null) {
         // Process successful sign-in
@@ -72,20 +72,19 @@ class GoogleCloudApiProvider {
         return null;
       }
     } else {
-      print(firebaseInstace.currentUser!.email);
+      print(_firebaseAuthInstance.currentUser!.email);
     }
   }
 
   static Future<bool> isUserLoggedin() async {
-    return await firebaseInstace.currentUser != null;
+    return await _firebaseAuthInstance.currentUser != null;
   }
 
   static Future<List<CalendarListEntry>?> getCalenders() async {
-    if(_googleSignIn.currentUser==null)
-      {
-        await firebaseInstace.signOut();
-        await getInstance();
-      }
+    if (_googleSignIn.currentUser == null) {
+      await _firebaseAuthInstance.signOut();
+      await getInstance();
+    }
     final authHeaders = await _googleSignIn.currentUser!.authHeaders;
     final httpClient = GoogleHttpClient(authHeaders);
     var dataList = await CalendarApi(httpClient).calendarList.list();
@@ -115,7 +114,7 @@ class GoogleCloudApiProvider {
     SettingsController settingsController = Get.find<SettingsController>();
 
     await _googleSignIn.signOut();
-    firebaseInstace.signOut();
+    _firebaseAuthInstance.signOut();
     await SecureStorageProvider().deleteUserModel();
     settingsController.isUserLoggedIn.value = false;
     homeController.isUserSignedIn.value = false;

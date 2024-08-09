@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../modules/home/controllers/home_controller.dart';
+import 'get_storage_provider.dart';
 
 class FirestoreDb {
   static final FirebaseFirestore _firebaseFirestore =
@@ -14,11 +17,16 @@ class FirestoreDb {
 
   static final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
+
+  static final _firebaseAuthInstance = FirebaseAuth.instance;
+
+  static final storage = Get.find<GetStorageProvider>();
+
   Future<Database?> getSQLiteDatabase() async {
     Database? db;
 
     final dir = await getDatabasesPath();
-    final dbPath = '${dir}/alarms.db';
+    final dbPath = '$dir/alarms.db';
     print(dir);
     db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
     return db;
@@ -72,7 +80,8 @@ class FirestoreDb {
         profile TEXT NOT NULL,
         isGuardian INTEGER,
         guardianTimer INTEGER,
-        guardian TEXT
+        guardian TEXT,
+        isCall INTEGER
       )
     ''');
     await db.execute('''
@@ -110,7 +119,7 @@ class FirestoreDb {
     }
     await sql!
         .insert('alarms', alarmRecord.toSQFliteMap())
-        .then((value) => print("insert success"));
+        .then((value) => print('insert success'));
     await _alarmsCollection(user)
         .add(AlarmModel.toMap(alarmRecord))
         .then((value) => alarmRecord.firestoreId = value.id);
@@ -284,6 +293,46 @@ class FirestoreDb {
         .collection('alarms')
         .doc(alarmRecord.firestoreId)
         .update(AlarmModel.toMap(alarmRecord));
+  }
+
+  static shareAlarm(String email, AlarmModel alarm) async {
+    final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
+    final Map<String, dynamic> alarmStatus = {'status': alarm.isEnabled};
+    await _firebaseFirestore
+        .collection('users')
+        .doc(email)
+        .collection('sharedAlarms')
+        .doc(currentUserEmail)
+        .collection(alarm.alarmID)
+        .add(AlarmModel.toMap(alarm))
+        .then((value) async {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(email)
+          .collection('alarmStatus')
+          .doc(currentUserEmail)
+          .collection(alarm.alarmID)
+          .add(alarmStatus);
+    });
+  }
+
+  static Future<String> userExists(String email) async {
+    final receiver =
+        await _firebaseFirestore.collection('users').doc(email).get();
+    if (receiver.exists) return receiver.data()!['fullName'];
+    return 'error';
+  }
+
+  static shareProfile(String email) async {
+    final profileSet = await IsarDb.getProfileAlarms();
+    final currentProfileName = await storage.readProfile();
+
+    final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
+    await _firebaseFirestore
+        .collection('users')
+        .doc(email)
+        .collection('sharedProfile')
+        .add(profileSet);
   }
 
   static Future<void> deleteOneTimeAlarm(

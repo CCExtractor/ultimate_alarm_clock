@@ -53,6 +53,7 @@ dependencies:
   android_intent_plus: ^5.0.2
   telephony: ^0.2.0
   intl_phone_number_input: ^0.7.4
+  firebase_messaging: ^14.7.19
 
 dev_dependencies:
   flutter_lints: ^2.0.3
