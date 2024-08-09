@@ -1,10 +1,12 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -19,11 +21,11 @@ void main() async {
     if (value) {
       Permission.notification.request();
     }
-
   });
 
-  await Firebase.initializeApp(
-  );
+  await Firebase.initializeApp(options: );
+  PushNotifications.init();
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
   await Get.putAsync(() => GetStorageProvider().init());
 
   final storage = Get.find<GetStorageProvider>();
@@ -50,6 +52,12 @@ void main() async {
   runApp(
     UltimateAlarmClockApp(),
   );
+}
+
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {
+    print("recieved noti");
+  }
 }
 
 class UltimateAlarmClockApp extends StatelessWidget {
