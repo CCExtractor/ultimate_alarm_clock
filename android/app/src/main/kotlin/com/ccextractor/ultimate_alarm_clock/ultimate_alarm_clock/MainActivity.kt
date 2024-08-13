@@ -92,7 +92,9 @@ class MainActivity : FlutterActivity() {
                 println("FLUTTER CALLED SCHEDULE")
                 val dbHelper = DatabaseHelper(context)
                 val db = dbHelper.readableDatabase
-                val ringTime = getLatestAlarm(db, true)
+                val sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                val profile = sharedPreferences.getString("flutter.profile", "Default")
+                val ringTime = getLatestAlarm(db, true, profile?: "Default")
                 if (ringTime != null) {
                     android.util.Log.d("yay", "yay ${ringTime["interval"]}")
                     Log.d("yay", "yay ${ringTime["isLocation"]}")

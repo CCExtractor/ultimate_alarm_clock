@@ -53,6 +53,7 @@ class AlarmModel {
   late double volMin;
   late int activityMonitor;
   late String alarmDate;
+  late bool ringOn;
   late String profile;
   late bool isGuardian;
   late int guardianTimer;
@@ -102,6 +103,7 @@ class AlarmModel {
       required this.volMax,
       required this.volMin,
       required this.activityMonitor,
+      required this.ringOn,
       required this.alarmDate,
       required this.profile,
       required this.isGuardian,
@@ -228,6 +230,7 @@ class AlarmModel {
       guardianTimer: map['guardianTimer'],
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
+      ringOn: map['ringOn'] == 1,
     );
   }
 
@@ -274,6 +277,7 @@ class AlarmModel {
       'volMax': volMax,
       'activityMonitor': activityMonitor,
       'alarmDate': alarmDate,
+      'ringOn': ringOn ? 1 : 0,
       'profile': profile,
       'isGuardian': isGuardian ? 1 : 0,
       'guardianTimer': guardianTimer,
@@ -291,17 +295,17 @@ class AlarmModel {
     alarmTime = alarmData['alarmTime'];
     firestoreId = alarmData['firestoreId'];
     alarmID = alarmData['alarmID'];
-    sharedUserIds = alarmData['sharedUserIds'];
+    sharedUserIds = List<String>.from(alarmData['sharedUserIds']);
     lastEditedUserId = alarmData['lastEditedUserId'];
     mutexLock = alarmData['mutexLock'];
     ownerId = alarmData['ownerId'];
     ownerName = alarmData['ownerName'];
-    days = alarmData['days'];
+    days = List<bool>.from(alarmData['days']);
     isEnabled = alarmData['isEnabled'];
     intervalToAlarm = alarmData['intervalToAlarm'];
     isActivityEnabled = alarmData['isActivityEnabled'];
     isWeatherEnabled = alarmData['isWeatherEnabled'];
-    weatherTypes = alarmData['weatherTypes'];
+    weatherTypes = List<int>.from(alarmData['weatherTypes']);
 
     activityInterval = alarmData['activityInterval'];
     isLocationEnabled = alarmData['isLocationEnabled'];
@@ -333,6 +337,7 @@ class AlarmModel {
     guardianTimer = alarmData['guardianTimer'];
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
+    ringOn = alarmData['ringOn'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -390,6 +395,7 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
+      'ringOn': alarmRecord.ringOn
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

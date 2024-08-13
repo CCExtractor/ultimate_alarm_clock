@@ -6,20 +6,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/google_cloud_api_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/google_calender_dialog.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/profile_config.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/views/toggle_button.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/home_controller.dart';
+import 'notification_icon.dart';
 
 class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
@@ -256,8 +255,10 @@ class HomeView extends GetView<HomeController> {
                           Utils.hapticFeedback();
                           controller.floatingButtonKey.currentState!.toggle();
                           controller.isProfile.value = false;
-                          Get.toNamed('/add-update-alarm',
-                              arguments: controller.genFakeAlarmModel(),);
+                          Get.toNamed(
+                            '/add-update-alarm',
+                            arguments: controller.genFakeAlarmModel(),
+                          );
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -295,8 +296,10 @@ class HomeView extends GetView<HomeController> {
                           .toggle();
                       Utils.hapticFeedback();
                       controller.isProfile.value = false;
-                      Get.toNamed('/add-update-alarm',
-                          arguments: controller.genFakeAlarmModel(),);
+                      Get.toNamed(
+                        '/add-update-alarm',
+                        arguments: controller.genFakeAlarmModel(),
+                      );
                     },
                   ),
           ),
@@ -384,9 +387,7 @@ class HomeView extends GetView<HomeController> {
                                       ),
                                       Row(
                                         children: [
-                                          IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(Icons.notifications),),
+                                          notificationIcon(controller),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: InkWell(
@@ -394,17 +395,20 @@ class HomeView extends GetView<HomeController> {
                                                 controller.isCalender.value =
                                                     true;
                                                 Get.dialog(
-                                                    await googleCalenderDialog(
-                                                        controller,
-                                                        themeController,
-                                                        context,),);
+                                                  await googleCalenderDialog(
+                                                    controller,
+                                                    themeController,
+                                                    context,
+                                                  ),
+                                                );
                                               },
                                               child: SvgPicture.asset(
                                                 'assets/images/GC.svg',
                                                 colorFilter:
                                                     const ColorFilter.mode(
-                                                        kprimaryColor,
-                                                        BlendMode.srcIn,),
+                                                  kprimaryColor,
+                                                  BlendMode.srcIn,
+                                                ),
                                                 height: 30 *
                                                     controller
                                                         .scalingFactor.value,
@@ -1446,9 +1450,10 @@ class HomeView extends GetView<HomeController> {
                     Get.back(result: false);
                   },
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                    kprimaryTextColor.withOpacity(0.5),
-                  ),),
+                    backgroundColor: MaterialStateProperty.all(
+                      kprimaryTextColor.withOpacity(0.5),
+                    ),
+                  ),
                   child: Text(
                     'Cancel'.tr,
                     style: Theme.of(context).textTheme.displaySmall!,

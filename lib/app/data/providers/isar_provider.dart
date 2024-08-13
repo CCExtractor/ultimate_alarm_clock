@@ -109,7 +109,8 @@ class IsarDb {
         isGuardian INTEGER,
         guardianTimer INTEGER,
         guardian TEXT,
-        isCall INTEGER
+        isCall INTEGER,
+        ringOn INTEGER
         
       )
     ''');
@@ -180,6 +181,25 @@ class IsarDb {
     final a = db.profileModels.filter().profileNameEqualTo(name).findFirst();
     print('$a appkle');
     return a;
+  }
+
+  static Future<List> getProfileList() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final p = await db.profileModels.where().findAll();
+    List profileNames = [];
+    for (final profiles in p) {
+      profileNames.add(profiles.profileName);
+    }
+    return profileNames;
+  }
+
+  static Future<bool> profileExists(String name) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final a = db.profileModels.filter().profileNameEqualTo(name).findFirst();
+
+    return a != null;
   }
 
   static Future<AlarmModel> getTriggeredAlarm(String time) async {
@@ -342,9 +362,10 @@ class IsarDb {
       alarmMaps.add(AlarmModel.toMap(item));
     }
     final Map<String, dynamic> profileSet = {
-      'profileName' : currentProfileName,
+      'profileName': currentProfileName,
       'profileData': ProfileModel.toMap(currentProfile!),
       'alarmData': alarmMaps,
+      'owner': ''
     };
     return profileSet;
   }

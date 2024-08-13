@@ -50,8 +50,15 @@ class ShareDialog extends StatelessWidget {
                       ),
                       onPressed: () async {
                         if (controller.selectedEmails.isNotEmpty) {
-                          for (final email in controller.selectedEmails) {
-                            await FirestoreDb.shareProfile(email);
+                          if (homeController.isProfile.value) {
+                            await FirestoreDb.shareProfile(
+                              controller.selectedEmails,
+                            );
+                          } else {
+                            await FirestoreDb.shareAlarm(
+                              controller.selectedEmails,
+                              controller.alarmRecord.value,
+                            );
                           }
                         } else {
                           Get.snackbar('Error', 'Select an User');
@@ -155,11 +162,17 @@ class ShareDialog extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final userList = snapshot.data;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: userList!.map((e) => emailTile(e)).toList(),
+                return SizedBox(
+                  height: Get.height * 0.3,
+                  child: ListView.builder(
+                    itemCount: userList!.length,
+                    itemBuilder: (context, index) {
+                      return emailTile(userList[index]);
+                    },
+                  ),
                 );
               }
+
               return const CircularProgressIndicator();
             },
           ),
@@ -181,85 +194,90 @@ class ShareDialog extends StatelessWidget {
       title: Padding(
         padding:
             EdgeInsets.symmetric(vertical: homeController.scalingFactor * 16),
-        child: Row(
-          children: [
-            Obx(
-              () => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: controller.selectedEmails.contains(email.email)
-                      ? kprimaryColor
-                      : ksecondaryBackgroundColor,
+        child: SingleChildScrollView(scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Obx(
+                () => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: controller.selectedEmails.contains(email.email)
+                        ? kprimaryColor
+                        : ksecondaryBackgroundColor,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(homeController.scalingFactor * 16),
+                    child: controller.selectedEmails.contains(email.email)
+                        ? const Icon(Icons.check)
+                        : Text(
+                            Utils.getInitials(email.username),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: homeController.scalingFactor * 15,
+                              color: ksecondaryColor,
+                            ),
+                          ),
+                  ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(homeController.scalingFactor * 16),
-                  child: controller.selectedEmails.contains(email.email)
-                      ? const Icon(Icons.check)
-                      : Text(
-                          Utils.getInitials(email.username),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: Get.width * 0.5,
+                        child: Text(
+                          email.username,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: homeController.scalingFactor * 15,
-                            color: ksecondaryColor,
+                            fontSize: homeController.scalingFactor * 20,
                           ),
                         ),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: Get.width * 0.5,
+                        child: Text(
+                          email.email,
+                          style: TextStyle(
+                            fontSize: homeController.scalingFactor * 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    email.username,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: homeController.scalingFactor * 22,
-                    ),
-                  ),
-                  Text(
-                    email.email,
-                    style: TextStyle(
-                      fontSize: homeController.scalingFactor * 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget toShare() {
-    if (homeController.isProfile.value) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: ksecondaryBackgroundColor,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -10,
-                    right: -10,
-                    child: Icon(
-                      Icons.settings,
-                      size: homeController.scalingFactor * 45,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(homeController.scalingFactor * 25),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: ksecondaryBackgroundColor,
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: Padding(
+              padding: EdgeInsets.all(homeController.scalingFactor * 25),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: homeController.isProfile.value
+                    ? Text(
                         homeController.selectedProfile.value
                             .substring(0, 2)
                             .toUpperCase(),
@@ -268,38 +286,50 @@ class ShareDialog extends StatelessWidget {
                           fontSize: homeController.scalingFactor * 30,
                           fontWeight: FontWeight.w700,
                         ),
+                      )
+                    : Icon(
+                        Icons.alarm,
+                        size: homeController.scalingFactor * 45,
                       ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Sharing Profile'),
-                Text(
-                  homeController.selectedProfile.value,
-                  style: TextStyle(
-                    color: kprimaryColor,
-                    fontSize: homeController.scalingFactor * 30,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              homeController.isProfile.value
+                  ? const Text('Sharing Profile')
+                  : const Text('Sharing Alarm'),
+              homeController.isProfile.value
+                  ? Text(
+                      homeController.selectedProfile.value,
+                      style: TextStyle(
+                        color: kprimaryColor,
+                        fontSize: homeController.scalingFactor * 30,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )
+                  : Text(
+                      Utils.timeOfDayToString(
+                        TimeOfDay.fromDateTime(
+                          controller.selectedTime.value,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: kprimaryColor,
+                        fontSize: homeController.scalingFactor * 30,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+            ],
           ),
-        ],
-      );
-    } else {
-      return const Row(
-        children: [],
-      );
-    }
+        ),
+      ],
+    );
   }
 }

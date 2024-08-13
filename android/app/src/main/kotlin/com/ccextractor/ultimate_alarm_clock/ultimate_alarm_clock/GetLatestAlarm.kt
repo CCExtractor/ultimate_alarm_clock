@@ -1,5 +1,6 @@
 package com.ccextractor.ultimate_alarm_clock
 
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
@@ -9,9 +10,10 @@ import java.time.LocalTime
 import java.util.*
 
 
-fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Map<String,*>? {
+fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String): Map<String, *>? {
     val now = Calendar.getInstance()
     var nowInMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
+    var nowInSeconds = nowInMinutes * 60 + now.get(Calendar.SECOND)
 
     if (wantNextAlarm) {
         nowInMinutes++
@@ -19,16 +21,19 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Map<String,*>? {
     val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
     val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
+
+
     val cursor = db.rawQuery(
         """
         SELECT * FROM alarms
         WHERE isEnabled = 1 
         AND alarmTime > ?
+        AND profile = ?
         AND ((isOneTime = 0 AND (days NOT LIKE '%1%' OR SUBSTR(days, ?, 1) = '1')) OR (isOneTime = 1 AND SUBSTR(days, ?, 4) = 'true'))
         ORDER BY ABS(minutesSinceMidnight - ?) ASC
         LIMIT 1
         """,
-        arrayOf(currentTime, currentDay.toString(), currentDay.toString(), nowInMinutes.toString())
+        arrayOf(currentTime, profile,currentDay.toString(), currentDay.toString(), nowInMinutes.toString())
     )
 
     return if (cursor.moveToFirst()) {
@@ -38,9 +43,8 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Map<String,*>? {
         Log.d("Alarm", alarm.alarmTime)
         val latestAlarmTimeOftheDay = stringToTimeOfDay(alarm.alarmTime)
         val intervaltoAlarm = getMillisecondsToAlarm(LocalTime.now(), latestAlarmTimeOftheDay)
-        Log.d("a", "${alarm.weatherTypes} ")
 
-        mapOf(
+        return mapOf(
             "interval" to intervaltoAlarm,
             "isActivity" to alarm.activityMonitor,
             "isLocation" to alarm.isLocationEnabled,
@@ -48,13 +52,14 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Map<String,*>? {
             "isWeather" to alarm.isWeatherEnabled,
             "weatherTypes" to alarm.weatherTypes
         )
-    } else {
+    }else {
         cursor.close()
         val selectAllQuery = """
             SELECT * FROM alarms
             WHERE isEnabled = 1
             AND alarmTime > ?
         """
+        Log.d("x", "xxxxxxxxxx")
         val allAlarmsCursor = db.rawQuery(selectAllQuery, arrayOf(currentTime))
         if (allAlarmsCursor.moveToFirst()) {
             val alarms = ArrayList<Long>()
@@ -85,9 +90,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean): Map<String,*>? {
                             "weatherTypes" to AlarmModel.fromCursor(allAlarmsCursor).weatherTypes
                         )
                     )
-                }
-                else
-                {
+                } else {
                     alarms.add(intervaltoAlarm + (86400000 * (7)).toLong())
                     alarmDetails.add(
                         mapOf(
@@ -142,7 +145,8 @@ data class AlarmModel(
     val isWeatherEnabled: Int,
     val weatherTypes: String,
     val isLocationEnabled: Int,
-    val location: String
+    val location: String,
+    val alarmDate: String
 ) {
     companion object {
         fun fromCursor(cursor: Cursor): AlarmModel {
@@ -156,6 +160,7 @@ data class AlarmModel(
             val weatherTypes = cursor.getString(cursor.getColumnIndex("weatherTypes"))
             val isLocationEnabled = cursor.getInt(cursor.getColumnIndex("isLocationEnabled"))
             val location = cursor.getString(cursor.getColumnIndex("location"))
+            val alarmDate = cursor.getString(cursor.getColumnIndex("alarmDate"))
             return AlarmModel(
                 id,
                 minutesSinceMidnight,
@@ -166,7 +171,8 @@ data class AlarmModel(
                 isWeatherEnabled,
                 weatherTypes,
                 isLocationEnabled,
-                location
+                location,
+                alarmDate
             )
         }
     }

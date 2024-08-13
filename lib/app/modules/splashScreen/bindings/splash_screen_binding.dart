@@ -4,6 +4,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
 import '../../home/controllers/home_controller.dart';
+import '../../timer/controllers/timer_controller.dart';
 
 class SplashScreenBinding extends Bindings {
   @override
@@ -12,11 +13,12 @@ class SplashScreenBinding extends Bindings {
       ThemeController(),
       permanent: true,
     );
-    Get.put<HomeController>(
-      HomeController(),permanent: true
-    );
+    Get.put<HomeController>(HomeController(), permanent: true);
     Get.put<SplashScreenController>(
       SplashScreenController(),
+    );
+    Get.lazyPut<TimerController>(
+      () => TimerController(),
     );
   }
 }

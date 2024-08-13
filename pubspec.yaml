@@ -54,6 +54,7 @@ dependencies:
   telephony: ^0.2.0
   intl_phone_number_input: ^0.7.4
   firebase_messaging: ^14.7.19
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_lints: ^2.0.3

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
 import 'package:intl/intl.dart';
@@ -45,6 +46,7 @@ class HomeController extends GetxController {
   Timer? _delayTimer;
   Timer _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {});
   List alarms = [].obs;
+  List notifications = [].obs;
 
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
@@ -86,6 +88,7 @@ class HomeController extends GetxController {
   RxBool isProfile = false.obs;
   RxString selectedProfile = ''.obs;
   Rx<ProfileModel> profileModel = Utils.genDefaultProfileModel().obs;
+
   final storage = Get.find<GetStorageProvider>();
 
   loginWithGoogle() async {
@@ -248,7 +251,13 @@ class HomeController extends GetxController {
     }
     readProfileName();
 
-    if (!isUserSignedIn.value) await loginWithGoogle();
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        isUserSignedIn.value = false;
+      } else {
+        isUserSignedIn.value = true;
+      }
+    });
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
         .readSortedAlarmListValue(key: 'sorted_alarm_list');
@@ -729,6 +738,7 @@ class HomeController extends GetxController {
         isGuardian: profileModel.value.isGuardian,
         guardianTimer: profileModel.value.guardianTimer,
         guardian: profileModel.value.guardian,
-        isCall: profileModel.value.isCall);
+        isCall: profileModel.value.isCall,
+        ringOn: false);
   }
 }

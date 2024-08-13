@@ -76,8 +76,8 @@ class GoogleCloudProvider {
     }
   }
 
-  static Future<bool> isUserLoggedin() async {
-    return await _firebaseAuthInstance.currentUser != null;
+  static isUserLoggedin()  {
+    return  _firebaseAuthInstance.currentUser != null;
   }
 
   static Future<List<CalendarListEntry>?> getCalenders() async {

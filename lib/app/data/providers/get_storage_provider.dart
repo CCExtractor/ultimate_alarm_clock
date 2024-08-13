@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GetStorageProvider {
   late final GetStorage _getStorage;
@@ -42,7 +43,9 @@ class GetStorageProvider {
   }
 
   Future<void> writeProfile(String profile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await _getStorage.write('profile', profile);
+    await prefs.setString('profile', profile);
   }
 
   Future<String> readProfile() async {

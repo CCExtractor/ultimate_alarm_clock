@@ -40,20 +40,8 @@ class AlarmControlController extends GetxController {
   Timer? _currentTimeTimer;
   bool isAlarmActive = true;
   late double initialVolume;
-
-  getCurrentlyRingingAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
-    AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
-    AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-    debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
-
-    return latestAlarm;
-  }
+  late Timer guardianTimer;
+  RxInt guardianCoundown = 120.obs;
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -166,6 +154,22 @@ class AlarmControlController extends GetxController {
   void onInit() async {
     super.onInit();
     currentlyRingingAlarm.value = Get.arguments;
+    print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
+    if (currentlyRingingAlarm.value.isGuardian) {
+      guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        print(guardianCoundown.value);
+        if (guardianCoundown.value == 0) {
+          currentlyRingingAlarm.value.isCall
+              ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
+              : Utils.sendSMS(currentlyRingingAlarm.value.guardian,
+                  "Your Friend is not waking up \n - Ultimate Alarm Clock");
+          timer.cancel();
+        } else {
+          guardianCoundown.value = guardianCoundown.value - 1;
+        }
+      });
+    }
+
     showButton.value = true;
     initialVolume = await FlutterVolumeController.getVolume(
       stream: AudioStream.alarm,

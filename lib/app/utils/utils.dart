@@ -35,7 +35,7 @@ class Utils {
     snoozeDuration: 0,
     gradient: 1,
     label: '',
-    isOneTime: false,
+    isOneTime: true,
     deleteAfterGoesOff: false,
     offsetDetails: {},
     lastEditedUserId: '',
@@ -75,6 +75,7 @@ class Utils {
     guardianTimer: 0,
     guardian: '',
     isCall: false,
+    ringOn: false,
   );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {
@@ -448,7 +449,7 @@ class Utils {
       snoozeDuration: 0,
       gradient: 1,
       label: '',
-      isOneTime: false,
+      isOneTime: true,
       deleteAfterGoesOff: false,
       offsetDetails: {},
       lastEditedUserId: '',
@@ -485,6 +486,7 @@ class Utils {
       guardianTimer: 0,
       guardian: '',
       isCall: false,
+      ringOn: false,
     );
   }
 
@@ -813,7 +815,7 @@ class Utils {
       return firstNameInitials + lastNameInitials;
     } else {
       // Return only the first two letters of the first name
-      return  parts[0].substring(0,2);
+      return parts[0].substring(0, 2);
     }
   }
 }

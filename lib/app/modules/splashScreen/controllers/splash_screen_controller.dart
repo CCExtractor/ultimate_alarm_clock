@@ -30,7 +30,6 @@ class SplashScreenController extends GetxController {
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
-
     return latestAlarm;
   }
 

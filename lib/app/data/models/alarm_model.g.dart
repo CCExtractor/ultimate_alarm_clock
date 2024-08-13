@@ -207,43 +207,48 @@ const AlarmModelSchema = CollectionSchema(
       name: r'qrValue',
       type: IsarType.string,
     ),
-    r'ringtoneName': PropertySchema(
+    r'ringOn': PropertySchema(
       id: 38,
+      name: r'ringOn',
+      type: IsarType.bool,
+    ),
+    r'ringtoneName': PropertySchema(
+      id: 39,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 39,
+      id: 40,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 40,
+      id: 41,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 41,
+      id: 42,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 42,
+      id: 43,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'volMax': PropertySchema(
-      id: 43,
+      id: 44,
       name: r'volMax',
       type: IsarType.double,
     ),
     r'volMin': PropertySchema(
-      id: 44,
+      id: 45,
       name: r'volMin',
       type: IsarType.double,
     ),
     r'weatherTypes': PropertySchema(
-      id: 45,
+      id: 46,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -354,14 +359,15 @@ void _alarmModelSerialize(
   writer.writeString(offsets[35], object.ownerName);
   writer.writeString(offsets[36], object.profile);
   writer.writeString(offsets[37], object.qrValue);
-  writer.writeString(offsets[38], object.ringtoneName);
-  writer.writeLong(offsets[39], object.shakeTimes);
-  writer.writeStringList(offsets[40], object.sharedUserIds);
-  writer.writeBool(offsets[41], object.showMotivationalQuote);
-  writer.writeLong(offsets[42], object.snoozeDuration);
-  writer.writeDouble(offsets[43], object.volMax);
-  writer.writeDouble(offsets[44], object.volMin);
-  writer.writeLongList(offsets[45], object.weatherTypes);
+  writer.writeBool(offsets[38], object.ringOn);
+  writer.writeString(offsets[39], object.ringtoneName);
+  writer.writeLong(offsets[40], object.shakeTimes);
+  writer.writeStringList(offsets[41], object.sharedUserIds);
+  writer.writeBool(offsets[42], object.showMotivationalQuote);
+  writer.writeLong(offsets[43], object.snoozeDuration);
+  writer.writeDouble(offsets[44], object.volMax);
+  writer.writeDouble(offsets[45], object.volMin);
+  writer.writeLongList(offsets[46], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -408,14 +414,15 @@ AlarmModel _alarmModelDeserialize(
     ownerName: reader.readString(offsets[35]),
     profile: reader.readString(offsets[36]),
     qrValue: reader.readString(offsets[37]),
-    ringtoneName: reader.readString(offsets[38]),
-    shakeTimes: reader.readLong(offsets[39]),
-    sharedUserIds: reader.readStringList(offsets[40]),
-    showMotivationalQuote: reader.readBool(offsets[41]),
-    snoozeDuration: reader.readLong(offsets[42]),
-    volMax: reader.readDouble(offsets[43]),
-    volMin: reader.readDouble(offsets[44]),
-    weatherTypes: reader.readLongList(offsets[45]) ?? [],
+    ringOn: reader.readBool(offsets[38]),
+    ringtoneName: reader.readString(offsets[39]),
+    shakeTimes: reader.readLong(offsets[40]),
+    sharedUserIds: reader.readStringList(offsets[41]),
+    showMotivationalQuote: reader.readBool(offsets[42]),
+    snoozeDuration: reader.readLong(offsets[43]),
+    volMax: reader.readDouble(offsets[44]),
+    volMin: reader.readDouble(offsets[45]),
+    weatherTypes: reader.readLongList(offsets[46]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[7]);
   object.isarId = id;
@@ -506,20 +513,22 @@ P _alarmModelDeserializeProp<P>(
     case 37:
       return (reader.readString(offset)) as P;
     case 38:
-      return (reader.readString(offset)) as P;
-    case 39:
-      return (reader.readLong(offset)) as P;
-    case 40:
-      return (reader.readStringList(offset)) as P;
-    case 41:
       return (reader.readBool(offset)) as P;
-    case 42:
+    case 39:
+      return (reader.readString(offset)) as P;
+    case 40:
       return (reader.readLong(offset)) as P;
+    case 41:
+      return (reader.readStringList(offset)) as P;
+    case 42:
+      return (reader.readBool(offset)) as P;
     case 43:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 44:
       return (reader.readDouble(offset)) as P;
     case 45:
+      return (reader.readDouble(offset)) as P;
+    case 46:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -3315,6 +3324,16 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ringOnEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ringOn',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       ringtoneNameEqualTo(
     String value, {
@@ -4556,6 +4575,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.asc);
@@ -5109,6 +5140,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.asc);
@@ -5438,6 +5481,12 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ringOn');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByRingtoneName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -5727,6 +5776,12 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, String, QQueryOperations> qrValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'qrValue');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations> ringOnProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ringOn');
     });
   }
 

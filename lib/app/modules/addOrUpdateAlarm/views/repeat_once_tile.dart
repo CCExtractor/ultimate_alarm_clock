@@ -50,7 +50,7 @@ class RepeatOnceTile extends StatelessWidget {
                     activeColor: ksecondaryColor,
                     onChanged: (value) {
                       Utils.hapticFeedback();
-                      controller.isOneTime.value = false;
+                      controller.isOneTime.value = true;
                     },
                   );
                 }

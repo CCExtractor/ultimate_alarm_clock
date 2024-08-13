@@ -24,6 +24,8 @@ class GaurdianAngel extends StatelessWidget {
     return Column(
       children: [
         ListTile(
+          onTap: () {
+          },
           title: Row(
             children: [
               FittedBox(
@@ -187,7 +189,10 @@ class GaurdianAngel extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               borderRadius: BorderRadius.circular(28),
-              onTap: () {},
+              onTap: () {
+                controller.isGuardian.value = true;
+                Get.back();
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: ksecondaryBackgroundColor,

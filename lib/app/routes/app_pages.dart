@@ -12,6 +12,8 @@ import '../modules/bottomNavigationBar/bindings/bottom_navigation_bar_binding.da
 import '../modules/bottomNavigationBar/views/bottom_navigation_bar_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/notifications/bindings/notifications_binding.dart';
+import '../modules/notifications/views/notifications_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/splashScreen/bindings/splash_screen_binding.dart';
@@ -81,6 +83,10 @@ class AppPages {
       page: () => StopwatchView(),
       binding: StopwatchBinding(),
     ),
-
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
   ];
 }

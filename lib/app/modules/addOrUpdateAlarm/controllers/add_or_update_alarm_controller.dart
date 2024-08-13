@@ -81,7 +81,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
-  final RxBool isOneTime = false.obs;
+  final RxBool isOneTime = true.obs;
   final RxString label = ''.obs;
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
@@ -179,9 +179,8 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   checkOverlayPermissionAndNavigate() async {
-    if (!(await Permission.systemAlertWindow.isGranted) ||
-        !(await Permission.ignoreBatteryOptimizations.isGranted) ||
-        !(await Permission.systemAlertWindow.isGranted)) {
+    if (!(await Permission.systemAlertWindow.isGranted) &&
+        !(await Permission.ignoreBatteryOptimizations.isGranted)) {
       Get.defaultDialog(
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
@@ -1096,6 +1095,7 @@ class AddOrUpdateAlarmController extends GetxController {
       guardianTimer: guardianTimer.value,
       guardian: guardian.value,
       isCall: isCall.value,
+      ringOn: isFutureDate.value,
     );
   }
 
@@ -1360,6 +1360,7 @@ class AddOrUpdateAlarmController extends GetxController {
       guardianTimer: guardianTimer.value,
       guardian: guardian.value,
       isCall: isCall.value,
+      ringOn: isFutureDate.value,
     );
     IsarDb.addProfile(profileModel);
     homeController.selectedProfile.value = profileModel.profileName;

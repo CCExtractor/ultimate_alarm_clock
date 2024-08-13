@@ -94,6 +94,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
+                              if (controller
+                                  .currentlyRingingAlarm.value.isGuardian) {
+                                controller.guardianTimer.cancel();
+                              }
                               if (Utils.isChallengeEnabled(
                                 controller.currentlyRingingAlarm.value,
                               )) {
@@ -105,8 +109,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               } else {
                                 Get.offNamed(
                                   '/bottom-navigation-bar',
-                                  arguments: controller.currentlyRingingAlarm
-                                      .value,
+                                  arguments:
+                                      controller.currentlyRingingAlarm.value,
                                 );
                               }
                             },
@@ -115,7 +119,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-
             ],
           ),
           body: Center(
@@ -168,20 +171,21 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 Obx(
                   () {
                     return Visibility(
-                    visible:
-                    controller.currentlyRingingAlarm.value.note.isNotEmpty,
-                    child: Text(
-                      controller.currentlyRingingAlarm.value.note,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w100,
-                        fontStyle: FontStyle.italic,
+                      visible: controller
+                          .currentlyRingingAlarm.value.note.isNotEmpty,
+                      child: Text(
+                        controller.currentlyRingingAlarm.value.note,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: themeController.isLightMode.value
+                                  ? kLightPrimaryTextColor
+                                  : kprimaryTextColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w100,
+                              fontStyle: FontStyle.italic,
+                            ),
                       ),
-                    ),
-                  );},
+                    );
+                  },
                 ),
                 Obx(
                   () => Visibility(

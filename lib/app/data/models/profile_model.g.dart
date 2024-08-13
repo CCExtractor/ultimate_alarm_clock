@@ -192,43 +192,48 @@ const ProfileModelSchema = CollectionSchema(
       name: r'qrValue',
       type: IsarType.string,
     ),
-    r'ringtoneName': PropertySchema(
+    r'ringOn': PropertySchema(
       id: 35,
+      name: r'ringOn',
+      type: IsarType.bool,
+    ),
+    r'ringtoneName': PropertySchema(
+      id: 36,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 36,
+      id: 37,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 37,
+      id: 38,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 38,
+      id: 39,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 39,
+      id: 40,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'volMax': PropertySchema(
-      id: 40,
+      id: 41,
       name: r'volMax',
       type: IsarType.double,
     ),
     r'volMin': PropertySchema(
-      id: 41,
+      id: 42,
       name: r'volMin',
       type: IsarType.double,
     ),
     r'weatherTypes': PropertySchema(
-      id: 42,
+      id: 43,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -328,14 +333,15 @@ void _profileModelSerialize(
   writer.writeString(offsets[32], object.ownerName);
   writer.writeString(offsets[33], object.profileName);
   writer.writeString(offsets[34], object.qrValue);
-  writer.writeString(offsets[35], object.ringtoneName);
-  writer.writeLong(offsets[36], object.shakeTimes);
-  writer.writeStringList(offsets[37], object.sharedUserIds);
-  writer.writeBool(offsets[38], object.showMotivationalQuote);
-  writer.writeLong(offsets[39], object.snoozeDuration);
-  writer.writeDouble(offsets[40], object.volMax);
-  writer.writeDouble(offsets[41], object.volMin);
-  writer.writeLongList(offsets[42], object.weatherTypes);
+  writer.writeBool(offsets[35], object.ringOn);
+  writer.writeString(offsets[36], object.ringtoneName);
+  writer.writeLong(offsets[37], object.shakeTimes);
+  writer.writeStringList(offsets[38], object.sharedUserIds);
+  writer.writeBool(offsets[39], object.showMotivationalQuote);
+  writer.writeLong(offsets[40], object.snoozeDuration);
+  writer.writeDouble(offsets[41], object.volMax);
+  writer.writeDouble(offsets[42], object.volMin);
+  writer.writeLongList(offsets[43], object.weatherTypes);
 }
 
 ProfileModel _profileModelDeserialize(
@@ -379,14 +385,15 @@ ProfileModel _profileModelDeserialize(
     ownerName: reader.readString(offsets[32]),
     profileName: reader.readString(offsets[33]),
     qrValue: reader.readString(offsets[34]),
-    ringtoneName: reader.readString(offsets[35]),
-    shakeTimes: reader.readLong(offsets[36]),
-    sharedUserIds: reader.readStringList(offsets[37]),
-    showMotivationalQuote: reader.readBool(offsets[38]),
-    snoozeDuration: reader.readLong(offsets[39]),
-    volMax: reader.readDouble(offsets[40]),
-    volMin: reader.readDouble(offsets[41]),
-    weatherTypes: reader.readLongList(offsets[42]) ?? [],
+    ringOn: reader.readBool(offsets[35]),
+    ringtoneName: reader.readString(offsets[36]),
+    shakeTimes: reader.readLong(offsets[37]),
+    sharedUserIds: reader.readStringList(offsets[38]),
+    showMotivationalQuote: reader.readBool(offsets[39]),
+    snoozeDuration: reader.readLong(offsets[40]),
+    volMax: reader.readDouble(offsets[41]),
+    volMin: reader.readDouble(offsets[42]),
+    weatherTypes: reader.readLongList(offsets[43]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[5]);
   return object;
@@ -470,20 +477,22 @@ P _profileModelDeserializeProp<P>(
     case 34:
       return (reader.readString(offset)) as P;
     case 35:
-      return (reader.readString(offset)) as P;
-    case 36:
-      return (reader.readLong(offset)) as P;
-    case 37:
-      return (reader.readStringList(offset)) as P;
-    case 38:
       return (reader.readBool(offset)) as P;
-    case 39:
+    case 36:
+      return (reader.readString(offset)) as P;
+    case 37:
       return (reader.readLong(offset)) as P;
+    case 38:
+      return (reader.readStringList(offset)) as P;
+    case 39:
+      return (reader.readBool(offset)) as P;
     case 40:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 41:
       return (reader.readDouble(offset)) as P;
     case 42:
+      return (reader.readDouble(offset)) as P;
+    case 43:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2892,6 +2901,16 @@ extension ProfileModelQueryFilter
     });
   }
 
+  QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition> ringOnEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ringOn',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
       ringtoneNameEqualTo(
     String value, {
@@ -4119,6 +4138,18 @@ extension ProfileModelQuerySortBy
     });
   }
 
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> sortByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> sortByRingOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.desc);
+    });
+  }
+
   QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> sortByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.asc);
@@ -4656,6 +4687,18 @@ extension ProfileModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> thenByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> thenByRingOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.desc);
+    });
+  }
+
   QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> thenByRingtoneName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ringtoneName', Sort.asc);
@@ -4975,6 +5018,12 @@ extension ProfileModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ProfileModel, ProfileModel, QDistinct> distinctByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ringOn');
+    });
+  }
+
   QueryBuilder<ProfileModel, ProfileModel, QDistinct> distinctByRingtoneName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -5252,6 +5301,12 @@ extension ProfileModelQueryProperty
   QueryBuilder<ProfileModel, String, QQueryOperations> qrValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'qrValue');
+    });
+  }
+
+  QueryBuilder<ProfileModel, bool, QQueryOperations> ringOnProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ringOn');
     });
   }
 

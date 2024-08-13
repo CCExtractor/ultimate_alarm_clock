@@ -20,10 +20,12 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+           val sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val profile = sharedPreferences.getString("flutter.profile", "Default")
 
             val dbHelper = DatabaseHelper(context)
             val db = dbHelper.readableDatabase
-            val ringTime = getLatestAlarm(db, true)
+            val ringTime = getLatestAlarm(db, true, profile?:"Default")
             db.close()
             if (ringTime != null) {
                 scheduleAlarm(ringTime["interval"]!! as Long, context, ringTime["isActivity"]!!)
