@@ -30,7 +30,7 @@ class WeatherApi extends StatelessWidget {
         Utils.hapticFeedback();
         Get.defaultDialog(
           titlePadding: const EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+          backgroundColor: themeController.secondaryBackgroundColor.value,
           title: 'API Key',
           titleStyle: Theme.of(context).textTheme.displaySmall,
           onWillPop: () async {
@@ -234,8 +234,8 @@ class WeatherApi extends StatelessWidget {
                                         .textTheme
                                         .displaySmall!
                                         .copyWith(
-                                          color: themeController.getColor('secondaryTextColor')
-                                        ),
+                                            color: themeController
+                                                .secondaryTextColor.value),
                                   ),
                                   onPressed: () {
                                     Utils.hapticFeedback();
@@ -275,8 +275,8 @@ class WeatherApi extends StatelessWidget {
                                     .textTheme
                                     .displaySmall!
                                     .copyWith(
-                                      color:
-                                      themeController.getColor('secondaryTextColor'),
+                                      color: themeController
+                                          .secondaryTextColor.value,
                                     ),
                               ),
                               onPressed: () {
@@ -321,204 +321,209 @@ class WeatherApi extends StatelessWidget {
                 'Open Weather Map API',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.info_sharp,
-                  size: 21,
-                  color: themeController.getColor('primaryTextColor').withOpacity(0.3),
-                ),
-                onPressed: () => {
-                  Utils.hapticFeedback(),
-                  showBottomSheet(
-                    context: context,
-                    backgroundColor:
-                    themeController.getColor('secondaryBackgroundColor'),
-                    builder: (context) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.05,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  'onenweathermap_title1.1'.tr,
-                                  style:
-                                      Theme.of(context).textTheme.displayMedium,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  'onenweathermap_title1.2'.tr,
-                                  style:
-                                      Theme.of(context).textTheme.displayMedium,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: height * 0.6,
-                              child: ListView(
+              Obx(
+                () => IconButton(
+                  icon: Icon(
+                    Icons.info_sharp,
+                    size: 21,
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.3),
+                  ),
+                  onPressed: () => {
+                    Utils.hapticFeedback(),
+                    showBottomSheet(
+                      context: context,
+                      backgroundColor:
+                          themeController.secondaryBackgroundColor.value,
+                      builder: (context) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.05,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
                                 children: [
-                                  RichText(
-                                    textAlign: TextAlign.justify,
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: 'step1.1'.tr,
-                                        ),
-                                        TextSpan(
-                                          text: 'step1.2'.tr,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: 'step1.3'.tr,
-                                        ),
-                                        TextSpan(
-                                          text: 'step1.4'.tr,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: 'step1.5'.tr,
-                                        ),
-                                      ],
-                                    ),
+                                  Text(
+                                    'onenweathermap_title1.1'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                    textAlign: TextAlign.center,
                                   ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  RichText(
-                                    textAlign: TextAlign.justify,
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: 'step2.1'.tr,
-                                        ),
-                                        TextSpan(
-                                          text: 'step2.2'.tr,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: 'step2.3'.tr,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  RichText(
-                                    textAlign: TextAlign.justify,
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: 'step3'.tr,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  RichText(
-                                    textAlign: TextAlign.justify,
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: 'step4.1'.tr,
-                                        ),
-                                        TextSpan(
-                                          text: 'step4.2'.tr,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: 'step4.3'.tr,
-                                        ),
-                                        TextSpan(
-                                          text: 'step4.4'.tr,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: 'step4.5'.tr,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  RichText(
-                                    textAlign: TextAlign.justify,
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: 'step5'.tr,
-                                        ),
-                                      ],
-                                    ),
+                                  Text(
+                                    'onenweathermap_title1.2'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                    textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
-                            ),
-                            SizedBox(
-                              width: width,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    kprimaryColor,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                },
-                                child: Text(
-                                  'Understood'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController
-                                                    .currentTheme.value ==
-                                                ThemeMode.light
-                                            ? kLightPrimaryTextColor
-                                            : ksecondaryTextColor,
+                              SizedBox(
+                                height: height * 0.6,
+                                child: ListView(
+                                  children: [
+                                    RichText(
+                                      textAlign: TextAlign.justify,
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'step1.1'.tr,
+                                          ),
+                                          TextSpan(
+                                            text: 'step1.2'.tr,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'step1.3'.tr,
+                                          ),
+                                          TextSpan(
+                                            text: 'step1.4'.tr,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'step1.5'.tr,
+                                          ),
+                                        ],
                                       ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    RichText(
+                                      textAlign: TextAlign.justify,
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'step2.1'.tr,
+                                          ),
+                                          TextSpan(
+                                            text: 'step2.2'.tr,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'step2.3'.tr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    RichText(
+                                      textAlign: TextAlign.justify,
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'step3'.tr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    RichText(
+                                      textAlign: TextAlign.justify,
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'step4.1'.tr,
+                                          ),
+                                          TextSpan(
+                                            text: 'step4.2'.tr,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'step4.3'.tr,
+                                          ),
+                                          TextSpan(
+                                            text: 'step4.4'.tr,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'step4.5'.tr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    RichText(
+                                      textAlign: TextAlign.justify,
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'step5'.tr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                },
+                              SizedBox(
+                                width: width,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      kprimaryColor,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Utils.hapticFeedback();
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Understood'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                          color: themeController
+                                                      .currentTheme.value ==
+                                                  ThemeMode.light
+                                              ? kLightPrimaryTextColor
+                                              : ksecondaryTextColor,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  },
+                ),
               ),
               const Spacer(),
               Icon(

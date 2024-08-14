@@ -25,7 +25,7 @@ class AlarmOffset extends StatelessWidget {
                 Utils.hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                  backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+                  backgroundColor: themeController.secondaryBackgroundColor.value,
                   title: 'Choose duration'.tr,
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
@@ -72,8 +72,8 @@ class AlarmOffset extends StatelessWidget {
                                         : kprimaryTextColor.withOpacity(0.08),
                                 foregroundColor:
                                     (controller.isOffsetBefore.value)
-                                        ? themeController.getColor('secondaryTextColor')
-                                        : themeController.getColor('primaryTextColor'),
+                                        ? themeController.secondaryTextColor.value
+                                        : themeController.primaryTextColor.value,
                               ),
                               child:  Text(
                                 'Before'.tr,
@@ -97,8 +97,8 @@ class AlarmOffset extends StatelessWidget {
                                         : kprimaryTextColor.withOpacity(0.08),
                                 foregroundColor:
                                     (!controller.isOffsetBefore.value)
-                                        ? themeController.getColor('secondaryTextColor')
-                                        : themeController.getColor('primaryTextColor'),
+                                        ? themeController.secondaryTextColor.value
+                                        : themeController.primaryTextColor.value,
                               ),
                               child:  Text(
                                 'After'.tr,
@@ -122,14 +122,14 @@ class AlarmOffset extends StatelessWidget {
                         controller.offsetDuration.value > 0 ? 'Enabled'.tr : 'Off'.tr,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: (controller.offsetDuration.value > 0)
-                                  ? themeController.getColor('primaryTextColor')
-                                  : themeController.getColor('primaryDisabledTextColor'),
+                                  ? themeController.primaryTextColor.value
+                                  : themeController.primaryDisabledTextColor.value,
                             ),
                       ),
                     ),
                     Icon(
                       Icons.chevron_right,
-                      color: themeController.getColor('primaryDisabledTextColor'),
+                      color: themeController.primaryDisabledTextColor.value,
                     ),
                   ],
                 ),

@@ -42,209 +42,213 @@ class HomeView extends GetView<HomeController> {
                     childrenOffset: Offset.zero,
                     distance: 70,
                     children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.floatingButtonKey.currentState!.toggle();
-                          Get.defaultDialog(
-                            title: 'Join an alarm'.tr,
-                            titlePadding:
-                                const EdgeInsets.fromLTRB(0, 21, 0, 0),
-                            backgroundColor: themeController.getColor('secondaryBackgroundColor'),
-                            titleStyle: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.getColor('primaryTextColor'),
-                                ),
-                            contentPadding: const EdgeInsets.all(21),
-                            content: TextField(
-                              controller: controller.alarmIdController,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              cursorColor: themeController.getColor('primaryTextColor').withOpacity(0.75),
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: themeController.getColor('primaryTextColor').withOpacity(0.75),
-                                    width: 1,
+                      Obx(
+                        () => TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor),
+                          ),
+                          onPressed: () {
+                            Utils.hapticFeedback();
+                            controller.floatingButtonKey.currentState!.toggle();
+                            Get.defaultDialog(
+                              title: 'Join an alarm'.tr,
+                              titlePadding:
+                                  const EdgeInsets.fromLTRB(0, 21, 0, 0),
+                              backgroundColor: themeController.secondaryBackgroundColor.value,
+                              titleStyle: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                    color: themeController.primaryTextColor.value,
                                   ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: themeController.getColor('primaryTextColor').withOpacity(0.75),
-                                    width: 1,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: themeController.getColor('primaryTextColor').withOpacity(0.75),
-                                    width: 1,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
-                                hintText: 'Enter Alarm ID'.tr,
-                                hintStyle: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      color: themeController.getColor('primaryDisabledTextColor'),
+                              contentPadding: const EdgeInsets.all(21),
+                              content: TextField(
+                                controller: controller.alarmIdController,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                cursorColor: themeController.primaryTextColor.value.withOpacity(0.75),
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: themeController.primaryTextColor.value.withOpacity(0.75),
+                                      width: 1,
                                     ),
-                              ),
-                            ),
-                            buttonColor: themeController.getColor('secondaryBackgroundColor'),
-                            confirm: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                  kprimaryColor,
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(12),
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: themeController.primaryTextColor.value.withOpacity(0.75),
+                                      width: 1,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(12),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: themeController.primaryTextColor.value.withOpacity(0.75),
+                                      width: 1,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(12),
+                                    ),
+                                  ),
+                                  hintText: 'Enter Alarm ID'.tr,
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        color: themeController.primaryDisabledTextColor.value,
+                                      ),
                                 ),
                               ),
-                              child: Text(
-                                'Join'.tr,
+                              buttonColor: themeController.secondaryBackgroundColor.value,
+                              confirm: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    kprimaryColor,
+                                  ),
+                                ),
+                                child: Text(
+                                  'Join'.tr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.secondaryTextColor.value,
+                                      ),
+                                ),
+                                onPressed: () async {
+                                  Utils.hapticFeedback();
+                                  var result =
+                                      await FirestoreDb.addUserToAlarmSharedUsers(
+                                    controller.userModel.value,
+                                    controller.alarmIdController.text,
+                                  );
+
+                                  if (result != true) {
+                                    Get.defaultDialog(
+                                      titlePadding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                      ),
+                                      backgroundColor:
+                                          themeController.secondaryBackgroundColor.value,
+                                      title: 'Error!'.tr,
+                                      titleStyle: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
+                                      content: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Icon(
+                                            Icons.close,
+                                            size: 50,
+                                            color: Colors.red,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 10.0,
+                                            ),
+                                            child: Text(
+                                              result == null
+                                                  ? 'You cannot join your own alarm!'
+                                                      .tr
+                                                  : 'An alarm with this ID doesn\'t exist!'
+                                                      .tr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          TextButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                kprimaryColor,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Okay'.tr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall!
+                                                  .copyWith(
+                                                    color: themeController
+                                                            .currentTheme.value == ThemeMode.light
+                                                        ? kLightPrimaryTextColor
+                                                        : ksecondaryTextColor,
+                                                  ),
+                                            ),
+                                            onPressed: () {
+                                              Utils.hapticFeedback();
+                                              Get.back();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    Get.back();
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.alarm,
+                                color: themeController.secondaryTextColor.value,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Join alarm'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall!
                                     .copyWith(
-                                      color: themeController.getColor('secondaryTextColor'),
+                                      color: themeController.secondaryTextColor.value,
                                     ),
                               ),
-                              onPressed: () async {
-                                Utils.hapticFeedback();
-                                var result =
-                                    await FirestoreDb.addUserToAlarmSharedUsers(
-                                  controller.userModel.value,
-                                  controller.alarmIdController.text,
-                                );
-
-                                if (result != true) {
-                                  Get.defaultDialog(
-                                    titlePadding: const EdgeInsets.symmetric(
-                                      vertical: 20,
-                                    ),
-                                    backgroundColor:
-                                        themeController.getColor('secondaryBackgroundColor'),
-                                    title: 'Error!'.tr,
-                                    titleStyle: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall,
-                                    content: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Icon(
-                                          Icons.close,
-                                          size: 50,
-                                          color: Colors.red,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 10.0,
-                                          ),
-                                          child: Text(
-                                            result == null
-                                                ? 'You cannot join your own alarm!'
-                                                    .tr
-                                                : 'An alarm with this ID doesn\'t exist!'
-                                                    .tr,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                              kprimaryColor,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'Okay'.tr,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall!
-                                                .copyWith(
-                                                  color: themeController
-                                                          .currentTheme.value == ThemeMode.light
-                                                      ? kLightPrimaryTextColor
-                                                      : ksecondaryTextColor,
-                                                ),
-                                          ),
-                                          onPressed: () {
-                                            Utils.hapticFeedback();
-                                            Get.back();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  Get.back();
-                                }
-                              },
-                            ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.alarm,
-                              color: themeController.getColor('secondaryTextColor'),
-                            ),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              'Join alarm'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: themeController.getColor('secondaryTextColor'),
-                                  ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        onPressed: () {
-                          Utils.hapticFeedback();
-                          controller.floatingButtonKey.currentState!.toggle();
-                          Get.toNamed('/add-update-alarm');
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: themeController.getColor('secondaryTextColor'),
-                            ),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              'Create alarm'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: themeController.getColor('secondaryTextColor'),
-                                  ),
-                            ),
-                          ],
+                      Obx(
+                        () => TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(kprimaryColor),
+                          ),
+                          onPressed: () {
+                            Utils.hapticFeedback();
+                            controller.floatingButtonKey.currentState!.toggle();
+                            Get.toNamed('/add-update-alarm');
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                color: themeController.secondaryTextColor.value,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Create alarm'.tr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                      color: themeController.secondaryTextColor.value,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -308,7 +312,7 @@ class HomeView extends GetView<HomeController> {
                                                   .textTheme
                                                   .displaySmall!
                                                   .copyWith(
-                                                    color: themeController.getColor('primaryDisabledTextColor'),
+                                                    color: themeController.primaryDisabledTextColor.value,
                                                     fontSize: 16 *
                                                         controller.scalingFactor
                                                             .value,
@@ -321,7 +325,7 @@ class HomeView extends GetView<HomeController> {
                                                     .textTheme
                                                     .displaySmall!
                                                     .copyWith(
-                                                      color: themeController.getColor('primaryTextColor')
+                                                      color: themeController.primaryTextColor.value
                                                               .withOpacity(
                                                               0.75,
                                                             ),
@@ -350,7 +354,7 @@ class HomeView extends GetView<HomeController> {
                                             icon: const Icon(
                                               Icons.menu,
                                             ),
-                                            color: themeController.getColor('primaryTextColor')
+                                            color: themeController.primaryTextColor.value
                                                     .withOpacity(0.75),
                                             iconSize: 27 *
                                                 controller.scalingFactor.value,
@@ -456,7 +460,7 @@ class HomeView extends GetView<HomeController> {
                                                   .clear();
                                             },
                                             icon: const Icon(Icons.close),
-                                            color: themeController.getColor('primaryTextColor')
+                                            color: themeController.primaryTextColor.value
                                                     .withOpacity(0.75),
                                             iconSize: 27 *
                                                 controller.scalingFactor.value,
@@ -477,7 +481,7 @@ class HomeView extends GetView<HomeController> {
                                                       .textTheme
                                                       .displaySmall!
                                                       .copyWith(
-                                                        color: themeController.getColor('primaryDisabledTextColor'),
+                                                        color: themeController.primaryDisabledTextColor.value,
                                                         fontSize: 16 *
                                                             controller
                                                                 .scalingFactor
@@ -511,7 +515,7 @@ class HomeView extends GetView<HomeController> {
                                                                   .textTheme
                                                                   .displaySmall!
                                                                   .copyWith(
-                                                                    color: themeController.getColor('primaryTextColor')
+                                                                    color: themeController.primaryTextColor.value
                                                                             .withOpacity(
                                                                             0.75,
                                                                           ),
@@ -573,7 +577,7 @@ class HomeView extends GetView<HomeController> {
                                                                           .value >
                                                                       0
                                                                   ? Colors.red
-                                                                  : themeController.getColor('primaryTextColor').withOpacity(
+                                                                  : themeController.primaryTextColor.value.withOpacity(
                                                                           0.75,
                                                                         ),
                                                               iconSize: 27 *
@@ -612,7 +616,7 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   Expanded(
                     child: GlowingOverscrollIndicator(
-                      color: themeController.getColor('primaryDisabledTextColor'),
+                      color: themeController.primaryDisabledTextColor.value,
                       axisDirection: AxisDirection.down,
                       child: Obx(() {
                         return FutureBuilder(
@@ -662,7 +666,7 @@ class HomeView extends GetView<HomeController> {
                                                   .textTheme
                                                   .displaySmall!
                                                   .copyWith(
-                                                    color: themeController.getColor('primaryDisabledTextColor'),
+                                                    color: themeController.primaryDisabledTextColor.value,
                                                   ),
                                             ),
                                           ],
@@ -785,7 +789,7 @@ class HomeView extends GetView<HomeController> {
                                                       horizontal: 10.0,
                                                     ),
                                                     child: Card(
-                                                      color: themeController.getColor('secondaryBackgroundColor'),
+                                                      color: themeController.secondaryBackgroundColor.value,
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
@@ -871,7 +875,7 @@ class HomeView extends GetView<HomeController> {
                                                                                   fontWeight: FontWeight.w500,
                                                                                   color: alarm.isEnabled == true
                                                                                       ? kprimaryColor
-                                                                                      : themeController.getColor('primaryDisabledTextColor'),
+                                                                                      : themeController.primaryDisabledTextColor.value,
                                                                                 ),
                                                                           ),
                                                                           if (alarm
@@ -880,7 +884,7 @@ class HomeView extends GetView<HomeController> {
                                                                             VerticalDivider(
                                                                               color: alarm.isEnabled == true
                                                                                   ? kprimaryColor
-                                                                                  : themeController.getColor('primaryDisabledTextColor'),
+                                                                                  : themeController.primaryDisabledTextColor.value,
                                                                               thickness: 1.4,
                                                                               width: 6,
                                                                               indent: 3.1,
@@ -897,7 +901,7 @@ class HomeView extends GetView<HomeController> {
                                                                                       fontWeight: FontWeight.w500,
                                                                                       color: alarm.isEnabled == true
                                                                                           ? kprimaryColor
-                                                                                          : themeController.getColor('primaryDisabledTextColor'),
+                                                                                          : themeController.primaryDisabledTextColor.value,
                                                                                     ),
                                                                               ),
                                                                             ),
@@ -917,8 +921,8 @@ class HomeView extends GetView<HomeController> {
                                                                             context,
                                                                           ).textTheme.displayLarge!.copyWith(
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor')
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                         ),
                                                                         Padding(
@@ -936,8 +940,8 @@ class HomeView extends GetView<HomeController> {
                                                                                   ))[1],
                                                                             style: Theme.of(context).textTheme.displayMedium!.copyWith(
                                                                                   color: alarm.isEnabled == true
-                                                                                      ? themeController.getColor('primaryTextColor')
-                                                                                      : themeController.getColor('primaryDisabledTextColor'),
+                                                                                      ? themeController.primaryTextColor.value
+                                                                                      : themeController.primaryDisabledTextColor.value,
                                                                                 ),
                                                                           ),
                                                                         ),
@@ -967,8 +971,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.share_arrival_time,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -981,8 +985,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.location_pin,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -995,8 +999,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.screen_lock_portrait,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1009,8 +1013,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.cloudy_snowing,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1023,8 +1027,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.qr_code_scanner,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1037,8 +1041,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.vibration,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1051,8 +1055,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.calculate,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                           if (alarm
@@ -1065,8 +1069,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.directions_walk,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor').withOpacity(0.5)
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
                                                                         ],
@@ -1180,12 +1184,12 @@ class HomeView extends GetView<HomeController> {
                                                                                   controller.refreshUpcomingAlarms();
                                                                                 }
                                                                               },
-                                                                              color: themeController.getColor('primaryBackgroundColor'),
+                                                                              color: themeController.primaryBackgroundColor.value,
                                                                               icon: Icon(
                                                                                 Icons.more_vert,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.getColor('primaryTextColor')
-                                                                                    : themeController.getColor('primaryDisabledTextColor'),
+                                                                                    ? themeController.primaryTextColor.value
+                                                                                    : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                               itemBuilder: (context) {
                                                                                 return [
@@ -1260,7 +1264,7 @@ class HomeView extends GetView<HomeController> {
       titlePadding: const EdgeInsets.symmetric(
         vertical: 20,
       ),
-      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
       title: 'Confirmation'.tr,
       titleStyle: Theme.of(context).textTheme.displaySmall,
       content: Column(

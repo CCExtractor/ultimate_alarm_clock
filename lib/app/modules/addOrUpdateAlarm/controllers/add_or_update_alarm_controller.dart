@@ -158,7 +158,7 @@ class AddOrUpdateAlarmController extends GetxController {
         !(await Permission.ignoreBatteryOptimizations.isGranted) ||
         !(await Permission.systemAlertWindow.isGranted)) {
       Get.defaultDialog(
-        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+        backgroundColor: themeController.secondaryBackgroundColor.value,
         title: 'Permission Required',
         titleStyle: TextStyle(
           color: themeController.currentTheme.value == ThemeMode.light
@@ -245,7 +245,7 @@ class AddOrUpdateAlarmController extends GetxController {
         titlePadding: const EdgeInsets.symmetric(
           vertical: 20,
         ),
-        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+        backgroundColor: themeController.secondaryBackgroundColor.value,
         title: 'Discard Changes?'.tr,
         titleStyle: Theme.of(context).textTheme.displaySmall,
         content: Column(
@@ -336,7 +336,7 @@ class AddOrUpdateAlarmController extends GetxController {
       return false;
     } else if (locationPermission == LocationPermission.denied) {
       bool? shouldAskPermission = await Get.defaultDialog<bool>(
-        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+        backgroundColor: themeController.secondaryBackgroundColor.value,
         barrierDismissible: false,
         title: 'Location Permission',
         contentPadding:
@@ -413,7 +413,7 @@ class AddOrUpdateAlarmController extends GetxController {
     restartQRCodeController(false);
     Get.defaultDialog(
       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
       title: 'Scan a QR/Bar Code',
       titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
       content: Obx(
@@ -523,7 +523,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-  backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+  backgroundColor: themeController.secondaryBackgroundColor.value,
   title: 'Camera Permission'.tr,
   titleStyle: TextStyle(
     color: themeController.currentTheme.value == ThemeMode.light
@@ -579,21 +579,23 @@ class AddOrUpdateAlarmController extends GetxController {
       }
     },
   ),
-  cancel: TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(
-        themeController.getColor('primaryTextColor').withOpacity(0.5),
-      ),
-    ),
-    child: Text(
-      'Cancel',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.getColor('primaryTextColor'),
+  cancel: Obx(
+        () => TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              themeController.primaryTextColor.value.withOpacity(0.5),
+            ),
           ),
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.primaryTextColor.value,
+                ),
+          ),
+          onPressed: () {
+            Get.back(); // Close the alert box
+          },
     ),
-    onPressed: () {
-      Get.back(); // Close the alert box
-    },
   ),
 );
     } else {
@@ -1198,8 +1200,8 @@ class AddOrUpdateAlarmController extends GetxController {
       Fluttertoast.showToast(
         msg: 'Rings in $timeToAlarm',
         toastLength: Toast.LENGTH_LONG,
-        backgroundColor: themeController.getColor('secondaryBackgroundColor'),
-        textColor: themeController.getColor('primaryTextColor'),
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        textColor: themeController.primaryTextColor.value,
       );
     } catch (e) {
       debugPrint(e.toString());

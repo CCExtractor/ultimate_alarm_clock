@@ -32,29 +32,33 @@ class TimerView extends GetView<TimerController> {
         child: AppBar(
           toolbarHeight: height / 7.9,
           elevation: 0.0,
-          title: Text(
-            'Timer',
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: themeController.getColor('primaryTextColor').withOpacity(
-                          0.75,
-                        ),
-                  fontSize: 26,
-                ),
+          title: Obx(
+            () => Text(
+              'Timer',
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: themeController.primaryTextColor.value.withOpacity(
+                            0.75,
+                          ),
+                    fontSize: 26,
+                  ),
+            ),
           ),
           actions: [
             LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                return IconButton(
-                  onPressed: () {
-                    Utils.hapticFeedback();
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                  icon: const Icon(
-                    Icons.menu,
+                return Obx(
+                  () => IconButton(
+                    onPressed: () {
+                      Utils.hapticFeedback();
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                    icon: const Icon(
+                      Icons.menu,
+                    ),
+                    color: themeController.primaryTextColor.value.withOpacity(0.75),
+                    iconSize: 27,
+                    // splashRadius: 0.000001,
                   ),
-                  color: themeController.getColor('primaryTextColor').withOpacity(0.75),
-                  iconSize: 27,
-                  // splashRadius: 0.000001,
                 );
               },
             ),
@@ -130,35 +134,37 @@ class TimerView extends GetView<TimerController> {
   }
 
   Widget addATimerSpace(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Utils.hapticFeedback();
-        TimerSelector(context);
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.add_alarm_outlined,
-                color: themeController.getColor('primaryTextColor').withOpacity(
-                        0.75,
-                      ),
-                size: 30,
-              ),
-            ),
-          ),
-          Text(
-            'Tap here to add a timer',
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: themeController.getColor('primaryDisabledTextColor'),
+    return Obx(
+      () => InkWell(
+        onTap: () {
+          Utils.hapticFeedback();
+          TimerSelector(context);
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                    Icons.add_alarm_outlined,
+                    color: themeController.primaryTextColor.value.withOpacity(
+                            0.75,
+                          ),
+                    size: 30,
+                  ),
                 ),
-          ),
-        ],
+              ),
+            Text(
+                'Tap here to add a timer',
+                style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: themeController.primaryDisabledTextColor.value,
+                    ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -167,7 +173,7 @@ class TimerView extends GetView<TimerController> {
     Get.defaultDialog(
       title: '',
       titlePadding: const EdgeInsets.all(0),
-      backgroundColor: themeController.getColor('primaryBackgroundColor'),
+      backgroundColor: themeController.primaryBackgroundColor.value,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -179,14 +185,16 @@ class TimerView extends GetView<TimerController> {
                   Icons.timer,
                   size: 20,
                 ),
-                Text(
-                  '  Add timer',
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                        color: themeController.getColor('primaryTextColor').withOpacity(
-                                0.5,
-                              ),
-                        fontSize: 15,
-                      ),
+                Obx(
+                  () => Text(
+                    '  Add timer',
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: themeController.primaryTextColor.value.withOpacity(
+                                  0.5,
+                                ),
+                          fontSize: 15,
+                        ),
+                  ),
                 ),
                 Spacer(),
                 Padding(
@@ -195,13 +203,15 @@ class TimerView extends GetView<TimerController> {
                     onTap: () {
                       inputTimeController.changeTimePickerTimer();
                     },
-                    child: Icon(
-                      Icons.keyboard,
-                      color:
-                      themeController.getColor('primaryTextColor').withOpacity(
-                                  0.5,
-                                ),
-                      size: 20,
+                    child: Obx(
+                      () => Icon(
+                        Icons.keyboard,
+                        color:
+                        themeController.primaryTextColor.value.withOpacity(
+                                    0.5,
+                                  ),
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
@@ -214,7 +224,7 @@ class TimerView extends GetView<TimerController> {
             },
             child: Obx(
               () => Container(
-                color: themeController.getColor('primaryBackgroundColor'),
+                color: themeController.primaryBackgroundColor.value,
                 width: width,
                 child: inputTimeController.isTimePickerTimer.value
                     ? Row(
@@ -232,7 +242,7 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                               ),
                               SizedBox(
@@ -264,19 +274,19 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontSize: 18,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                 decoration: BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
                                       width: width * 0.005,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                     bottom: BorderSide(
                                       width: width * 0.005,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                   ),
                                 ),
@@ -296,7 +306,7 @@ class TimerView extends GetView<TimerController> {
                                   .displayLarge!
                                   .copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: themeController.getColor('primaryDisabledTextColor'),
+                                    color: themeController.primaryDisabledTextColor.value,
                                   ),
                             ),
                           ),
@@ -311,7 +321,7 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                               ),
                               SizedBox(
@@ -342,19 +352,19 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontSize: 18,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                 decoration: BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
                                       width: width * 0.005,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                     bottom: BorderSide(
                                       width: width * 0.005,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                   ),
                                 ),
@@ -374,7 +384,7 @@ class TimerView extends GetView<TimerController> {
                                   .displayLarge!
                                   .copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: themeController.getColor('primaryDisabledTextColor'),
+                                    color: themeController.primaryDisabledTextColor.value,
                                   ),
                             ),
                           ),
@@ -389,7 +399,7 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                               ),
                               SizedBox(
@@ -420,19 +430,19 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontSize: 18,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                 decoration: BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
                                       width: width * 0.005,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                     bottom: BorderSide(
                                       width: width * 0.005,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                                   ),
                                 ),
@@ -456,7 +466,7 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                               ),
                               SizedBox(
@@ -507,7 +517,7 @@ class TimerView extends GetView<TimerController> {
                                   .displayLarge!
                                   .copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: themeController.getColor('primaryDisabledTextColor'),
+                                    color: themeController.primaryDisabledTextColor.value,
                                   ),
                             ),
                           ),
@@ -522,7 +532,7 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                               ),
                               SizedBox(
@@ -573,7 +583,7 @@ class TimerView extends GetView<TimerController> {
                                   .displayLarge!
                                   .copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: themeController.getColor('primaryDisabledTextColor'),
+                                    color: themeController.primaryDisabledTextColor.value,
                                   ),
                             ),
                           ),
@@ -588,7 +598,7 @@ class TimerView extends GetView<TimerController> {
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          themeController.getColor('primaryDisabledTextColor'),
+                                          themeController.primaryDisabledTextColor.value,
                                     ),
                               ),
                               SizedBox(
@@ -646,17 +656,19 @@ class TimerView extends GetView<TimerController> {
                     child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Cancel',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                color: themeController.getColor('primaryTextColor').withOpacity(
-                                        0.5,
-                                      ),
-                                fontSize: 15,
-                              ),
+                        child: Obx(
+                          () => Text(
+                            'Cancel',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  color: themeController.primaryTextColor.value.withOpacity(
+                                          0.5,
+                                        ),
+                                  fontSize: 15,
+                                ),
+                          ),
                         ),
                       ),
                     ),
@@ -683,17 +695,19 @@ class TimerView extends GetView<TimerController> {
                     child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'OK',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                color: themeController.getColor('primaryTextColor').withOpacity(
-                                        0.5,
-                                      ),
-                                fontSize: 15,
-                              ),
+                        child: Obx(
+                          () => Text(
+                            'OK',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  color: themeController.primaryTextColor.value.withOpacity(
+                                          0.5,
+                                        ),
+                                  fontSize: 15,
+                                ),
+                          ),
                         ),
                       ),
                     ),

@@ -43,7 +43,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
               () => DropdownMenu(
                 menuStyle: MenuStyle(
                   backgroundColor: MaterialStatePropertyAll(
-                    widget.themeController.getColor("secondaryBackgroundColor"),
+                    widget.themeController.secondaryBackgroundColor.value,
                   ),
                 ),
                 inputDecorationTheme:
@@ -51,7 +51,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 trailingIcon: Icon(
                   Icons.arrow_drop_down_outlined,
                   size: 40.0,
-                  color: widget.themeController.getColor('primaryTextColor').withOpacity(0.8),
+                  color: widget.themeController.primaryTextColor.value.withOpacity(0.8),
                 ),
                 width: widget.width * 0.78,
                 initialSelection: widget.controller.currentLanguage.value,
@@ -63,7 +63,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                     label: "${e.value['description']}",
                     style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(
-                        widget.themeController.getColor('primaryTextColor'),
+                        widget.themeController.primaryTextColor.value,
                       ),
                     ),
                   );

@@ -49,15 +49,17 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                        Obx(
+                          () => Text(
                             'Scan your QR/Bar Code!'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.getColor('primaryTextColor').withOpacity(0.7),
+                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
                                 ),
+                            ),
                           ),
                           SizedBox(
                             height: height * 0.08,
@@ -103,7 +105,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icon(
                                                   Icons.done,
                                                   size: height * 0.2,
-                                                  color: themeController.getColor('primaryTextColor')
+                                                  color: themeController.primaryTextColor.value
                                                           .withOpacity(0.7),
                                                 )
                                               : Column(
@@ -114,7 +116,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                     Icon(
                                                       Icons.close,
                                                       size: height * 0.2,
-                                                      color: themeController.getColor('primaryTextColor')
+                                                      color: themeController.primaryTextColor.value
                                                               .withOpacity(
                                                               0.7,
                                                             ),
@@ -129,7 +131,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           .copyWith(
                                                             fontWeight:
                                                                 FontWeight.w500,
-                                                            color: themeController.getColor('primaryTextColor')
+                                                            color: themeController.primaryTextColor.value
                                                                     .withOpacity(
                                                                     0.7,
                                                                   ),
@@ -151,7 +153,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             .textTheme
                                                             .displaySmall!
                                                             .copyWith(
-                                                              color: themeController.getColor('secondaryTextColor'),
+                                                              color: themeController.secondaryTextColor.value,
                                                             ),
                                                       ),
                                                       onPressed: () async {

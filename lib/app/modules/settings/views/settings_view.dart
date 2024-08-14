@@ -27,20 +27,23 @@ class SettingsView extends GetView<SettingsController> {
     var height = Get.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Settings'.tr,
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: controller.themeController.getColor('primaryTextColor'),
-                fontWeight: FontWeight.w500,
-              ),
+        title: Obx(
+          () => Text(
+            'Settings'.tr,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: controller.themeController.primaryTextColor.value,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
         ),
         centerTitle: true,
         elevation: 0.0,
         leading: IconButton(
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-            color:
-                controller.themeController.getColor("primaryTextColor"),
+          icon: Obx(
+            () => Icon(
+              Icons.adaptive.arrow_back,
+              color: controller.themeController.primaryTextColor.value,
+            ),
           ),
           onPressed: () {
             Utils.hapticFeedback();

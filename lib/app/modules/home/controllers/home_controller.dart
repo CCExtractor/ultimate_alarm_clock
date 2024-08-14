@@ -428,17 +428,19 @@ class HomeController extends GetxController {
         top: 20,
         bottom: 10,
       ),
-      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
       titleStyle: TextStyle(
-        color: themeController.getColor('primaryTextColor'),
+        color: themeController.primaryTextColor.value,
       ),
       contentPadding: const EdgeInsets.all(20),
       content: Column(
         children: [
-          Text(
-            quote.getQuote(),
-            style: TextStyle(
-              color: themeController.getColor('primaryTextColor'),
+          Obx(
+            () => Text(
+              quote.getQuote(),
+              style: TextStyle(
+                color: themeController.primaryTextColor.value,
+              ),
             ),
           ),
           const SizedBox(
@@ -446,12 +448,14 @@ class HomeController extends GetxController {
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: Text(
-              quote.getAuthor(),
-              style: TextStyle(
-                color: themeController.getColor('primaryTextColor'),
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.italic,
+            child: Obx(
+              () => Text(
+                quote.getAuthor(),
+                style: TextStyle(
+                  color: themeController.primaryTextColor.value,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ),
@@ -523,7 +527,7 @@ class HomeController extends GetxController {
       titlePadding: const EdgeInsets.symmetric(
         vertical: 20,
       ),
-      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
       title: 'Are you sure you want to delete these alarms?'.tr,
       titleStyle: Theme.of(context).textTheme.displaySmall,
       content: Column(

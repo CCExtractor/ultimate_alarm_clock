@@ -122,7 +122,7 @@ class _ToggleButtonState extends State<ToggleButton> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: themeController.getColor('primaryTextColor'),
+              color: themeController.primaryTextColor.value,
               width: 1,
             ),
           ),
@@ -143,17 +143,19 @@ class _ToggleButtonState extends State<ToggleButton> {
   }
 
   Widget _animatedCircle() {
-    return Center(
-      child: AnimatedContainer(
-        duration: const Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.bounceIn,
-        height: 10 * widget.controller.scalingFactor.value,
-        width: 10 * widget.controller.scalingFactor.value,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: themeController.getColor('primaryTextColor'),
+    return Obx(
+      () => Center(
+        child: AnimatedContainer(
+          duration: const Duration(
+            milliseconds: 300,
+          ),
+          curve: Curves.bounceIn,
+          height: 10 * widget.controller.scalingFactor.value,
+          width: 10 * widget.controller.scalingFactor.value,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: themeController.primaryTextColor.value,
+          ),
         ),
       ),
     );

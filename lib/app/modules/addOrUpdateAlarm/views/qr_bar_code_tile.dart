@@ -23,10 +23,12 @@ class QrBarCode extends StatelessWidget {
           FittedBox(
             alignment: Alignment.centerLeft,
             fit: BoxFit.scaleDown,
-            child: Text(
-              'QR/Bar Code'.tr,
-              style: TextStyle(
-                color: themeController.getColor("primaryTextColor"),
+            child: Obx(
+              () => Text(
+                'QR/Bar Code'.tr,
+                style: TextStyle(
+                  color: themeController.primaryTextColor.value,
+                ),
               ),
             ),
           ),
@@ -65,14 +67,16 @@ class QrBarCode extends StatelessWidget {
                 controller.isQrEnabled.value == true ? 'Enabled'.tr : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isQrEnabled.value == false)
-                          ? themeController.getColor('primaryDisabledTextColor')
-                          : themeController.getColor("primaryTextColor"),
+                          ? themeController.primaryDisabledTextColor.value
+                          : themeController.primaryTextColor.value,
                     ),
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: themeController.getColor('primaryDisabledTextColor'),
+            Obx(
+              () => Icon(
+                Icons.chevron_right,
+                color: themeController.primaryDisabledTextColor.value,
+              ),
             ),
           ],
         ),

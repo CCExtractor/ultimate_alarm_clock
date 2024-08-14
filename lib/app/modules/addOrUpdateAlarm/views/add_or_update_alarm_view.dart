@@ -194,27 +194,32 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   ),
                 ),
               ),
-        appBar: AppBar(
-          backgroundColor: (controller.alarmRecord.value != null &&
-                  controller.mutexLock.value == true)
-              ? themeController.getColor('primaryBackgroundColor')
-              : themeController.getColor('secondaryBackgroundColor'),
-          elevation: 0.0,
-          centerTitle: true,
-          iconTheme: Theme.of(context).iconTheme,
-          title: (controller.alarmRecord.value != null &&
-                  controller.mutexLock.value == true)
-              ? const Text('')
-              : Obx(
-                  () => Text(
-                    'Rings in @timeToAlarm'.trParams(
-                      {
-                        'timeToAlarm': controller.timeToAlarm.value.toString(),
-                      },
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height / 8.9),
+          child: Obx(
+              () => AppBar(
+              backgroundColor: (controller.alarmRecord.value != null &&
+                      controller.mutexLock.value == true)
+                  ? themeController.primaryBackgroundColor.value
+                  : themeController.secondaryBackgroundColor.value,
+              elevation: 0.0,
+              centerTitle: true,
+              iconTheme: Theme.of(context).iconTheme,
+              title: (controller.alarmRecord.value != null &&
+                      controller.mutexLock.value == true)
+                  ? const Text('')
+                  : Obx(
+                      () => Text(
+                        'Rings in @timeToAlarm'.trParams(
+                          {
+                            'timeToAlarm': controller.timeToAlarm.value.toString(),
+                          },
+                        ),
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
+            ),
+          ),
         ),
         body: (controller.alarmRecord.value != null &&
                 controller.mutexLock.value == true)
@@ -224,13 +229,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        'Uh-oh!'.tr,
-                        style:
-                            Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  color: themeController
-                                      .getColor('primaryDisabledTextColor'),
-                                ),
+                      child: Obx(
+                        () => Text(
+                          'Uh-oh!'.tr,
+                          style:
+                              Theme.of(context).textTheme.displayMedium!.copyWith(
+                                    color: themeController
+                                        .primaryDisabledTextColor.value,
+                                  ),
+                        ),
                       ),
                     ),
                     SvgPicture.asset(
@@ -240,14 +247,16 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        // 'This alarm is currently being edited!',
-                        'alarmEditing'.tr,
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController
-                                      .getColor('primaryDisabledTextColor'),
-                                ),
+                      child: Obx(
+                        () => Text(
+                          // 'This alarm is currently being edited!',
+                          'alarmEditing'.tr,
+                          style:
+                              Theme.of(context).textTheme.displaySmall!.copyWith(
+                                    color: themeController
+                                        .primaryDisabledTextColor.value,
+                                  ),
+                        ),
                       ),
                     ),
                     TextButton(
@@ -255,13 +264,15 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         backgroundColor:
                             MaterialStateProperty.all(kprimaryColor),
                       ),
-                      child: Text(
-                        'Go back'.tr,
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController
-                                      .getColor('secondaryTextColor'),
-                                ),
+                      child: Obx(
+                            () => Text(
+                          'Go back'.tr,
+                          style:
+                              Theme.of(context).textTheme.displaySmall!.copyWith(
+                                    color: themeController
+                                        .secondaryTextColor.value,
+                                  ),
+                        ),
                       ),
                       onPressed: () {
                         Utils.hapticFeedback();
@@ -273,254 +284,66 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               )
             : ListView(
                 children: [
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    height: height * 0.32,
-                    width: width,
-                    child: Obx(
-                      () {
-                        return InkWell(
-                          onTap: () {
-                            Utils.hapticFeedback();
-                            inputTimeController.changeDatePicker();
-                          },
-                          child: inputTimeController.isTimePicker.value
-                              ? Obx(
-                                  () => Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      NumberPicker(
-                                        minValue: settingsController
-                                                .is24HrsEnabled.value
-                                            ? 0
-                                            : 1,
-                                        maxValue: settingsController
-                                                .is24HrsEnabled.value
-                                            ? 23
-                                            : 12,
-                                        value: controller.hours.value,
-                                        onChanged: (value) {
-                                          Utils.hapticFeedback();
-                                          controller.hours.value = value;
-                                          controller.selectedTime.value =
-                                              DateTime(
-                                            controller.selectedTime.value.year,
-                                            controller.selectedTime.value.month,
-                                            controller.selectedTime.value.day,
-                                            inputTimeController.convert24(
-                                              value,
-                                              controller.meridiemIndex.value,
-                                            ),
-                                            controller
-                                                .selectedTime.value.minute,
-                                          );
-                                          inputTimeController
-                                                  .inputHrsController.text =
-                                              controller.hours.value.toString();
-                                          inputTimeController
-                                                  .inputMinutesController.text =
-                                              controller.minutes.value
-                                                  .toString();
-                                          inputTimeController.changePeriod(
-                                            controller.meridiemIndex.value == 0
-                                                ? 'AM'
-                                                : 'PM',
-                                          );
-                                        },
-                                        infiniteLoop: true,
-                                        itemWidth: width * 0.17,
-                                        zeroPad: true,
-                                        selectedTextStyle: Theme.of(context)
-                                            .textTheme
-                                            .displayLarge!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: kprimaryColor,
-                                            ),
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium!
-                                            .copyWith(
-                                              fontSize: 20,
-                                              color: themeController.getColor(
-                                                'primaryDisabledTextColor',
-                                              ),
-                                            ),
-                                        decoration: BoxDecoration(
-                                          border: Border(
-                                            top: BorderSide(
-                                              width: width * 0.005,
-                                              color: themeController.getColor(
-                                                'primaryDisabledTextColor',
-                                              ),
-                                            ),
-                                            bottom: BorderSide(
-                                              width: width * 0.005,
-                                              color: themeController.getColor(
-                                                'primaryDisabledTextColor',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: width * 0.02,
-                                        ),
-                                        child: Text(
-                                          ':',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displayLarge!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: themeController.getColor(
-                                                  'primaryDisabledTextColor',
-                                                ),
-                                              ),
-                                        ),
-                                      ),
-                                      NumberPicker(
-                                        minValue: 0,
-                                        maxValue: 59,
-                                        value: controller.minutes.value,
-                                        onChanged: (value) {
-                                          Utils.hapticFeedback();
-                                          controller.minutes.value = value;
-                                          controller.selectedTime.value =
-                                              DateTime(
-                                            controller.selectedTime.value.year,
-                                            controller.selectedTime.value.month,
-                                            controller.selectedTime.value.day,
-                                            controller.selectedTime.value.hour,
-                                            controller.minutes.value,
-                                          );
-                                          inputTimeController
-                                                  .inputHrsController.text =
-                                              controller.hours.value.toString();
-                                          inputTimeController
-                                                  .inputMinutesController.text =
-                                              controller.minutes.value
-                                                  .toString();
-                                          inputTimeController.changePeriod(
-                                            controller.meridiemIndex.value == 0
-                                                ? 'AM'
-                                                : 'PM',
-                                          );
-                                        },
-                                        infiniteLoop: true,
-                                        itemWidth: width * 0.17,
-                                        zeroPad: true,
-                                        selectedTextStyle: Theme.of(context)
-                                            .textTheme
-                                            .displayLarge!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: kprimaryColor,
-                                            ),
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium!
-                                            .copyWith(
-                                              fontSize: 20,
-                                              color: themeController.getColor(
-                                                'primaryDisabledTextColor',
-                                              ),
-                                            ),
-                                        decoration: BoxDecoration(
-                                          border: Border(
-                                            top: BorderSide(
-                                              width: width * 0.005,
-                                              color: themeController.getColor(
-                                                'primaryDisabledTextColor',
-                                              ),
-                                            ),
-                                            bottom: BorderSide(
-                                              width: width * 0.005,
-                                              color: themeController.getColor(
-                                                'primaryDisabledTextColor',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: settingsController
-                                                .is24HrsEnabled.value
-                                            ? false
-                                            : true,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: width * 0.02,
-                                          ),
-                                          child: Text(
-                                            ':',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayLarge!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color:
-                                                      themeController.getColor(
-                                                    'primaryDisabledTextColor',
-                                                  ),
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: settingsController
-                                                .is24HrsEnabled.value
-                                            ? false
-                                            : true,
-                                        child: NumberPicker(
-                                          minValue: 0,
-                                          maxValue: 1,
-                                          value: controller.meridiemIndex.value,
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      height: height * 0.32,
+                      width: width,
+                      child: Obx(
+                        () {
+                          return InkWell(
+                            onTap: () {
+                              Utils.hapticFeedback();
+                              inputTimeController.changeDatePicker();
+                            },
+                            child: inputTimeController.isTimePicker.value
+                                ? Obx(
+                                    () => Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        NumberPicker(
+                                          minValue: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? 0
+                                              : 1,
+                                          maxValue: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? 23
+                                              : 12,
+                                          value: controller.hours.value,
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
-                                            value == 0
-                                                ? controller
-                                                    .meridiemIndex.value = 0
-                                                : controller
-                                                    .meridiemIndex.value = 1;
+                                            controller.hours.value = value;
                                             controller.selectedTime.value =
                                                 DateTime(
-                                              controller
-                                                  .selectedTime.value.year,
-                                              controller
-                                                  .selectedTime.value.month,
+                                              controller.selectedTime.value.year,
+                                              controller.selectedTime.value.month,
                                               controller.selectedTime.value.day,
                                               inputTimeController.convert24(
-                                                controller.hours.value,
+                                                value,
                                                 controller.meridiemIndex.value,
                                               ),
-                                              controller.minutes.value,
+                                              controller
+                                                  .selectedTime.value.minute,
                                             );
                                             inputTimeController
                                                     .inputHrsController.text =
-                                                controller.hours.value
-                                                    .toString();
+                                                controller.hours.value.toString();
                                             inputTimeController
-                                                    .inputMinutesController
-                                                    .text =
+                                                    .inputMinutesController.text =
                                                 controller.minutes.value
                                                     .toString();
                                             inputTimeController.changePeriod(
-                                              controller.meridiemIndex.value ==
-                                                      0
+                                              controller.meridiemIndex.value == 0
                                                   ? 'AM'
                                                   : 'PM',
                                             );
                                           },
-                                          textMapper: (numberText) {
-                                            return controller
-                                                .meridiem[int.parse(numberText)]
-                                                .value;
-                                          },
+                                          infiniteLoop: true,
                                           itemWidth: width * 0.17,
+                                          zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
                                               .displayLarge!
@@ -533,173 +356,353 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               .displayMedium!
                                               .copyWith(
                                                 fontSize: 20,
-                                                color: themeController.getColor(
-                                                  'primaryDisabledTextColor',
-                                                ),
+                                                color: themeController.
+                                                  primaryDisabledTextColor.value,
                                               ),
                                           decoration: BoxDecoration(
                                             border: Border(
                                               top: BorderSide(
                                                 width: width * 0.005,
-                                                color: themeController.getColor(
-                                                  'primaryDisabledTextColor',
-                                                ),
+                                                color: themeController.
+                                                  primaryDisabledTextColor.value
                                               ),
                                               bottom: BorderSide(
                                                 width: width * 0.005,
-                                                color: themeController.getColor(
-                                                  'primaryDisabledTextColor',
+                                                color: themeController.
+                                                  primaryDisabledTextColor.value
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.02,
+                                          ),
+                                          child: Text(
+                                            ':',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: themeController.
+                                                    primaryDisabledTextColor.value,
+                                                ),
+                                          ),
+                                        ),
+                                        NumberPicker(
+                                          minValue: 0,
+                                          maxValue: 59,
+                                          value: controller.minutes.value,
+                                          onChanged: (value) {
+                                            Utils.hapticFeedback();
+                                            controller.minutes.value = value;
+                                            controller.selectedTime.value =
+                                                DateTime(
+                                              controller.selectedTime.value.year,
+                                              controller.selectedTime.value.month,
+                                              controller.selectedTime.value.day,
+                                              controller.selectedTime.value.hour,
+                                              controller.minutes.value,
+                                            );
+                                            inputTimeController
+                                                    .inputHrsController.text =
+                                                controller.hours.value.toString();
+                                            inputTimeController
+                                                    .inputMinutesController.text =
+                                                controller.minutes.value
+                                                    .toString();
+                                            inputTimeController.changePeriod(
+                                              controller.meridiemIndex.value == 0
+                                                  ? 'AM'
+                                                  : 'PM',
+                                            );
+                                          },
+                                          infiniteLoop: true,
+                                          itemWidth: width * 0.17,
+                                          zeroPad: true,
+                                          selectedTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: kprimaryColor,
+                                              ),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                fontSize: 20,
+                                                color: themeController.
+                                                  primaryDisabledTextColor.value,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController.
+                                                  primaryDisabledTextColor.value,
+                                              ),
+                                              bottom: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController.
+                                                  primaryDisabledTextColor.value
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? false
+                                              : true,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: width * 0.02,
+                                            ),
+                                            child: Text(
+                                              ':',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displayLarge!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        themeController.
+                                                      primaryDisabledTextColor.value,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: settingsController
+                                                  .is24HrsEnabled.value
+                                              ? false
+                                              : true,
+                                          child: NumberPicker(
+                                            minValue: 0,
+                                            maxValue: 1,
+                                            value: controller.meridiemIndex.value,
+                                            onChanged: (value) {
+                                              Utils.hapticFeedback();
+                                              value == 0
+                                                  ? controller
+                                                      .meridiemIndex.value = 0
+                                                  : controller
+                                                      .meridiemIndex.value = 1;
+                                              controller.selectedTime.value =
+                                                  DateTime(
+                                                controller
+                                                    .selectedTime.value.year,
+                                                controller
+                                                    .selectedTime.value.month,
+                                                controller.selectedTime.value.day,
+                                                inputTimeController.convert24(
+                                                  controller.hours.value,
+                                                  controller.meridiemIndex.value,
+                                                ),
+                                                controller.minutes.value,
+                                              );
+                                              inputTimeController
+                                                      .inputHrsController.text =
+                                                  controller.hours.value
+                                                      .toString();
+                                              inputTimeController
+                                                      .inputMinutesController
+                                                      .text =
+                                                  controller.minutes.value
+                                                      .toString();
+                                              inputTimeController.changePeriod(
+                                                controller.meridiemIndex.value ==
+                                                        0
+                                                    ? 'AM'
+                                                    : 'PM',
+                                              );
+                                            },
+                                            textMapper: (numberText) {
+                                              return controller
+                                                  .meridiem[int.parse(numberText)]
+                                                  .value;
+                                            },
+                                            itemWidth: width * 0.17,
+                                            selectedTextStyle: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: kprimaryColor,
+                                                ),
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium!
+                                                .copyWith(
+                                                  fontSize: 20,
+                                                  color: themeController.
+                                                    primaryDisabledTextColor.value,
+                                                ),
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                top: BorderSide(
+                                                  width: width * 0.005,
+                                                  color: themeController.
+                                                    primaryDisabledTextColor.value,
+                                                ),
+                                                bottom: BorderSide(
+                                                  width: width * 0.005,
+                                                  color: themeController.
+                                                    primaryDisabledTextColor.value,
                                                 ),
                                               ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 80,
+                                        child: TextField(
+                                          onChanged: (_) {
+                                            inputTimeController.setTime();
+                                          },
+                                          decoration: const InputDecoration(
+                                            hintText: 'HH',
+                                            border: InputBorder.none,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          controller: inputTimeController
+                                              .inputHrsController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                              RegExp(
+                                                '[1,2,3,4,5,6,7,8,9,0]',
+                                              ),
+                                            ),
+                                            LengthLimitingTextInputFormatter(2),
+                                            LimitRange(
+                                              0,
+                                              settingsController
+                                                      .is24HrsEnabled.value
+                                                  ? 23
+                                                  : 12,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 16,
+                                        child: Text(
+                                          ':',
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 80,
+                                        child: TextField(
+                                          onChanged: (_) {
+                                            inputTimeController.setTime();
+                                          },
+                                          decoration: const InputDecoration(
+                                            hintText: 'MM',
+                                            border: InputBorder.none,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          controller: inputTimeController
+                                              .inputMinutesController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                              RegExp(
+                                                '[1,2,3,4,5,6,7,8,9,0]',
+                                              ),
+                                            ),
+                                            LengthLimitingTextInputFormatter(2),
+                                            LimitRange(00, 59),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ),
+                                      Visibility(
+                                        visible: !settingsController
+                                            .is24HrsEnabled.value,
+                                        child: DropdownButton(
+                                          underline: Container(),
+                                          value: inputTimeController.isAM.value
+                                              ? 'AM'
+                                              : 'PM',
+                                          dropdownColor: themeController.
+                                            primaryBackgroundColor.value,
+                                          items:
+                                              ['AM', 'PM'].map((String period) {
+                                            return DropdownMenuItem<String>(
+                                              value: period,
+                                              child: Text(period),
+                                            );
+                                          }).toList(),
+                                          onChanged: (getPeriod) {
+                                            inputTimeController
+                                                .changePeriod(getPeriod!);
+
+                                            inputTimeController.setTime();
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      Visibility(
+                                        visible: inputTimeController
+                                            .isTimePicker.isFalse,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Utils.hapticFeedback();
+                                            inputTimeController
+                                                .confirmTimeInput();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              border: Border.all(
+                                                color: kprimaryColor,
+                                                width: 1.0,
+                                              ),
+                                            ),
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Icon(
+                                              Icons.done,
+                                              color: kprimaryColor,
                                             ),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 80,
-                                      child: TextField(
-                                        onChanged: (_) {
-                                          inputTimeController.setTime();
-                                        },
-                                        decoration: const InputDecoration(
-                                          hintText: 'HH',
-                                          border: InputBorder.none,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        controller: inputTimeController
-                                            .inputHrsController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                              '[1,2,3,4,5,6,7,8,9,0]',
-                                            ),
-                                          ),
-                                          LengthLimitingTextInputFormatter(2),
-                                          LimitRange(
-                                            0,
-                                            settingsController
-                                                    .is24HrsEnabled.value
-                                                ? 23
-                                                : 12,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 16,
-                                      child: Text(
-                                        ':',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 80,
-                                      child: TextField(
-                                        onChanged: (_) {
-                                          inputTimeController.setTime();
-                                        },
-                                        decoration: const InputDecoration(
-                                          hintText: 'MM',
-                                          border: InputBorder.none,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        controller: inputTimeController
-                                            .inputMinutesController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                              '[1,2,3,4,5,6,7,8,9,0]',
-                                            ),
-                                          ),
-                                          LengthLimitingTextInputFormatter(2),
-                                          LimitRange(00, 59),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    Visibility(
-                                      visible: !settingsController
-                                          .is24HrsEnabled.value,
-                                      child: DropdownButton(
-                                        underline: Container(),
-                                        value: inputTimeController.isAM.value
-                                            ? 'AM'
-                                            : 'PM',
-                                        dropdownColor: themeController.getColor(
-                                          'primaryBackgroundColor',
-                                        ),
-                                        items:
-                                            ['AM', 'PM'].map((String period) {
-                                          return DropdownMenuItem<String>(
-                                            value: period,
-                                            child: Text(period),
-                                          );
-                                        }).toList(),
-                                        onChanged: (getPeriod) {
-                                          inputTimeController
-                                              .changePeriod(getPeriod!);
-
-                                          inputTimeController.setTime();
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Visibility(
-                                      visible: inputTimeController
-                                          .isTimePicker.isFalse,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Utils.hapticFeedback();
-                                          inputTimeController
-                                              .confirmTimeInput();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50.0),
-                                            border: Border.all(
-                                              color: kprimaryColor,
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Icon(
-                                            Icons.done,
-                                            color: kprimaryColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   RepeatTile(
                     controller: controller,
                     themeController: themeController,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Divider(
-                      color:
-                          themeController.getColor('primaryDisabledTextColor'),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Divider(
+                        color:
+                            themeController.primaryDisabledTextColor.value,
+                      ),
                     ),
                   ),
                   Obx(
@@ -716,10 +719,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             .every((element) => element == false))
                         ? Container(
                             color: themeController
-                                .getColor('secondaryBackgroundColor'),
+                                .secondaryBackgroundColor.value,
                             child: Divider(
                               color: themeController
-                                  .getColor('primaryDisabledTextColor'),
+                                  .primaryDisabledTextColor.value,
                             ),
                           )
                         : const SizedBox(),
@@ -728,11 +731,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     controller: controller,
                     themeController: themeController,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Divider(
-                      color:
-                          themeController.getColor('primaryDisabledTextColor'),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Divider(
+                        color:
+                            themeController.primaryDisabledTextColor.value,
+                      ),
                     ),
                   ),
                   Obx(
@@ -748,22 +753,26 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     controller: controller,
                     themeController: themeController,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Divider(
-                      color:
-                          themeController.getColor('primaryDisabledTextColor'),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Divider(
+                        color:
+                            themeController.primaryDisabledTextColor.value,
+                      ),
                     ),
                   ),
                   NoteTile(
                     controller: controller,
                     themeController: themeController,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Divider(
-                      color:
-                          themeController.getColor('primaryDisabledTextColor'),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Divider(
+                        color:
+                            themeController.primaryDisabledTextColor.value,
+                      ),
                     ),
                   ),
                   ChooseRingtoneTile(
@@ -772,22 +781,26 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     height: height,
                     width: width,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Divider(
-                      color:
-                          themeController.getColor('primaryDisabledTextColor'),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Divider(
+                        color:
+                            themeController.primaryDisabledTextColor.value,
+                      ),
                     ),
                   ),
                   AscendingVolumeTile(
                     controller: controller,
                     themeController: themeController,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Divider(
-                      color:
-                          themeController.getColor('primaryDisabledTextColor'),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Divider(
+                        color:
+                            themeController.primaryDisabledTextColor.value,
+                      ),
                     ),
                   ),
                   QuoteTile(
@@ -801,51 +814,53 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     height: 10,
                     width: width,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Text(
-                              'Automatic Cancellation'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: themeController
-                                        .getColor('primaryTextColor')
-                                        .withOpacity(0.85),
-                                  ),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                'Automatic Cancellation'.tr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: themeController
+                                          .primaryTextColor.value
+                                          .withOpacity(0.85),
+                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                        ScreenActivityTile(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Divider(
-                          color: themeController
-                              .getColor('primaryDisabledTextColor'),
-                        ),
-                        WeatherTile(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Divider(
-                          color: themeController
-                              .getColor('primaryDisabledTextColor'),
-                        ),
-                        LocationTile(
-                          controller: controller,
-                          height: height,
-                          width: width,
-                          themeController: themeController,
-                        ),
-                      ],
+                          ScreenActivityTile(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController
+                                .primaryDisabledTextColor.value,
+                          ),
+                          WeatherTile(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController
+                                .primaryDisabledTextColor.value,
+                          ),
+                          LocationTile(
+                            controller: controller,
+                            height: height,
+                            width: width,
+                            themeController: themeController,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -855,56 +870,58 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     height: 10,
                     width: width,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Text(
-                              'Challenges'.tr,
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleMedium!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: themeController
-                                        .getColor('primaryTextColor')
-                                        .withOpacity(0.85),
-                                  ),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                'Challenges'.tr,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: themeController
+                                          .primaryTextColor.value
+                                          .withOpacity(0.85),
+                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                        ShakeToDismiss(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Divider(
-                          color: themeController
-                              .getColor('primaryDisabledTextColor'),
-                        ),
-                        QrBarCode(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Divider(
-                          color: themeController
-                              .getColor('primaryDisabledTextColor'),
-                        ),
-                        MathsChallenge(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Divider(
-                          color: themeController
-                              .getColor('primaryDisabledTextColor'),
-                        ),
-                        PedometerChallenge(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                      ],
+                          ShakeToDismiss(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController
+                                .primaryDisabledTextColor.value,
+                          ),
+                          QrBarCode(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController
+                                .primaryDisabledTextColor.value,
+                          ),
+                          MathsChallenge(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Divider(
+                            color: themeController
+                                .primaryDisabledTextColor.value,
+                          ),
+                          PedometerChallenge(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -914,70 +931,72 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     height: 10,
                     width: width,
                   ),
-                  Container(
-                    color: themeController.getColor('secondaryBackgroundColor'),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Text(
-                              'Shared Alarm'.tr,
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleMedium!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: themeController
-                                        .getColor('primaryTextColor')
-                                        .withOpacity(0.85),
-                                  ),
+                  Obx(
+                    () => Container(
+                      color: themeController.secondaryBackgroundColor.value,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                'Shared Alarm'.tr,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: themeController
+                                          .primaryTextColor.value
+                                          .withOpacity(0.85),
+                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                        SharedAlarm(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Divider(
-                          color: themeController
-                              .getColor('primaryDisabledTextColor'),
-                        ),
-                        AlarmIDTile(
-                          controller: controller,
-                          width: width,
-                          themeController: themeController,
-                        ),
-                        Obx(
-                          () => Container(
-                            child: (controller.isSharedAlarmEnabled.value)
-                                ? Divider(
-                                    color: themeController
-                                        .getColor('primaryDisabledTextColor'),
-                                  )
-                                : const SizedBox(),
+                          SharedAlarm(
+                            controller: controller,
+                            themeController: themeController,
                           ),
-                        ),
-                        AlarmOffset(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                        Obx(
-                          () => Container(
-                            child: (controller.isSharedAlarmEnabled.value &&
-                                    controller.alarmRecord.value != null)
-                                ? Divider(
-                                    color: themeController
-                                        .getColor('primaryDisabledTextColor'),
-                                  )
-                                : const SizedBox(),
+                          Divider(
+                            color: themeController
+                                .primaryDisabledTextColor.value,
                           ),
-                        ),
-                        SharedUsers(
-                          controller: controller,
-                          themeController: themeController,
-                        ),
-                      ],
+                          AlarmIDTile(
+                            controller: controller,
+                            width: width,
+                            themeController: themeController,
+                          ),
+                          Obx(
+                            () => Container(
+                              child: (controller.isSharedAlarmEnabled.value)
+                                  ? Divider(
+                                      color: themeController
+                                          .primaryDisabledTextColor.value,
+                                    )
+                                  : const SizedBox(),
+                            ),
+                          ),
+                          AlarmOffset(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                          Obx(
+                            () => Container(
+                              child: (controller.isSharedAlarmEnabled.value &&
+                                      controller.alarmRecord.value != null)
+                                  ? Divider(
+                                      color: themeController
+                                          .primaryDisabledTextColor.value,
+                                    )
+                                  : const SizedBox(),
+                            ),
+                          ),
+                          SharedUsers(
+                            controller: controller,
+                            themeController: themeController,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(

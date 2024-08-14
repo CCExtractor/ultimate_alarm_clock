@@ -9,6 +9,7 @@ class ThemeController extends GetxController {
   @override
   void onInit() {
     _loadThemeValue();
+    updateThemeColors();
     super.onInit();
   }
 
@@ -18,34 +19,38 @@ class ThemeController extends GetxController {
     currentTheme.value = currentTheme.value == ThemeMode.light
         ? ThemeMode.dark
         : ThemeMode.light;
+    updateThemeColors();
   }
 
-  final Map<String, Color> lightThemeColors = {
-    'primaryColor': kprimaryColor,
-    'secondaryColor': kLightSecondaryColor,
-    'primaryBackgroundColor': kLightPrimaryBackgroundColor,
-    'secondaryBackgroundColor': kLightSecondaryBackgroundColor,
-    'primaryTextColor': kLightPrimaryTextColor,
-    'secondaryTextColor': kLightSecondaryTextColor,
-    'primaryDisabledTextColor': kLightPrimaryDisabledTextColor,
-  };
+  Rx<Color> primaryColor = kprimaryColor.obs;
+  Rx<Color> secondaryColor = kLightSecondaryColor.obs;
+  Rx<Color> primaryBackgroundColor = kLightPrimaryBackgroundColor.obs;
+  Rx<Color> secondaryBackgroundColor = kLightSecondaryBackgroundColor.obs;
+  Rx<Color> primaryTextColor = kLightPrimaryTextColor.obs;
+  Rx<Color> secondaryTextColor = kLightSecondaryTextColor.obs;
+  Rx<Color> primaryDisabledTextColor = kLightPrimaryDisabledTextColor.obs;
 
-  final Map<String, Color> darkThemeColors = {
-    'primary': kprimaryColor, // Left
-    'secondaryColor': ksecondaryColor, // Done
-    'primaryBackgroundColor': kprimaryBackgroundColor, // Done
-    'secondaryBackgroundColor': ksecondaryBackgroundColor, // Done
-    'primaryTextColor': kprimaryTextColor, // Done
-    'secondaryTextColor': ksecondaryTextColor, // Done
-    'primaryDisabledTextColor': kprimaryDisabledTextColor, // Done
-  };
-
-  Color getColor(String color) {
-    if (currentTheme.value == ThemeMode.light) {
-      return lightThemeColors[color]!;
-    } else {
-      return darkThemeColors[color]!;
-    }
+  void updateThemeColors() {
+    primaryColor.value =
+    currentTheme.value == ThemeMode.light ? kprimaryColor : kprimaryColor;
+    secondaryColor.value = currentTheme.value == ThemeMode.light
+        ? kLightSecondaryColor
+        : ksecondaryColor;
+    primaryBackgroundColor.value = currentTheme.value == ThemeMode.light
+        ? kLightPrimaryBackgroundColor
+        : kprimaryBackgroundColor;
+    secondaryBackgroundColor.value = currentTheme.value == ThemeMode.light
+        ? kLightSecondaryBackgroundColor
+        : ksecondaryBackgroundColor;
+    primaryTextColor.value = currentTheme.value == ThemeMode.light
+        ? kLightPrimaryTextColor
+        : kprimaryTextColor;
+    secondaryTextColor.value = currentTheme.value == ThemeMode.light
+        ? kLightSecondaryTextColor
+        : ksecondaryTextColor;
+    primaryDisabledTextColor.value = currentTheme.value == ThemeMode.light
+        ? kLightPrimaryDisabledTextColor
+        : kprimaryDisabledTextColor;
   }
 
   void _loadThemeValue() async {
@@ -53,6 +58,7 @@ class ThemeController extends GetxController {
         await _secureStorageProvider.readThemeValue() == AppTheme.light
             ? ThemeMode.light
             : ThemeMode.dark;
+    updateThemeColors();
     Get.changeThemeMode(currentTheme.value);
   }
 
@@ -66,6 +72,7 @@ class ThemeController extends GetxController {
 
   void toggleThemeValue(bool enabled) {
     currentTheme.value = enabled ? ThemeMode.light : ThemeMode.dark;
+    updateThemeColors();
     _saveThemeValuePreference();
   }
 }

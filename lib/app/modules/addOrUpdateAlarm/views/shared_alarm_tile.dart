@@ -29,7 +29,7 @@ class SharedAlarm extends StatelessWidget {
                         child: Text(
                           'Shared Alarm'.tr,
                           style: TextStyle(
-                            color: themeController.getColor("primaryTextColor"),
+                            color: themeController.primaryTextColor.value,
                           ),
                         ),
                       ),
@@ -45,7 +45,7 @@ class SharedAlarm extends StatelessWidget {
                           Utils.hapticFeedback();
                           showModalBottomSheet(
                             context: context,
-                            backgroundColor: themeController.getColor("secondaryBackgroundColor"),
+                            backgroundColor: themeController.secondaryBackgroundColor.value,
                             builder: (context) {
                               return Center(
                                 child: Padding(
@@ -56,7 +56,7 @@ class SharedAlarm extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.share_arrival_time,
-                                        color: themeController.getColor('primaryTextColor'),
+                                        color: themeController.primaryTextColor.value,
                                         size: height * 0.1,
                                       ),
                                       Text(
@@ -143,7 +143,7 @@ class SharedAlarm extends StatelessWidget {
                     Get.defaultDialog(
                       contentPadding: const EdgeInsets.all(10.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                      backgroundColor: themeController.getColor("secondaryBackgroundColor"),
+                      backgroundColor: themeController.secondaryBackgroundColor.value,
                       title: 'Disabled!'.tr,
                       titleStyle: Theme.of(context).textTheme.displaySmall,
                       content: Column(
@@ -204,7 +204,7 @@ class SharedAlarm extends StatelessWidget {
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                            themeController.getColor('primaryTextColor')
+                                            themeController.primaryTextColor.value
                                                 .withOpacity(0.5),
                                       ),
                                     ),
@@ -217,7 +217,7 @@ class SharedAlarm extends StatelessWidget {
                                             .textTheme
                                             .displaySmall!
                                             .copyWith(
-                                              color: themeController.getColor('primaryTextColor'),
+                                              color: themeController.primaryTextColor.value,
                                             ),
                                       ),
                                     ),
@@ -240,14 +240,14 @@ class SharedAlarm extends StatelessWidget {
                     child: Text(
                       'Enable Shared Alarm'.tr,
                       style: TextStyle(
-                        color: themeController.getColor("primaryTextColor"),
+                        color: themeController.primaryTextColor.value,
                       ),
                     ),
                   ),
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: themeController.getColor('primaryTextColor').withOpacity(0.7),
+                      color: themeController.primaryTextColor.value.withOpacity(0.7),
                     ),
                   ),
                 ),

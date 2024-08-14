@@ -15,7 +15,7 @@ Widget buildEndDrawer(BuildContext context) {
           bottomLeft: Radius.circular(10),
         ),
       ),
-      backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
       child: Column(
         children: [
           DrawerHeader(
@@ -65,7 +65,7 @@ Widget buildEndDrawer(BuildContext context) {
                                 .textTheme
                                 .titleLarge!
                                 .copyWith(
-                                  color: themeController.getColor('primaryTextColor'),
+                                  color: themeController.primaryTextColor.value,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
@@ -87,13 +87,13 @@ Widget buildEndDrawer(BuildContext context) {
             title: Text(
               'Settings'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: themeController.getColor('primaryTextColor').withOpacity(0.8),
+                    color: themeController.primaryTextColor.value.withOpacity(0.8),
                   ),
             ),
             leading: Icon(
               Icons.settings,
               size: 26,
-              color: themeController.getColor('primaryTextColor').withOpacity(0.8),
+              color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
           ),
           ListTile(
@@ -106,13 +106,13 @@ Widget buildEndDrawer(BuildContext context) {
             title: Text(
               'About'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: themeController.getColor('primaryTextColor').withOpacity(0.8),
+                    color: themeController.primaryTextColor.value.withOpacity(0.8),
                   ),
             ),
             leading: Icon(
               Icons.info_outline,
               size: 26,
-              color: themeController.getColor('primaryTextColor').withOpacity(0.8),
+              color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
           ),
         ],

@@ -39,11 +39,11 @@ class ChooseRingtoneTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-        tileColor: themeController.getColor('secondaryBackgroundColor'),
+        tileColor: themeController.secondaryBackgroundColor.value,
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(
-            color: themeController.getColor('primaryTextColor'),
+            color: themeController.primaryTextColor.value,
           ),
         ),
         onTap: () async {
@@ -56,7 +56,7 @@ class ChooseRingtoneTile extends StatelessWidget {
 
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: themeController.getColor('secondaryBackgroundColor'),
+            backgroundColor: themeController.secondaryBackgroundColor.value,
             title: 'Choose Ringtone'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Obx(
@@ -70,7 +70,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                         height: height * 0.2,
                         child: Card(
                           elevation: 0,
-                          color: themeController.getColor('secondaryBackgroundColor'),
+                          color: themeController.secondaryBackgroundColor.value,
                           child: Scrollbar(
                             radius: Radius.circular(5),
                             thumbVisibility: true,
@@ -79,7 +79,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                               child: ListView.separated(
                                 separatorBuilder: (context, index) {
                                   return Divider(
-                                    color: themeController.getColor('secondaryBackgroundColor'),
+                                    color: themeController.secondaryBackgroundColor.value,
                                     height: 0,
                                   );
                                 },
@@ -121,8 +121,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                   .customRingtoneName ==
                                               controller
                                                   .customRingtoneNames[index]
-                                          ? themeController.getColor('primaryBackgroundColor')
-                                          : themeController.getColor('secondaryBackgroundColor'),
+                                          ? themeController.primaryBackgroundColor.value
+                                          : themeController.secondaryBackgroundColor.value,
                                       title: Text(
                                         controller.customRingtoneNames[index],
                                         overflow: TextOverflow.ellipsis,
@@ -227,7 +227,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                     child: Text(
                       'Done'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.getColor('secondaryTextColor'),
+                            color: themeController.secondaryTextColor.value,
                           ),
                     ),
                   ),
@@ -249,8 +249,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: (controller.label.value.trim().isEmpty)
-                              ? themeController.getColor('primaryDisabledTextColor')
-                              : themeController.getColor('primaryTextColor'),
+                              ? themeController.primaryDisabledTextColor.value
+                              : themeController.primaryTextColor.value,
                         ),
                   ),
                 ),
@@ -258,8 +258,8 @@ class ChooseRingtoneTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 color: (controller.label.value.trim().isEmpty)
-                    ? themeController.getColor('primaryDisabledTextColor')
-                    : themeController.getColor('primaryTextColor'),
+                    ? themeController.primaryDisabledTextColor.value
+                    : themeController.primaryTextColor.value,
               ),
             ],
           ),

@@ -47,25 +47,29 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                        Obx(
+                          () => Text(
                             'Shake your phone!'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.getColor('primaryTextColor').withOpacity(0.7),
+                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
                                 ),
+                            ),
                           ),
                           SizedBox(
                             height: height * 0.08,
                           ),
-                          Transform.rotate(
-                            angle: -10 * math.pi / 180,
-                            child: Icon(
-                              Icons.vibration,
-                              size: height * 0.2,
-                              color: themeController.getColor('primaryTextColor').withOpacity(0.7),
+                          Obx(
+                            () => Transform.rotate(
+                              angle: -10 * math.pi / 180,
+                              child: Icon(
+                                Icons.vibration,
+                                size: height * 0.2,
+                                color: themeController.primaryTextColor.value.withOpacity(0.7),
+                              ),
                             ),
                           ),
                           SizedBox(

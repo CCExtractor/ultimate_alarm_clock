@@ -27,48 +27,52 @@ class DeleteAfterGoesOff extends StatelessWidget {
       children: [
         Visibility(
           visible: isVisible,
-          child: ListTile(
-            tileColor: themeController.getColor('secondaryBackgroundColor'),
-            title: FittedBox(
-              alignment: Alignment.centerLeft,
-              fit: BoxFit.scaleDown,
-              child: Text(
-                'Delete After Goes Off'.tr,
-                style: TextStyle(
-                  color: themeController.getColor('primaryTextColor'),
+          child: Obx(
+            () => ListTile(
+              tileColor: themeController.secondaryBackgroundColor.value,
+              title: FittedBox(
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Delete After Goes Off'.tr,
+                  style: TextStyle(
+                    color: themeController.primaryTextColor.value,
+                  ),
                 ),
               ),
-            ),
-            onTap: () {
-              Utils.hapticFeedback();
-              controller.deleteAfterGoesOff.value =
-                  !controller.deleteAfterGoesOff.value;
-            },
-            trailing: InkWell(
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Obx(
-                    () {
-                      return Switch.adaptive(
-                        value: controller.deleteAfterGoesOff.value,
-                        activeColor: ksecondaryColor,
-                        onChanged: (value) {
-                          Utils.hapticFeedback();
-                          controller.deleteAfterGoesOff.value = value;
-                        },
-                      );
-                    },
-                  ),
-                ],
+              onTap: () {
+                Utils.hapticFeedback();
+                controller.deleteAfterGoesOff.value =
+                    !controller.deleteAfterGoesOff.value;
+              },
+              trailing: InkWell(
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Obx(
+                      () {
+                        return Switch.adaptive(
+                          value: controller.deleteAfterGoesOff.value,
+                          activeColor: ksecondaryColor,
+                          onChanged: (value) {
+                            Utils.hapticFeedback();
+                            controller.deleteAfterGoesOff.value = value;
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-        Container(
-          color: themeController.getColor('secondaryBackgroundColor'),
-          child: Divider(
-            color: themeController.getColor('primaryDisabledTextColor'),
+        Obx(
+          () => Container(
+            color: themeController.secondaryBackgroundColor.value,
+            child: Divider(
+              color: themeController.primaryDisabledTextColor.value,
+            ),
           ),
         ),
       ],
