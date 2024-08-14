@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:telephony/telephony.dart';
 
 class GaurdianAngel extends StatelessWidget {
   const GaurdianAngel({
@@ -24,8 +26,7 @@ class GaurdianAngel extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          onTap: () {
-          },
+          onTap: () {},
           title: Row(
             children: [
               FittedBox(
@@ -74,56 +75,63 @@ class GaurdianAngel extends StatelessWidget {
                     activeColor: ksecondaryColor,
                     onChanged: (value) {
                       Utils.hapticFeedback();
-                      Get.dialog(
-                        Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          backgroundColor: kprimaryBackgroundColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InternationalPhoneNumberInput(
-                                    textFieldController:
-                                        controller.contactTextEditingController,
-                                    onInputChanged: (value) {},
-                                    onInputValidated: (value) {},
-                                    spaceBetweenSelectorAndTextField: 0,
-                                    selectorConfig: const SelectorConfig(
-                                      showFlags: false,
-                                      setSelectorButtonAsPrefixIcon: true,
-                                      leadingPadding: 0,
-                                      trailingSpace: false,
-                                    ),
-                                  ),
+                      Permission.phone.isDenied.then((value) {
+                        if (!value) {
+                          final Telephony telephony = Telephony.instance;
+                          telephony.requestPhoneAndSmsPermissions.then((value) {
+                            Get.dialog(
+                              Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: controller
-                                            .homeController.scalingFactor *
-                                        8,
-                                    horizontal: controller
-                                            .homeController.scalingFactor *
-                                        4,
-                                  ),
-                                  child: Row(
+                                backgroundColor: kprimaryBackgroundColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Option(0, Icons.sms, 'Text'),
-                                      Option(1, Icons.call, 'Call'),
-                                      const Spacer(),
-                                      Submit(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: InternationalPhoneNumberInput(
+                                          textFieldController: controller
+                                              .contactTextEditingController,
+                                          onInputChanged: (value) {},
+                                          onInputValidated: (value) {},
+                                          spaceBetweenSelectorAndTextField: 0,
+                                          selectorConfig: const SelectorConfig(
+                                            showFlags: false,
+                                            setSelectorButtonAsPrefixIcon: true,
+                                            leadingPadding: 0,
+                                            trailingSpace: false,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: controller.homeController
+                                                  .scalingFactor *
+                                              8,
+                                          horizontal: controller.homeController
+                                                  .scalingFactor *
+                                              4,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Option(0, Icons.sms, 'Text'),
+                                            Option(1, Icons.call, 'Call'),
+                                            const Spacer(),
+                                            Submit(),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                              ),
+                            );
+                          });
+                        }
+                      });
                     },
                   );
                 },

@@ -720,6 +720,9 @@ class AddOrUpdateAlarmController extends GetxController {
     });
 
     if (Get.arguments != null || homeController.isProfile.value) {
+      selectedDate.value = Utils.stringToDate(alarmRecord.value.alarmDate);
+      isFutureDate.value =
+          selectedDate.value.difference(DateTime.now()).inHours > 0;
       isGuardian.value = alarmRecord.value.isGuardian;
       guardian.value = alarmRecord.value.guardian;
       guardianTimer.value = alarmRecord.value.guardianTimer;
@@ -1277,7 +1280,7 @@ class AddOrUpdateAlarmController extends GetxController {
         )) ??
         DateTime.now();
     isFutureDate.value =
-        selectedDate.value.difference(DateTime.now()).inDays > 0;
+        selectedDate.value.difference(DateTime.now()).inHours > 0;
   }
 
   void showToast({
@@ -1304,7 +1307,7 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
-  void createProfile() {
+  Future<void> createProfile() async {
     profileModel = ProfileModel(
       profileName: profileTextEditingController.text,
       deleteAfterGoesOff: deleteAfterGoesOff.value,
@@ -1362,7 +1365,13 @@ class AddOrUpdateAlarmController extends GetxController {
       isCall: isCall.value,
       ringOn: isFutureDate.value,
     );
-    IsarDb.addProfile(profileModel);
+    var profileId =
+        await IsarDb.profileId(homeController.selectedProfile.value);
+    print(profileId);
+    if (profileId != 'null') profileModel.isarId = profileId;
+    print(profileModel.isarId);
+    await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+    await IsarDb.addProfile(profileModel);
     homeController.selectedProfile.value = profileModel.profileName;
     storage.writeProfile(profileModel.profileName);
   }

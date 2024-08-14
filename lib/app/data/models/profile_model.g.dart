@@ -396,6 +396,7 @@ ProfileModel _profileModelDeserialize(
     weatherTypes: reader.readLongList(offsets[43]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[5]);
+  object.isarId = id;
   return object;
 }
 
@@ -508,7 +509,9 @@ List<IsarLinkBase<dynamic>> _profileModelGetLinks(ProfileModel object) {
 }
 
 void _profileModelAttach(
-    IsarCollection<dynamic> col, Id id, ProfileModel object) {}
+    IsarCollection<dynamic> col, Id id, ProfileModel object) {
+  object.isarId = id;
+}
 
 extension ProfileModelQueryWhereSort
     on QueryBuilder<ProfileModel, ProfileModel, QWhere> {

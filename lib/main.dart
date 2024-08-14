@@ -24,9 +24,8 @@ void main() async {
     }
   });
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  PushNotifications.init();
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+  await Firebase.initializeApp();
+
   await Get.putAsync(() => GetStorageProvider().init());
 
   final storage = Get.find<GetStorageProvider>();

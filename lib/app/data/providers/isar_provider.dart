@@ -202,6 +202,14 @@ class IsarDb {
     return a != null;
   }
 
+  static Future profileId(String name) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    return a == null ? 'null' : a.isarId;
+  }
+
   static Future<AlarmModel> getTriggeredAlarm(String time) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
@@ -368,6 +376,22 @@ class IsarDb {
       'owner': ''
     };
     return profileSet;
+  }
+
+  static Future updateAlarmProfiles(String newName) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final currentProfileName = await storage.readProfile();
+    final currentProfile = await IsarDb.getProfile(currentProfileName);
+    List<AlarmModel> alarmsModels = await db.alarmModels
+        .where()
+        .filter()
+        .profileEqualTo(currentProfileName)
+        .findAll();
+    for (final item in alarmsModels) {
+      item.profile = newName;
+      updateAlarm(item);
+    }
   }
 
   static Future<void> deleteAlarm(int id) async {

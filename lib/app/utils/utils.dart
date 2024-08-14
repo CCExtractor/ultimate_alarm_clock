@@ -100,6 +100,14 @@ class Utils {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
+  static DateTime stringToDate(String date){
+    final parts = date.split('-');
+    final day = int.parse(parts[2]);
+    final month = int.parse(parts[1]);
+    final year = int.parse(parts[0]);
+    return DateTime(year,month,day);
+  }
+
   static DateTime? stringToDateTime(String timeString) {
     try {
       final parts = timeString.split(':');

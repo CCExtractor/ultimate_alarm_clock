@@ -9,8 +9,8 @@ part 'profile_model.g.dart';
 
 @collection
 class ProfileModel {
+  Id isarId = Isar.autoIncrement;
   late String profileName;
-  Id get isarId => fastHash(profileName);
   String? firestoreId;
   late bool isEnabled;
   late bool isLocationEnabled;

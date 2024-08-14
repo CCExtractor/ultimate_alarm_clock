@@ -17,8 +17,9 @@ class SplashScreenBinding extends Bindings {
     Get.put<SplashScreenController>(
       SplashScreenController(),
     );
-    Get.lazyPut<TimerController>(
-      () => TimerController(),
+    Get.put<TimerController>(
+      TimerController(),
+      permanent: true,
     );
   }
 }

@@ -439,7 +439,7 @@ class HomeController extends GetxController {
     print(Events.value);
   }
 
-  Future<void> setAlarmFromEvent(CalendarApi.Event event) async {
+  Future<void> setAlarmFromEvent(CalendarApi.Event event, String date) async {
     AlarmModel alarmModel = genFakeAlarmModel();
     alarmModel.alarmTime = Utils.formatDateTimeToHHMMSS(
       event.start?.dateTime?.toLocal() ?? event.start!.date!.toLocal(),
@@ -448,6 +448,8 @@ class HomeController extends GetxController {
     alarmModel.intervalToAlarm = Utils.calculateTimeDifference(
       event.start?.dateTime ?? event.start!.date!,
     );
+    alarmModel.ringOn = true;
+
     alarmModel.label = event.summary!;
     alarmModel.isOneTime = true;
     isProfile.value = false;

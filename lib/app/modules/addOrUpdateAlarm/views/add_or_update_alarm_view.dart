@@ -85,8 +85,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       if ((await Permission.systemAlertWindow.isGranted) &&
                           (await Permission
                               .ignoreBatteryOptimizations.isGranted)) {
-                        if (!controller.homeController.isProfile.value) {
-                          print('aryan');
+                        if (!controller.homeController.isProfile.value)
+                        {
                           if (controller.userModel.value != null) {
                             controller.offsetDetails[
                                 controller.userModel.value!.id] = {
