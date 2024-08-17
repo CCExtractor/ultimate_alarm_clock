@@ -41,68 +41,68 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
         var alarm = AlarmModel.fromCursor(cursor)
         var intervaltoAlarm = Long.MAX_VALUE
         var setAlarm: AlarmModel? =null
-        do {
-            alarm = AlarmModel.fromCursor(cursor)
-            if (alarm.ringOn == 0) {
+            do {
+                alarm = AlarmModel.fromCursor(cursor)
+                if (alarm.ringOn == 0) {
 
-                var dayfromToday = 0
-                var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                Log.d("d","timeDiff ${timeDif}")
+                    var dayfromToday = 0
+                    var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
+                    Log.d("d","timeDiff ${timeDif}")
 
-                if ((alarm.days[currentDay] == '1' || alarm.days=="0000000") && timeDif > -1L) {
-                    if (timeDif < intervaltoAlarm) {
-                        intervaltoAlarm = timeDif
-                        setAlarm = alarm
-                    }
-                } else {
-                    dayfromToday = getDaysUntilNextAlarm(alarm.days, currentDay)
-                    if (dayfromToday == 0) {
-
-                        if(alarm.days=="0000000")
-                        {
-
-                            var timeDif =
-                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
-                            if (timeDif < intervaltoAlarm && timeDif > -1L ) {
-                                intervaltoAlarm = timeDif
-                                setAlarm = alarm
-                            }
-                        }
-                       else{
-
-                            var timeDif =
-                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
-                            if (timeDif < intervaltoAlarm && timeDif > -1L ) {
-                                intervaltoAlarm = timeDif
-                                setAlarm = alarm
-                            }
-                       }
-                    } else if (dayfromToday == 1) {
-                        var timeDif =
-                            getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
-                        Log.d("d","timeDiff ${timeDif}")
-
-                        if (timeDif < intervaltoAlarm && timeDif > -1L) {
+                    if ((alarm.days[currentDay] == '1' || alarm.days=="0000000") && timeDif > -1L) {
+                        if (timeDif < intervaltoAlarm) {
                             intervaltoAlarm = timeDif
                             setAlarm = alarm
                         }
                     } else {
-                        var timeDif =
-                            getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * (dayfromToday - 1)
-                        if (timeDif < intervaltoAlarm && timeDif > -1L) {
-                            intervaltoAlarm = timeDif
-                            setAlarm = alarm
-                        }
-                    }
+                        dayfromToday = getDaysUntilNextAlarm(alarm.days, currentDay)
+                        if (dayfromToday == 0) {
 
-                }
-            } else {
-                val dayfromToday = getDaysFromCurrentDate(alarm.alarmDate)
-                if (dayfromToday == 0L) {
-                    var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                    if (alarm.days[currentDay] == '1' && timeDif > -1L) {
-                        if (timeDif < intervaltoAlarm) {
-                            intervaltoAlarm = timeDif
+                            if(alarm.days=="0000000")
+                            {
+
+                                var timeDif =
+                                    getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
+                                if (timeDif < intervaltoAlarm && timeDif > -1L ) {
+                                    intervaltoAlarm = timeDif
+                                    setAlarm = alarm
+                                }
+                            }
+                           else{
+
+                                var timeDif =
+                                    getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
+                                if (timeDif < intervaltoAlarm && timeDif > -1L ) {
+                                    intervaltoAlarm = timeDif
+                                    setAlarm = alarm
+                                }
+                           }
+                        } else if (dayfromToday == 1) {
+                            var timeDif =
+                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
+                            Log.d("d","timeDiff ${timeDif}")
+
+                            if (timeDif < intervaltoAlarm && timeDif > -1L) {
+                                intervaltoAlarm = timeDif
+                                setAlarm = alarm
+                            }
+                        } else {
+                            var timeDif =
+                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * (dayfromToday - 1)
+                            if (timeDif < intervaltoAlarm && timeDif > -1L) {
+                                intervaltoAlarm = timeDif
+                                setAlarm = alarm
+                            }
+                        }
+
+                    }
+                } else {
+                    val dayfromToday = getDaysFromCurrentDate(alarm.alarmDate)
+                    if (dayfromToday == 0L) {
+                        var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
+                        if (alarm.days[currentDay] == '1' && timeDif > -1L) {
+                            if (timeDif < intervaltoAlarm) {
+                                intervaltoAlarm = timeDif
                             setAlarm = alarm
                         }
                     }
