@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   firebase_core: ^2.27.0
-  screen_state: ^2.0.0
+  screen_state: ^4.0.0
   cupertino_icons: ^1.0.2
   get: 4.6.6
   get_storage: ^2.1.1
