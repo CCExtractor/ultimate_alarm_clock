@@ -22,6 +22,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
     }
     val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
     val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+    Log.d("d","cd ${currentDay}")
 
 
     val cursor = db.rawQuery(
@@ -43,9 +44,12 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
         do {
             alarm = AlarmModel.fromCursor(cursor)
             if (alarm.ringOn == 0) {
+
                 var dayfromToday = 0
                 var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                if (alarm.days[currentDay] == '1' || alarm.days=="0000000" && timeDif > -1L) {
+                Log.d("d","timeDiff ${timeDif}")
+
+                if ((alarm.days[currentDay] == '1' || alarm.days=="0000000") && timeDif > -1L) {
                     if (timeDif < intervaltoAlarm) {
                         intervaltoAlarm = timeDif
                         setAlarm = alarm
@@ -53,15 +57,31 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
                 } else {
                     dayfromToday = getDaysUntilNextAlarm(alarm.days, currentDay)
                     if (dayfromToday == 0) {
-                        var timeDif =
-                            getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
-                        if (timeDif < intervaltoAlarm && timeDif > -1L ) {
-                            intervaltoAlarm = timeDif
-                            setAlarm = alarm
+
+                        if(alarm.days=="0000000")
+                        {
+
+                            var timeDif =
+                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
+                            if (timeDif < intervaltoAlarm && timeDif > -1L ) {
+                                intervaltoAlarm = timeDif
+                                setAlarm = alarm
+                            }
                         }
+                       else{
+
+                            var timeDif =
+                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
+                            if (timeDif < intervaltoAlarm && timeDif > -1L ) {
+                                intervaltoAlarm = timeDif
+                                setAlarm = alarm
+                            }
+                       }
                     } else if (dayfromToday == 1) {
                         var timeDif =
                             getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
+                        Log.d("d","timeDiff ${timeDif}")
+
                         if (timeDif < intervaltoAlarm && timeDif > -1L) {
                             intervaltoAlarm = timeDif
                             setAlarm = alarm
@@ -94,6 +114,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
                         setAlarm = alarm
                     }
                 } else {
+
                     var timeDif =
                         getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * (dayfromToday - 1)
                     if (timeDif < intervaltoAlarm && timeDif > -1L) {
@@ -171,7 +192,7 @@ fun getDaysUntilNextAlarm(alarmDays: String, currentDay: Int): Int {
     }
 
     // If no alarms are on in the week, return -1
-    return -1
+    return 0
 }
 
 fun getTimeDifferenceFromMidnight(timeString: String): Long {
