@@ -73,65 +73,64 @@ class GaurdianAngel extends StatelessWidget {
                   return Switch.adaptive(
                     value: controller.isGuardian.value,
                     activeColor: ksecondaryColor,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       Utils.hapticFeedback();
-                      Permission.phone.isDenied.then((value) {
-                        if (!value) {
-                          final Telephony telephony = Telephony.instance;
-                          telephony.requestPhoneAndSmsPermissions.then((value) {
-                            Get.dialog(
-                              Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
-                                ),
-                                backgroundColor: kprimaryBackgroundColor,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: InternationalPhoneNumberInput(
-                                          textFieldController: controller
-                                              .contactTextEditingController,
-                                          onInputChanged: (value) {},
-                                          onInputValidated: (value) {},
-                                          spaceBetweenSelectorAndTextField: 0,
-                                          selectorConfig: const SelectorConfig(
-                                            showFlags: false,
-                                            setSelectorButtonAsPrefixIcon: true,
-                                            leadingPadding: 0,
-                                            trailingSpace: false,
-                                          ),
-                                        ),
+                      var phonePerm =
+                          await Permission.phone.request().isGranted;
+                      var smsPerm = await Permission.sms.request().isGranted;
+
+                      if (phonePerm && smsPerm) {
+                        Get.dialog(
+                          Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            backgroundColor: kprimaryBackgroundColor,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InternationalPhoneNumberInput(
+                                      textFieldController: controller
+                                          .contactTextEditingController,
+                                      onInputChanged: (value) {},
+                                      onInputValidated: (value) {},
+                                      spaceBetweenSelectorAndTextField: 0,
+                                      selectorConfig: const SelectorConfig(
+                                        showFlags: false,
+                                        setSelectorButtonAsPrefixIcon: true,
+                                        leadingPadding: 0,
+                                        trailingSpace: false,
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: controller.homeController
-                                                  .scalingFactor *
-                                              8,
-                                          horizontal: controller.homeController
-                                                  .scalingFactor *
-                                              4,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Option(0, Icons.sms, 'Text'),
-                                            Option(1, Icons.call, 'Call'),
-                                            const Spacer(),
-                                            Submit(),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: controller
+                                              .homeController.scalingFactor *
+                                          8,
+                                      horizontal: controller
+                                              .homeController.scalingFactor *
+                                          4,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Option(0, Icons.sms, 'Text'),
+                                        Option(1, Icons.call, 'Call'),
+                                        const Spacer(),
+                                        Submit(),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            );
-                          });
-                        }
-                      });
+                            ),
+                          ),
+                        );
+                      }
                     },
                   );
                 },
