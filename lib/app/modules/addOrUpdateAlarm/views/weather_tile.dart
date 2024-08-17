@@ -302,9 +302,7 @@ class WeatherTile extends StatelessWidget {
                     ),
                   );
                 },
-                tileColor: themeController.isLightMode.value
-                    ? kLightSecondaryBackgroundColor
-                    : ksecondaryBackgroundColor,
+
                 title: Row(
                   children: [
                     FittedBox(

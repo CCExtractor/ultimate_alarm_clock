@@ -10,12 +10,10 @@ import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_control
 class TimerBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TimerController>(
-      () => TimerController(),
+    Get.put<TimerController>(
+      TimerController(),
     );
 
-    Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
 
-    Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
   }
 }

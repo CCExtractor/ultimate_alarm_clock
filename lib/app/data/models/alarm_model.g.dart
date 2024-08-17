@@ -27,193 +27,228 @@ const AlarmModelSchema = CollectionSchema(
       name: r'activityMonitor',
       type: IsarType.long,
     ),
-    r'alarmID': PropertySchema(
+    r'alarmDate': PropertySchema(
       id: 2,
+      name: r'alarmDate',
+      type: IsarType.string,
+    ),
+    r'alarmID': PropertySchema(
+      id: 3,
       name: r'alarmID',
       type: IsarType.string,
     ),
     r'alarmTime': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'alarmTime',
       type: IsarType.string,
     ),
     r'days': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'days',
       type: IsarType.boolList,
     ),
     r'deleteAfterGoesOff': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'deleteAfterGoesOff',
       type: IsarType.bool,
     ),
     r'firestoreId': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'firestoreId',
       type: IsarType.string,
     ),
     r'gradient': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'gradient',
       type: IsarType.long,
     ),
+    r'guardian': PropertySchema(
+      id: 9,
+      name: r'guardian',
+      type: IsarType.string,
+    ),
+    r'guardianTimer': PropertySchema(
+      id: 10,
+      name: r'guardianTimer',
+      type: IsarType.long,
+    ),
     r'intervalToAlarm': PropertySchema(
-      id: 8,
+      id: 11,
       name: r'intervalToAlarm',
       type: IsarType.long,
     ),
     r'isActivityEnabled': PropertySchema(
-      id: 9,
+      id: 12,
       name: r'isActivityEnabled',
       type: IsarType.bool,
     ),
+    r'isCall': PropertySchema(
+      id: 13,
+      name: r'isCall',
+      type: IsarType.bool,
+    ),
     r'isEnabled': PropertySchema(
-      id: 10,
+      id: 14,
       name: r'isEnabled',
       type: IsarType.bool,
     ),
+    r'isGuardian': PropertySchema(
+      id: 15,
+      name: r'isGuardian',
+      type: IsarType.bool,
+    ),
     r'isLocationEnabled': PropertySchema(
-      id: 11,
+      id: 16,
       name: r'isLocationEnabled',
       type: IsarType.bool,
     ),
     r'isMathsEnabled': PropertySchema(
-      id: 12,
+      id: 17,
       name: r'isMathsEnabled',
       type: IsarType.bool,
     ),
     r'isOneTime': PropertySchema(
-      id: 13,
+      id: 18,
       name: r'isOneTime',
       type: IsarType.bool,
     ),
     r'isPedometerEnabled': PropertySchema(
-      id: 14,
+      id: 19,
       name: r'isPedometerEnabled',
       type: IsarType.bool,
     ),
     r'isQrEnabled': PropertySchema(
-      id: 15,
+      id: 20,
       name: r'isQrEnabled',
       type: IsarType.bool,
     ),
     r'isShakeEnabled': PropertySchema(
-      id: 16,
+      id: 21,
       name: r'isShakeEnabled',
       type: IsarType.bool,
     ),
     r'isSharedAlarmEnabled': PropertySchema(
-      id: 17,
+      id: 22,
       name: r'isSharedAlarmEnabled',
       type: IsarType.bool,
     ),
     r'isWeatherEnabled': PropertySchema(
-      id: 18,
+      id: 23,
       name: r'isWeatherEnabled',
       type: IsarType.bool,
     ),
     r'label': PropertySchema(
-      id: 19,
+      id: 24,
       name: r'label',
       type: IsarType.string,
     ),
     r'lastEditedUserId': PropertySchema(
-      id: 20,
+      id: 25,
       name: r'lastEditedUserId',
       type: IsarType.string,
     ),
     r'location': PropertySchema(
-      id: 21,
+      id: 26,
       name: r'location',
       type: IsarType.string,
     ),
     r'mainAlarmTime': PropertySchema(
-      id: 22,
+      id: 27,
       name: r'mainAlarmTime',
       type: IsarType.string,
     ),
     r'mathsDifficulty': PropertySchema(
-      id: 23,
+      id: 28,
       name: r'mathsDifficulty',
       type: IsarType.long,
     ),
     r'minutesSinceMidnight': PropertySchema(
-      id: 24,
+      id: 29,
       name: r'minutesSinceMidnight',
       type: IsarType.long,
     ),
     r'mutexLock': PropertySchema(
-      id: 25,
+      id: 30,
       name: r'mutexLock',
       type: IsarType.bool,
     ),
     r'note': PropertySchema(
-      id: 26,
+      id: 31,
       name: r'note',
       type: IsarType.string,
     ),
     r'numMathsQuestions': PropertySchema(
-      id: 27,
+      id: 32,
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
     r'numberOfSteps': PropertySchema(
-      id: 28,
+      id: 33,
       name: r'numberOfSteps',
       type: IsarType.long,
     ),
     r'ownerId': PropertySchema(
-      id: 29,
+      id: 34,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 30,
+      id: 35,
       name: r'ownerName',
       type: IsarType.string,
     ),
+    r'profile': PropertySchema(
+      id: 36,
+      name: r'profile',
+      type: IsarType.string,
+    ),
     r'qrValue': PropertySchema(
-      id: 31,
+      id: 37,
       name: r'qrValue',
       type: IsarType.string,
     ),
+    r'ringOn': PropertySchema(
+      id: 38,
+      name: r'ringOn',
+      type: IsarType.bool,
+    ),
     r'ringtoneName': PropertySchema(
-      id: 32,
+      id: 39,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 33,
+      id: 40,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 34,
+      id: 41,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 35,
+      id: 42,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 36,
+      id: 43,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'volMax': PropertySchema(
-      id: 37,
+      id: 44,
       name: r'volMax',
       type: IsarType.double,
     ),
     r'volMin': PropertySchema(
-      id: 38,
+      id: 45,
       name: r'volMin',
       type: IsarType.double,
     ),
     r'weatherTypes': PropertySchema(
-      id: 39,
+      id: 46,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -238,6 +273,7 @@ int _alarmModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.alarmDate.length * 3;
   bytesCount += 3 + object.alarmID.length * 3;
   bytesCount += 3 + object.alarmTime.length * 3;
   bytesCount += 3 + object.days.length;
@@ -247,6 +283,7 @@ int _alarmModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.guardian.length * 3;
   bytesCount += 3 + object.label.length * 3;
   bytesCount += 3 + object.lastEditedUserId.length * 3;
   bytesCount += 3 + object.location.length * 3;
@@ -259,6 +296,7 @@ int _alarmModelEstimateSize(
   bytesCount += 3 + object.note.length * 3;
   bytesCount += 3 + object.ownerId.length * 3;
   bytesCount += 3 + object.ownerName.length * 3;
+  bytesCount += 3 + object.profile.length * 3;
   bytesCount += 3 + object.qrValue.length * 3;
   bytesCount += 3 + object.ringtoneName.length * 3;
   {
@@ -285,44 +323,51 @@ void _alarmModelSerialize(
 ) {
   writer.writeLong(offsets[0], object.activityInterval);
   writer.writeLong(offsets[1], object.activityMonitor);
-  writer.writeString(offsets[2], object.alarmID);
-  writer.writeString(offsets[3], object.alarmTime);
-  writer.writeBoolList(offsets[4], object.days);
-  writer.writeBool(offsets[5], object.deleteAfterGoesOff);
-  writer.writeString(offsets[6], object.firestoreId);
-  writer.writeLong(offsets[7], object.gradient);
-  writer.writeLong(offsets[8], object.intervalToAlarm);
-  writer.writeBool(offsets[9], object.isActivityEnabled);
-  writer.writeBool(offsets[10], object.isEnabled);
-  writer.writeBool(offsets[11], object.isLocationEnabled);
-  writer.writeBool(offsets[12], object.isMathsEnabled);
-  writer.writeBool(offsets[13], object.isOneTime);
-  writer.writeBool(offsets[14], object.isPedometerEnabled);
-  writer.writeBool(offsets[15], object.isQrEnabled);
-  writer.writeBool(offsets[16], object.isShakeEnabled);
-  writer.writeBool(offsets[17], object.isSharedAlarmEnabled);
-  writer.writeBool(offsets[18], object.isWeatherEnabled);
-  writer.writeString(offsets[19], object.label);
-  writer.writeString(offsets[20], object.lastEditedUserId);
-  writer.writeString(offsets[21], object.location);
-  writer.writeString(offsets[22], object.mainAlarmTime);
-  writer.writeLong(offsets[23], object.mathsDifficulty);
-  writer.writeLong(offsets[24], object.minutesSinceMidnight);
-  writer.writeBool(offsets[25], object.mutexLock);
-  writer.writeString(offsets[26], object.note);
-  writer.writeLong(offsets[27], object.numMathsQuestions);
-  writer.writeLong(offsets[28], object.numberOfSteps);
-  writer.writeString(offsets[29], object.ownerId);
-  writer.writeString(offsets[30], object.ownerName);
-  writer.writeString(offsets[31], object.qrValue);
-  writer.writeString(offsets[32], object.ringtoneName);
-  writer.writeLong(offsets[33], object.shakeTimes);
-  writer.writeStringList(offsets[34], object.sharedUserIds);
-  writer.writeBool(offsets[35], object.showMotivationalQuote);
-  writer.writeLong(offsets[36], object.snoozeDuration);
-  writer.writeDouble(offsets[37], object.volMax);
-  writer.writeDouble(offsets[38], object.volMin);
-  writer.writeLongList(offsets[39], object.weatherTypes);
+  writer.writeString(offsets[2], object.alarmDate);
+  writer.writeString(offsets[3], object.alarmID);
+  writer.writeString(offsets[4], object.alarmTime);
+  writer.writeBoolList(offsets[5], object.days);
+  writer.writeBool(offsets[6], object.deleteAfterGoesOff);
+  writer.writeString(offsets[7], object.firestoreId);
+  writer.writeLong(offsets[8], object.gradient);
+  writer.writeString(offsets[9], object.guardian);
+  writer.writeLong(offsets[10], object.guardianTimer);
+  writer.writeLong(offsets[11], object.intervalToAlarm);
+  writer.writeBool(offsets[12], object.isActivityEnabled);
+  writer.writeBool(offsets[13], object.isCall);
+  writer.writeBool(offsets[14], object.isEnabled);
+  writer.writeBool(offsets[15], object.isGuardian);
+  writer.writeBool(offsets[16], object.isLocationEnabled);
+  writer.writeBool(offsets[17], object.isMathsEnabled);
+  writer.writeBool(offsets[18], object.isOneTime);
+  writer.writeBool(offsets[19], object.isPedometerEnabled);
+  writer.writeBool(offsets[20], object.isQrEnabled);
+  writer.writeBool(offsets[21], object.isShakeEnabled);
+  writer.writeBool(offsets[22], object.isSharedAlarmEnabled);
+  writer.writeBool(offsets[23], object.isWeatherEnabled);
+  writer.writeString(offsets[24], object.label);
+  writer.writeString(offsets[25], object.lastEditedUserId);
+  writer.writeString(offsets[26], object.location);
+  writer.writeString(offsets[27], object.mainAlarmTime);
+  writer.writeLong(offsets[28], object.mathsDifficulty);
+  writer.writeLong(offsets[29], object.minutesSinceMidnight);
+  writer.writeBool(offsets[30], object.mutexLock);
+  writer.writeString(offsets[31], object.note);
+  writer.writeLong(offsets[32], object.numMathsQuestions);
+  writer.writeLong(offsets[33], object.numberOfSteps);
+  writer.writeString(offsets[34], object.ownerId);
+  writer.writeString(offsets[35], object.ownerName);
+  writer.writeString(offsets[36], object.profile);
+  writer.writeString(offsets[37], object.qrValue);
+  writer.writeBool(offsets[38], object.ringOn);
+  writer.writeString(offsets[39], object.ringtoneName);
+  writer.writeLong(offsets[40], object.shakeTimes);
+  writer.writeStringList(offsets[41], object.sharedUserIds);
+  writer.writeBool(offsets[42], object.showMotivationalQuote);
+  writer.writeLong(offsets[43], object.snoozeDuration);
+  writer.writeDouble(offsets[44], object.volMax);
+  writer.writeDouble(offsets[45], object.volMin);
+  writer.writeLongList(offsets[46], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -334,45 +379,52 @@ AlarmModel _alarmModelDeserialize(
   final object = AlarmModel(
     activityInterval: reader.readLong(offsets[0]),
     activityMonitor: reader.readLong(offsets[1]),
-    alarmID: reader.readString(offsets[2]),
-    alarmTime: reader.readString(offsets[3]),
-    days: reader.readBoolList(offsets[4]) ?? [],
-    deleteAfterGoesOff: reader.readBool(offsets[5]),
-    gradient: reader.readLong(offsets[7]),
-    intervalToAlarm: reader.readLong(offsets[8]),
-    isActivityEnabled: reader.readBool(offsets[9]),
-    isEnabled: reader.readBoolOrNull(offsets[10]) ?? true,
-    isLocationEnabled: reader.readBool(offsets[11]),
-    isMathsEnabled: reader.readBool(offsets[12]),
-    isOneTime: reader.readBool(offsets[13]),
-    isPedometerEnabled: reader.readBool(offsets[14]),
-    isQrEnabled: reader.readBool(offsets[15]),
-    isShakeEnabled: reader.readBool(offsets[16]),
-    isSharedAlarmEnabled: reader.readBool(offsets[17]),
-    isWeatherEnabled: reader.readBool(offsets[18]),
-    label: reader.readString(offsets[19]),
-    lastEditedUserId: reader.readString(offsets[20]),
-    location: reader.readString(offsets[21]),
-    mainAlarmTime: reader.readStringOrNull(offsets[22]),
-    mathsDifficulty: reader.readLong(offsets[23]),
-    minutesSinceMidnight: reader.readLong(offsets[24]),
-    mutexLock: reader.readBool(offsets[25]),
-    note: reader.readString(offsets[26]),
-    numMathsQuestions: reader.readLong(offsets[27]),
-    numberOfSteps: reader.readLong(offsets[28]),
-    ownerId: reader.readString(offsets[29]),
-    ownerName: reader.readString(offsets[30]),
-    qrValue: reader.readString(offsets[31]),
-    ringtoneName: reader.readString(offsets[32]),
-    shakeTimes: reader.readLong(offsets[33]),
-    sharedUserIds: reader.readStringList(offsets[34]),
-    showMotivationalQuote: reader.readBool(offsets[35]),
-    snoozeDuration: reader.readLong(offsets[36]),
-    volMax: reader.readDouble(offsets[37]),
-    volMin: reader.readDouble(offsets[38]),
-    weatherTypes: reader.readLongList(offsets[39]) ?? [],
+    alarmDate: reader.readString(offsets[2]),
+    alarmID: reader.readString(offsets[3]),
+    alarmTime: reader.readString(offsets[4]),
+    days: reader.readBoolList(offsets[5]) ?? [],
+    deleteAfterGoesOff: reader.readBool(offsets[6]),
+    gradient: reader.readLong(offsets[8]),
+    guardian: reader.readString(offsets[9]),
+    guardianTimer: reader.readLong(offsets[10]),
+    intervalToAlarm: reader.readLong(offsets[11]),
+    isActivityEnabled: reader.readBool(offsets[12]),
+    isCall: reader.readBool(offsets[13]),
+    isEnabled: reader.readBoolOrNull(offsets[14]) ?? true,
+    isGuardian: reader.readBool(offsets[15]),
+    isLocationEnabled: reader.readBool(offsets[16]),
+    isMathsEnabled: reader.readBool(offsets[17]),
+    isOneTime: reader.readBool(offsets[18]),
+    isPedometerEnabled: reader.readBool(offsets[19]),
+    isQrEnabled: reader.readBool(offsets[20]),
+    isShakeEnabled: reader.readBool(offsets[21]),
+    isSharedAlarmEnabled: reader.readBool(offsets[22]),
+    isWeatherEnabled: reader.readBool(offsets[23]),
+    label: reader.readString(offsets[24]),
+    lastEditedUserId: reader.readString(offsets[25]),
+    location: reader.readString(offsets[26]),
+    mainAlarmTime: reader.readStringOrNull(offsets[27]),
+    mathsDifficulty: reader.readLong(offsets[28]),
+    minutesSinceMidnight: reader.readLong(offsets[29]),
+    mutexLock: reader.readBool(offsets[30]),
+    note: reader.readString(offsets[31]),
+    numMathsQuestions: reader.readLong(offsets[32]),
+    numberOfSteps: reader.readLong(offsets[33]),
+    ownerId: reader.readString(offsets[34]),
+    ownerName: reader.readString(offsets[35]),
+    profile: reader.readString(offsets[36]),
+    qrValue: reader.readString(offsets[37]),
+    ringOn: reader.readBool(offsets[38]),
+    ringtoneName: reader.readString(offsets[39]),
+    shakeTimes: reader.readLong(offsets[40]),
+    sharedUserIds: reader.readStringList(offsets[41]),
+    showMotivationalQuote: reader.readBool(offsets[42]),
+    snoozeDuration: reader.readLong(offsets[43]),
+    volMax: reader.readDouble(offsets[44]),
+    volMin: reader.readDouble(offsets[45]),
+    weatherTypes: reader.readLongList(offsets[46]) ?? [],
   );
-  object.firestoreId = reader.readStringOrNull(offsets[6]);
+  object.firestoreId = reader.readStringOrNull(offsets[7]);
   object.isarId = id;
   return object;
 }
@@ -393,27 +445,27 @@ P _alarmModelDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readBoolList(offset) ?? []) as P;
+      return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolList(offset) ?? []) as P;
     case 6:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 7:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
       return (reader.readLong(offset)) as P;
     case 9:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
+      return (reader.readLong(offset)) as P;
     case 11:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 12:
       return (reader.readBool(offset)) as P;
     case 13:
       return (reader.readBool(offset)) as P;
     case 14:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 15:
       return (reader.readBool(offset)) as P;
     case 16:
@@ -423,46 +475,60 @@ P _alarmModelDeserializeProp<P>(
     case 18:
       return (reader.readBool(offset)) as P;
     case 19:
-      return (reader.readString(offset)) as P;
-    case 20:
-      return (reader.readString(offset)) as P;
-    case 21:
-      return (reader.readString(offset)) as P;
-    case 22:
-      return (reader.readStringOrNull(offset)) as P;
-    case 23:
-      return (reader.readLong(offset)) as P;
-    case 24:
-      return (reader.readLong(offset)) as P;
-    case 25:
       return (reader.readBool(offset)) as P;
+    case 20:
+      return (reader.readBool(offset)) as P;
+    case 21:
+      return (reader.readBool(offset)) as P;
+    case 22:
+      return (reader.readBool(offset)) as P;
+    case 23:
+      return (reader.readBool(offset)) as P;
+    case 24:
+      return (reader.readString(offset)) as P;
+    case 25:
+      return (reader.readString(offset)) as P;
     case 26:
       return (reader.readString(offset)) as P;
     case 27:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 28:
       return (reader.readLong(offset)) as P;
     case 29:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 30:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 31:
       return (reader.readString(offset)) as P;
     case 32:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 33:
       return (reader.readLong(offset)) as P;
     case 34:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 35:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 36:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 37:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 38:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 39:
+      return (reader.readString(offset)) as P;
+    case 40:
+      return (reader.readLong(offset)) as P;
+    case 41:
+      return (reader.readStringList(offset)) as P;
+    case 42:
+      return (reader.readBool(offset)) as P;
+    case 43:
+      return (reader.readLong(offset)) as P;
+    case 44:
+      return (reader.readDouble(offset)) as P;
+    case 45:
+      return (reader.readDouble(offset)) as P;
+    case 46:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -672,6 +738,140 @@ extension AlarmModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> alarmDateEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'alarmDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      alarmDateGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'alarmDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> alarmDateLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'alarmDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> alarmDateBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'alarmDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      alarmDateStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'alarmDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> alarmDateEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'alarmDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> alarmDateContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'alarmDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> alarmDateMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'alarmDate',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      alarmDateIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'alarmDate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      alarmDateIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'alarmDate',
+        value: '',
       ));
     });
   }
@@ -1256,6 +1456,196 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> guardianEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'guardian',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'guardian',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> guardianLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'guardian',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> guardianBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'guardian',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'guardian',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> guardianEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'guardian',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> guardianContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'guardian',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> guardianMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'guardian',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'guardian',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'guardian',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianTimerEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'guardianTimer',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianTimerGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'guardianTimer',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianTimerLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'guardianTimer',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      guardianTimerBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'guardianTimer',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
       intervalToAlarmEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -1322,11 +1712,31 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> isCallEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isCall',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> isEnabledEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isEnabled',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> isGuardianEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isGuardian',
         value: value,
       ));
     });
@@ -2650,6 +3060,138 @@ extension AlarmModelQueryFilter
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profile',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      profileGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'profile',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'profile',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'profile',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'profile',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'profile',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'profile',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'profile',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> profileIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profile',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      profileIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'profile',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> qrValueEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -2778,6 +3320,16 @@ extension AlarmModelQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'qrValue',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> ringOnEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ringOn',
+        value: value,
       ));
     });
   }
@@ -3586,6 +4138,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByAlarmDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'alarmDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByAlarmDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'alarmDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByAlarmID() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'alarmID', Sort.asc);
@@ -3648,6 +4212,30 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByGuardian() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardian', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByGuardianDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardian', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByGuardianTimer() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardianTimer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByGuardianTimerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardianTimer', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIntervalToAlarm() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'intervalToAlarm', Sort.asc);
@@ -3674,6 +4262,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsCall() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCall', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsCallDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCall', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEnabled', Sort.asc);
@@ -3683,6 +4283,18 @@ extension AlarmModelQuerySortBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsGuardian() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isGuardian', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsGuardianDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isGuardian', Sort.desc);
     });
   }
 
@@ -3939,6 +4551,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByProfile() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profile', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByProfileDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profile', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByQrValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.asc);
@@ -3948,6 +4572,18 @@ extension AlarmModelQuerySortBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByQrValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByRingOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.desc);
     });
   }
 
@@ -4055,6 +4691,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByAlarmDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'alarmDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByAlarmDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'alarmDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByAlarmID() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'alarmID', Sort.asc);
@@ -4117,6 +4765,30 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByGuardian() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardian', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByGuardianDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardian', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByGuardianTimer() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardianTimer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByGuardianTimerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'guardianTimer', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIntervalToAlarm() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'intervalToAlarm', Sort.asc);
@@ -4143,6 +4815,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsCall() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCall', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsCallDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCall', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEnabled', Sort.asc);
@@ -4152,6 +4836,18 @@ extension AlarmModelQuerySortThenBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsGuardian() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isGuardian', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsGuardianDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isGuardian', Sort.desc);
     });
   }
 
@@ -4420,6 +5116,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByProfile() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profile', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByProfileDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profile', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByQrValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.asc);
@@ -4429,6 +5137,18 @@ extension AlarmModelQuerySortThenBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByQrValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'qrValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByRingOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ringOn', Sort.desc);
     });
   }
 
@@ -4522,6 +5242,13 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByAlarmDate(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'alarmDate', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByAlarmID(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -4562,6 +5289,19 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByGuardian(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'guardian', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByGuardianTimer() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'guardianTimer');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIntervalToAlarm() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'intervalToAlarm');
@@ -4575,9 +5315,21 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsCall() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isCall');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isEnabled');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsGuardian() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isGuardian');
     });
   }
 
@@ -4715,10 +5467,23 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByProfile(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'profile', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByQrValue(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'qrValue', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByRingOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ringOn');
     });
   }
 
@@ -4793,6 +5558,12 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, String, QQueryOperations> alarmDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'alarmDate');
+    });
+  }
+
   QueryBuilder<AlarmModel, String, QQueryOperations> alarmIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'alarmID');
@@ -4830,6 +5601,18 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, String, QQueryOperations> guardianProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'guardian');
+    });
+  }
+
+  QueryBuilder<AlarmModel, int, QQueryOperations> guardianTimerProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'guardianTimer');
+    });
+  }
+
   QueryBuilder<AlarmModel, int, QQueryOperations> intervalToAlarmProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'intervalToAlarm');
@@ -4842,9 +5625,21 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, bool, QQueryOperations> isCallProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isCall');
+    });
+  }
+
   QueryBuilder<AlarmModel, bool, QQueryOperations> isEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isEnabled');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations> isGuardianProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isGuardian');
     });
   }
 
@@ -4972,9 +5767,21 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, String, QQueryOperations> profileProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'profile');
+    });
+  }
+
   QueryBuilder<AlarmModel, String, QQueryOperations> qrValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'qrValue');
+    });
+  }
+
+  QueryBuilder<AlarmModel, bool, QQueryOperations> ringOnProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ringOn');
     });
   }
 

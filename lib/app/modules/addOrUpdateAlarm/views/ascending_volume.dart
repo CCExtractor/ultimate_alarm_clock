@@ -110,9 +110,6 @@ class AscendingVolumeTile extends StatelessWidget {
         );
       },
       child: ListTile(
-        tileColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
         title: Text(
           'Ascending Volume'.tr,
           style: TextStyle(

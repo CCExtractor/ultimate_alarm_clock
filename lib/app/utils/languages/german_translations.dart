@@ -40,7 +40,7 @@ class GermanTranslations extends Translations {
           //home_view.dart
           'About': 'Um',
           'Settings': 'Einstellungen',
-          'v0.1.0': 'v0.1.0',
+          'v0.2.0': 'v0.2.0',
           'Ultimate Alarm Clock': 'Ultimativer Wecker',
           'Create alarm': 'Alarm erstellen',
           'Join alarm': 'Alarm beitreten',

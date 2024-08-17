@@ -5,6 +5,8 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+import '../../../data/providers/google_cloud_api_provider.dart';
+
 class GoogleSignIn extends StatelessWidget {
   const GoogleSignIn({
     super.key,
@@ -29,7 +31,7 @@ class GoogleSignIn extends StatelessWidget {
       onTap: () async {
         Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
-          bool? isSuccessfulLogin = await controller.loginWithGoogle();
+          var isSuccessfulLogin = await GoogleCloudProvider.getInstance();
 
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(
@@ -149,28 +151,26 @@ class GoogleSignIn extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
-          child: Row(
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Obx(
-                () => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      (controller.isUserLoggedIn.value)
-                          ?
-                          // 'Unlink ${controller.userModel!.email}'
-                          'Unlink @usermail'.trParams(
-                              {'usermail': controller.userModel!.email})
-                          : 'Sign-In with Google'.tr,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
+             Container(width: Get.width*0.55,
+               child: SingleChildScrollView(scrollDirection: Axis.horizontal,
+                 child: Row(children: [ Obx(
+                       () => Text(
+                     (controller.isUserLoggedIn.value)
+                         ?
+                     // 'Unlink ${controller.userModel!.email}'
+                     'Unlink @usermail'.trParams(
+                         {'usermail': controller.userModel.value!.email})
+                         : 'Sign-In with Google'.tr,
+                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                       overflow: TextOverflow.ellipsis,
+                     ),
+                   ),
+                 ),
+                   ],),
+               ),
+             ),IconButton(
                 onPressed: () => {
                   Utils.hapticFeedback(),
                   showBottomSheet(
@@ -205,7 +205,7 @@ class GoogleSignIn extends StatelessWidget {
                                 Text(
                                   'Shared Alarm'.tr,
                                   style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                  Theme.of(context).textTheme.displaySmall,
                                 ),
                                 Text(
                                   // 'Collaborate with friends, family members,'
@@ -220,7 +220,7 @@ class GoogleSignIn extends StatelessWidget {
                                 Text(
                                   'Syncing Across Devices'.tr,
                                   style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                  Theme.of(context).textTheme.displaySmall,
                                 ),
                                 Text(
                                   // 'Access your alarms across multiple devices'
@@ -235,7 +235,7 @@ class GoogleSignIn extends StatelessWidget {
                                 Text(
                                   'Your privacy'.tr,
                                   style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                  Theme.of(context).textTheme.displaySmall,
                                 ),
                                 Text(
                                   // 'We do not access,  use or sell any'
@@ -274,10 +274,10 @@ class GoogleSignIn extends StatelessWidget {
                                       .textTheme
                                       .displaySmall!
                                       .copyWith(
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : ksecondaryTextColor,
-                                      ),
+                                    color: themeController.isLightMode.value
+                                        ? kLightPrimaryTextColor
+                                        : ksecondaryTextColor,
+                                  ),
                                 ),
                               ),
                             ),
@@ -295,7 +295,6 @@ class GoogleSignIn extends StatelessWidget {
                       : kprimaryTextColor.withOpacity(0.3),
                 ),
               ),
-              Spacer(),
               Obx(
                 () => Icon(
                   (controller.isUserLoggedIn.value)

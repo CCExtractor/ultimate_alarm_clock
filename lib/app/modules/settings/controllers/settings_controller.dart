@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/calendar/v3.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
@@ -12,8 +13,11 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:weather/weather.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
+import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 
 import '../../../data/providers/get_storage_provider.dart';
+import '../../../data/providers/google_cloud_api_provider.dart';
+import '../../../utils/GoogleHttpClient.dart';
 
 class SettingsController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
@@ -28,7 +32,6 @@ class SettingsController extends GetxController {
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
   late GoogleSignInAccount? googleSignInAccount;
   final RxBool isUserLoggedIn = false.obs;
   final Rx<WeatherKeyState> weatherKeyState = WeatherKeyState.add.obs;
@@ -37,8 +40,7 @@ class SettingsController extends GetxController {
   RxBool isApiKeyEmpty = false.obs;
   final storage = Get.find<GetStorageProvider>();
   final RxString local = Get.locale.toString().obs;
-  UserModel? userModel;
-
+  final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   final Map<String, dynamic> optionslocales = {
     'en_US': {
       'languageCode': 'en',
@@ -70,67 +72,20 @@ class SettingsController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    userModel = homeController.userModel.value;
-    isUserLoggedIn.value = await _googleSignIn.isSignedIn();
+    userModel.value = homeController.userModel.value;
+    isUserLoggedIn.value = await GoogleCloudProvider.isUserLoggedin();
     if (isUserLoggedIn.value) {
-      userModel = await _secureStorageProvider.retrieveUserModel();
+      userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
   }
 
   // Logins user using GoogleSignIn
-  loginWithGoogle() async {
-    try {
-      googleSignInAccount = await _googleSignIn.signIn();
-
-      if (googleSignInAccount != null) {
-        // Process successful sign-in
-        String fullName = googleSignInAccount!.displayName.toString();
-        List<String> parts = fullName.split(' ');
-        String lastName = ' ';
-        if (parts.length == 3) {
-          if (parts[parts.length - 1].length == 1) {
-            lastName = parts[1].toLowerCase().capitalizeFirst.toString();
-          } else {
-            lastName = parts[parts.length - 1]
-                .toLowerCase()
-                .capitalizeFirst
-                .toString();
-          }
-        } else {
-          lastName =
-              parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
-        }
-        String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
-
-        userModel = UserModel(
-          id: googleSignInAccount!.id,
-          fullName: fullName,
-          firstName: firstName,
-          lastName: lastName,
-          email: googleSignInAccount!.email,
-        );
-        await FirestoreDb.addUser(userModel!);
-        await SecureStorageProvider().storeUserModel(userModel!);
-        isUserLoggedIn.value = true;
-        homeController.isUserSignedIn.value = true;
-        homeController.userModel.value = userModel;
-        await homeController.initStream(userModel);
-        return true;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      // Handle any other exceptions that may occur
-      debugPrint(e.toString());
-      return null;
-    }
-  }
 
   Future<void> logoutGoogle() async {
-    await _googleSignIn.signOut();
+    await GoogleCloudProvider.logoutGoogle();
     await SecureStorageProvider().deleteUserModel();
-    userModel = null;
+    userModel.value = null;
     isUserLoggedIn.value = false;
     homeController.isUserSignedIn.value = false;
     homeController.userModel.value = null;

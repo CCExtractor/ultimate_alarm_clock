@@ -46,7 +46,7 @@ class RussianTranslations extends Translations {
           //home_view.dart
           'About': 'О',
           'Settings': 'Настройки',
-          'v0.1.0': 'v0.1.0',
+          'v0.2.0': 'v0.2.0',
           'Ultimate Alarm Clock': 'Лучший будильник',
           'Create alarm': 'Создать будильник',
           'Join alarm': 'Присоединиться к будильнику',

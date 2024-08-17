@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GetStorageProvider {
   late final GetStorage _getStorage;
@@ -39,5 +40,16 @@ class GetStorageProvider {
   Future<void> writeLocale(String lanCode, String countryCode) async {
     await _getStorage.write('languageCode', lanCode);
     await _getStorage.write('countryCode', countryCode);
+  }
+
+  Future<void> writeProfile(String profile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await _getStorage.write('profile', profile);
+    await prefs.setString('profile', profile);
+  }
+
+  Future<String> readProfile() async {
+    String profile = await _getStorage.read('profile') ?? 'Default';
+    return profile;
   }
 }

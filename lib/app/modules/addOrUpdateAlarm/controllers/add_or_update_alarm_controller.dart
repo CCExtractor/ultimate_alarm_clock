@@ -5,13 +5,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
@@ -52,7 +55,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final mutexLock = false.obs;
   var lastEditedUserId = ''.obs;
   final sharedUserIds = <String>[].obs;
-  var alarmRecord = Rxn<AlarmModel>(null);
+  var alarmRecord = Utils.alarmModelInit.obs;
   final RxMap offsetDetails = {}.obs;
   final offsetDuration = 0.obs;
   final isOffsetBefore = true.obs;
@@ -78,7 +81,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final selectedWeather = <WeatherTypes>[].obs;
   final repeatDays =
       <bool>[false, false, false, false, false, false, false].obs;
-  final RxBool isOneTime = false.obs;
+  final RxBool isOneTime = true.obs;
   final RxString label = ''.obs;
   final RxInt snoozeDuration = 1.obs;
   var customRingtoneName = 'Default'.obs;
@@ -94,6 +97,18 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxDouble selectedGradientDouble = 0.0.obs;
   final RxDouble volMin = 0.0.obs;
   final RxDouble volMax = 10.0.obs;
+  var selectedDate = DateTime.now().obs;
+  final RxBool isFutureDate = false.obs;
+
+  final RxBool isAddUser = false.obs;
+
+  final RxList selectedEmails = [].obs;
+
+  TextEditingController profileTextEditingController = TextEditingController();
+
+  TextEditingController contactTextEditingController = TextEditingController();
+
+  TextEditingController emailTextEditingController = TextEditingController();
 
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
@@ -101,7 +116,7 @@ class AddOrUpdateAlarmController extends GetxController {
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
-    for (String userId in alarmRecord.value?.sharedUserIds ?? []) {
+    for (String userId in alarmRecord.value.sharedUserIds ?? []) {
       userDetails.add(await FirestoreDb.fetchUserDetails(userId));
     }
 
@@ -116,6 +131,16 @@ class AddOrUpdateAlarmController extends GetxController {
   // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
   Map<String, dynamic> changedFields = {};
+
+  RxInt alarmSettingType = 0.obs;
+
+  late ProfileModel profileModel;
+  final storage = Get.find<GetStorageProvider>();
+
+  final RxBool isGuardian = false.obs;
+  final RxInt guardianTimer = 0.obs;
+  final RxString guardian = ''.obs;
+  final RxBool isCall = false.obs;
 
   void toggleIsPlaying() {
     isPlaying.toggle();
@@ -134,7 +159,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void setGradient(int value) {
-    this.gradient.value = value;
+    gradient.value = value;
   }
 
   void setIsWeekdaysSelected(bool value) {
@@ -154,9 +179,8 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   checkOverlayPermissionAndNavigate() async {
-    if (!(await Permission.systemAlertWindow.isGranted) ||
-        !(await Permission.ignoreBatteryOptimizations.isGranted) ||
-        !(await Permission.systemAlertWindow.isGranted)) {
+    if (!(await Permission.systemAlertWindow.isGranted) &&
+        !(await Permission.ignoreBatteryOptimizations.isGranted)) {
       Get.defaultDialog(
         backgroundColor: themeController.isLightMode.value
             ? kLightSecondaryBackgroundColor
@@ -214,7 +238,8 @@ class AddOrUpdateAlarmController extends GetxController {
                       .isGranted;
                   if (!requested) {
                     debugPrint(
-                        'IGNORE_BATTERY_OPTIMIZATION permission denied!');
+                      'IGNORE_BATTERY_OPTIMIZATION permission denied!',
+                    );
                     return;
                   }
                 }
@@ -353,7 +378,9 @@ class AddOrUpdateAlarmController extends GetxController {
               ? kLightPrimaryTextColor
               : Colors.white,
         ),
-        content: const Text('To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.'),
+        content: const Text(
+          'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.',
+        ),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
@@ -531,85 +558,86 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-  backgroundColor: themeController.isLightMode.value
-      ? kLightSecondaryBackgroundColor
-      : ksecondaryBackgroundColor,
-  title: 'Camera Permission'.tr,
-  titleStyle: TextStyle(
-    color: themeController.isLightMode.value
-        ? kLightPrimaryTextColor
-        : Colors.white,
-  ),
-  titlePadding: const EdgeInsets.only(
-    top: 25,
-    left: 10,
-  ),
-  contentPadding: const EdgeInsets.only(top: 20, left: 20, right: 20,bottom: 23),
-  content: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Center(
-        child: Text(
-          'Please allow camera access to scan QR codes.'.tr,
-          textAlign: TextAlign.center,
+        backgroundColor: themeController.isLightMode.value
+            ? kLightSecondaryBackgroundColor
+            : ksecondaryBackgroundColor,
+        title: 'Camera Permission'.tr,
+        titleStyle: TextStyle(
+          color: themeController.isLightMode.value
+              ? kLightPrimaryTextColor
+              : Colors.white,
         ),
-      ),
-    ],
-  ),
-  onCancel: () {
-    Get.back(); // Close the alert box
-  },
-  onConfirm: () async {
-    Get.back(); // Close the alert box
-    PermissionStatus permissionStatus = await Permission.camera.request();
-    if (permissionStatus.isGranted) {
-      // Permission granted, proceed with QR code scanning
-      showQRDialog();
-    }
-  },
-  confirm: TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-    ),
-    child: Text(
-      'OK',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : ksecondaryTextColor,
+        titlePadding: const EdgeInsets.only(
+          top: 25,
+          left: 10,
+        ),
+        contentPadding:
+            const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 23),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                'Please allow camera access to scan QR codes.'.tr,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+        onCancel: () {
+          Get.back(); // Close the alert box
+        },
+        onConfirm: () async {
+          Get.back(); // Close the alert box
+          PermissionStatus permissionStatus = await Permission.camera.request();
+          if (permissionStatus.isGranted) {
+            // Permission granted, proceed with QR code scanning
+            showQRDialog();
+          }
+        },
+        confirm: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(kprimaryColor),
           ),
-    ),
-    onPressed: () async {
-      Get.back(); // Close the alert box
-      PermissionStatus permissionStatus =
-          await Permission.camera.request();
-      if (permissionStatus.isGranted) {
-        // Permission granted, proceed with QR code scanning
-        showQRDialog();
-      }
-    },
-  ),
-  cancel: TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(
-        themeController.isLightMode.value
-            ? kLightPrimaryTextColor.withOpacity(0.5)
-            : kprimaryTextColor.withOpacity(0.5),
-      ),
-    ),
-    child: Text(
-      'Cancel',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+          child: Text(
+            'OK',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : ksecondaryTextColor,
+                ),
           ),
-    ),
-    onPressed: () {
-      Get.back(); // Close the alert box
-    },
-  ),
-);
+          onPressed: () async {
+            Get.back(); // Close the alert box
+            PermissionStatus permissionStatus =
+                await Permission.camera.request();
+            if (permissionStatus.isGranted) {
+              // Permission granted, proceed with QR code scanning
+              showQRDialog();
+            }
+          },
+        ),
+        cancel: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              themeController.isLightMode.value
+                  ? kLightPrimaryTextColor.withOpacity(0.5)
+                  : kprimaryTextColor.withOpacity(0.5),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: themeController.isLightMode.value
+                      ? kLightPrimaryTextColor
+                      : kprimaryTextColor,
+                ),
+          ),
+          onPressed: () {
+            Get.back(); // Close the alert box
+          },
+        ),
+      );
     } else {
       showQRDialog();
     }
@@ -631,23 +659,26 @@ class AddOrUpdateAlarmController extends GetxController {
     if (isSharedAlarmEnabled.value == true) {
       // Making sure the alarm wasn't suddenly updated to be an
       // online (shared) alarm
-      if (await IsarDb.doesAlarmExist(alarmRecord.value!.alarmID) == false) {
-        alarmData.firestoreId = alarmRecord.value!.firestoreId;
-        await FirestoreDb.updateAlarm(alarmRecord.value!.ownerId, alarmData);
+      if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == false) {
+        alarmData.firestoreId = alarmRecord.value.firestoreId;
+        await FirestoreDb.updateAlarm(alarmRecord.value.ownerId, alarmData);
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
-        await IsarDb.deleteAlarm(alarmRecord.value!.isarId);
+        await IsarDb.deleteAlarm(alarmRecord.value.isarId);
         createAlarm(alarmData);
       }
     } else {
       // Making sure the alarm wasn't suddenly updated to be an offline alarm
-      if (await IsarDb.doesAlarmExist(alarmRecord.value!.alarmID) == true) {
-        alarmData.isarId = alarmRecord.value!.isarId;
+      print('aid = ${alarmRecord.value.alarmID}');
+      if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
+        alarmData.isarId = alarmRecord.value.isarId;
         await IsarDb.updateAlarm(alarmData);
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
-            userModel.value, alarmRecord.value!.firestoreId!);
+          userModel.value,
+          alarmRecord.value.firestoreId!,
+        );
         createAlarm(alarmData);
       }
     }
@@ -663,8 +694,15 @@ class AddOrUpdateAlarmController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    alarmRecord.value = Get.arguments;
+    profileTextEditingController.text = homeController.selectedProfile.value;
+    emailTextEditingController.text = '';
+
+    if (Get.arguments != null) {
+      alarmRecord.value = Get.arguments;
+    }
+
     userModel.value = homeController.userModel.value;
+
     if (userModel.value != null) {
       userId.value = userModel.value!.id;
       userName.value = userModel.value!.fullName;
@@ -681,22 +719,30 @@ class AddOrUpdateAlarmController extends GetxController {
       }
     });
 
-    if (Get.arguments != null) {
-      snoozeDuration.value = alarmRecord.value!.snoozeDuration;
-      gradient.value = alarmRecord.value!.gradient;
-      volMin.value = alarmRecord.value!.volMin;
-      volMax.value = alarmRecord.value!.volMax;
-      isOneTime.value = alarmRecord.value!.isOneTime;
-      deleteAfterGoesOff.value = alarmRecord.value!.deleteAfterGoesOff;
-      label.value = alarmRecord.value!.label;
-      customRingtoneName.value = alarmRecord.value!.ringtoneName;
-      note.value = alarmRecord.value!.note;
-      showMotivationalQuote.value = alarmRecord.value!.showMotivationalQuote;
+    if (Get.arguments != null || homeController.isProfile.value) {
+      selectedDate.value = Utils.stringToDate(alarmRecord.value.alarmDate);
+      isFutureDate.value =
+          selectedDate.value.difference(DateTime.now()).inHours > 0;
+      isGuardian.value = alarmRecord.value.isGuardian;
+      guardian.value = alarmRecord.value.guardian;
+      guardianTimer.value = alarmRecord.value.guardianTimer;
+      isActivityMonitorenabled.value =
+          alarmRecord.value.isActivityEnabled ? 1 : 0;
+      snoozeDuration.value = alarmRecord.value.snoozeDuration;
+      gradient.value = alarmRecord.value.gradient;
+      volMin.value = alarmRecord.value.volMin;
+      volMax.value = alarmRecord.value.volMax;
+      isOneTime.value = alarmRecord.value.isOneTime;
+      deleteAfterGoesOff.value = alarmRecord.value.deleteAfterGoesOff;
+      label.value = alarmRecord.value.label;
+      customRingtoneName.value = alarmRecord.value.ringtoneName;
+      note.value = alarmRecord.value.note;
+      showMotivationalQuote.value = alarmRecord.value.showMotivationalQuote;
 
-      sharedUserIds.value = alarmRecord.value!.sharedUserIds!;
+      sharedUserIds.value = alarmRecord.value.sharedUserIds!;
       // Reinitializing all values here
       selectedTime.value = Utils.timeOfDayToDateTime(
-        Utils.stringToTimeOfDay(alarmRecord.value!.alarmTime),
+        Utils.stringToTimeOfDay(alarmRecord.value.alarmTime),
       );
       hours.value = selectedTime.value.hour;
       minutes.value = selectedTime.value.minute;
@@ -720,16 +766,17 @@ class AddOrUpdateAlarmController extends GetxController {
         repeatDays,
       );
 
-      repeatDays.value = alarmRecord.value!.days;
+      repeatDays.value = alarmRecord.value.days;
       // Shows the selected days in UI
       daysRepeating.value = Utils.getRepeatDays(repeatDays);
 
       // Setting the old values for all the auto dismissal
-      isActivityenabled.value = alarmRecord.value!.isActivityEnabled;
-      activityInterval.value = alarmRecord.value!.activityInterval ~/ 60000;
+      isActivityenabled.value = alarmRecord.value.isActivityEnabled;
+      useScreenActivity.value = alarmRecord.value.isActivityEnabled;
+      activityInterval.value = alarmRecord.value.activityInterval ~/ 60000;
 
-      isLocationEnabled.value = alarmRecord.value!.isLocationEnabled;
-      selectedPoint.value = Utils.stringToLatLng(alarmRecord.value!.location);
+      isLocationEnabled.value = alarmRecord.value.isLocationEnabled;
+      selectedPoint.value = Utils.stringToLatLng(alarmRecord.value.location);
       // Shows the marker in UI
       markersList.add(
         Marker(
@@ -742,63 +789,67 @@ class AddOrUpdateAlarmController extends GetxController {
         ),
       );
 
-      isWeatherEnabled.value = alarmRecord.value!.isWeatherEnabled;
+      isWeatherEnabled.value = alarmRecord.value.isWeatherEnabled;
       weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
 
-      isMathsEnabled.value = alarmRecord.value!.isMathsEnabled;
-      numMathsQuestions.value = alarmRecord.value!.numMathsQuestions;
+      isMathsEnabled.value = alarmRecord.value.isMathsEnabled;
+      numMathsQuestions.value = alarmRecord.value.numMathsQuestions;
       mathsDifficulty.value =
-          Difficulty.values[alarmRecord.value!.mathsDifficulty];
-      mathsSliderValue.value = alarmRecord.value!.mathsDifficulty.toDouble();
+          Difficulty.values[alarmRecord.value.mathsDifficulty];
+      mathsSliderValue.value = alarmRecord.value.mathsDifficulty.toDouble();
 
-      isShakeEnabled.value = alarmRecord.value!.isShakeEnabled;
-      shakeTimes.value = alarmRecord.value!.shakeTimes;
+      isShakeEnabled.value = alarmRecord.value.isShakeEnabled;
+      shakeTimes.value = alarmRecord.value.shakeTimes;
 
-      isPedometerEnabled.value = alarmRecord.value!.isPedometerEnabled;
-      numberOfSteps.value = alarmRecord.value!.numberOfSteps;
+      isPedometerEnabled.value = alarmRecord.value.isPedometerEnabled;
+      numberOfSteps.value = alarmRecord.value.numberOfSteps;
 
-      isQrEnabled.value = alarmRecord.value!.isQrEnabled;
-      qrValue.value = alarmRecord.value!.qrValue;
-      detectedQrValue.value = alarmRecord.value!.qrValue;
+      isQrEnabled.value = alarmRecord.value.isQrEnabled;
+      qrValue.value = alarmRecord.value.qrValue;
+      detectedQrValue.value = alarmRecord.value.qrValue;
 
-      alarmID = alarmRecord.value!.alarmID;
+      alarmID = alarmRecord.value.alarmID == ''
+          ? const Uuid().v4()
+          : alarmRecord.value.alarmID;
 
       // if alarmRecord is null or alarmRecord.ownerId is null,
       // then assign the current logged-in user as the owner.
-      if (alarmRecord.value == null || alarmRecord.value!.ownerId.isEmpty) {
+      if (alarmRecord.value.ownerId.isEmpty) {
         ownerId.value = userId.value;
         ownerName.value = userName.value;
       } else {
-        ownerId.value = alarmRecord.value!.ownerId;
-        ownerName.value = alarmRecord.value!.ownerName;
+        ownerId.value = alarmRecord.value.ownerId;
+        ownerName.value = alarmRecord.value.ownerName;
       }
 
-      mutexLock.value = alarmRecord.value!.mutexLock;
-      isSharedAlarmEnabled.value = alarmRecord.value!.isSharedAlarmEnabled;
+      mutexLock.value = alarmRecord.value.mutexLock;
+      isSharedAlarmEnabled.value = alarmRecord.value.isSharedAlarmEnabled;
 
       if (isSharedAlarmEnabled.value) {
         selectedTime.value = Utils.timeOfDayToDateTime(
-          Utils.stringToTimeOfDay(alarmRecord.value!.mainAlarmTime!),
+          Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
         );
 
         mainAlarmTime.value = Utils.timeOfDayToDateTime(
-          Utils.stringToTimeOfDay(alarmRecord.value!.mainAlarmTime!),
+          Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
         );
-        offsetDetails.value = alarmRecord.value!.offsetDetails!;
+        offsetDetails.value = alarmRecord.value.offsetDetails!;
         offsetDuration.value = alarmRecord
-            .value!.offsetDetails![userModel.value!.id]['offsetDuration'];
+            .value.offsetDetails![userModel.value!.id]['offsetDuration'];
         isOffsetBefore.value = alarmRecord
-            .value!.offsetDetails![userModel.value!.id]['isOffsetBefore'];
+            .value.offsetDetails![userModel.value!.id]['isOffsetBefore'];
       }
 
       // Set lock only if its not locked
       if (isSharedAlarmEnabled.value == true &&
-          alarmRecord.value!.mutexLock == false) {
-        alarmRecord.value!.mutexLock = true;
-        alarmRecord.value!.lastEditedUserId = userModel.value!.id;
+          alarmRecord.value.mutexLock == false) {
+        alarmRecord.value.mutexLock = true;
+        alarmRecord.value.lastEditedUserId = userModel.value!.id;
         await FirestoreDb.updateAlarm(
-            alarmRecord.value!.ownerId, alarmRecord.value!);
-        alarmRecord.value!.mutexLock = false;
+          alarmRecord.value.ownerId,
+          alarmRecord.value,
+        );
+        alarmRecord.value.mutexLock = false;
         mutexLock.value = false;
       }
     } else {
@@ -850,7 +901,7 @@ class AddOrUpdateAlarmController extends GetxController {
       'numberOfSteps': numberOfSteps.value,
       'isSharedAlarmEnabled': isSharedAlarmEnabled.value,
       'offsetDuration': offsetDuration.value,
-      'isOffsetBefore': isOffsetBefore.value
+      'isOffsetBefore': isOffsetBefore.value,
     });
 
     addListeners();
@@ -921,7 +972,9 @@ class AddOrUpdateAlarmController extends GetxController {
           ),
         );
         _compareAndSetChange(
-            'location', '${point.latitude} ${point.longitude}');
+          'location',
+          '${point.latitude} ${point.longitude}',
+        );
       },
     );
 
@@ -970,28 +1023,28 @@ class AddOrUpdateAlarmController extends GetxController {
       // We also make sure the doc was not already locked
       // If it was suddenly enabled, it will be created newly anyway
       if (isSharedAlarmEnabled.value == true &&
-          alarmRecord.value!.isSharedAlarmEnabled == true &&
-          alarmRecord.value!.mutexLock == false) {
+          alarmRecord.value.isSharedAlarmEnabled == true &&
+          alarmRecord.value.mutexLock == false) {
         AlarmModel updatedModel = updatedAlarmModel();
-        updatedModel.firestoreId = alarmRecord.value!.firestoreId;
+        updatedModel.firestoreId = alarmRecord.value.firestoreId;
         await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
       }
     }
   }
 
   AlarmModel updatedAlarmModel() {
-    String _ownerId = '';
-    String _ownerName = '';
+    String ownerId = '';
+    String ownerName = '';
 
     // if alarmRecord is null or alarmRecord.ownerId is null,
     // then assign the current logged-in user as the owner.
 
-    if (alarmRecord.value == null || alarmRecord.value!.ownerId.isEmpty) {
-      _ownerId = userId.value;
-      _ownerName = userName.value;
+    if (alarmRecord.value.ownerId.isEmpty) {
+      ownerId = userId.value;
+      ownerName = userName.value;
     } else {
-      _ownerId = alarmRecord.value!.ownerId;
-      _ownerName = alarmRecord.value!.ownerName;
+      ownerId = alarmRecord.value.ownerId;
+      ownerName = alarmRecord.value.ownerName;
     }
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
@@ -1008,8 +1061,8 @@ class AddOrUpdateAlarmController extends GetxController {
       lastEditedUserId: lastEditedUserId.value,
       mutexLock: mutexLock.value,
       alarmID: alarmID,
-      ownerId: _ownerId,
-      ownerName: _ownerName,
+      ownerId: ownerId,
+      ownerName: ownerName,
       activityInterval: activityInterval.value * 60000,
       days: repeatDays.toList(),
       alarmTime:
@@ -1038,7 +1091,14 @@ class AddOrUpdateAlarmController extends GetxController {
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
-      activityMonitor: isActivityMonitorenabled.value
+      activityMonitor: isActivityMonitorenabled.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
+      profile: homeController.selectedProfile.value,
+      isGuardian: isGuardian.value,
+      guardianTimer: guardianTimer.value,
+      guardian: guardian.value,
+      isCall: isCall.value,
+      ringOn: isFutureDate.value,
     );
   }
 
@@ -1116,8 +1176,9 @@ class AddOrUpdateAlarmController extends GetxController {
             currentCounterOfUsage: 1,
           );
           AudioUtils.updateRingtoneCounterOfUsage(
-              customRingtoneName: previousRingtone,
-              counterUpdate: CounterUpdate.decrement);
+            customRingtoneName: previousRingtone,
+            counterUpdate: CounterUpdate.decrement,
+          );
           await IsarDb.addCustomRingtone(customRingtone);
         }
       }
@@ -1165,8 +1226,8 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Deleted',
               'The selected ringtone has been successfully deleted.',
-              margin: EdgeInsets.all(15),
-              animationDuration: Duration(seconds: 1),
+              margin: const EdgeInsets.all(15),
+              animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
               barBlur: 15,
               colorText: kprimaryTextColor,
@@ -1175,8 +1236,8 @@ class AddOrUpdateAlarmController extends GetxController {
             Get.snackbar(
               'Ringtone Not Found',
               'The selected ringtone does not exist and cannot be deleted.',
-              margin: EdgeInsets.all(15),
-              animationDuration: Duration(seconds: 1),
+              margin: const EdgeInsets.all(15),
+              animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
               barBlur: 15,
               colorText: kprimaryTextColor,
@@ -1187,8 +1248,8 @@ class AddOrUpdateAlarmController extends GetxController {
             'Ringtone in Use',
             'This ringtone cannot be deleted as it is currently assigned'
                 ' to one or more alarms.',
-            margin: EdgeInsets.all(15),
-            animationDuration: Duration(seconds: 1),
+            margin: const EdgeInsets.all(15),
+            animationDuration: const Duration(seconds: 1),
             snackPosition: SnackPosition.BOTTOM,
             barBlur: 15,
             colorText: kprimaryTextColor,
@@ -1198,6 +1259,28 @@ class AddOrUpdateAlarmController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  datePicker(BuildContext context) async {
+    selectedDate.value = (await showDatePicker(
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.dark().copyWith(
+                colorScheme: const ColorScheme.dark(
+                  primary: kprimaryColor,
+                ),
+              ),
+              child: child!,
+            );
+          },
+          context: context,
+          currentDate: selectedDate.value,
+          firstDate: DateTime.now(),
+          lastDate: DateTime.now().add(const Duration(days: 355)),
+        )) ??
+        DateTime.now();
+    isFutureDate.value =
+        selectedDate.value.difference(DateTime.now()).inHours > 0;
   }
 
   void showToast({
@@ -1222,5 +1305,74 @@ class AddOrUpdateAlarmController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> createProfile() async {
+    profileModel = ProfileModel(
+      profileName: profileTextEditingController.text,
+      deleteAfterGoesOff: deleteAfterGoesOff.value,
+      snoozeDuration: snoozeDuration.value,
+      volMax: volMax.value,
+      volMin: volMin.value,
+      gradient: gradient.value,
+      offsetDetails: offsetDetails,
+      label: label.value,
+      note: note.value,
+      showMotivationalQuote: showMotivationalQuote.value,
+      isOneTime: isOneTime.value,
+      lastEditedUserId: lastEditedUserId.value,
+      mutexLock: mutexLock.value,
+      ownerId: ownerId.value,
+      ownerName: ownerName.value,
+      activityInterval: activityInterval.value * 60000,
+      days: repeatDays.toList(),
+      intervalToAlarm: Utils.getMillisecondsToAlarm(
+        DateTime.now(),
+        selectedTime.value,
+      ),
+      isActivityEnabled: isActivityenabled.value,
+      minutesSinceMidnight: Utils.timeOfDayToInt(
+        TimeOfDay.fromDateTime(
+          selectedTime.value,
+        ),
+      ),
+      isLocationEnabled: isLocationEnabled.value,
+      weatherTypes: Utils.getIntFromWeatherTypes(
+        selectedWeather.toList(),
+      ),
+      isWeatherEnabled: isWeatherEnabled.value,
+      location: Utils.geoPointToString(
+        Utils.latLngToGeoPoint(
+          selectedPoint.value,
+        ),
+      ),
+      isSharedAlarmEnabled: isSharedAlarmEnabled.value,
+      isQrEnabled: isQrEnabled.value,
+      qrValue: qrValue.value,
+      isMathsEnabled: isMathsEnabled.value,
+      numMathsQuestions: numMathsQuestions.value,
+      mathsDifficulty: mathsDifficulty.value.index,
+      isShakeEnabled: isShakeEnabled.value,
+      shakeTimes: shakeTimes.value,
+      isPedometerEnabled: isPedometerEnabled.value,
+      numberOfSteps: numberOfSteps.value,
+      ringtoneName: customRingtoneName.value,
+      activityMonitor: isActivityMonitorenabled.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
+      isGuardian: isGuardian.value,
+      guardianTimer: guardianTimer.value,
+      guardian: guardian.value,
+      isCall: isCall.value,
+      ringOn: isFutureDate.value,
+    );
+    var profileId =
+        await IsarDb.profileId(homeController.selectedProfile.value);
+    print(profileId);
+    if (profileId != 'null') profileModel.isarId = profileId;
+    print(profileModel.isarId);
+    await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+    await IsarDb.addProfile(profileModel);
+    homeController.selectedProfile.value = profileModel.profileName;
+    storage.writeProfile(profileModel.profileName);
   }
 }

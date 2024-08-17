@@ -18,9 +18,7 @@ class RepeatOnceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+
       title: FittedBox(
         fit: BoxFit.scaleDown,
         alignment: Alignment.centerLeft,
@@ -52,7 +50,7 @@ class RepeatOnceTile extends StatelessWidget {
                     activeColor: ksecondaryColor,
                     onChanged: (value) {
                       Utils.hapticFeedback();
-                      controller.isOneTime.value = false;
+                      controller.isOneTime.value = true;
                     },
                   );
                 }

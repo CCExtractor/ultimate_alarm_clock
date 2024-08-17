@@ -13,6 +13,8 @@ abstract class Routes {
   static const BOTTOM_NAVIGATION_BAR = _Paths.BOTTOM_NAVIGATION_BAR;
   static const TIMER_RING = _Paths.TIMER_RING;
   static const STOPWATCH = _Paths.STOPWATCH;
+  static const ADD_OR_UPDATE_PROFILE = _Paths.ADD_OR_UPDATE_PROFILE;
+  static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
 }
 
 abstract class _Paths {
@@ -27,4 +29,6 @@ abstract class _Paths {
   static const BOTTOM_NAVIGATION_BAR = '/bottom-navigation-bar';
   static const TIMER_RING = '/timer-ring';
   static const STOPWATCH = '/stopwatch';
+  static const ADD_OR_UPDATE_PROFILE = '/add-or-update-profile';
+  static const NOTIFICATIONS = '/notifications';
 }
