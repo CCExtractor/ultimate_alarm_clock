@@ -6,12 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
-
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
-import 'package:ultimate_alarm_clock/firebase_options.dart';
 import 'app/routes/app_pages.dart';
 
 Locale? loc;
