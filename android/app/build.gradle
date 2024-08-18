@@ -88,5 +88,6 @@ dependencies {
     implementation 'com.google.firebase:protolite-well-known-types:18.0.0'
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("androidx.multidex:multidex:2.0.1")
     
 }
