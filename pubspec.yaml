@@ -3,13 +3,17 @@ version: 0.2.0
 publish_to: none
 description: A new Flutter project.
 environment:
+
   sdk: ">=3.4.3 <4.0.0"
   flutter: 3.22.2
 
+
 dependencies:
   firebase_core: ^2.27.0
+
   screen_state: ^4.0.0
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.8
+
   get: 4.6.6
   get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
@@ -39,7 +43,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.3.8
-  fluttertoast: ^8.2.4
+  fluttertoast: ^8.2.5
   path_provider: ^2.1.1
   audio_session: ^0.1.18
   uuid: ^4.3.3

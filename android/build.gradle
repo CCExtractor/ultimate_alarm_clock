@@ -1,7 +1,9 @@
 buildscript {
     ext.kotlin_version = '1.7.10'
    ext {
-       compileSdkVersion   = 34            // or latest
+
+       compileSdkVersion   = 34           // or latest
+
        targetSdkVersion    = 34                // or latest
        appCompatVersion    = "1.4.2"           // or latest
    }
@@ -25,11 +27,16 @@ allprojects {
     }
 }
 
-rootProject.buildDir = '../build'
+rootProject.buildDir = '../build' 
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    afterEvaluate{
+        android{
+            compileSdkVersion 34
+        }
+    }
 }
 subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(':app')
 }
 
