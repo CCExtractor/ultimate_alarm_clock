@@ -1,19 +1,23 @@
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
+import 'package:telephony/telephony.dart';
+
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
 
+import '../data/models/profile_model.dart';
+import '../data/providers/get_storage_provider.dart';
 import 'constants.dart';
 
 class Utils {
@@ -22,6 +26,57 @@ class Utils {
     final minutes = time.minute.toString().padLeft(2, '0');
     return '$hours:$minutes';
   }
+
+  static final storage = Get.find<GetStorageProvider>();
+
+  static AlarmModel alarmModelInit = AlarmModel(
+    volMax: 1.0,
+    volMin: 0.0,
+    snoozeDuration: 0,
+    gradient: 1,
+    label: '',
+    isOneTime: true,
+    deleteAfterGoesOff: false,
+    offsetDetails: {},
+    lastEditedUserId: '',
+    mutexLock: false,
+    ownerName: '',
+    ownerId: '',
+    activityInterval: 0,
+    isMathsEnabled: false,
+    numMathsQuestions: 0,
+    mathsDifficulty: 0,
+    qrValue: '',
+    isQrEnabled: false,
+    isShakeEnabled: false,
+    shakeTimes: 0,
+    isPedometerEnabled: false,
+    numberOfSteps: 0,
+    days: [false, false, false, false, false, false, false],
+    weatherTypes: [],
+    isWeatherEnabled: false,
+    isEnabled: false,
+    isActivityEnabled: false,
+    isLocationEnabled: false,
+    isSharedAlarmEnabled: false,
+    intervalToAlarm: 0,
+    location: '0.0,0.0',
+    minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+    ringtoneName: 'Default',
+    note: '',
+    showMotivationalQuote: false,
+    activityMonitor: 0,
+    profile: 'Default',
+    alarmDate: DateTime.now().toString().substring(0, 11),
+    alarmTime: '',
+    alarmID: '',
+    mainAlarmTime: '',
+    isGuardian: false,
+    guardianTimer: 0,
+    guardian: '',
+    isCall: false,
+    ringOn: false,
+  );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {
     // Extract hours, minutes, and seconds from the DateTime
@@ -43,6 +98,14 @@ class Utils {
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
     return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  static DateTime stringToDate(String date){
+    final parts = date.split('-');
+    final day = int.parse(parts[2]);
+    final month = int.parse(parts[1]);
+    final year = int.parse(parts[0]);
+    return DateTime(year,month,day);
   }
 
   static DateTime? stringToDateTime(String timeString) {
@@ -109,17 +172,17 @@ class Utils {
     final int hours = duration.inHours;
 
     if (seconds < 10) {
-      return "${seconds}";
+      return '$seconds';
     } else if (seconds < 60) {
-      return "${seconds}";
+      return '$seconds';
     } else if (minutes < 10) {
-      return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$minutes:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else if (minutes < 60) {
-      return "${minutes}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$minutes:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else if (hours < 10) {
-      return "${hours}:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$hours:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     } else {
-      return "${hours}:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
+      return "$hours:${minutes % 60 < 10 ? '0' : ''}${minutes % 60}:${seconds % 60 < 10 ? '0' : ''}${seconds % 60}";
     }
   }
 
@@ -289,7 +352,7 @@ class Utils {
       'Thur'.tr,
       'Fri'.tr,
       'Sat'.tr,
-      'Sun'.tr
+      'Sun'.tr,
     ];
     int weekdayCount = 0;
     int weekendCount = 0;
@@ -380,29 +443,27 @@ class Utils {
   static Future<TimerModel> genFakeTimerModel() async {
     return TimerModel(
       timerValue: 0,
-      timeElapsed :0,
+      timeElapsed: 0,
       startedOn: '',
       ringtoneName: '',
       timerName: '',
     );
   }
 
-  static AlarmModel genFakeAlarmModel() {
-    return AlarmModel(
+  static ProfileModel genDefaultProfileModel() {
+    return ProfileModel(
       volMax: 1.0,
       volMin: 0.0,
       snoozeDuration: 0,
       gradient: 1,
       label: '',
-      isOneTime: false,
+      isOneTime: true,
       deleteAfterGoesOff: false,
       offsetDetails: {},
-      mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
       lastEditedUserId: '',
       mutexLock: false,
       ownerName: '',
       ownerId: '',
-      alarmID: '',
       activityInterval: 0,
       isMathsEnabled: false,
       numMathsQuestions: 0,
@@ -421,13 +482,19 @@ class Utils {
       isLocationEnabled: false,
       isSharedAlarmEnabled: false,
       intervalToAlarm: 0,
-      location: '',
-      alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      location: '0.0,0.0',
       minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
       ringtoneName: 'Default',
       note: '',
       showMotivationalQuote: false,
-      activityMonitor: 0
+      activityMonitor: 0,
+      profileName: 'Default',
+      alarmDate: DateTime.now().toString().substring(0, 11),
+      isGuardian: false,
+      guardianTimer: 0,
+      guardian: '',
+      isCall: false,
+      ringOn: false,
     );
   }
 
@@ -667,15 +734,96 @@ class Utils {
       );
     }
   }
-  static int getDifferenceMillisFromNow(String datetimeString, int milliseconds) {
+
+  static int calculateTimeDifference(DateTime targetDateTime) {
+    targetDateTime = targetDateTime.toLocal();
+    var currentTime = DateTime.now();
+    currentTime = currentTime.subtract(
+      Duration(
+        milliseconds: currentTime.millisecond,
+        microseconds: currentTime.microsecond,
+      ),
+    );
+    final difference = targetDateTime.difference(currentTime);
+    final milliseconds = difference.inHours * 60 * 60 * 1000 +
+        difference.inMinutes * 60 * 1000 +
+        difference.inSeconds * 1000;
+    return milliseconds;
+  }
+
+  static int getDifferenceMillisFromNow(
+    String datetimeString,
+    int milliseconds,
+  ) {
     try {
       final providedDatetime = DateTime.parse(datetimeString);
-      final updatedDatetime = providedDatetime.add(Duration(milliseconds: milliseconds));
+      final updatedDatetime =
+          providedDatetime.add(Duration(milliseconds: milliseconds));
       final currentDatetime = DateTime.now();
       final difference = updatedDatetime.difference(currentDatetime);
       return difference.inMilliseconds;
     } catch (e) {
       return 0;
+    }
+  }
+
+  static String formatDateTimeToStandard(DateTime dateTime) {
+    dateTime = dateTime.toLocal();
+    final formattedDate =
+        '${dateTime.year}-${_twoDigits(dateTime.month)}-${_twoDigits(dateTime.day)}';
+    final formattedTime =
+        '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}';
+    return '$formattedDate ($formattedTime)';
+  }
+
+  static dialNumber(String phoneNo) async {
+    await Permission.phone.isDenied.then((value) async {
+      if (value) {
+        Permission.phone.request();
+      } else {
+        AndroidIntent intent = AndroidIntent(
+          action: 'android.intent.action.CALL',
+          data: 'tel:$phoneNo',
+        );
+        await intent.launch();
+      }
+    });
+  }
+
+  static spotifyPlay(String url) async {
+    AndroidIntent intent = const AndroidIntent(
+      action: 'android.intent.action.VIEW',
+      data: 'spotify:track:3Pzh926pXggbMe2ZpXyMV7',
+    );
+    await intent.launch();
+  }
+
+  static sendSMS(String phoneNo, String text) async {
+    final Telephony telephony = Telephony.instance;
+    await telephony.requestPhoneAndSmsPermissions.then((value) {
+      if (value == true) {
+        telephony.sendSms(to: phoneNo, message: text);
+      }
+    });
+  }
+
+  static String _twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  static String getInitials(String username) {
+    // Split the username into parts
+    List<String> parts = username.split(' ');
+
+    // Get the first two letters of the first name
+    String firstNameInitials = parts[0].substring(0, 1);
+
+    // Check if there is a last name
+    if (parts.length > 1) {
+      // Get the first two letters of the last name
+      String lastNameInitials = parts[1].substring(0, 1);
+      return firstNameInitials + lastNameInitials;
+    } else {
+      // Return only the first two letters of the first name
+      return parts[0].substring(0, 2);
     }
   }
 }

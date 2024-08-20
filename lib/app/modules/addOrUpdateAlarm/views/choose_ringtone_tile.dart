@@ -39,7 +39,7 @@ class ChooseRingtoneTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-        tileColor: themeController.secondaryBackgroundColor.value,
+
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(

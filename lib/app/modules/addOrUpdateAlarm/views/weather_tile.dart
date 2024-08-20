@@ -285,7 +285,7 @@ class WeatherTile extends StatelessWidget {
                     ),
                   );
                 },
-                tileColor: themeController.secondaryBackgroundColor.value,
+
                 title: Row(
                   children: [
                     FittedBox(

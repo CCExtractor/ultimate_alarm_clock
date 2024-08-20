@@ -92,6 +92,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
+                              if (controller
+                                  .currentlyRingingAlarm.value.isGuardian) {
+                                controller.guardianTimer.cancel();
+                              }
                               if (Utils.isChallengeEnabled(
                                 controller.currentlyRingingAlarm.value,
                               )) {
@@ -103,8 +107,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               } else {
                                 Get.offNamed(
                                   '/bottom-navigation-bar',
-                                  arguments: controller.currentlyRingingAlarm
-                                      .value,
+                                  arguments:
+                                      controller.currentlyRingingAlarm.value,
                                 );
                               }
                             },
@@ -113,39 +117,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-              (Get.arguments != null)
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Obx(
-                        () => SizedBox(
-                          height: height * 0.06,
-                          width: width,
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                themeController.primaryTextColor.value.withOpacity(0.7),
-                              ),
-                            ),
-                            child: Text(
-                              'Exit Preview'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
-                                  ),
-                            ),
-                            onPressed: () {
-                              Utils.hapticFeedback();
-                              Get.offNamed('/bottom-navigation-bar');
-                            },
-                          ),
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
             ],
           ),
           body: Center(
@@ -196,19 +167,21 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
                 Obx(
-                  () => Visibility(
-                    visible:
-                        controller.currentlyRingingAlarm.value.note.isNotEmpty,
-                    child: Text(
-                      controller.currentlyRingingAlarm.value.note,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: themeController.primaryTextColor.value,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w100,
-                            fontStyle: FontStyle.italic,
-                          ),
-                    ),
-                  ),
+                  () {
+                    return Visibility(
+                      visible: controller
+                          .currentlyRingingAlarm.value.note.isNotEmpty,
+                      child: Text(
+                        controller.currentlyRingingAlarm.value.note,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: themeController.primaryTextColor.value,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w100,
+                              fontStyle: FontStyle.italic,
+                            ),
+                      ),
+                    );
+                  },
                 ),
                 Obx(
                   () => Visibility(

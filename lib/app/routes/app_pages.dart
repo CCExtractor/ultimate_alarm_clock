@@ -1,25 +1,27 @@
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/about/bindings/about_binding.dart';
-import 'package:ultimate_alarm_clock/app/modules/about/views/about_view.dart';
-import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/bindings/bottom_navigation_bar_binding.dart';
-import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/views/bottom_navigation_bar_view.dart';
-import 'package:ultimate_alarm_clock/app/modules/splashScreen/bindings/splash_screen_binding.dart';
-import 'package:ultimate_alarm_clock/app/modules/splashScreen/views/splash_screen_view.dart';
-import 'package:ultimate_alarm_clock/app/modules/stopwatch/bindings/stopwatch_bindings.dart';
-import 'package:ultimate_alarm_clock/app/modules/stopwatch/views/stopwatch_view.dart';
-import 'package:ultimate_alarm_clock/app/modules/timerRing/bindings/timer_ring_binding.dart';
-import 'package:ultimate_alarm_clock/app/modules/timerRing/views/timer_ring_view.dart';
 
+import '../modules/about/bindings/about_binding.dart';
+import '../modules/about/views/about_view.dart';
 import '../modules/addOrUpdateAlarm/bindings/add_or_update_alarm_binding.dart';
 import '../modules/addOrUpdateAlarm/views/add_or_update_alarm_view.dart';
 import '../modules/alarmChallenge/bindings/alarm_challenge_binding.dart';
 import '../modules/alarmChallenge/views/alarm_challenge_view.dart';
 import '../modules/alarmRing/bindings/alarm_ring_binding.dart';
 import '../modules/alarmRing/views/alarm_ring_view.dart';
+import '../modules/bottomNavigationBar/bindings/bottom_navigation_bar_binding.dart';
+import '../modules/bottomNavigationBar/views/bottom_navigation_bar_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/notifications/bindings/notifications_binding.dart';
+import '../modules/notifications/views/notifications_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
+import '../modules/splashScreen/bindings/splash_screen_binding.dart';
+import '../modules/splashScreen/views/splash_screen_view.dart';
+import '../modules/stopwatch/bindings/stopwatch_bindings.dart';
+import '../modules/stopwatch/views/stopwatch_view.dart';
+import '../modules/timerRing/bindings/timer_ring_binding.dart';
+import '../modules/timerRing/views/timer_ring_view.dart';
 
 part 'app_routes.dart';
 
@@ -75,10 +77,16 @@ class AppPages {
       page: () => TimerRingView(),
       binding: TimerRingBinding(),
     ),
+
     GetPage(
       name: _Paths.STOPWATCH,
       page: () => StopwatchView(),
       binding: StopwatchBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
     ),
   ];
 }

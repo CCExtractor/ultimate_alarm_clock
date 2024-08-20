@@ -11,7 +11,6 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_fe
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/language_menu.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/views/weather_api.dart';
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -57,15 +56,7 @@ class SettingsView extends GetView<SettingsController> {
             padding: const EdgeInsets.symmetric(vertical: 25.0),
             child: Column(
               children: [
-                WeatherApi(
-                  controller: controller,
-                  width: width,
-                  height: height,
-                  themeController: controller.themeController,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+
                 GoogleSignIn(
                   controller: controller,
                   width: width,

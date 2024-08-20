@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
@@ -152,7 +154,7 @@ class SharedAlarm extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
+                                horizontal: 8.0, vertical: 4.0,),
                             child: Text(
                               'To use this feature, you have to link your Google account!'
                                   .tr,
@@ -251,6 +253,6 @@ class SharedAlarm extends StatelessWidget {
                     ),
                   ),
                 ),
-        ));
+        ),);
   }
 }

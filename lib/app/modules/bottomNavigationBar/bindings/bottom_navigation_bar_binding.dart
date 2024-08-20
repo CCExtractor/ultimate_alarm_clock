@@ -12,13 +12,10 @@ class BottomNavigationBarBinding extends Bindings {
     Get.lazyPut<BottomNavigationBarController>(
       () => BottomNavigationBarController(),
     );
-    Get.lazyPut<TimerController>(
-      () => TimerController(),
-    );
+
     Get.lazyPut<StopwatchController>(
       () => StopwatchController(),
     );
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
-    Get.lazyPut(() => HomeController());
   }
 }

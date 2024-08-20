@@ -19,7 +19,7 @@ class LabelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-        tileColor: themeController.secondaryBackgroundColor.value,
+
         title: FittedBox(
           alignment: Alignment.centerLeft,
           fit: BoxFit.scaleDown,

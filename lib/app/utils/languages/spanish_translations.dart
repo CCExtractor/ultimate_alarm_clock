@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:get/get.dart';
 
 class SpanishTranslations extends Translations {
@@ -47,7 +49,7 @@ class SpanishTranslations extends Translations {
           //home_view.dart
           'About': 'Acerca de',
           'Settings': 'Configuración',
-          'v0.1.0': 'v0.1.0',
+          'v0.2.0': 'v0.2.0',
           'Ultimate Alarm Clock': 'Reloj Despertador Definitivo',
           'Create alarm': 'Crear alarma',
           'Join alarm': 'Unirse a alarma',

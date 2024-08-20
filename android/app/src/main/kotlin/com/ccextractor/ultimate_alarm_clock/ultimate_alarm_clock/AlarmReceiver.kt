@@ -3,11 +3,6 @@ package com.ccextractor.ultimate_alarm_clock
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.LocationManager
-import androidx.core.content.ContextCompat
-import com.ultimate_alarm_clock.Utilities.LocationHelper
-import kotlin.math.*
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -15,6 +10,8 @@ class AlarmReceiver : BroadcastReceiver() {
         if (context == null || intent == null) {
             return
         }
+
+  
 
 
         val flutterIntent = Intent(context, MainActivity::class.java).apply {

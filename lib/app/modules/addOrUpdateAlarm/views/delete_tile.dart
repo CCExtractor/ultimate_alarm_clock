@@ -29,7 +29,7 @@ class DeleteAfterGoesOff extends StatelessWidget {
           visible: isVisible,
           child: Obx(
             () => ListTile(
-              tileColor: themeController.secondaryBackgroundColor.value,
+
               title: FittedBox(
                 alignment: Alignment.centerLeft,
                 fit: BoxFit.scaleDown,
@@ -69,7 +69,6 @@ class DeleteAfterGoesOff extends StatelessWidget {
         ),
         Obx(
           () => Container(
-            color: themeController.secondaryBackgroundColor.value,
             child: Divider(
               color: themeController.primaryDisabledTextColor.value,
             ),

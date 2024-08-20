@@ -19,7 +19,7 @@ class NoteTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-        tileColor: themeController.secondaryBackgroundColor.value,
+
         title: FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,

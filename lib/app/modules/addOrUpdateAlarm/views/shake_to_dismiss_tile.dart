@@ -18,8 +18,6 @@ class ShakeToDismiss extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
     int shakeTimes;
     bool isShakeEnabled;
     return Obx(
@@ -97,6 +95,7 @@ class ShakeToDismiss extends StatelessWidget {
                             controller.shakeTimes.value = value;
                           },
                         ),
+                        // ignore: require_trailing_commas
                         Text(controller.shakeTimes.value > 1
                             ? 'times'.tr
                             : 'time'.tr),

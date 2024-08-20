@@ -48,7 +48,7 @@ class AppTranslations extends Translations {
           'Next alarm': 'Next alarm',
           'About': 'About',
           'Settings': 'Settings',
-          'v0.1.0': 'v0.1.0',
+          'v0.2.0': 'v0.2.0',
           'Ultimate Alarm Clock': 'Ultimate Alarm Clock',
           'Create alarm': 'Create alarm',
           'Join alarm': 'Join alarm',

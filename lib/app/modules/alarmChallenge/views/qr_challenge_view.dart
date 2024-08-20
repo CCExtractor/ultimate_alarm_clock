@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +25,7 @@ class SharedUsers extends StatelessWidget {
       () => Container(
         child: (controller.isSharedAlarmEnabled.value &&
                 controller.alarmRecord.value != null)
-            ? (controller.alarmRecord.value!.ownerId !=
+            ? (controller.alarmRecord.value.ownerId !=
                     controller.userModel.value!.id)
                 ? ListTile(
                     title: Text(
@@ -35,7 +35,7 @@ class SharedUsers extends StatelessWidget {
                       ),
                     ),
                     trailing: Text(
-                      controller.alarmRecord.value!.ownerName,
+                      controller.alarmRecord.value.ownerName,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: themeController.primaryDisabledTextColor.value,
                           ),

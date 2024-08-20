@@ -12,9 +12,7 @@ class HomeBinding extends Bindings {
       HomeController(),
     );
 
-    Get.lazyPut<TimerController>(
-      () => TimerController(),
-    );
+    
     Get.lazyPut<BottomNavigationBarController>(
       () => BottomNavigationBarController(),
     );
