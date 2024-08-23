@@ -58,14 +58,13 @@ class GoogleSignIn extends StatelessWidget {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
                     ),
-                    child: Text(
-                      'Okay'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value ==
-                                    ThemeMode.light
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
-                          ),
+                    child: Obx(
+                      () => Text(
+                        'Okay'.tr,
+                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                              color: themeController.secondaryTextColor.value,
+                            ),
+                      ),
                     ),
                     onPressed: () {
                       Utils.hapticFeedback();
@@ -100,17 +99,16 @@ class GoogleSignIn extends StatelessWidget {
                           backgroundColor:
                               MaterialStateProperty.all(kprimaryColor),
                         ),
-                        child: Text(
-                          'Unlink'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.currentTheme.value ==
-                                        ThemeMode.light
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
-                              ),
+                        child: Obx(
+                          () => Text(
+                            'Unlink'.tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: themeController.secondaryTextColor.value,
+                                ),
+                          ),
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
@@ -273,10 +271,7 @@ class GoogleSignIn extends StatelessWidget {
                                         .displaySmall!
                                         .copyWith(
                                           color: themeController
-                                                      .currentTheme.value ==
-                                                  ThemeMode.light
-                                              ? kLightPrimaryTextColor
-                                              : ksecondaryTextColor,
+                                                      .secondaryTextColor.value,
                                         ),
                                   ),
                                 ),

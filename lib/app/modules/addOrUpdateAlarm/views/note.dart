@@ -95,9 +95,7 @@ class NoteTile extends StatelessWidget {
               child: Text(
                 'Save'.tr,
                 style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                      color: themeController.currentTheme.value == ThemeMode.light
-                          ? kLightPrimaryTextColor
-                          : ksecondaryTextColor,
+                      color: themeController.secondaryTextColor.value,
                     ),
               ),
               onPressed: () {

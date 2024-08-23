@@ -41,9 +41,7 @@ class MathsChallenge extends StatelessWidget {
               icon: Icon(
                 Icons.info_sharp,
                 size: 21,
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor.withOpacity(0.45)
-                    : kprimaryTextColor.withOpacity(0.3),
+                color: themeController.primaryTextColor.value.withOpacity(0.3),
               ),
               onPressed: () {
                 Utils.showModal(
@@ -149,9 +147,7 @@ class MathsChallenge extends StatelessWidget {
                           'Save'.tr,
                           style:
                               Theme.of(context).textTheme.displaySmall!.copyWith(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
+                                    color: themeController.secondaryTextColor.value,
                                   ),
                         ),
                         onPressed: () async {

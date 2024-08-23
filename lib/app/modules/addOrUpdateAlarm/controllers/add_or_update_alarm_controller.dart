@@ -185,9 +185,7 @@ class AddOrUpdateAlarmController extends GetxController {
         backgroundColor: themeController.secondaryBackgroundColor.value,
         title: 'Permission Required',
         titleStyle: TextStyle(
-          color: themeController.currentTheme.value == ThemeMode.light
-              ? kLightPrimaryTextColor
-              : Colors.white,
+          color: themeController.primaryTextColor.value,
         ),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -308,18 +306,14 @@ class AddOrUpdateAlarmController extends GetxController {
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                        color: themeController.currentTheme.value == ThemeMode.light
-                            ? Colors.red.withOpacity(0.9)
-                            : Colors.red,
+                        color: Colors.red,
                         width: 1,
                       ),
                     ),
                     child: Text(
                       'Leave'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? Colors.red.withOpacity(0.9)
-                                : Colors.red,
+                            color: Colors.red,
                           ),
                     ),
                   ),
@@ -368,9 +362,7 @@ class AddOrUpdateAlarmController extends GetxController {
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(
-          color: themeController.currentTheme.value == ThemeMode.light
-              ? kLightPrimaryTextColor
-              : Colors.white,
+          color: themeController.primaryTextColor.value,
         ),
         content: const Text(
           'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.',
@@ -481,9 +473,7 @@ class AddOrUpdateAlarmController extends GetxController {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.currentTheme.value == ThemeMode.light
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
+                                color: themeController.secondaryTextColor.value,
                               ),
                         ),
                         onPressed: () {
@@ -503,9 +493,7 @@ class AddOrUpdateAlarmController extends GetxController {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.currentTheme.value == ThemeMode.light
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
+                                color: themeController.secondaryTextColor.value,
                               ),
                         ),
                         onPressed: () async {
@@ -525,9 +513,7 @@ class AddOrUpdateAlarmController extends GetxController {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.currentTheme.value == ThemeMode.light
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
+                                  color: themeController.secondaryTextColor.value,
                                 ),
                           ),
                           onPressed: () {
@@ -553,9 +539,7 @@ class AddOrUpdateAlarmController extends GetxController {
   backgroundColor: themeController.secondaryBackgroundColor.value,
   title: 'Camera Permission'.tr,
   titleStyle: TextStyle(
-    color: themeController.currentTheme.value == ThemeMode.light
-        ? kLightPrimaryTextColor
-        : Colors.white,
+    color: themeController.primaryTextColor.value,
   ),
   titlePadding: const EdgeInsets.only(
     top: 25,
@@ -589,13 +573,13 @@ class AddOrUpdateAlarmController extends GetxController {
     style: ButtonStyle(
       backgroundColor: MaterialStateProperty.all(kprimaryColor),
     ),
-    child: Text(
-      'OK',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.currentTheme.value == ThemeMode.light
-                ? kLightPrimaryTextColor
-                : ksecondaryTextColor,
-          ),
+    child: Obx(
+      () => Text(
+        'OK',
+        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+              color: themeController.secondaryTextColor.value,
+            ),
+      ),
     ),
     onPressed: () async {
       Get.back(); // Close the alert box

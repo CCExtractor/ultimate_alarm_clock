@@ -73,9 +73,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ? 'Save'.tr
                             : 'Update'.tr,
                         style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: themeController.currentTheme.value == ThemeMode.light
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
+                                  color: themeController.secondaryTextColor.value,
                                 ),
                       ),
                       onPressed: () async {
@@ -409,10 +407,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         .scalingFactor *
                                                     20,
                                                     color: themeController
-                                                        .currentTheme.value == ThemeMode.light
-                                                        ? kLightPrimaryDisabledTextColor
-                                                        : kprimaryDisabledTextColor
-                                                        .withOpacity(0.5),
+                                                        .primaryDisabledTextColor.value,
                                               ),
                                         ),
                                         Padding(
@@ -496,10 +491,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     .scalingFactor *
                                                     20,
                                                 color: themeController
-                                                    .currentTheme.value == ThemeMode.light
-                                                    ? kLightPrimaryDisabledTextColor
-                                                    : kprimaryDisabledTextColor
-                                                    .withOpacity(0.5),
+                                                    .primaryDisabledTextColor.value,
                                               ),
                                         ),
                                         Visibility(
@@ -611,12 +603,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       .scalingFactor *
                                                       20,
                                                   color: themeController
-                                                      .currentTheme.value == ThemeMode.light
-                                                      ? kLightPrimaryDisabledTextColor
-                                                      : kprimaryDisabledTextColor
-                                                      .withOpacity(
-                                                      0.5,
-                                                  ),
+                                                      .primaryDisabledTextColor.value,
                                                 ),
                                           ),
                                         ),
@@ -774,17 +761,19 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                     ),
                   ),
                 )
-                  : Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Profile Name',
-                          fillColor: ksecondaryBackgroundColor,
-                          filled: true,
+                  : Obx(
+                    () => Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Profile Name',
+                            fillColor: controller.themeController.secondaryBackgroundColor.value,
+                            filled: true,
+                          ),
+                          controller: controller.profileTextEditingController,
                         ),
-                        controller: controller.profileTextEditingController,
                       ),
-                    ),
+                  ),
                     SettingSelector(),
                     Obx(
                           () => controller.alarmSettingType.value == 0

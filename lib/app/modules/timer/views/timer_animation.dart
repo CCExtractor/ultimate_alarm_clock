@@ -167,7 +167,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: kprimaryBackgroundColor,
+                                              color: themeController.primaryBackgroundColor.value,
                                               borderRadius:
                                                   BorderRadius.circular(20)),
                                           child: const Padding(
@@ -189,7 +189,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: kprimaryBackgroundColor,
+                                            color: themeController.primaryBackgroundColor.value,
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: const Padding(

@@ -99,11 +99,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
-                                          color: themeController.currentTheme.value == ThemeMode.light
-                                              ? kLightPrimaryTextColor
-                                                  .withOpacity(0.4)
-                                              : kprimaryTextColor
-                                                  .withOpacity(0.2),
+                                          color: themeController.primaryTextColor.value
+                                                  .withOpacity(0.3),
                                         ),
                                       ),
                                     ],
@@ -161,11 +158,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
-                                          color: themeController.currentTheme.value == ThemeMode.light
-                                              ? kLightPrimaryTextColor
-                                                  .withOpacity(0.4)
-                                              : kprimaryTextColor
-                                                  .withOpacity(0.2),
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
                                         ),
                                       ),
                                     ],
@@ -221,11 +215,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
-                                          color: themeController.currentTheme.value == ThemeMode.light
-                                              ? kLightPrimaryTextColor
-                                                  .withOpacity(0.4)
-                                              : kprimaryTextColor
-                                                  .withOpacity(0.2),
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
                                         ),
                                       ),
                                     ],
@@ -285,11 +276,8 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
-                                          color: themeController.currentTheme.value == ThemeMode.light
-                                              ? kLightPrimaryTextColor
-                                                  .withOpacity(0.4)
-                                              : kprimaryTextColor
-                                                  .withOpacity(0.2),
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
                                         ),
                                       ),
                                     ],

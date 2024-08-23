@@ -45,32 +45,33 @@ class _ProfileSelectState extends State<ProfileSelect> {
                         padding: EdgeInsets.only(
                           left: 18 * controller.scalingFactor.value,
                         ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 24 * controller.scalingFactor.value,
-                            vertical: 4 * controller.scalingFactor.value,
-                          ),
-                          decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.topCenter,
-                                stops: [0.2, 0.2],
-                                colors: [
-                                  kprimaryColor,
-                                  ksecondaryBackgroundColor,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(18)),
-                          child: Obx(() => Text(
-                                "${controller.selectedProfile}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(
-                                      color: themeController.primaryTextColor.value.withOpacity(
-                                              0.75,
-                                            ),
-                                      fontSize:
+                        child: Obx(
+                          () => Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24 * controller.scalingFactor.value,
+                              vertical: 4 * controller.scalingFactor.value,
+                            ),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.topCenter,
+                                  stops: [0.2, 0.2],
+                                  colors: [
+                                    kprimaryColor,
+                                    themeController.secondaryBackgroundColor.value,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(18)),
+                            child: Text(
+                                  "${controller.selectedProfile}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.primaryTextColor.value.withOpacity(
+                                                0.75,
+                                              ),
+                                        fontSize:
                                           22 * controller.scalingFactor.value,
                                     ),
                               )),

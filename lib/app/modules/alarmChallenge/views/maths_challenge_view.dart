@@ -163,9 +163,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           controller.onButtonPressed(number);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightPrimaryTextColor.withOpacity(0.10)
-              : kprimaryTextColor.withOpacity(0.08),
+          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.10),
           foregroundColor: themeController.primaryTextColor.value,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),
@@ -183,9 +181,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           controller.displayValue.value = '';
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.currentTheme.value == ThemeMode.light
-              ? kLightPrimaryTextColor.withOpacity(0.40)
-              : kprimaryTextColor.withOpacity(0.5),
+          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.45),
           foregroundColor: Colors.black,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),

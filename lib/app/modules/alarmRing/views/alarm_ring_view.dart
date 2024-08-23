@@ -85,9 +85,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
+                                    color: themeController.secondaryTextColor.value,
                                   ),
                             ),
                             onPressed: () {

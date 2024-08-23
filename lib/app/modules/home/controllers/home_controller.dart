@@ -554,9 +554,7 @@ class HomeController extends GetxController {
             child: Text(
               'Dismiss',
               style: TextStyle(
-                color: themeController.currentTheme.value == ThemeMode.light
-                    ? kLightPrimaryTextColor
-                    : ksecondaryTextColor,
+                color: themeController.secondaryTextColor.value,
               ),
             ),
           ),
@@ -639,41 +637,39 @@ class HomeController extends GetxController {
                         ),
                   ),
                 ),
-                OutlinedButton(
-                  onPressed: () async {
-                    await deleteAlarms();
+                Obx(
+                  () => OutlinedButton(
+                    onPressed: () async {
+                      await deleteAlarms();
 
-                    // Closing the multiple select mode
-                    inMultipleSelectMode.value = false;
-                    isAnyAlarmHolded.value = false;
-                    isAllAlarmsSelected.value = false;
+                      // Closing the multiple select mode
+                      inMultipleSelectMode.value = false;
+                      isAnyAlarmHolded.value = false;
+                      isAllAlarmsSelected.value = false;
 
-                    numberOfAlarmsSelected.value = 0;
-                    selectedAlarmSet.clear();
-                    // After deleting alarms, refreshing to schedule latest one
-                    refreshTimer = true;
-                    refreshUpcomingAlarms();
+                      numberOfAlarmsSelected.value = 0;
+                      selectedAlarmSet.clear();
+                      // After deleting alarms, refreshing to schedule latest one
+                      refreshTimer = true;
+                      refreshUpcomingAlarms();
 
-                    Get.offNamedUntil(
-                      '/bottom-navigation-bar',
-                      (route) => route.settings.name == '/splash-screen',
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: themeController.currentTheme.value == ThemeMode.light
-                          ? Colors.red.withOpacity(0.9)
-                          : Colors.red,
-                      width: 1,
+                      Get.offNamedUntil(
+                        '/bottom-navigation-bar',
+                        (route) => route.settings.name == '/splash-screen',
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: Colors.red,
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'Okay'.tr,
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.currentTheme.value == ThemeMode.light
-                              ? Colors.red.withOpacity(0.9)
-                              : Colors.red,
-                        ),
+                    child: Text(
+                      'Okay'.tr,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: Colors.red,
+                          ),
+                    ),
                   ),
                 ),
               ],

@@ -79,10 +79,7 @@ class RepeatTile extends StatelessWidget {
                                   .displaySmall!
                                   .copyWith(
                                     color: controller.themeController
-                                                .currentTheme.value ==
-                                            ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
+                                                .secondaryTextColor.value,
                                   ),
                             ),
                           ),
@@ -312,10 +309,7 @@ class RepeatTile extends StatelessWidget {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.currentTheme.value ==
-                                          ThemeMode.light
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
+                                  color: themeController.secondaryTextColor.value,
                                 ),
                           ),
                         ),

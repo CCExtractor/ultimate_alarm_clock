@@ -73,9 +73,7 @@ class SnoozeDurationTile extends StatelessWidget {
                     child: Text(
                       'Done'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value == ThemeMode.light
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
+                            color: themeController.secondaryTextColor.value,
                           ),
                     ),
                   ),

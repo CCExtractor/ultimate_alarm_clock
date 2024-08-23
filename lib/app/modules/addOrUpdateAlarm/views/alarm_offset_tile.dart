@@ -66,10 +66,7 @@ class AlarmOffset extends StatelessWidget {
                                 backgroundColor: (controller
                                         .isOffsetBefore.value)
                                     ? kprimaryColor
-                                    : themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.10)
-                                        : kprimaryTextColor.withOpacity(0.08),
+                                    : themeController.primaryTextColor.value.withOpacity(0.10),
                                 foregroundColor:
                                     (controller.isOffsetBefore.value)
                                         ? themeController.secondaryTextColor.value
@@ -91,10 +88,8 @@ class AlarmOffset extends StatelessWidget {
                                 backgroundColor: (!controller
                                         .isOffsetBefore.value)
                                     ? kprimaryColor
-                                    : themeController.currentTheme.value == ThemeMode.light
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.10)
-                                        : kprimaryTextColor.withOpacity(0.08),
+                                    : themeController.primaryTextColor.value
+                                            .withOpacity(0.10),
                                 foregroundColor:
                                     (!controller.isOffsetBefore.value)
                                         ? themeController.secondaryTextColor.value

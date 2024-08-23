@@ -98,10 +98,7 @@ class AscendingVolumeTile extends StatelessWidget {
                     child: Text(
                       'Apply Gradient'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.currentTheme.value ==
-                                    ThemeMode.light
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
+                            color: themeController.secondaryTextColor.value,
                           ),
                     ),
                   ),

@@ -100,9 +100,7 @@ class LabelTile extends StatelessWidget {
                 'Save'.tr,
                 style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       color:
-                          themeController.currentTheme.value == ThemeMode.light
-                              ? kLightPrimaryTextColor
-                              : ksecondaryTextColor,
+                          themeController.secondaryTextColor.value,
                     ),
               ),
               onPressed: () {

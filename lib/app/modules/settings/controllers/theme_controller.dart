@@ -31,26 +31,23 @@ class ThemeController extends GetxController {
   Rx<Color> primaryDisabledTextColor = kLightPrimaryDisabledTextColor.obs;
 
   void updateThemeColors() {
-    primaryColor.value =
-    currentTheme.value == ThemeMode.light ? kprimaryColor : kprimaryColor;
-    secondaryColor.value = currentTheme.value == ThemeMode.light
-        ? kLightSecondaryColor
-        : ksecondaryColor;
-    primaryBackgroundColor.value = currentTheme.value == ThemeMode.light
-        ? kLightPrimaryBackgroundColor
-        : kprimaryBackgroundColor;
-    secondaryBackgroundColor.value = currentTheme.value == ThemeMode.light
-        ? kLightSecondaryBackgroundColor
-        : ksecondaryBackgroundColor;
-    primaryTextColor.value = currentTheme.value == ThemeMode.light
-        ? kLightPrimaryTextColor
-        : kprimaryTextColor;
-    secondaryTextColor.value = currentTheme.value == ThemeMode.light
-        ? kLightSecondaryTextColor
-        : ksecondaryTextColor;
-    primaryDisabledTextColor.value = currentTheme.value == ThemeMode.light
-        ? kLightPrimaryDisabledTextColor
-        : kprimaryDisabledTextColor;
+    if (currentTheme.value == ThemeMode.light) {
+      primaryColor.value = kprimaryColor;
+      secondaryColor.value = kLightSecondaryColor;
+      primaryBackgroundColor.value = kLightPrimaryBackgroundColor;
+      secondaryBackgroundColor.value = kLightSecondaryBackgroundColor;
+      primaryTextColor.value = kLightPrimaryTextColor;
+      secondaryTextColor.value = kLightSecondaryTextColor;
+      primaryDisabledTextColor.value = kLightPrimaryDisabledTextColor;
+    } else {
+      primaryColor.value = kprimaryColor;
+      secondaryColor.value = ksecondaryColor;
+      primaryBackgroundColor.value = kprimaryBackgroundColor;
+      secondaryBackgroundColor.value = ksecondaryBackgroundColor;
+      primaryTextColor.value = kprimaryTextColor;
+      secondaryTextColor.value = ksecondaryTextColor;
+      primaryDisabledTextColor.value = kprimaryDisabledTextColor;
+    }
   }
 
   void _loadThemeValue() async {

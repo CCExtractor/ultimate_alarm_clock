@@ -49,9 +49,7 @@ Widget buildEndDrawer(BuildContext context) {
                                 .textTheme
                                 .displayMedium!
                                 .copyWith(
-                                  color: themeController.currentTheme.value == ThemeMode.light
-                                      ? kprimaryTextColor
-                                      : ksecondaryTextColor,
+                                  color: themeController.primaryBackgroundColor.value,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
