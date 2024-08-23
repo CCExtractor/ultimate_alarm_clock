@@ -25,6 +25,7 @@ class IsarDb {
 
   IsarDb._internal() {
     db = openDB();
+
   }
   static final storage = Get.find<GetStorageProvider>();
 
@@ -625,5 +626,38 @@ class IsarDb {
       debugPrint(e.toString());
       rethrow;
     }
+  }
+
+  static loadDefaultRingtones() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    await db.ringtoneModels.importJson([
+
+      {
+        'ringtoneName': 'Digital Alarm 1',
+        'ringtonePath': 'digialarm.mp3',
+        'currentCounterOfUsage': 0
+      },
+      {
+        'ringtoneName': 'Digital Alarm 2',
+        'ringtonePath': 'digialarm2.mp3',
+        'currentCounterOfUsage': 0
+      },
+      {
+        'ringtoneName': 'Digital Alarm 3',
+        'ringtonePath': 'digialarm3.mp3',
+        'currentCounterOfUsage': 0
+      },
+      {
+        'ringtoneName': 'Mystery',
+        'ringtonePath': 'mystery.mp3',
+        'currentCounterOfUsage': 0
+      },
+      {
+        'ringtoneName': 'New Day',
+        'ringtonePath': 'newday.mp3',
+        'currentCounterOfUsage': 0
+      },
+    ]);
   }
 }
