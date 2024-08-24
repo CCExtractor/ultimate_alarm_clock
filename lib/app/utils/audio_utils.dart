@@ -2,6 +2,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart' as audioplayer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
@@ -46,8 +47,23 @@ class AudioUtils {
     String customRingtonePath,
   ) async {
     try {
+      var volume = await FlutterVolumeController.getVolume();
+      await audioPlayer.setVolume(volume??1.0);
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.DeviceFileSource(customRingtonePath));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> playAssetSound(
+    String customRingtonePath,
+  ) async {
+    try {
+      var volume = await FlutterVolumeController.getVolume();
+      await audioPlayer.setVolume(volume??1.0);
+      await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
+      await audioPlayer.play(audioplayer.AssetSource(customRingtonePath));
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -60,33 +76,34 @@ class AudioUtils {
       if (audioSession == null) {
         await initializeAudioSession();
       }
-
+      var volume = await FlutterVolumeController.getVolume();
+      await audioPlayer.setVolume(volume??1.0);
       await audioSession!.setActive(true);
 
       String ringtoneName = alarmRecord.ringtoneName;
 
-      if (ringtoneName == 'Default') {
-        await alarmChannel.invokeMethod('playDefaultAlarm');
-      } else {
-        int customRingtoneId = fastHash(ringtoneName);
-        RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
-          customRingtoneId: customRingtoneId,
-        );
+      int customRingtoneId = fastHash(ringtoneName);
+      RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+        customRingtoneId: customRingtoneId,
+      );
 
-        if (customRingtone != null) {
-          String customRingtonePath = customRingtone.ringtonePath;
-          await playCustomSound(customRingtonePath);
+      if (customRingtone != null) {
+        String customRingtonePath = customRingtone.ringtonePath;
+        if (defaultRingtones.contains(ringtoneName)) {
+          await playAssetSound(customRingtonePath);
         } else {
-          await alarmChannel.invokeMethod('playDefaultAlarm');
-          bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
+          await playCustomSound(customRingtonePath);
+        }
+      } else {
+        await alarmChannel.invokeMethod('playDefaultAlarm');
+        bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
 
-          alarmRecord.ringtoneName = 'Default';
+        alarmRecord.ringtoneName = 'Default';
 
-          if (isSharedAlarmEnabled) {
-            await FirestoreDb.updateAlarm(alarmRecord.ownerId, alarmRecord);
-          } else {
-            await IsarDb.updateAlarm(alarmRecord);
-          }
+        if (isSharedAlarmEnabled) {
+          await FirestoreDb.updateAlarm(alarmRecord.ownerId, alarmRecord);
+        } else {
+          await IsarDb.updateAlarm(alarmRecord);
         }
       }
     } catch (e) {
@@ -161,6 +178,20 @@ class AudioUtils {
       if (ringtoneName == 'Default') {
         await alarmChannel.invokeMethod('playDefaultAlarm');
         isPreviewing = true;
+      } else if (defaultRingtones.contains(ringtoneName)) {
+        int customRingtoneId = fastHash(ringtoneName);
+        RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+          customRingtoneId: customRingtoneId,
+        );
+
+        if (customRingtone != null) {
+          String customRingtonePath = customRingtone.ringtonePath;
+          await alarmChannel.invokeMethod('stopDefaultAlarm');
+          await audioSession!.setActive(false);
+          await audioSession!.setActive(true);
+          await playAssetSound(customRingtonePath);
+          isPreviewing = true;
+        }
       } else {
         int customRingtoneId = fastHash(ringtoneName);
         RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(

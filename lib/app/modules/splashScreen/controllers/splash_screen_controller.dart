@@ -21,14 +21,9 @@ class SplashScreenController extends GetxController {
       homeController.genFakeAlarmModel().obs;
 
   getCurrentlyRingingAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
-    AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, false);
     AlarmModel latestAlarm =
-        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+        await IsarDb.getLatestAlarm(_alarmRecord, false);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
     return latestAlarm;
   }
@@ -108,7 +103,7 @@ class SplashScreenController extends GetxController {
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
-
+        print("shouldring: $shouldAlarmRing");
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
           shouldNavigate = false;
@@ -118,41 +113,6 @@ class SplashScreenController extends GetxController {
           if (isAlarmIgnored == true) {
             shouldAlarmRing = false;
           } else {
-            // AlarmModel latestAlarm = await getCurrentlyRingingAlarm();
-
-            // Deciding to ring if weather is enabled
-            // if (latestAlarm.isLocationEnabled == true) {
-            //   LatLng destination = LatLng(0, 0);
-            //   LatLng source = Utils.stringToLatLng(latestAlarm.location);
-            //   destination = await FlLocation.getLocationStream().first.then(
-            //         (value) => Utils.stringToLatLng(
-            //           '${value.latitude}, ${value.longitude}',
-            //         ),
-            //       );
-            //
-            //   if (Utils.isWithinRadius(source, destination, 500)) {
-            //     shouldAlarmRing = false;
-            //   }
-            // }
-
-            // Deciding to ring if weather is enabled
-            // if (latestAlarm.isWeatherEnabled == true) {
-            //   LatLng currentLocation = LatLng(0, 0);
-            //
-            //   currentLocation = await FlLocation.getLocationStream().first.then(
-            //         (value) => Utils.stringToLatLng(
-            //           '${value.latitude}, ${value.longitude}',
-            //         ),
-            //       );
-            //   bool isWeatherTypeMatching = await checkWeatherCondition(
-            //     currentLocation,
-            //     latestAlarm.weatherTypes,
-            //   );
-            //   if (isWeatherTypeMatching == true) {
-            //     shouldAlarmRing = false;
-            //   }
-            // }
-
             if (shouldAlarmRing) {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);

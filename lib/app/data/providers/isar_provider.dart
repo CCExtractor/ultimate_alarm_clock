@@ -570,7 +570,7 @@ class IsarDb {
       final isarProvider = IsarDb();
       final db = await isarProvider.db;
 
-      final query = db.ringtoneModels.where().findAll();
+      final query = db.ringtoneModels.where().sortByRingtoneName().findAll();
 
       return query;
     } catch (e) {
@@ -624,6 +624,43 @@ class IsarDb {
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
+    }
+  }
+
+  static loadDefaultRingtones() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final ringtoneCount = await db.ringtoneModels.where().findAll();
+    if (ringtoneCount.isEmpty) {
+      await db.writeTxn(() async {
+        await db.ringtoneModels.importJson([
+          {'isarId' : fastHash('Digital Alarm 1'),
+            'ringtoneName': 'Digital Alarm 1',
+            'ringtonePath': 'ringtones/digialarm.mp3',
+            'currentCounterOfUsage': 0
+          },
+          {'isarId' : fastHash('Digital Alarm 2'),
+            'ringtoneName': 'Digital Alarm 2',
+            'ringtonePath': 'ringtones/digialarm2.mp3',
+            'currentCounterOfUsage': 0
+          },
+          {'isarId' : fastHash('Digital Alarm 3'),
+            'ringtoneName': 'Digital Alarm 3',
+            'ringtonePath': 'ringtones/digialarm3.mp3',
+            'currentCounterOfUsage': 0
+          },
+          {'isarId' : fastHash('Mystery'),
+            'ringtoneName': 'Mystery',
+            'ringtonePath': 'ringtones/mystery.mp3',
+            'currentCounterOfUsage': 0
+          },
+          {'isarId' : fastHash('New Day'),
+            'ringtoneName': 'New Day',
+            'ringtonePath': 'ringtones/newday.mp3',
+            'currentCounterOfUsage': 0
+          },
+        ]);
+      });
     }
   }
 }
