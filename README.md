@@ -46,8 +46,8 @@ Issue: [#592](https://github.com/CCExtractor/ultimate_alarm_clock/issues/592), P
 Automatically dismiss alarms if the user’s screen is on for more than X minutes, indicating they are busy and don’t need the alarm.”
 Issue: [#572](https://github.com/CCExtractor/ultimate_alarm_clock/issues/572), Pull-Request: [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574)
 
-### 7) Open-meteo integration and weather fetch login shift to Kotlin, Location access notification
-Switch to Open-Meteo for weather API for seamless weather integration without the need for an API key, reducing setup friction and streamlining the user experience. Migrated Add Notification for the location being accessed in the background. Weather and Location-based smart controls logic shifted to kotlin.
+### 7) Open-meteo integration and weather fetch logic shift to Kotlin, Location access notification
+Switch to Open-Meteo for weather API for seamless weather integration without the need for an API key, reducing setup friction and streamlining the user experience. Add Notification for user location being accessed in the background. Weather and Location-based smart controls logic shifted to Kotlin.
 Issue: [#579](https://github.com/CCExtractor/ultimate_alarm_clock/issues/579), Pull-Request: [#580](https://github.com/CCExtractor/ultimate_alarm_clock/pull/580)
 
 ### 8) Timer
