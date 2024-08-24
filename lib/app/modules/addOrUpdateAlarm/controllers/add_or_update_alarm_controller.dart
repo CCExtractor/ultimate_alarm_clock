@@ -84,7 +84,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxBool isOneTime = true.obs;
   final RxString label = ''.obs;
   final RxInt snoozeDuration = 1.obs;
-  var customRingtoneName = 'Default'.obs;
+  var customRingtoneName = 'Digital Alarm 1'.obs;
   var customRingtoneNames = [].obs;
   var previousRingtone = '';
   final noteController = TextEditingController();
@@ -708,6 +708,7 @@ class AddOrUpdateAlarmController extends GetxController {
       userName.value = userModel.value!.fullName;
       lastEditedUserId.value = userModel.value!.id;
     }
+    IsarDb.loadDefaultRingtones();
 
     // listens to the userModel declared in homeController and updates on signup event
     homeController.userModel.stream.listen((UserModel? user) {

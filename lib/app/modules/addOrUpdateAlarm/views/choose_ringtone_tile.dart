@@ -20,7 +20,7 @@ class ChooseRingtoneTile extends StatelessWidget {
   final double height;
   final double width;
 
-  void onTapPreview(String ringtonePath) async {
+  void onTapPreview(String ringtoneName) async {
     Utils.hapticFeedback();
 
     // Stop the currently playing audio before starting the preview for the new
@@ -30,7 +30,7 @@ class ChooseRingtoneTile extends StatelessWidget {
       await AudioUtils.stopPreviewCustomSound();
       controller.toggleIsPlaying();
     } else {
-      await AudioUtils.previewCustomSound(ringtonePath);
+      await AudioUtils.previewCustomSound(ringtoneName);
       controller.toggleIsPlaying(); // Toggle the isPlaying state
     }
   }
@@ -39,7 +39,6 @@ class ChooseRingtoneTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(
@@ -54,9 +53,9 @@ class ChooseRingtoneTile extends StatelessWidget {
           controller.customRingtoneNames.value =
               await controller.getAllCustomRingtoneNames();
 
-          controller.customRingtoneNames.insert(0, 'Default');
-
           Get.defaultDialog(
+            onWillPop: () async => false,
+            barrierDismissible: false,
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
             backgroundColor: themeController.isLightMode.value
                 ? kLightSecondaryBackgroundColor
@@ -71,7 +70,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                       padding: EdgeInsets.all(4),
                       child: SizedBox(
                         width: width * 0.8,
-                        height: height * 0.2,
+                        height: height * 0.3,
                         child: Card(
                           elevation: 0,
                           color: themeController.isLightMode.value
@@ -82,15 +81,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                             thumbVisibility: true,
                             child: Padding(
                               padding: EdgeInsets.only(right: 4),
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return Divider(
-                                    color: themeController.isLightMode.value
-                                        ? ksecondaryBackgroundColor
-                                        : kLightSecondaryBackgroundColor,
-                                    height: 0,
-                                  );
-                                },
+                              child: ListView.builder(
                                 itemCount:
                                     controller.customRingtoneNames.length,
                                 shrinkWrap: true,
@@ -98,6 +89,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                   return Obx(
                                     () => ListTile(
                                       onTap: () async {
+                                        await AudioUtils.stopPreviewCustomSound();
+                                        controller.isPlaying.value = false;
                                         controller.previousRingtone =
                                             controller.customRingtoneName.value;
 
@@ -177,9 +170,9 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                       : kprimaryColor,
                                                 ),
                                               ),
-                                            if (controller.customRingtoneNames[
-                                                    index] !=
-                                                'Default'.tr)
+                                            if (!defaultRingtones.contains(
+                                                controller.customRingtoneNames[
+                                                    index]))
                                               IconButton(
                                                 onPressed: () async {
                                                   await controller
@@ -211,39 +204,49 @@ class ChooseRingtoneTile extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      Utils.hapticFeedback();
-                      controller.previousRingtone =
-                          controller.customRingtoneName.value;
-                      await controller.saveCustomRingtone();
-                    },
-                    child: Text(
-                      'Upload Ringtone'.tr,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: kprimaryColor,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      Utils.hapticFeedback();
-                      Get.back();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kprimaryColor,
-                    ),
-                    child: Text(
-                      'Done'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
-                          ),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () async {
+                          Utils.hapticFeedback();
+                          await AudioUtils.stopPreviewCustomSound();
+                          controller.isPlaying.value = false;
+                          controller.previousRingtone =
+                              controller.customRingtoneName.value;
+                          await controller.saveCustomRingtone();
+                        },
+                        child: Text(
+                          'Upload Ringtone'.tr,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: kprimaryColor,
+                                  ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          Utils.hapticFeedback();
+                          await AudioUtils.stopPreviewCustomSound();
+                          controller.isPlaying.value = false;
+                          Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kprimaryColor,
+                        ),
+                        child: Text(
+                          'Done'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.isLightMode.value
+                                    ? kLightPrimaryTextColor
+                                    : ksecondaryTextColor,
+                              ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

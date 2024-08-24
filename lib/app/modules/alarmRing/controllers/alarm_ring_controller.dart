@@ -177,7 +177,7 @@ class AlarmControlController extends GetxController {
 
     FlutterVolumeController.updateShowSystemUI(false);
 
-    _fadeInAlarmVolume();
+    // _fadeInAlarmVolume();     TODO fix volume fade-in
 
     if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
       if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
