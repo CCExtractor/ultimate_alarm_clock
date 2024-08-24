@@ -9,6 +9,7 @@ This project aims to build a non-conventional alarm clock with smart features su
 </p>
   
 ## Table of Contents
+- [What's new (GSOC'24)](#what's-new)
 - [GetX Pattern](#getx-pattern)
 - [Database Schema](#database-schema)
 - [Installation & Setup](#installation--setup)
@@ -17,6 +18,51 @@ This project aims to build a non-conventional alarm clock with smart features su
 - [Future Plans](#future-plans)
 - [Community](#community)
 - [Flutter](#flutter)
+
+## What's New?
+During the GSOC'24 period, the following features were implemented by Contributor Aryan Saraf:
+
+### 1) Migrating Alarm Scheduling logic and Smart Controls logic to Kotlin
+The previous alarm scheduling logic and smart controls would launch the app when working in the background due to reliance on Flutter method channels for database access and functions. To resolve this, we have migrated the Alarm Scheduling and Smart Controls logic from Flutter to Kotlin.
+Pull-Requests: [#563](https://github.com/CCExtractor/ultimate_alarm_clock/pull/563) [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574) [#580](https://github.com/CCExtractor/ultimate_alarm_clock/pull/580) 
+
+### 2) Cross-communication between Flutter and Kotin
+Switching to SQLite databases will enhance cross-language data accessibility and streamline native feature integration. Earlier, we used Method Channels to extract data from the ISAR database for scheduling alarms upon booting, which triggers MainActivity and launches the app from the background. Transitioning to SQLite will improve flexibility and adaptability for future developments as it can be directly used by Kotlin.
+Issue: [#562](https://github.com/CCExtractor/ultimate_alarm_clock/issues/562), Pull-Request: [#563](https://github.com/CCExtractor/ultimate_alarm_clock/pull/563)
+
+### 3) Profile Switcher and Alarm/Profile Sharing
+Effortlessly manage and share custom alarm profiles for different days and occasions, ensuring only the active profile’s alarms are prioritized. Alarms and profiles can now be shared with other users using their emails. In-app notifications for received alarms and profiles with the option to either accept or reject them.
+Issue: [#591](https://github.com/CCExtractor/ultimate_alarm_clock/issues/591), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
+
+### 4) Google Calendar Integration and Date-based Scheduling
+Integrate Google Calendar to import reminders, events and aggregate alarms. Users can now create alarms that can be triggered on a specific date
+Issue: [#590](https://github.com/CCExtractor/ultimate_alarm_clock/issues/590), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
+
+### 5) Guardian Angel
+Set a Guardian Angel to send a call or SMS to if you fail to wake up for important events, ensuring you never miss crucial moments.
+Issue: [#592](https://github.com/CCExtractor/ultimate_alarm_clock/issues/592), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
+
+### 6) Anti-disturbance
+Automatically dismiss alarms if the user’s screen is on for more than X minutes, indicating they are busy and don’t need the alarm.”
+Issue: [#572](https://github.com/CCExtractor/ultimate_alarm_clock/issues/572), Pull-Request: [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574)
+
+### 7) Open-meteo integration and weather fetch login shift to Kotlin, Location access notification
+Switch to Open-Meteo for weather API for seamless weather integration without the need for an API key, reducing setup friction and streamlining the user experience. Migrated Add Notification for the location being accessed in the background. Weather and Location-based smart controls logic shifted to kotlin.
+Issue: [#579](https://github.com/CCExtractor/ultimate_alarm_clock/issues/579), Pull-Request: [#580](https://github.com/CCExtractor/ultimate_alarm_clock/pull/580)
+
+### 8) Timer
+Revamped the timer with multiple timer support, an easy-to-use UI, notification display when minimized, and direct Kotlin database access for faster performance without relying on Flutter for data.
+Issue: [#564](https://github.com/CCExtractor/ultimate_alarm_clock/issues/564), Pull-Request: [#565](https://github.com/CCExtractor/ultimate_alarm_clock/pull/565)
+
+### 9) Ringtones
+“Added 5 new royalty-free ringtones and fixed related bugs, including erratic ringtone preview behaviour.”
+Issue: [#595](https://github.com/CCExtractor/ultimate_alarm_clock/issues/595), Pull-Request: [#596](https://github.com/CCExtractor/ultimate_alarm_clock/pull/596)
+
+### 10) UI and bug fixes
+- Fixed Scheduling logic for weekday scheduling.
+- Fixed Several Controller errors throughout different PRs.
+- New UI for alarm and profile setting screen.
+- Fixed existing Firebase Auth implementation.
 
 ## GetX Pattern
 
@@ -106,8 +152,6 @@ The schema for Firebase Firestore consists of collections and documents, and her
 
   - `location` (String): The location associated with the alarm.
 
-  - `activityInterval` (Integer): Interval for activity tracking, in minutes.
-
   - `minutesSinceMidnight` (Integer): The number of minutes since midnight when the alarm is set.
 
   - `days` (List of Booleans): A list representing the days on which the alarm should repeat.
@@ -141,6 +185,42 @@ The schema for Firebase Firestore consists of collections and documents, and her
   - `snoozeDuration` (Integer): The snooze duration for the alarm, in minutes.
 
   - `offsetDetails` (Map, Ignored): A map containing additional offset details.
+
+  - `deleteAfterGoesOff` (Boolean): Deletes the alarm once it rings.
+
+  - `showMotivationalQuote` (Boolean): Toggle motivational quote pop on alarm dismiss.
+
+  - `activityMonitor` (Integer): Checks whether the activity monitor is on as 0 and 1.
+ 
+  - `alarmDate` (String): Stores the date on which the alarm should ring.
+
+  - `ringOn` (Boolean): Toggle specific ring date for alarms.
+
+  - `profile` (String): Stores the name of the profile the alarm belongs to.
+
+  - `isGuardian` (Boolean): Toggle the Guardian Angel feature for the alarm.
+
+  - `guardianTimer` (Integer): Stores time in seconds for Guardian Angel to activate after inactivity during an alarm trigger.
+
+  - `guardian` (String): Contact number of the person to contact for Guardian Angel feature.
+
+  - `isCall` (Boolean): Toggles Call or SMS for Guardian Angel.
+
+#### Timers Collection
+- **Attributes**:
+  - `timerValue` (Integer): The total duration of the timer in seconds.
+    
+  - `startedOn` (String): The timestamp when the timer was started.
+    
+  - `ringtoneName` (String): The name of the ringtone to be played when the timer ends.
+    
+  - `timerName` (String): A unique name for the timer.
+    
+  - `isPaused` (Integer): Indicates whether the timer is paused (0 for not 
+paused, 1 for paused).
+
+  - `timeElapsed` (Integer): The amount of time that has elapsed since the timer 
+  started, in seconds.
 
 ### ISAR 
 
@@ -402,18 +482,18 @@ If you find a bug or have a suggestion for improvement, please create an [issue]
 
 We appreciate your contributions to the "Ultimate Alarm Clock" project, and your help is invaluable in making it even better.
 
-If you have any questions regarding something in the project, do not hestitate to ask :)
+If you have any questions regarding something in the project, do not hesitate to ask :)
 
 ## Future Plans
 
-#### Default Alarm Ringtones
+#### Google Assistant commands
 
-- In addition to custom ringtones, we will also provide a selection of default alarm tones. These default options will cater to a variety of preferences and ensure that users have a range of options to choose from.
+- We want to add Google Assistant commands to set alarms directly without the need to open the app.
+  
+#### Google Cloud Functions
 
-#### Timer Functionality
-
-- We are working on implementing timer functionality within the app. This will expand the utility of the "Ultimate Alarm Clock" beyond traditional alarm features, allowing users to set countdown timers for various purposes.
-
+- We are working on implementing Google Cloud functions to make shared alarms more interactive by allowing users to disable or reconfigure alarms for others.
+  
 #### Architectural and Data Flow Changes
 
 - We have plans to make architectural and data flow changes within the application to enhance its overall performance and maintainability. These changes will optimize resource utilization and streamline the user experience.
