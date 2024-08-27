@@ -321,6 +321,8 @@ ThemeData kLightThemeData = ThemeData(
   ),
 );
 
+const List<String> defaultRingtones = ['Digital Alarm 1','Digital Alarm 2','Digital Alarm 3','Mystery','New Day'];
+
 const Map<String, String> Holidays = {
   'Christian Holidays': 'en.christian#holiday@group.v.calendar.google.com',
   'Hindu Holidays': 'en.hinduism#holiday@group.v.calendar.google.com',
