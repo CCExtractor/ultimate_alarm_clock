@@ -32,36 +32,36 @@ class GaurdianAngel extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  'Gaurdian Angel'.tr,
-                  style: TextStyle(
-                    color: themeController.isLightMode.value
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
+                child: Obx(
+                  () => Text(
+                    'Gaurdian Angel'.tr,
+                    style: TextStyle(
+                      color: themeController.primaryTextColor.value,
+                    ),
                   ),
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.info_sharp,
-                  size: 21,
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.45)
-                      : kprimaryTextColor.withOpacity(0.3),
+              Obx(
+                () => IconButton(
+                  icon: Icon(
+                      Icons.info_sharp,
+                      size: 21,
+                      color: themeController.primaryTextColor.value.withOpacity(0.3),
+                    ),
+                  onPressed: () {
+                    Utils.showModal(
+                      context: context,
+                      title: 'Guardian Angel',
+                      description:
+                          'This feature will automatically call or text a person'
+                          ' you trust the most if you dont wake up to an alarm!'
+                          '\n \n CALLING AND SMS PERMISSION REQUIRED.'
+                          '\n \n RATES MAY APPLY AS PER YOUR SERVICE PROVIDER',
+                      iconData: Icons.info_sharp,
+                      isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                    );
+                  },
                 ),
-                onPressed: () {
-                  Utils.showModal(
-                    context: context,
-                    title: 'Guardian Angel',
-                    description:
-                        'This feature will automatically call or text a person'
-                        ' you trust the most if you dont wake up to an alarm!'
-                        '\n \n CALLING AND SMS PERMISSION REQUIRED.'
-                        '\n \n RATES MAY APPLY AS PER YOUR SERVICE PROVIDER',
-                    iconData: Icons.info_sharp,
-                    isLightMode: themeController.isLightMode.value,
-                  );
-                },
               ),
             ],
           ),

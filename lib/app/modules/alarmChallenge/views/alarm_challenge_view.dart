@@ -65,55 +65,46 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                   Get.to(() => ShakeChallengeView());
                                 }
                               },
-                              child: Container(
-                                width: width * 0.91,
-                                height: height * 0.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(18),
+                              child: Obx(
+                                () => Container(
+                                  width: width * 0.91,
+                                  height: height * 0.1,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(18),
+                                    ),
+                                    color: themeController.secondaryBackgroundColor.value,
                                   ),
-                                  color: themeController.isLightMode.value
-                                      ? kLightSecondaryBackgroundColor
-                                      : ksecondaryBackgroundColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Icon(
-                                      Icons.vibration,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
-                                          : kprimaryTextColor.withOpacity(0.8),
-                                      size: 28,
-                                    ),
-                                    Text(
-                                      'Shake Challenge'.tr,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : kprimaryTextColor,
-                                          ),
-                                    ),
-                                    Obx(
-                                      () => Icon(
-                                        controller.isShakeOngoing.value ==
-                                                Status.completed
-                                            ? Icons.done
-                                            : Icons.arrow_forward_ios_sharp,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.vibration,
+                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        size: 28,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'Shake Challenge'.tr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                              color: themeController.primaryTextColor.value,
+                                            ),
+                                      ),
+                                      Obx(
+                                        () => Icon(
+                                          controller.isShakeOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp,
+                                          color: themeController.primaryTextColor.value
+                                                  .withOpacity(0.3),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -133,55 +124,46 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                   Get.to(() => MathsChallengeView());
                                 }
                               },
-                              child: Container(
-                                width: width * 0.91,
-                                height: height * 0.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(18),
+                              child: Obx(
+                                () => Container(
+                                  width: width * 0.91,
+                                  height: height * 0.1,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(18),
+                                    ),
+                                    color: themeController.secondaryBackgroundColor.value,
                                   ),
-                                  color: themeController.isLightMode.value
-                                      ? kLightSecondaryBackgroundColor
-                                      : ksecondaryBackgroundColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Icon(
-                                      Icons.calculate_sharp,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
-                                          : kprimaryTextColor.withOpacity(0.8),
-                                      size: 28,
-                                    ),
-                                    Text(
-                                      'Maths Challenge'.tr,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : kprimaryTextColor,
-                                          ),
-                                    ),
-                                    Obx(
-                                      () => Icon(
-                                        controller.isQrOngoing.value ==
-                                                Status.completed
-                                            ? Icons.done
-                                            : Icons.arrow_forward_ios_sharp,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.calculate_sharp,
+                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        size: 28,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'Maths Challenge'.tr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                              color: themeController.primaryTextColor.value,
+                                            ),
+                                      ),
+                                      Obx(
+                                        () => Icon(
+                                          controller.isQrOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp,
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -199,55 +181,46 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                   Get.to(() => QRChallengeView());
                                 }
                               },
-                              child: Container(
-                                width: width * 0.91,
-                                height: height * 0.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(18),
+                              child: Obx(
+                                 () => Container(
+                                  width: width * 0.91,
+                                  height: height * 0.1,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(18),
+                                    ),
+                                    color: themeController.secondaryBackgroundColor.value,
                                   ),
-                                  color: themeController.isLightMode.value
-                                      ? kLightSecondaryBackgroundColor
-                                      : ksecondaryBackgroundColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Icon(
-                                      Icons.qr_code_scanner,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
-                                          : kprimaryTextColor.withOpacity(0.8),
-                                      size: 28,
-                                    ),
-                                    Text(
-                                      'QR/Bar Code Challenge'.tr,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : kprimaryTextColor,
-                                          ),
-                                    ),
-                                    Obx(
-                                      () => Icon(
-                                        controller.isQrOngoing.value ==
-                                                Status.completed
-                                            ? Icons.done
-                                            : Icons.arrow_forward_ios_sharp,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.qr_code_scanner,
+                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        size: 28,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'QR/Bar Code Challenge'.tr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                              color: themeController.primaryTextColor.value,
+                                            ),
+                                      ),
+                                      Obx(
+                                        () => Icon(
+                                          controller.isQrOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp,
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -269,55 +242,46 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                   Get.to(() => PedometerChallengeView());
                                 }
                               },
-                              child: Container(
-                                width: width * 0.91,
-                                height: height * 0.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(18),
+                              child: Obx(
+                                () => Container(
+                                  width: width * 0.91,
+                                  height: height * 0.1,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(18),
+                                    ),
+                                    color: themeController.secondaryBackgroundColor.value,
                                   ),
-                                  color: themeController.isLightMode.value
-                                      ? kLightSecondaryBackgroundColor
-                                      : ksecondaryBackgroundColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Icon(
-                                      Icons.directions_walk,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.8)
-                                          : kprimaryTextColor.withOpacity(0.8),
-                                      size: 28,
-                                    ),
-                                    Text(
-                                      'Pedometer Challenge',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                            color: themeController
-                                                    .isLightMode.value
-                                                ? kLightPrimaryTextColor
-                                                : kprimaryTextColor,
-                                          ),
-                                    ),
-                                    Obx(
-                                      () => Icon(
-                                        controller.isPedometerOngoing.value ==
-                                                Status.completed
-                                            ? Icons.done
-                                            : Icons.arrow_forward_ios_sharp,
-                                        color: themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                                .withOpacity(0.4)
-                                            : kprimaryTextColor
-                                                .withOpacity(0.2),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.directions_walk,
+                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        size: 28,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'Pedometer Challenge',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                              color: themeController.primaryTextColor.value,
+                                            ),
+                                      ),
+                                      Obx(
+                                        () => Icon(
+                                          controller.isPedometerOngoing.value ==
+                                                  Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp,
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

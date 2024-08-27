@@ -42,9 +42,7 @@ class ChooseRingtoneTile extends StatelessWidget {
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+            color: themeController.primaryTextColor.value,
           ),
         ),
         onTap: () async {
@@ -57,9 +55,7 @@ class ChooseRingtoneTile extends StatelessWidget {
             onWillPop: () async => false,
             barrierDismissible: false,
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: themeController.isLightMode.value
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
+            backgroundColor: themeController.secondaryBackgroundColor.value,
             title: 'Choose Ringtone'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Obx(
@@ -73,9 +69,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                         height: height * 0.3,
                         child: Card(
                           elevation: 0,
-                          color: themeController.isLightMode.value
-                              ? kLightSecondaryBackgroundColor
-                              : ksecondaryBackgroundColor,
+                          color: themeController.secondaryBackgroundColor.value,
                           child: Scrollbar(
                             radius: Radius.circular(5),
                             thumbVisibility: true,
@@ -122,12 +116,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                   .customRingtoneName ==
                                               controller
                                                   .customRingtoneNames[index]
-                                          ? themeController.isLightMode.value
-                                              ? kLightPrimaryBackgroundColor
-                                              : kprimaryBackgroundColor
-                                          : themeController.isLightMode.value
-                                              ? kLightSecondaryBackgroundColor
-                                              : ksecondaryBackgroundColor,
+                                          ? themeController.primaryBackgroundColor.value
+                                          : themeController.secondaryBackgroundColor.value,
                                       title: Text(
                                         controller.customRingtoneNames[index],
                                         overflow: TextOverflow.ellipsis,
@@ -218,8 +208,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                         },
                         child: Text(
                           'Upload Ringtone'.tr,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: kprimaryColor,
                                   ),
                         ),
@@ -236,13 +225,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                         ),
                         child: Text(
                           'Done'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
+                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                color: themeController.secondaryTextColor.value,
                               ),
                         ),
                       ),
@@ -266,12 +250,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: (controller.label.value.trim().isEmpty)
-                              ? themeController.isLightMode.value
-                                  ? kLightPrimaryDisabledTextColor
-                                  : kprimaryDisabledTextColor
-                              : themeController.isLightMode.value
-                                  ? kLightPrimaryTextColor
-                                  : kprimaryTextColor,
+                              ? themeController.primaryDisabledTextColor.value
+                              : themeController.primaryTextColor.value,
                         ),
                   ),
                 ),
@@ -279,12 +259,8 @@ class ChooseRingtoneTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 color: (controller.label.value.trim().isEmpty)
-                    ? themeController.isLightMode.value
-                        ? kLightPrimaryDisabledTextColor
-                        : kprimaryDisabledTextColor
-                    : themeController.isLightMode.value
-                        ? kLightPrimaryTextColor
-                        : kprimaryTextColor,
+                    ? themeController.primaryDisabledTextColor.value
+                    : themeController.primaryTextColor.value,
               ),
             ],
           ),

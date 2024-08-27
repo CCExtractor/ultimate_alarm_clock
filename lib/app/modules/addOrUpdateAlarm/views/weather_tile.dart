@@ -27,9 +27,7 @@ class WeatherTile extends StatelessWidget {
                   await controller.getLocation();
                   Get.defaultDialog(
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                    backgroundColor: themeController.isLightMode.value
-                        ? kLightSecondaryBackgroundColor
-                        : ksecondaryBackgroundColor,
+                    backgroundColor: themeController.secondaryBackgroundColor.value,
                     title: 'Select weather types'.tr,
                     titleStyle: Theme.of(context).textTheme.displaySmall,
                     content: Obx(
@@ -56,10 +54,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
-                                          : kprimaryTextColor.withOpacity(0.5),
+                                      color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
                                         .contains(WeatherTypes.sunny),
@@ -108,10 +103,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
-                                          : kprimaryTextColor.withOpacity(0.5),
+                                      color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
                                         .contains(WeatherTypes.cloudy),
@@ -161,10 +153,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
-                                          : kprimaryTextColor.withOpacity(0.5),
+                                      color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
                                         .contains(WeatherTypes.rainy),
@@ -213,10 +202,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
-                                          : kprimaryTextColor.withOpacity(0.5),
+                                      color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
                                         .contains(WeatherTypes.windy),
@@ -265,10 +251,7 @@ class WeatherTile extends StatelessWidget {
                                   Checkbox.adaptive(
                                     side: BorderSide(
                                       width: 1.5,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                              .withOpacity(0.5)
-                                          : kprimaryTextColor.withOpacity(0.5),
+                                      color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
                                         .contains(WeatherTypes.stormy),
@@ -311,9 +294,7 @@ class WeatherTile extends StatelessWidget {
                       child: Text(
                         'Weather Condition'.tr,
                         style: TextStyle(
-                          color: themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          color: themeController.primaryTextColor.value,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -322,17 +303,13 @@ class WeatherTile extends StatelessWidget {
                       icon: Icon(
                         Icons.info_sharp,
                         size: 21,
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor.withOpacity(0.3)
-                            : kprimaryTextColor.withOpacity(0.3),
+                        color: themeController.primaryTextColor.value.withOpacity(0.3),
                       ),
                       onPressed: () {
                         Utils.hapticFeedback();
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: themeController.isLightMode.value
-                              ? kLightSecondaryBackgroundColor
-                              : ksecondaryBackgroundColor,
+                          backgroundColor: themeController.secondaryBackgroundColor.value,
                           builder: (context) {
                             return Center(
                               child: Padding(
@@ -343,9 +320,7 @@ class WeatherTile extends StatelessWidget {
                                   children: [
                                     Icon(
                                       Icons.cloudy_snowing,
-                                      color: themeController.isLightMode.value
-                                          ? kLightPrimaryTextColor
-                                          : kprimaryTextColor,
+                                      color: themeController.primaryTextColor.value,
                                       size: height * 0.1,
                                     ),
                                     Text(
@@ -390,9 +365,7 @@ class WeatherTile extends StatelessWidget {
                                               .displaySmall!
                                               .copyWith(
                                                 color: themeController
-                                                        .isLightMode.value
-                                                    ? kLightPrimaryTextColor
-                                                    : ksecondaryTextColor,
+                                                        .secondaryTextColor.value,
                                               ),
                                         ),
                                       ),
@@ -421,9 +394,7 @@ class WeatherTile extends StatelessWidget {
                                 color:
                                     (controller.isWeatherEnabled.value == false)
                                         ? kprimaryDisabledTextColor
-                                        : themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
+                                        : themeController.primaryTextColor.value,
                               ),
                         ),
                       ),

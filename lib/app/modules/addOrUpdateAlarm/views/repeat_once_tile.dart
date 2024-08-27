@@ -17,54 +17,54 @@ class RepeatOnceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return Obx(
+      () => ListTile(
 
-      title: FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: Alignment.centerLeft,
-        child: Text(
-          'Ring once'.tr,
-          style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Ring once'.tr,
+            style: TextStyle(
+              color: themeController.primaryTextColor.value,
+            ),
           ),
         ),
-      ),
-      onTap: () {
-        Utils.hapticFeedback();
-        if (!controller.repeatDays.every((element) => element == false)) {
-          controller.isOneTime.value = !controller.isOneTime.value;
-        }
-      },
-      trailing: InkWell(
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Obx(
-              () {
-                if (controller.repeatDays
-                    .every((element) => element == false)) {
+        onTap: () {
+          Utils.hapticFeedback();
+          if (!controller.repeatDays.every((element) => element == false)) {
+            controller.isOneTime.value = !controller.isOneTime.value;
+          }
+        },
+        trailing: InkWell(
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Obx(
+                () {
+                  if (controller.repeatDays
+                      .every((element) => element == false)) {
+                    return Switch.adaptive(
+                      value: false,
+                      activeColor: ksecondaryColor,
+                      onChanged: (value) {
+                        Utils.hapticFeedback();
+                        controller.isOneTime.value = true;
+                      },
+                    );
+                  }
                   return Switch.adaptive(
-                    value: false,
+                    value: controller.isOneTime.value,
                     activeColor: ksecondaryColor,
                     onChanged: (value) {
                       Utils.hapticFeedback();
-                      controller.isOneTime.value = true;
+                      controller.isOneTime.value = value;
                     },
                   );
-                }
-                return Switch.adaptive(
-                  value: controller.isOneTime.value,
-                  activeColor: ksecondaryColor,
-                  onChanged: (value) {
-                    Utils.hapticFeedback();
-                    controller.isOneTime.value = value;
-                  },
-                );
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

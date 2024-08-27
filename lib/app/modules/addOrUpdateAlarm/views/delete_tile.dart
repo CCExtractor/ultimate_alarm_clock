@@ -27,50 +27,51 @@ class DeleteAfterGoesOff extends StatelessWidget {
       children: [
         Visibility(
           visible: isVisible,
-          child: ListTile(
-            title: FittedBox(
-              alignment: Alignment.centerLeft,
-              fit: BoxFit.scaleDown,
-              child: Text(
-                'Delete After Goes Off'.tr,
-                style: TextStyle(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
+          child: Obx(
+            () => ListTile(
+
+              title: FittedBox(
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Delete After Goes Off'.tr,
+                  style: TextStyle(
+                    color: themeController.primaryTextColor.value,
+                  ),
                 ),
               ),
-            ),
-            onTap: () {
-              Utils.hapticFeedback();
-              controller.deleteAfterGoesOff.value =
-                  !controller.deleteAfterGoesOff.value;
-            },
-            trailing: InkWell(
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Obx(
-                    () {
-                      return Switch.adaptive(
-                        value: controller.deleteAfterGoesOff.value,
-                        activeColor: ksecondaryColor,
-                        onChanged: (value) {
-                          Utils.hapticFeedback();
-                          controller.deleteAfterGoesOff.value = value;
-                        },
-                      );
-                    },
-                  ),
-                ],
+              onTap: () {
+                Utils.hapticFeedback();
+                controller.deleteAfterGoesOff.value =
+                    !controller.deleteAfterGoesOff.value;
+              },
+              trailing: InkWell(
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Obx(
+                      () {
+                        return Switch.adaptive(
+                          value: controller.deleteAfterGoesOff.value,
+                          activeColor: ksecondaryColor,
+                          onChanged: (value) {
+                            Utils.hapticFeedback();
+                            controller.deleteAfterGoesOff.value = value;
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-        Container(
-          child: Divider(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryDisabledTextColor
-                : kprimaryDisabledTextColor,
+        Obx(
+          () => Container(
+            child: Divider(
+              color: themeController.primaryDisabledTextColor.value,
+            ),
           ),
         ),
       ],

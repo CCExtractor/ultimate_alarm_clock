@@ -31,7 +31,7 @@ const Color kLightSecondaryColor = Color(0xff6FBC00);
 const Color kLightPrimaryBackgroundColor = Color(0xffFFFFFF);
 const Color kLightSecondaryBackgroundColor = Color(0xffF9F9F9);
 const Color kLightPrimaryTextColor = Color(0xff444444);
-const Color kLightSecondaryTextColor = Color(0xff7C7C7C);
+const Color kLightSecondaryTextColor = Color(0xff444444);
 const Color kLightPrimaryDisabledTextColor = Color(0xffACACAB);
 
 // Dark ThemeData

@@ -20,151 +20,139 @@ class PedometerChallenge extends StatelessWidget {
   Widget build(BuildContext context) {
     int numberOfSteps;
     bool isPedometerEnabled;
-    return ListTile(
-      title: Row(
-        children: [
-          Text(
-            'Pedometer'.tr,
-            style: TextStyle(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
+    return Obx(
+      () => ListTile(
+        title: Row(
+          children: [
+            Text(
+              'Pedometer'.tr,
+              style: TextStyle(
+                color: themeController.primaryTextColor.value,
+              ),
             ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.info_sharp,
-              size: 21,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor.withOpacity(0.45)
-                  : kprimaryTextColor.withOpacity(0.3),
+            IconButton(
+              icon: Icon(
+                Icons.info_sharp,
+                size: 21,
+                color: themeController.primaryTextColor.value.withOpacity(0.3),
+              ),
+              onPressed: () {
+                Utils.showModal(
+                  context: context,
+                  title: 'Pedometer'.tr,
+                  description: 'pedometerDescription'.tr,
+                  iconData: Icons.directions_walk,
+                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                );
+              },
             ),
-            onPressed: () {
-              Utils.showModal(
-                context: context,
-                title: 'Pedometer'.tr,
-                description: 'pedometerDescription'.tr,
-                iconData: Icons.directions_walk,
-                isLightMode: themeController.isLightMode.value,
-              );
+          ],
+        ),
+        onTap: () {
+          Utils.hapticFeedback();
+          // storing initial state
+          numberOfSteps = controller.numberOfSteps.value;
+          isPedometerEnabled = controller.isPedometerEnabled.value;
+          Get.defaultDialog(
+            onWillPop: () async {
+              // presetting values to initial state
+              _presetToInitial(numberOfSteps, isPedometerEnabled);
+              return true;
             },
-          ),
-        ],
-      ),
-      onTap: () {
-        Utils.hapticFeedback();
-        // storing initial state
-        numberOfSteps = controller.numberOfSteps.value;
-        isPedometerEnabled = controller.isPedometerEnabled.value;
-        Get.defaultDialog(
-          onWillPop: () async {
-            // presetting values to initial state
-            _presetToInitial(numberOfSteps, isPedometerEnabled);
-            return true;
-          },
-          titlePadding: const EdgeInsets.only(top: 20),
-          backgroundColor: themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
-          title: 'Number of steps'.tr,
-          titleStyle: Theme.of(context).textTheme.displaySmall,
-          content: Obx(
-            () => Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      NumberPicker(
-                        value: controller.numberOfSteps.value,
-                        minValue: 0,
-                        maxValue: 60,
-                        onChanged: (value) {
-                          Utils.hapticFeedback();
-                          if (value > 0) {
-                            controller.isPedometerEnabled.value = true;
-                          } else {
-                            controller.isPedometerEnabled.value = false;
-                          }
-                          controller.numberOfSteps.value = value;
-                        },
-                      ),
-                      Text(
-                        controller.numberOfSteps.value > 1
-                            ? 'steps'.tr
-                            : 'step'.tr,
-                      ),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
+            titlePadding: const EdgeInsets.only(top: 20),
+            backgroundColor: themeController.secondaryBackgroundColor.value,
+            title: 'Number of steps'.tr,
+            titleStyle: Theme.of(context).textTheme.displaySmall,
+            content: Obx(
+              () => Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
+                        NumberPicker(
+                          value: controller.numberOfSteps.value,
+                          minValue: 0,
+                          maxValue: 60,
+                          onChanged: (value) {
                             Utils.hapticFeedback();
-                            Get.back();
+                            if (value > 0) {
+                              controller.isPedometerEnabled.value = true;
+                            } else {
+                              controller.isPedometerEnabled.value = false;
+                            }
+                            controller.numberOfSteps.value = value;
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: kprimaryColor,
-                            // Set the desired background color
-                          ),
-                          child: Text(
-                            'Done'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
-                                ),
-                          ),
+                        ),
+                        Text(
+                          controller.numberOfSteps.value > 1
+                              ? 'steps'.tr
+                              : 'step'.tr,
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      trailing: InkWell(
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Obx(
-              () => Text(
-                controller.numberOfSteps.value > 0
-                    ? controller.numberOfSteps.value > 1
-                        ? '${controller.numberOfSteps.value} ' + 'steps'.tr
-                        : '${controller.numberOfSteps.value} ' + 'step'.tr
-                    : 'Off'.tr,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: (controller.isPedometerEnabled.value == false)
-                          ? themeController.isLightMode.value
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Utils.hapticFeedback();
+                              Get.back();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kprimaryColor,
+                              // Set the desired background color
+                            ),
+                            child: Text(
+                              'Done'.tr,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                    color: themeController.secondaryTextColor.value,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
+                ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
-            ),
-          ],
+          );
+        },
+        trailing: InkWell(
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Obx(
+                () => Text(
+                  controller.numberOfSteps.value > 0
+                      ? controller.numberOfSteps.value > 1
+                          ? '${controller.numberOfSteps.value} ' + 'steps'.tr
+                          : '${controller.numberOfSteps.value} ' + 'step'.tr
+                      : 'Off'.tr,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: (controller.isPedometerEnabled.value == false)
+                            ? themeController.primaryDisabledTextColor.value
+                            : themeController.primaryTextColor.value,
+                      ),
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: themeController.primaryDisabledTextColor.value,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -182,14 +182,10 @@ class AddOrUpdateAlarmController extends GetxController {
     if (!(await Permission.systemAlertWindow.isGranted) &&
         !(await Permission.ignoreBatteryOptimizations.isGranted)) {
       Get.defaultDialog(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
         title: 'Permission Required',
         titleStyle: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : Colors.white,
+          color: themeController.primaryTextColor.value,
         ),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -272,9 +268,7 @@ class AddOrUpdateAlarmController extends GetxController {
         titlePadding: const EdgeInsets.symmetric(
           vertical: 20,
         ),
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
         title: 'Discard Changes?'.tr,
         titleStyle: Theme.of(context).textTheme.displaySmall,
         content: Column(
@@ -312,18 +306,14 @@ class AddOrUpdateAlarmController extends GetxController {
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                        color: themeController.isLightMode.value
-                            ? Colors.red.withOpacity(0.9)
-                            : Colors.red,
+                        color: Colors.red,
                         width: 1,
                       ),
                     ),
                     child: Text(
                       'Leave'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
-                                ? Colors.red.withOpacity(0.9)
-                                : Colors.red,
+                            color: Colors.red,
                           ),
                     ),
                   ),
@@ -365,18 +355,14 @@ class AddOrUpdateAlarmController extends GetxController {
       return false;
     } else if (locationPermission == LocationPermission.denied) {
       bool? shouldAskPermission = await Get.defaultDialog<bool>(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
         barrierDismissible: false,
         title: 'Location Permission',
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : Colors.white,
+          color: themeController.primaryTextColor.value,
         ),
         content: const Text(
           'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.',
@@ -446,9 +432,7 @@ class AddOrUpdateAlarmController extends GetxController {
     restartQRCodeController(false);
     Get.defaultDialog(
       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-      backgroundColor: themeController.isLightMode.value
-          ? kLightSecondaryBackgroundColor
-          : ksecondaryBackgroundColor,
+      backgroundColor: themeController.secondaryBackgroundColor.value,
       title: 'Scan a QR/Bar Code',
       titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
       content: Obx(
@@ -489,9 +473,7 @@ class AddOrUpdateAlarmController extends GetxController {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
+                                color: themeController.secondaryTextColor.value,
                               ),
                         ),
                         onPressed: () {
@@ -511,9 +493,7 @@ class AddOrUpdateAlarmController extends GetxController {
                               .textTheme
                               .displaySmall!
                               .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
+                                color: themeController.secondaryTextColor.value,
                               ),
                         ),
                         onPressed: () async {
@@ -533,9 +513,7 @@ class AddOrUpdateAlarmController extends GetxController {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : ksecondaryTextColor,
+                                  color: themeController.secondaryTextColor.value,
                                 ),
                           ),
                           onPressed: () {
@@ -558,86 +536,80 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
-        title: 'Camera Permission'.tr,
-        titleStyle: TextStyle(
-          color: themeController.isLightMode.value
-              ? kLightPrimaryTextColor
-              : Colors.white,
+  backgroundColor: themeController.secondaryBackgroundColor.value,
+  title: 'Camera Permission'.tr,
+  titleStyle: TextStyle(
+    color: themeController.primaryTextColor.value,
+  ),
+  titlePadding: const EdgeInsets.only(
+    top: 25,
+    left: 10,
+  ),
+  contentPadding:
+  const EdgeInsets.only(top: 20, left: 20, right: 20,bottom: 23),
+  content: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Center(
+        child: Text(
+          'Please allow camera access to scan QR codes.'.tr,
+          textAlign: TextAlign.center,
         ),
-        titlePadding: const EdgeInsets.only(
-          top: 25,
-          left: 10,
-        ),
-        contentPadding:
-            const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 23),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Text(
-                'Please allow camera access to scan QR codes.'.tr,
-                textAlign: TextAlign.center,
-              ),
+      ),
+    ],
+  ),
+  onCancel: () {
+    Get.back(); // Close the alert box
+  },
+  onConfirm: () async {
+    Get.back(); // Close the alert box
+    PermissionStatus permissionStatus = await Permission.camera.request();
+    if (permissionStatus.isGranted) {
+      // Permission granted, proceed with QR code scanning
+      showQRDialog();
+    }
+  },
+  confirm: TextButton(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+    ),
+    child: Obx(
+      () => Text(
+        'OK',
+        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+              color: themeController.secondaryTextColor.value,
             ),
-          ],
-        ),
-        onCancel: () {
-          Get.back(); // Close the alert box
-        },
-        onConfirm: () async {
-          Get.back(); // Close the alert box
-          PermissionStatus permissionStatus = await Permission.camera.request();
-          if (permissionStatus.isGranted) {
-            // Permission granted, proceed with QR code scanning
-            showQRDialog();
-          }
-        },
-        confirm: TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+      ),
+    ),
+    onPressed: () async {
+      Get.back(); // Close the alert box
+      PermissionStatus permissionStatus =
+          await Permission.camera.request();
+      if (permissionStatus.isGranted) {
+        // Permission granted, proceed with QR code scanning
+        showQRDialog();
+      }
+    },
+  ),
+  cancel: Obx(
+    () => TextButton(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(
+        themeController.primaryTextColor.value.withOpacity(0.5),
+      ),
+    ),
+    child: Text(
+      'Cancel',
+      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+            color: themeController.primaryTextColor.value,
           ),
-          child: Text(
-            'OK',
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : ksecondaryTextColor,
-                ),
-          ),
-          onPressed: () async {
-            Get.back(); // Close the alert box
-            PermissionStatus permissionStatus =
-                await Permission.camera.request();
-            if (permissionStatus.isGranted) {
-              // Permission granted, proceed with QR code scanning
-              showQRDialog();
-            }
-          },
-        ),
-        cancel: TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              themeController.isLightMode.value
-                  ? kLightPrimaryTextColor.withOpacity(0.5)
-                  : kprimaryTextColor.withOpacity(0.5),
-            ),
-          ),
-          child: Text(
-            'Cancel',
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor
-                      : kprimaryTextColor,
-                ),
-          ),
-          onPressed: () {
-            Get.back(); // Close the alert box
-          },
-        ),
-      );
+    ),
+    onPressed: () {
+      Get.back(); // Close the alert box
+    },
+  ),
+),
+);
     } else {
       showQRDialog();
     }
@@ -1296,12 +1268,8 @@ class AddOrUpdateAlarmController extends GetxController {
       Fluttertoast.showToast(
         msg: 'Rings in $timeToAlarm',
         toastLength: Toast.LENGTH_LONG,
-        backgroundColor: themeController.isLightMode.value
-            ? kLightSecondaryBackgroundColor
-            : ksecondaryBackgroundColor,
-        textColor: themeController.isLightMode.value
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        textColor: themeController.primaryTextColor.value,
       );
     } catch (e) {
       debugPrint(e.toString());

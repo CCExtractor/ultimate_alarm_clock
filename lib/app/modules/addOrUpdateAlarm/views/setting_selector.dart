@@ -60,7 +60,7 @@ class SettingSelector extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: controller.alarmSettingType.value == val
                       ? kprimaryColor
-                      : ksecondaryBackgroundColor,
+                      : controller.themeController.secondaryBackgroundColor.value,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -68,8 +68,8 @@ class SettingSelector extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: controller.alarmSettingType.value == val
-                        ? ksecondaryBackgroundColor
-                        : Colors.white,
+                        ? kLightPrimaryTextColor
+                        : controller.themeController.primaryDisabledTextColor.value,
                   ),
                 ),
               ),

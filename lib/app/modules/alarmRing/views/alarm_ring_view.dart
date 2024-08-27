@@ -13,29 +13,27 @@ class AlarmControlView extends GetView<AlarmControlController> {
 
   ThemeController themeController = Get.find<ThemeController>();
 
-  TextButton getAddSnoozeButtons(
+  Obx getAddSnoozeButtons(
       BuildContext context, int snoozeMinutes, String title) {
-    return TextButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
-          themeController.isLightMode.value
-              ? kLightSecondaryBackgroundColor
-              : ksecondaryBackgroundColor,
+    return Obx(
+        () => TextButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            themeController.secondaryBackgroundColor.value,
+          ),
         ),
+        child: Text(
+          title.tr,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: themeController.primaryTextColor.value,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+        onPressed: () {
+          Utils.hapticFeedback();
+          controller.addMinutes(snoozeMinutes);
+        },
       ),
-      child: Text(
-        title.tr,
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor
-                  : kprimaryTextColor,
-              fontWeight: FontWeight.w600,
-            ),
-      ),
-      onPressed: () {
-        Utils.hapticFeedback();
-        controller.addMinutes(snoozeMinutes);
-      },
     );
   }
 
@@ -87,9 +85,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
+                                    color: themeController.secondaryTextColor.value,
                                   ),
                             ),
                             onPressed: () {
@@ -176,9 +172,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                       child: Text(
                         controller.currentlyRingingAlarm.value.note,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: themeController.isLightMode.value
-                                  ? kLightPrimaryTextColor
-                                  : kprimaryTextColor,
+                              color: themeController.primaryTextColor.value,
                               fontSize: 20,
                               fontWeight: FontWeight.w100,
                               fontStyle: FontStyle.italic,
@@ -201,9 +195,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                themeController.isLightMode.value
-                                    ? kLightSecondaryBackgroundColor
-                                    : ksecondaryBackgroundColor,
+                                themeController.secondaryBackgroundColor.value,
                               ),
                             ),
                             child: Text(
@@ -212,9 +204,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : kprimaryTextColor,
+                                    color: themeController.primaryTextColor.value,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),

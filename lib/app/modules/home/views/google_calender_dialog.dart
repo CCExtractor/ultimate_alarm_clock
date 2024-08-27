@@ -58,9 +58,7 @@ Future<Widget> googleCalenderDialog(
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.isLightMode.value
-                                      ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor,
+                                  color: themeController.primaryDisabledTextColor.value,
                                   fontSize: 20 * controller.scalingFactor.value,
                                 ),
                           ),
@@ -84,9 +82,7 @@ Future<Widget> googleCalenderDialog(
                                       );
                                     },
                                     child: Card(
-                                      color: themeController.isLightMode.value
-                                          ? kLightSecondaryBackgroundColor
-                                          : ksecondaryBackgroundColor,
+                                      color: themeController.secondaryBackgroundColor.value,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                           16,
@@ -114,10 +110,7 @@ Future<Widget> googleCalenderDialog(
                                                     .textTheme
                                                     .displaySmall!
                                                     .copyWith(
-                                                      color: themeController
-                                                              .isLightMode.value
-                                                          ? kLightPrimaryTextColor
-                                                          : kprimaryTextColor,
+                                                      color: themeController.primaryTextColor.value,
                                                       fontSize: 15 *
                                                           controller
                                                               .scalingFactor
@@ -142,9 +135,7 @@ Future<Widget> googleCalenderDialog(
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Card(
-                                    color: themeController.isLightMode.value
-                                        ? kLightSecondaryBackgroundColor
-                                        : ksecondaryBackgroundColor,
+                                    color: themeController.secondaryBackgroundColor.value,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         16,
@@ -183,11 +174,7 @@ Future<Widget> googleCalenderDialog(
                                                             .textTheme
                                                             .displaySmall!
                                                             .copyWith(
-                                                              color: themeController
-                                                                      .isLightMode
-                                                                      .value
-                                                                  ? kLightPrimaryTextColor
-                                                                  : kprimaryTextColor,
+                                                              color: themeController.primaryTextColor.value,
                                                               fontSize: 15 *
                                                                   controller
                                                                       .scalingFactor
