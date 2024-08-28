@@ -312,7 +312,7 @@ class HomeView extends GetView<HomeController> {
                                                 ),
                                                 Container(
                                                   height: 35,
-                                                  width: 340,
+                                                  width: MediaQuery.of(context).size.width / 1.2,
                                                   child: Row(
                                                     children: [
                                                       Obx(() {
@@ -360,9 +360,12 @@ class HomeView extends GetView<HomeController> {
                                                           ),
 
                                                           // Delete button
+                                                          SizedBox(
+                                                            width: 30 * controller.scalingFactor.value,
+                                                          ),
                                                           Obx(
-                                                            () => IconButton(
-                                                              onPressed:
+                                                            () => InkWell(
+                                                              onTap:
                                                                   () async {
                                                                 // Deleting the alarms
                                                                 await controller
@@ -391,21 +394,21 @@ class HomeView extends GetView<HomeController> {
                                                                 controller
                                                                     .refreshUpcomingAlarms();
                                                               },
-                                                              icon: const Icon(
+                                                              child:  Icon(
                                                                 Icons.delete,
+                                                                color: controller
+                                                                    .numberOfAlarmsSelected
+                                                                    .value >
+                                                                    0
+                                                                    ? Colors.red
+                                                                    : themeController.primaryTextColor.value.withOpacity(
+                                                                  0.75,
+                                                                ),
+                                                                size: 27 *
+                                                                    controller
+                                                                        .scalingFactor
+                                                                        .value,
                                                               ),
-                                                              color: controller
-                                                                          .numberOfAlarmsSelected
-                                                                          .value >
-                                                                      0
-                                                                  ? Colors.red
-                                                                  : themeController.primaryTextColor.value.withOpacity(
-                                                                          0.75,
-                                                                        ),
-                                                              iconSize: 27 *
-                                                                  controller
-                                                                      .scalingFactor
-                                                                      .value,
                                                             ),
                                                           ),
                                                         ],
