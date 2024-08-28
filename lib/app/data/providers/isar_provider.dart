@@ -197,7 +197,7 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }

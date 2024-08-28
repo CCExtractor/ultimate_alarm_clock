@@ -1,5 +1,4 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -56,11 +55,6 @@ void main() async {
   );
 }
 
-Future _firebaseBackgroundMessage(RemoteMessage message) async {
-  if (message.notification != null) {
-    print("recieved noti");
-  }
-}
 
 class UltimateAlarmClockApp extends StatelessWidget {
   UltimateAlarmClockApp({super.key});

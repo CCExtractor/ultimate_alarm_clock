@@ -144,11 +144,11 @@ class NotificationsView extends GetView<NotificationsController> {
                                         TextButton(
                                           onPressed: () async {
                                             await FirestoreDb.removeItem(
-                                                controller.notifications[index]
-                                                    ['owner'],
-                                                controller
-                                                    .notifications[index]);
-                                            Get.back();
+                                              controller.notifications[index],
+                                            );
+                                            Get.snackbar('Notification',
+                                                'Shared Item Removed',);
+                                            Navigator.of(context).pop();
                                           },
                                           child: const Text(
                                             'Reject',
@@ -174,11 +174,13 @@ class NotificationsView extends GetView<NotificationsController> {
                                                         index]['AlarmName'],
                                                   );
                                             await FirestoreDb.removeItem(
-                                                controller.notifications[index]
-                                                    ['owner'],
                                                 controller
                                                     .notifications[index]);
-                                            Get.back();
+
+
+                                            Navigator.of(context).pop();
+                                            Get.snackbar("Notification",
+                                                "Shared Item Added");
                                           },
                                           child: const Text('Add'),
                                         ),
@@ -210,7 +212,8 @@ class NotificationsView extends GetView<NotificationsController> {
   }
 
   Widget toAccept(Map notification) {
-    return SingleChildScrollView(scrollDirection: Axis.horizontal,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       child: Row(
         children: [
           Container(
@@ -221,8 +224,8 @@ class NotificationsView extends GetView<NotificationsController> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(18),
               child: Padding(
-                padding:
-                    EdgeInsets.all(controller.homeController.scalingFactor * 10),
+                padding: EdgeInsets.all(
+                    controller.homeController.scalingFactor * 10),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: notification['type'] == 'profile'
@@ -257,13 +260,15 @@ class NotificationsView extends GetView<NotificationsController> {
                     ? Text(
                         '${notification['owner']} sent a profile.',
                         style: TextStyle(
-                          fontSize: controller.homeController.scalingFactor * 14,
+                          fontSize:
+                              controller.homeController.scalingFactor * 14,
                         ),
                       )
                     : Text(
                         '${notification['owner']} sent an alarm.',
                         style: TextStyle(
-                          fontSize: controller.homeController.scalingFactor * 14,
+                          fontSize:
+                              controller.homeController.scalingFactor * 14,
                         ),
                       ),
                 notification['type'] == 'profile'
@@ -271,7 +276,8 @@ class NotificationsView extends GetView<NotificationsController> {
                         notification['profileName'],
                         style: TextStyle(
                           color: kprimaryColor,
-                          fontSize: controller.homeController.scalingFactor * 20,
+                          fontSize:
+                              controller.homeController.scalingFactor * 20,
                           fontWeight: FontWeight.w700,
                         ),
                       )
@@ -279,7 +285,8 @@ class NotificationsView extends GetView<NotificationsController> {
                         notification['alarmTime'],
                         style: TextStyle(
                           color: kprimaryColor,
-                          fontSize: controller.homeController.scalingFactor * 20,
+                          fontSize:
+                              controller.homeController.scalingFactor * 20,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
