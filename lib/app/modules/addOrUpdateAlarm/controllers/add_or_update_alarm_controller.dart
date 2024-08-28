@@ -513,7 +513,8 @@ class AddOrUpdateAlarmController extends GetxController {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.secondaryTextColor.value,
+                                  color:
+                                      themeController.secondaryTextColor.value,
                                 ),
                           ),
                           onPressed: () {
@@ -536,80 +537,80 @@ class AddOrUpdateAlarmController extends GetxController {
 
     if (!cameraStatus.isGranted) {
       Get.defaultDialog(
-  backgroundColor: themeController.secondaryBackgroundColor.value,
-  title: 'Camera Permission'.tr,
-  titleStyle: TextStyle(
-    color: themeController.primaryTextColor.value,
-  ),
-  titlePadding: const EdgeInsets.only(
-    top: 25,
-    left: 10,
-  ),
-  contentPadding:
-  const EdgeInsets.only(top: 20, left: 20, right: 20,bottom: 23),
-  content: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Center(
-        child: Text(
-          'Please allow camera access to scan QR codes.'.tr,
-          textAlign: TextAlign.center,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        title: 'Camera Permission'.tr,
+        titleStyle: TextStyle(
+          color: themeController.primaryTextColor.value,
         ),
-      ),
-    ],
-  ),
-  onCancel: () {
-    Get.back(); // Close the alert box
-  },
-  onConfirm: () async {
-    Get.back(); // Close the alert box
-    PermissionStatus permissionStatus = await Permission.camera.request();
-    if (permissionStatus.isGranted) {
-      // Permission granted, proceed with QR code scanning
-      showQRDialog();
-    }
-  },
-  confirm: TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-    ),
-    child: Obx(
-      () => Text(
-        'OK',
-        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-              color: themeController.secondaryTextColor.value,
+        titlePadding: const EdgeInsets.only(
+          top: 25,
+          left: 10,
+        ),
+        contentPadding:
+            const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 23),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                'Please allow camera access to scan QR codes.'.tr,
+                textAlign: TextAlign.center,
+              ),
             ),
-      ),
-    ),
-    onPressed: () async {
-      Get.back(); // Close the alert box
-      PermissionStatus permissionStatus =
-          await Permission.camera.request();
-      if (permissionStatus.isGranted) {
-        // Permission granted, proceed with QR code scanning
-        showQRDialog();
-      }
-    },
-  ),
-  cancel: Obx(
-    () => TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(
-        themeController.primaryTextColor.value.withOpacity(0.5),
-      ),
-    ),
-    child: Text(
-      'Cancel',
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.primaryTextColor.value,
+          ],
+        ),
+        onCancel: () {
+          Get.back(); // Close the alert box
+        },
+        onConfirm: () async {
+          Get.back(); // Close the alert box
+          PermissionStatus permissionStatus = await Permission.camera.request();
+          if (permissionStatus.isGranted) {
+            // Permission granted, proceed with QR code scanning
+            showQRDialog();
+          }
+        },
+        confirm: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(kprimaryColor),
           ),
-    ),
-    onPressed: () {
-      Get.back(); // Close the alert box
-    },
-  ),
-),
-);
+          child: Obx(
+            () => Text(
+              'OK',
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: themeController.secondaryTextColor.value,
+                  ),
+            ),
+          ),
+          onPressed: () async {
+            Get.back(); // Close the alert box
+            PermissionStatus permissionStatus =
+                await Permission.camera.request();
+            if (permissionStatus.isGranted) {
+              // Permission granted, proceed with QR code scanning
+              showQRDialog();
+            }
+          },
+        ),
+        cancel: Obx(
+          () => TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                themeController.primaryTextColor.value.withOpacity(0.5),
+              ),
+            ),
+            child: Text(
+              'Cancel',
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: themeController.primaryTextColor.value,
+                  ),
+            ),
+            onPressed: () {
+              Get.back(); // Close the alert box
+            },
+          ),
+        ),
+      );
     } else {
       showQRDialog();
     }
@@ -666,7 +667,9 @@ class AddOrUpdateAlarmController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    profileTextEditingController.text = homeController.selectedProfile.value;
+    profileTextEditingController.text = homeController.isProfileUpdate.value
+        ? homeController.selectedProfile.value
+        : "";
     emailTextEditingController.text = '';
 
     if (Get.arguments != null) {
@@ -1334,14 +1337,19 @@ class AddOrUpdateAlarmController extends GetxController {
       isCall: isCall.value,
       ringOn: isFutureDate.value,
     );
-    var profileId =
+
+    if(homeController.isProfileUpdate.value)
+      {
+        var profileId =
         await IsarDb.profileId(homeController.selectedProfile.value);
-    print(profileId);
-    if (profileId != 'null') profileModel.isarId = profileId;
-    print(profileModel.isarId);
-    await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+        print(profileId);
+        if (profileId != 'null') profileModel.isarId = profileId;
+        print(profileModel.isarId);
+        await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+      }
     await IsarDb.addProfile(profileModel);
     homeController.selectedProfile.value = profileModel.profileName;
     storage.writeProfile(profileModel.profileName);
+    homeController.writeProfileName(profileModel.profileName);
   }
 }

@@ -112,6 +112,9 @@ class MainActivity : FlutterActivity() {
                         ringTime["isWeather"]!! as Int,
                         ringTime["weatherTypes"]!! as String
                     )
+                }else{
+                    println("FLUTTER CALLED CANCEL ALARMS")
+                    cancelAllScheduledAlarms()
                 }
                 result.success(null)
             } else if (call.method == "cancelAllScheduledAlarms") {

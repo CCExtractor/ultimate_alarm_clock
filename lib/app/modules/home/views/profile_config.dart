@@ -34,6 +34,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
             ? InkWell(
                 onTap: () async {
                   controller.isProfile.value = true;
+                  controller.isProfileUpdate.value = true;
                   Get.toNamed('/add-update-alarm',
                       arguments: controller.genFakeAlarmModel());
                 },
@@ -101,6 +102,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                           controller.profileModel.value =
                               (await IsarDb.getProfile(
                                   controller.selectedProfile.value))!;
+                          controller.isProfileUpdate.value = false;
                           Get.toNamed(
                             '/add-update-alarm',
                           );
@@ -160,7 +162,6 @@ class _ProfileSelectState extends State<ProfileSelect> {
         borderRadius: BorderRadius.circular(18),
         onTap: () {
           controller.writeProfileName(profile.profileName);
-
           controller.expandProfile.value = !controller.expandProfile.value;
         },
         child: Obx(() => Container(
