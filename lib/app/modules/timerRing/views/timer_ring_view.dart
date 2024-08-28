@@ -44,13 +44,13 @@ class TimerRingView extends GetView<TimerRingController> {
                 onPressed: () async {
                   Get.offNamed('/bottom-navigation-bar');
                 },
-                child: Text(
-                  'Stop',
-                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : ksecondaryTextColor,
-                      ),
+                child: Obx(
+                  () => Text(
+                    'Stop',
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          color: themeController.secondaryTextColor.value,
+                        ),
+                  ),
                 ),
               ),
             ),
@@ -68,14 +68,14 @@ class TimerRingView extends GetView<TimerRingController> {
                 SizedBox(
                   height: height * 0.10,
                 ),
-                Text(
-                  'Time\'s up!',
-                  style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                        color: themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+                Obx(
+                  () => Text(
+                    'Time\'s up!',
+                    style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                          color: themeController.primaryTextColor.value,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
               ],
             ),

@@ -25,9 +25,7 @@ class AlarmOffset extends StatelessWidget {
                 Utils.hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                  backgroundColor: themeController.isLightMode.value
-                      ? kLightSecondaryBackgroundColor
-                      : ksecondaryBackgroundColor,
+                  backgroundColor: themeController.secondaryBackgroundColor.value,
                   title: 'Choose duration'.tr,
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
@@ -68,18 +66,11 @@ class AlarmOffset extends StatelessWidget {
                                 backgroundColor: (controller
                                         .isOffsetBefore.value)
                                     ? kprimaryColor
-                                    : themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.10)
-                                        : kprimaryTextColor.withOpacity(0.08),
+                                    : themeController.primaryTextColor.value.withOpacity(0.10),
                                 foregroundColor:
                                     (controller.isOffsetBefore.value)
-                                        ? themeController.isLightMode.value
-                                            ? kLightSecondaryTextColor
-                                            : ksecondaryTextColor
-                                        : themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
+                                        ? themeController.secondaryTextColor.value
+                                        : themeController.primaryTextColor.value,
                               ),
                               child:  Text(
                                 'Before'.tr,
@@ -97,18 +88,12 @@ class AlarmOffset extends StatelessWidget {
                                 backgroundColor: (!controller
                                         .isOffsetBefore.value)
                                     ? kprimaryColor
-                                    : themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                            .withOpacity(0.10)
-                                        : kprimaryTextColor.withOpacity(0.08),
+                                    : themeController.primaryTextColor.value
+                                            .withOpacity(0.10),
                                 foregroundColor:
                                     (!controller.isOffsetBefore.value)
-                                        ? themeController.isLightMode.value
-                                            ? kLightSecondaryTextColor
-                                            : ksecondaryTextColor
-                                        : themeController.isLightMode.value
-                                            ? kLightPrimaryTextColor
-                                            : kprimaryTextColor,
+                                        ? themeController.secondaryTextColor.value
+                                        : themeController.primaryTextColor.value,
                               ),
                               child:  Text(
                                 'After'.tr,
@@ -132,20 +117,14 @@ class AlarmOffset extends StatelessWidget {
                         controller.offsetDuration.value > 0 ? 'Enabled'.tr : 'Off'.tr,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: (controller.offsetDuration.value > 0)
-                                  ? themeController.isLightMode.value
-                                      ? kLightPrimaryTextColor
-                                      : kprimaryTextColor
-                                  : themeController.isLightMode.value
-                                      ? kLightPrimaryDisabledTextColor
-                                      : kprimaryDisabledTextColor,
+                                  ? themeController.primaryTextColor.value
+                                  : themeController.primaryDisabledTextColor.value,
                             ),
                       ),
                     ),
                     Icon(
                       Icons.chevron_right,
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryDisabledTextColor
-                          : kprimaryDisabledTextColor,
+                      color: themeController.primaryDisabledTextColor.value,
                     ),
                   ],
                 ),

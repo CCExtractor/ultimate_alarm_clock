@@ -52,7 +52,9 @@ class MainActivity : FlutterActivity() {
 
         if (intent != null && intent.hasExtra(EXTRA_KEY)) {
             val receivedData = intent.getStringExtra(EXTRA_KEY)
-            alarmConfig["shouldAlarmRing"] = true
+            if(receivedData == "true") {
+                alarmConfig["shouldAlarmRing"] = true
+            }
             isAlarm = intent.getStringExtra(ALARM_TYPE)
             val cleanIntent = Intent(intent)
             cleanIntent.removeExtra(EXTRA_KEY)
@@ -63,7 +65,10 @@ class MainActivity : FlutterActivity() {
         }
 
         if (isAlarm == "true") {
+            val cleanIntent = Intent(intent)
+            cleanIntent.removeExtra(EXTRA_KEY)
             methodChannel1.invokeMethod("appStartup", alarmConfig)
+            alarmConfig["shouldAlarmRing"] = false
         }
         methodChannel2.setMethodCallHandler { call, result ->
             if (call.method == "playDefaultAlarm") {

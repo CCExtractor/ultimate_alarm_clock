@@ -156,75 +156,71 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
   }
 
   Widget _buildNumberButton(String number) {
-    return ElevatedButton(
-      onPressed: () {
-        Utils.hapticFeedback();
-        controller.onButtonPressed(number);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightPrimaryTextColor.withOpacity(0.10)
-            : kprimaryTextColor.withOpacity(0.08),
-        foregroundColor: themeController.isLightMode.value
-            ? kLightPrimaryTextColor
-            : kprimaryTextColor,
-        padding: const EdgeInsets.all(16),
-        minimumSize: const Size(64, 64),
+    return Obx(
+        () => ElevatedButton(
+        onPressed: () {
+          Utils.hapticFeedback();
+          controller.onButtonPressed(number);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.10),
+          foregroundColor: themeController.primaryTextColor.value,
+          padding: const EdgeInsets.all(16),
+          minimumSize: const Size(64, 64),
+        ),
+        child: Text(number, style: const TextStyle(fontSize: 24)),
       ),
-      child: Text(number, style: const TextStyle(fontSize: 24)),
     );
   }
 
   Widget _buildClearButton() {
-    return ElevatedButton(
-      onPressed: () {
-        Utils.hapticFeedback();
-        controller.displayValue.value = '';
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: themeController.isLightMode.value
-            ? kLightPrimaryTextColor.withOpacity(0.40)
-            : kprimaryTextColor.withOpacity(0.5),
-        foregroundColor: Colors.black,
-        padding: const EdgeInsets.all(16),
-        minimumSize: const Size(64, 64),
-      ),
-      child: Icon(
-        Icons.backspace,
-        size: 32,
-        color: themeController.isLightMode.value
-            ? kLightPrimaryTextColor.withOpacity(0.7)
-            : kprimaryTextColor.withOpacity(0.7),
+    return Obx(
+        () => ElevatedButton(
+        onPressed: () {
+          Utils.hapticFeedback();
+          controller.displayValue.value = '';
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.45),
+          foregroundColor: Colors.black,
+          padding: const EdgeInsets.all(16),
+          minimumSize: const Size(64, 64),
+        ),
+        child: Icon(
+          Icons.backspace,
+          size: 32,
+          color: themeController.primaryTextColor.value.withOpacity(0.7),
+        ),
       ),
     );
   }
 
   Widget _buildDoneButton() {
-    return ElevatedButton(
-      onPressed: () {
-        Utils.hapticFeedback();
-        if (controller.mathsAnswer.toString() ==
-            controller.displayValue.value) {
-          controller.numMathsQuestions.value -= 1;
-          controller.isMathsOngoing.value = Status.initialized;
-          controller.correctAnswer.value = true;
-        } else {
-          controller.displayValue.value = '';
-          controller.correctAnswer.value = false;
-          controller.isMathsOngoing.value = Status.initialized;
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: kprimaryColor.withOpacity(0.8),
-        foregroundColor: themeController.isLightMode.value
-            ? kLightSecondaryTextColor
-            : ksecondaryTextColor,
-        padding: const EdgeInsets.all(16),
-        minimumSize: const Size(64, 64),
-      ),
-      child: const Icon(
-        Icons.done,
-        size: 32,
+    return Obx(
+        () => ElevatedButton(
+        onPressed: () {
+          Utils.hapticFeedback();
+          if (controller.mathsAnswer.toString() ==
+              controller.displayValue.value) {
+            controller.numMathsQuestions.value -= 1;
+            controller.isMathsOngoing.value = Status.initialized;
+            controller.correctAnswer.value = true;
+          } else {
+            controller.displayValue.value = '';
+            controller.correctAnswer.value = false;
+            controller.isMathsOngoing.value = Status.initialized;
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: kprimaryColor.withOpacity(0.8),
+          foregroundColor: themeController.secondaryTextColor.value,
+          padding: const EdgeInsets.all(16),
+          minimumSize: const Size(64, 64),
+        ),
+        child: const Icon(
+          Icons.done,
+          size: 32,
+        ),
       ),
     );
   }

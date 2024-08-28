@@ -69,7 +69,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
             color: kprimaryColor,
             fontSize: 14,
             decorationColor:
-                themeController.isLightMode.value ? Colors.black : Colors.white,
+                themeController.primaryBackgroundColor.value,
             decorationThickness: 0.8,
           ),
         ),

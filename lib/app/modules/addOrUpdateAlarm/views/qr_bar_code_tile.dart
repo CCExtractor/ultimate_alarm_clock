@@ -23,22 +23,22 @@ class QrBarCode extends StatelessWidget {
           FittedBox(
             alignment: Alignment.centerLeft,
             fit: BoxFit.scaleDown,
-            child: Text(
-              'QR/Bar Code'.tr,
-              style: TextStyle(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
+            child: Obx(
+              () => Text(
+                'QR/Bar Code'.tr,
+                style: TextStyle(
+                  color: themeController.primaryTextColor.value,
+                ),
               ),
             ),
           ),
           IconButton(
-            icon: Icon(
-              Icons.info_sharp,
-              size: 21,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryTextColor.withOpacity(0.45)
-                  : kprimaryTextColor.withOpacity(0.3),
+            icon: Obx(
+              () => Icon(
+                Icons.info_sharp,
+                size: 21,
+                color: themeController.primaryTextColor.value.withOpacity(0.3),
+              ),
             ),
             onPressed: () {
               Utils.showModal(
@@ -48,7 +48,7 @@ class QrBarCode extends StatelessWidget {
                 //     'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
                 description: 'qrDescription'.tr,
                 iconData: Icons.qr_code_scanner,
-                isLightMode: themeController.isLightMode.value,
+                isLightMode: themeController.currentTheme.value == ThemeMode.light,
               );
             },
           ),
@@ -67,20 +67,16 @@ class QrBarCode extends StatelessWidget {
                 controller.isQrEnabled.value == true ? 'Enabled'.tr : 'Off'.tr,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: (controller.isQrEnabled.value == false)
-                          ? themeController.isLightMode.value
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
-                              ? kLightPrimaryTextColor
-                              : kprimaryTextColor,
+                          ? themeController.primaryDisabledTextColor.value
+                          : themeController.primaryTextColor.value,
                     ),
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: themeController.isLightMode.value
-                  ? kLightPrimaryDisabledTextColor
-                  : kprimaryDisabledTextColor,
+            Obx(
+              () => Icon(
+                Icons.chevron_right,
+                color: themeController.primaryDisabledTextColor.value,
+              ),
             ),
           ],
         ),

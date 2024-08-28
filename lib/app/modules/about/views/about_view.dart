@@ -14,23 +14,23 @@ class AboutView extends GetView<AboutController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'About'.tr,
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: themeController.isLightMode.value
-                    ? kLightPrimaryTextColor
-                    : kprimaryTextColor,
-                fontWeight: FontWeight.w500,
+        title: Obx(
+          () => Text(
+            'About'.tr,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: themeController.primaryTextColor.value,
+                  fontWeight: FontWeight.w500,
               ),
+          ),
         ),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+          icon: Obx(
+            () => Icon(
+              Icons.adaptive.arrow_back,
+              color: themeController.primaryTextColor.value,
+            ),
           ),
           onPressed: () {
             Utils.hapticFeedback();

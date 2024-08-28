@@ -32,9 +32,7 @@ class AlarmDateTile extends StatelessWidget {
                   child: Text(
                     "Ring On",
                     style: TextStyle(
-                      color: themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+                      color: themeController.primaryTextColor.value,
                     ),
                   ),
                 ),
@@ -48,23 +46,16 @@ class AlarmDateTile extends StatelessWidget {
                             ? "${controller.selectedDate.value.toString().substring(0, 11)}"
                             : "Off",
                         style: TextStyle(
-                          color: !controller.isFutureDate.value?themeController.isLightMode.value
-                              ? kLightPrimaryDisabledTextColor
-                              : kprimaryDisabledTextColor
-                                : themeController.isLightMode.value
-                            ? kLightPrimaryTextColor
-                            : kprimaryTextColor,
+                          color: !controller.isFutureDate.value ?
+                          themeController.primaryDisabledTextColor.value
+                                : themeController.primaryTextColor.value,
                         ),
                       ),
                     ), Icon(
                       Icons.chevron_right,
                       color: !(controller.isFutureDate.value)
-                          ? themeController.isLightMode.value
-                          ? kLightPrimaryDisabledTextColor
-                          : kprimaryDisabledTextColor
-                          : themeController.isLightMode.value
-                          ? kLightPrimaryTextColor
-                          : kprimaryTextColor,
+                          ? themeController.primaryDisabledTextColor.value
+                          : themeController.primaryTextColor.value,
                     ),]
                   ),
                 )

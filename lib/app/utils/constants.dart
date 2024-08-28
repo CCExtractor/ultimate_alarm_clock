@@ -31,7 +31,7 @@ const Color kLightSecondaryColor = Color(0xff6FBC00);
 const Color kLightPrimaryBackgroundColor = Color(0xffFFFFFF);
 const Color kLightSecondaryBackgroundColor = Color(0xffF9F9F9);
 const Color kLightPrimaryTextColor = Color(0xff444444);
-const Color kLightSecondaryTextColor = Color(0xff7C7C7C);
+const Color kLightSecondaryTextColor = Color(0xff444444);
 const Color kLightPrimaryDisabledTextColor = Color(0xffACACAB);
 
 // Dark ThemeData
@@ -320,6 +320,8 @@ ThemeData kLightThemeData = ThemeData(
     ),
   ),
 );
+
+const List<String> defaultRingtones = ['Digital Alarm 1','Digital Alarm 2','Digital Alarm 3','Mystery','New Day'];
 
 const Map<String, String> Holidays = {
   'Christian Holidays': 'en.christian#holiday@group.v.calendar.google.com',

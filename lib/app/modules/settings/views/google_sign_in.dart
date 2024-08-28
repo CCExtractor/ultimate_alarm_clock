@@ -36,9 +36,7 @@ class GoogleSignIn extends StatelessWidget {
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(
               titlePadding: const EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: themeController.isLightMode.value
-                  ? kLightSecondaryBackgroundColor
-                  : ksecondaryBackgroundColor,
+              backgroundColor: themeController.secondaryBackgroundColor.value,
               title: 'Success!'.tr,
               titleStyle: Theme.of(context).textTheme.displaySmall,
               content: Column(
@@ -60,13 +58,13 @@ class GoogleSignIn extends StatelessWidget {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
                     ),
-                    child: Text(
-                      'Okay'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.isLightMode.value
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
-                          ),
+                    child: Obx(
+                      () => Text(
+                        'Okay'.tr,
+                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                              color: themeController.secondaryTextColor.value,
+                            ),
+                      ),
                     ),
                     onPressed: () {
                       Utils.hapticFeedback();
@@ -77,15 +75,13 @@ class GoogleSignIn extends StatelessWidget {
               ),
             );
           } else {
-            Get.snackbar("Error", "Sign-In attempt failed!");
+            Get.snackbar('Error', 'Sign-In attempt failed!');
           }
         } else {
           Get.defaultDialog(
             contentPadding: const EdgeInsets.all(10.0),
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
-            backgroundColor: themeController.isLightMode.value
-                ? kLightSecondaryBackgroundColor
-                : ksecondaryBackgroundColor,
+            backgroundColor: themeController.secondaryBackgroundColor.value,
             title: 'Are you sure?'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Column(
@@ -103,16 +99,16 @@ class GoogleSignIn extends StatelessWidget {
                           backgroundColor:
                               MaterialStateProperty.all(kprimaryColor),
                         ),
-                        child: Text(
-                          'Unlink'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.isLightMode.value
-                                    ? kLightPrimaryTextColor
-                                    : ksecondaryTextColor,
-                              ),
+                        child: Obx(
+                          () => Text(
+                            'Unlink'.tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: themeController.secondaryTextColor.value,
+                                ),
+                          ),
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
@@ -147,152 +143,146 @@ class GoogleSignIn extends StatelessWidget {
         width: width * 0.91,
         height: height * 0.1,
         decoration: Utils.getCustomTileBoxDecoration(
-          isLightMode: themeController.isLightMode.value,
+          isLightMode: themeController.currentTheme.value == ThemeMode.light,
         ),
         child: Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-             Container(width: Get.width*0.55,
-               child: SingleChildScrollView(scrollDirection: Axis.horizontal,
-                 child: Row(children: [ Obx(
-                       () => Text(
-                     (controller.isUserLoggedIn.value)
-                         ?
-                     // 'Unlink ${controller.userModel!.email}'
-                     'Unlink @usermail'.trParams(
-                         {'usermail': controller.userModel.value!.email})
-                         : 'Sign-In with Google'.tr,
-                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                       overflow: TextOverflow.ellipsis,
-                     ),
-                   ),
-                 ),
-                   ],),
-               ),
-             ),IconButton(
-                onPressed: () => {
-                  Utils.hapticFeedback(),
-                  showBottomSheet(
-                    context: context,
-                    backgroundColor: themeController.isLightMode.value
-                        ? kLightSecondaryBackgroundColor
-                        : ksecondaryBackgroundColor,
-                    builder: (context) {
-                      return Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              'Why do I have to sign in with Google?'.tr,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.displayMedium,
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  // 'Signing in is optional. It'
-                                  // ' is only required for the'
-                                  // ' functionalities that use'
-                                  // ' cloud services to work such as:',
-                                  'Sign-inDescription'.tr,
-                                  textAlign: TextAlign.justify,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Shared Alarm'.tr,
-                                  style:
-                                  Theme.of(context).textTheme.displaySmall,
-                                ),
-                                Text(
-                                  // 'Collaborate with friends, family members,'
-                                  // ' or colleagues to ensure that they'
-                                  // ' wake up on time using shared alarms.',
-                                  'CollabDescription'.tr,
-                                  textAlign: TextAlign.justify,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Syncing Across Devices'.tr,
-                                  style:
-                                  Theme.of(context).textTheme.displaySmall,
-                                ),
-                                Text(
-                                  // 'Access your alarms across multiple devices'
-                                  // ' where the alarms are updated in'
-                                  // ' real-time.',
-                                  'AccessMultiple'.tr,
-                                  textAlign: TextAlign.justify,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Your privacy'.tr,
-                                  style:
-                                  Theme.of(context).textTheme.displaySmall,
-                                ),
-                                Text(
-                                  // 'We do not access,  use or sell any'
-                                  // ' information, which you can verify by'
-                                  // ' inspecting the source code.',
-                                  'NoAccessInfo'.tr,
-                                  textAlign: TextAlign.justify,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  // 'All access is limited exclusively to'
-                                  // ' provide the functionalities described'
-                                  // ' above.',
-                                  'LimitedAccess'.tr,
-                                  textAlign: TextAlign.justify,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: width,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    kprimaryColor,
+              Obx(
+                () => Expanded(
+                    child: Text(
+                      (controller.isUserLoggedIn.value)
+                          ?
+                          // 'Unlink ${controller.userModel!.email}'
+                          'Unlink @usermail'.trParams(
+                              {'usermail': controller.userModel.value!.email})
+                          : 'Sign-In with Google'.tr,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                    ),
+                  ),
+                ),Obx(
+                () => IconButton(
+                  onPressed: () => {
+                    Utils.hapticFeedback(),
+                    showBottomSheet(
+                      context: context,
+                      backgroundColor: themeController.secondaryBackgroundColor.value,
+                      builder: (context) {
+                        return Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Why do I have to sign in with Google?'.tr,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.displayMedium,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    // 'Signing in is optional. It'
+                                    // ' is only required for the'
+                                    // ' functionalities that use'
+                                    // ' cloud services to work such as:',
+                                    'Sign-inDescription'.tr,
+                                    textAlign: TextAlign.justify,
                                   ),
-                                ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                },
-                                child: Text(
-                                  'Understood'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                    color: themeController.isLightMode.value
-                                        ? kLightPrimaryTextColor
-                                        : ksecondaryTextColor,
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Shared Alarm'.tr,
+                                    style:
+                                    Theme.of(context).textTheme.displaySmall,
+                                  ),
+                                  Text(
+                                    // 'Collaborate with friends, family members,'
+                                    // ' or colleagues to ensure that they'
+                                    // ' wake up on time using shared alarms.',
+                                    'CollabDescription'.tr,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Syncing Across Devices'.tr,
+                                    style:
+                                    Theme.of(context).textTheme.displaySmall,
+                                  ),
+                                  Text(
+                                    // 'Access your alarms across multiple devices'
+                                    // ' where the alarms are updated in'
+                                    // ' real-time.',
+                                    'AccessMultiple'.tr,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Your privacy'.tr,
+                                    style:
+                                    Theme.of(context).textTheme.displaySmall,
+                                  ),
+                                  Text(
+                                    // 'We do not access,  use or sell any'
+                                    // ' information, which you can verify by'
+                                    // ' inspecting the source code.',
+                                    'NoAccessInfo'.tr,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    // 'All access is limited exclusively to'
+                                    // ' provide the functionalities described'
+                                    // ' above.',
+                                    'LimitedAccess'.tr,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: width,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      kprimaryColor,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Utils.hapticFeedback();
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Understood'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                          color: themeController
+                                                      .secondaryTextColor.value,
+                                        ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  },
+                  icon: Icon(
+                    Icons.info_sharp,
+                    size: 21,
+                    color: themeController.primaryTextColor.value.withOpacity(0.3),
                   ),
-                },
-                icon: Icon(
-                  Icons.info_sharp,
-                  size: 21,
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.3)
-                      : kprimaryTextColor.withOpacity(0.3),
                 ),
               ),
               Obx(
@@ -300,9 +290,8 @@ class GoogleSignIn extends StatelessWidget {
                   (controller.isUserLoggedIn.value)
                       ? Icons.close
                       : Icons.arrow_forward_ios_sharp,
-                  color: themeController.isLightMode.value
-                      ? kLightPrimaryTextColor.withOpacity(0.4)
-                      : kprimaryTextColor.withOpacity(0.2),
+                  color:
+                      themeController.primaryTextColor.value.withOpacity(0.2),
                 ),
               ),
             ],

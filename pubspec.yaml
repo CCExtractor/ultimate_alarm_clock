@@ -3,14 +3,14 @@ version: 0.2.0
 publish_to: none
 description: A new Flutter project.
 environment:
-  sdk: ">=3.5.0 <4.0.0"
-  flutter: 3.24.0
+  sdk: ">=3.4.3 <4.0.0"
+  flutter: 3.22.2
 
 dependencies:
   firebase_core: ^2.27.0
 
   screen_state: ^4.0.0
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.2
 
   get: 4.6.6
   get_storage: ^2.1.1
@@ -59,7 +59,7 @@ dependencies:
   shared_preferences: ^2.2.3
 
 dev_dependencies:
-  flutter_lints: ^2.0.3
+  flutter_lints: ^4.0.0
   isar_generator: ^3.1.0+1
   build_runner: ^2.0.0
   flutter_test:
@@ -99,3 +99,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/ringtones/

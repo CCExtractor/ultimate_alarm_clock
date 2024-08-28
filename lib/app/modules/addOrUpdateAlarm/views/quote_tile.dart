@@ -18,34 +18,34 @@ class QuoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return Obx(
+      () => ListTile(
 
-      title: FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: Alignment.centerLeft,
-        child: Text(
-          'Show Motivational Quote'.tr,
-          style: TextStyle(
-            color: themeController.isLightMode.value
-                ? kLightPrimaryTextColor
-                : kprimaryTextColor,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Show Motivational Quote'.tr,
+            style: TextStyle(
+              color: themeController.primaryTextColor.value,
+            ),
           ),
         ),
-      ),
-      trailing: Obx(
-        () => Switch.adaptive(
-          value: controller.showMotivationalQuote.value,
-          activeColor: ksecondaryColor,
-          onChanged: (value) {
-            controller.showMotivationalQuote.value = value;
-          },
+        trailing: Obx(
+          () => Switch.adaptive(
+            value: controller.showMotivationalQuote.value,
+            activeColor: ksecondaryColor,
+            onChanged: (value) {
+              controller.showMotivationalQuote.value = value;
+            },
+          ),
         ),
+        onTap: () {
+          Utils.hapticFeedback();
+          controller.showMotivationalQuote.value =
+              !controller.showMotivationalQuote.value;
+        },
       ),
-      onTap: () {
-        Utils.hapticFeedback();
-        controller.showMotivationalQuote.value =
-            !controller.showMotivationalQuote.value;
-      },
     );
   }
 }
