@@ -150,10 +150,8 @@ class GoogleSignIn extends StatelessWidget {
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Obx(
-                () => Container(width: Get.width*0.55,
-                child: SingleChildScrollView(scrollDirection: Axis.horizontal,
-                  child: Row(children: [
-                    Text(
+                () => Expanded(
+                    child: Text(
                       (controller.isUserLoggedIn.value)
                           ?
                           // 'Unlink ${controller.userModel!.email}'
@@ -164,9 +162,7 @@ class GoogleSignIn extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                     ),
-
-                  ],),
-            ),),
+                  ),
                 ),Obx(
                 () => IconButton(
                   onPressed: () => {

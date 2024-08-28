@@ -51,6 +51,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                               horizontal: 24 * controller.scalingFactor.value,
                               vertical: 4 * controller.scalingFactor.value,
                             ),
+                            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 2 / 3),
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
@@ -73,6 +74,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                                               ),
                                         fontSize:
                                           22 * controller.scalingFactor.value,
+                                    overflow: TextOverflow.ellipsis
                                     ),
                               )),
                         ),
