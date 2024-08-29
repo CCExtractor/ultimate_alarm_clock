@@ -24,159 +24,162 @@ class ShareDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       backgroundColor: ksecondaryBackgroundColor,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: kprimaryBackgroundColor,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              children: [
-                toShare(),
-                Obx(
-                  () => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: controller.selectedEmails.isNotEmpty
-                            ? MaterialStateProperty.all(
-                                ksecondaryColor,
-                              )
-                            : MaterialStateProperty.all(
-                                kprimaryDisabledTextColor,
-                              ),
-                      ),
-                      onPressed: () async {
-                        if (controller.selectedEmails.isNotEmpty) {
-                          if (homeController.isProfile.value) {
-                            await FirestoreDb.shareProfile(
-                              controller.selectedEmails,
-                            );
-                          } else {
-                            await FirestoreDb.shareAlarm(
-                              controller.selectedEmails,
-                              controller.alarmRecord.value,
-                            );
-                          }
-                        } else {
-                          Get.snackbar('Error', 'Select an User');
-                        }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.share,
-                            color: controller.selectedEmails.isNotEmpty
-                                ? kprimaryBackgroundColor
-                                : kprimaryColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Share',
-                              style: TextStyle(
-                                color: controller.selectedEmails.isNotEmpty
-                                    ? kprimaryBackgroundColor
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            title: Row(
-              children: [
-                const Icon(
-                  Icons.person,
-                  color: ksecondaryColor,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Select Users',
-                    style: TextStyle(
-                      fontSize: homeController.scalingFactor * 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  splashRadius: homeController.scalingFactor * 16,
-                  color: kprimaryColor,
-                  onPressed: () {
-                    controller.isAddUser.value = !controller.isAddUser.value;
-                  },
-                  icon: const Icon(Icons.add),
-                ),
-              ],
-            ),
-          ),
-          Obx(
-            () => controller.isAddUser.value
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: controller.emailTextEditingController,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () async {
-                            if (RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                            ).hasMatch(
-                              controller.emailTextEditingController.text,
-                            )) {
-                              IsarDb.addEmail(
-                                controller.emailTextEditingController.text,
+      child: SingleChildScrollView(scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: kprimaryBackgroundColor,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Column(
+                children: [
+                  toShare(),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: controller.selectedEmails.isNotEmpty
+                              ? WidgetStateProperty.all(
+                                  ksecondaryColor,
+                                )
+                              : WidgetStateProperty.all(
+                                  kprimaryDisabledTextColor,
+                                ),
+                        ),
+                        onPressed: () async {
+                          if (controller.selectedEmails.isNotEmpty) {
+                            if (homeController.isProfile.value) {
+                              await FirestoreDb.shareProfile(
+                                controller.selectedEmails,
                               );
                             } else {
-                              Get.snackbar('Error', 'Invalid email');
+                              await FirestoreDb.shareAlarm(
+                                controller.selectedEmails,
+                                controller.alarmRecord.value,
+                              );
                             }
-                          },
-                          icon: const Icon(
-                            Icons.add_circle_outlined,
-                            color: kprimaryColor,
-                          ),
+                          } else {
+                            Get.snackbar('Error', 'Select an User');
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.share,
+                              color: controller.selectedEmails.isNotEmpty
+                                  ? kprimaryBackgroundColor
+                                  : kprimaryColor,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Share',
+                                style: TextStyle(
+                                  color: controller.selectedEmails.isNotEmpty
+                                      ? kprimaryBackgroundColor
+                                      : Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        prefixIcon: const Icon(Icons.alternate_email),
-                        prefixIconColor: kprimaryDisabledTextColor,
-                        hintText: 'Enter e-mail',
                       ),
                     ),
-                  )
-                : const SizedBox(),
-          ),
-          StreamBuilder(
-            stream: IsarDb.getEmails(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final userList = snapshot.data;
-                return SizedBox(
-                  height: Get.height * 0.3,
-                  child: ListView.builder(
-                    itemCount: userList!.length,
-                    itemBuilder: (context, index) {
-                      return emailTile(userList[index]);
-                    },
                   ),
-                );
-              }
+                ],
+              ),
+            ),
+            ListTile(
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.person,
+                    color: ksecondaryColor,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Select Users',
+                      style: TextStyle(
+                        fontSize: homeController.scalingFactor * 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    splashRadius: homeController.scalingFactor * 16,
+                    color: kprimaryColor,
+                    onPressed: () {
+                      controller.isAddUser.value = !controller.isAddUser.value;
+                    },
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+              ),
+            ),
+            Obx(
+              () => controller.isAddUser.value
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: controller.emailTextEditingController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () async {
+                              if (RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                              ).hasMatch(
+                                controller.emailTextEditingController.text,
+                              )) {
+                                IsarDb.addEmail(
+                                  controller.emailTextEditingController.text,
+                                );
+                              } else {
+                                Get.snackbar('Error', 'Invalid email');
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.add_circle_outlined,
+                              color: kprimaryColor,
+                            ),
+                          ),
+                          prefixIcon: const Icon(Icons.alternate_email),
+                          prefixIconColor: kprimaryDisabledTextColor,
+                          hintText: 'Enter e-mail',
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ),
+            StreamBuilder(
+              stream: IsarDb.getEmails(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final userList = snapshot.data;
+                  return SizedBox(
 
-              return const CircularProgressIndicator();
-            },
-          ),
-        ],
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: userList!.length,
+                      itemBuilder: (context, index) {
+                        return emailTile(userList[index]);
+                      },
+                    ),
+                  );
+                }
+
+                return const CircularProgressIndicator();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -301,31 +304,33 @@ class ShareDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              homeController.isProfile.value
-                  ? const Text('Sharing Profile')
-                  : const Text('Sharing Alarm'),
-              homeController.isProfile.value
-                  ? Text(
-                      homeController.selectedProfile.value,
-                      style: TextStyle(
-                        color: kprimaryColor,
-                        fontSize: homeController.scalingFactor * 30,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    )
-                  : Text(
-                      Utils.timeOfDayToString(
-                        TimeOfDay.fromDateTime(
-                          controller.selectedTime.value,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: kprimaryColor,
-                        fontSize: homeController.scalingFactor * 30,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+            children: [ homeController.isProfile.value
+                ? const Text('Sharing Profile')
+                : const Text('Sharing Alarm'),
+             SizedBox(width: Get.width*0.35,child:
+                 homeController.isProfile.value
+                     ? Text(
+
+                   homeController.selectedProfile.value,
+                   style: TextStyle(
+                     color: kprimaryColor,
+                     fontSize: homeController.scalingFactor * 30,
+                     fontWeight: FontWeight.w700,
+                   ),                          overflow: TextOverflow.ellipsis,
+                 )
+                     : Text(
+                   Utils.timeOfDayToString(
+                     TimeOfDay.fromDateTime(
+                       controller.selectedTime.value,
+
+                     ),
+                   ), overflow: TextOverflow.ellipsis,
+                   style: TextStyle(
+                     color: kprimaryColor,
+                     fontSize: homeController.scalingFactor * 30,
+                     fontWeight: FontWeight.w700,
+                   ),
+                 ),)
             ],
           ),
         ),

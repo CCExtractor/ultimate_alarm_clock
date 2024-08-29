@@ -322,10 +322,14 @@ class FirestoreDb {
         .doc(currentUserEmail)
         .collection('sharedProfile')
         .doc(currentProfileName)
-        .set(profileSet);
+        .set(profileSet)
+        .then((v) {
+      Get.snackbar('Notification', 'Item Shared!');
+    });
+    ;
     for (final email in emails) {
       await _firebaseFirestore.collection('users').doc(email).update({
-        "receivedItems": FieldValue.arrayUnion([sharedItem])
+        'receivedItems': FieldValue.arrayUnion([sharedItem])
       });
     }
   }
@@ -344,10 +348,13 @@ class FirestoreDb {
         .doc(currentUserEmail)
         .collection('sharedAlarms')
         .doc(alarm.alarmID)
-        .set(AlarmModel.toMap(alarm));
+        .set(AlarmModel.toMap(alarm))
+        .then((v) {
+      Get.snackbar('Notification', 'Item Shared!');
+    });
     for (final email in emails) {
       await _firebaseFirestore.collection('users').doc(email).update({
-        "receivedItems": FieldValue.arrayUnion([sharedItem])
+        'receivedItems': FieldValue.arrayUnion([sharedItem])
       });
     }
   }
@@ -515,9 +522,14 @@ class FirestoreDb {
     yield* userNotifications;
   }
 
-  static removeItem(String email, Map item) async {
-    await _firebaseFirestore.collection('users').doc(email).update({
-      "receivedItems": FieldValue.arrayRemove([item])
+  static removeItem(Map item) async {
+    print(item);
+
+    await _firebaseFirestore
+        .collection('users')
+        .doc(_firebaseAuthInstance.currentUser!.email)
+        .update({
+      'receivedItems': FieldValue.arrayRemove([item])
     });
   }
 }

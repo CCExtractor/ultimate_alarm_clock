@@ -91,6 +91,8 @@ class HomeController extends GetxController {
 
   final storage = Get.find<GetStorageProvider>();
 
+  RxBool isProfileUpdate = false.obs;
+
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
     if (await SecureStorageProvider().retrieveUserModel() != null) {

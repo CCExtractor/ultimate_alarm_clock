@@ -218,7 +218,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
               ),
             ),
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height / 8.9),
+            preferredSize: Size.fromHeight(height*0.08),
             child: Obx(
               () => AppBar(
                 backgroundColor: themeController.primaryBackgroundColor.value,
