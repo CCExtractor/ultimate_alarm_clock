@@ -36,6 +36,7 @@ class ScreenMonitorService : Service() {
 
         createNotificationChannel()
 
+
         val intentFilter = IntentFilter(Intent.ACTION_SCREEN_ON).apply {
             addAction(Intent.ACTION_SCREEN_OFF)
         }

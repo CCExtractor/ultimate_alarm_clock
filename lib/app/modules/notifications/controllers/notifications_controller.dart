@@ -56,7 +56,6 @@ class NotificationsController extends GetxController {
   Future importAlarm(String email, String alarmName) async {
     final alarmMap = await FirestoreDb.receiveAlarm(email, alarmName);
     final alarm = await AlarmModel.fromMap(alarmMap);
-    alarm.alarmID = Uuid().v4();
     alarm.profile = selectedProfile.value;
     await IsarDb.addAlarm(alarm);
   }

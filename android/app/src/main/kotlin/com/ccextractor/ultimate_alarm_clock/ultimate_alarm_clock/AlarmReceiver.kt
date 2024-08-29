@@ -3,15 +3,18 @@ package com.ccextractor.ultimate_alarm_clock
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 
 
 class AlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context?, intent: Intent?) = runBlocking {
         if (context == null || intent == null) {
-            return
+            return@runBlocking
         }
-
-  
 
 
         val flutterIntent = Intent(context, MainActivity::class.java).apply {
@@ -28,10 +31,14 @@ class AlarmReceiver : BroadcastReceiver() {
         val screenOnTimeInMillis = sharedPreferences.getLong("flutter.is_screen_on", 0L)
         val screenOffTimeInMillis = sharedPreferences.getLong("flutter.is_screen_off", 0L)
         val activityCheckIntent = Intent(context, ScreenMonitorService::class.java)
-        context.stopService(activityCheckIntent)
-        val isLocationEnabled = sharedPreferences.getInt("flutter.is_location_on", 0)
+        val shareCheckIntent = Intent(context, ShareEnabledService::class.java)
 
-        if (Math.abs(screenOnTimeInMillis - screenOffTimeInMillis) < 180000 || screenOnTimeInMillis - screenOffTimeInMillis == 0L) {
+        context.stopService(activityCheckIntent)
+        context.stopService(shareCheckIntent)
+        val isRemoved = sharedPreferences.getString("flutter.isRemoved", "")
+        Log.d("id", "id $isRemoved")
+
+        if ((Math.abs(screenOnTimeInMillis - screenOffTimeInMillis) < 180000 || screenOnTimeInMillis - screenOffTimeInMillis == 0L) && (isRemoved == "false")) {
             println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)
         }

@@ -5,15 +5,16 @@ class UserModel {
   final String email;
   final String id;
   List receivedItems = [];
+  List sentAlarms = [];
 
-  UserModel({
-    required this.fullName,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.id,
-    this.receivedItems = const [],
-  });
+  UserModel(
+      {required this.fullName,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.id,
+      this.receivedItems = const [],
+      this.sentAlarms = const []});
 
   Map<String, dynamic> toJson() {
     return {
@@ -22,18 +23,19 @@ class UserModel {
       'lastName': lastName,
       'email': email,
       'id': id,
-      'receivedItems': receivedItems
+      'receivedItems': receivedItems,
+      'sentAlarms': sentAlarms
     };
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      fullName: json['fullName'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      id: json['id'],
-      receivedItems: json['receivedItems'],
-    );
+        fullName: json['fullName'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        email: json['email'],
+        id: json['id'],
+        receivedItems: json['receivedItems'],
+        sentAlarms: json['sentAlarms']);
   }
 }

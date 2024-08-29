@@ -337,11 +337,13 @@ class FirestoreDb {
   static shareAlarm(List emails, AlarmModel alarm) async {
     final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
     alarm.profile = 'Default';
+    alarm.ownerId = currentUserEmail!;
+    IsarDb.updateAlarm(alarm);
     Map sharedItem = {
       'type': 'alarm',
       'AlarmName': alarm.alarmID,
       'owner': currentUserEmail,
-      'alarmTime': alarm.alarmTime
+      'alarmTime': alarm.alarmTime,
     };
     await _firebaseFirestore
         .collection('users')
@@ -352,11 +354,30 @@ class FirestoreDb {
         .then((v) {
       Get.snackbar('Notification', 'Item Shared!');
     });
+    await _firebaseFirestore.collection('users').doc(currentUserEmail).update({
+      'sentAlarms': FieldValue.arrayUnion([sharedItem])
+    });
+
     for (final email in emails) {
       await _firebaseFirestore.collection('users').doc(email).update({
         'receivedItems': FieldValue.arrayUnion([sharedItem])
       });
     }
+  }
+  static unShareAlarm( AlarmModel alarm) async {
+    final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
+    alarm.profile = 'Default';
+    Map sharedItem = {
+      'type': 'alarm',
+      'AlarmName': alarm.alarmID,
+      'owner': currentUserEmail,
+      'alarmTime': alarm.alarmTime,
+    };
+
+    await _firebaseFirestore.collection('users').doc(currentUserEmail).update({
+      'sentAlarms': FieldValue.arrayRemove([sharedItem])
+    });
+
   }
 
   static Future receiveProfile(String email, String profileName) async {

@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalTime
@@ -12,7 +13,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String): Map<String, *>? {
+
+fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String): Map<String, *>?  {
     val now = Calendar.getInstance()
     var nowInMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
     var nowInSeconds = nowInMinutes * 60 + now.get(Calendar.SECOND)
@@ -22,7 +24,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
     }
     val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
     val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-    Log.d("d","cd ${currentDay}")
+    Log.d("d", "cd ${currentDay}")
 
 
     val cursor = db.rawQuery(
@@ -35,74 +37,74 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
     var selectedAlarm = null;
     Log.d("Alarm", cursor.count.toString())
 
-    return if (cursor.count>0) {
+    return if (cursor.count > 0) {
         // Parse the cursor into an AlarmModel object
         cursor.moveToFirst()
         var alarm = AlarmModel.fromCursor(cursor)
         var intervaltoAlarm = Long.MAX_VALUE
-        var setAlarm: AlarmModel? =null
-            do {
-                alarm = AlarmModel.fromCursor(cursor)
-                if (alarm.ringOn == 0) {
+        var setAlarm: AlarmModel? = null
+        do {
+            alarm = AlarmModel.fromCursor(cursor)
 
-                    var dayfromToday = 0
-                    var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                    Log.d("d","timeDiff ${timeDif}")
 
-                    if ((alarm.days[currentDay] == '1' || alarm.days=="0000000") && timeDif > -1L) {
-                        if (timeDif < intervaltoAlarm) {
-                            intervaltoAlarm = timeDif
-                            setAlarm = alarm
-                        }
-                    } else {
-                        dayfromToday = getDaysUntilNextAlarm(alarm.days, currentDay)
-                        if (dayfromToday == 0) {
+            if (alarm.ringOn == 0) {
 
-                            if(alarm.days=="0000000")
-                            {
+                var dayfromToday = 0
+                var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
+                Log.d("d", "timeDiff ${timeDif}")
 
-                                var timeDif =
-                                    getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
-                                if (timeDif < intervaltoAlarm && timeDif > -1L ) {
-                                    intervaltoAlarm = timeDif
-                                    setAlarm = alarm
-                                }
-                            }
-                           else{
+                if ((alarm.days[currentDay] == '1' || alarm.days == "0000000") && timeDif > -1L) {
+                    if (timeDif < intervaltoAlarm) {
+                        intervaltoAlarm = timeDif
+                        setAlarm = alarm
+                    }
+                } else {
+                    dayfromToday = getDaysUntilNextAlarm(alarm.days, currentDay)
+                    if (dayfromToday == 0) {
 
-                                var timeDif =
-                                    getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
-                                if (timeDif < intervaltoAlarm && timeDif > -1L ) {
-                                    intervaltoAlarm = timeDif
-                                    setAlarm = alarm
-                                }
-                           }
-                        } else if (dayfromToday == 1) {
+                        if (alarm.days == "0000000") {
+
                             var timeDif =
                                 getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
-                            Log.d("d","timeDiff ${timeDif}")
-
                             if (timeDif < intervaltoAlarm && timeDif > -1L) {
                                 intervaltoAlarm = timeDif
                                 setAlarm = alarm
                             }
                         } else {
+
                             var timeDif =
-                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * (dayfromToday - 1)
+                                getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
                             if (timeDif < intervaltoAlarm && timeDif > -1L) {
                                 intervaltoAlarm = timeDif
                                 setAlarm = alarm
                             }
                         }
+                    } else if (dayfromToday == 1) {
+                        var timeDif =
+                            getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
+                        Log.d("d", "timeDiff ${timeDif}")
 
+                        if (timeDif < intervaltoAlarm && timeDif > -1L) {
+                            intervaltoAlarm = timeDif
+                            setAlarm = alarm
+                        }
+                    } else {
+                        var timeDif =
+                            getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * (dayfromToday - 1)
+                        if (timeDif < intervaltoAlarm && timeDif > -1L) {
+                            intervaltoAlarm = timeDif
+                            setAlarm = alarm
+                        }
                     }
-                } else {
-                    val dayfromToday = getDaysFromCurrentDate(alarm.alarmDate)
-                    if (dayfromToday == 0L) {
-                        var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                        if (alarm.days[currentDay] == '1' && timeDif > -1L) {
-                            if (timeDif < intervaltoAlarm) {
-                                intervaltoAlarm = timeDif
+
+                }
+            } else {
+                val dayfromToday = getDaysFromCurrentDate(alarm.alarmDate)
+                if (dayfromToday == 0L) {
+                    var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
+                    if (alarm.days[currentDay] == '1' && timeDif > -1L) {
+                        if (timeDif < intervaltoAlarm) {
+                            intervaltoAlarm = timeDif
                             setAlarm = alarm
                         }
                     }
@@ -129,16 +131,17 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String):
         cursor.close()
         if (setAlarm != null) {
             Log.d("Alarm", intervaltoAlarm.toString())
-             val a = mapOf(
+            val a = mapOf(
                 "interval" to intervaltoAlarm,
                 "isActivity" to setAlarm.activityMonitor,
                 "isLocation" to setAlarm.isLocationEnabled,
                 "location" to setAlarm.location,
                 "isWeather" to setAlarm.isWeatherEnabled,
                 "weatherTypes" to setAlarm.weatherTypes,
-                 "alarmID" to setAlarm.alarmId
+                "alarmID" to setAlarm.alarmId,
+                "ownerId" to setAlarm.ownerId
             )
-            Log.d("s","sdsd ${a}")
+            Log.d("s", "sdsd ${a}")
             return a
         }
         null
@@ -223,6 +226,7 @@ fun getTimeDifferenceFromMidnight(timeString: String): Long {
     return receivedCalendar.timeInMillis - midnight.timeInMillis
 }
 
+
 fun getMillisecondsUntilMidnight(): Long {
     // Get the current time
     val currentTime = Calendar.getInstance()
@@ -286,7 +290,8 @@ data class AlarmModel(
     val location: String,
     val alarmDate: String,
     val alarmId: String,
-    val ringOn: Int
+    val ringOn: Int,
+    val ownerId: String
 ) {
     companion object {
         @SuppressLint("Range")
@@ -304,6 +309,8 @@ data class AlarmModel(
             val alarmDate = cursor.getString(cursor.getColumnIndex("alarmDate"))
             val alarmId = cursor.getString(cursor.getColumnIndex("alarmID"))
             val ringOn = cursor.getInt(cursor.getColumnIndex("ringOn"))
+            val ownerId = cursor.getString(cursor.getColumnIndex("ownerId"))
+
             return AlarmModel(
                 id,
                 minutesSinceMidnight,
@@ -317,7 +324,8 @@ data class AlarmModel(
                 location,
                 alarmDate,
                 alarmId,
-                ringOn
+                ringOn,
+                ownerId
             )
         }
     }

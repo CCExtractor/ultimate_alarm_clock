@@ -178,7 +178,6 @@ class NotificationsView extends GetView<NotificationsController> {
                                                     .notifications[index]);
 
 
-                                            Navigator.of(context).pop();
                                             Get.snackbar("Notification",
                                                 "Shared Item Added");
                                           },

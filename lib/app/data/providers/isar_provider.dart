@@ -399,6 +399,10 @@ class IsarDb {
     final db = await isarProvider.db;
     final sql = await IsarDb().getAlarmSQLiteDatabase();
     final tobedeleted = await db.alarmModels.get(id);
+    if(tobedeleted!.ownerId!="")
+      {
+        FirestoreDb.unShareAlarm(tobedeleted);
+      }
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });

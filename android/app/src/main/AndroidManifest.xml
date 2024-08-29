@@ -45,6 +45,10 @@
         android:label="Ultimate Alarm Clock"
         tools:replace="android:label">
         <service
+            android:name="com.ccextractor.ultimate_alarm_clock.ShareEnabledService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
             android:name="com.ccextractor.ultimate_alarm_clock.ScreenMonitorService"
             android:enabled="true"
             android:exported="true"></service>
