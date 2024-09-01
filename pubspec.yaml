@@ -20,7 +20,7 @@ dependencies:
   latlong2: ^0.8.1
   flutter_map: ^4.0.0
   fl_location: ^2.0.0+1
-  flutter_fgbg: ^0.3.0
+  flutter_fgbg: ^0.6.0
   flutter_svg: ^2.0.4
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
