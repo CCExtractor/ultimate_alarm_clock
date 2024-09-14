@@ -14,11 +14,7 @@ class GetStorageProvider {
 
   Future<String> readCurrentLanguage() async {
     print(_getStorage.read('currentLanguageKey'));
-    String? language = await _getStorage.read(('currentLanguageKey'));
-    if (language == null) {
-      language = Get.locale.toString();
-      writeCurrentLanguage(language);
-    }
+    String? language = _getStorage.read(('currentLanguageKey'));
     return language;
   }
 
@@ -49,7 +45,7 @@ class GetStorageProvider {
   }
 
   Future<String> readProfile() async {
-    String profile = await _getStorage.read('profile') ?? 'Default';
+    String profile = _getStorage.read('profile') ?? 'Default';
     return profile;
   }
 }

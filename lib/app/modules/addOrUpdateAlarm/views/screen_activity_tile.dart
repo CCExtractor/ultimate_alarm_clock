@@ -125,7 +125,7 @@ class ScreenActivityTile extends StatelessWidget {
                       controller.isActivityMonitorenabled.value = 1;
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),

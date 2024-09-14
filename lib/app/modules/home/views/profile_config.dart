@@ -24,22 +24,28 @@ class _ProfileSelectState extends State<ProfileSelect> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => AnimatedSwitcher(
-        duration: Duration(milliseconds: 250),
+    return Obx(
+      () => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
         transitionBuilder: (child, animation) {
           return SizeTransition(
-              sizeFactor: animation, axis: Axis.horizontal, child: child);
+            sizeFactor: animation,
+            axis: Axis.horizontal,
+            child: child,
+          );
         },
         child: !controller.expandProfile.value
             ? InkWell(
                 onTap: () async {
                   controller.isProfile.value = true;
                   controller.isProfileUpdate.value = true;
-                  Get.toNamed('/add-update-alarm',
-                      arguments: controller.genFakeAlarmModel());
+                  Get.toNamed(
+                    '/add-update-alarm',
+                    arguments: controller.genFakeAlarmModel(),
+                  );
                 },
                 child: Container(
-                  key: ValueKey(1),
+                  key: const ValueKey(1),
                   child: Row(
                     children: [
                       Padding(
@@ -52,36 +58,43 @@ class _ProfileSelectState extends State<ProfileSelect> {
                               horizontal: 24 * controller.scalingFactor.value,
                               vertical: 4 * controller.scalingFactor.value,
                             ),
-                            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 2 / 3),
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 2 / 3),
                             decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.topCenter,
-                                  stops: [0.2, 0.2],
-                                  colors: [
-                                    kprimaryColor,
-                                    themeController.secondaryBackgroundColor.value,
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(18)),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.topCenter,
+                                stops: const [0.2, 0.2],
+                                colors: [
+                                  kprimaryColor,
+                                  themeController
+                                      .secondaryBackgroundColor.value,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(18),
+                            ),
                             child: Text(
-                                  "${controller.selectedProfile}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController.primaryTextColor.value.withOpacity(
-                                                0.75,
-                                              ),
-                                        fontSize:
-                                          22 * controller.scalingFactor.value,
-                                    overflow: TextOverflow.ellipsis
+                              '${controller.selectedProfile}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                    color: themeController
+                                        .primaryTextColor.value
+                                        .withOpacity(
+                                      0.75,
                                     ),
-                              )),
+                                    fontSize:
+                                        22 * controller.scalingFactor.value,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(28),
                           onTap: () {
@@ -89,10 +102,11 @@ class _ProfileSelectState extends State<ProfileSelect> {
                                 !controller.expandProfile.value;
                           },
                           child: Container(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.arrow_forward_ios),
-                          )),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.arrow_forward_ios),
+                            ),
+                          ),
                         ),
                       ),
                       InkWell(
@@ -101,17 +115,19 @@ class _ProfileSelectState extends State<ProfileSelect> {
                           controller.isProfile.value = true;
                           controller.profileModel.value =
                               (await IsarDb.getProfile(
-                                  controller.selectedProfile.value))!;
+                            controller.selectedProfile.value,
+                          ))!;
                           controller.isProfileUpdate.value = false;
                           Get.toNamed(
                             '/add-update-alarm',
                           );
                         },
                         child: Container(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.add),
-                        )),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.add),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -128,31 +144,34 @@ class _ProfileSelectState extends State<ProfileSelect> {
                         controller.expandProfile.value =
                             !controller.expandProfile.value;
                       },
-                      child: Container(child: Icon(Icons.arrow_back_ios)),
+                      child: Container(child: const Icon(Icons.arrow_back_ios)),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: Get.width * 0.8,
-                    key: ValueKey(2),
+                    key: const ValueKey(2),
                     child: StreamBuilder(
-                        stream: IsarDb.getProfiles(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final profiles = snapshot.data;
-                            return SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: profiles!
-                                    .map((e) => profileCapsule(e))
-                                    .toList(),
-                              ),
-                            );
-                          }
-                          return SizedBox();
-                        }),
+                      stream: IsarDb.getProfiles(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final profiles = snapshot.data;
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: profiles!
+                                  .map((e) => profileCapsule(e))
+                                  .toList(),
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
                   ),
                 ],
-              )));
+              ),
+      ),
+    );
   }
 
   Widget profileCapsule(ProfileModel profile) {
@@ -164,26 +183,29 @@ class _ProfileSelectState extends State<ProfileSelect> {
           controller.writeProfileName(profile.profileName);
           controller.expandProfile.value = !controller.expandProfile.value;
         },
-        child: Obx(() => Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 24 * controller.scalingFactor.value,
-                vertical: 4 * controller.scalingFactor.value,
-              ),
-              decoration: BoxDecoration(
-                  color: profile.profileName == controller.selectedProfile.value
-                      ? kprimaryColor.withOpacity(0.5)
-                      : ksecondaryBackgroundColor,
-                  borderRadius: BorderRadius.circular(18)),
-              child: Text(
-                "${profile.profileName}",
-                style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                      color: themeController.primaryTextColor.value.withOpacity(
-                              0.75,
-                            ),
-                      fontSize: 22 * controller.scalingFactor.value,
+        child: Obx(
+          () => Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 24 * controller.scalingFactor.value,
+              vertical: 4 * controller.scalingFactor.value,
+            ),
+            decoration: BoxDecoration(
+              color: profile.profileName == controller.selectedProfile.value
+                  ? kprimaryColor.withOpacity(0.5)
+                  : ksecondaryBackgroundColor,
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Text(
+              profile.profileName,
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: themeController.primaryTextColor.value.withOpacity(
+                      0.75,
                     ),
-              ),
-            )),
+                    fontSize: 22 * controller.scalingFactor.value,
+                  ),
+            ),
+          ),
+        ),
       ),
     );
   }

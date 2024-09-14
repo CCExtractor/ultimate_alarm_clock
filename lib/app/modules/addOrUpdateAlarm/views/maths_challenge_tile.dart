@@ -52,7 +52,8 @@ class MathsChallenge extends StatelessWidget {
                   //     ' dismiss the alarm.'
                   description: 'mathDescription'.tr,
                   iconData: Icons.calculate,
-                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                  isLightMode:
+                      themeController.currentTheme.value == ThemeMode.light,
                 );
               },
             ),
@@ -82,7 +83,8 @@ class MathsChallenge extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                        Utils.getDifficultyLabel(
+                                controller.mathsDifficulty.value)
                             .tr,
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
@@ -90,9 +92,11 @@ class MathsChallenge extends StatelessWidget {
                         Utils.generateMathProblem(
                           controller.mathsDifficulty.value,
                         )[0],
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                              color: themeController.primaryTextColor.value.withOpacity(0.78),
-                            ),
+                        style:
+                            Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  color: themeController.primaryTextColor.value
+                                      .withOpacity(0.78),
+                                ),
                       ),
                       Slider.adaptive(
                         min: 0.0,
@@ -141,14 +145,16 @@ class MathsChallenge extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Save'.tr,
-                          style:
-                              Theme.of(context).textTheme.displaySmall!.copyWith(
-                                    color: themeController.secondaryTextColor.value,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.secondaryTextColor.value,
+                              ),
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
@@ -161,16 +167,19 @@ class MathsChallenge extends StatelessWidget {
                       ),
                       TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            themeController.primaryTextColor.value.withOpacity(0.5),
+                          backgroundColor: WidgetStateProperty.all(
+                            themeController.primaryTextColor.value
+                                .withOpacity(0.5),
                           ),
                         ),
                         child: Text(
                           'Cancel'.tr,
-                          style:
-                              Theme.of(context).textTheme.displaySmall!.copyWith(
-                                    color: themeController.primaryTextColor.value,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.primaryTextColor.value,
+                              ),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
@@ -192,7 +201,8 @@ class MathsChallenge extends StatelessWidget {
               Obx(
                 () => Text(
                   controller.isMathsEnabled == true
-                      ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
+                      ? Utils.getDifficultyLabel(
+                              controller.mathsDifficulty.value)
                           .tr
                       : 'Off'.tr,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -214,7 +224,10 @@ class MathsChallenge extends StatelessWidget {
   }
 
   void _presetToInitial(
-      bool isMathsEnabled, double sliderValue, int noOfMathQues) {
+    bool isMathsEnabled,
+    double sliderValue,
+    int noOfMathQues,
+  ) {
     controller.isMathsEnabled.value = isMathsEnabled;
     controller.mathsSliderValue.value = sliderValue;
     controller.numMathsQuestions.value = noOfMathQues;

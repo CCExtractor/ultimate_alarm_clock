@@ -40,18 +40,17 @@ class SettingSelector extends StatelessWidget {
               onTap: () async {
                 if (name == 'Share') {
                   final isLoggedIn = await GoogleCloudProvider.isUserLoggedin();
-                  if(isLoggedIn)
-                    {
-                      Get.dialog(ShareDialog(
+                  if (isLoggedIn) {
+                    Get.dialog(
+                      ShareDialog(
                         homeController: controller.homeController,
                         controller: controller,
                         themeController: controller.themeController,
-                      ));
-                    }
-                  else{
+                      ),
+                    );
+                  } else {
                     await GoogleCloudProvider.getInstance();
-
-                  };
+                  }
                 } else {
                   controller.alarmSettingType.value = val;
                 }
@@ -60,7 +59,8 @@ class SettingSelector extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: controller.alarmSettingType.value == val
                       ? kprimaryColor
-                      : controller.themeController.secondaryBackgroundColor.value,
+                      : controller
+                          .themeController.secondaryBackgroundColor.value,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -69,7 +69,8 @@ class SettingSelector extends StatelessWidget {
                     icon,
                     color: controller.alarmSettingType.value == val
                         ? kLightPrimaryTextColor
-                        : controller.themeController.primaryDisabledTextColor.value,
+                        : controller
+                            .themeController.primaryDisabledTextColor.value,
                   ),
                 ),
               ),

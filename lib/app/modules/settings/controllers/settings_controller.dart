@@ -17,7 +17,6 @@ import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sig
 
 import '../../../data/providers/get_storage_provider.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
-import '../../../utils/GoogleHttpClient.dart';
 
 class SettingsController extends GetxController {
   HomeController homeController = Get.find<HomeController>();

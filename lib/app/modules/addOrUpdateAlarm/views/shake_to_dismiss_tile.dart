@@ -49,7 +49,8 @@ class ShakeToDismiss extends StatelessWidget {
                   //     ' - no more lazy snoozing :)',
                   description: 'shakeDescription'.tr,
                   iconData: Icons.vibration_sharp,
-                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                  isLightMode:
+                      themeController.currentTheme.value == ThemeMode.light,
                 );
               },
             ),
@@ -94,9 +95,11 @@ class ShakeToDismiss extends StatelessWidget {
                           },
                         ),
                         // ignore: require_trailing_commas
-                        Text(controller.shakeTimes.value > 1
-                            ? 'times'.tr
-                            : 'time'.tr),
+                        Text(
+                          controller.shakeTimes.value > 1
+                              ? 'times'.tr
+                              : 'time'.tr,
+                        ),
                       ],
                     ),
                   ),
@@ -122,7 +125,8 @@ class ShakeToDismiss extends StatelessWidget {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.secondaryTextColor.value,
+                                    color: themeController
+                                        .secondaryTextColor.value,
                                   ),
                             ),
                           ),
