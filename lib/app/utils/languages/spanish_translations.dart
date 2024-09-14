@@ -57,8 +57,9 @@ class SpanishTranslations extends Translations {
           'Yes': 'Sí',
           'No': 'No',
           'Confirmation': 'Confirmación',
-          'want to delete?': '¿Estás seguro de que deseas eliminar esta alarma?',
-          'delete':'borrar',
+          'want to delete?':
+              '¿Estás seguro de que deseas eliminar esta alarma?',
+          'delete': 'borrar',
           'You cannot join your own alarm!':
               '¡No puedes unirte a tu propia alarma!',
           'An alarm with this ID doesn\'t exist!':
@@ -229,7 +230,7 @@ class SpanishTranslations extends Translations {
           'Shake your phone!': '¡Agita tu teléfono!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "No puedes retroceder mientras suena la alarma",
+              'No puedes retroceder mientras suena la alarma',
           'Start Challenge': 'Comenzar el desafío',
           'Dismiss': 'Descartar',
           'Exit Preview': 'Salir de la vista previa',
@@ -272,7 +273,7 @@ class SpanishTranslations extends Translations {
           'Ascending Volume': 'Volumen ascendente',
           'Alarm deleted': 'Alarma eliminada',
           'Undo': 'Deshacer',
-          'The alarm has been deleted': 'La alarma ha sido eliminada'
+          'The alarm has been deleted': 'La alarma ha sido eliminada',
         },
       };
 }

@@ -48,8 +48,9 @@ class GermanTranslations extends Translations {
           'Yes': 'Ja',
           'No': 'Nein',
           'Confirmation': 'Bestätigung',
-          'want to delete?': 'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
-          'delete' : 'löschen',
+          'want to delete?':
+              'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
+          'delete': 'löschen',
           'You cannot join your own alarm!':
               'Sie können Ihrem eigenen Alarm nicht beitreten!',
           'An alarm with this ID doesn\'t exist!':
@@ -226,7 +227,7 @@ class GermanTranslations extends Translations {
           'Shake your phone!': 'Schütteln Sie Ihr Telefon!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Sie können nicht zurückgehen, während der Alarm klingelt",
+              'Sie können nicht zurückgehen, während der Alarm klingelt',
           'Start Challenge': 'Herausforderung starten',
           'Dismiss': 'Abbrechen',
           'Exit Preview': 'Vorschau beenden',
@@ -271,7 +272,7 @@ class GermanTranslations extends Translations {
           'Ascending Volume': 'Aufsteigende Lautstärke',
           'Alarm deleted': 'Alarm gelöscht',
           'Undo': 'Rückgängig machen',
-          'The alarm has been deleted': 'Der Alarm wurde gelöscht'
+          'The alarm has been deleted': 'Der Alarm wurde gelöscht',
         },
       };
 }

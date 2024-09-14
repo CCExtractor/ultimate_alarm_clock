@@ -31,8 +31,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
 
   Timer? _timerCounter;
   void startTimer() {
-    _timerCounter = Timer.periodic(Duration(seconds: 1), (timer) {
-      print('${widget.timer.timerName}');
+    _timerCounter = Timer.periodic(const Duration(seconds: 1), (timer) {
+      print(widget.timer.timerName);
       if (widget.timer.timeElapsed < widget.timer.timerValue) {
         setState(() {
           widget.timer.timeElapsed += 1000;
@@ -53,18 +53,25 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
   void initState() {
     super.initState();
     if (Utils.getDifferenceMillisFromNow(
-                widget.timer.startedOn, widget.timer.timerValue) <=
+              widget.timer.startedOn,
+              widget.timer.timerValue,
+            ) <=
             0 &&
         widget.timer.isPaused == 0) {
       widget.timer.isPaused = 1;
       widget.timer.timeElapsed = 0;
       IsarDb.updateTimerPauseStatus(widget.timer);
     } else if (Utils.getDifferenceMillisFromNow(
-                widget.timer.startedOn, widget.timer.timerValue) <
+              widget.timer.startedOn,
+              widget.timer.timerValue,
+            ) <
             widget.timer.timerValue &&
         widget.timer.isPaused == 0) {
-      widget.timer.timeElapsed =widget.timer.timerValue-Utils.getDifferenceMillisFromNow(
-          widget.timer.startedOn, widget.timer.timerValue);
+      widget.timer.timeElapsed = widget.timer.timerValue -
+          Utils.getDifferenceMillisFromNow(
+            widget.timer.startedOn,
+            widget.timer.timerValue,
+          );
       IsarDb.updateTimerPauseStatus(widget.timer);
     }
     if (widget.timer.isPaused == 0) {
@@ -84,7 +91,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,
       ),
-      child: Container(
+      child: SizedBox(
         height: context.height / 3.3,
         width: context.width,
         child: Obx(
@@ -104,9 +111,10 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 children: [
                   AnimatedContainer(
                     decoration: BoxDecoration(
-                        color: kprimaryDisabledTextColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(18)),
-                    duration: Duration(milliseconds: 1000),
+                      color: kprimaryDisabledTextColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    duration: const Duration(milliseconds: 1000),
                     height: context.height / 3.3,
                     width: context.width *
                         ((widget.timer.timeElapsed) /
@@ -140,13 +148,15 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall!.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: kprimaryColor,
-                                          fontSize: 18),
+                                            fontWeight: FontWeight.w500,
+                                            color: kprimaryColor,
+                                            fontSize: 18,
+                                          ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Padding(
-                                      padding: const EdgeInsets.only(right: 16.0),
+                                      padding:
+                                          const EdgeInsets.only(right: 16.0),
                                       child: InkWell(
                                         onTap: () {
                                           setState(() {
@@ -155,21 +165,26 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                               stopTimer();
                                             }
                                             widget.timer.timeElapsed = 0;
-                                            IsarDb.updateTimerTick(widget.timer);
+                                            IsarDb.updateTimerTick(
+                                                widget.timer);
                                             if (_timerCounter != null &&
                                                 widget.timer.isPaused == 0) {
                                               widget.timer.startedOn =
                                                   DateTime.now().toString();
-                                              IsarDb.updateTimerTick(widget.timer)
-                                                  .then((value) => startTimer());
+                                              IsarDb.updateTimerTick(
+                                                      widget.timer)
+                                                  .then(
+                                                      (value) => startTimer());
                                             }
                                           });
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: themeController.primaryBackgroundColor.value,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
+                                            color: themeController
+                                                .primaryBackgroundColor.value,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
                                           child: const Padding(
                                             padding: EdgeInsets.all(4.0),
                                             child: Icon(
@@ -189,9 +204,11 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: themeController.primaryBackgroundColor.value,
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
+                                          color: themeController
+                                              .primaryBackgroundColor.value,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
                                         child: const Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Icon(
@@ -200,7 +217,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                           ),
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                                 Padding(
@@ -212,64 +229,74 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     children: [
                                       Obx(
                                         () => AnimatedContainer(
-                                          duration: Duration(seconds: 1),
+                                          duration: const Duration(seconds: 1),
                                           child: Text(
-                                            '${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}',
+                                            Utils.formatMilliseconds(
+                                                widget.timer.timerValue -
+                                                    widget.timer.timeElapsed),
                                             style: Theme.of(
                                               context,
                                             ).textTheme.displayLarge!.copyWith(
-                                                  color: themeController.primaryTextColor.value,
+                                                  color: themeController
+                                                      .primaryTextColor.value,
                                                   fontSize: 44,
                                                 ),
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: GestureDetector(
-                                            onTap: () {
+                                        padding: const EdgeInsets.all(20),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              widget.timer.isPaused == 0
+                                                  ? stopTimer()
+                                                  : startTimer();
+                                              widget.timer.isPaused =
+                                                  widget.timer.isPaused == 0
+                                                      ? 1
+                                                      : 0;
+                                              IsarDb.updateTimerPauseStatus(
+                                                widget.timer,
+                                              );
+                                            });
+                                            if (widget.timer.timeElapsed >=
+                                                widget.timer.timerValue) {
+                                              controller.stopRinger(
+                                                widget.timer.timerId,
+                                              );
                                               setState(() {
-                                                widget.timer.isPaused == 0
-                                                    ? stopTimer()
-                                                    : startTimer();
-                                                widget.timer.isPaused =
-                                                    widget.timer.isPaused == 0
-                                                        ? 1
-                                                        : 0;
-                                                IsarDb.updateTimerPauseStatus(
-                                                    widget.timer);
+                                                widget.timer.timeElapsed = 0;
+                                                IsarDb.updateTimerTick(
+                                                  widget.timer,
+                                                ).then(
+                                                  (value) => IsarDb
+                                                      .updateTimerPauseStatus(
+                                                    widget.timer,
+                                                  ),
+                                                );
+                                                widget.timer.isPaused = 1;
                                               });
-                                              if (widget.timer.timeElapsed >=
-                                                  widget.timer.timerValue) {
-                                                controller.stopRinger(
-                                                    widget.timer.timerId);
-                                                setState(() {
-                                                  widget.timer.timeElapsed = 0;
-                                                  IsarDb.updateTimerTick(
-                                                          widget.timer)
-                                                      .then((value) => IsarDb
-                                                          .updateTimerPauseStatus(
-                                                              widget.timer));
-                                                  widget.timer.isPaused = 1;
-                                                });
-                                              }
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: kprimaryColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(80)),
-                                              width: 80,
-                                              height: 80,
-                                              child: Icon(
-                                                widget.timer.isPaused == 0
-                                                    ? Icons.pause
-                                                    : Icons.play_arrow,
-                                                size: 30,
-                                                color: ksecondaryBackgroundColor,
-                                              ),
+                                            }
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: kprimaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(80),
                                             ),
-                                          ))
+                                            width: 80,
+                                            height: 80,
+                                            child: Icon(
+                                              widget.timer.isPaused == 0
+                                                  ? Icons.pause
+                                                  : Icons.play_arrow,
+                                              size: 30,
+                                              color: ksecondaryBackgroundColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -279,7 +306,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

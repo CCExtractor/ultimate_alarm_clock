@@ -290,7 +290,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: WidgetStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
                       'Cancel'.tr,
@@ -305,7 +305,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.red,
                         width: 1,
                       ),
@@ -465,7 +465,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Save',
@@ -485,7 +485,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Retake',
@@ -505,7 +505,7 @@ class AddOrUpdateAlarmController extends GetxController {
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),
+                                WidgetStateProperty.all(kprimaryColor),
                           ),
                           child: Text(
                             'Disable',
@@ -572,7 +572,7 @@ class AddOrUpdateAlarmController extends GetxController {
         },
         confirm: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+            backgroundColor: WidgetStateProperty.all(kprimaryColor),
           ),
           child: Obx(
             () => Text(
@@ -595,7 +595,7 @@ class AddOrUpdateAlarmController extends GetxController {
         cancel: Obx(
           () => TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 themeController.primaryTextColor.value.withOpacity(0.5),
               ),
             ),
@@ -669,7 +669,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     profileTextEditingController.text = homeController.isProfileUpdate.value
         ? homeController.selectedProfile.value
-        : "";
+        : '';
     emailTextEditingController.text = '';
 
     if (Get.arguments != null) {
@@ -1143,7 +1143,7 @@ class AddOrUpdateAlarmController extends GetxController {
         String? filePath = customRingtoneResult.files.single.path;
 
         String? savedFilePath =
-            await saveToDocumentsDirectory(filePath: filePath!);
+            await saveToDocumentsDirectory(filePath: filePath);
 
         if (savedFilePath != null) {
           RingtoneModel customRingtone = RingtoneModel(
@@ -1338,15 +1338,14 @@ class AddOrUpdateAlarmController extends GetxController {
       ringOn: isFutureDate.value,
     );
 
-    if(homeController.isProfileUpdate.value)
-      {
-        var profileId =
-        await IsarDb.profileId(homeController.selectedProfile.value);
-        print(profileId);
-        if (profileId != 'null') profileModel.isarId = profileId;
-        print(profileModel.isarId);
-        await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
-      }
+    if (homeController.isProfileUpdate.value) {
+      var profileId =
+          await IsarDb.profileId(homeController.selectedProfile.value);
+      print(profileId);
+      if (profileId != 'null') profileModel.isarId = profileId;
+      print(profileModel.isarId);
+      await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+    }
     await IsarDb.addProfile(profileModel);
     homeController.selectedProfile.value = profileModel.profileName;
     storage.writeProfile(profileModel.profileName);

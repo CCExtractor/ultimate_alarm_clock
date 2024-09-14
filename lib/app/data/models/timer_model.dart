@@ -11,13 +11,14 @@ class TimerModel {
   late String ringtoneName;
   late int isPaused;
 
-  TimerModel(
-      {required this.timerValue,
-      required this.startedOn,
-      required this.ringtoneName,
-      required this.timerName,
-      this.isPaused = 0,
-      this.timeElapsed = 0});
+  TimerModel({
+    required this.timerValue,
+    required this.startedOn,
+    required this.ringtoneName,
+    required this.timerName,
+    this.isPaused = 0,
+    this.timeElapsed = 0,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -36,7 +37,7 @@ class TimerModel {
     timerId = map['id'];
     startedOn = map['startedOn'];
     timerValue = map['timerValue'];
-    timeElapsed= map['timeElapsed'];
+    timeElapsed = map['timeElapsed'];
     ringtoneName = map['ringtoneName'];
     timerName = map['timerName'];
     isPaused = map['isPaused'];

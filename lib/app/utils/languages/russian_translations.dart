@@ -55,7 +55,7 @@ class RussianTranslations extends Translations {
           'No': 'Нет',
           'Confirmation': 'подтверждение',
           'want to delete?': 'Вы уверены, что хотите удалить этот будильник?',
-          'delete':'удалить',
+          'delete': 'удалить',
           'You cannot join your own alarm!':
               'Вы не можете присоединиться к собственной тревоге!',
           'An alarm with this ID doesn\'t exist!':
@@ -221,7 +221,7 @@ class RussianTranslations extends Translations {
           'Shake your phone!': 'Встряхните свой телефон!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Вы не можете вернуться, пока звонит будильник",
+              'Вы не можете вернуться, пока звонит будильник',
           'Start Challenge': 'Начать задание',
           'Dismiss': 'Отклонить',
           'Exit Preview': 'Выйти из предпросмотра',
