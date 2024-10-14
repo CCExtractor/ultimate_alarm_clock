@@ -58,7 +58,8 @@ Future<Widget> googleCalenderDialog(
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.primaryDisabledTextColor.value,
+                                  color: themeController
+                                      .primaryDisabledTextColor.value,
                                   fontSize: 20 * controller.scalingFactor.value,
                                 ),
                           ),
@@ -82,7 +83,8 @@ Future<Widget> googleCalenderDialog(
                                       );
                                     },
                                     child: Card(
-                                      color: themeController.secondaryBackgroundColor.value,
+                                      color: themeController
+                                          .secondaryBackgroundColor.value,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                           16,
@@ -96,9 +98,8 @@ Future<Widget> googleCalenderDialog(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
+                                              const Padding(
+                                                padding: EdgeInsets.all(8.0),
                                                 child: Icon(
                                                   Icons.calendar_month,
                                                   color: kprimaryColor,
@@ -110,7 +111,9 @@ Future<Widget> googleCalenderDialog(
                                                     .textTheme
                                                     .displaySmall!
                                                     .copyWith(
-                                                      color: themeController.primaryTextColor.value,
+                                                      color: themeController
+                                                          .primaryTextColor
+                                                          .value,
                                                       fontSize: 15 *
                                                           controller
                                                               .scalingFactor
@@ -135,7 +138,8 @@ Future<Widget> googleCalenderDialog(
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Card(
-                                    color: themeController.secondaryBackgroundColor.value,
+                                    color: themeController
+                                        .secondaryBackgroundColor.value,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         16,
@@ -174,7 +178,9 @@ Future<Widget> googleCalenderDialog(
                                                             .textTheme
                                                             .displaySmall!
                                                             .copyWith(
-                                                              color: themeController.primaryTextColor.value,
+                                                              color: themeController
+                                                                  .primaryTextColor
+                                                                  .value,
                                                               fontSize: 15 *
                                                                   controller
                                                                       .scalingFactor
@@ -189,10 +195,8 @@ Future<Widget> googleCalenderDialog(
                                                       Axis.horizontal,
                                                   child: Row(
                                                     children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(
+                                                      const Padding(
+                                                        padding: EdgeInsets.all(
                                                           8.0,
                                                         ),
                                                         child: Icon(
@@ -202,19 +206,19 @@ Future<Widget> googleCalenderDialog(
                                                         ),
                                                       ),
                                                       Text(
-                                                        Utils.formatDateTimeToStandard(
-                                                            controller
-                                                                    .Events
-                                                                    .value[
-                                                                        index]
-                                                                    .start
-                                                                    .dateTime ??
-                                                                controller
-                                                                    .Events
-                                                                    .value[
-                                                                        index]
-                                                                    .start
-                                                                    .date),
+                                                        Utils
+                                                            .formatDateTimeToStandard(
+                                                          controller
+                                                                  .Events
+                                                                  .value[index]
+                                                                  .start
+                                                                  .dateTime ??
+                                                              controller
+                                                                  .Events
+                                                                  .value[index]
+                                                                  .start
+                                                                  .date,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -227,22 +231,18 @@ Future<Widget> googleCalenderDialog(
                                           padding: const EdgeInsets.all(16.0),
                                           child: InkWell(
                                             onTap: () {
-
                                               controller.setAlarmFromEvent(
-                                                  controller
-                                                      .Events.value[index],
-                                                  Utils
-                                                      .formatDateTimeToStandard(
-                                                          controller
-                                                                  .Events
-                                                                  .value[index]
-                                                                  .start
-                                                                  .dateTime ??
-                                                              controller
-                                                                  .Events
-                                                                  .value[index]
-                                                                  .start
-                                                                  .date)[10]);
+                                                controller.Events.value[index],
+                                                Utils.formatDateTimeToStandard(
+                                                  controller.Events.value[index]
+                                                          .start.dateTime ??
+                                                      controller
+                                                          .Events
+                                                          .value[index]
+                                                          .start
+                                                          .date,
+                                                )[10],
+                                              );
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -252,9 +252,8 @@ Future<Widget> googleCalenderDialog(
                                                 ),
                                                 color: kprimaryColor,
                                               ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(8.0),
                                                 child: Center(
                                                   child: Icon(
                                                     Icons

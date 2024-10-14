@@ -9,16 +9,19 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/alarm_ring_controller.dart';
 
 class AlarmControlView extends GetView<AlarmControlController> {
-  AlarmControlView({Key? key}) : super(key: key);
+  AlarmControlView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
   Obx getAddSnoozeButtons(
-      BuildContext context, int snoozeMinutes, String title) {
+    BuildContext context,
+    int snoozeMinutes,
+    String title,
+  ) {
     return Obx(
-        () => TextButton(
+      () => TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(
             themeController.secondaryBackgroundColor.value,
           ),
         ),
@@ -71,7 +74,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                     child: controller.showButton.value
                         ? TextButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                 kprimaryColor,
                               ),
                             ),
@@ -85,7 +88,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.secondaryTextColor.value,
+                                    color: themeController
+                                        .secondaryTextColor.value,
                                   ),
                             ),
                             onPressed: () {
@@ -194,7 +198,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           width: width * 0.5,
                           child: TextButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                 themeController.secondaryBackgroundColor.value,
                               ),
                             ),
@@ -204,7 +208,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(
-                                    color: themeController.primaryTextColor.value,
+                                    color:
+                                        themeController.primaryTextColor.value,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),

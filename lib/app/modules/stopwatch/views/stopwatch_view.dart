@@ -8,7 +8,7 @@ import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 
 class StopwatchView extends GetView<StopwatchController> {
-  StopwatchView({Key? key}) : super(key: key);
+  StopwatchView({super.key});
   ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
@@ -25,17 +25,17 @@ class StopwatchView extends GetView<StopwatchController> {
             LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return Obx(
-                      () => IconButton(
-                        onPressed: () {
+                  () => IconButton(
+                    onPressed: () {
                       Utils.hapticFeedback();
                       Scaffold.of(context).openEndDrawer();
                     },
-                        icon: const Icon(
+                    icon: const Icon(
                       Icons.menu,
                     ),
-                        color: themeController.primaryTextColor.value
+                    color: themeController.primaryTextColor.value
                         .withOpacity(0.75),
-                        iconSize: 27,
+                    iconSize: 27,
                     // splashRadius: 0.000001,
                   ),
                 );
@@ -111,7 +111,7 @@ class StopwatchView extends GetView<StopwatchController> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FloatingActionButton(
-                heroTag: "start",
+                heroTag: 'start',
                 onPressed: controller.toggleTimer,
                 child: Obx(
                   () => Icon(
@@ -124,9 +124,9 @@ class StopwatchView extends GetView<StopwatchController> {
               ),
               // Reset button
               FloatingActionButton(
-                heroTag: "stop",
+                heroTag: 'stop',
                 onPressed: controller.resetTime,
-                child: Icon(
+                child: const Icon(
                   Icons.stop_rounded,
                   size: 33,
                 ),
@@ -135,7 +135,7 @@ class StopwatchView extends GetView<StopwatchController> {
           ),
         ],
       ),
-      endDrawer: buildEndDrawer(context)
+      endDrawer: buildEndDrawer(context),
     );
   }
 }

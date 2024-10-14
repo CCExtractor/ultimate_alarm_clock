@@ -7,7 +7,7 @@ import '../../../utils/constants.dart';
 import '../controllers/notifications_controller.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
-  const NotificationsView({Key? key}) : super(key: key);
+  const NotificationsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +87,9 @@ class NotificationsView extends GetView<NotificationsController> {
                                                       .scalingFactor *
                                                   20,
                                             ),
-                                            child: Text(
-                                                "Select profile to add to"),
+                                            child: const Text(
+                                              'Select profile to add to',
+                                            ),
                                           ),
                                     controller.notifications[index]['type'] ==
                                             'profile'
@@ -98,7 +99,8 @@ class NotificationsView extends GetView<NotificationsController> {
                                             itemCount:
                                                 controller.allProfiles.length,
                                             itemBuilder: (context, index) {
-                                              return Obx(() => ListTile(
+                                              return Obx(
+                                                () => ListTile(
                                                   onTap: () {
                                                     controller.selectedProfile
                                                             .value =
@@ -106,9 +108,11 @@ class NotificationsView extends GetView<NotificationsController> {
                                                             .allProfiles[index];
                                                   },
                                                   shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              18)),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      18,
+                                                    ),
+                                                  ),
                                                   tileColor: controller
                                                               .selectedProfile
                                                               .value ==
@@ -136,8 +140,11 @@ class NotificationsView extends GetView<NotificationsController> {
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
-                                                  )));
-                                            }),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -146,8 +153,10 @@ class NotificationsView extends GetView<NotificationsController> {
                                             await FirestoreDb.removeItem(
                                               controller.notifications[index],
                                             );
-                                            Get.snackbar('Notification',
-                                                'Shared Item Removed',);
+                                            Get.snackbar(
+                                              'Notification',
+                                              'Shared Item Removed',
+                                            );
                                             Navigator.of(context).pop();
                                           },
                                           child: const Text(
@@ -174,13 +183,14 @@ class NotificationsView extends GetView<NotificationsController> {
                                                         index]['AlarmName'],
                                                   );
                                             await FirestoreDb.removeItem(
-                                                controller
-                                                    .notifications[index]);
-
+                                              controller.notifications[index],
+                                            );
 
                                             Navigator.of(context).pop();
-                                            Get.snackbar("Notification",
-                                                "Shared Item Added");
+                                            Get.snackbar(
+                                              'Notification',
+                                              'Shared Item Added',
+                                            );
                                           },
                                           child: const Text('Add'),
                                         ),
@@ -197,13 +207,12 @@ class NotificationsView extends GetView<NotificationsController> {
                     },
                   )
                 : const Text(
-                    "No Notifications to see",
+                    'No Notifications to see',
                     style: TextStyle(color: kprimaryDisabledTextColor),
                   );
-            ;
           }
           return const Text(
-            "No Notifications to see",
+            'No Notifications to see',
             style: TextStyle(color: kprimaryDisabledTextColor),
           );
         },
@@ -225,7 +234,8 @@ class NotificationsView extends GetView<NotificationsController> {
               borderRadius: BorderRadius.circular(18),
               child: Padding(
                 padding: EdgeInsets.all(
-                    controller.homeController.scalingFactor * 10),
+                  controller.homeController.scalingFactor * 10,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: notification['type'] == 'profile'

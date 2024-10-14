@@ -56,12 +56,15 @@ class GoogleSignIn extends StatelessWidget {
                   ),
                   TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: WidgetStateProperty.all(kprimaryColor),
                     ),
                     child: Obx(
                       () => Text(
                         'Okay'.tr,
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
                               color: themeController.secondaryTextColor.value,
                             ),
                       ),
@@ -87,8 +90,9 @@ class GoogleSignIn extends StatelessWidget {
             content: Column(
               children: [
                 Text(
-                    // 'Do you want to unlink your Google account?',
-                    'unlinkAccount'.tr),
+                  // 'Do you want to unlink your Google account?',
+                  'unlinkAccount'.tr,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
@@ -97,7 +101,7 @@ class GoogleSignIn extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Obx(
                           () => Text(
@@ -106,7 +110,8 @@ class GoogleSignIn extends StatelessWidget {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.secondaryTextColor.value,
+                                  color:
+                                      themeController.secondaryTextColor.value,
                                 ),
                           ),
                         ),
@@ -118,7 +123,7 @@ class GoogleSignIn extends StatelessWidget {
                       ),
                       TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                             kprimaryTextColor.withOpacity(0.5),
                           ),
                         ),
@@ -146,30 +151,34 @@ class GoogleSignIn extends StatelessWidget {
           isLightMode: themeController.currentTheme.value == ThemeMode.light,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.only(left: 30, right: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Obx(
                 () => Expanded(
-                    child: Text(
-                      (controller.isUserLoggedIn.value)
-                          ?
-                          // 'Unlink ${controller.userModel!.email}'
-                          'Unlink @usermail'.trParams(
-                              {'usermail': controller.userModel.value!.email})
-                          : 'Sign-In with Google'.tr,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                    ),
+                  child: Text(
+                    (controller.isUserLoggedIn.value)
+                        ?
+                        // 'Unlink ${controller.userModel!.email}'
+                        'Unlink @usermail'.trParams(
+                            {'usermail': controller.userModel.value!.email},
+                          )
+                        : 'Sign-In with Google'.tr,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          overflow: TextOverflow.ellipsis,
+                        ),
                   ),
-                ),Obx(
+                ),
+              ),
+              Obx(
                 () => IconButton(
                   onPressed: () => {
                     Utils.hapticFeedback(),
                     showBottomSheet(
                       context: context,
-                      backgroundColor: themeController.secondaryBackgroundColor.value,
+                      backgroundColor:
+                          themeController.secondaryBackgroundColor.value,
                       builder: (context) {
                         return Padding(
                           padding: const EdgeInsets.all(25.0),
@@ -179,7 +188,8 @@ class GoogleSignIn extends StatelessWidget {
                               Text(
                                 'Why do I have to sign in with Google?'.tr,
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.displayMedium,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
                               ),
                               Column(
                                 children: [
@@ -196,8 +206,9 @@ class GoogleSignIn extends StatelessWidget {
                                   ),
                                   Text(
                                     'Shared Alarm'.tr,
-                                    style:
-                                    Theme.of(context).textTheme.displaySmall,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall,
                                   ),
                                   Text(
                                     // 'Collaborate with friends, family members,'
@@ -211,8 +222,9 @@ class GoogleSignIn extends StatelessWidget {
                                   ),
                                   Text(
                                     'Syncing Across Devices'.tr,
-                                    style:
-                                    Theme.of(context).textTheme.displaySmall,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall,
                                   ),
                                   Text(
                                     // 'Access your alarms across multiple devices'
@@ -226,8 +238,9 @@ class GoogleSignIn extends StatelessWidget {
                                   ),
                                   Text(
                                     'Your privacy'.tr,
-                                    style:
-                                    Theme.of(context).textTheme.displaySmall,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall,
                                   ),
                                   Text(
                                     // 'We do not access,  use or sell any'
@@ -252,7 +265,7 @@ class GoogleSignIn extends StatelessWidget {
                                 width: width,
                                 child: TextButton(
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
+                                    backgroundColor: WidgetStateProperty.all(
                                       kprimaryColor,
                                     ),
                                   ),
@@ -267,7 +280,7 @@ class GoogleSignIn extends StatelessWidget {
                                         .displaySmall!
                                         .copyWith(
                                           color: themeController
-                                                      .secondaryTextColor.value,
+                                              .secondaryTextColor.value,
                                         ),
                                   ),
                                 ),
@@ -281,7 +294,8 @@ class GoogleSignIn extends StatelessWidget {
                   icon: Icon(
                     Icons.info_sharp,
                     size: 21,
-                    color: themeController.primaryTextColor.value.withOpacity(0.3),
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.3),
                   ),
                 ),
               ),
