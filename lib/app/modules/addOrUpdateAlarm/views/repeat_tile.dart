@@ -31,9 +31,10 @@ class RepeatTile extends StatelessWidget {
               },
               backgroundColor: themeController.secondaryBackgroundColor.value,
               builder: (BuildContext context) {
-                return Container(
-                  height: height * 0.45,
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       buildDailyTile(),
                       Container(
@@ -61,6 +62,7 @@ class RepeatTile extends StatelessWidget {
                           padding: const EdgeInsets.only(
                             left: 25,
                             right: 25,
+                            bottom: 25
                           ),
                           child: TextButton(
                             style: ButtonStyle(
