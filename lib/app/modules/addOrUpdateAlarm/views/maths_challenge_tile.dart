@@ -111,15 +111,15 @@ class MathsChallenge extends StatelessWidget {
                     ],
                   ),
                   Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        () => Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           NumberPicker(
                             value: controller.numMathsQuestions.value,
-                            minValue: 1,
+                            minValue: 0,
                             maxValue: 100,
                             onChanged: (value) {
                               Utils.hapticFeedback();
@@ -152,7 +152,11 @@ class MathsChallenge extends StatelessWidget {
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
-                          controller.isMathsEnabled.value = true;
+                          if (controller.numMathsQuestions.value != 0) {
+                            controller.isMathsEnabled.value = true;
+                          } else {
+                            controller.isMathsEnabled.value = false;
+                          }
                           Get.back();
                         },
                       ),
@@ -191,7 +195,7 @@ class MathsChallenge extends StatelessWidget {
             children: [
               Obx(
                 () => Text(
-                  controller.isMathsEnabled == true
+                  controller.isMathsEnabled.value == true
                       ? Utils.getDifficultyLabel(controller.mathsDifficulty.value)
                           .tr
                       : 'Off'.tr,
