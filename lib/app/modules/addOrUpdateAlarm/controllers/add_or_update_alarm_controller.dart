@@ -72,7 +72,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final mathsSliderValue = 0.0.obs;
   final mathsDifficulty = Difficulty.Easy.obs;
   final isMathsEnabled = false.obs;
-  final numMathsQuestions = 1.obs;
+  final numMathsQuestions = 0.obs;
   final MapController mapController = MapController();
   final selectedPoint = LatLng(0, 0).obs;
   final RxList markersList = [].obs;
