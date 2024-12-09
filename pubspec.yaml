@@ -11,7 +11,7 @@ dependencies:
 
   screen_state: ^4.0.0
   cupertino_icons: ^1.0.2
-
+  win32: ^5.2.0
   get: 4.6.6
   get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
