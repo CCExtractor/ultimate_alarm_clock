@@ -180,7 +180,7 @@ ThemeData kThemeData = ThemeData(
 
 // Light ThemeData
 ThemeData kLightThemeData = ThemeData(
-  useMaterial3: true,
+  useMaterial3: false,
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(foregroundColor: kprimaryColor),
   ),
