@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
@@ -11,7 +10,6 @@ import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_animation.dar
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'dart:math' as math;
 
 import '../../../data/models/timer_model.dart';
 
@@ -473,7 +471,7 @@ class TimerView extends GetView<TimerController> {
                                 height: height * 0.008,
                               ),
                               SizedBox(
-                                width: 80,
+                                width: 70,
                                 child: TextField(
                                   onChanged: (_) {
                                     inputTimeController.setTimerTime();
@@ -539,7 +537,7 @@ class TimerView extends GetView<TimerController> {
                                 height: height * 0.008,
                               ),
                               SizedBox(
-                                width: 80,
+                                width: 70,
                                 child: TextField(
                                   onChanged: (_) {
                                     inputTimeController.setTimerTime();
@@ -605,7 +603,7 @@ class TimerView extends GetView<TimerController> {
                                 height: height * 0.008,
                               ),
                               SizedBox(
-                                width: 80,
+                                width: 70,
                                 child: TextField(
                                   onChanged: (_) {
                                     inputTimeController.setTimerTime();
