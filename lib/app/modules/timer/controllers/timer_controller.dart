@@ -18,7 +18,6 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   RxList timers = [].obs;
   RxList isRinging = [].obs;
 
-
   getFakeTimerModel() async {
     TimerModel fakeTimer = await Utils.genFakeTimerModel();
     return fakeTimer;
@@ -80,11 +79,11 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     }
   }
 
-  void createTimer() async {
+  Future<void> createTimer() async {
     TimerModel timerRecord = await getFakeTimerModel();
 
     timerRecord.startedOn = DateTime.now().toString();
-    ;
+
     timerRecord.timerValue = Utils.getMillisecondsToAlarm(
       DateTime.now(),
       DateTime.now().add(remainingTime.value),
@@ -93,10 +92,8 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     timerRecord.timerName =
         '${Utils.formatMilliseconds(timerRecord.timerValue)} Timer';
 
-    IsarDb.insertTimer(timerRecord).then((value) async {
-      updateTimerInfo();
-    });
-    Get.back();
+    await IsarDb.insertTimer(timerRecord);
+    updateTimerInfo();
   }
 
   deleteTimer(int id) async {
@@ -138,4 +135,10 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       Get.back();
     }
   }
+  Future<void> setPresetTimer(Duration presetDuration) async {
+  remainingTime.value = presetDuration;
+  await createTimer();
 }
+}
+
+
