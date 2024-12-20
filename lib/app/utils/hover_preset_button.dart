@@ -4,7 +4,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
-Widget presetButton(BuildContext context, String label, Duration duration) {
+Widget hoverPresetButton(BuildContext context, String label, Duration duration) {
   final TimerController timerController = Get.find<TimerController>();
   final ThemeController themeController = Get.find<ThemeController>();
 
@@ -22,7 +22,8 @@ Widget presetButton(BuildContext context, String label, Duration duration) {
         horizontal: width * 0.02,
         vertical: height * 0.01,
       ),
-      backgroundColor: Colors.transparent,
+
+      backgroundColor: themeController.primaryColor.value,
       shadowColor: Colors.transparent,
       fixedSize: Size(
         width * 0.02,
@@ -36,7 +37,8 @@ Widget presetButton(BuildContext context, String label, Duration duration) {
       label,
       style: TextStyle(
         fontSize: height * 0.02,
-        color: kprimaryDisabledTextColor,
+        color: kprimaryBackgroundColor,
+      
         fontWeight: FontWeight.bold,
       ),
     ),

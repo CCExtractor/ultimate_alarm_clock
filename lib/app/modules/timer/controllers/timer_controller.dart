@@ -142,4 +142,3 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
 }
 
 
-
