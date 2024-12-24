@@ -22,8 +22,8 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var height = Get.height;
-    var width = Get.width;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return Obx(
       () => Scaffold(
         backgroundColor: themeController.primaryBackgroundColor.value,

@@ -18,8 +18,11 @@ class MathsChallenge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
+    // var width = Get.width;
+    // var height = Get.height;
+    final double width = MediaQuery.of(context).size.width;
+    // ignore: unused_local_variable
+    final double height = MediaQuery.of(context).size.height;
     double sliderValue;
     int noOfMathQues;
     bool isMathsEnabled;

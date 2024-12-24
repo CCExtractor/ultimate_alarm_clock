@@ -17,8 +17,10 @@ class WeatherTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
+    // var width = Get.width;
+    // var height = Get.height;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return Obx(
       () => Container(
         child:  ListTile(
@@ -53,7 +55,7 @@ class WeatherTile extends StatelessWidget {
                                 children: [
                                   Checkbox.adaptive(
                                     side: BorderSide(
-                                      width: 1.5,
+                                      width: width*0.0015,
                                       color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -102,7 +104,7 @@ class WeatherTile extends StatelessWidget {
                                 children: [
                                   Checkbox.adaptive(
                                     side: BorderSide(
-                                      width: 1.5,
+                                      width: width*0.0015,
                                       color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -152,7 +154,7 @@ class WeatherTile extends StatelessWidget {
                                 children: [
                                   Checkbox.adaptive(
                                     side: BorderSide(
-                                      width: 1.5,
+                                      width: width*0.0015,
                                       color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -201,7 +203,7 @@ class WeatherTile extends StatelessWidget {
                                 children: [
                                   Checkbox.adaptive(
                                     side: BorderSide(
-                                      width: 1.5,
+                                      width: width*0.0015,
                                       color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather
@@ -250,7 +252,7 @@ class WeatherTile extends StatelessWidget {
                                 children: [
                                   Checkbox.adaptive(
                                     side: BorderSide(
-                                      width: 1.5,
+                                      width: width*0.0015,
                                       color: themeController.primaryTextColor.value.withOpacity(0.5),
                                     ),
                                     value: controller.selectedWeather

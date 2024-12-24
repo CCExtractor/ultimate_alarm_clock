@@ -5,6 +5,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+// ignore: must_be_immutable
 class MathsChallengeView extends GetView<AlarmChallengeController> {
   MathsChallengeView({Key? key}) : super(key: key);
 
@@ -12,8 +13,10 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
-    var height = Get.height;
-    var width = Get.width;
+    // var height = Get.height;
+    // var width = Get.width;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () {
         Utils.hapticFeedback();

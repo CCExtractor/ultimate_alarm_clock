@@ -17,8 +17,11 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
   @override
   Widget build(BuildContext context) {
     // ignore: unused_local_variable
-    var width = Get.width;
-    var height = Get.height;
+    // var width = Get.width;
+    // var height = Get.height;
+    // ignore: unused_local_variable
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(

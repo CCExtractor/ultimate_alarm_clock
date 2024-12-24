@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
+// ignore: must_be_immutable
 class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
@@ -39,8 +40,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
+    // var width = Get.width;
+    // var height = Get.height;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {

@@ -7,6 +7,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     var width = Get.width;
     return const Scaffold(
       body: SafeArea(

@@ -18,8 +18,10 @@ class RepeatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<bool> repeatDays = List<bool>.filled(7, false);
+    // ignore: unused_local_variable
     var height = Get.height;
     var width = Get.width;
+
 
     return Obx(
       () => InkWell(
@@ -60,10 +62,7 @@ class RepeatTile extends StatelessWidget {
                         width: width,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                            left: 25,
-                            right: 25,
-                            bottom: 25
-                          ),
+                              left: 25, right: 25, bottom: 25),
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
@@ -81,7 +80,7 @@ class RepeatTile extends StatelessWidget {
                                   .displaySmall!
                                   .copyWith(
                                     color: controller.themeController
-                                                .secondaryTextColor.value,
+                                        .secondaryTextColor.value,
                                   ),
                             ),
                           ),
@@ -95,7 +94,6 @@ class RepeatTile extends StatelessWidget {
           );
         },
         child: ListTile(
-
           title: Obx(
             () {
               bool anyDaySelected =
@@ -311,7 +309,8 @@ class RepeatTile extends StatelessWidget {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                  color: themeController.secondaryTextColor.value,
+                                  color:
+                                      themeController.secondaryTextColor.value,
                                 ),
                           ),
                         ),
