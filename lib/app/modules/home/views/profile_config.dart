@@ -1,15 +1,14 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
 import '../../../utils/constants.dart';
-import 'package:android_intent_plus/android_intent.dart';
 
-import '../../../utils/utils.dart';
 
 class ProfileSelect extends StatefulWidget {
   const ProfileSelect({super.key});
@@ -25,10 +24,10 @@ class _ProfileSelectState extends State<ProfileSelect> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => AnimatedSwitcher(
-        duration: Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
         transitionBuilder: (child, animation) {
           return SizeTransition(
-              sizeFactor: animation, axis: Axis.horizontal, child: child);
+              sizeFactor: animation, axis: Axis.horizontal, child: child,);
         },
         child: !controller.expandProfile.value
             ? InkWell(
@@ -36,10 +35,10 @@ class _ProfileSelectState extends State<ProfileSelect> {
                   controller.isProfile.value = true;
                   controller.isProfileUpdate.value = true;
                   Get.toNamed('/add-update-alarm',
-                      arguments: controller.genFakeAlarmModel());
+                      arguments: controller.genFakeAlarmModel(),);
                 },
                 child: Container(
-                  key: ValueKey(1),
+                  key: const ValueKey(1),
                   child: Row(
                     children: [
                       Padding(
@@ -57,15 +56,15 @@ class _ProfileSelectState extends State<ProfileSelect> {
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.topCenter,
-                                  stops: [0.2, 0.2],
+                                  stops: const [0.2, 0.2],
                                   colors: [
                                     kprimaryColor,
                                     themeController.secondaryBackgroundColor.value,
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(18)),
+                                borderRadius: BorderRadius.circular(18),),
                             child: Text(
-                                  "${controller.selectedProfile}",
+                                  '${controller.selectedProfile}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
@@ -76,23 +75,22 @@ class _ProfileSelectState extends State<ProfileSelect> {
                                         fontSize:
                                           22 * controller.scalingFactor.value,
                                     overflow: TextOverflow.ellipsis
-                                    ),
-                              )),
+                                    ,),
+                              ),),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(28),
                           onTap: () {
                             controller.expandProfile.value =
                                 !controller.expandProfile.value;
                           },
-                          child: Container(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.arrow_forward_ios),
-                          )),
+                          child: const Padding(
+                                                      padding: EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.arrow_forward_ios),
+                                                    ),
                         ),
                       ),
                       InkWell(
@@ -101,17 +99,16 @@ class _ProfileSelectState extends State<ProfileSelect> {
                           controller.isProfile.value = true;
                           controller.profileModel.value =
                               (await IsarDb.getProfile(
-                                  controller.selectedProfile.value))!;
+                                  controller.selectedProfile.value,))!;
                           controller.isProfileUpdate.value = false;
                           Get.toNamed(
                             '/add-update-alarm',
                           );
                         },
-                        child: Container(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.add),
-                        )),
+                        child: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.add),
+                                                ),
                       ),
                     ],
                   ),
@@ -128,12 +125,12 @@ class _ProfileSelectState extends State<ProfileSelect> {
                         controller.expandProfile.value =
                             !controller.expandProfile.value;
                       },
-                      child: Container(child: Icon(Icons.arrow_back_ios)),
+                      child: const Icon(Icons.arrow_back_ios),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: Get.width * 0.8,
-                    key: ValueKey(2),
+                    key: const ValueKey(2),
                     child: StreamBuilder(
                         stream: IsarDb.getProfiles(),
                         builder: (context, snapshot) {
@@ -149,10 +146,10 @@ class _ProfileSelectState extends State<ProfileSelect> {
                             );
                           }
                           return SizedBox();
-                        }),
+                        },),
                   ),
                 ],
-              )));
+              ),),);
   }
 
   Widget profileCapsule(ProfileModel profile) {
@@ -172,10 +169,10 @@ class _ProfileSelectState extends State<ProfileSelect> {
               decoration: BoxDecoration(
                   color: profile.profileName == controller.selectedProfile.value
                       ? kprimaryColor.withOpacity(0.5)
-                      : ksecondaryBackgroundColor,
-                  borderRadius: BorderRadius.circular(18)),
+                      : themeController.secondaryBackgroundColor.value,
+                  borderRadius: BorderRadius.circular(18),),
               child: Text(
-                "${profile.profileName}",
+                profile.profileName,
                 style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       color: themeController.primaryTextColor.value.withOpacity(
                               0.75,
@@ -183,7 +180,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                       fontSize: 22 * controller.scalingFactor.value,
                     ),
               ),
-            )),
+            ),),
       ),
     );
   }
