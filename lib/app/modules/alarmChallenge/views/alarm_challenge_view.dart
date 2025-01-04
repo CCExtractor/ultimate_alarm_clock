@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
 
+// ignore: must_be_immutable
 class AlarmChallengeView extends GetView<AlarmChallengeController> {
   AlarmChallengeView({Key? key}) : super(key: key);
 
@@ -17,8 +18,10 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
+    // var width = Get.width;
+    // var height = Get.height;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     return GestureDetector(
       onTap: () {

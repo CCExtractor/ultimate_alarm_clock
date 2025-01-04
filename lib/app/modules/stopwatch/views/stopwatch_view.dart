@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controllers/stopwatch_controller.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
-import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 
+// ignore: must_be_immutable
 class StopwatchView extends GetView<StopwatchController> {
   StopwatchView({Key? key}) : super(key: key);
   ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
+    // ignore: unused_local_variable
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height / 7.9),

@@ -19,8 +19,10 @@ class SharedAlarm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = Get.width;
-    var height = Get.height;
+    // var width = Get.width;
+    // var height = Get.height;
+        final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     return Obx(() => Container(
           child: (controller.userModel.value != null)

@@ -7,6 +7,7 @@ import 'dart:math' as math;
 
 import '../controllers/alarm_challenge_controller.dart';
 
+// ignore: must_be_immutable
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
   ShakeChallengeView({Key? key}) : super(key: key);
 
@@ -14,9 +15,12 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
+
+    // var width = Get.width;
+    // var height = Get.height;  
     // ignore: unused_local_variable
-    var width = Get.width;
-    var height = Get.height;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
