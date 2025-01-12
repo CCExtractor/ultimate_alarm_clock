@@ -1,19 +1,18 @@
 buildscript {
-    ext.kotlin_version = '1.7.10'
-   ext {
-       compileSdkVersion   = 34            // or latest
-       targetSdkVersion    = 34                // or latest
-       appCompatVersion    = "1.4.2"           // or latest
-   }
+    ext.kotlin_version = '1.7.10' // Update to the latest Kotlin version
+    ext {
+        compileSdkVersion   = 34    // Latest compile SDK
+        targetSdkVersion    = 34    // Latest target SDK
+        appCompatVersion    = "1.6.1" // Update appCompatVersion
+    }
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.gms:google-services:4.3.15' // Verify latest version if needed
     }
 }
 
@@ -21,7 +20,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-
     }
 }
 

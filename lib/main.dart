@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
+//import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+// import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -30,7 +30,7 @@ void main() async {
   final storage = Get.find<GetStorageProvider>();
   loc = await storage.readLocale();
 
-  final ThemeController themeController = Get.put(ThemeController());
+  //final ThemeController themeController = Get.put(ThemeController());
 
   AudioPlayer.global.setAudioContext(
     const AudioContext(
