@@ -1,9 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.7.10' // Update to the latest Kotlin version
+    ext.kotlin_version = '1.7.10' 
     ext {
-        compileSdkVersion   = 34    // Latest compile SDK
-        targetSdkVersion    = 34    // Latest target SDK
-        appCompatVersion    = "1.6.1" // Update appCompatVersion
+        compileSdkVersion   = 34   
+        targetSdkVersion    = 34    
+        appCompatVersion    = "1.6.1"
     }
     repositories {
         google()
@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.15' // Verify latest version if needed
+        classpath 'com.google.gms:google-services:4.3.15'
     }
 }
 

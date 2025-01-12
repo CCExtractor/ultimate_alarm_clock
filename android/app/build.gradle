@@ -37,6 +37,9 @@ android {
     ndkVersion flutter.ndkVersion
 
     defaultConfig {
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+
         applicationId "com.ccextractor.ultimate_alarm_clock"
         minSdkVersion 24
         targetSdkVersion 34 // Updated to latest targetSdkVersion
@@ -44,6 +47,8 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
     }
+
+    
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17 // Updated to Java 17
