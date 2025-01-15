@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -42,6 +44,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
   Widget build(BuildContext context) {
     // var width = Get.width;
     // var height = Get.height;
+    SettingsController settingsController = Get.find<SettingsController>();
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return PopScope(
@@ -140,8 +143,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ? "${controller.minutes.toString().padLeft(2, '0')}"
                                 // ignore: lines_longer_than_80_chars
                                 ":${controller.seconds.toString().padLeft(2, '0')}"
-                            : '${controller.timeNow[0]} '
-                                '${controller.timeNow[1]}',
+                            : !settingsController.is24HrsEnabled.value?
+                            '${controller.timeNow[0]} ''${controller.timeNow[1]}'
+                            :'${controller.timeNow24}'
+                        ,
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge!

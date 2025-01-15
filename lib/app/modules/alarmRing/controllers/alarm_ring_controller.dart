@@ -9,6 +9,8 @@ import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 
@@ -23,6 +25,7 @@ import 'package:vibration/vibration.dart';
 import '../../home/controllers/home_controller.dart';
 
 class AlarmControlController extends GetxController {
+  SettingsController settingsController = Get.find<SettingsController>();
   MethodChannel alarmChannel = MethodChannel('ulticlock');
   RxString note = ''.obs;
   Timer? vibrationTimer;
@@ -35,6 +38,8 @@ class AlarmControlController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
   Rx<AlarmModel> currentlyRingingAlarm = Utils.alarmModelInit.obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
+  final timeNow24 =
+      Utils.timeOfDayToString(TimeOfDay.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
   Timer? _currentTimeTimer;
@@ -42,6 +47,21 @@ class AlarmControlController extends GetxController {
   late double initialVolume;
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
+
+  int convert24(int value, int meridiemIndex) {
+    if (!settingsController.is24HrsEnabled.value) {
+      if (meridiemIndex == 0) {
+        if (value == 12) {
+          value = value - 12;
+        }
+      } else {
+        if (value != 12) {
+          value = value + 12;
+        }
+      }
+    }
+    return value;
+  }
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();

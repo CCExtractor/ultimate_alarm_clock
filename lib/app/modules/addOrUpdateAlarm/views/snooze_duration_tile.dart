@@ -20,7 +20,7 @@ class SnoozeDurationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     int duration;
     return Obx(
-      () => InkWell(
+          () => InkWell(
         onTap: () {
           Utils.hapticFeedback();
           // storing the values
@@ -37,7 +37,7 @@ class SnoozeDurationTile extends StatelessWidget {
             title: 'Select duration'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
             content: Obx(
-              () => Column(
+                  () => Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -73,8 +73,8 @@ class SnoozeDurationTile extends StatelessWidget {
                     child: Text(
                       'Done'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.secondaryTextColor.value,
-                          ),
+                        color: themeController.secondaryTextColor.value,
+                      ),
                     ),
                   ),
                 ],
@@ -97,15 +97,15 @@ class SnoozeDurationTile extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Obx(
-                () => Text(
+                    () => Text(
                   controller.snoozeDuration.value > 0
                       ? '${controller.snoozeDuration.value} min'
                       : 'Off'.tr,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: (controller.snoozeDuration.value <= 0)
-                            ? themeController.primaryDisabledTextColor.value
-                            : themeController.primaryTextColor.value,
-                      ),
+                    color: (controller.snoozeDuration.value <= 0)
+                        ? themeController.primaryDisabledTextColor.value
+                        : themeController.primaryTextColor.value,
+                  ),
                 ),
               ),
               Icon(

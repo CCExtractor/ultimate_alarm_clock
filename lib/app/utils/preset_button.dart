@@ -30,6 +30,7 @@ Widget presetButton(BuildContext context, String label, Duration duration) {
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(height * 0.02),
+
       ),
     ),
     child: Text(
