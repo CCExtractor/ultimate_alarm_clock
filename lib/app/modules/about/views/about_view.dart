@@ -20,7 +20,7 @@ class AboutView extends GetView<AboutController> {
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: themeController.primaryTextColor.value,
                   fontWeight: FontWeight.w500,
-              ),
+                ),
           ),
         ),
         elevation: 0,
@@ -58,8 +58,8 @@ class AboutView extends GetView<AboutController> {
               ),
             ),
             const SizedBox(height: 10),
-             Text(
-              'Version: 0.2.0'.tr,
+            Text(
+              'Version: 0.2.1'.tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -68,8 +68,9 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child:  Text(
-                'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'.tr,
+              child: Text(
+                'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'
+                    .tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -129,7 +130,8 @@ class AboutView extends GetView<AboutController> {
                         Uri.parse(AboutController.ccExtractorUrl),
                       )) {
                         throw Exception(
-                          'Could not launch ${AboutController.ccExtractorUrl}'.tr,
+                          'Could not launch ${AboutController.ccExtractorUrl}'
+                              .tr,
                         );
                       }
                     },

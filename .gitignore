@@ -54,3 +54,6 @@ app.*.map.json
 /windows/flutter/generated_plugins.cmake
 /lib/firebase_options.dart
 /firebase.json
+/.fvm
+/.tmp
+/caches

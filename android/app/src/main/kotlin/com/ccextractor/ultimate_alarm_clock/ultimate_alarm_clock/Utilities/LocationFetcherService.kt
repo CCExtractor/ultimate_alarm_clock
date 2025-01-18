@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
 import android.os.IBinder
@@ -39,7 +40,7 @@ class LocationFetcherService : Service() {
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
 
         createNotificationChannel()
-        startForeground(notificationId, getNotification())
+        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
         var fetchLocationDeffered = async {
             fetchLocation()
         }
@@ -77,7 +78,7 @@ class LocationFetcherService : Service() {
             Location(destinationLatitude, destinationLongitude)
         )
         Log.d("Distance", "distance ${distance}")
-        if (distance <= 500.0) {
+        if (distance >= 500.0) {
 
             val flutterIntent =
                 Intent(this@LocationFetcherService, MainActivity::class.java).apply {
@@ -98,7 +99,7 @@ class LocationFetcherService : Service() {
 
 
         }
-        if(distance > 500.0){
+        if(distance < 500.0){
             Timer().schedule(9000){
                 Timer().schedule(3000){
                     stopSelf()

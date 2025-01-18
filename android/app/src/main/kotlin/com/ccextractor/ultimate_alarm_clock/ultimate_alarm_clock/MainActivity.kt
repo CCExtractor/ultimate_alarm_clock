@@ -38,7 +38,7 @@ class MainActivity : FlutterActivity() {
         var intentFilter = IntentFilter()
         intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.START_TIMERNOTIF")
         intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF")
-        context.registerReceiver(TimerNotification(), intentFilter)
+        context.registerReceiver(TimerNotification(), intentFilter,Context.RECEIVER_EXPORTED)
     }
 
 
