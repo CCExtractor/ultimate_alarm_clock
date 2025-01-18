@@ -13,6 +13,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.pm.ServiceInfo
 
 import android.content.SharedPreferences
 
@@ -79,7 +80,7 @@ class ScreenMonitorService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(notificationId, getNotification())
+        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED)
         return START_STICKY
     }
 

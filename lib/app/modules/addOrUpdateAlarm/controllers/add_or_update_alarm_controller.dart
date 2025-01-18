@@ -1338,15 +1338,14 @@ class AddOrUpdateAlarmController extends GetxController {
       ringOn: isFutureDate.value,
     );
 
-    if(homeController.isProfileUpdate.value)
-      {
-        var profileId =
-        await IsarDb.profileId(homeController.selectedProfile.value);
-        print(profileId);
-        if (profileId != 'null') profileModel.isarId = profileId;
-        print(profileModel.isarId);
-        await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
-      }
+    if (homeController.isProfileUpdate.value) {
+      var profileId =
+          await IsarDb.profileId(homeController.selectedProfile.value);
+      print(profileId);
+      if (profileId != 'null') profileModel.isarId = profileId;
+      print(profileModel.isarId);
+      await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+    }
     await IsarDb.addProfile(profileModel);
     homeController.selectedProfile.value = profileModel.profileName;
     storage.writeProfile(profileModel.profileName);

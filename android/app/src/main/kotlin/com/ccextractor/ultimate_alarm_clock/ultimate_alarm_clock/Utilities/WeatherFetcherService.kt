@@ -19,6 +19,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.util.Timer
 import kotlin.concurrent.schedule
+import android.content.pm.ServiceInfo
 
 
 class WeatherFetcherService() : Service() {
@@ -102,6 +103,7 @@ class WeatherFetcherService() : Service() {
                     shouldRing = false
 
                     if(shouldRing==false)
+                    
                     {
                         Timer().schedule(3000) {
                             stopSelf()
@@ -164,7 +166,7 @@ class WeatherFetcherService() : Service() {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(notificationId, getNotification())
+        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
         return START_STICKY
     }
 

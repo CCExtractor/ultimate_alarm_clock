@@ -49,7 +49,8 @@ Widget buildEndDrawer(BuildContext context) {
                                 .textTheme
                                 .displayMedium!
                                 .copyWith(
-                                  color: themeController.primaryBackgroundColor.value,
+                                  color: themeController
+                                      .primaryBackgroundColor.value,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
@@ -57,7 +58,7 @@ Widget buildEndDrawer(BuildContext context) {
                         SizedBox(
                           width: Get.width * 0.5,
                           child: Text(
-                            'v0.2.0'.tr,
+                            'v0.2.1'.tr,
                             softWrap: true,
                             style: Theme.of(context)
                                 .textTheme
@@ -85,7 +86,8 @@ Widget buildEndDrawer(BuildContext context) {
             title: Text(
               'Settings'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: themeController.primaryTextColor.value.withOpacity(0.8),
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.8),
                   ),
             ),
             leading: Icon(
@@ -104,7 +106,8 @@ Widget buildEndDrawer(BuildContext context) {
             title: Text(
               'About'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: themeController.primaryTextColor.value.withOpacity(0.8),
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.8),
                   ),
             ),
             leading: Icon(
