@@ -19,12 +19,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
         
-          java-version: "17.x"
+          java-version: "19.x"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.22.2
 
       - name: Build Flutter app for Android
         run: flutter build apk
