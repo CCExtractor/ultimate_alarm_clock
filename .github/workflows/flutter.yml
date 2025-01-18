@@ -18,7 +18,6 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
-        
           java-version: "19.x"
 
       - name: Setup Flutter
@@ -28,4 +27,4 @@ jobs:
           flutter-version: 3.22.2
 
       - name: Build Flutter app for Android
-        run: flutter build apk
+        run: flutter build apk --debug
