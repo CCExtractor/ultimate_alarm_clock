@@ -35,6 +35,8 @@ class AlarmControlController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
   Rx<AlarmModel> currentlyRingingAlarm = Utils.alarmModelInit.obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
+  final timeNow24 =
+      Utils.timeOfDayToString(TimeOfDay.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
   Timer? _currentTimeTimer;
