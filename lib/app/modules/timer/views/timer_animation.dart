@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 import '../../../utils/utils.dart';
 import '../../settings/controllers/theme_controller.dart';
+import 'dart:math' show min;
 
 class TimerAnimatedCard extends StatefulWidget {
   final TimerModel timer;
@@ -64,7 +65,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
             widget.timer.timerValue &&
         widget.timer.isPaused == 0) {
       widget.timer.timeElapsed =widget.timer.timerValue-Utils.getDifferenceMillisFromNow(
-          widget.timer.startedOn, widget.timer.timerValue);
+              widget.timer.startedOn, widget.timer.timerValue);
       IsarDb.updateTimerPauseStatus(widget.timer);
     }
     if (widget.timer.isPaused == 0) {
@@ -218,8 +219,14 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                             style: Theme.of(
                                               context,
                                             ).textTheme.displayLarge!.copyWith(
-                                                  color: themeController.primaryTextColor.value,
-                                                  fontSize: 44,
+                                                  color: themeController
+                                                      .primaryTextColor.value,
+                                                  fontSize: min(
+                                                      44.0,
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.08),
                                                 ),
                                           ),
                                         ),

@@ -16,7 +16,8 @@ import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/hover_preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'dart:math' as math;
+
+import 'dart:math' show min;
 
 import '../../../data/models/timer_model.dart';
 
@@ -326,13 +327,14 @@ class TimerView extends GetView<TimerController> {
                                                 .setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
-                                          itemWidth: width * 0.17,
+                                          itemWidth: min(width * 0.17, 80),
                                           zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
                                               .displayLarge!
                                               .copyWith(
-                                                fontSize: 30,
+                                                fontSize:
+                                                    min(30, height * 0.04),
                                                 fontWeight: FontWeight.bold,
                                                 color: kprimaryColor,
                                               ),
@@ -340,7 +342,8 @@ class TimerView extends GetView<TimerController> {
                                               .textTheme
                                               .displayMedium!
                                               .copyWith(
-                                                fontSize: 18,
+                                                fontSize:
+                                                    min(18, height * 0.025),
                                                 color: themeController
                                                     .primaryDisabledTextColor
                                                     .value,
@@ -411,7 +414,7 @@ class TimerView extends GetView<TimerController> {
                                                 .setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
-                                          itemWidth: width * 0.17,
+                                          itemWidth: min(width * 0.17, 80),
                                           zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
@@ -425,7 +428,8 @@ class TimerView extends GetView<TimerController> {
                                               .textTheme
                                               .displayMedium!
                                               .copyWith(
-                                                fontSize: 18,
+                                                fontSize:
+                                                    min(18, height * 0.025),
                                                 color: themeController
                                                     .primaryDisabledTextColor
                                                     .value,
@@ -496,13 +500,14 @@ class TimerView extends GetView<TimerController> {
                                                 .setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
-                                          itemWidth: width * 0.17,
+                                          itemWidth: min(width * 0.17, 80),
                                           zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
                                               .displayLarge!
                                               .copyWith(
-                                                fontSize: 30,
+                                                fontSize:
+                                                    min(30, height * 0.04),
                                                 fontWeight: FontWeight.bold,
                                                 color: kprimaryColor,
                                               ),
@@ -510,7 +515,8 @@ class TimerView extends GetView<TimerController> {
                                               .textTheme
                                               .displayMedium!
                                               .copyWith(
-                                                fontSize: 18,
+                                                fontSize:
+                                                    min(18, height * 0.025),
                                                 color: themeController
                                                     .primaryDisabledTextColor
                                                     .value,
@@ -869,11 +875,11 @@ class TimerView extends GetView<TimerController> {
   }
   double calculateTopPosition() {
   final RenderBox? renderBox = dialogKey.currentContext?.findRenderObject() as RenderBox?;
-  if (renderBox != null) {
+    if (renderBox != null) {
     
-    final position = renderBox.localToGlobal(Offset.zero);
-    return position.dy - 100;
+      final position = renderBox.localToGlobal(Offset.zero);
+      return position.dy - 100;
+    }
+    return 160;
   }
-  return 160; 
-}
 }
