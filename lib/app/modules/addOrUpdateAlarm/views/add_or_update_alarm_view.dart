@@ -34,6 +34,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
+import 'dart:math' show min;
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
@@ -400,10 +401,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           .textTheme
                                                           .displayLarge!
                                                           .copyWith(
-                                                            fontSize: controller
-                                                                    .homeController
-                                                                    .scalingFactor *
-                                                                40,
+                                                            fontSize: min(
+                                                                controller
+                                                                        .homeController
+                                                                        .scalingFactor *
+                                                                    40,
+                                                                34.0),
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color:
@@ -413,10 +416,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       .textTheme
                                                       .displayMedium!
                                                       .copyWith(
-                                                        fontSize: controller
-                                                                .homeController
-                                                                .scalingFactor *
-                                                            20,
+                                                        fontSize: min(
+                                                            controller
+                                                                    .homeController
+                                                                    .scalingFactor *
+                                                                20,
+                                                            17.0),
                                                         color: themeController
                                                             .primaryDisabledTextColor
                                                             .value,
@@ -488,10 +493,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           .textTheme
                                                           .displayLarge!
                                                           .copyWith(
-                                                            fontSize: controller
-                                                                    .homeController
-                                                                    .scalingFactor *
-                                                                40,
+                                                            fontSize: min(
+                                                                controller
+                                                                        .homeController
+                                                                        .scalingFactor *
+                                                                    40,
+                                                                34.0),
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color:
@@ -501,10 +508,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       .textTheme
                                                       .displayMedium!
                                                       .copyWith(
-                                                        fontSize: controller
-                                                                .homeController
-                                                                .scalingFactor *
-                                                            20,
+                                                        fontSize: min(
+                                                            controller
+                                                                    .homeController
+                                                                    .scalingFactor *
+                                                                20,
+                                                            17.0),
                                                         color: themeController
                                                             .primaryDisabledTextColor
                                                             .value,
@@ -606,10 +615,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         .textTheme
                                                         .displayLarge!
                                                         .copyWith(
-                                                          fontSize: controller
-                                                                  .homeController
-                                                                  .scalingFactor *
-                                                              40,
+                                                          fontSize: min(
+                                                              controller
+                                                                      .homeController
+                                                                      .scalingFactor *
+                                                                  40,
+                                                              34.0),
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: kprimaryColor,
@@ -618,10 +629,12 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         .textTheme
                                                         .displayMedium!
                                                         .copyWith(
-                                                          fontSize: controller
-                                                                  .homeController
-                                                                  .scalingFactor *
-                                                              20,
+                                                          fontSize: min(
+                                                              controller
+                                                                      .homeController
+                                                                      .scalingFactor *
+                                                                  20,
+                                                              17.0),
                                                           color: themeController
                                                               .primaryDisabledTextColor
                                                               .value,
