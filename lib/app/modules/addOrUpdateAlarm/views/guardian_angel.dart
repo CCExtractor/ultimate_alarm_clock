@@ -38,7 +38,6 @@ class GaurdianAngel extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 18.sp,
                       color: themeController.primaryTextColor.value,
                       fontWeight: FontWeight.w500,
                     ),

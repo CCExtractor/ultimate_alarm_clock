@@ -109,7 +109,6 @@ class ScreenActivityTile extends StatelessWidget {
                 child: Text(
                   'Screen Activity'.tr,
                   style: TextStyle(
-                    fontSize: 18.sp,
                     color: themeController.primaryTextColor.value,
                   ),
                 ),
