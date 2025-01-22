@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/google_cloud_api_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
@@ -15,7 +16,7 @@ class SettingSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        vertical: controller.homeController.scalingFactor.value * 30,
+        vertical: 30.h,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -34,24 +35,22 @@ class SettingSelector extends StatelessWidget {
       () => Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0.r),
             child: InkWell(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(28.r),
               onTap: () async {
                 if (name == 'Share') {
                   final isLoggedIn = await GoogleCloudProvider.isUserLoggedin();
-                  if(isLoggedIn)
-                    {
-                      Get.dialog(ShareDialog(
-                        homeController: controller.homeController,
-                        controller: controller,
-                        themeController: controller.themeController,
-                      ));
-                    }
-                  else{
+                  if (isLoggedIn) {
+                    Get.dialog(ShareDialog(
+                      homeController: controller.homeController,
+                      controller: controller,
+                      themeController: controller.themeController,
+                    ));
+                  } else {
                     await GoogleCloudProvider.getInstance();
-
-                  };
+                  }
+                  ;
                 } else {
                   controller.alarmSettingType.value = val;
                 }
@@ -60,16 +59,19 @@ class SettingSelector extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: controller.alarmSettingType.value == val
                       ? kprimaryColor
-                      : controller.themeController.secondaryBackgroundColor.value,
-                  borderRadius: BorderRadius.circular(20),
+                      : controller
+                          .themeController.secondaryBackgroundColor.value,
+                  borderRadius: BorderRadius.circular(20.roundToDouble()),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0.r),
                   child: Icon(
+                    size: 24.r,
                     icon,
                     color: controller.alarmSettingType.value == val
                         ? kLightPrimaryTextColor
-                        : controller.themeController.primaryDisabledTextColor.value,
+                        : controller
+                            .themeController.primaryDisabledTextColor.value,
                   ),
                 ),
               ),
@@ -79,7 +81,7 @@ class SettingSelector extends StatelessWidget {
             name,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: controller.homeController.scalingFactor.value * 12,
+              fontSize: 12.sp,
             ),
           ),
         ],

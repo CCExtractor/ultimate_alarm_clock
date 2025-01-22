@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
@@ -28,26 +29,32 @@ class GaurdianAngel extends StatelessWidget {
         ListTile(
           onTap: () {},
           title: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+              Expanded(
                 child: Obx(
                   () => Text(
                     'Gaurdian Angel'.tr,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
+                      fontSize: 18.sp,
                       color: themeController.primaryTextColor.value,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
               Obx(
                 () => IconButton(
+                  padding: EdgeInsets.zero,
+                  visualDensity: VisualDensity.compact,
                   icon: Icon(
-                      Icons.info_sharp,
-                      size: 21,
-                      color: themeController.primaryTextColor.value.withOpacity(0.3),
-                    ),
+                    Icons.info_sharp,
+                    size: 21.r,
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.3),
+                  ),
                   onPressed: () {
                     Utils.showModal(
                       context: context,
@@ -58,7 +65,8 @@ class GaurdianAngel extends StatelessWidget {
                           '\n \n CALLING AND SMS PERMISSION REQUIRED.'
                           '\n \n RATES MAY APPLY AS PER YOUR SERVICE PROVIDER',
                       iconData: Icons.info_sharp,
-                      isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                      isLightMode:
+                          themeController.currentTheme.value == ThemeMode.light,
                     );
                   },
                 ),

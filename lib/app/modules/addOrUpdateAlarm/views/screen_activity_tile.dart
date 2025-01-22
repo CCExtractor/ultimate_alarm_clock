@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
@@ -101,14 +102,14 @@ class ScreenActivityTile extends StatelessWidget {
         },
         child: ListTile(
           title: Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              FittedBox(
-                alignment: Alignment.centerLeft,
-                fit: BoxFit.scaleDown,
+              Expanded(
                 child: Text(
                   'Screen Activity'.tr,
                   style: TextStyle(
+                    fontSize: 18.sp,
                     color: themeController.primaryTextColor.value,
                   ),
                 ),

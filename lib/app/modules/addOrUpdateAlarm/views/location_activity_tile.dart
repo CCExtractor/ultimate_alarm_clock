@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -135,11 +136,15 @@ class LocationTile extends StatelessWidget {
                     const SizedBox(height: 10),
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
                         'Save',
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
                               color: themeController.secondaryTextColor.value,
                             ),
                       ),
@@ -157,22 +162,26 @@ class LocationTile extends StatelessWidget {
         },
         child: ListTile(
           title: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+              Expanded(
                 child: Text(
                   'Location Based'.tr,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
+                    fontSize: 18.sp,
                     color: themeController.primaryTextColor.value,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
               IconButton(
                 icon: Icon(
                   Icons.info_sharp,
-                  size: 21,
-                  color: themeController.primaryTextColor.value.withOpacity(0.3),
+                  size: 21.r,
+                  color:
+                      themeController.primaryTextColor.value.withOpacity(0.3),
                 ),
                 onPressed: () {
                   Utils.showModal(
@@ -182,7 +191,8 @@ class LocationTile extends StatelessWidget {
                         ' alarm if you are within 500m of'
                         ' the chosen location!',
                     iconData: Icons.info_sharp,
-                    isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                    isLightMode:
+                        themeController.currentTheme.value == ThemeMode.light,
                   );
                 },
               ),
@@ -193,7 +203,9 @@ class LocationTile extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
-                  controller.isLocationEnabled.value == false ? 'Off' : 'Enabled',
+                  controller.isLocationEnabled.value == false
+                      ? 'Off'
+                      : 'Enabled',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.isLocationEnabled.value == false)
                             ? themeController.primaryDisabledTextColor.value

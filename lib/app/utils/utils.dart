@@ -2,6 +2,7 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -100,12 +101,12 @@ class Utils {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  static DateTime stringToDate(String date){
+  static DateTime stringToDate(String date) {
     final parts = date.split('-');
     final day = int.parse(parts[2]);
     final month = int.parse(parts[1]);
     final year = int.parse(parts[0]);
-    return DateTime(year,month,day);
+    return DateTime(year, month, day);
   }
 
   static DateTime? stringToDateTime(String timeString) {
@@ -666,55 +667,72 @@ class Utils {
       backgroundColor: isLightMode
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
+      isScrollControlled: true,
       builder: (context) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  iconData,
-                  color:
-                      isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
-                  size: MediaQuery.of(context).size.height * 0.1,
-                ),
-                Text(
-                  title.tr,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Text(
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(25.r),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    iconData,
+                    color: isLightMode
+                        ? kLightPrimaryTextColor
+                        : kprimaryTextColor,
+                    size: min(0.08.sh, 40.r),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    title.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                      color: isLightMode
+                          ? kLightPrimaryTextColor
+                          : kprimaryTextColor,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
                     description.tr,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: isLightMode
+                          ? kLightPrimaryTextColor
+                          : kprimaryTextColor,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        kprimaryColor,
+                  SizedBox(height: 16.h),
+                  SizedBox(
+                    width: 1.sw,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(kprimaryColor),
+                        padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(vertical: 12.h)),
+                      ),
+                      onPressed: () {
+                        Utils.hapticFeedback();
+                        Get.back();
+                      },
+                      child: Text(
+                        'Understood'.tr,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isLightMode
+                              ? kLightPrimaryTextColor
+                              : ksecondaryTextColor,
+                        ),
                       ),
                     ),
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Get.back();
-                    },
-                    child: Text(
-                      'Understood'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: isLightMode
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
-                          ),
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
