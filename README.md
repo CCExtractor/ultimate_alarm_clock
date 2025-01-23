@@ -360,6 +360,7 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
   - Define automatic cancellation conditions based on screen activity, weather, and location.
   - Choose from challenges, including shake to dismiss, QR code, and math challenges.
   - Manage shared alarms.
+  - Opt for randomized ringtones, allowing the app to select a different ringtone each time the alarm rings.
 
 <img src="./assets/images/readme/alarm1.jpg" height="400" alt="add-alarm-1">
 <img src="./assets/images/readme/alarm2.jpg" height="400" alt="add-alarm-2">
