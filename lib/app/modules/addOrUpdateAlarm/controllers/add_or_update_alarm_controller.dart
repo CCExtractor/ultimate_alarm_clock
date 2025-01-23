@@ -91,7 +91,18 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxString note = ''.obs;
   final deleteAfterGoesOff = false.obs;
 
+  //Disable "choose ringtone" when "random tone" is selected
+  RxBool isChooseRingtoneSwitchDisabled = false.obs;
+
+  void disableChooseRingtoneSwitch() {
+    isChooseRingtoneSwitchDisabled.value = true;
+  }
+  void enableChooseRingtoneSwitch() {
+    isChooseRingtoneSwitchDisabled.value = false;
+  }
+
   final RxBool showMotivationalQuote = false.obs;
+  final RxBool randomTone = false.obs;
   final RxBool useScreenActivity = false.obs;
   final RxInt gradient = 0.obs;
   final RxDouble selectedGradientDouble = 0.0.obs;

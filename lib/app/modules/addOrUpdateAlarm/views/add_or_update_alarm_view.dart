@@ -18,6 +18,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/note.dar
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/pedometer_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_code_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quote_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/random_tone_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_activity_tile.dart';
@@ -881,6 +882,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 themeController: themeController,
                                 height: height,
                                 width: width,
+                              ),
+                              Divider(
+                                color: themeController
+                                    .primaryDisabledTextColor.value,
+                              ),
+                              RandomToneTile(
+                                controller: controller,
+                                themeController: themeController,
                               ),
                               Divider(
                                 color: themeController

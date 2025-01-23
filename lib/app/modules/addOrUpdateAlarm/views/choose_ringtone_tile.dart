@@ -1,3 +1,7 @@
+// ignore_for_file: lines_longer_than_80_chars, require_trailing_commas, prefer_const_constructors, use_build_context_synchronously
+
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
@@ -42,10 +46,15 @@ class ChooseRingtoneTile extends StatelessWidget {
         title: Text(
           'Choose Ringtone'.tr,
           style: TextStyle(
-            color: themeController.primaryTextColor.value,
+            //Change color of Choose Ringtone tile if Random Ringtone opted
+            color: controller.isChooseRingtoneSwitchDisabled.value
+            ? Color.fromARGB(129, 255, 255, 255)
+            : controller.themeController.primaryTextColor.value
           ),
         ),
-        onTap: () async {
+        onTap: controller.isChooseRingtoneSwitchDisabled.value
+        ? null
+        : () async {
           Utils.hapticFeedback();
 
           controller.customRingtoneNames.value =
