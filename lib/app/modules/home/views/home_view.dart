@@ -163,7 +163,8 @@ class HomeView extends GetView<HomeController> {
                                           Obx(
                                             () => Visibility(
                                               visible:
-                                                  controller.scalingFactor < 0.9
+                                                  controller.scalingFactor <
+                                                          0.9.r
                                                       ? false
                                                       : true,
                                               child: IconButton(
