@@ -287,13 +287,19 @@ class WeatherTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
-              child: Text(
-                'Weather Condition '.tr,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: themeController.primaryTextColor.value,
-                  fontWeight: FontWeight.w500,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minWidth: 130.w, // Minimum width before ellipsis
+                    maxWidth: 200.w // Maximum width to expand
+                    ),
+                child: Text(
+                  'Weather Condition '.tr,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: themeController.primaryTextColor.value,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
@@ -328,26 +334,35 @@ class WeatherTile extends StatelessWidget {
           ],
         ),
         trailing: InkWell(
-          child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Obx(
-                    () => Container(
-                      width: 100.w,
-                      child: Text(
-                        controller.weatherTypes.value,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontSize: 14.sp,
-                              color:
-                                  (controller.isWeatherEnabled.value == false)
-                                      ? kprimaryDisabledTextColor
-                                      : themeController.primaryTextColor.value,
-                            ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    () => Expanded(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 45.w,
+                          maxWidth: 100.w,
+                        ),
+                        child: Text(
+                          textAlign: TextAlign.right,
+                          controller.weatherTypes.value,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                fontSize: 16.sp,
+                                color: (controller.isWeatherEnabled.value ==
+                                        false)
+                                    ? kprimaryDisabledTextColor
+                                    : themeController.primaryTextColor.value,
+                              ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ),
