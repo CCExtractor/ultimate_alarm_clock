@@ -206,6 +206,7 @@ class LocationTile extends StatelessWidget {
                       ? 'Off'
                       : 'Enabled',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 16.sp,
                         color: (controller.isLocationEnabled.value == false)
                             ? themeController.primaryDisabledTextColor.value
                             : themeController.primaryTextColor.value,

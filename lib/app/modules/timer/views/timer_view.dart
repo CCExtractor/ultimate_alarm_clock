@@ -2,6 +2,7 @@
 
 import 'package:async/async.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -219,7 +220,6 @@ class TimerView extends GetView<TimerController> {
 
   void timerSelector(BuildContext context, double width, double height) {
     showDialog(
-      
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -228,6 +228,9 @@ class TimerView extends GetView<TimerController> {
           clipBehavior: Clip.none,
           children: [
             Dialog(
+              insetPadding: EdgeInsets.symmetric(
+                  horizontal: 5.w), // Reduce padding around dialog
+
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -369,8 +372,10 @@ class TimerView extends GetView<TimerController> {
                                     ),
                                     // Minutes Picker
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.02,
+                                      padding: EdgeInsets.only(
+                                        left: width * 0.02,
+                                        right: width * 0.02,
+                                        top: height * 0.035,
                                       ),
                                       child: Text(
                                         ':',
@@ -455,8 +460,10 @@ class TimerView extends GetView<TimerController> {
                                     ),
                                     // Seconds Picker
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.02,
+                                      padding: EdgeInsets.only(
+                                        left: width * 0.02,
+                                        right: width * 0.02,
+                                        top: height * 0.035,
                                       ),
                                       child: Text(
                                         ':',
@@ -873,10 +880,11 @@ class TimerView extends GetView<TimerController> {
       },
     );
   }
+
   double calculateTopPosition() {
-  final RenderBox? renderBox = dialogKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? renderBox =
+        dialogKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
-    
       final position = renderBox.localToGlobal(Offset.zero);
       return position.dy - 100;
     }

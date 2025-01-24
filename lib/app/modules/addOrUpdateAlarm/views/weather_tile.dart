@@ -342,9 +342,9 @@ class WeatherTile extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Obx(
                     () => Expanded(
-                      child: ConstrainedBox(
+                      child: ConstrainedBox(  
                         constraints: BoxConstraints(
-                          minWidth: 45.w,
+                          minWidth: 32.w,
                           maxWidth: 100.w,
                         ),
                         child: Text(

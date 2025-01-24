@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -64,7 +65,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 widget.timer.startedOn, widget.timer.timerValue) <
             widget.timer.timerValue &&
         widget.timer.isPaused == 0) {
-      widget.timer.timeElapsed =widget.timer.timerValue-Utils.getDifferenceMillisFromNow(
+      widget.timer.timeElapsed = widget.timer.timerValue -
+          Utils.getDifferenceMillisFromNow(
               widget.timer.startedOn, widget.timer.timerValue);
       IsarDb.updateTimerPauseStatus(widget.timer);
     }
@@ -82,21 +84,21 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10.0,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.0.w,
       ),
       child: Container(
-        height: context.height / 3.3,
-        width: context.width,
+        height: 0.3.sh,
+        width: 1.sw,
         child: Obx(
           () => Card(
-            margin: const EdgeInsets.all(5),
+            margin: EdgeInsets.all(5.r),
             color: widget.timer.timeElapsed < widget.timer.timerValue
                 ? themeController.secondaryBackgroundColor.value
                 : themeController.secondaryColor.value,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
-                18,
+                18.r,
               ),
             ),
             child: ClipRRect(
@@ -105,21 +107,22 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 children: [
                   AnimatedContainer(
                     decoration: BoxDecoration(
-                        color: kprimaryDisabledTextColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(18)),
+                      color: kprimaryDisabledTextColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(18.r),
+                    ),
                     duration: Duration(milliseconds: 1000),
-                    height: context.height / 3.3,
-                    width: context.width *
+                    height: 0.3.sh,
+                    width: 1.sw *
                         ((widget.timer.timeElapsed) /
                             (widget.timer.timerValue)),
                   ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 25.0,
-                        right: 20.0,
-                        top: 20.0,
-                        bottom: 20.0,
+                      padding: EdgeInsets.only(
+                        left: 25.w,
+                        right: 20.w,
+                        top: 20.h,
+                        bottom: 20.h,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -143,11 +146,11 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                       ).textTheme.bodySmall!.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color: kprimaryColor,
-                                          fontSize: 18),
+                                          fontSize: 18.sp),
                                     ),
                                     Spacer(),
                                     Padding(
-                                      padding: const EdgeInsets.only(right: 16.0),
+                                      padding: EdgeInsets.only(right: 16.0.w),
                                       child: InkWell(
                                         onTap: () {
                                           setState(() {
@@ -156,26 +159,30 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                               stopTimer();
                                             }
                                             widget.timer.timeElapsed = 0;
-                                            IsarDb.updateTimerTick(widget.timer);
+                                            IsarDb.updateTimerTick(
+                                                widget.timer);
                                             if (_timerCounter != null &&
                                                 widget.timer.isPaused == 0) {
                                               widget.timer.startedOn =
                                                   DateTime.now().toString();
-                                              IsarDb.updateTimerTick(widget.timer)
-                                                  .then((value) => startTimer());
+                                              IsarDb.updateTimerTick(
+                                                      widget.timer)
+                                                  .then(
+                                                      (value) => startTimer());
                                             }
                                           });
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: themeController.primaryBackgroundColor.value,
+                                              color: themeController
+                                                  .primaryBackgroundColor.value,
                                               borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(4.0),
+                                                  BorderRadius.circular(20.r)),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(4.0.r),
                                             child: Icon(
                                               Icons.refresh,
-                                              size: 18,
+                                              size: 18.sp,
                                             ),
                                           ),
                                         ),
@@ -190,14 +197,15 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: themeController.primaryBackgroundColor.value,
+                                            color: themeController
+                                                .primaryBackgroundColor.value,
                                             borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(4.0),
+                                                BorderRadius.circular(20.r)),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4.0.r),
                                           child: Icon(
                                             Icons.close,
-                                            size: 18,
+                                            size: 18.r,
                                           ),
                                         ),
                                       ),
@@ -205,8 +213,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                   ],
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 20),
+                                  padding: EdgeInsets.symmetric(vertical: 13.h),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -219,20 +226,14 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                             style: Theme.of(
                                               context,
                                             ).textTheme.displayLarge!.copyWith(
-                                                  color: themeController
-                                                      .primaryTextColor.value,
-                                                  fontSize: min(
-                                                      44.0,
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.08),
-                                                ),
+                                                color: themeController
+                                                    .primaryTextColor.value,
+                                                fontSize: 30.0.sp),
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                          padding: EdgeInsets.all(20),
+                                          padding: EdgeInsets.all(14.r),
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -265,15 +266,17 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                               decoration: BoxDecoration(
                                                   color: kprimaryColor,
                                                   borderRadius:
-                                                      BorderRadius.circular(80)),
-                                              width: 80,
-                                              height: 80,
+                                                      BorderRadius.circular(
+                                                          80.r)),
+                                              width: 80.w,
+                                              height: 80.h,
                                               child: Icon(
                                                 widget.timer.isPaused == 0
                                                     ? Icons.pause
                                                     : Icons.play_arrow,
-                                                size: 30,
-                                                color: ksecondaryBackgroundColor,
+                                                size: 30.r,
+                                                color:
+                                                    ksecondaryBackgroundColor,
                                               ),
                                             ),
                                           ))
