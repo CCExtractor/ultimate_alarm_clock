@@ -18,7 +18,7 @@ import 'package:ultimate_alarm_clock/app/utils/hover_preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-import 'dart:math' show min;
+import 'dart:math' show max, min;
 
 import '../../../data/models/timer_model.dart';
 
@@ -834,20 +834,20 @@ class TimerView extends GetView<TimerController> {
             Visibility(
               visible: controller.timerList.length > 2,
               child: Positioned(
-                top: calculateTopPosition(),
+                top: calculateTopPosition(context),
                 child: Material(
                   elevation: 5.0,
                   color: Colors.transparent,
                   shadowColor: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(15.0.r),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 10.0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0.w,
+                      vertical: 10.0.h,
                     ),
                     child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
+                      spacing: 10.r,
+                      runSpacing: 10.r,
                       children: [
                         hoverPresetButton(
                           context,
@@ -881,13 +881,15 @@ class TimerView extends GetView<TimerController> {
     );
   }
 
-  double calculateTopPosition() {
+  double calculateTopPosition(context) {
     final RenderBox? renderBox =
         dialogKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
       final position = renderBox.localToGlobal(Offset.zero);
-      return position.dy - 100;
+      final textScale = MediaQuery.of(context).textScaleFactor;
+      final dynamicOffset = 15.h * textScale;
+      return position.dy - dynamicOffset;
     }
-    return 160;
+    return 100.h;
   }
 }
