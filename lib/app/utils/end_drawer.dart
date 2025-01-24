@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
@@ -9,10 +10,10 @@ Widget buildEndDrawer(BuildContext context) {
   ThemeController themeController = Get.find<ThemeController>();
   return Obx(
     () => Drawer(
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
+          topLeft: Radius.circular(10.r),
+          bottomLeft: Radius.circular(10.r),
         ),
       ),
       backgroundColor: themeController.secondaryBackgroundColor.value,
@@ -23,17 +24,17 @@ Widget buildEndDrawer(BuildContext context) {
             child: Center(
               child: Row(
                 children: [
-                  const Flexible(
+                  Flexible(
                     flex: 1,
                     child: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage(
+                      radius: 30.r,
+                      backgroundImage: const AssetImage(
                         'assets/images/ic_launcher-playstore.png',
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
+                  SizedBox(
+                    width: 10.w,
                   ),
                   Flexible(
                     flex: 3,
@@ -41,7 +42,7 @@ Widget buildEndDrawer(BuildContext context) {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: Get.width * 0.5,
+                          width: 0.5.sw,
                           child: Text(
                             'Ultimate Alarm Clock'.tr,
                             softWrap: true,
@@ -49,14 +50,14 @@ Widget buildEndDrawer(BuildContext context) {
                                 .textTheme
                                 .displayMedium!
                                 .copyWith(
-                                  color: themeController
-                                      .primaryBackgroundColor.value,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    color: themeController
+                                        .primaryBackgroundColor.value,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.sp),
                           ),
                         ),
                         SizedBox(
-                          width: Get.width * 0.5,
+                          width: 0.5.sw,
                           child: Text(
                             'v0.2.1'.tr,
                             softWrap: true,
@@ -66,6 +67,7 @@ Widget buildEndDrawer(BuildContext context) {
                                 .copyWith(
                                   color: themeController.primaryTextColor.value,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 16.sp,
                                 ),
                           ),
                         ),
@@ -82,17 +84,18 @@ Widget buildEndDrawer(BuildContext context) {
               Get.back();
               Get.toNamed('/settings');
             },
-            contentPadding: const EdgeInsets.only(left: 20, right: 44),
+            contentPadding: EdgeInsets.only(left: 20.w, right: 44.w),
             title: Text(
               'Settings'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.8),
+                    fontSize: 16.sp,
                   ),
             ),
             leading: Icon(
               Icons.settings,
-              size: 26,
+              size: 24.r,
               color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
           ),
@@ -102,17 +105,18 @@ Widget buildEndDrawer(BuildContext context) {
               Get.back();
               Get.toNamed(Routes.ABOUT);
             },
-            contentPadding: const EdgeInsets.only(left: 20, right: 44),
+            contentPadding: EdgeInsets.only(left: 20.w, right: 44.w),
             title: Text(
               'About'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.8),
+                    fontSize: 16.sp,
                   ),
             ),
             leading: Icon(
               Icons.info_outline,
-              size: 26,
+              size: 24.r,
               color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
           ),

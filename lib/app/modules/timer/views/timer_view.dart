@@ -2,6 +2,7 @@
 
 import 'package:async/async.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -16,7 +17,8 @@ import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/hover_preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'dart:math' as math;
+
+import 'dart:math' show max, min;
 
 import '../../../data/models/timer_model.dart';
 
@@ -218,7 +220,6 @@ class TimerView extends GetView<TimerController> {
 
   void timerSelector(BuildContext context, double width, double height) {
     showDialog(
-      
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -227,6 +228,9 @@ class TimerView extends GetView<TimerController> {
           clipBehavior: Clip.none,
           children: [
             Dialog(
+              insetPadding: EdgeInsets.symmetric(
+                  horizontal: 5.w), // Reduce padding around dialog
+
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -326,13 +330,14 @@ class TimerView extends GetView<TimerController> {
                                                 .setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
-                                          itemWidth: width * 0.17,
+                                          itemWidth: min(width * 0.17, 80),
                                           zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
                                               .displayLarge!
                                               .copyWith(
-                                                fontSize: 30,
+                                                fontSize:
+                                                    min(30, height * 0.04),
                                                 fontWeight: FontWeight.bold,
                                                 color: kprimaryColor,
                                               ),
@@ -340,7 +345,8 @@ class TimerView extends GetView<TimerController> {
                                               .textTheme
                                               .displayMedium!
                                               .copyWith(
-                                                fontSize: 18,
+                                                fontSize:
+                                                    min(18, height * 0.025),
                                                 color: themeController
                                                     .primaryDisabledTextColor
                                                     .value,
@@ -366,8 +372,10 @@ class TimerView extends GetView<TimerController> {
                                     ),
                                     // Minutes Picker
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.02,
+                                      padding: EdgeInsets.only(
+                                        left: width * 0.02,
+                                        right: width * 0.02,
+                                        top: height * 0.035,
                                       ),
                                       child: Text(
                                         ':',
@@ -411,7 +419,7 @@ class TimerView extends GetView<TimerController> {
                                                 .setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
-                                          itemWidth: width * 0.17,
+                                          itemWidth: min(width * 0.17, 80),
                                           zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
@@ -425,7 +433,8 @@ class TimerView extends GetView<TimerController> {
                                               .textTheme
                                               .displayMedium!
                                               .copyWith(
-                                                fontSize: 18,
+                                                fontSize:
+                                                    min(18, height * 0.025),
                                                 color: themeController
                                                     .primaryDisabledTextColor
                                                     .value,
@@ -451,8 +460,10 @@ class TimerView extends GetView<TimerController> {
                                     ),
                                     // Seconds Picker
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.02,
+                                      padding: EdgeInsets.only(
+                                        left: width * 0.02,
+                                        right: width * 0.02,
+                                        top: height * 0.035,
                                       ),
                                       child: Text(
                                         ':',
@@ -496,13 +507,14 @@ class TimerView extends GetView<TimerController> {
                                                 .setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
-                                          itemWidth: width * 0.17,
+                                          itemWidth: min(width * 0.17, 80),
                                           zeroPad: true,
                                           selectedTextStyle: Theme.of(context)
                                               .textTheme
                                               .displayLarge!
                                               .copyWith(
-                                                fontSize: 30,
+                                                fontSize:
+                                                    min(30, height * 0.04),
                                                 fontWeight: FontWeight.bold,
                                                 color: kprimaryColor,
                                               ),
@@ -510,7 +522,8 @@ class TimerView extends GetView<TimerController> {
                                               .textTheme
                                               .displayMedium!
                                               .copyWith(
-                                                fontSize: 18,
+                                                fontSize:
+                                                    min(18, height * 0.025),
                                                 color: themeController
                                                     .primaryDisabledTextColor
                                                     .value,
@@ -821,20 +834,20 @@ class TimerView extends GetView<TimerController> {
             Visibility(
               visible: controller.timerList.length > 2,
               child: Positioned(
-                top: calculateTopPosition(),
+                top: calculateTopPosition(context),
                 child: Material(
                   elevation: 5.0,
                   color: Colors.transparent,
                   shadowColor: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(15.0.r),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 10.0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0.w,
+                      vertical: 10.0.h,
                     ),
                     child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
+                      spacing: 10.r,
+                      runSpacing: 10.r,
                       children: [
                         hoverPresetButton(
                           context,
@@ -867,13 +880,16 @@ class TimerView extends GetView<TimerController> {
       },
     );
   }
-  double calculateTopPosition() {
-  final RenderBox? renderBox = dialogKey.currentContext?.findRenderObject() as RenderBox?;
-  if (renderBox != null) {
-    
-    final position = renderBox.localToGlobal(Offset.zero);
-    return position.dy - 100;
+
+  double calculateTopPosition(context) {
+    final RenderBox? renderBox =
+        dialogKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      final position = renderBox.localToGlobal(Offset.zero);
+      final textScale = MediaQuery.of(context).textScaleFactor;
+      final dynamicOffset = 15.h * textScale;
+      return position.dy - dynamicOffset;
+    }
+    return 100.h;
   }
-  return 160; 
-}
 }

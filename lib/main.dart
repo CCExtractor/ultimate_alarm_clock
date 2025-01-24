@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
@@ -50,11 +51,16 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
-  runApp(
-    UltimateAlarmClockApp(),
-  );
+  await ScreenUtil.ensureScreenSize();
+  runApp(ScreenUtilInit(
+    designSize: const Size(360, 790),
+    minTextAdapt: true,
+    splitScreenMode: true,
+    builder: (context, child) {
+      return UltimateAlarmClockApp();
+    },
+  ));
 }
-
 
 class UltimateAlarmClockApp extends StatelessWidget {
   UltimateAlarmClockApp({super.key});

@@ -24,11 +24,11 @@ class ShakeToDismiss extends StatelessWidget {
       () => ListTile(
         title: Row(
           children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
+            Expanded(
               child: Text(
                 'Shake to dismiss'.tr,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: themeController.primaryTextColor.value,
                 ),
@@ -49,7 +49,8 @@ class ShakeToDismiss extends StatelessWidget {
                   //     ' - no more lazy snoozing :)',
                   description: 'shakeDescription'.tr,
                   iconData: Icons.vibration_sharp,
-                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                  isLightMode:
+                      themeController.currentTheme.value == ThemeMode.light,
                 );
               },
             ),
@@ -122,7 +123,8 @@ class ShakeToDismiss extends StatelessWidget {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.secondaryTextColor.value,
+                                    color: themeController
+                                        .secondaryTextColor.value,
                                   ),
                             ),
                           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -34,6 +35,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
+import 'dart:math' show min;
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
@@ -62,10 +64,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
         floatingActionButton: (controller.mutexLock.value == true)
             ? const SizedBox()
             : Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: EdgeInsets.all(18.0.r),
                 child: SizedBox(
-                  height: height * 0.06,
-                  width: width * 0.8,
+                  height: 0.06.sh,
+                  width: 0.8.sw,
                   child: TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(kprimaryColor),
@@ -219,7 +221,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                 ),
               ),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * 0.08),
+          preferredSize: Size.fromHeight(0.08.sh),
           child: Obx(
             () => AppBar(
               backgroundColor: themeController.primaryBackgroundColor.value,
@@ -250,7 +252,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: EdgeInsets.all(20.0.r),
                       child: Obx(
                         () => Text(
                           'Uh-oh!'.tr,
@@ -270,7 +272,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       width: width * 0.5,
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: EdgeInsets.all(20.0.r),
                       child: Obx(
                         () => Text(
                           // 'This alarm is currently being edited!',
@@ -314,18 +316,18 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                   !controller.homeController.isProfile.value
                       ? Padding(
                           padding: EdgeInsets.only(
-                            top: height * 0.02,
-                            left: width * 0.04,
-                            right: width * 0.04,
+                            top: 0.02.r,
+                            left: 0.04.r,
+                            right: 0.04.r,
                           ),
                           child: Obx(
                             () => Container(
                               decoration: BoxDecoration(
                                 color: themeController
                                     .secondaryBackgroundColor.value,
-                                borderRadius: BorderRadius.circular(500),
+                                borderRadius: BorderRadius.circular(500.r),
                               ),
-                              height: height * 0.25,
+                              height: 0.25.sh,
                               child: Obx(
                                 () {
                                   return InkWell(
@@ -393,17 +395,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     );
                                                   },
                                                   infiniteLoop: true,
-                                                  itemWidth: width * 0.17,
+                                                  itemWidth: 0.17.sw,
                                                   zeroPad: true,
                                                   selectedTextStyle:
                                                       Theme.of(context)
                                                           .textTheme
                                                           .displayLarge!
                                                           .copyWith(
-                                                            fontSize: controller
-                                                                    .homeController
-                                                                    .scalingFactor *
-                                                                40,
+                                                            fontSize: 30.sp,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color:
@@ -413,10 +412,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       .textTheme
                                                       .displayMedium!
                                                       .copyWith(
-                                                        fontSize: controller
-                                                                .homeController
-                                                                .scalingFactor *
-                                                            20,
+                                                        fontSize: 18.sp,
                                                         color: themeController
                                                             .primaryDisabledTextColor
                                                             .value,
@@ -424,7 +420,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                    horizontal: width * 0.02,
+                                                    horizontal: 0.02.w,
                                                   ),
                                                   child: Text(
                                                     ':',
@@ -481,17 +477,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     );
                                                   },
                                                   infiniteLoop: true,
-                                                  itemWidth: width * 0.17,
+                                                  itemWidth: 0.25.sw,
                                                   zeroPad: true,
                                                   selectedTextStyle:
                                                       Theme.of(context)
                                                           .textTheme
                                                           .displayLarge!
                                                           .copyWith(
-                                                            fontSize: controller
-                                                                    .homeController
-                                                                    .scalingFactor *
-                                                                40,
+                                                            fontSize: 30.sp,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color:
@@ -501,10 +494,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       .textTheme
                                                       .displayMedium!
                                                       .copyWith(
-                                                        fontSize: controller
-                                                                .homeController
-                                                                .scalingFactor *
-                                                            20,
+                                                        fontSize: 18.sp,
                                                         color: themeController
                                                             .primaryDisabledTextColor
                                                             .value,
@@ -518,7 +508,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   child: Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
-                                                      horizontal: width * 0.02,
+                                                      horizontal: 0.02.w,
                                                     ),
                                                     child: Text(
                                                       ':',
@@ -600,16 +590,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                       )]
                                                           .value;
                                                     },
-                                                    itemWidth: width * 0.17,
+                                                    itemWidth: 0.25.sw,
                                                     selectedTextStyle: Theme.of(
                                                             context)
                                                         .textTheme
                                                         .displayLarge!
                                                         .copyWith(
-                                                          fontSize: controller
-                                                                  .homeController
-                                                                  .scalingFactor *
-                                                              40,
+                                                          fontSize: 30.sp,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: kprimaryColor,
@@ -618,10 +605,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         .textTheme
                                                         .displayMedium!
                                                         .copyWith(
-                                                          fontSize: controller
-                                                                  .homeController
-                                                                  .scalingFactor *
-                                                              20,
+                                                          fontSize: 18.sp,
                                                           color: themeController
                                                               .primaryDisabledTextColor
                                                               .value,
@@ -636,7 +620,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               SizedBox(
-                                                width: 80,
+                                                width: 80.w,
                                                 child: TextField(
                                                   onChanged: (_) {
                                                     inputTimeController
@@ -675,7 +659,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 16,
+                                                width: 16.w,
                                                 child: Text(
                                                   ':',
                                                   textAlign: TextAlign.center,
@@ -685,7 +669,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 80,
+                                                width: 80.w,
                                                 child: TextField(
                                                   onChanged: (_) {
                                                     inputTimeController
@@ -715,8 +699,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                width: 16,
+                                              SizedBox(
+                                                width: 16.w,
                                               ),
                                               Visibility(
                                                 visible: !settingsController
@@ -748,8 +732,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                   },
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                width: 12,
+                                              SizedBox(
+                                                width: 12.w,
                                               ),
                                               Visibility(
                                                 visible: inputTimeController
@@ -764,18 +748,18 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                        50.0,
+                                                        50.0.r,
                                                       ),
                                                       border: Border.all(
                                                         color: kprimaryColor,
-                                                        width: 1.0,
+                                                        width: 1.0.r,
                                                       ),
                                                     ),
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: const Icon(
+                                                        EdgeInsets.all(5.0.r),
+                                                    child: Icon(
                                                       Icons.done,
+                                                      size: 24.r,
                                                       color: kprimaryColor,
                                                     ),
                                                   ),
@@ -791,7 +775,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         )
                       : Obx(
                           () => Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.all(16.0.r),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: 'Profile Name',
@@ -1026,7 +1010,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             ],
                           )
                         : SizedBox(
-                            height: height * 0.15,
+                            height: 0.15.sh,
                           ),
                   ),
                 ],
