@@ -85,7 +85,8 @@ class GaurdianAngel extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            backgroundColor: kprimaryBackgroundColor,
+                            backgroundColor: themeController
+                                .secondaryBackgroundColor.value,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -160,7 +161,7 @@ class GaurdianAngel extends StatelessWidget {
                   color: (val == 0 && !controller.isCall.value) ||
                           (val == 1 && controller.isCall.value)
                       ? kprimaryColor
-                      : ksecondaryBackgroundColor,
+                      : kLightPrimaryDisabledTextColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -202,14 +203,14 @@ class GaurdianAngel extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: ksecondaryBackgroundColor,
+                  color: themeController.primaryColor.value,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Icon(
                     Icons.check,
-                    color: kprimaryColor,
+                    color: ksecondaryTextColor,
                   ),
                 ),
               ),
