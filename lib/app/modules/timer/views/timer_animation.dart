@@ -85,7 +85,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         horizontal: 10.0,
       ),
       child: Container(
-        height: context.height / 3.3,
+        height: context.height / 3.0, // changed from 3.3 to 3.0
         width: context.width,
         child: Obx(
           () => Card(
@@ -118,7 +118,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                         left: 25.0,
                         right: 20.0,
                         top: 20.0,
-                        bottom: 20.0,
+                        bottom: 30.0,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
