@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import '../controllers/alarm_ring_controller.dart';
 
 // ignore: must_be_immutable
@@ -13,6 +13,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
+  SettingsController settingsController = Get.find<SettingsController>();
 
   Obx getAddSnoozeButtons(
       BuildContext context, int snoozeMinutes, String title) {
@@ -140,8 +141,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             ? "${controller.minutes.toString().padLeft(2, '0')}"
                                 // ignore: lines_longer_than_80_chars
                                 ":${controller.seconds.toString().padLeft(2, '0')}"
-                            : '${controller.timeNow[0]} '
-                                '${controller.timeNow[1]}',
+                            : !settingsController.is24HrsEnabled.value?
+                        '${controller.timeNow[0]} ''${controller.timeNow[1]}'
+                            :'${controller.timeNow24}'
+                        ,
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge!
