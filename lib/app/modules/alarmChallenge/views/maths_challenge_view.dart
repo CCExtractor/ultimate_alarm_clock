@@ -181,7 +181,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
-          controller.displayValue.value = '';
+          controller.removeDigit();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: themeController.primaryTextColor.value.withOpacity(0.45),
@@ -228,3 +228,4 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     );
   }
 }
+
