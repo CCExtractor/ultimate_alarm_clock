@@ -284,7 +284,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         kprimaryColor,
                                                                   ),
                                                           textStyle: Theme.of(
-                                                                  context)
+                                                            context,
+                                                          )
                                                               .textTheme
                                                               .displayMedium!
                                                               .copyWith(
@@ -306,7 +307,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           child: Text(
                                                             ':',
                                                             style: Theme.of(
-                                                                    context)
+                                                              context,
+                                                            )
                                                                 .textTheme
                                                                 .displayLarge!
                                                                 .copyWith(
@@ -394,7 +396,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         kprimaryColor,
                                                                   ),
                                                           textStyle: Theme.of(
-                                                                  context)
+                                                            context,
+                                                          )
                                                               .textTheme
                                                               .displayMedium!
                                                               .copyWith(
@@ -423,7 +426,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                             child: Text(
                                                               ':',
                                                               style: Theme.of(
-                                                                      context)
+                                                                context,
+                                                              )
                                                                   .textTheme
                                                                   .displayLarge!
                                                                   .copyWith(
@@ -525,7 +529,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 width * 0.17,
                                                             selectedTextStyle:
                                                                 Theme.of(
-                                                                        context)
+                                                              context,
+                                                            )
                                                                     .textTheme
                                                                     .displayLarge!
                                                                     .copyWith(
@@ -539,7 +544,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                           kprimaryColor,
                                                                     ),
                                                             textStyle: Theme.of(
-                                                                    context)
+                                                              context,
+                                                            )
                                                                 .textTheme
                                                                 .displayMedium!
                                                                 .copyWith(
@@ -673,7 +679,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .value,
                                                           items: [
                                                             'AM',
-                                                            'PM'
+                                                            'PM',
                                                           ].map(
                                                               (String period) {
                                                             return DropdownMenuItem<
@@ -687,7 +693,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                               (getPeriod) {
                                                             inputTimeController
                                                                 .changePeriod(
-                                                                    getPeriod!);
+                                                              getPeriod!,
+                                                            );
 
                                                             inputTimeController
                                                                 .setTime();
@@ -781,7 +788,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ),
                                       Obx(
                                         () => (!controller.repeatDays.every(
-                                                (element) => element == false))
+                                          (element) => element == false,
+                                        ))
                                             ? RepeatOnceTile(
                                                 controller: controller,
                                                 themeController:
@@ -791,7 +799,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ),
                                       Obx(
                                         () => (!controller.repeatDays.every(
-                                                (element) => element == false))
+                                          (element) => element == false,
+                                        ))
                                             ? Divider(
                                                 color: themeController
                                                     .primaryDisabledTextColor
@@ -809,7 +818,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ),
                                       Obx(
                                         () => (controller.repeatDays.every(
-                                                (element) => element == false))
+                                          (element) => element == false,
+                                        ))
                                             ? DeleteAfterGoesOff(
                                                 controller: controller,
                                                 themeController:

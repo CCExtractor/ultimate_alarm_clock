@@ -34,26 +34,28 @@ class HomeView extends GetView<HomeController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
         () => Visibility(
-            visible: controller.inMultipleSelectMode.value ? false : true,
-            child: Container(
-              height: controller.scalingFactor.value * 90,
-              width: controller.scalingFactor.value * 90,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Utils.hapticFeedback();
-                  controller.isProfile.value = false;
-                  Get.toNamed(
-                    '/add-update-alarm',
-                    arguments: controller.genFakeAlarmModel(),
-                  );
-                },
-                child: Container(
-                    child: Icon(
+          visible: controller.inMultipleSelectMode.value ? false : true,
+          child: Container(
+            height: controller.scalingFactor.value * 90,
+            width: controller.scalingFactor.value * 90,
+            child: FloatingActionButton(
+              onPressed: () {
+                Utils.hapticFeedback();
+                controller.isProfile.value = false;
+                Get.toNamed(
+                  '/add-update-alarm',
+                  arguments: controller.genFakeAlarmModel(),
+                );
+              },
+              child: Container(
+                child: Icon(
                   Icons.add,
                   size: controller.scalingFactor.value * 30,
-                )),
+                ),
               ),
-            )),
+            ),
+          ),
+        ),
       ),
       endDrawer: buildEndDrawer(context),
       appBar: null,
