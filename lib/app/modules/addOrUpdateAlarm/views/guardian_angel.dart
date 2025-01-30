@@ -26,21 +26,80 @@ class GaurdianAngel extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          onTap: () {},
-          title: Row(
-            children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Obx(
-                  () => Text(
-                    'Gaurdian Angel'.tr,
-                    style: TextStyle(
-                      color: themeController.primaryTextColor.value,
+          onTap: () async {
+      var phonePerm =
+          await Permission.phone.request().isGranted;
+      var smsPerm = await Permission.sms.request().isGranted;
+
+      if (phonePerm && smsPerm) {
+        Get.dialog(
+          Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            backgroundColor: themeController
+                .secondaryBackgroundColor.value,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InternationalPhoneNumberInput(
+                      textFieldController: controller
+                          .contactTextEditingController,
+                      onInputChanged: (value) {},
+                      onInputValidated: (value) {},
+                      spaceBetweenSelectorAndTextField: 0,
+                      selectorConfig: const SelectorConfig(
+                        showFlags: true,
+                        setSelectorButtonAsPrefixIcon: true,
+                        leadingPadding: 0,
+                        trailingSpace: false,
+                        countryComparator: orderedCountryCode,
+                      ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: controller
+                          .homeController.scalingFactor *
+                          8,
+                      horizontal: controller
+                          .homeController.scalingFactor *
+                          4,
+                    ),
+                    child: Row(
+                      children: [
+                        Option(0, Icons.sms, 'Text'),
+                        Option(1, Icons.call, 'Call'),
+                        const Spacer(),
+                        Submit(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    },
+    title: Row(
+      children: [
+        FittedBox(
+          fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+              child: Obx(
+                () => Text(
+                  'Gaurdian Angel'.tr,
+                  style: TextStyle(
+                    color: themeController.primaryTextColor.value,
                   ),
                 ),
               ),
+             ),
               Obx(
                 () => IconButton(
                   icon: Icon(
@@ -75,63 +134,7 @@ class GaurdianAngel extends StatelessWidget {
                     activeColor: ksecondaryColor,
                     onChanged: (value) async {
                       Utils.hapticFeedback();
-                      var phonePerm =
-                          await Permission.phone.request().isGranted;
-                      var smsPerm = await Permission.sms.request().isGranted;
-
-                      if (phonePerm && smsPerm) {
-                        Get.dialog(
-                          Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            backgroundColor: themeController
-                                .secondaryBackgroundColor.value,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InternationalPhoneNumberInput(
-                                      textFieldController: controller
-                                          .contactTextEditingController,
-                                      onInputChanged: (value) {},
-                                      onInputValidated: (value) {},
-                                      spaceBetweenSelectorAndTextField: 0,
-                                      selectorConfig: const SelectorConfig(
-                                        showFlags: false,
-                                        setSelectorButtonAsPrefixIcon: true,
-                                        leadingPadding: 0,
-                                        trailingSpace: false,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: controller
-                                              .homeController.scalingFactor *
-                                          8,
-                                      horizontal: controller
-                                              .homeController.scalingFactor *
-                                          4,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Option(0, Icons.sms, 'Text'),
-                                        Option(1, Icons.call, 'Call'),
-                                        const Spacer(),
-                                        Submit(),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
+                      controller.isGuardian.value = value;
                     },
                   );
                 },
