@@ -899,6 +899,19 @@ class HomeView extends GetView<HomeController> {
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
+                                                                          if (alarm.isSpeakEnabled)
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(
+                                                                                horizontal: 3.0,
+                                                                              ),
+                                                                              child: Icon(
+                                                                                Icons.mic,
+                                                                                size: 24,
+                                                                                color: alarm.isEnabled == true
+                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    : themeController.primaryDisabledTextColor.value,
+                                                                              ),
+                                                                            ),
                                                                         ],
                                                                       ),
                                                                   ],

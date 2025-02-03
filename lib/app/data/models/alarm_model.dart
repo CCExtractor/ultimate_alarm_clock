@@ -23,6 +23,7 @@ class AlarmModel {
   late bool isShakeEnabled;
   late bool isQrEnabled;
   late bool isPedometerEnabled;
+  late bool isSpeakEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
@@ -32,6 +33,7 @@ class AlarmModel {
   late List<int> weatherTypes;
   late int shakeTimes;
   late int numberOfSteps;
+  late int numberOfWords;
   late int numMathsQuestions;
   late int mathsDifficulty;
   late String qrValue;
@@ -89,6 +91,8 @@ class AlarmModel {
       required this.qrValue,
       required this.isPedometerEnabled,
       required this.numberOfSteps,
+      required this.isSpeakEnabled,
+      required this.numberOfWords,
       required this.activityInterval,
       this.offsetDetails = const {},
       required this.mainAlarmTime,
@@ -163,6 +167,8 @@ class AlarmModel {
     shakeTimes = documentSnapshot['shakeTimes'];
     isPedometerEnabled = documentSnapshot['isPedometerEnabled'];
     numberOfSteps = documentSnapshot['numberOfSteps'];
+    isSpeakEnabled = documentSnapshot['isSpeakEnabled'];
+    numberOfWords = documentSnapshot['numberOfWords'];
     ringtoneName = documentSnapshot['ringtoneName'];
     note = documentSnapshot['note'];
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
@@ -203,6 +209,8 @@ class AlarmModel {
       qrValue: map['qrValue'],
       isPedometerEnabled: map['isPedometerEnabled'] == 1,
       numberOfSteps: map['numberOfSteps'],
+      isSpeakEnabled: map['isSpeakEnabled'] == 1,
+      numberOfWords: map['numberOfWords'],
       intervalToAlarm: map['intervalToAlarm'],
       isActivityEnabled: map['isActivityEnabled'] == 1,
       sharedUserIds: map['sharedUserIds'] != null
@@ -257,6 +265,8 @@ class AlarmModel {
       'qrValue': qrValue,
       'isPedometerEnabled': isPedometerEnabled ? 1 : 0,
       'numberOfSteps': numberOfSteps,
+      'isSpeakEnabled': isSpeakEnabled ? 1 : 0,
+      'numberOfWords': numberOfWords,
       'intervalToAlarm': intervalToAlarm,
       'isActivityEnabled': isActivityEnabled ? 1 : 0,
       'sharedUserIds': sharedUserIds != null ? jsonEncode(sharedUserIds) : null,
@@ -321,6 +331,8 @@ class AlarmModel {
     shakeTimes = alarmData['shakeTimes'];
     isPedometerEnabled = alarmData['isPedometerEnabled'];
     numberOfSteps = alarmData['numberOfSteps'];
+    isSpeakEnabled = alarmData['isSpeakEnabled'];
+    numberOfWords = alarmData['numberOfWords'];
     label = alarmData['label'];
     isOneTime = alarmData['isOneTime'];
     ringtoneName = alarmData['ringtoneName'];
@@ -380,6 +392,8 @@ class AlarmModel {
       'shakeTimes': alarmRecord.shakeTimes,
       'isPedometerEnabled': alarmRecord.isPedometerEnabled,
       'numberOfSteps': alarmRecord.numberOfSteps,
+      'isSpeakEnabled': alarmRecord.isSpeakEnabled,
+      'numberOfWords': alarmRecord.numberOfWords,
       'snoozeDuration': alarmRecord.snoozeDuration,
       'gradient': alarmRecord.gradient,
       'ringtoneName': alarmRecord.ringtoneName,

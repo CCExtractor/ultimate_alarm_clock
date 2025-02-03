@@ -712,6 +712,8 @@ class HomeController extends GetxController {
         shakeTimes: profileModel.value.shakeTimes,
         isPedometerEnabled: profileModel.value.isPedometerEnabled,
         numberOfSteps: profileModel.value.numberOfSteps,
+        isSpeakEnabled: profileModel.value.isSpeakEnabled,
+        numberOfWords: profileModel.value.numberOfWords,
         days: profileModel.value.days,
         weatherTypes: profileModel.value.weatherTypes,
         isWeatherEnabled: profileModel.value.isWeatherEnabled,

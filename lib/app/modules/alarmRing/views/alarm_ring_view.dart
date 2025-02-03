@@ -61,6 +61,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
       },
       child: SafeArea(
         child: Scaffold(
+
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Column(

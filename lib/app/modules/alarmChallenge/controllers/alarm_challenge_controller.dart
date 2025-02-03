@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shake/shake.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -42,6 +45,13 @@ class AlarmChallengeController extends GetxController {
   bool shouldProcessStepCount = false;
 
   late Stream<StepCount> _stepCountStream;
+
+  final isSpeakOngoing= Status.initialized.obs;
+  late RxString randomSentence = ''.obs;
+  late RxString spokenText=''.obs;
+  final SpeechToText speechToText = SpeechToText();
+  late RxBool isListening = false.obs;
+  late int numberOfWords;
 
   void onButtonPressed(String buttonText) {
     displayValue.value += buttonText;
@@ -160,6 +170,11 @@ class AlarmChallengeController extends GetxController {
       });
     }
 
+    if(alarmRecord.isSpeakEnabled){
+      numberOfWords=alarmRecord.numberOfWords;
+      randomSentence=generateRandomSentence(numberOfWords);
+    }
+
     if (alarmRecord.isPedometerEnabled) {
       final PermissionStatus status =
           await Permission.activityRecognition.request();
@@ -245,5 +260,57 @@ class AlarmChallengeController extends GetxController {
     } else {
       AudioUtils.playAlarm(alarmRecord: alarmRecord);
     }
+  }
+
+
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+
+    spokenText.value = result.recognizedWords;
+    spokenText=spokenText.toLowerCase().obs;
+    if(spokenText.value==randomSentence.value){
+      isSpeakOngoing.value=Status.completed;
+      alarmRecord.isSpeakEnabled=false;
+      Get.back();
+      isChallengesComplete();
+    }
+  }
+
+  void startListening() async {
+     isListening = true.obs;
+     await speechToText.initialize();
+    await speechToText.listen(onResult: _onSpeechResult);
+  }
+
+  void stopListening() async {
+    isListening = false.obs;
+    await speechToText.stop();
+  }
+
+  RxString generateRandomSentence(int wordCount) {
+    final List<String> defaultWordPool = [
+      "apple", "orange", "banana", "river", "mountain", "sky", "ocean", "dog",
+      "cat", "happy", "sad", "flutter", "dart", "awesome", "cool", "programming",
+      "learning", "code", "random", "sentence", "generator", "build", "create",
+      "amazing", "beautiful", "tree", "forest", "house", "journey", "adventure",
+      "sun", "moon", "star", "cloud", "rain", "storm", "light", "dark", "fire",
+      "water", "earth", "wind", "flower", "grass", "sand","beach", "island",
+      "mountain", "valley", "desert", "canyon", "lake", "pond", "stream", "road",
+      "bridge", "city", "town", "village", "country", "continent", "planet",
+      "galaxy", "universe", "life", "birth", "beginning", "end", "past", "future",
+    ];
+
+    // Use the provided word pool or fallback to the default word pool
+    final List<String> activeWordPool =defaultWordPool;
+
+    if (wordCount <= 0 || activeWordPool.isEmpty) {
+      throw ArgumentError('Word count must be greater than zero and word pool cannot be empty.');
+    }
+
+    final Random random = Random();
+    return List.generate(
+      wordCount,
+          (_) => activeWordPool[random.nextInt(activeWordPool.length)],
+    ).join(' ').obs;
   }
 }

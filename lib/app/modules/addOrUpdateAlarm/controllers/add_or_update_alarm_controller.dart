@@ -48,6 +48,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final shakeTimes = 0.obs;
   final isPedometerEnabled = false.obs;
   final numberOfSteps = 0.obs;
+  final isSpeakEnabled=false.obs;
+  final numberOfWords = 0.obs;
   var ownerId = ''.obs; // id -> owner of the alarm
   var ownerName = ''.obs; // name -> owner of the alarm
   var userId = ''.obs; // id -> loggedin user
@@ -188,11 +190,11 @@ class AddOrUpdateAlarmController extends GetxController {
           color: themeController.primaryTextColor.value,
         ),
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         content: const Text(
           'This app requires permission to draw overlays,send notifications'
-          ' and Ignore batter optimization.',
+              ' and Ignore batter optimization.',
         ),
         actions: [
           TextButton(
@@ -295,8 +297,8 @@ class AddOrUpdateAlarmController extends GetxController {
                     child: Text(
                       'Cancel'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: kprimaryBackgroundColor,
-                          ),
+                        color: kprimaryBackgroundColor,
+                      ),
                     ),
                   ),
                   OutlinedButton(
@@ -313,8 +315,8 @@ class AddOrUpdateAlarmController extends GetxController {
                     child: Text(
                       'Leave'.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: Colors.red,
-                          ),
+                        color: Colors.red,
+                      ),
                     ),
                   ),
                 ],
@@ -359,7 +361,7 @@ class AddOrUpdateAlarmController extends GetxController {
         barrierDismissible: false,
         title: 'Location Permission',
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         titleStyle: TextStyle(
           color: themeController.primaryTextColor.value,
@@ -416,7 +418,7 @@ class AddOrUpdateAlarmController extends GetxController {
   createAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
       alarmRecord.value =
-          await FirestoreDb.addAlarm(userModel.value, alarmData);
+      await FirestoreDb.addAlarm(userModel.value, alarmData);
     } else {
       alarmRecord.value = await IsarDb.addAlarm(alarmData);
     }
@@ -436,95 +438,95 @@ class AddOrUpdateAlarmController extends GetxController {
       title: 'Scan a QR/Bar Code',
       titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
       content: Obx(
-        () => Column(
+            () => Column(
           children: [
             detectedQrValue.value.isEmpty
                 ? SizedBox(
-                    height: 300,
-                    width: 300,
-                    child: MobileScanner(
-                      controller: qrController,
-                      fit: BoxFit.cover,
-                      onDetect: (capture) {
-                        final List<Barcode> barcodes = capture.barcodes;
-                        for (final barcode in barcodes) {
-                          detectedQrValue.value = barcode.rawValue.toString();
-                          debugPrint(barcode.rawValue.toString());
-                        }
-                      },
-                    ),
-                  )
+              height: 300,
+              width: 300,
+              child: MobileScanner(
+                controller: qrController,
+                fit: BoxFit.cover,
+                onDetect: (capture) {
+                  final List<Barcode> barcodes = capture.barcodes;
+                  for (final barcode in barcodes) {
+                    detectedQrValue.value = barcode.rawValue.toString();
+                    debugPrint(barcode.rawValue.toString());
+                  }
+                },
+              ),
+            )
                 : Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Text(detectedQrValue.value),
-                  ),
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: Text(detectedQrValue.value),
+            ),
             (detectedQrValue.value.isNotEmpty)
                 ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Save',
-                          style: Theme.of(Get.context!)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.secondaryTextColor.value,
-                              ),
-                        ),
-                        onPressed: () {
-                          qrValue.value = detectedQrValue.value;
-                          isQrEnabled.value = true;
-                          Get.back();
-                        },
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(kprimaryColor),
+                  ),
+                  child: Text(
+                    'Save',
+                    style: Theme.of(Get.context!)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(
+                      color: themeController.secondaryTextColor.value,
+                    ),
+                  ),
+                  onPressed: () {
+                    qrValue.value = detectedQrValue.value;
+                    isQrEnabled.value = true;
+                    Get.back();
+                  },
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(kprimaryColor),
+                  ),
+                  child: Text(
+                    'Retake',
+                    style: Theme.of(Get.context!)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(
+                      color: themeController.secondaryTextColor.value,
+                    ),
+                  ),
+                  onPressed: () async {
+                    qrController.dispose();
+                    restartQRCodeController(true);
+                  },
+                ),
+                if (isQrEnabled.value)
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                      MaterialStateProperty.all(kprimaryColor),
+                    ),
+                    child: Text(
+                      'Disable',
+                      style: Theme.of(Get.context!)
+                          .textTheme
+                          .displaySmall!
+                          .copyWith(
+                        color:
+                        themeController.secondaryTextColor.value,
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Retake',
-                          style: Theme.of(Get.context!)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.secondaryTextColor.value,
-                              ),
-                        ),
-                        onPressed: () async {
-                          qrController.dispose();
-                          restartQRCodeController(true);
-                        },
-                      ),
-                      if (isQrEnabled.value)
-                        TextButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),
-                          ),
-                          child: Text(
-                            'Disable',
-                            style: Theme.of(Get.context!)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color:
-                                      themeController.secondaryTextColor.value,
-                                ),
-                          ),
-                          onPressed: () {
-                            isQrEnabled.value = false;
-                            qrValue.value = '';
-                            Get.back();
-                          },
-                        ),
-                    ],
-                  )
+                    ),
+                    onPressed: () {
+                      isQrEnabled.value = false;
+                      qrValue.value = '';
+                      Get.back();
+                    },
+                  ),
+              ],
+            )
                 : const SizedBox(),
           ],
         ),
@@ -547,7 +549,7 @@ class AddOrUpdateAlarmController extends GetxController {
           left: 10,
         ),
         contentPadding:
-            const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 23),
+        const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 23),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -575,17 +577,17 @@ class AddOrUpdateAlarmController extends GetxController {
             backgroundColor: MaterialStateProperty.all(kprimaryColor),
           ),
           child: Obx(
-            () => Text(
+                () => Text(
               'OK',
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.secondaryTextColor.value,
-                  ),
+                color: themeController.secondaryTextColor.value,
+              ),
             ),
           ),
           onPressed: () async {
             Get.back(); // Close the alert box
             PermissionStatus permissionStatus =
-                await Permission.camera.request();
+            await Permission.camera.request();
             if (permissionStatus.isGranted) {
               // Permission granted, proceed with QR code scanning
               showQRDialog();
@@ -593,7 +595,7 @@ class AddOrUpdateAlarmController extends GetxController {
           },
         ),
         cancel: Obx(
-          () => TextButton(
+              () => TextButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
                 themeController.primaryTextColor.value.withOpacity(0.5),
@@ -602,8 +604,8 @@ class AddOrUpdateAlarmController extends GetxController {
             child: Text(
               'Cancel',
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.primaryTextColor.value,
-                  ),
+                color: themeController.primaryTextColor.value,
+              ),
             ),
             onPressed: () {
               Get.back(); // Close the alert box
@@ -703,7 +705,7 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian.value = alarmRecord.value.guardian;
       guardianTimer.value = alarmRecord.value.guardianTimer;
       isActivityMonitorenabled.value =
-          alarmRecord.value.isActivityEnabled ? 1 : 0;
+      alarmRecord.value.isActivityEnabled ? 1 : 0;
       snoozeDuration.value = alarmRecord.value.snoozeDuration;
       gradient.value = alarmRecord.value.gradient;
       volMin.value = alarmRecord.value.volMin;
@@ -771,7 +773,7 @@ class AddOrUpdateAlarmController extends GetxController {
       isMathsEnabled.value = alarmRecord.value.isMathsEnabled;
       numMathsQuestions.value = alarmRecord.value.numMathsQuestions;
       mathsDifficulty.value =
-          Difficulty.values[alarmRecord.value.mathsDifficulty];
+      Difficulty.values[alarmRecord.value.mathsDifficulty];
       mathsSliderValue.value = alarmRecord.value.mathsDifficulty.toDouble();
 
       isShakeEnabled.value = alarmRecord.value.isShakeEnabled;
@@ -779,6 +781,9 @@ class AddOrUpdateAlarmController extends GetxController {
 
       isPedometerEnabled.value = alarmRecord.value.isPedometerEnabled;
       numberOfSteps.value = alarmRecord.value.numberOfSteps;
+
+      isSpeakEnabled.value = alarmRecord.value.isSpeakEnabled;
+      numberOfWords.value = alarmRecord.value.numberOfWords;
 
       isQrEnabled.value = alarmRecord.value.isQrEnabled;
       qrValue.value = alarmRecord.value.qrValue;
@@ -868,13 +873,14 @@ class AddOrUpdateAlarmController extends GetxController {
       'activityInterval': activityInterval.value,
       'weatherTypes': weatherTypes.value,
       'location':
-          '${selectedPoint.value.latitude} ${selectedPoint.value.longitude}',
+      '${selectedPoint.value.latitude} ${selectedPoint.value.longitude}',
       'shakeTimes': shakeTimes.value,
       'qrValue': qrValue.value,
       'mathsDifficulty': mathsDifficulty.value,
       'mathsSliderValue': mathsSliderValue.value,
       'numMathsQuestions': numMathsQuestions.value,
       'numberOfSteps': numberOfSteps.value,
+      'numberOfWords': numberOfWords.value,
       'isSharedAlarmEnabled': isSharedAlarmEnabled.value,
       'offsetDuration': offsetDuration.value,
       'isOffsetBefore': isOffsetBefore.value,
@@ -934,7 +940,7 @@ class AddOrUpdateAlarmController extends GetxController {
     // Adding to markers list, to display on map
     // (MarkersLayer takes only List<Marker>)
     selectedPoint.listen(
-      (point) {
+          (point) {
         selectedPoint.value = point;
         markersList.clear();
         markersList.add(
@@ -967,6 +973,7 @@ class AddOrUpdateAlarmController extends GetxController {
     setupListener<Difficulty>(mathsDifficulty, 'mathsDifficulty');
     setupListener<int>(numMathsQuestions, 'numMathsQuestions');
     setupListener<int>(numberOfSteps, 'numberOfSteps');
+    setupListener<int>(numberOfWords, 'numberOfWords');
 
     setupListener<bool>(isSharedAlarmEnabled, 'isSharedAlarmEnabled');
     setupListener<int>(offsetDuration, 'offsetDuration');
@@ -1031,7 +1038,7 @@ class AddOrUpdateAlarmController extends GetxController {
       isOneTime: isOneTime.value,
       deleteAfterGoesOff: deleteAfterGoesOff.value,
       mainAlarmTime:
-          Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
+      Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
       offsetDetails: offsetDetails,
       sharedUserIds: sharedUserIds,
       lastEditedUserId: lastEditedUserId.value,
@@ -1042,12 +1049,12 @@ class AddOrUpdateAlarmController extends GetxController {
       activityInterval: activityInterval.value * 60000,
       days: repeatDays.toList(),
       alarmTime:
-          Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
+      Utils.timeOfDayToString(TimeOfDay.fromDateTime(selectedTime.value)),
       intervalToAlarm:
-          Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value),
+      Utils.getMillisecondsToAlarm(DateTime.now(), selectedTime.value),
       isActivityEnabled: isActivityenabled.value,
       minutesSinceMidnight:
-          Utils.timeOfDayToInt(TimeOfDay.fromDateTime(selectedTime.value)),
+      Utils.timeOfDayToInt(TimeOfDay.fromDateTime(selectedTime.value)),
       isLocationEnabled: isLocationEnabled.value,
       weatherTypes: Utils.getIntFromWeatherTypes(selectedWeather.toList()),
       isWeatherEnabled: isWeatherEnabled.value,
@@ -1064,6 +1071,8 @@ class AddOrUpdateAlarmController extends GetxController {
       shakeTimes: shakeTimes.value,
       isPedometerEnabled: isPedometerEnabled.value,
       numberOfSteps: numberOfSteps.value,
+      isSpeakEnabled: isSpeakEnabled.value,
+      numberOfWords: numberOfWords.value,
       ringtoneName: customRingtoneName.value,
       note: note.value,
       showMotivationalQuote: showMotivationalQuote.value,
@@ -1143,7 +1152,7 @@ class AddOrUpdateAlarmController extends GetxController {
         String? filePath = customRingtoneResult.files.single.path;
 
         String? savedFilePath =
-            await saveToDocumentsDirectory(filePath: filePath!);
+        await saveToDocumentsDirectory(filePath: filePath!);
 
         if (savedFilePath != null) {
           RingtoneModel customRingtone = RingtoneModel(
@@ -1166,7 +1175,7 @@ class AddOrUpdateAlarmController extends GetxController {
   Future<List<String>> getAllCustomRingtoneNames() async {
     try {
       List<RingtoneModel> customRingtones =
-          await IsarDb.getAllCustomRingtones();
+      await IsarDb.getAllCustomRingtones();
 
       return customRingtones
           .map((customRingtone) => customRingtone.ringtoneName)
@@ -1184,7 +1193,7 @@ class AddOrUpdateAlarmController extends GetxController {
     try {
       int customRingtoneId = AudioUtils.fastHash(ringtoneName);
       RingtoneModel? customRingtone =
-          await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+      await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
       if (customRingtone != null) {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
@@ -1239,21 +1248,21 @@ class AddOrUpdateAlarmController extends GetxController {
 
   datePicker(BuildContext context) async {
     selectedDate.value = (await showDatePicker(
-          builder: (BuildContext context, Widget? child) {
-            return Theme(
-              data: ThemeData.dark().copyWith(
-                colorScheme: const ColorScheme.dark(
-                  primary: kprimaryColor,
-                ),
-              ),
-              child: child!,
-            );
-          },
-          context: context,
-          currentDate: selectedDate.value,
-          firstDate: DateTime.now(),
-          lastDate: DateTime.now().add(const Duration(days: 355)),
-        )) ??
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: kprimaryColor,
+            ),
+          ),
+          child: child!,
+        );
+      },
+      context: context,
+      currentDate: selectedDate.value,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 355)),
+    )) ??
         DateTime.now();
     isFutureDate.value =
         selectedDate.value.difference(DateTime.now()).inHours > 0;
@@ -1328,6 +1337,8 @@ class AddOrUpdateAlarmController extends GetxController {
       shakeTimes: shakeTimes.value,
       isPedometerEnabled: isPedometerEnabled.value,
       numberOfSteps: numberOfSteps.value,
+      isSpeakEnabled: isSpeakEnabled.value,
+      numberOfWords: numberOfWords.value,
       ringtoneName: customRingtoneName.value,
       activityMonitor: isActivityMonitorenabled.value,
       alarmDate: selectedDate.value.toString().substring(0, 11),
@@ -1338,9 +1349,10 @@ class AddOrUpdateAlarmController extends GetxController {
       ringOn: isFutureDate.value,
     );
 
-    if (homeController.isProfileUpdate.value) {
+    if(homeController.isProfileUpdate.value)
+    {
       var profileId =
-          await IsarDb.profileId(homeController.selectedProfile.value);
+      await IsarDb.profileId(homeController.selectedProfile.value);
       print(profileId);
       if (profileId != 'null') profileModel.isarId = profileId;
       print(profileModel.isarId);

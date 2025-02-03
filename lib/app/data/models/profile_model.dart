@@ -20,6 +20,7 @@ class ProfileModel {
   late bool isShakeEnabled;
   late bool isQrEnabled;
   late bool isPedometerEnabled;
+  late bool isSpeakEnabled;
   late int intervalToAlarm;
   late bool isActivityEnabled;
   late String location;
@@ -29,6 +30,7 @@ class ProfileModel {
   late List<int> weatherTypes;
   late int shakeTimes;
   late int numberOfSteps;
+  late int numberOfWords;
   late int numMathsQuestions;
   late int mathsDifficulty;
   late String qrValue;
@@ -83,6 +85,8 @@ class ProfileModel {
       required this.qrValue,
       required this.isPedometerEnabled,
       required this.numberOfSteps,
+      required this.isSpeakEnabled,
+      required this.numberOfWords,
       required this.activityInterval,
       this.offsetDetails = const {},
       required this.label,
@@ -149,6 +153,8 @@ class ProfileModel {
     shakeTimes = documentSnapshot['shakeTimes'];
     isPedometerEnabled = documentSnapshot['isPedometerEnabled'];
     numberOfSteps = documentSnapshot['numberOfSteps'];
+    isSpeakEnabled = documentSnapshot['isSpeakEnabled'];
+    numberOfWords = documentSnapshot['numberOfWords'];
     ringtoneName = documentSnapshot['ringtoneName'];
     note = documentSnapshot['note'];
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
@@ -203,6 +209,8 @@ class ProfileModel {
     shakeTimes = profileData['shakeTimes'];
     isPedometerEnabled = profileData['isPedometerEnabled'];
     numberOfSteps = profileData['numberOfSteps'];
+    isSpeakEnabled = profileData['isSpeakEnabled'];
+    numberOfWords = profileData['numberOfWords'];
     label = profileData['label'];
     isOneTime = profileData['isOneTime'];
     ringtoneName = profileData['ringtoneName'];
@@ -260,6 +268,8 @@ class ProfileModel {
       'shakeTimes': profileRecord.shakeTimes,
       'isPedometerEnabled': profileRecord.isPedometerEnabled,
       'numberOfSteps': profileRecord.numberOfSteps,
+      'isSpeakEnabled': profileRecord.isSpeakEnabled,
+      'numberOfWords': profileRecord.numberOfWords,
       'snoozeDuration': profileRecord.snoozeDuration,
       'gradient': profileRecord.gradient,
       'ringtoneName': profileRecord.ringtoneName,

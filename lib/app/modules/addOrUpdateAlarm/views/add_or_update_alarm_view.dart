@@ -20,6 +20,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/qr_bar_c
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/quote_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_once_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/repeat_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/speak_challenge_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/screen_activity_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/setting_selector.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to_dismiss_tile.dart';
@@ -171,6 +172,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             isPedometerEnabled:
                                 controller.isPedometerEnabled.value,
                             numberOfSteps: controller.numberOfSteps.value,
+                            isSpeakEnabled: controller.isSpeakEnabled.value,
+                            numberOfWords: controller.numberOfWords.value,
                             ringtoneName: controller.customRingtoneName.value,
                             activityMonitor:
                                 controller.isActivityMonitorenabled.value,
@@ -970,6 +973,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     .primaryDisabledTextColor.value,
                               ),
                               PedometerChallenge(
+                                controller: controller,
+                                themeController: themeController,
+                              ),
+                              Divider(
+                                color: themeController
+                                    .primaryDisabledTextColor.value,
+                              ),
+                              SpeakChallenge(
                                 controller: controller,
                                 themeController: themeController,
                               ),

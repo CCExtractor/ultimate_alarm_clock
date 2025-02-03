@@ -122,118 +122,128 @@ const ProfileModelSchema = CollectionSchema(
       name: r'isSharedAlarmEnabled',
       type: IsarType.bool,
     ),
-    r'isWeatherEnabled': PropertySchema(
+    r'isSpeakEnabled': PropertySchema(
       id: 21,
+      name: r'isSpeakEnabled',
+      type: IsarType.bool,
+    ),
+    r'isWeatherEnabled': PropertySchema(
+      id: 22,
       name: r'isWeatherEnabled',
       type: IsarType.bool,
     ),
     r'label': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'label',
       type: IsarType.string,
     ),
     r'lastEditedUserId': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'lastEditedUserId',
       type: IsarType.string,
     ),
     r'location': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'location',
       type: IsarType.string,
     ),
     r'mathsDifficulty': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'mathsDifficulty',
       type: IsarType.long,
     ),
     r'minutesSinceMidnight': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'minutesSinceMidnight',
       type: IsarType.long,
     ),
     r'mutexLock': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'mutexLock',
       type: IsarType.bool,
     ),
     r'note': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'note',
       type: IsarType.string,
     ),
     r'numMathsQuestions': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
     r'numberOfSteps': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'numberOfSteps',
       type: IsarType.long,
     ),
+    r'numberOfWords': PropertySchema(
+      id: 32,
+      name: r'numberOfWords',
+      type: IsarType.long,
+    ),
     r'ownerId': PropertySchema(
-      id: 31,
+      id: 33,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 32,
+      id: 34,
       name: r'ownerName',
       type: IsarType.string,
     ),
     r'profileName': PropertySchema(
-      id: 33,
+      id: 35,
       name: r'profileName',
       type: IsarType.string,
     ),
     r'qrValue': PropertySchema(
-      id: 34,
+      id: 36,
       name: r'qrValue',
       type: IsarType.string,
     ),
     r'ringOn': PropertySchema(
-      id: 35,
+      id: 37,
       name: r'ringOn',
       type: IsarType.bool,
     ),
     r'ringtoneName': PropertySchema(
-      id: 36,
+      id: 38,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 37,
+      id: 39,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 38,
+      id: 40,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 39,
+      id: 41,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 40,
+      id: 42,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'volMax': PropertySchema(
-      id: 41,
+      id: 43,
       name: r'volMax',
       type: IsarType.double,
     ),
     r'volMin': PropertySchema(
-      id: 42,
+      id: 44,
       name: r'volMin',
       type: IsarType.double,
     ),
     r'weatherTypes': PropertySchema(
-      id: 43,
+      id: 45,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -319,29 +329,31 @@ void _profileModelSerialize(
   writer.writeBool(offsets[18], object.isQrEnabled);
   writer.writeBool(offsets[19], object.isShakeEnabled);
   writer.writeBool(offsets[20], object.isSharedAlarmEnabled);
-  writer.writeBool(offsets[21], object.isWeatherEnabled);
-  writer.writeString(offsets[22], object.label);
-  writer.writeString(offsets[23], object.lastEditedUserId);
-  writer.writeString(offsets[24], object.location);
-  writer.writeLong(offsets[25], object.mathsDifficulty);
-  writer.writeLong(offsets[26], object.minutesSinceMidnight);
-  writer.writeBool(offsets[27], object.mutexLock);
-  writer.writeString(offsets[28], object.note);
-  writer.writeLong(offsets[29], object.numMathsQuestions);
-  writer.writeLong(offsets[30], object.numberOfSteps);
-  writer.writeString(offsets[31], object.ownerId);
-  writer.writeString(offsets[32], object.ownerName);
-  writer.writeString(offsets[33], object.profileName);
-  writer.writeString(offsets[34], object.qrValue);
-  writer.writeBool(offsets[35], object.ringOn);
-  writer.writeString(offsets[36], object.ringtoneName);
-  writer.writeLong(offsets[37], object.shakeTimes);
-  writer.writeStringList(offsets[38], object.sharedUserIds);
-  writer.writeBool(offsets[39], object.showMotivationalQuote);
-  writer.writeLong(offsets[40], object.snoozeDuration);
-  writer.writeDouble(offsets[41], object.volMax);
-  writer.writeDouble(offsets[42], object.volMin);
-  writer.writeLongList(offsets[43], object.weatherTypes);
+  writer.writeBool(offsets[21], object.isSpeakEnabled);
+  writer.writeBool(offsets[22], object.isWeatherEnabled);
+  writer.writeString(offsets[23], object.label);
+  writer.writeString(offsets[24], object.lastEditedUserId);
+  writer.writeString(offsets[25], object.location);
+  writer.writeLong(offsets[26], object.mathsDifficulty);
+  writer.writeLong(offsets[27], object.minutesSinceMidnight);
+  writer.writeBool(offsets[28], object.mutexLock);
+  writer.writeString(offsets[29], object.note);
+  writer.writeLong(offsets[30], object.numMathsQuestions);
+  writer.writeLong(offsets[31], object.numberOfSteps);
+  writer.writeLong(offsets[32], object.numberOfWords);
+  writer.writeString(offsets[33], object.ownerId);
+  writer.writeString(offsets[34], object.ownerName);
+  writer.writeString(offsets[35], object.profileName);
+  writer.writeString(offsets[36], object.qrValue);
+  writer.writeBool(offsets[37], object.ringOn);
+  writer.writeString(offsets[38], object.ringtoneName);
+  writer.writeLong(offsets[39], object.shakeTimes);
+  writer.writeStringList(offsets[40], object.sharedUserIds);
+  writer.writeBool(offsets[41], object.showMotivationalQuote);
+  writer.writeLong(offsets[42], object.snoozeDuration);
+  writer.writeDouble(offsets[43], object.volMax);
+  writer.writeDouble(offsets[44], object.volMin);
+  writer.writeLongList(offsets[45], object.weatherTypes);
 }
 
 ProfileModel _profileModelDeserialize(
@@ -371,29 +383,31 @@ ProfileModel _profileModelDeserialize(
     isQrEnabled: reader.readBool(offsets[18]),
     isShakeEnabled: reader.readBool(offsets[19]),
     isSharedAlarmEnabled: reader.readBool(offsets[20]),
-    isWeatherEnabled: reader.readBool(offsets[21]),
-    label: reader.readString(offsets[22]),
-    lastEditedUserId: reader.readString(offsets[23]),
-    location: reader.readString(offsets[24]),
-    mathsDifficulty: reader.readLong(offsets[25]),
-    minutesSinceMidnight: reader.readLong(offsets[26]),
-    mutexLock: reader.readBool(offsets[27]),
-    note: reader.readString(offsets[28]),
-    numMathsQuestions: reader.readLong(offsets[29]),
-    numberOfSteps: reader.readLong(offsets[30]),
-    ownerId: reader.readString(offsets[31]),
-    ownerName: reader.readString(offsets[32]),
-    profileName: reader.readString(offsets[33]),
-    qrValue: reader.readString(offsets[34]),
-    ringOn: reader.readBool(offsets[35]),
-    ringtoneName: reader.readString(offsets[36]),
-    shakeTimes: reader.readLong(offsets[37]),
-    sharedUserIds: reader.readStringList(offsets[38]),
-    showMotivationalQuote: reader.readBool(offsets[39]),
-    snoozeDuration: reader.readLong(offsets[40]),
-    volMax: reader.readDouble(offsets[41]),
-    volMin: reader.readDouble(offsets[42]),
-    weatherTypes: reader.readLongList(offsets[43]) ?? [],
+    isSpeakEnabled: reader.readBool(offsets[21]),
+    isWeatherEnabled: reader.readBool(offsets[22]),
+    label: reader.readString(offsets[23]),
+    lastEditedUserId: reader.readString(offsets[24]),
+    location: reader.readString(offsets[25]),
+    mathsDifficulty: reader.readLong(offsets[26]),
+    minutesSinceMidnight: reader.readLong(offsets[27]),
+    mutexLock: reader.readBool(offsets[28]),
+    note: reader.readString(offsets[29]),
+    numMathsQuestions: reader.readLong(offsets[30]),
+    numberOfSteps: reader.readLong(offsets[31]),
+    numberOfWords: reader.readLong(offsets[32]),
+    ownerId: reader.readString(offsets[33]),
+    ownerName: reader.readString(offsets[34]),
+    profileName: reader.readString(offsets[35]),
+    qrValue: reader.readString(offsets[36]),
+    ringOn: reader.readBool(offsets[37]),
+    ringtoneName: reader.readString(offsets[38]),
+    shakeTimes: reader.readLong(offsets[39]),
+    sharedUserIds: reader.readStringList(offsets[40]),
+    showMotivationalQuote: reader.readBool(offsets[41]),
+    snoozeDuration: reader.readLong(offsets[42]),
+    volMax: reader.readDouble(offsets[43]),
+    volMin: reader.readDouble(offsets[44]),
+    weatherTypes: reader.readLongList(offsets[45]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[5]);
   object.isarId = id;
@@ -452,48 +466,52 @@ P _profileModelDeserializeProp<P>(
     case 21:
       return (reader.readBool(offset)) as P;
     case 22:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 23:
       return (reader.readString(offset)) as P;
     case 24:
       return (reader.readString(offset)) as P;
     case 25:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 26:
       return (reader.readLong(offset)) as P;
     case 27:
-      return (reader.readBool(offset)) as P;
-    case 28:
-      return (reader.readString(offset)) as P;
-    case 29:
       return (reader.readLong(offset)) as P;
+    case 28:
+      return (reader.readBool(offset)) as P;
+    case 29:
+      return (reader.readString(offset)) as P;
     case 30:
       return (reader.readLong(offset)) as P;
     case 31:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 32:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 33:
       return (reader.readString(offset)) as P;
     case 34:
       return (reader.readString(offset)) as P;
     case 35:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 36:
       return (reader.readString(offset)) as P;
     case 37:
-      return (reader.readLong(offset)) as P;
-    case 38:
-      return (reader.readStringList(offset)) as P;
-    case 39:
       return (reader.readBool(offset)) as P;
-    case 40:
+    case 38:
+      return (reader.readString(offset)) as P;
+    case 39:
       return (reader.readLong(offset)) as P;
+    case 40:
+      return (reader.readStringList(offset)) as P;
     case 41:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 42:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 43:
+      return (reader.readDouble(offset)) as P;
+    case 44:
+      return (reader.readDouble(offset)) as P;
+    case 45:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1522,6 +1540,16 @@ extension ProfileModelQueryFilter
   }
 
   QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
+      isSpeakEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isSpeakEnabled',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
       isWeatherEnabledEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2352,6 +2380,62 @@ extension ProfileModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'numberOfSteps',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
+      numberOfWordsEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'numberOfWords',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
+      numberOfWordsGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'numberOfWords',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
+      numberOfWordsLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'numberOfWords',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterFilterCondition>
+      numberOfWordsBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'numberOfWords',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -3962,6 +4046,20 @@ extension ProfileModelQuerySortBy
   }
 
   QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
+      sortByIsSpeakEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSpeakEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
+      sortByIsSpeakEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSpeakEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
       sortByIsWeatherEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isWeatherEnabled', Sort.asc);
@@ -4089,6 +4187,19 @@ extension ProfileModelQuerySortBy
       sortByNumberOfStepsDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'numberOfSteps', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> sortByNumberOfWords() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfWords', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
+      sortByNumberOfWordsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfWords', Sort.desc);
     });
   }
 
@@ -4499,6 +4610,20 @@ extension ProfileModelQuerySortThenBy
   }
 
   QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
+      thenByIsSpeakEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSpeakEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
+      thenByIsSpeakEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSpeakEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
       thenByIsWeatherEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isWeatherEnabled', Sort.asc);
@@ -4638,6 +4763,19 @@ extension ProfileModelQuerySortThenBy
       thenByNumberOfStepsDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'numberOfSteps', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy> thenByNumberOfWords() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfWords', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QAfterSortBy>
+      thenByNumberOfWordsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'numberOfWords', Sort.desc);
     });
   }
 
@@ -4924,6 +5062,13 @@ extension ProfileModelQueryWhereDistinct
   }
 
   QueryBuilder<ProfileModel, ProfileModel, QDistinct>
+      distinctByIsSpeakEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isSpeakEnabled');
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QDistinct>
       distinctByIsWeatherEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isWeatherEnabled');
@@ -4990,6 +5135,13 @@ extension ProfileModelQueryWhereDistinct
       distinctByNumberOfSteps() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'numberOfSteps');
+    });
+  }
+
+  QueryBuilder<ProfileModel, ProfileModel, QDistinct>
+      distinctByNumberOfWords() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'numberOfWords');
     });
   }
 
@@ -5219,6 +5371,12 @@ extension ProfileModelQueryProperty
     });
   }
 
+  QueryBuilder<ProfileModel, bool, QQueryOperations> isSpeakEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isSpeakEnabled');
+    });
+  }
+
   QueryBuilder<ProfileModel, bool, QQueryOperations>
       isWeatherEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -5280,6 +5438,12 @@ extension ProfileModelQueryProperty
   QueryBuilder<ProfileModel, int, QQueryOperations> numberOfStepsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'numberOfSteps');
+    });
+  }
+
+  QueryBuilder<ProfileModel, int, QQueryOperations> numberOfWordsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'numberOfWords');
     });
   }
 

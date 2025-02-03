@@ -4,6 +4,7 @@ import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/maths_chal
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/pedometer_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/qr_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/shake_challenge_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmChallenge/views/speak_challenge_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -292,6 +293,55 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                             height: 20,
                             width: 0,
                           ),
+                          if (controller.alarmRecord.isSpeakEnabled)
+                            InkWell(
+                              onTap: () {
+                                Utils.hapticFeedback();
+                                Get.to(() => SpeakChallengeView());
+                              },
+                              child: Obx(
+                                    () => Container(
+                                  width: width * 0.91,
+                                  height: height * 0.1,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(18),
+                                    ),
+                                    color: themeController.secondaryBackgroundColor.value,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.record_voice_over,
+                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        size: 28,
+                                      ),
+                                      Text(
+                                        'Speak To Dismiss Challenge',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                          color: themeController.primaryTextColor.value,
+                                        ),
+                                      ),
+                                      Obx(
+                                            () => Icon(
+                                          controller.isPedometerOngoing.value ==
+                                              Status.completed
+                                              ? Icons.done
+                                              : Icons.arrow_forward_ios_sharp,
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(0.3),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),

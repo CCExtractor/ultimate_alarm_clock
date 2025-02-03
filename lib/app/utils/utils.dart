@@ -52,6 +52,8 @@ class Utils {
     shakeTimes: 0,
     isPedometerEnabled: false,
     numberOfSteps: 0,
+    isSpeakEnabled: false,
+    numberOfWords: 0,
     days: [false, false, false, false, false, false, false],
     weatherTypes: [],
     isWeatherEnabled: false,
@@ -474,6 +476,8 @@ class Utils {
       shakeTimes: 0,
       isPedometerEnabled: false,
       numberOfSteps: 0,
+      isSpeakEnabled: false,
+      numberOfWords: 0,
       days: [false, false, false, false, false, false, false],
       weatherTypes: [],
       isWeatherEnabled: false,
@@ -614,7 +618,8 @@ class Utils {
     if (alarmRecord.isMathsEnabled ||
         alarmRecord.isQrEnabled ||
         alarmRecord.isShakeEnabled ||
-        alarmRecord.isPedometerEnabled) {
+        alarmRecord.isPedometerEnabled ||
+        alarmRecord.isSpeakEnabled) {
       return true;
     }
     return false;
