@@ -49,7 +49,8 @@ class ShakeToDismiss extends StatelessWidget {
                   //     ' - no more lazy snoozing :)',
                   description: 'shakeDescription'.tr,
                   iconData: Icons.vibration_sharp,
-                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                  isLightMode:
+                      themeController.currentTheme.value == ThemeMode.light,
                 );
               },
             ),
@@ -122,7 +123,8 @@ class ShakeToDismiss extends StatelessWidget {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.secondaryTextColor.value,
+                                    color: themeController
+                                        .secondaryTextColor.value,
                                   ),
                             ),
                           ),
