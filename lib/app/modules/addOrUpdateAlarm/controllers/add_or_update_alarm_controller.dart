@@ -24,6 +24,7 @@ import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl_phone_number_input/src/models/country_model.dart';
 import '../../settings/controllers/settings_controller.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
@@ -1352,3 +1353,11 @@ class AddOrUpdateAlarmController extends GetxController {
     homeController.writeProfileName(profileModel.profileName);
   }
 }
+
+  int orderedCountryCode(Country countryA, Country countryB) {
+    // `??` for null safety of 'dialCode'
+    String dialCodeA = countryA.dialCode ?? '0';
+    String dialCodeB = countryB.dialCode ?? '0';
+
+    return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
+  }
