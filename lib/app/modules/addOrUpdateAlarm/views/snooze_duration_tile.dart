@@ -36,49 +36,64 @@ class SnoozeDurationTile extends StatelessWidget {
             backgroundColor: themeController.secondaryBackgroundColor.value,
             title: 'Select duration'.tr,
             titleStyle: Theme.of(context).textTheme.displaySmall,
-            content: Obx(
-              () => Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        NumberPicker(
-                          value: controller.snoozeDuration.value,
-                          minValue: 1,
-                          maxValue: 1440,
-                          onChanged: (value) {
-                            Utils.hapticFeedback();
-                            controller.snoozeDuration.value = value;
-                          },
-                        ),
-                        Text(
-                          controller.snoozeDuration.value > 1
-                              ? 'minutes'.tr
-                              : 'minute'.tr,
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Get.back();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kprimaryColor,
-                    ),
-                    child: Text(
-                      'Done'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: themeController.secondaryTextColor.value,
+            content: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Obx(
+                () => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          NumberPicker(
+                            value: controller.snoozeDuration.value <= 0
+                                ? 1
+                                : controller.snoozeDuration
+                                    .value, // Handle 0 or negative values
+                            minValue: 1,
+                            maxValue: 1440,
+                            onChanged: (value) {
+                              Utils.hapticFeedback();
+                              controller.snoozeDuration.value = value;
+                            },
                           ),
+                          Text(
+                            controller.snoozeDuration.value > 1
+                                ? 'minutes'.tr
+                                : 'minute'.tr,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Utils.hapticFeedback();
+                          Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kprimaryColor,
+                        ),
+                        child: Text(
+                          'Done'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: themeController.secondaryTextColor.value,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              // ),
             ),
           );
         },
