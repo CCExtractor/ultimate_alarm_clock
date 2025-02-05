@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/models/flag_model.dart';
 
 class StopwatchController extends GetxController {
   final RxBool isTimerPaused = true.obs;
@@ -74,12 +75,4 @@ class StopwatchController extends GetxController {
     _result.value =
         '${_stopwatch.elapsed.inMinutes.toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inMilliseconds % 1000 ~/ 10).toString().padLeft(2, '0')}';
   }
-}
-
-class Flag {
-  final int number;
-  final Duration lapTime;
-  final Duration totalTime;
-
-  Flag({required this.number, required this.lapTime, required this.totalTime});
 }
