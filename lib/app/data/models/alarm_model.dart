@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:uuid/uuid.dart';
 
 part 'alarm_model.g.dart';
 
@@ -418,5 +419,57 @@ class AlarmModel {
     final rotatedString = s.substring(1) + s[0];
     // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
+  }
+
+  AlarmModel clone() {
+    return AlarmModel(
+      alarmTime: alarmTime,
+      alarmID: Uuid().v4(), // Generate a new unique ID
+      sharedUserIds: sharedUserIds,
+      ownerId: ownerId,
+      ownerName: ownerName,
+      lastEditedUserId: lastEditedUserId,
+      mutexLock: mutexLock,
+      isEnabled: isEnabled,
+      days: List<bool>.from(days),
+      intervalToAlarm: intervalToAlarm,
+      isActivityEnabled: isActivityEnabled,
+      minutesSinceMidnight: minutesSinceMidnight,
+      isLocationEnabled: isLocationEnabled,
+      isSharedAlarmEnabled: isSharedAlarmEnabled,
+      isWeatherEnabled: isWeatherEnabled,
+      location: location,
+      weatherTypes: List<int>.from(weatherTypes),
+      isMathsEnabled: isMathsEnabled,
+      mathsDifficulty: mathsDifficulty,
+      numMathsQuestions: numMathsQuestions,
+      isShakeEnabled: isShakeEnabled,
+      shakeTimes: shakeTimes,
+      isQrEnabled: isQrEnabled,
+      qrValue: qrValue,
+      isPedometerEnabled: isPedometerEnabled,
+      numberOfSteps: numberOfSteps,
+      activityInterval: activityInterval,
+      offsetDetails: offsetDetails != null ? Map.from(offsetDetails!) : null,
+      mainAlarmTime: mainAlarmTime,
+      label: '$label (Copy)', // Append "(Copy)" to the label
+      isOneTime: isOneTime,
+      snoozeDuration: snoozeDuration,
+      gradient: gradient,
+      ringtoneName: ringtoneName,
+      note: note,
+      deleteAfterGoesOff: deleteAfterGoesOff,
+      showMotivationalQuote: showMotivationalQuote,
+      volMax: volMax,
+      volMin: volMin,
+      activityMonitor: activityMonitor,
+      alarmDate: alarmDate,
+      profile: profile,
+      isGuardian: isGuardian,
+      guardianTimer: guardianTimer,
+      guardian: guardian,
+      isCall: isCall,
+      ringOn: ringOn,
+    );
   }
 }

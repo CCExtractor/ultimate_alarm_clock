@@ -19,6 +19,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../data/models/profile_model.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
@@ -734,5 +735,30 @@ class HomeController extends GetxController {
         guardian: profileModel.value.guardian,
         isCall: profileModel.value.isCall,
         ringOn: false);
+  }
+
+  void duplicateAlarm(AlarmModel alarm) {
+    // Clone the alarm
+    var newAlarm = alarm.clone();
+    // Assign a new unique ID
+    newAlarm.alarmID = Uuid().v4();
+    // Add the new alarm to the database
+    if (newAlarm.isSharedAlarmEnabled) {
+      FirestoreDb.addAlarm(userModel.value, newAlarm);
+    } else {
+      IsarDb.addAlarm(newAlarm);
+    }
+    // Refresh the list of alarms
+    refreshUpcomingAlarms();
+    Get.snackbar(
+      'Alarm duplicated',
+      'The alarm has been duplicated.',
+      duration: const Duration(seconds: 4),
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 15,
+      ),
+    );
   }
 }
