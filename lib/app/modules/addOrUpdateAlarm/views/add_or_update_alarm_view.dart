@@ -42,6 +42,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   final InputTimeController inputTimeController =
       Get.put(InputTimeController());
   final SettingsController settingsController = Get.find<SettingsController>();
+  double getFontSize(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return width < 360 ? 14 : 30;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +84,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     controller.timeToAlarm.value.toString(),
                               },
                             ),
-                            style: Theme.of(context).textTheme.titleSmall,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall,
                           ),
                         ),
             ),
@@ -240,6 +246,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .selectedTime
                                                                   .value
                                                                   .minute,
+                                                              
                                                             );
                                                             inputTimeController
                                                                     .inputHrsController
@@ -521,7 +528,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .value;
                                                             },
                                                             itemWidth:
-                                                                width * 0.17,
+                                                                width * 0.2,
                                                             selectedTextStyle:
                                                                 Theme.of(
                                                                         context)
@@ -529,8 +536,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                     .displayLarge!
                                                                     .copyWith(
                                                                       fontSize:
-                                                                          controller.homeController.scalingFactor *
-                                                                              40,
+                                                                          getFontSize(
+                                                                              context),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -542,10 +549,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 .textTheme
                                                                 .displayMedium!
                                                                 .copyWith(
-                                                                  fontSize: controller
-                                                                          .homeController
-                                                                          .scalingFactor *
-                                                                      20,
+                                                                  fontSize:
+                                                                      getFontSize(
+                                                                          context),
                                                                   color: themeController
                                                                       .primaryDisabledTextColor
                                                                       .value,
