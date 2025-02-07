@@ -42,10 +42,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   final InputTimeController inputTimeController =
       Get.put(InputTimeController());
   final SettingsController settingsController = Get.find<SettingsController>();
-  double getFontSize(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return width < 360 ? 14 : 30;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -535,9 +531,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                     .textTheme
                                                                     .displayLarge!
                                                                     .copyWith(
-                                                                      fontSize:
-                                                                          getFontSize(
-                                                                              context),
+                                                                      fontSize: Utils.getFontSize(context),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -550,7 +544,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 .displayMedium!
                                                                 .copyWith(
                                                                   fontSize:
-                                                                      getFontSize(
+                                                                    Utils.getFontSize(
                                                                           context),
                                                                   color: themeController
                                                                       .primaryDisabledTextColor
