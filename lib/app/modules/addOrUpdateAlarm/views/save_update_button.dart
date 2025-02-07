@@ -6,6 +6,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/widgets/action_button.dart';
 
 class SaveUpdateButton extends StatelessWidget {
   const SaveUpdateButton({
@@ -22,40 +23,21 @@ class SaveUpdateButton extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: SizedBox(
-        height: height * 0.06,
-        width: width * 0.8,
-        child: TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
-          ),
-          child: _buildButtonText(context),
-          onPressed: () async {
-            Utils.hapticFeedback();
-            await _handlePermissionAndNavigate();
+    return ActionButton(
+      buttonText: controller.alarmRecord.value.alarmID == '' ? 'Save'.tr : 'Update'.tr,
+      onPressed: () async {
+        await _handlePermissionAndNavigate();
 
-            if (await _checkPermissions()) {
-              if (!controller.homeController.isProfile.value) {
-                await _saveOrUpdateAlarm();
-              } else {
-                _createProfileIfNeeded();
-              }
+        if (await _checkPermissions()) {
+          if (!controller.homeController.isProfile.value) {
+            await _saveOrUpdateAlarm();
+            } else {
+              _createProfileIfNeeded();
             }
-          },
-        ),
-      ),
-    );
-  }
+          }
+        },
 
-  Text _buildButtonText(BuildContext context) {
-    return Text(
-      controller.alarmRecord.value.alarmID == '' ? 'Save'.tr : 'Update'.tr,
-      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-            color: themeController.secondaryTextColor.value,
-          ),
-    );
+      );
   }
 
   Future<bool> _checkPermissions() async {
