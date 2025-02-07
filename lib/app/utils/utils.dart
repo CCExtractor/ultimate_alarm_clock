@@ -826,4 +826,8 @@ class Utils {
       return parts[0].substring(0, 2);
     }
   }
+  static double getFontSize(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return width < 360 ? 14 : 30;
+  }
 }
