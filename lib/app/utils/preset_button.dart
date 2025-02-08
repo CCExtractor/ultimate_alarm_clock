@@ -24,7 +24,7 @@ Widget presetButton(BuildContext context, String label, Duration duration) {
       ),
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
-      fixedSize: Size(
+      minimumSize: Size(
         width * 0.02,
         height * 0.01,
       ),
