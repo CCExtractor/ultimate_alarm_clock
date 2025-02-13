@@ -168,21 +168,21 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 ),
               ),
 
-              // Dismiss button (not full width) with a gap above the Exit Preview button
+              
               Positioned(
-                bottom: 80, // Adjusted to add a gap above the Exit Preview button
-                left: width * 0.1, // 10% margin on both sides (80% width)
-                right: width * 0.1, // 10% margin on both sides (80% width)
+                bottom: 80, 
+                left: width * 0.1, 
+                right: width * 0.1, 
                 child: Obx(
                   () => Visibility(
                     visible: controller.showButton.value,
                     child: SizedBox(
                       height: height * 0.07,
-                      width: width * 0.8, // 80% width
+                      width: width * 0.8,
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            kprimaryColor, // Use your primary color
+                            kprimaryColor, 
                           ),
                         ),
                         onPressed: () {
@@ -224,24 +224,24 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 ),
               ),
 
-              // Full-width red exit button at the very bottom
+              
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: Container(
                   width: double.infinity,
-                  height: 60, // Adjust height as needed
-                  color: Colors.red, // Red background color
+                  height: 60, 
+                  color: Colors.red, 
                   child: TextButton(
                     onPressed: () {
                       Utils.hapticFeedback();
-                      Get.offNamed('/bottom-navigation-bar'); // Exit the preview
+                      Get.offNamed('/bottom-navigation-bar'); 
                     },
                     child: Text(
                       'Exit Preview'.tr,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.white, // White text color
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
