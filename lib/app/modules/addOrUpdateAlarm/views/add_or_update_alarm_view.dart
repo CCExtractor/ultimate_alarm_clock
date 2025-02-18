@@ -888,7 +888,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                         color: themeController
                                             .primaryDisabledTextColor.value,
                                       ),
-                                      GaurdianAngel(
+                                      GuardianAngel(
                                         controller: controller,
                                         themeController: themeController,
                                       ),
