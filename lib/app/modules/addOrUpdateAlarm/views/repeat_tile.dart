@@ -364,9 +364,9 @@ class RepeatTile extends StatelessWidget {
 
             // Update repeatDays based on isWeekdaysSelected value
             for (int i = 0; i < controller.repeatDays.length; i++) {
-              // Assuming weekdays are from Monday to Friday (index 0 to 5)
+              // Assuming weekdays are from Monday to Friday (index 0 to 4)
               controller.repeatDays[i] =
-                  controller.isWeekdaysSelected.value && i >= 0 && i < 5;
+                  controller.isWeekdaysSelected.value && i >= 0 && i <= 4;
             }
           },
           child: Padding(
@@ -394,11 +394,11 @@ class RepeatTile extends StatelessWidget {
 
                     // Update repeatDays based on isWeekdaysSelected value
                     for (int i = 0; i < controller.repeatDays.length; i++) {
-                      // Assuming weekdays are from Monday to Friday (index 1 to 5)
+                      // Assuming weekdays are from Monday to Friday (index 0 to 4)
                       controller.repeatDays[i] =
                           controller.isWeekdaysSelected.value &&
-                              i >= 1 &&
-                              i <= 5;
+                              i >= 0 &&
+                              i <= 4;
                     }
                   },
                 ),
