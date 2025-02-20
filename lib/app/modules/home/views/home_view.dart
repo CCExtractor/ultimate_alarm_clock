@@ -443,7 +443,7 @@ class HomeView extends GetView<HomeController> {
                   Padding(
                     padding:
                         EdgeInsets.only(bottom: controller.scalingFactor * 20),
-                    child: ProfileSelect(),
+                    child: const ProfileSelect(),
                   ),
                   Expanded(
                     child: GlowingOverscrollIndicator(
