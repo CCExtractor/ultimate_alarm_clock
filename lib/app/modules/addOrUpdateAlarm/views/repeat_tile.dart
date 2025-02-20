@@ -22,7 +22,6 @@ class RepeatTile extends StatelessWidget {
     var height = Get.height;
     var width = Get.width;
 
-
     return Obx(
       () => InkWell(
         onTap: () {
@@ -172,7 +171,15 @@ class RepeatTile extends StatelessWidget {
                   activeColor: kprimaryColor.withOpacity(0.8),
                   value: controller.isDailySelected.value,
                   onChanged: (value) {
-                    // This onChanged can be empty, as we handle the tap in InkWell
+                    Utils.hapticFeedback();
+                    controller
+                        .setIsDailySelected(!controller.isDailySelected.value);
+
+                    // Update repeatDays based on isDailySelected value
+                    for (int i = 0; i < controller.repeatDays.length; i++) {
+                      controller.repeatDays[i] =
+                          controller.isDailySelected.value;
+                    }
                   },
                 ),
               ],
