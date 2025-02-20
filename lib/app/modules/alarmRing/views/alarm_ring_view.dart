@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -17,7 +16,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
   Obx getAddSnoozeButtons(
       BuildContext context, int snoozeMinutes, String title) {
     return Obx(
-        () => TextButton(
+      () => TextButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
             themeController.secondaryBackgroundColor.value,
@@ -40,10 +39,9 @@ class AlarmControlView extends GetView<AlarmControlController> {
 
   @override
   Widget build(BuildContext context) {
-    // var width = Get.width;
-    // var height = Get.height;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
+
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -60,169 +58,197 @@ class AlarmControlView extends GetView<AlarmControlController> {
       },
       child: SafeArea(
         child: Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+          body: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Obx(
-                  () => SizedBox(
-                    height: height * 0.06,
-                    width: width * 0.8,
-                    child: controller.showButton.value
-                        ? TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                kprimaryColor,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Obx(
+                      () => Column(
+                        children: [
+                          Text(
+                            controller.formattedDate.value,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                            width: 0,
+                          ),
+                          Text(
+                            (controller.isSnoozing.value)
+                                ? "${controller.minutes.toString().padLeft(2, '0')}"
+                                    // ignore: lines_longer_than_80_chars
+                                    ":${controller.seconds.toString().padLeft(2, '0')}"
+                                : '${controller.timeNow[0]} '
+                                    '${controller.timeNow[1]}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(fontSize: 50),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                            width: 0,
+                          ),
+                          Obx(
+                            () => Visibility(
+                              visible: controller.isSnoozing.value,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  getAddSnoozeButtons(context, 1, '+1 min'),
+                                  getAddSnoozeButtons(context, 2, '+2 min'),
+                                  getAddSnoozeButtons(context, 5, '+5 min'),
+                                ],
                               ),
                             ),
-                            child: Text(
-                              Utils.isChallengeEnabled(
-                                controller.currentlyRingingAlarm.value,
-                              )
-                                  ? 'Start Challenge'.tr
-                                  : 'Dismiss'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: themeController.secondaryTextColor.value,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Obx(
+                      () {
+                        return Visibility(
+                          visible: controller
+                              .currentlyRingingAlarm.value.note.isNotEmpty,
+                          child: Text(
+                            controller.currentlyRingingAlarm.value.note,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: themeController.primaryTextColor.value,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w100,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                          ),
+                        );
+                      },
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: !controller.isSnoozing.value,
+                        child: Obx(
+                          () => Padding(
+                            padding: Get.arguments != null
+                                ? const EdgeInsets.symmetric(vertical: 90.0)
+                                : EdgeInsets.zero,
+                            child: SizedBox(
+                              height: height * 0.07,
+                              width: width * 0.5,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    themeController.secondaryBackgroundColor.value,
                                   ),
+                                ),
+                                child: Text(
+                                  'Snooze'.tr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        color: themeController.primaryTextColor.value,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  controller.startSnooze();
+                                },
+                              ),
                             ),
-                            onPressed: () {
-                              Utils.hapticFeedback();
-                              if (controller
-                                  .currentlyRingingAlarm.value.isGuardian) {
-                                controller.guardianTimer.cancel();
-                              }
-                              if (Utils.isChallengeEnabled(
-                                controller.currentlyRingingAlarm.value,
-                              )) {
-                                Get.toNamed(
-                                  '/alarm-challenge',
-                                  arguments:
-                                      controller.currentlyRingingAlarm.value,
-                                );
-                              } else {
-                                Get.offNamed(
-                                  '/bottom-navigation-bar',
-                                  arguments:
-                                      controller.currentlyRingingAlarm.value,
-                                );
-                              }
-                            },
-                          )
-                        : const SizedBox(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Obx(
-                  () => Column(
-                    children: [
-                      Text(
-                        controller.formattedDate.value,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                        width: 0,
-                      ),
-                      Text(
-                        (controller.isSnoozing.value)
-                            ? "${controller.minutes.toString().padLeft(2, '0')}"
-                                // ignore: lines_longer_than_80_chars
-                                ":${controller.seconds.toString().padLeft(2, '0')}"
-                            : '${controller.timeNow[0]} '
-                                '${controller.timeNow[1]}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge!
-                            .copyWith(fontSize: 50),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                        width: 0,
-                      ),
-                      Obx(
-                        () => Visibility(
-                          visible: controller.isSnoozing.value,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              getAddSnoozeButtons(context, 1, '+1 min'),
-                              getAddSnoozeButtons(context, 2, '+2 min'),
-                              getAddSnoozeButtons(context, 5, '+5 min'),
-                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Obx(
-                  () {
-                    return Visibility(
-                      visible: controller
-                          .currentlyRingingAlarm.value.note.isNotEmpty,
-                      child: Text(
-                        controller.currentlyRingingAlarm.value.note,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: themeController.primaryTextColor.value,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w100,
-                              fontStyle: FontStyle.italic,
-                            ),
-                      ),
-                    );
-                  },
-                ),
-                Obx(
+              ),
+
+              
+              Positioned(
+                bottom: 80, 
+                left: width * 0.1, 
+                right: width * 0.1, 
+                child: Obx(
                   () => Visibility(
-                    visible: !controller.isSnoozing.value,
-                    child: Obx(
-                      () => Padding(
-                        padding: Get.arguments != null
-                            ? const EdgeInsets.symmetric(vertical: 90.0)
-                            : EdgeInsets.zero,
-                        child: SizedBox(
-                          height: height * 0.07,
-                          width: width * 0.5,
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                themeController.secondaryBackgroundColor.value,
-                              ),
-                            ),
-                            child: Text(
-                              'Snooze'.tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: themeController.primaryTextColor.value,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            onPressed: () {
-                              Utils.hapticFeedback();
-                              controller.startSnooze();
-                            },
+                    visible: controller.showButton.value,
+                    child: SizedBox(
+                      height: height * 0.07,
+                      width: width * 0.8,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            kprimaryColor, 
                           ),
+                        ),
+                        onPressed: () {
+                          Utils.hapticFeedback();
+                          if (controller.currentlyRingingAlarm.value.isGuardian) {
+                            controller.guardianTimer.cancel();
+                          }
+                          if (Utils.isChallengeEnabled(
+                            controller.currentlyRingingAlarm.value,
+                          )) {
+                            Get.toNamed(
+                              '/alarm-challenge',
+                              arguments: controller.currentlyRingingAlarm.value,
+                            );
+                          } else {
+                            Get.offNamed(
+                              '/bottom-navigation-bar',
+                              arguments: controller.currentlyRingingAlarm.value,
+                            );
+                          }
+                        },
+                        child: Text(
+                          Utils.isChallengeEnabled(
+                            controller.currentlyRingingAlarm.value,
+                          )
+                              ? 'Start Challenge'.tr
+                              : 'Dismiss'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: themeController.secondaryTextColor.value,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+
+              
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  width: double.infinity,
+                  height: 60, 
+                  color: Colors.red, 
+                  child: TextButton(
+                    onPressed: () {
+                      Utils.hapticFeedback();
+                      Get.offNamed('/bottom-navigation-bar'); 
+                    },
+                    child: Text(
+                      'Exit Preview'.tr,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
