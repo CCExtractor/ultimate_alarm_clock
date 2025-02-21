@@ -8,6 +8,8 @@ import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dar
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 
+import 'dart:io';
+
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
@@ -17,13 +19,18 @@ Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Permission.notification.isDenied.then((value) {
-    if (value) {
-      Permission.notification.request();
-    }
-  });
+  if (Platform.isAndroid) {
+    await Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    });
+  }
+  
 
-  await Firebase.initializeApp();
+  if(Platform.isAndroid){
+    await Firebase.initializeApp();
+  }
 
   await Get.putAsync(() => GetStorageProvider().init());
 
