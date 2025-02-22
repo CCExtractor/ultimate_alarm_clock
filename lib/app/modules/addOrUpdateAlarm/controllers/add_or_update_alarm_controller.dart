@@ -26,6 +26,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl_phone_number_input/src/models/country_model.dart';
 import '../../settings/controllers/settings_controller.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
@@ -980,6 +981,76 @@ class AddOrUpdateAlarmController extends GetxController {
       _compareAndSetChange(fieldName, value);
     });
   }
+
+  void openSnoozeDurationDialog(BuildContext context, ThemeController themeController) {
+  int duration = snoozeDuration.value;
+  
+  if (duration < 1) {
+    duration = 1;
+    snoozeDuration.value = 1;
+  }
+  Get.defaultDialog(
+    onWillPop: () async {
+      Get.back();
+      snoozeDuration.value = duration;
+      return true;
+    },
+    titlePadding: const EdgeInsets.only(top: 20),
+    backgroundColor: themeController.secondaryBackgroundColor.value,
+    title: 'Select duration'.tr,
+    titleStyle: Theme.of(context).textTheme.displaySmall,
+    content: SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
+        child: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    NumberPicker(
+                      value: snoozeDuration.value,
+                      minValue: 1,
+                      maxValue: 1440,
+                      onChanged: (value) {
+                        Utils.hapticFeedback();
+                        snoozeDuration.value = value;
+                      },
+                    ),
+                    Text(
+                      snoozeDuration.value > 1
+                          ? 'minutes'.tr
+                          : 'minute'.tr,
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Utils.hapticFeedback();
+                  Get.back();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kprimaryColor,
+                ),
+                child: Text(
+                  'Done'.tr,
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        color: themeController.secondaryTextColor.value,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
   // if initialValues map contains fieldName and newValue is equal to currentValue
   // then set changeFields map field to true
