@@ -78,10 +78,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           Text(
                             (controller.isSnoozing.value)
                                 ? "${controller.minutes.toString().padLeft(2, '0')}"
-                                    // ignore: lines_longer_than_80_chars
                                     ":${controller.seconds.toString().padLeft(2, '0')}"
-                                : '${controller.timeNow[0]} '
-                                    '${controller.timeNow[1]}',
+                                : (controller.is24HourFormat.value)
+                                    ? '${controller.timeNow24Hr}'
+                                    : '${controller.timeNow[0]} ${controller.timeNow[1]}',
                             style: Theme.of(context)
                                 .textTheme
                                 .displayLarge!
@@ -141,7 +141,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               child: TextButton(
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                    themeController.secondaryBackgroundColor.value,
+                                    themeController
+                                        .secondaryBackgroundColor.value,
                                   ),
                                 ),
                                 child: Text(
@@ -150,7 +151,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       .textTheme
                                       .bodyMedium!
                                       .copyWith(
-                                        color: themeController.primaryTextColor.value,
+                                        color: themeController
+                                            .primaryTextColor.value,
                                         fontWeight: FontWeight.w600,
                                       ),
                                 ),
@@ -167,12 +169,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ],
                 ),
               ),
-
-              
               Positioned(
-                bottom: 80, 
-                left: width * 0.1, 
-                right: width * 0.1, 
+                bottom: 80,
+                left: width * 0.1,
+                right: width * 0.1,
                 child: Obx(
                   () => Visibility(
                     visible: controller.showButton.value,
@@ -182,12 +182,13 @@ class AlarmControlView extends GetView<AlarmControlController> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            kprimaryColor, 
+                            kprimaryColor,
                           ),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
-                          if (controller.currentlyRingingAlarm.value.isGuardian) {
+                          if (controller
+                              .currentlyRingingAlarm.value.isGuardian) {
                             controller.guardianTimer.cancel();
                           }
                           if (Utils.isChallengeEnabled(
@@ -223,20 +224,18 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-
-              
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: Container(
                   width: double.infinity,
-                  height: 60, 
-                  color: Colors.red, 
+                  height: 60,
+                  color: Colors.red,
                   child: TextButton(
                     onPressed: () {
                       Utils.hapticFeedback();
-                      Get.offNamed('/bottom-navigation-bar'); 
+                      Get.offNamed('/bottom-navigation-bar');
                     },
                     child: Text(
                       'Exit Preview'.tr,
