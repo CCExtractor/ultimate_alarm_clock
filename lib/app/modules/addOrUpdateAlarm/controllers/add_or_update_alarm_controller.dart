@@ -180,83 +180,91 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   checkOverlayPermissionAndNavigate() async {
-    if (!(await Permission.systemAlertWindow.isGranted) &&
-        !(await Permission.ignoreBatteryOptimizations.isGranted)) {
-      Get.defaultDialog(
-        backgroundColor: themeController.secondaryBackgroundColor.value,
-        title: 'Permission Required',
-        titleStyle: TextStyle(
-          color: themeController.primaryTextColor.value,
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        titlePadding: const EdgeInsets.only(top: 30, right: 40),
-        content: const Text(
-          'This app requires permission to draw overlays,send notifications'
-          ' and Ignore batter optimization.',
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
-            ),
-            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
-            onPressed: () {
-              Get.back();
-            },
+    if (Platform.isAndroid) {
+      if (!(await Permission.systemAlertWindow.isGranted) &&
+          !(await Permission.ignoreBatteryOptimizations.isGranted)) {
+        Get.defaultDialog(
+          backgroundColor: themeController.secondaryBackgroundColor.value,
+          title: 'Permission Required',
+          titleStyle: TextStyle(
+            color: themeController.primaryTextColor.value,
           ),
-          const SizedBox(
-            width: 10,
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          titlePadding: const EdgeInsets.only(top: 30, right: 40),
+          content: const Text(
+            'This app requires permission to draw overlays,send notifications'
+            ' and Ignore batter optimization.',
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Get.back();
+              },
             ),
-            child: const Text(
-              'Grant Permission',
-              style: TextStyle(color: Colors.black),
+            const SizedBox(
+              width: 10,
             ),
-            onPressed: () async {
-              Get.back();
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child: const Text(
+                'Grant Permission',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () async {
+                Get.back();
 
-              if (Platform.isAndroid) {
-                // Request overlay permission
-                if (!(await Permission.systemAlertWindow.isGranted)) {
-                  final status = await Permission.systemAlertWindow.request();
-                  if (!status.isGranted) {
-                    debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                if (Platform.isAndroid) {
+                  // Request overlay permission
+                  if (!(await Permission.systemAlertWindow.isGranted)) {
+                    final status = await Permission.systemAlertWindow.request();
+                    if (!status.isGranted) {
+                      debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                      return;
+                    }
+                  }
+
+                  if (!(await Permission
+                      .ignoreBatteryOptimizations.isGranted)) {
+                    bool requested = await Permission.ignoreBatteryOptimizations
+                        .request()
+                        .isGranted;
+                    if (!requested) {
+                      debugPrint(
+                        'IGNORE_BATTERY_OPTIMIZATION permission denied!',
+                      );
+                      return;
+                    }
+                  }
+                }
+
+                // Request notification permission
+                if (!await Permission.notification.isGranted) {
+                  final status = await Permission.notification.request();
+                  if (status != PermissionStatus.granted) {
+                    debugPrint('Notification permission denied!');
                     return;
                   }
                 }
 
-                if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
-                  bool requested = await Permission.ignoreBatteryOptimizations
-                      .request()
-                      .isGranted;
-                  if (!requested) {
-                    debugPrint(
-                      'IGNORE_BATTERY_OPTIMIZATION permission denied!',
-                    );
-                    return;
-                  }
-                }
-              }
-
-              // Request notification permission
-              if (!await Permission.notification.isGranted) {
-                final status = await Permission.notification.request();
-                if (status != PermissionStatus.granted) {
-                  debugPrint('Notification permission denied!');
-                  return;
-                }
-              }
-
-              Get.back();
-            },
-          ),
-        ],
-      );
-    } else {
+                Get.back();
+              },
+            ),
+          ],
+        );
+      } else {
+        Get.back();
+      }
+    }
+    if(Platform.isMacOS){
+      //Grant permissions on mac.
       Get.back();
     }
   }
@@ -1269,12 +1277,17 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord.days,
       );
 
-      Fluttertoast.showToast(
-        msg: 'Rings in $timeToAlarm',
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: themeController.secondaryBackgroundColor.value,
-        textColor: themeController.primaryTextColor.value,
-      );
+      if (Platform.isAndroid) {
+        Fluttertoast.showToast(
+          msg: 'Rings in $timeToAlarm',
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: themeController.secondaryBackgroundColor.value,
+          textColor: themeController.primaryTextColor.value,
+        );
+      }
+      if (Platform.isMacOS){
+        debugPrint('Rings in $timeToAlarm');
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
