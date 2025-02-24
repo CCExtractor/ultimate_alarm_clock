@@ -21,10 +21,10 @@ class InputTimeController extends GetxController {
   final selectedDateTime = DateTime.now().obs;
   bool isInputtingTime = false;
 
-  
+
   int? _previousDisplayHour;
 
-  
+
   void confirmTimeInput() {
     setTime();
     changeDatePicker();
@@ -37,25 +37,25 @@ class InputTimeController extends GetxController {
     super.onInit();
   }
 
-  
+
   final isAM = true.obs;
 
-  
+
   void changePeriod(String period) {
     isAM.value = period == 'AM';
   }
 
-  
+
   void changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
   }
 
-  
+
   void changeTimePickerTimer() {
     isTimePickerTimer.value = !isTimePickerTimer.value;
   }
 
-  
+
   int convert24(int value, int meridiemIndex) {
     if (!settingsController.is24HrsEnabled.value) {
       if (meridiemIndex == 0) {
@@ -71,9 +71,9 @@ class InputTimeController extends GetxController {
     return value;
   }
 
-  
-  
-  
+
+
+
   void toggleIfAtBoundary() {
     if (!settingsController.is24HrsEnabled.value) {
       final rawHourText = inputHrsController.text.trim();
@@ -84,7 +84,7 @@ class InputTimeController extends GetxController {
         debugPrint("toggleIfAtBoundary error parsing hour: $e");
         return;
       }
-  
+
       if (newHour == 0) {
         newHour = 12;
       }
@@ -100,12 +100,12 @@ class InputTimeController extends GetxController {
     }
   }
 
-  
+
   void setTime() {
     AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
     selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
 
-  
+
     isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
     inputHrsController.text = settingsController.is24HrsEnabled.value
         ? selectedDateTime.value.hour.toString()
@@ -116,7 +116,7 @@ class InputTimeController extends GetxController {
                 : selectedDateTime.value.hour.toString()));
     inputMinutesController.text = selectedDateTime.value.minute.toString();
 
-  
+
     toggleIfAtBoundary();
 
     try {
@@ -166,7 +166,7 @@ class InputTimeController extends GetxController {
     }
   }
 
-  
+
   void setTimerTime() {
     TimerController timerController = Get.find<TimerController>();
     try {
