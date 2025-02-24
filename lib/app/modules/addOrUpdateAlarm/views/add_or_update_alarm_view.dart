@@ -565,7 +565,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         width: 80,
                                                         child: TextField(
                                                           onChanged: (_) {
-                                                            // Automatically toggle AM/PM when the time is 12:00
+                                                            
                                                             if (int.parse(inputTimeController
                                                                         .inputHrsController
                                                                         .text) ==
