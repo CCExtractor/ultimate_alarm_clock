@@ -7,15 +7,23 @@ import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_control
 
 class InputTimeController extends GetxController {
   SettingsController settingsController = Get.find<SettingsController>();
+
   final isTimePicker = false.obs;
   final isTimePickerTimer = false.obs;
+
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
+
   TextEditingController inputHoursControllerTimer = TextEditingController();
   TextEditingController inputMinutesControllerTimer = TextEditingController();
   TextEditingController inputSecondsControllerTimer = TextEditingController();
+
   final selectedDateTime = DateTime.now().obs;
   bool isInputtingTime = false;
+
+
+  int? _previousDisplayHour;
+
 
   void confirmTimeInput() {
     setTime();
@@ -29,18 +37,24 @@ class InputTimeController extends GetxController {
     super.onInit();
   }
 
+
   final isAM = true.obs;
-  changePeriod(String period) {
+
+
+  void changePeriod(String period) {
     isAM.value = period == 'AM';
   }
 
-  changeDatePicker() {
+
+  void changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
   }
 
-  changeTimePickerTimer() {
+
+  void changeTimePickerTimer() {
     isTimePickerTimer.value = !isTimePickerTimer.value;
   }
+
 
   int convert24(int value, int meridiemIndex) {
     if (!settingsController.is24HrsEnabled.value) {
@@ -57,62 +71,89 @@ class InputTimeController extends GetxController {
     return value;
   }
 
+
+
+
+  void toggleIfAtBoundary() {
+    if (!settingsController.is24HrsEnabled.value) {
+      final rawHourText = inputHrsController.text.trim();
+      int newHour;
+      try {
+        newHour = int.parse(rawHourText);
+      } catch (e) {
+        debugPrint("toggleIfAtBoundary error parsing hour: $e");
+        return;
+      }
+
+      if (newHour == 0) {
+        newHour = 12;
+      }
+      debugPrint("toggleIfAtBoundary: previousDisplayHour = $_previousDisplayHour, newHour = $newHour");
+      if (_previousDisplayHour != null) {
+        if ((_previousDisplayHour == 11 && newHour == 12) ||
+            (_previousDisplayHour == 12 && newHour == 11)) {
+          isAM.value = !isAM.value;
+          debugPrint("toggleIfAtBoundary: Toggled isAM to ${isAM.value}");
+        }
+      }
+      _previousDisplayHour = newHour;
+    }
+  }
+
+
   void setTime() {
-    AddOrUpdateAlarmController addOrUpdateAlarmController =
-        Get.find<AddOrUpdateAlarmController>();
+    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
     selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+
+
     isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
     inputHrsController.text = settingsController.is24HrsEnabled.value
         ? selectedDateTime.value.hour.toString()
         : (selectedDateTime.value.hour == 0
-            ? 12.toString()
+            ? '12'
             : (selectedDateTime.value.hour > 12
                 ? (selectedDateTime.value.hour - 12).toString()
                 : selectedDateTime.value.hour.toString()));
     inputMinutesController.text = selectedDateTime.value.minute.toString();
+
+
+    toggleIfAtBoundary();
+
     try {
       int hour = int.parse(inputHrsController.text);
       if (!settingsController.is24HrsEnabled.value) {
         if (isAM.value) {
-          if (hour == 12) {
-            hour = hour - 12;
-          }
+          if (hour == 12) hour = 0; 
         } else {
-          if (hour != 12) {
-            hour = hour + 12;
-          }
+          if (hour != 12) hour = hour + 12;
         }
       }
 
       int minute = int.parse(inputMinutesController.text);
       final time = TimeOfDay(hour: hour, minute: minute);
       DateTime today = DateTime.now();
-      DateTime tomorrow = today.add(const Duration(days: 1));
-      bool isNextDay =
-          (time.hour == today.hour && time.minute < today.minute) ||
-              (time.hour < today.hour);
+      DateTime tomorrow = today.add(Duration(days: 1));
+
+      bool isNextDay = (time.hour == today.hour && time.minute < today.minute) || (time.hour < today.hour);
       bool isNextMonth = isNextDay && (today.day > tomorrow.day);
       bool isNextYear = isNextMonth && (today.month > tomorrow.month);
       int day = isNextDay ? tomorrow.day : today.day;
       int month = isNextMonth ? tomorrow.month : today.month;
-      int year = isNextYear ? tomorrow.month : today.month;
-      selectedDateTime.value =
-          DateTime(year, month, day, time.hour, time.minute);
+      int year = isNextYear ? tomorrow.year : today.year;
+      selectedDateTime.value = DateTime(year, month, day, time.hour, time.minute);
       addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
 
       if (!settingsController.is24HrsEnabled.value) {
         if (selectedDateTime.value.hour == 0) {
           addOrUpdateAlarmController.hours.value = 12;
         } else if (selectedDateTime.value.hour > 12) {
-          addOrUpdateAlarmController.hours.value =
-              (selectedDateTime.value.hour - 12);
+          addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour - 12;
         } else {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }
       } else {
-        addOrUpdateAlarmController.hours.value = convert24(
-            selectedDateTime.value.hour,
-            addOrUpdateAlarmController.meridiemIndex.value);
+        addOrUpdateAlarmController.hours.value =
+            convert24(selectedDateTime.value.hour, addOrUpdateAlarmController.meridiemIndex.value);
       }
       addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
       if (selectedDateTime.value.hour >= 12) {
@@ -125,14 +166,13 @@ class InputTimeController extends GetxController {
     }
   }
 
+
   void setTimerTime() {
     TimerController timerController = Get.find<TimerController>();
-
     try {
       int hours = int.parse(inputHoursControllerTimer.text);
       int minutes = int.parse(inputMinutesControllerTimer.text);
       int seconds = int.parse(inputSecondsControllerTimer.text);
-
       timerController.hours.value = hours;
       timerController.minutes.value = minutes;
       timerController.seconds.value = seconds;
@@ -143,22 +183,9 @@ class InputTimeController extends GetxController {
 
   void setTextFieldTimerTime() {
     TimerController timerController = Get.find<TimerController>();
-
     inputHoursControllerTimer.text = timerController.hours.value.toString();
     inputMinutesControllerTimer.text = timerController.minutes.value.toString();
     inputSecondsControllerTimer.text = timerController.seconds.value.toString();
-
-    try {
-      String hours = timerController.hours.value.toString();
-      String minutes = timerController.minutes.value.toString();
-      String seconds = timerController.seconds.value.toString();
-
-      inputHoursControllerTimer.text = hours;
-      inputMinutesControllerTimer.text = minutes;
-      inputSecondsControllerTimer.text = seconds;
-    } catch (e) {
-      debugPrint(e.toString());
-    }
   }
 
   @override
@@ -173,28 +200,16 @@ class InputTimeController extends GetxController {
 }
 
 class LimitRange extends TextInputFormatter {
-  LimitRange(
-    this.minRange,
-    this.maxRange,
-  ) : assert(
-          minRange < maxRange,
-        );
-
+  LimitRange(this.minRange, this.maxRange) : assert(minRange < maxRange);
   final int minRange;
   final int maxRange;
 
   @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     try {
-      var value = int.parse(newValue.text);
-      if (value < minRange) {
-        return TextEditingValue(text: minRange.toString());
-      } else if (value > maxRange) {
-        return TextEditingValue(text: maxRange.toString());
-      }
+      int value = int.parse(newValue.text);
+      if (value < minRange) return TextEditingValue(text: minRange.toString());
+      else if (value > maxRange) return TextEditingValue(text: maxRange.toString());
       return newValue;
     } catch (e) {
       debugPrint(e.toString());
