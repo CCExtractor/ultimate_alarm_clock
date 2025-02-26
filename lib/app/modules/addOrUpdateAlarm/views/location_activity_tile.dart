@@ -98,10 +98,6 @@ class LocationTile extends StatelessWidget {
             if (value == 0) {
               controller.isLocationEnabled.value = false;
             } else if (value == 1) {
-              if (controller.isLocationEnabled.value == false) {
-                await controller.getLocation();
-              }
-
               Get.defaultDialog(
                 backgroundColor: themeController.secondaryBackgroundColor.value,
                 title: 'Set location to automatically cancel alarm!',
@@ -152,6 +148,11 @@ class LocationTile extends StatelessWidget {
                   ],
                 ),
               );
+
+              if (controller.isLocationEnabled.value == false) {
+                await controller.getLocation();
+                controller.mapController.move(controller.selectedPoint.value, 15);
+              }
             }
           });
         },
