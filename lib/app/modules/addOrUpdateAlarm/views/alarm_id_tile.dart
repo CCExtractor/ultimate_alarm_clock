@@ -24,7 +24,7 @@ class AlarmIDTile extends StatelessWidget {
       () => Container(
         child: (controller.isSharedAlarmEnabled.value == true)
             ? Obx(
-              () => ListTile(
+                () => ListTile(
                   onTap: () {
                     Utils.hapticFeedback();
                     Clipboard.setData(ClipboardData(text: controller.alarmID));
@@ -51,18 +51,20 @@ class AlarmIDTile extends StatelessWidget {
                   trailing: InkWell(
                     child: Icon(
                       Icons.copy,
-                      color: themeController.primaryTextColor.value.withOpacity(0.7),
+                      color: themeController.primaryTextColor.value
+                          .withOpacity(0.7),
                     ),
                   ),
                 ),
-            )
+              )
             : Obx(
                 () => ListTile(
                   onTap: () {
                     Utils.hapticFeedback();
                     Get.defaultDialog(
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                      backgroundColor: themeController.secondaryBackgroundColor.value,
+                      backgroundColor:
+                          themeController.secondaryBackgroundColor.value,
                       title: 'Disabled!'.tr,
                       titleStyle: Theme.of(context).textTheme.displaySmall,
                       content: Column(
@@ -70,7 +72,7 @@ class AlarmIDTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: Text(
                               //'To copy Alarm ID you have enable shared alarm!',
                               'toCopyAlarm'.tr,
@@ -81,7 +83,7 @@ class AlarmIDTile extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: TextButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                   kprimaryColor,
                                 ),
                               ),
@@ -91,7 +93,8 @@ class AlarmIDTile extends StatelessWidget {
                                     .textTheme
                                     .displaySmall!
                                     .copyWith(
-                                      color: themeController.secondaryTextColor.value,
+                                      color: themeController
+                                          .secondaryTextColor.value,
                                     ),
                               ),
                               onPressed: () {
@@ -113,11 +116,12 @@ class AlarmIDTile extends StatelessWidget {
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: themeController.primaryTextColor.value.withOpacity(0.7),
+                      color: themeController.primaryTextColor.value
+                          .withOpacity(0.7),
                     ),
                   ),
                 ),
-            ),
+              ),
       ),
     );
   }

@@ -19,7 +19,6 @@ class LabelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListTile(
-
         title: FittedBox(
           alignment: Alignment.centerLeft,
           fit: BoxFit.scaleDown,
@@ -94,13 +93,12 @@ class LabelTile extends StatelessWidget {
             buttonColor: themeController.secondaryBackgroundColor.value,
             confirm: TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                backgroundColor: WidgetStateProperty.all(kprimaryColor),
               ),
               child: Text(
                 'Save'.tr,
                 style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                      color:
-                          themeController.secondaryTextColor.value,
+                      color: themeController.secondaryTextColor.value,
                     ),
               ),
               onPressed: () {

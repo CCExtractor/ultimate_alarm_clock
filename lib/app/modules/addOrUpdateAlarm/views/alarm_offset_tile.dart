@@ -25,7 +25,8 @@ class AlarmOffset extends StatelessWidget {
                 Utils.hapticFeedback();
                 Get.defaultDialog(
                   titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                  backgroundColor: themeController.secondaryBackgroundColor.value,
+                  backgroundColor:
+                      themeController.secondaryBackgroundColor.value,
                   title: 'Choose duration'.tr,
                   titleStyle: Theme.of(context).textTheme.displaySmall,
                   content: Column(
@@ -63,18 +64,19 @@ class AlarmOffset extends StatelessWidget {
                                 controller.isOffsetBefore.value = true;
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (controller
-                                        .isOffsetBefore.value)
-                                    ? kprimaryColor
-                                    : themeController.primaryTextColor.value.withOpacity(0.10),
-                                foregroundColor:
+                                backgroundColor:
                                     (controller.isOffsetBefore.value)
-                                        ? themeController.secondaryTextColor.value
-                                        : themeController.primaryTextColor.value,
+                                        ? kprimaryColor
+                                        : themeController.primaryTextColor.value
+                                            .withOpacity(0.10),
+                                foregroundColor: (controller
+                                        .isOffsetBefore.value)
+                                    ? themeController.secondaryTextColor.value
+                                    : themeController.primaryTextColor.value,
                               ),
-                              child:  Text(
+                              child: Text(
                                 'Before'.tr,
-                                style: TextStyle(fontSize: 14),
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ),
                           ),
@@ -85,19 +87,19 @@ class AlarmOffset extends StatelessWidget {
                                 controller.isOffsetBefore.value = false;
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (!controller
-                                        .isOffsetBefore.value)
-                                    ? kprimaryColor
-                                    : themeController.primaryTextColor.value
-                                            .withOpacity(0.10),
-                                foregroundColor:
+                                backgroundColor:
                                     (!controller.isOffsetBefore.value)
-                                        ? themeController.secondaryTextColor.value
-                                        : themeController.primaryTextColor.value,
+                                        ? kprimaryColor
+                                        : themeController.primaryTextColor.value
+                                            .withOpacity(0.10),
+                                foregroundColor: (!controller
+                                        .isOffsetBefore.value)
+                                    ? themeController.secondaryTextColor.value
+                                    : themeController.primaryTextColor.value,
                               ),
-                              child:  Text(
+                              child: Text(
                                 'After'.tr,
-                                style: TextStyle(fontSize: 14),
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ),
                           ),
@@ -108,17 +110,20 @@ class AlarmOffset extends StatelessWidget {
                 );
               },
               child: ListTile(
-                title:  Text('Ring before / after '.tr),
+                title: Text('Ring before / after '.tr),
                 trailing: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Obx(
                       () => Text(
-                        controller.offsetDuration.value > 0 ? 'Enabled'.tr : 'Off'.tr,
+                        controller.offsetDuration.value > 0
+                            ? 'Enabled'.tr
+                            : 'Off'.tr,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: (controller.offsetDuration.value > 0)
                                   ? themeController.primaryTextColor.value
-                                  : themeController.primaryDisabledTextColor.value,
+                                  : themeController
+                                      .primaryDisabledTextColor.value,
                             ),
                       ),
                     ),

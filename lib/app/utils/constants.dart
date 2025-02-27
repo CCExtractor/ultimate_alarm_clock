@@ -46,8 +46,8 @@ ThemeData kThemeData = ThemeData(
   ),
   fontFamily: 'poppins',
   checkboxTheme: CheckboxThemeData(
-    checkColor: MaterialStateProperty.all(kprimaryTextColor),
-    fillColor: MaterialStateProperty.all(kprimaryBackgroundColor),
+    checkColor: WidgetStateProperty.all(kprimaryTextColor),
+    fillColor: WidgetStateProperty.all(kprimaryBackgroundColor),
   ),
   textTheme: const TextTheme(
     titleSmall: TextStyle(color: kprimaryTextColor, letterSpacing: 0.15),
@@ -84,7 +84,7 @@ ThemeData kThemeData = ThemeData(
   appBarTheme: const AppBarTheme(backgroundColor: kprimaryBackgroundColor),
   colorScheme: ColorScheme.fromSwatch().copyWith(
     secondary: ksecondaryColor,
-    background: kprimaryBackgroundColor,
+    surface: kprimaryBackgroundColor,
     onPrimaryContainer: ksecondaryBackgroundColor,
   ),
   inputDecorationTheme: InputDecorationTheme(
@@ -112,8 +112,8 @@ ThemeData kThemeData = ThemeData(
   ),
   outlinedButtonTheme: const OutlinedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-      side: MaterialStatePropertyAll(BorderSide(color: kprimaryColor)),
+      backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+      side: WidgetStatePropertyAll(BorderSide(color: kprimaryColor)),
     ),
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -189,8 +189,8 @@ ThemeData kLightThemeData = ThemeData(
   ),
   fontFamily: 'poppins',
   checkboxTheme: CheckboxThemeData(
-    checkColor: MaterialStateProperty.all(kprimaryTextColor),
-    fillColor: MaterialStateProperty.all(kLightPrimaryBackgroundColor),
+    checkColor: WidgetStateProperty.all(kprimaryTextColor),
+    fillColor: WidgetStateProperty.all(kLightPrimaryBackgroundColor),
   ),
   textTheme: const TextTheme(
     titleSmall: TextStyle(color: kLightPrimaryTextColor, letterSpacing: 0.15),
@@ -227,7 +227,7 @@ ThemeData kLightThemeData = ThemeData(
   appBarTheme: const AppBarTheme(backgroundColor: kLightPrimaryBackgroundColor),
   colorScheme: ColorScheme.fromSwatch().copyWith(
     secondary: kLightSecondaryColor,
-    background: kLightPrimaryBackgroundColor,
+    surface: kLightPrimaryBackgroundColor,
     onPrimaryContainer: kLightSecondaryBackgroundColor,
   ),
   inputDecorationTheme: InputDecorationTheme(
@@ -255,8 +255,8 @@ ThemeData kLightThemeData = ThemeData(
   ),
   outlinedButtonTheme: const OutlinedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-      side: MaterialStatePropertyAll(BorderSide(color: kprimaryColor)),
+      backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+      side: WidgetStatePropertyAll(BorderSide(color: kprimaryColor)),
     ),
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -321,7 +321,13 @@ ThemeData kLightThemeData = ThemeData(
   ),
 );
 
-const List<String> defaultRingtones = ['Digital Alarm 1','Digital Alarm 2','Digital Alarm 3','Mystery','New Day'];
+const List<String> defaultRingtones = [
+  'Digital Alarm 1',
+  'Digital Alarm 2',
+  'Digital Alarm 3',
+  'Mystery',
+  'New Day'
+];
 
 const Map<String, String> Holidays = {
   'Christian Holidays': 'en.christian#holiday@group.v.calendar.google.com',

@@ -50,10 +50,11 @@ class ScreenActivityTile extends StatelessWidget {
                           value: controller.useScreenActivity.value,
                           activeColor: ksecondaryColor,
                           onChanged: (value) {
-                            if (value == false)
+                            if (value == false) {
                               controller.isActivityMonitorenabled.value = 0;
-                            else
+                            } else {
                               controller.isActivityMonitorenabled.value = 1;
+                            }
                           },
                         ),
                         NumberPicker(
@@ -119,13 +120,14 @@ class ScreenActivityTile extends StatelessWidget {
                   activeColor: ksecondaryColor,
                   onChanged: (value) {
                     controller.useScreenActivity.value = value;
-                    if (value == false)
+                    if (value == false) {
                       controller.isActivityMonitorenabled.value = 0;
-                    else
+                    } else {
                       controller.isActivityMonitorenabled.value = 1;
+                    }
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),

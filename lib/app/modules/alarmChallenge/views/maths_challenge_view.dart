@@ -7,7 +7,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 // ignore: must_be_immutable
 class MathsChallengeView extends GetView<AlarmChallengeController> {
-  MathsChallengeView({Key? key}) : super(key: key);
+  MathsChallengeView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
@@ -47,13 +47,19 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                           ? Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      16.0, 16.0, 16.0, 30.0),
                                   child: Obx(
-                                        () => Text(
-                                          'Question @noMathQ'.trParams({
-                                            'noMathQ' :  controller.numMathsQuestions.value.toString(),
-                                          }),
-                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    () => Text(
+                                      'Question @noMathQ'.trParams({
+                                        'noMathQ': controller
+                                            .numMathsQuestions.value
+                                            .toString(),
+                                      }),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
                                             letterSpacing: 1.5,
                                           ),
                                     ),
@@ -160,13 +166,14 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   Widget _buildNumberButton(String number) {
     return Obx(
-        () => ElevatedButton(
+      () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
           controller.onButtonPressed(number);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.10),
+          backgroundColor:
+              themeController.primaryTextColor.value.withOpacity(0.10),
           foregroundColor: themeController.primaryTextColor.value,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),
@@ -178,13 +185,14 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   Widget _buildClearButton() {
     return Obx(
-        () => ElevatedButton(
+      () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
           controller.removeDigit();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.45),
+          backgroundColor:
+              themeController.primaryTextColor.value.withOpacity(0.45),
           foregroundColor: Colors.black,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),
@@ -200,7 +208,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   Widget _buildDoneButton() {
     return Obx(
-        () => ElevatedButton(
+      () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
           if (controller.mathsAnswer.toString() ==
@@ -228,4 +236,3 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     );
   }
 }
-

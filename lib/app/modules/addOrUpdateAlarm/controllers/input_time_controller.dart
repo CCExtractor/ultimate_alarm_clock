@@ -111,8 +111,9 @@ class InputTimeController extends GetxController {
         }
       } else {
         addOrUpdateAlarmController.hours.value = convert24(
-            selectedDateTime.value.hour,
-            addOrUpdateAlarmController.meridiemIndex.value);
+          selectedDateTime.value.hour,
+          addOrUpdateAlarmController.meridiemIndex.value,
+        );
       }
       addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
       if (selectedDateTime.value.hour >= 12) {

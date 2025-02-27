@@ -42,7 +42,8 @@ class PedometerChallenge extends StatelessWidget {
                   title: 'Pedometer'.tr,
                   description: 'pedometerDescription'.tr,
                   iconData: Icons.directions_walk,
-                  isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                  isLightMode:
+                      themeController.currentTheme.value == ThemeMode.light,
                 );
               },
             ),
@@ -116,7 +117,8 @@ class PedometerChallenge extends StatelessWidget {
                                   .textTheme
                                   .displaySmall!
                                   .copyWith(
-                                    color: themeController.secondaryTextColor.value,
+                                    color: themeController
+                                        .secondaryTextColor.value,
                                   ),
                             ),
                           ),
@@ -137,8 +139,8 @@ class PedometerChallenge extends StatelessWidget {
                 () => Text(
                   controller.numberOfSteps.value > 0
                       ? controller.numberOfSteps.value > 1
-                          ? '${controller.numberOfSteps.value} ' + 'steps'.tr
-                          : '${controller.numberOfSteps.value} ' + 'step'.tr
+                          ? '${controller.numberOfSteps.value} ${'steps'.tr}'
+                          : '${controller.numberOfSteps.value} ${'step'.tr}'
                       : 'Off'.tr,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.isPedometerEnabled.value == false)

@@ -100,12 +100,12 @@ class Utils {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  static DateTime stringToDate(String date){
+  static DateTime stringToDate(String date) {
     final parts = date.split('-');
     final day = int.parse(parts[2]);
     final month = int.parse(parts[1]);
     final year = int.parse(parts[0]);
-    return DateTime(year,month,day);
+    return DateTime(year, month, day);
   }
 
   static DateTime? stringToDateTime(String timeString) {
@@ -696,7 +696,7 @@ class Utils {
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                         kprimaryColor,
                       ),
                     ),
@@ -826,6 +826,7 @@ class Utils {
       return parts[0].substring(0, 2);
     }
   }
+
   static double getFontSize(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return width < 360 ? 14 : 30;

@@ -23,7 +23,7 @@ import 'package:vibration/vibration.dart';
 import '../../home/controllers/home_controller.dart';
 
 class AlarmControlController extends GetxController {
-  MethodChannel alarmChannel = MethodChannel('ulticlock');
+  MethodChannel alarmChannel = const MethodChannel('ulticlock');
   RxString note = ''.obs;
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
@@ -44,12 +44,11 @@ class AlarmControlController extends GetxController {
   RxInt guardianCoundown = 120.obs;
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = homeController.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
@@ -161,8 +160,10 @@ class AlarmControlController extends GetxController {
         if (guardianCoundown.value == 0) {
           currentlyRingingAlarm.value.isCall
               ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
-              : Utils.sendSMS(currentlyRingingAlarm.value.guardian,
-                  "Your Friend is not waking up \n - Ultimate Alarm Clock");
+              : Utils.sendSMS(
+                  currentlyRingingAlarm.value.guardian,
+                  'Your Friend is not waking up \n - Ultimate Alarm Clock',
+                );
           timer.cancel();
         } else {
           guardianCoundown.value = guardianCoundown.value - 1;
@@ -277,11 +278,11 @@ class AlarmControlController extends GetxController {
         try {
           await alarmChannel.invokeMethod('scheduleAlarm', {
             'milliSeconds': intervaltoAlarm,
-            'activityMonitor': latestAlarm.activityMonitor
+            'activityMonitor': latestAlarm.activityMonitor,
           });
-          print("Scheduled...");
+          print('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          print('Failed to schedule alarm: ${e.message}');
         }
       }
     }

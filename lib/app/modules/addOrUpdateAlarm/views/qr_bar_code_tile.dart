@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class QrBarCode extends StatelessWidget {
@@ -48,7 +47,8 @@ class QrBarCode extends StatelessWidget {
                 //     'Scan the QR/Bar code on any object, like a book, and relocate it to a different room. To deactivate the alarm, simply rescan the same QR/Bar code.',
                 description: 'qrDescription'.tr,
                 iconData: Icons.qr_code_scanner,
-                isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                isLightMode:
+                    themeController.currentTheme.value == ThemeMode.light,
               );
             },
           ),

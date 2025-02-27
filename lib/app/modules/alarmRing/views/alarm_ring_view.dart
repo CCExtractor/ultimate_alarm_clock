@@ -9,16 +9,19 @@ import '../controllers/alarm_ring_controller.dart';
 
 // ignore: must_be_immutable
 class AlarmControlView extends GetView<AlarmControlController> {
-  AlarmControlView({Key? key}) : super(key: key);
+  AlarmControlView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
   Obx getAddSnoozeButtons(
-      BuildContext context, int snoozeMinutes, String title) {
+    BuildContext context,
+    int snoozeMinutes,
+    String title,
+  ) {
     return Obx(
       () => TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(
             themeController.secondaryBackgroundColor.value,
           ),
         ),
@@ -95,7 +98,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             () => Visibility(
                               visible: controller.isSnoozing.value,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   getAddSnoozeButtons(context, 1, '+1 min'),
                                   getAddSnoozeButtons(context, 2, '+2 min'),
@@ -140,8 +144,9 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               width: width * 0.5,
                               child: TextButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    themeController.secondaryBackgroundColor.value,
+                                  backgroundColor: WidgetStateProperty.all(
+                                    themeController
+                                        .secondaryBackgroundColor.value,
                                   ),
                                 ),
                                 child: Text(
@@ -150,7 +155,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       .textTheme
                                       .bodyMedium!
                                       .copyWith(
-                                        color: themeController.primaryTextColor.value,
+                                        color: themeController
+                                            .primaryTextColor.value,
                                         fontWeight: FontWeight.w600,
                                       ),
                                 ),
@@ -167,12 +173,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ],
                 ),
               ),
-
-              
               Positioned(
-                bottom: 80, 
-                left: width * 0.1, 
-                right: width * 0.1, 
+                bottom: 80,
+                left: width * 0.1,
+                right: width * 0.1,
                 child: Obx(
                   () => Visibility(
                     visible: controller.showButton.value,
@@ -181,13 +185,14 @@ class AlarmControlView extends GetView<AlarmControlController> {
                       width: width * 0.8,
                       child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            kprimaryColor, 
+                          backgroundColor: WidgetStateProperty.all(
+                            kprimaryColor,
                           ),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
-                          if (controller.currentlyRingingAlarm.value.isGuardian) {
+                          if (controller
+                              .currentlyRingingAlarm.value.isGuardian) {
                             controller.guardianTimer.cancel();
                           }
                           if (Utils.isChallengeEnabled(
@@ -223,20 +228,18 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-
-              
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: Container(
                   width: double.infinity,
-                  height: 60, 
-                  color: Colors.red, 
+                  height: 60,
+                  color: Colors.red,
                   child: TextButton(
                     onPressed: () {
                       Utils.hapticFeedback();
-                      Get.offNamed('/bottom-navigation-bar'); 
+                      Get.offNamed('/bottom-navigation-bar');
                     },
                     child: Text(
                       'Exit Preview'.tr,

@@ -22,7 +22,7 @@ class UserModel {
       'lastName': lastName,
       'email': email,
       'id': id,
-      'receivedItems': receivedItems
+      'receivedItems': receivedItems,
     };
   }
 
