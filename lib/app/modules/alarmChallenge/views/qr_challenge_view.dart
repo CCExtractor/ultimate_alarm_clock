@@ -10,7 +10,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/alarm_challenge_controller.dart';
 
 class QRChallengeView extends GetView<AlarmChallengeController> {
-  QRChallengeView({Key? key}) : super(key: key);
+  QRChallengeView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
@@ -52,16 +52,18 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Obx(
-                          () => Text(
-                            'Scan your QR/Bar Code!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
-                                ),
+                          Obx(
+                            () => Text(
+                              'Scan your QR/Bar Code!'.tr,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeController
+                                        .primaryTextColor.value
+                                        .withOpacity(0.7),
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -108,8 +110,9 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icon(
                                                   Icons.done,
                                                   size: height * 0.2,
-                                                  color: themeController.primaryTextColor.value
-                                                          .withOpacity(0.7),
+                                                  color: themeController
+                                                      .primaryTextColor.value
+                                                      .withOpacity(0.7),
                                                 )
                                               : Column(
                                                   mainAxisAlignment:
@@ -119,10 +122,12 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                     Icon(
                                                       Icons.close,
                                                       size: height * 0.2,
-                                                      color: themeController.primaryTextColor.value
-                                                              .withOpacity(
-                                                              0.7,
-                                                            ),
+                                                      color: themeController
+                                                          .primaryTextColor
+                                                          .value
+                                                          .withOpacity(
+                                                        0.7,
+                                                      ),
                                                     ),
                                                     Text(
                                                       'Wrong Code Scanned!'.tr,
@@ -134,16 +139,18 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                           .copyWith(
                                                             fontWeight:
                                                                 FontWeight.w500,
-                                                            color: themeController.primaryTextColor.value
-                                                                    .withOpacity(
-                                                                    0.7,
-                                                                  ),
+                                                            color: themeController
+                                                                .primaryTextColor
+                                                                .value
+                                                                .withOpacity(
+                                                              0.7,
+                                                            ),
                                                           ),
                                                     ),
                                                     TextButton(
                                                       style: ButtonStyle(
                                                         backgroundColor:
-                                                            MaterialStateProperty
+                                                            WidgetStateProperty
                                                                 .all(
                                                           kprimaryColor,
                                                         ),
@@ -156,7 +163,9 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             .textTheme
                                                             .displaySmall!
                                                             .copyWith(
-                                                              color: themeController.secondaryTextColor.value,
+                                                              color: themeController
+                                                                  .secondaryTextColor
+                                                                  .value,
                                                             ),
                                                       ),
                                                       onPressed: () async {

@@ -56,7 +56,7 @@ class LocationTile extends StatelessWidget {
                       ),
                     ),
                     Radio(
-                      fillColor: MaterialStateProperty.all(
+                      fillColor: WidgetStateProperty.all(
                         (controller.isLocationEnabled.value == true)
                             ? themeController.primaryDisabledTextColor.value
                             : kprimaryColor,
@@ -126,20 +126,26 @@ class LocationTile extends StatelessWidget {
                             urlTemplate:
                                 'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
                           ),
-                          Obx(() => MarkerLayer(
+                          Obx(
+                            () => MarkerLayer(
                               markers:
-                                  List<Marker>.from(controller.markersList))),
+                                  List<Marker>.from(controller.markersList),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                        backgroundColor: WidgetStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
                         'Save',
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
                               color: themeController.secondaryTextColor.value,
                             ),
                       ),
@@ -172,7 +178,8 @@ class LocationTile extends StatelessWidget {
                 icon: Icon(
                   Icons.info_sharp,
                   size: 21,
-                  color: themeController.primaryTextColor.value.withOpacity(0.3),
+                  color:
+                      themeController.primaryTextColor.value.withOpacity(0.3),
                 ),
                 onPressed: () {
                   Utils.showModal(
@@ -182,7 +189,8 @@ class LocationTile extends StatelessWidget {
                         ' alarm if you are within 500m of'
                         ' the chosen location!',
                     iconData: Icons.info_sharp,
-                    isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                    isLightMode:
+                        themeController.currentTheme.value == ThemeMode.light,
                   );
                 },
               ),
@@ -193,7 +201,9 @@ class LocationTile extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
-                  controller.isLocationEnabled.value == false ? 'Off' : 'Enabled',
+                  controller.isLocationEnabled.value == false
+                      ? 'Off'
+                      : 'Enabled',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.isLocationEnabled.value == false)
                             ? themeController.primaryDisabledTextColor.value

@@ -178,7 +178,8 @@ class IsarDb {
   static Future<ProfileModel?> getProfile(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
     print('$a appkle');
     return a;
   }
@@ -197,7 +198,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }
@@ -373,7 +375,7 @@ class IsarDb {
       'profileName': currentProfileName,
       'profileData': ProfileModel.toMap(currentProfile!),
       'alarmData': alarmMaps,
-      'owner': ''
+      'owner': '',
     };
     return profileSet;
   }
@@ -634,30 +636,35 @@ class IsarDb {
     if (ringtoneCount.isEmpty) {
       await db.writeTxn(() async {
         await db.ringtoneModels.importJson([
-          {'isarId' : fastHash('Digital Alarm 1'),
+          {
+            'isarId': fastHash('Digital Alarm 1'),
             'ringtoneName': 'Digital Alarm 1',
             'ringtonePath': 'ringtones/digialarm.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('Digital Alarm 2'),
+          {
+            'isarId': fastHash('Digital Alarm 2'),
             'ringtoneName': 'Digital Alarm 2',
             'ringtonePath': 'ringtones/digialarm2.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('Digital Alarm 3'),
+          {
+            'isarId': fastHash('Digital Alarm 3'),
             'ringtoneName': 'Digital Alarm 3',
             'ringtonePath': 'ringtones/digialarm3.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('Mystery'),
+          {
+            'isarId': fastHash('Mystery'),
             'ringtoneName': 'Mystery',
             'ringtonePath': 'ringtones/mystery.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('New Day'),
+          {
+            'isarId': fastHash('New Day'),
             'ringtoneName': 'New Day',
             'ringtonePath': 'ringtones/newday.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
         ]);
       });

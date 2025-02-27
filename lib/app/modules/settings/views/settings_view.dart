@@ -18,7 +18,7 @@ import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  SettingsView({Key? key}) : super(key: key);
+  const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,6 @@ class SettingsView extends GetView<SettingsController> {
             padding: const EdgeInsets.symmetric(vertical: 25.0),
             child: Column(
               children: [
-
                 GoogleSignIn(
                   controller: controller,
                   width: width,
@@ -103,9 +102,10 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 CustomizeUndoDuration(
-                    width: width,
-                    height: height,
-                    themeController: controller.themeController),
+                  width: width,
+                  height: height,
+                  themeController: controller.themeController,
+                ),
                 const SizedBox(
                   height: 20,
                 ),

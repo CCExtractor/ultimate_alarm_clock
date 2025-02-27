@@ -37,7 +37,8 @@ class SharedUsers extends StatelessWidget {
                     trailing: Text(
                       controller.alarmRecord.value.ownerName,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: themeController.primaryDisabledTextColor.value,
+                            color:
+                                themeController.primaryDisabledTextColor.value,
                           ),
                     ),
                   )
@@ -53,7 +54,8 @@ class SharedUsers extends StatelessWidget {
                         Utils.hapticFeedback();
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: themeController.primaryBackgroundColor.value,
+                          backgroundColor:
+                              themeController.primaryBackgroundColor.value,
                           builder: (BuildContext context) {
                             final userDetails = RxList<UserModel?>([]);
 
@@ -106,35 +108,33 @@ class SharedUsers extends StatelessWidget {
                                                 title: Text(
                                                   user!.fullName,
                                                   style: TextStyle(
-                                                    color: themeController.primaryTextColor.value,
+                                                    color: themeController
+                                                        .primaryTextColor.value,
                                                   ),
                                                 ),
                                                 trailing: TextButton(
                                                   style: ButtonStyle(
                                                     padding:
-                                                        MaterialStateProperty
-                                                            .all(
+                                                        WidgetStateProperty.all(
                                                       EdgeInsets.zero,
                                                     ),
                                                     minimumSize:
-                                                        MaterialStateProperty
-                                                            .all(
+                                                        WidgetStateProperty.all(
                                                       const Size(
                                                         80,
                                                         30,
                                                       ),
                                                     ),
                                                     maximumSize:
-                                                        MaterialStateProperty
-                                                            .all(
+                                                        WidgetStateProperty.all(
                                                       const Size(
                                                         80,
                                                         30,
                                                       ),
                                                     ),
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors.red),
+                                                        WidgetStateProperty.all(
+                                                            Colors.red),
                                                   ),
                                                   child: Text(
                                                     'Remove'.tr,
@@ -142,9 +142,12 @@ class SharedUsers extends StatelessWidget {
                                                         .textTheme
                                                         .bodyLarge!
                                                         .copyWith(
-                                                          color: themeController.primaryTextColor.value.withOpacity(
-                                                                  0.9,
-                                                                ),
+                                                          color: themeController
+                                                              .primaryTextColor
+                                                              .value
+                                                              .withOpacity(
+                                                            0.9,
+                                                          ),
                                                         ),
                                                   ),
                                                   onPressed: () async {
@@ -167,7 +170,9 @@ class SharedUsers extends StatelessWidget {
                                                 ),
                                               ),
                                               Divider(
-                                                color: themeController.primaryDisabledTextColor.value,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
                                               ),
                                             ],
                                           ),
@@ -182,7 +187,8 @@ class SharedUsers extends StatelessWidget {
                       },
                       child: Icon(
                         Icons.chevron_right,
-                        color: themeController.primaryTextColor.value.withOpacity(0.7),
+                        color: themeController.primaryTextColor.value
+                            .withOpacity(0.7),
                       ),
                     ),
                   )

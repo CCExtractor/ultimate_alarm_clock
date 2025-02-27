@@ -248,7 +248,7 @@ class HomeController extends GetxController {
     final checkDefault = await IsarDb.getProfile('Default');
     if (checkDefault == null) {
       IsarDb.addProfile(Utils.genDefaultProfileModel());
-      await storage.writeProfile("Default");
+      await storage.writeProfile('Default');
       profileModel.value = Utils.genDefaultProfileModel();
     }
     readProfileName();
@@ -546,7 +546,7 @@ class HomeController extends GetxController {
           ),
           TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 kprimaryColor,
               ),
             ),
@@ -630,7 +630,7 @@ class HomeController extends GetxController {
                     Get.back();
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: WidgetStateProperty.all(kprimaryColor),
                   ),
                   child: Text(
                     'Cancel'.tr,
@@ -661,7 +661,7 @@ class HomeController extends GetxController {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.red,
                         width: 1,
                       ),
@@ -688,51 +688,52 @@ class HomeController extends GetxController {
 
   AlarmModel genFakeAlarmModel() {
     return AlarmModel(
-        volMax: profileModel.value.volMax,
-        volMin: profileModel.value.volMin,
-        snoozeDuration: profileModel.value.snoozeDuration,
-        gradient: profileModel.value.gradient,
-        label: profileModel.value.label,
-        isOneTime: profileModel.value.isOneTime,
-        deleteAfterGoesOff: profileModel.value.deleteAfterGoesOff,
-        offsetDetails: profileModel.value.offsetDetails,
-        mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        lastEditedUserId: profileModel.value.lastEditedUserId,
-        mutexLock: profileModel.value.mutexLock,
-        ownerName: profileModel.value.ownerName,
-        ownerId: profileModel.value.ownerId,
-        alarmID: '',
-        activityInterval: profileModel.value.activityInterval,
-        isMathsEnabled: profileModel.value.isMathsEnabled,
-        numMathsQuestions: profileModel.value.numMathsQuestions,
-        mathsDifficulty: profileModel.value.mathsDifficulty,
-        qrValue: profileModel.value.qrValue,
-        isQrEnabled: profileModel.value.isQrEnabled,
-        isShakeEnabled: profileModel.value.isShakeEnabled,
-        shakeTimes: profileModel.value.shakeTimes,
-        isPedometerEnabled: profileModel.value.isPedometerEnabled,
-        numberOfSteps: profileModel.value.numberOfSteps,
-        days: profileModel.value.days,
-        weatherTypes: profileModel.value.weatherTypes,
-        isWeatherEnabled: profileModel.value.isWeatherEnabled,
-        isEnabled: profileModel.value.isEnabled,
-        isActivityEnabled: profileModel.value.isActivityEnabled,
-        isLocationEnabled: profileModel.value.isLocationEnabled,
-        isSharedAlarmEnabled: profileModel.value.isSharedAlarmEnabled,
-        intervalToAlarm: 0,
-        location: profileModel.value.location,
-        alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
-        minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
-        ringtoneName: profileModel.value.ringtoneName,
-        note: profileModel.value.note,
-        showMotivationalQuote: profileModel.value.showMotivationalQuote,
-        activityMonitor: profileModel.value.activityMonitor,
-        alarmDate: profileModel.value.alarmDate,
-        profile: profileModel.value.profileName,
-        isGuardian: profileModel.value.isGuardian,
-        guardianTimer: profileModel.value.guardianTimer,
-        guardian: profileModel.value.guardian,
-        isCall: profileModel.value.isCall,
-        ringOn: false);
+      volMax: profileModel.value.volMax,
+      volMin: profileModel.value.volMin,
+      snoozeDuration: profileModel.value.snoozeDuration,
+      gradient: profileModel.value.gradient,
+      label: profileModel.value.label,
+      isOneTime: profileModel.value.isOneTime,
+      deleteAfterGoesOff: profileModel.value.deleteAfterGoesOff,
+      offsetDetails: profileModel.value.offsetDetails,
+      mainAlarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      lastEditedUserId: profileModel.value.lastEditedUserId,
+      mutexLock: profileModel.value.mutexLock,
+      ownerName: profileModel.value.ownerName,
+      ownerId: profileModel.value.ownerId,
+      alarmID: '',
+      activityInterval: profileModel.value.activityInterval,
+      isMathsEnabled: profileModel.value.isMathsEnabled,
+      numMathsQuestions: profileModel.value.numMathsQuestions,
+      mathsDifficulty: profileModel.value.mathsDifficulty,
+      qrValue: profileModel.value.qrValue,
+      isQrEnabled: profileModel.value.isQrEnabled,
+      isShakeEnabled: profileModel.value.isShakeEnabled,
+      shakeTimes: profileModel.value.shakeTimes,
+      isPedometerEnabled: profileModel.value.isPedometerEnabled,
+      numberOfSteps: profileModel.value.numberOfSteps,
+      days: profileModel.value.days,
+      weatherTypes: profileModel.value.weatherTypes,
+      isWeatherEnabled: profileModel.value.isWeatherEnabled,
+      isEnabled: profileModel.value.isEnabled,
+      isActivityEnabled: profileModel.value.isActivityEnabled,
+      isLocationEnabled: profileModel.value.isLocationEnabled,
+      isSharedAlarmEnabled: profileModel.value.isSharedAlarmEnabled,
+      intervalToAlarm: 0,
+      location: profileModel.value.location,
+      alarmTime: Utils.timeOfDayToString(TimeOfDay.now()),
+      minutesSinceMidnight: Utils.timeOfDayToInt(TimeOfDay.now()),
+      ringtoneName: profileModel.value.ringtoneName,
+      note: profileModel.value.note,
+      showMotivationalQuote: profileModel.value.showMotivationalQuote,
+      activityMonitor: profileModel.value.activityMonitor,
+      alarmDate: profileModel.value.alarmDate,
+      profile: profileModel.value.profileName,
+      isGuardian: profileModel.value.isGuardian,
+      guardianTimer: profileModel.value.guardianTimer,
+      guardian: profileModel.value.guardian,
+      isCall: profileModel.value.isCall,
+      ringOn: false,
+    );
   }
 }

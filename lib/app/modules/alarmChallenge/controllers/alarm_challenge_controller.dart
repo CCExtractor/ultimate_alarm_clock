@@ -246,13 +246,13 @@ class AlarmChallengeController extends GetxController {
       AudioUtils.playAlarm(alarmRecord: alarmRecord);
     }
   }
+
   void removeDigit() {
-  if (displayValue.value.isNotEmpty) {
-    displayValue.value = displayValue.value.substring(
-      0, 
-      displayValue.value.length - 1
-    );
+    if (displayValue.value.isNotEmpty) {
+      displayValue.value = displayValue.value.substring(
+        0,
+        displayValue.value.length - 1,
+      );
+    }
   }
 }
-}
-

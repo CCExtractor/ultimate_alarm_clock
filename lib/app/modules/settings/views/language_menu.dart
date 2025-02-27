@@ -36,33 +36,34 @@ class _LanguageMenuState extends State<LanguageMenu> {
             widget.themeController.currentTheme.value == ThemeMode.light,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 30),
+        padding: const EdgeInsets.only(left: 30),
         child: Row(
           children: [
             Obx(
               () => DropdownMenu(
                 menuStyle: MenuStyle(
-                  backgroundColor: MaterialStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll(
                     widget.themeController.secondaryBackgroundColor.value,
                   ),
                 ),
                 inputDecorationTheme:
-                    InputDecorationTheme(enabledBorder: InputBorder.none),
+                    const InputDecorationTheme(enabledBorder: InputBorder.none),
                 trailingIcon: Icon(
                   Icons.arrow_drop_down_outlined,
                   size: 40.0,
-                  color: widget.themeController.primaryTextColor.value.withOpacity(0.8),
+                  color: widget.themeController.primaryTextColor.value
+                      .withOpacity(0.8),
                 ),
                 width: widget.width * 0.78,
                 initialSelection: widget.controller.currentLanguage.value,
-                label: Text('Change Language'),
+                label: const Text('Change Language'),
                 dropdownMenuEntries:
                     widget.controller.optionslocales.entries.map((e) {
                   return DropdownMenuEntry(
-                    value: "${e.key}",
+                    value: '${e.key}',
                     label: "${e.value['description']}",
                     style: ButtonStyle(
-                      foregroundColor: MaterialStatePropertyAll(
+                      foregroundColor: WidgetStatePropertyAll(
                         widget.themeController.primaryTextColor.value,
                       ),
                     ),
