@@ -52,4 +52,20 @@ class GetStorageProvider {
     String profile = await _getStorage.read('profile') ?? 'Default';
     return profile;
   }
+
+  Future<List<Map<String, dynamic>>> readTimerPreset(String key) async {
+    if (_getStorage.read(key) == null) {
+      await writeTimerPreset(key, <Map<String, dynamic>>[]);
+    }
+    return (_getStorage.read(key) as List)
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+  }
+
+  Future<void> writeTimerPreset(
+    String key,
+    List<Map<String, dynamic>> value,
+  ) async {
+    await _getStorage.write(key, value);
+  }
 }

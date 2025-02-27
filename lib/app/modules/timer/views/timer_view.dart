@@ -14,7 +14,6 @@ import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_animation.dar
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/hover_preset_button.dart';
-import 'package:ultimate_alarm_clock/app/utils/preset_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'dart:math' as math;
 
@@ -28,12 +27,15 @@ class TimerView extends GetView<TimerController> {
       Get.put(InputTimeController());
   // var width = Get.width;
   // var height = Get.height;
+  final TextEditingController presetDurationController =
+      TextEditingController();
 
   @override
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: PreferredSize(
@@ -84,7 +86,23 @@ class TimerView extends GetView<TimerController> {
               child: FloatingActionButton(
                 onPressed: () {
                   Utils.hapticFeedback();
-                  timerSelector(context, width, height);
+                  timerSelector(context, width, height, () {
+                    controller.remainingTime.value = Duration(
+                      hours: controller.hours.value,
+                      minutes: controller.minutes.value,
+                      seconds: controller.seconds.value,
+                    );
+                    if (controller.hours.value != 0 ||
+                        controller.minutes.value != 0 ||
+                        controller.seconds.value != 0) {
+                      controller.createTimer();
+                    }
+                    controller.hours.value = 0;
+                    controller.minutes.value = 1;
+                    controller.seconds.value = 0;
+
+                    Get.back();
+                  });
                 },
                 backgroundColor: kprimaryColor,
                 child: const Icon(
@@ -142,11 +160,8 @@ class TimerView extends GetView<TimerController> {
                 ),
               ),
 
-            // No timers: Centered addATimerSpace and preset buttons
             if (!hasTimers)
-              Center(
-                child: buildAddTimerSection(context, width, height),
-              ),
+              Center(child: buildAddTimerSection(context, width, height)),
           ],
         );
       }),
@@ -163,17 +178,106 @@ class TimerView extends GetView<TimerController> {
       mainAxisSize: MainAxisSize.min,
       children: [
         addATimerSpace(context, width, height),
+
+        const SizedBox(height: 32),
+
+        // Display custom presets
         Visibility(
           visible: controller.timerList.length <= 2,
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
+          child: Row(
             children: [
-              presetButton(context, '+1:00', const Duration(minutes: 1)),
-              presetButton(context, '+5:00', const Duration(minutes: 5)),
-              presetButton(context, '+10:00', const Duration(minutes: 10)),
-              presetButton(context, '+15:00', const Duration(minutes: 15)),
+              Expanded(
+                flex: controller.customPresets.isNotEmpty ? 1 : 100,
+                child: InkWell(
+                  child: Icon(
+                    Icons.add,
+                    size: 28,
+                    color: controller.customPresets.isNotEmpty
+                        ? kprimaryDisabledTextColor
+                        : themeController.primaryTextColor.value.withOpacity(
+                            0.75,
+                          ),
+                  ),
+                  onTap: () {
+                    Utils.hapticFeedback();
+                    timerSelector(context, width, height, () {
+                      if (controller.hours.value == 0 &&
+                          controller.minutes.value == 0 &&
+                          controller.seconds.value == 0) {
+                        controller.hours.value = 0;
+                        controller.minutes.value = 1;
+                        controller.seconds.value = 0;
+
+                        Get.back();
+
+                        return;
+                      }
+                      Duration duration = Duration(
+                        hours: controller.hours.value,
+                        minutes: controller.minutes.value,
+                        seconds: controller.seconds.value,
+                      );
+
+                      controller.saveCustomPreset(duration);
+
+                      controller.hours.value = 0;
+                      controller.minutes.value = 1;
+                      controller.seconds.value = 0;
+
+                      Get.back();
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: Obx(() {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: controller.customPresets.map((preset) {
+                        return GestureDetector(
+                          onLongPress: () {
+                            Utils.hapticFeedback();
+                            int index =
+                                controller.customPresets.indexOf(preset);
+                            controller.deleteCustomPreset(index);
+                          },
+                          onTap: () {
+                            controller.setPresetTimer(preset.duration);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(
+                              '${preset.duration.inHours.toString().padLeft(2, '0')}:${(preset.duration.inMinutes % 60).toString().padLeft(2, '0')}',
+                              style: TextStyle(
+                                fontSize: height * 0.036,
+                                color: themeController.primaryTextColor.value
+                                    .withOpacity(
+                                  0.75,
+                                ),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }),
+              ),
             ],
+          ),
+        ),
+        Visibility(
+          visible: controller.timerList.length <= 2,
+          child: Text(
+            'Tap to save a custom preset',
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: themeController.primaryDisabledTextColor.value,
+                ),
           ),
         ),
       ],
@@ -185,7 +289,23 @@ class TimerView extends GetView<TimerController> {
       () => InkWell(
         onTap: () {
           Utils.hapticFeedback();
-          timerSelector(context, width, height);
+          timerSelector(context, width, height, () {
+            controller.remainingTime.value = Duration(
+              hours: controller.hours.value,
+              minutes: controller.minutes.value,
+              seconds: controller.seconds.value,
+            );
+            if (controller.hours.value != 0 ||
+                controller.minutes.value != 0 ||
+                controller.seconds.value != 0) {
+              controller.createTimer();
+            }
+            controller.hours.value = 0;
+            controller.minutes.value = 1;
+            controller.seconds.value = 0;
+
+            Get.back();
+          });
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -216,9 +336,13 @@ class TimerView extends GetView<TimerController> {
     );
   }
 
-  void timerSelector(BuildContext context, double width, double height) {
+  void timerSelector(
+    BuildContext context,
+    double width,
+    double height,
+    void Function() onTap,
+  ) {
     showDialog(
-      
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -775,21 +899,7 @@ class TimerView extends GetView<TimerController> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(18),
                               onTap: () {
-                                controller.remainingTime.value = Duration(
-                                  hours: controller.hours.value,
-                                  minutes: controller.minutes.value,
-                                  seconds: controller.seconds.value,
-                                );
-                                if (controller.hours.value != 0 ||
-                                    controller.minutes.value != 0 ||
-                                    controller.seconds.value != 0) {
-                                  controller.createTimer();
-                                }
-                                controller.hours.value = 0;
-                                controller.minutes.value = 1;
-                                controller.seconds.value = 0;
-
-                                Get.back();
+                                onTap();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -867,13 +977,14 @@ class TimerView extends GetView<TimerController> {
       },
     );
   }
+
   double calculateTopPosition() {
-  final RenderBox? renderBox = dialogKey.currentContext?.findRenderObject() as RenderBox?;
-  if (renderBox != null) {
-    
-    final position = renderBox.localToGlobal(Offset.zero);
-    return position.dy - 100;
+    final RenderBox? renderBox =
+        dialogKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      final position = renderBox.localToGlobal(Offset.zero);
+      return position.dy - 100;
+    }
+    return 160;
   }
-  return 160; 
-}
 }
