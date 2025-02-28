@@ -454,7 +454,7 @@ Thank you for your interest in contributing to the "Ultimate Alarm Clock" projec
    ```
 3. **Create a Branch:** Create a new branch for your contributions, giving it a descriptive name.
    ```sh
-   git checkout -b your-feature-name
+   git checkout -b your-feature/issue-name
    ```
 4. **Make Changes:** Make your desired changes, improvements, or bug fixes in your local environment.
 5. **Test:** Ensure that your changes do not introduce new issues and do not break existing features. Test your code thoroughly.
