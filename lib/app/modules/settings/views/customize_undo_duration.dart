@@ -1,13 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 
 import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 import '../controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 class CustomizeUndoDuration extends StatelessWidget{
   HomeController homeController = Get.find<HomeController>();

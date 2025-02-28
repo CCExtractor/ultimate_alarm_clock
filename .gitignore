@@ -57,3 +57,4 @@ app.*.map.json
 /.fvm
 /.tmp
 /caches
+/.fvmrc
