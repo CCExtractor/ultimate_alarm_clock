@@ -26,7 +26,7 @@ class WeatherTile extends StatelessWidget {
         child:  ListTile(
                 onTap: () async {
                   Utils.hapticFeedback();
-                  await controller.getLocation();
+                  await controller.checkAndRequestPermission();
                   Get.defaultDialog(
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
                     backgroundColor: themeController.secondaryBackgroundColor.value,
