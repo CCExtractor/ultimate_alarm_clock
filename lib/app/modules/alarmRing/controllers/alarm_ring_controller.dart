@@ -15,6 +15,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -33,10 +34,13 @@ class AlarmControlController extends GetxController {
   RxInt seconds = 0.obs;
   RxBool showButton = false.obs;
   HomeController homeController = Get.find<HomeController>();
+  SettingsController settingsController = Get.find<SettingsController>();
+  RxBool get is24HourFormat => settingsController.is24HrsEnabled;
   Rx<AlarmModel> currentlyRingingAlarm = Utils.alarmModelInit.obs;
   final formattedDate = Utils.getFormattedDate(DateTime.now()).obs;
   final timeNow =
       Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now())).obs;
+  final timeNow24Hr = Utils.timeOfDayToString(TimeOfDay.now()).obs;
   Timer? _currentTimeTimer;
   bool isAlarmActive = true;
   late double initialVolume;
