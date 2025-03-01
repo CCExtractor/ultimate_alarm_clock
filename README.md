@@ -1,6 +1,6 @@
 # Ultimate Alarm Clock
 
-This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather and  more! It also includes challenges to ensure you completely wake up and an option to set shared alarms! This is the ULTIMATE alarm clock :)
+This project aims to build a non-conventional alarm clock with smart features such as auto-dismissal based on phone activity, weather and more! It also includes challenges to ensure you completely wake up and an option to set shared alarms! This is the ULTIMATE alarm clock :)
 
 <p align="center">
   <a href="https://summerofcode.withgoogle.com/programs/2023/projects/c7GIl1mf">
@@ -20,45 +20,56 @@ This project aims to build a non-conventional alarm clock with smart features su
 - [Flutter](#flutter)
 
 ## What's New?
+
 During the GSOC'24 period, the following features were implemented by Contributor Aryan Saraf:
 
 ### 1) Migrating Alarm Scheduling logic and Smart Controls logic to Kotlin
+
 The previous alarm scheduling logic and smart controls would launch the app when working in the background due to reliance on Flutter method channels for database access and functions. To resolve this, we have migrated the Alarm Scheduling and Smart Controls logic from Flutter to Kotlin.
-Pull-Requests: [#563](https://github.com/CCExtractor/ultimate_alarm_clock/pull/563) [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574) [#580](https://github.com/CCExtractor/ultimate_alarm_clock/pull/580) 
+Pull-Requests: [#563](https://github.com/CCExtractor/ultimate_alarm_clock/pull/563) [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574) [#580](https://github.com/CCExtractor/ultimate_alarm_clock/pull/580)
 
 ### 2) Cross-communication between Flutter and Kotin
+
 Switching to SQLite databases will enhance cross-language data accessibility and streamline native feature integration. Earlier, we used Method Channels to extract data from the ISAR database for scheduling alarms upon booting, which triggers MainActivity and launches the app from the background. Transitioning to SQLite will improve flexibility and adaptability for future developments as it can be directly used by Kotlin.
 Issue: [#562](https://github.com/CCExtractor/ultimate_alarm_clock/issues/562), Pull-Request: [#563](https://github.com/CCExtractor/ultimate_alarm_clock/pull/563)
 
 ### 3) Profile Switcher and Alarm/Profile Sharing
+
 Effortlessly manage and share custom alarm profiles for different days and occasions, ensuring only the active profile’s alarms are prioritized. Alarms and profiles can now be shared with other users using their emails. In-app notifications for received alarms and profiles with the option to either accept or reject them.
 Issue: [#591](https://github.com/CCExtractor/ultimate_alarm_clock/issues/591), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
 
 ### 4) Google Calendar Integration and Date-based Scheduling
+
 Integrate Google Calendar to import reminders, events and aggregate alarms. Users can now create alarms that can be triggered on a specific date
 Issue: [#590](https://github.com/CCExtractor/ultimate_alarm_clock/issues/590), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
 
 ### 5) Guardian Angel
+
 Set a Guardian Angel to send a call or SMS to if you fail to wake up for important events, ensuring you never miss crucial moments.
 Issue: [#592](https://github.com/CCExtractor/ultimate_alarm_clock/issues/592), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
 
 ### 6) Anti-disturbance
+
 Automatically dismiss alarms if the user’s screen is on for more than X minutes, indicating they are busy and don’t need the alarm.”
 Issue: [#572](https://github.com/CCExtractor/ultimate_alarm_clock/issues/572), Pull-Request: [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574)
 
 ### 7) Open-meteo integration and weather fetch logic shift to Kotlin, Location access notification
+
 Switch to Open-Meteo for weather API for seamless weather integration without the need for an API key, reducing setup friction and streamlining the user experience. Add Notification for user location being accessed in the background. Weather and Location-based smart controls logic shifted to Kotlin.
 Issue: [#579](https://github.com/CCExtractor/ultimate_alarm_clock/issues/579), Pull-Request: [#580](https://github.com/CCExtractor/ultimate_alarm_clock/pull/580)
 
 ### 8) Timer
+
 Revamped the timer with multiple timer support, an easy-to-use UI, notification display when minimized, and direct Kotlin database access for faster performance without relying on Flutter for data.
 Issue: [#564](https://github.com/CCExtractor/ultimate_alarm_clock/issues/564), Pull-Request: [#565](https://github.com/CCExtractor/ultimate_alarm_clock/pull/565)
 
 ### 9) Ringtones
+
 “Added 5 new royalty-free ringtones and fixed related bugs, including erratic ringtone preview behaviour.”
 Issue: [#595](https://github.com/CCExtractor/ultimate_alarm_clock/issues/595), Pull-Request: [#596](https://github.com/CCExtractor/ultimate_alarm_clock/pull/596)
 
 ### 10) UI and bug fixes
+
 - Fixed Scheduling logic for weekday scheduling.
 - Fixed Several Controller errors throughout different PRs.
 - New UI for alarm and profile setting screen.
@@ -92,7 +103,7 @@ Replace `/your_page_name` with the desired name for your new page. This command 
 
 ### Purpose of Different Files
 
-- **Controller**: The controller is responsible for handling the business logic and state management of a page. It connects the UI (View) with the underlying data and functions. 
+- **Controller**: The controller is responsible for handling the business logic and state management of a page. It connects the UI (View) with the underlying data and functions.
 - **View**: The view represents the UI of the page. It defines how the page should look and interact with users. It focuses on the presentation of data.
 - **Binding**: The binding connects the controller and view, ensuring that they work together seamlessly. It sets up dependencies, routes, and other configurations required for the page.
 
@@ -100,7 +111,7 @@ To learn more about the GetX, you can read the documentation [_here_](https://ch
 
 ## Database Schema
 
-The "Ultimate Alarm Clock" project utilizes multiple databases for different purposes. These databases include Firebase Firestore, ISAR, and Flutter Secure Storage. Each database serves a distinct role in managing various aspects of the application. Below we provide an overview of the schema for each of these databases. 
+The "Ultimate Alarm Clock" project utilizes multiple databases for different purposes. These databases include Firebase Firestore, ISAR, and Flutter Secure Storage. Each database serves a distinct role in managing various aspects of the application. Below we provide an overview of the schema for each of these databases.
 
 ### Firebase Firestore
 
@@ -110,11 +121,10 @@ Firebase Firestore is used for real-time data synchronization and storage of use
 
 - **Real-time Updates**: Firestore enables instant updates and synchronization of alarm data across devices and users. This means that any changes made to shared alarms are immediately reflected on all connected devices.
 
-
-The schema for Firebase Firestore consists of collections and documents, and here is a summary of its structure. 
-
+The schema for Firebase Firestore consists of collections and documents, and here is a summary of its structure.
 
 #### Users Collection
+
 - **Attributes**:
   - `fullName` (String): User's fullname
   - `firstName` (String): User's first name
@@ -123,10 +133,12 @@ The schema for Firebase Firestore consists of collections and documents, and her
   - `id` (String): A unique identifier for each user
 
 #### Alarms Collection
+
 - **Attributes**:
+
   - `isarId` (Auto-incremented Integer): A unique identifier generated automatically by ISAR.
 
-  - `firestoreId` (String): An optional identifier associated with Firestore. 
+  - `firestoreId` (String): An optional identifier associated with Firestore.
 
   - `alarmTime` (String): The time at which the alarm is set to go off.
 
@@ -191,7 +203,7 @@ The schema for Firebase Firestore consists of collections and documents, and her
   - `showMotivationalQuote` (Boolean): Toggle motivational quote pop on alarm dismiss.
 
   - `activityMonitor` (Integer): Checks whether the activity monitor is on as 0 and 1.
- 
+
   - `alarmDate` (String): Stores the date on which the alarm should ring.
 
   - `ringOn` (Boolean): Toggle specific ring date for alarms.
@@ -207,24 +219,22 @@ The schema for Firebase Firestore consists of collections and documents, and her
   - `isCall` (Boolean): Toggles Call or SMS for Guardian Angel.
 
 #### Timers Collection
+
 - **Attributes**:
+
   - `timerValue` (Integer): The total duration of the timer in seconds.
-    
   - `startedOn` (String): The timestamp when the timer was started.
-    
   - `ringtoneName` (String): The name of the ringtone to be played when the timer ends.
-    
   - `timerName` (String): A unique name for the timer.
-    
-  - `isPaused` (Integer): Indicates whether the timer is paused (0 for not 
-paused, 1 for paused).
+  - `isPaused` (Integer): Indicates whether the timer is paused (0 for not
+    paused, 1 for paused).
 
-  - `timeElapsed` (Integer): The amount of time that has elapsed since the timer 
-  started, in seconds.
+  - `timeElapsed` (Integer): The amount of time that has elapsed since the timer
+    started, in seconds.
 
-### ISAR 
+### ISAR
 
-ISAR is the go-to solution for local storage of alarm-related data. It facilitates the efficient and structured management of alarm settings and preferences, ensuring that alarms function smoothly even in offline scenarios. ISAR optimizes data retrieval, enabling quick access to triggered alarms and user-specific configurations. Its performance efficiency and data integrity make it an essential component, ensuring that alarms trigger accurately and promptly. ISAR complements Firestore's real-time data synchronization, offering a responsive local data store to enhance the overall user experience. 
+ISAR is the go-to solution for local storage of alarm-related data. It facilitates the efficient and structured management of alarm settings and preferences, ensuring that alarms function smoothly even in offline scenarios. ISAR optimizes data retrieval, enabling quick access to triggered alarms and user-specific configurations. Its performance efficiency and data integrity make it an essential component, ensuring that alarms trigger accurately and promptly. ISAR complements Firestore's real-time data synchronization, offering a responsive local data store to enhance the overall user experience.
 
 The key reasons for utilizing IsarDb are as follows:
 
@@ -236,7 +246,7 @@ The schema for this data is already described above.
 
 ### SQFLITE
 
-SQFLite is a Flutter plugin that allows you to use SQLite databases in your Flutter applications. Using SQLite database we can share alarm data between dart and kotlin or other native languages without the need for calling method channels. 
+SQFLite is a Flutter plugin that allows you to use SQLite databases in your Flutter applications. Using SQLite database we can share alarm data between dart and kotlin or other native languages without the need for calling method channels.
 
 - **Cross Communication Between Dart and Native**: SqLite database can be accessed by any native language with ease, allowing for seamless flow of data between the two.
 
@@ -263,7 +273,9 @@ The Flutter Secure Storage library is utilized in the "Ultimate Alarm Clock" pro
 Flutter Secure Storage is instrumental in ensuring the security and privacy of sensitive user data and preferences, contributing to a seamless and secure user experience in the "Ultimate Alarm Clock" project.
 
 ## Installation & Setup
+
 ### Prerequisites
+
 Before getting started, ensure you have the following prerequisites installed on your system:
 
 - [Flutter](https://flutter.dev/docs/get-started/install): Install the latest version of Flutter, including Dart SDK, by following the official installation guide.
@@ -271,7 +283,6 @@ Before getting started, ensure you have the following prerequisites installed on
 - [Git](https://git-scm.com/downloads): Version control tool to clone the project's repository.
 
 - A code editor such as [Visual Studio Code](https://code.visualstudio.com/) or [Android Studio](https://developer.android.com/studio) with Flutter and Dart plugins.
-
 
 ### Installation Steps
 
@@ -282,51 +293,53 @@ Before getting started, ensure you have the following prerequisites installed on
    ```bash
    git clone https://github.com/CCExtractor/ultimate_alarm_clock.git
    ```
-   
+
 2. **Navigate to the Project Directory**:
 
    Change your working directory to the project folder:
-   
+
    ```bash
    cd ultimate-alarm-clock
    ```
-   
+
 3. **Install Dependencies**:
-   
+
    Use the `flutter pub get` command to install the project's dependencies:
 
    ```bash
    flutter pub get
    ```
-   
+
 4. **Run the Application**:
-  
+
    You can run the application on a connected device (emulator or physical device) using the following command:
 
    ```bash
    flutter run
    ```
-   
-This command will compile and launch the "Ultimate Alarm Clock" app on your device.
 
+This command will compile and launch the "Ultimate Alarm Clock" app on your device.
 
 ## User Interface & Features
 
 The "Ultimate Alarm Clock" offers a user-friendly and versatile interface designed to meet your alarm management needs. This section provides an overview of the app's user interface, highlighting key features and functionalities.
 
 ### Splash Screen
+
 - The app opens with a welcoming splash screen, providing a brief introduction to the application.
 
 <img src="./assets/images/readme/splash1.jpg" height="400" alt="splash-1">
 <img src="./assets/images/readme/splash2.jpg" height="400" alt="splash-2">
 
 ### Light and Dark Modes
+
 - The "Ultimate Alarm Clock" offers both light and dark modes to suit your preferred theme and enhance readability in different lighting conditions.
 
 <img src="./assets/images/readme/dark.jpg" height="400" alt="dark">
 <img src="./assets/images/readme/light.jpg" height="400" alt="light">
 
 ### Home View
+
 - After the splash screen, you are directed to the Home View, where you can manage your alarms.
 - The Home View allows you to:
   - View all your alarms.
@@ -339,8 +352,8 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 
 <img src="./assets/images/readme/home.jpg" height="400" alt="home">
 
-
 ### Settings View
+
 - In the Settings View, you can customize various aspects of the app:
   - Set or edit the weather API key for weather-related features.
   - Log in with your Google account.
@@ -351,6 +364,7 @@ The "Ultimate Alarm Clock" offers a user-friendly and versatile interface design
 <img src="./assets/images/readme/settings.jpg" height="400" alt="settings">
 
 ### Add or Update Alarm View
+
 - The floating action button in the Home View allows you to create alarms, directing you to the Add or Update Alarm View.
 - In this view, you can:
   - Set the alarm time using a time picker or manually entering time using keyboard.
@@ -382,7 +396,6 @@ The "Ultimate Alarm Clock" project introduces the feature of shared alarms, allo
    - Users can join an existing shared alarm by entering a unique shared alarm ID or accepting an invitation from the owner.
    - The shared alarm ID is a unique code that the owner shares with potential collaborators.
 
-
 #### Implementation of Shared Alarms
 
 ##### `addUserToAlarmSharedUsers`
@@ -410,6 +423,7 @@ The `removeUserFromAlarmSharedUsers` function allows the owner of a shared alarm
 ##### `streamAlarms`
 
 1. **Data Sources**: It combines data from three primary data sources:
+
    - **Firestore**: Alarms stored in the Firestore database.
    - **Shared Alarms**: Alarms shared with the user through collaboration.
    - **IsarDB**: Alarms stored locally for offline use.
@@ -417,6 +431,7 @@ The `removeUserFromAlarmSharedUsers` function allows the owner of a shared alarm
 2. **Data Transformation**: The function processes the data retrieved from these sources. This transformation includes converting the raw document snapshots into `AlarmModel` objects, a data structure that represents alarm records.
 
 3. **Sorting**: Depending on user preferences, the alarms are sorted. Users have the option to enable or disable sorting, and two different sorting methods are applied based on this preference:
+
    - **Time-Based Sorting**: If the sorting preference is enabled, the alarms are sorted in ascending order based on their scheduled time.
    - **Priority Sorting**: If the sorting preference is disabled, the alarms are organized based on priority:
      - First, the enabled alarms are listed ahead of disabled ones.
@@ -439,12 +454,13 @@ Thank you for your interest in contributing to the "Ultimate Alarm Clock" projec
    ```bash
    git clone https://github.com/your-username/ultimate-alarm-clock.git
    ```
+
 3. **Create a Branch**: Create a new branch for your contributions, giving it a descriptive name.
 
    ```bash
    git checkout -b your-feature-name
    ```
-   
+
 4. **Make Changes**: Make your desired changes, improvements, or bug fixes in your local environment.
 
 5. **Test**: Ensure that your changes do not introduce new issues and do not break existing features. Test your code thoroughly.
@@ -452,11 +468,13 @@ Thank you for your interest in contributing to the "Ultimate Alarm Clock" projec
 6. **Documentation**: If your changes impact the user interface, configuration, or functionality, update the documentation to reflect the changes.
 
 7. **Commit**: Commit your changes with a clear and concise message.
+
    ```bash
    git commit -m "Add feature/fix: Describe your changes here"
    ```
 
 8. **Push Changes**: Push your changes to your GitHub fork.
+
    ```bash
    git push origin your-feature-name
    ```
@@ -466,6 +484,43 @@ Thank you for your interest in contributing to the "Ultimate Alarm Clock" projec
 10. **Code Review**: Your PR will undergo code review. Make any necessary adjustments based on feedback.
 
 11. **Merge**: Once your PR is approved, it will be merged into the main project repository.
+
+## Troubleshooting Environment Issues
+
+If you encounter issues while setting up or running the project, follow these steps to resolve them:
+
+### **Common Issue: Gradle Build Failure**
+
+New contributors may face a **Gradle build failure** when running `flutter run`, displaying an error related to `app_plugin_loader.gradle`. This happens due to deprecated Gradle plugin application methods.
+
+**Error Message Example:**
+
+```sh
+FAILURE: Build failed with an exception.
+
+* Where:
+Script '/home/user/flutter/packages/flutter_tools/gradle/app_plugin_loader.gradle' line: 9
+
+* What went wrong:
+A problem occurred evaluating script.
+> You are applying Flutter's app_plugin_loader Gradle plugin imperatively using the apply script method, which is not possible anymore. Migrate to applying Gradle plugins with the declarative plugins block: https://flutter.dev/go/flutter-gradle-plugin-apply
+```
+
+For more details, refer to the **[GitHub Issue #X - Gradle Build Failure](#)** (Replace `#X` with the actual issue link when available).
+
+### **Steps to Fix Environment Issues**
+
+- **Downgrade Flutter** to version `3.22.2`.
+- **Install Android Studio Koala** version `2024.1.2.8` instead of latest Android Studio.
+- **Ensure Java 17 is used** by removing other Java versions.
+- **Restart your system** and then run the following commands:
+  ```sh
+  flutter clean
+  flutter pub get
+  flutter run
+  ```
+
+Following these steps should help resolve common setup-related issues for new contributors.
 
 ### Guidelines
 
@@ -489,11 +544,11 @@ If you have any questions regarding something in the project, do not hesitate to
 #### Google Assistant commands
 
 - We want to add Google Assistant commands to set alarms directly without the need to open the app.
-  
+
 #### Google Cloud Functions
 
 - We are working on implementing Google Cloud functions to make shared alarms more interactive by allowing users to disable or reconfigure alarms for others.
-  
+
 #### Architectural and Data Flow Changes
 
 - We have plans to make architectural and data flow changes within the application to enhance its overall performance and maintainability. These changes will optimize resource utilization and streamline the user experience.
