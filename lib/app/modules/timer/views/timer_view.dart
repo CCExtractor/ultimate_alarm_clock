@@ -215,7 +215,6 @@ class TimerView extends GetView<TimerController> {
 
   void timerSelector(BuildContext context, double width, double height) {
     showDialog(
-      
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -557,7 +556,7 @@ class TimerView extends GetView<TimerController> {
                                           height: height * 0.008,
                                         ),
                                         SizedBox(
-                                          width: width * 0.2,
+                                          width: width * 0.18,
                                           child: TextField(
                                             onChanged: (_) {
                                               inputTimeController
@@ -628,7 +627,7 @@ class TimerView extends GetView<TimerController> {
                                           height: height * 0.008,
                                         ),
                                         SizedBox(
-                                          width: width * 0.2,
+                                          width: width * 0.18,
                                           child: TextField(
                                             onChanged: (_) {
                                               inputTimeController
@@ -699,7 +698,7 @@ class TimerView extends GetView<TimerController> {
                                           height: height * 0.008,
                                         ),
                                         SizedBox(
-                                          width: width * 0.2,
+                                          width: width * 0.18,
                                           child: TextField(
                                             onChanged: (_) {
                                               inputTimeController
@@ -864,13 +863,14 @@ class TimerView extends GetView<TimerController> {
       },
     );
   }
+
   double calculateTopPosition() {
-  final RenderBox? renderBox = dialogKey.currentContext?.findRenderObject() as RenderBox?;
-  if (renderBox != null) {
-    
-    final position = renderBox.localToGlobal(Offset.zero);
-    return position.dy - 100;
+    final RenderBox? renderBox =
+        dialogKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      final position = renderBox.localToGlobal(Offset.zero);
+      return position.dy - 100;
+    }
+    return 160;
   }
-  return 160; 
-}
 }
