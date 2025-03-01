@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
-import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/customize_undo_duration.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
@@ -11,14 +9,12 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_fe
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/language_menu.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  SettingsView({Key? key}) : super(key: key);
+  const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +52,6 @@ class SettingsView extends GetView<SettingsController> {
             padding: const EdgeInsets.symmetric(vertical: 25.0),
             child: Column(
               children: [
-
                 GoogleSignIn(
                   controller: controller,
                   width: width,
@@ -103,9 +98,10 @@ class SettingsView extends GetView<SettingsController> {
                   height: 20,
                 ),
                 CustomizeUndoDuration(
-                    width: width,
-                    height: height,
-                    themeController: controller.themeController),
+                  width: width,
+                  height: height,
+                  themeController: controller.themeController,
+                ),
                 const SizedBox(
                   height: 20,
                 ),

@@ -6,7 +6,6 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:telephony/telephony.dart';
 
 class GuardianAngel extends StatelessWidget {
   const GuardianAngel({
