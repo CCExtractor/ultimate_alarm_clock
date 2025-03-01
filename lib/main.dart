@@ -32,7 +32,7 @@ void main() async {
   final ThemeController themeController = Get.put(ThemeController());
 
   AudioPlayer.global.setAudioContext(
-    const AudioContext(
+    AudioContext(
       android: AudioContextAndroid(
         audioMode: AndroidAudioMode.ringtone,
         contentType: AndroidContentType.music,
