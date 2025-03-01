@@ -24,7 +24,6 @@ class ScreenActivityTile extends StatelessWidget {
       () => InkWell(
         onTap: () {
           Utils.hapticFeedback();
-          // storing the initial values
           activityInterval = controller.activityInterval.value;
           isActivityEnalbed = controller.isActivityenabled.value;
           Get.defaultDialog(
@@ -50,7 +49,8 @@ class ScreenActivityTile extends StatelessWidget {
                           value: controller.useScreenActivity.value,
                           activeColor: ksecondaryColor,
                           onChanged: (value) {
-                            if (value == false)
+                            controller.useScreenActivity.value = value;
+                            if (!value)
                               controller.isActivityMonitorenabled.value = 0;
                             else
                               controller.isActivityMonitorenabled.value = 1;
@@ -119,7 +119,7 @@ class ScreenActivityTile extends StatelessWidget {
                   activeColor: ksecondaryColor,
                   onChanged: (value) {
                     controller.useScreenActivity.value = value;
-                    if (value == false)
+                    if (!value)
                       controller.isActivityMonitorenabled.value = 0;
                     else
                       controller.isActivityMonitorenabled.value = 1;

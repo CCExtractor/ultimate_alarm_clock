@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/v4.dart';
 
 import '../../../data/models/alarm_model.dart';
 import '../../../data/models/profile_model.dart';

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';

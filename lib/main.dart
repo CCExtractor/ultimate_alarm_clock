@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -51,13 +50,13 @@ void main() async {
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
   runApp(
-    UltimateAlarmClockApp(),
+    const UltimateAlarmClockApp(),
   );
 }
 
 
 class UltimateAlarmClockApp extends StatelessWidget {
-  UltimateAlarmClockApp({super.key});
+  const UltimateAlarmClockApp({super.key});
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

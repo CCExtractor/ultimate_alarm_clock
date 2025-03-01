@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis/calendar/v3.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
@@ -13,11 +11,9 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:weather/weather.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
-import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 
 import '../../../data/providers/get_storage_provider.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
-import '../../../utils/GoogleHttpClient.dart';
 
 class SettingsController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
