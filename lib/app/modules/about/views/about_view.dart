@@ -9,6 +9,8 @@ class AboutView extends GetView<AboutController> {
   final AboutController aboutController = Get.find<AboutController>();
   ThemeController themeController = Get.find<ThemeController>();
 
+  AboutView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +53,7 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Text(
               'Ultimate Alarm Clock'.tr,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -59,7 +61,7 @@ class AboutView extends GetView<AboutController> {
             const SizedBox(height: 10),
             Text(
               'Version: 0.2.1'.tr,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -71,7 +73,7 @@ class AboutView extends GetView<AboutController> {
                 'This project was originally developed as part of Google Summer of code under the CCExtractor organization. It\'s free, the source code is available, and we encourage programmers to contribute'
                     .tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                 ),

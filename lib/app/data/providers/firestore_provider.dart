@@ -314,7 +314,7 @@ class FirestoreDb {
     Map sharedItem = {
       'type': 'profile',
       'profileName': currentProfileName,
-      'owner': currentUserEmail
+      'owner': currentUserEmail,
     };
     await _firebaseFirestore
         .collection('users')
@@ -325,10 +325,9 @@ class FirestoreDb {
         .then((v) {
       Get.snackbar('Notification', 'Item Shared!');
     });
-    ;
     for (final email in emails) {
       await _firebaseFirestore.collection('users').doc(email).update({
-        'receivedItems': FieldValue.arrayUnion([sharedItem])
+        'receivedItems': FieldValue.arrayUnion([sharedItem]),
       });
     }
   }
@@ -340,7 +339,7 @@ class FirestoreDb {
       'type': 'alarm',
       'AlarmName': alarm.alarmID,
       'owner': currentUserEmail,
-      'alarmTime': alarm.alarmTime
+      'alarmTime': alarm.alarmTime,
     };
     await _firebaseFirestore
         .collection('users')
@@ -353,7 +352,7 @@ class FirestoreDb {
     });
     for (final email in emails) {
       await _firebaseFirestore.collection('users').doc(email).update({
-        'receivedItems': FieldValue.arrayUnion([sharedItem])
+        'receivedItems': FieldValue.arrayUnion([sharedItem]),
       });
     }
   }
@@ -528,7 +527,7 @@ class FirestoreDb {
         .collection('users')
         .doc(_firebaseAuthInstance.currentUser!.email)
         .update({
-      'receivedItems': FieldValue.arrayRemove([item])
+      'receivedItems': FieldValue.arrayRemove([item]),
     });
   }
 }

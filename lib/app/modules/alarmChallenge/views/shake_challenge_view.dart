@@ -9,15 +9,14 @@ import '../controllers/alarm_challenge_controller.dart';
 
 // ignore: must_be_immutable
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
-  ShakeChallengeView({Key? key}) : super(key: key);
+  ShakeChallengeView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
-
     // var width = Get.width;
-    // var height = Get.height;  
+    // var height = Get.height;
     // ignore: unused_local_variable
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
@@ -51,16 +50,18 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Obx(
-                          () => Text(
-                            'Shake your phone!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
-                                ),
+                          Obx(
+                            () => Text(
+                              'Shake your phone!'.tr,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeController
+                                        .primaryTextColor.value
+                                        .withOpacity(0.7),
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -72,7 +73,8 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                               child: Icon(
                                 Icons.vibration,
                                 size: height * 0.2,
-                                color: themeController.primaryTextColor.value.withOpacity(0.7),
+                                color: themeController.primaryTextColor.value
+                                    .withOpacity(0.7),
                               ),
                             ),
                           ),

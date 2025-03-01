@@ -54,7 +54,6 @@ void main() async {
   );
 }
 
-
 class UltimateAlarmClockApp extends StatelessWidget {
   const UltimateAlarmClockApp({super.key});
   @override
@@ -68,7 +67,7 @@ class UltimateAlarmClockApp extends StatelessWidget {
       getPages: AppPages.routes,
       translations: AppTranslations(),
       locale: loc,
-      fallbackLocale: Locale('en', 'US'),
+      fallbackLocale: const Locale('en', 'US'),
       builder: (BuildContext context, Widget? error) {
         ErrorWidget.builder = (FlutterErrorDetails? error) {
           return CustomErrorScreen(errorDetails: error!);

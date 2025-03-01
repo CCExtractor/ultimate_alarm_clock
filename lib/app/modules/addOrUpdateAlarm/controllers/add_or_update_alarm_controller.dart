@@ -290,7 +290,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: WidgetStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
                       'Cancel'.tr,
@@ -305,7 +305,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.red,
                         width: 1,
                       ),
@@ -465,7 +465,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Save',
@@ -485,7 +485,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Retake',
@@ -505,7 +505,7 @@ class AddOrUpdateAlarmController extends GetxController {
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),
+                                WidgetStateProperty.all(kprimaryColor),
                           ),
                           child: Text(
                             'Disable',
@@ -572,7 +572,7 @@ class AddOrUpdateAlarmController extends GetxController {
         },
         confirm: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+            backgroundColor: WidgetStateProperty.all(kprimaryColor),
           ),
           child: Obx(
             () => Text(
@@ -595,7 +595,7 @@ class AddOrUpdateAlarmController extends GetxController {
         cancel: Obx(
           () => TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 themeController.primaryTextColor.value.withOpacity(0.5),
               ),
             ),
@@ -669,7 +669,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     profileTextEditingController.text = homeController.isProfileUpdate.value
         ? homeController.selectedProfile.value
-        : "";
+        : '';
     emailTextEditingController.text = '';
 
     if (Get.arguments != null) {
@@ -1353,10 +1353,10 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 }
 
-  int orderedCountryCode(Country countryA, Country countryB) {
-    // `??` for null safety of 'dialCode'
-    String dialCodeA = countryA.dialCode ?? '0';
-    String dialCodeB = countryB.dialCode ?? '0';
+int orderedCountryCode(Country countryA, Country countryB) {
+  // `??` for null safety of 'dialCode'
+  String dialCodeA = countryA.dialCode ?? '0';
+  String dialCodeB = countryB.dialCode ?? '0';
 
-    return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
-  }
+  return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
+}

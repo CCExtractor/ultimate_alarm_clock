@@ -20,7 +20,6 @@ class ToggleButton extends StatefulWidget {
 }
 
 class _ToggleButtonState extends State<ToggleButton> {
-
   ThemeController themeController = Get.find<ThemeController>();
 
   @override

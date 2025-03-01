@@ -12,10 +12,11 @@ class TimerRingController extends GetxController {
   MethodChannel timerChannel = const MethodChannel('timer');
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
-   getFakeTimerModel()async {
-   TimerModel fakeTimer = await Utils.genFakeTimerModel();
-   return fakeTimer;
+  getFakeTimerModel() async {
+    TimerModel fakeTimer = await Utils.genFakeTimerModel();
+    return fakeTimer;
   }
+
   @override
   void onInit() async {
     super.onInit();

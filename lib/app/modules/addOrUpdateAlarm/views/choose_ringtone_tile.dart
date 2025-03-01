@@ -63,7 +63,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                 children: [
                   Obx(
                     () => Padding(
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       child: SizedBox(
                         width: width * 0.8,
                         height: height * 0.3,
@@ -71,10 +71,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                           elevation: 0,
                           color: themeController.secondaryBackgroundColor.value,
                           child: Scrollbar(
-                            radius: Radius.circular(5),
+                            radius: const Radius.circular(5),
                             thumbVisibility: true,
                             child: Padding(
-                              padding: EdgeInsets.only(right: 4),
+                              padding: const EdgeInsets.only(right: 4),
                               child: ListView.builder(
                                 itemCount:
                                     controller.customRingtoneNames.length,
@@ -83,7 +83,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                   return Obx(
                                     () => ListTile(
                                       onTap: () async {
-                                        await AudioUtils.stopPreviewCustomSound();
+                                        await AudioUtils
+                                            .stopPreviewCustomSound();
                                         controller.isPlaying.value = false;
                                         controller.previousRingtone =
                                             controller.customRingtoneName.value;
@@ -116,8 +117,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                   .customRingtoneName ==
                                               controller
                                                   .customRingtoneNames[index]
-                                          ? themeController.primaryBackgroundColor.value
-                                          : themeController.secondaryBackgroundColor.value,
+                                          ? themeController
+                                              .primaryBackgroundColor.value
+                                          : themeController
+                                              .secondaryBackgroundColor.value,
                                       title: Text(
                                         controller.customRingtoneNames[index],
                                         overflow: TextOverflow.ellipsis,
@@ -131,9 +134,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                     .customRingtoneNames[index])
                                               IconButton(
                                                 onPressed: () => onTapPreview(
-                                                    controller
-                                                            .customRingtoneNames[
-                                                        index]),
+                                                  controller
+                                                          .customRingtoneNames[
+                                                      index],
+                                                ),
                                                 icon: Icon(
                                                   (controller.isPlaying.value &&
                                                           controller
@@ -156,13 +160,15 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                           255,
                                                           116,
                                                           111,
-                                                          110) // Change this color to red
+                                                          110,
+                                                        ) // Change this color to red
                                                       : kprimaryColor,
                                                 ),
                                               ),
                                             if (!defaultRingtones.contains(
-                                                controller.customRingtoneNames[
-                                                    index]))
+                                              controller
+                                                  .customRingtoneNames[index],
+                                            ))
                                               IconButton(
                                                 onPressed: () async {
                                                   await controller
@@ -208,7 +214,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                         },
                         child: Text(
                           'Upload Ringtone'.tr,
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: kprimaryColor,
                                   ),
                         ),
@@ -225,7 +232,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                         ),
                         child: Text(
                           'Done'.tr,
-                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
                                 color: themeController.secondaryTextColor.value,
                               ),
                         ),

@@ -8,6 +8,8 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 class TimerRingView extends GetView<TimerRingController> {
   ThemeController themeController = Get.find<ThemeController>();
 
+  TimerRingView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -37,7 +39,7 @@ class TimerRingView extends GetView<TimerRingController> {
               width: width * 0.8,
               child: TextButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                     kprimaryColor,
                   ),
                 ),
