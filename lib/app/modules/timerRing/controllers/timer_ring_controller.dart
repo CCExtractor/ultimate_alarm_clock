@@ -22,7 +22,7 @@ class TimerRingController extends GetxController {
     super.onInit();
 
     // Preventing app from being minimized!
-    _subscription = FGBGEvents.stream.listen((event) {
+    _subscription = FGBGEvents.instance.stream.listen((event) {
       if (event == FGBGType.background) {
         timerChannel.invokeMethod('bringAppToForeground');
       }

@@ -264,7 +264,7 @@ const AlarmModelSchema = CollectionSchema(
   getId: _alarmModelGetId,
   getLinks: _alarmModelGetLinks,
   attach: _alarmModelAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _alarmModelEstimateSize(

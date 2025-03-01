@@ -118,8 +118,8 @@ class LocationTile extends StatelessWidget {
                             controller.selectedPoint.value = point;
                           },
                           // screenSize: Size(width * 0.3, height * 0.8),
-                          center: controller.selectedPoint.value,
-                          zoom: 15,
+                          initialCenter: controller.selectedPoint.value,
+                          initialZoom: 15,
                         ),
                         children: [
                           TileLayer(

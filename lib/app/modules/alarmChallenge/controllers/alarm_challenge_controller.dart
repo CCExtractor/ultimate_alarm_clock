@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shake/shake.dart';
+import 'package:shake_gesture/shake_gesture.dart';
+
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -18,7 +19,6 @@ class AlarmChallengeController extends GetxController {
 
   final RxInt shakedCount = 0.obs;
   final isShakeOngoing = Status.initialized.obs;
-  ShakeDetector? _shakeDetector;
   MobileScannerController? qrController;
 
   final qrValue = ''.obs;
@@ -97,12 +97,10 @@ class AlarmChallengeController extends GetxController {
     if (alarmRecord.isShakeEnabled) {
       isShakeOngoing.listen((value) {
         if (value == Status.ongoing) {
-          _shakeDetector = ShakeDetector.autoStart(
-            onPhoneShake: () {
-              shakedCount.value -= 1;
-              restartTimer();
-            },
-          );
+          ShakeGesture.registerCallback(onShake: () {
+            shakedCount.value -= 1;
+            restartTimer();
+          });
         }
       });
 
@@ -111,7 +109,10 @@ class AlarmChallengeController extends GetxController {
           isShakeOngoing.value = Status.completed;
           alarmRecord.isShakeEnabled = false;
           Get.back();
-          _shakeDetector!.stopListening();
+          ShakeGesture.unregisterCallback(onShake: () {
+            shakedCount.value -= 1;
+            restartTimer();
+          });
           isChallengesComplete();
         }
       });
@@ -246,13 +247,11 @@ class AlarmChallengeController extends GetxController {
       AudioUtils.playAlarm(alarmRecord: alarmRecord);
     }
   }
+
   void removeDigit() {
-  if (displayValue.value.isNotEmpty) {
-    displayValue.value = displayValue.value.substring(
-      0, 
-      displayValue.value.length - 1
-    );
+    if (displayValue.value.isNotEmpty) {
+      displayValue.value =
+          displayValue.value.substring(0, displayValue.value.length - 1);
+    }
   }
 }
-}
-

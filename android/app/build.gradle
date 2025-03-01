@@ -1,14 +1,16 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new Exception("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -21,11 +23,6 @@ if (flutterVersionName == null) {
     flutterVersionName = '0.2.1'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -33,7 +30,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 34
+    namespace "com.ccextractor.ultimate_alarm_clock"
+    compileSdkVersion 35
     ndkVersion flutter.ndkVersion
 
     defaultConfig {
@@ -93,9 +91,6 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10"
     implementation platform('com.google.firebase:firebase-bom:32.0.0') // Updated Firebase BOM to latest
     implementation 'com.google.firebase:protolite-well-known-types:18.0.0'
     implementation("com.android.volley:volley:1.2.1")

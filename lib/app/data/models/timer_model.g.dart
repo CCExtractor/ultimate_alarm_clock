@@ -59,7 +59,7 @@ const TimerModelSchema = CollectionSchema(
   getId: _timerModelGetId,
   getLinks: _timerModelGetLinks,
   attach: _timerModelAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _timerModelEstimateSize(

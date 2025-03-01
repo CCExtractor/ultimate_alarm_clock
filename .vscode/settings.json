@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "E:/ultimate_alarm_clock/linux"
+    "cmake.sourceDirectory": "E:/ultimate_alarm_clock/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
