@@ -80,9 +80,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     controller.timeToAlarm.value.toString(),
                               },
                             ),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall,
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ),
             ),
@@ -233,17 +231,16 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .day,
                                                               inputTimeController
                                                                   .convert24(
-                                                                value,
-                                                                controller
-                                                                    .meridiemIndex
-                                                                    .value,
-                                                              ),
+                                                                      value,
+                                                                      controller
+                                                                          .meridiemIndex
+                                                                          .value),
                                                               controller
                                                                   .selectedTime
                                                                   .value
                                                                   .minute,
-                                                              
                                                             );
+
                                                             inputTimeController
                                                                     .inputHrsController
                                                                     .text =
@@ -265,6 +262,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   ? 'AM'
                                                                   : 'PM',
                                                             );
+                                                            inputTimeController
+                                                                .setTime();
                                                           },
                                                           infiniteLoop: true,
                                                           itemWidth:
@@ -531,7 +530,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                     .textTheme
                                                                     .displayLarge!
                                                                     .copyWith(
-                                                                      fontSize: Utils.getFontSize(context),
+                                                                      fontSize:
+                                                                          Utils.getFontSize(
+                                                                              context),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -543,8 +544,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 .textTheme
                                                                 .displayMedium!
                                                                 .copyWith(
-                                                                  fontSize:
-                                                                    Utils.getFontSize(
+                                                                  fontSize: Utils
+                                                                      .getFontSize(
                                                                           context),
                                                                   color: themeController
                                                                       .primaryDisabledTextColor
@@ -564,6 +565,19 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         width: 80,
                                                         child: TextField(
                                                           onChanged: (_) {
+                                                            
+                                                            if (int.parse(inputTimeController
+                                                                        .inputHrsController
+                                                                        .text) ==
+                                                                    12 &&
+                                                                int.parse(inputTimeController
+                                                                        .inputMinutesController
+                                                                        .text) ==
+                                                                    0) {
+                                                              inputTimeController
+                                                                  .isAM
+                                                                  .toggle();
+                                                            }
                                                             inputTimeController
                                                                 .setTime();
                                                           },
@@ -583,22 +597,17 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .number,
                                                           inputFormatters: [
                                                             FilteringTextInputFormatter
-                                                                .allow(
-                                                              RegExp(
-                                                                '[1,2,3,4,5,6,7,8,9,0]',
-                                                              ),
-                                                            ),
+                                                                .allow(RegExp(
+                                                                    '[1,2,3,4,5,6,7,8,9,0]')),
                                                             LengthLimitingTextInputFormatter(
-                                                              2,
-                                                            ),
+                                                                2),
                                                             LimitRange(
-                                                              0,
-                                                              settingsController
-                                                                      .is24HrsEnabled
-                                                                      .value
-                                                                  ? 23
-                                                                  : 12,
-                                                            ),
+                                                                0,
+                                                                settingsController
+                                                                        .is24HrsEnabled
+                                                                        .value
+                                                                    ? 23
+                                                                    : 12),
                                                           ],
                                                         ),
                                                       ),
