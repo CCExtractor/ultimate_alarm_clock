@@ -44,7 +44,7 @@ const RingtoneModelSchema = CollectionSchema(
   getId: _ringtoneModelGetId,
   getLinks: _ringtoneModelGetLinks,
   attach: _ringtoneModelAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _ringtoneModelEstimateSize(

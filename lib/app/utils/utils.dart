@@ -8,8 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
-import 'package:telephony/telephony.dart';
-
+import 'package:flutter_background_messenger/flutter_background_messenger.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
@@ -100,12 +99,12 @@ class Utils {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  static DateTime stringToDate(String date){
+  static DateTime stringToDate(String date) {
     final parts = date.split('-');
     final day = int.parse(parts[2]);
     final month = int.parse(parts[1]);
     final year = int.parse(parts[0]);
-    return DateTime(year,month,day);
+    return DateTime(year, month, day);
   }
 
   static DateTime? stringToDateTime(String timeString) {
@@ -799,12 +798,21 @@ class Utils {
   }
 
   static sendSMS(String phoneNo, String text) async {
-    final Telephony telephony = Telephony.instance;
-    await telephony.requestPhoneAndSmsPermissions.then((value) {
-      if (value == true) {
-        telephony.sendSms(to: phoneNo, message: text);
+    final messenger = FlutterBackgroundMessenger();
+    try {
+      final success = await messenger.sendSMS(
+        phoneNumber: phoneNo,
+        message: text,
+      );
+
+      if (success) {
+        print('SMS sent successfully');
+      } else {
+        print('Failed to send SMS');
       }
-    });
+    } catch (e) {
+      print('Error sending SMS: $e');
+    }
   }
 
   static String _twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -826,6 +834,7 @@ class Utils {
       return parts[0].substring(0, 2);
     }
   }
+
   static double getFontSize(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return width < 360 ? 14 : 30;
