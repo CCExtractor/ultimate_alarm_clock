@@ -24,7 +24,7 @@ class WeatherTile extends StatelessWidget {
       child: ListTile(
         onTap: () async {
           Utils.hapticFeedback();
-          await controller.getLocation();
+          await controller.checkAndRequestPermission();
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
             backgroundColor: themeController.secondaryBackgroundColor.value,
@@ -44,17 +44,20 @@ class WeatherTile extends StatelessWidget {
             ),
           );
         },
+        // Wrap the row in an Expanded or Flexible if needed for layout
         title: Row(
           children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Obx(() => Text(
-                    'Weather Condition'.tr,
-                    style: TextStyle(
-                      color: themeController.primaryTextColor.value,
-                    ),
-                  )),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Obx(() => Text(
+                      'Weather Condition'.tr,
+                      style: TextStyle(
+                        color: themeController.primaryTextColor.value,
+                      ),
+                    )),
+              ),
             ),
             Obx(() => IconButton(
                   icon: Icon(
@@ -134,21 +137,23 @@ class WeatherTile extends StatelessWidget {
           child: Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Obx(() => Container(
-                    width: 150,
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      controller.weatherTypes.value,
-                      textAlign: TextAlign.right,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: (controller.isWeatherEnabled.value == false)
-                                ? kprimaryDisabledTextColor
-                                : themeController.primaryTextColor.value,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
+              Obx(
+                () => Container(
+                  width: 150,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    controller.weatherTypes.value,
+                    textAlign: TextAlign.right,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: (controller.isWeatherEnabled.value == false)
+                              ? kprimaryDisabledTextColor
+                              : themeController.primaryTextColor.value,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
               const Icon(
                 Icons.chevron_right,
                 color: kprimaryDisabledTextColor,
@@ -192,28 +197,29 @@ class WeatherOption extends StatelessWidget {
         padding: const EdgeInsets.only(left: 10.0),
         child: Row(
           children: [
-            Obx(() => Checkbox.adaptive(
-                  side: BorderSide(
-                    width: width * 0.0015,
-                    color: themeController.primaryTextColor.value.withOpacity(0.5),
-                  ),
-                  value: controller.selectedWeather.contains(type),
-                  activeColor: kprimaryColor.withOpacity(0.8),
-                  onChanged: (value) {
-                    Utils.hapticFeedback();
-                    if (controller.selectedWeather.contains(type)) {
-                      controller.selectedWeather.remove(type);
-                    } else {
-                      controller.selectedWeather.add(type);
-                    }
-                  },
-                )),
+            Obx(
+              () => Checkbox.adaptive(
+                side: BorderSide(
+                  width: width * 0.0015,
+                  color: themeController.primaryTextColor.value.withOpacity(0.5),
+                ),
+                value: controller.selectedWeather.contains(type),
+                activeColor: kprimaryColor.withOpacity(0.8),
+                onChanged: (value) {
+                  Utils.hapticFeedback();
+                  if (controller.selectedWeather.contains(type)) {
+                    controller.selectedWeather.remove(type);
+                  } else {
+                    controller.selectedWeather.add(type);
+                  }
+                },
+              ),
+            ),
             Text(
               label.tr,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(fontSize: 15),
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontSize: 15,
+                  ),
               overflow: TextOverflow.ellipsis,
             ),
           ],
