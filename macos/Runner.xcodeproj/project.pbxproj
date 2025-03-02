@@ -29,6 +29,11 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		5AF066206A0E33C8EC39A2D6 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C67D172DE8B98F89E5852B /* Pods_Runner.framework */; };
 		7F631C83937A79D61B4F9336 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F32FC8DA58A75C69DDAE338 /* Pods_RunnerTests.framework */; };
+		A45933B92D71B1C600FD99C5 /* digialarm3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A45933B62D71B1C600FD99C5 /* digialarm3.mp3 */; };
+		A45933BA2D71B1C600FD99C5 /* digialarm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A45933B42D71B1C600FD99C5 /* digialarm.mp3 */; };
+		A45933BB2D71B1C600FD99C5 /* digialarm2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A45933B52D71B1C600FD99C5 /* digialarm2.mp3 */; };
+		A45933BC2D71B1C600FD99C5 /* mystery.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A45933B72D71B1C600FD99C5 /* mystery.mp3 */; };
+		A45933BD2D71B1C600FD99C5 /* newday.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A45933B82D71B1C600FD99C5 /* newday.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +72,7 @@
 		331C80D7294CF71000263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedPluginRegistrant.swift; sourceTree = "<group>"; };
-		33CC10ED2044A3C60003C045 /* flutter_example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flutter_example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33CC10ED2044A3C60003C045 /* ultimate_alarm_clock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ultimate_alarm_clock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33CC10F02044A3C60003C045 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33CC10F22044A3C60003C045 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Runner/Assets.xcassets; sourceTree = "<group>"; };
 		33CC10F52044A3C60003C045 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -82,6 +87,11 @@
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		91CB1B68C2E050800D646978 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		A45933B42D71B1C600FD99C5 /* digialarm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = digialarm.mp3; sourceTree = "<group>"; };
+		A45933B52D71B1C600FD99C5 /* digialarm2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = digialarm2.mp3; sourceTree = "<group>"; };
+		A45933B62D71B1C600FD99C5 /* digialarm3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = digialarm3.mp3; sourceTree = "<group>"; };
+		A45933B72D71B1C600FD99C5 /* mystery.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = mystery.mp3; sourceTree = "<group>"; };
+		A45933B82D71B1C600FD99C5 /* newday.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = newday.mp3; sourceTree = "<group>"; };
 		B6C67D172DE8B98F89E5852B /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C834E260078188F34FEE4882 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		E6428EBEAA6E4CDB4D041359 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -132,6 +142,11 @@
 		33CC10E42044A3C60003C045 = {
 			isa = PBXGroup;
 			children = (
+				A45933B42D71B1C600FD99C5 /* digialarm.mp3 */,
+				A45933B52D71B1C600FD99C5 /* digialarm2.mp3 */,
+				A45933B62D71B1C600FD99C5 /* digialarm3.mp3 */,
+				A45933B72D71B1C600FD99C5 /* mystery.mp3 */,
+				A45933B82D71B1C600FD99C5 /* newday.mp3 */,
 				33FAB671232836740065AC1E /* Runner */,
 				33CEB47122A05771004F2AC0 /* Flutter */,
 				331C80D6294CF71000263BE5 /* RunnerTests */,
@@ -144,7 +159,7 @@
 		33CC10EE2044A3C60003C045 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				33CC10ED2044A3C60003C045 /* flutter_example.app */,
+				33CC10ED2044A3C60003C045 /* ultimate_alarm_clock.app */,
 				331C80D5294CF71000263BE5 /* RunnerTests.xctest */,
 			);
 			name = Products;
@@ -249,7 +264,7 @@
 			);
 			name = Runner;
 			productName = Runner;
-			productReference = 33CC10ED2044A3C60003C045 /* flutter_example.app */;
+			productReference = 33CC10ED2044A3C60003C045 /* ultimate_alarm_clock.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -314,6 +329,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A45933B92D71B1C600FD99C5 /* digialarm3.mp3 in Resources */,
+				A45933BA2D71B1C600FD99C5 /* digialarm.mp3 in Resources */,
+				A45933BB2D71B1C600FD99C5 /* digialarm2.mp3 in Resources */,
+				A45933BC2D71B1C600FD99C5 /* mystery.mp3 in Resources */,
+				A45933BD2D71B1C600FD99C5 /* newday.mp3 in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
 			);
@@ -598,7 +618,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.alarmclock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.ultimateAlarmClock;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -734,7 +754,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.alarmclock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.ultimateAlarmClock;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -758,6 +778,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractpr.ultimateAlarmClock;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};

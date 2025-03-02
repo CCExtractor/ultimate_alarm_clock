@@ -147,11 +147,13 @@ class IsarDb {
     final sql = await IsarDb().getAlarmSQLiteDatabase();
     final db = await isarProvider.db;
     await db.writeTxn(() async {
-      await db.alarmModels.put(alarmRecord);
+      print("HEre it is");
+      print(await db.alarmModels.put(alarmRecord));
     });
     final sqlmap = alarmRecord.toSQFliteMap();
     print(sqlmap);
-    await sql!.insert('alarms', sqlmap);
+    print("ANd now here");
+    print(await sql!.insert('alarms', sqlmap));
     return alarmRecord;
   }
 
