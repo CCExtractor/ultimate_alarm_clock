@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
@@ -16,6 +17,7 @@ import 'app/routes/app_pages.dart';
 Locale? loc;
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.notification.isDenied.then((value) {
     if (value) {
@@ -43,6 +45,7 @@ void main() async {
     ),
   );
 
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -54,7 +57,6 @@ void main() async {
     UltimateAlarmClockApp(),
   );
 }
-
 
 class UltimateAlarmClockApp extends StatelessWidget {
   UltimateAlarmClockApp({super.key});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/debug/views/debug_screen.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/customize_undo_duration.dart';
@@ -118,6 +119,34 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(
                   height: 20,
                 ),
+                GestureDetector(
+                  onTap: (){
+                    Get.to(DebugScreen());
+                  },
+                  child: Container(
+                    width: width * 0.91,
+                    height: height * 0.1,
+                    decoration: Utils.getCustomTileBoxDecoration(
+                      isLightMode:
+                      controller.themeController.currentTheme.value == ThemeMode.light,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Debug screen',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                  
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

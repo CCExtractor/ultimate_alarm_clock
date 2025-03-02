@@ -26,6 +26,7 @@ class IsarDb {
   IsarDb._internal() {
     db = openDB();
   }
+
   static final storage = Get.find<GetStorageProvider>();
 
   Future<Database?> getAlarmSQLiteDatabase() async {
@@ -53,6 +54,24 @@ class IsarDb {
             ringtoneName text not null,
             timerName text not null,
             isPaused integer not null)
+        ''');
+      },
+    );
+    return db;
+  }
+
+  Future<Database?> setAlarmLogs() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/AlarmLogs.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE LOG (
+          LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+          LogTime DATETIME NOT NULL,            
+          Status VARCHAR(50) NOT NULL)
         ''');
       },
     );
@@ -142,6 +161,39 @@ class IsarDb {
     return Future.value(Isar.getInstance());
   }
 
+
+  Future<int> insertLog(String status) async {
+    final db = await setAlarmLogs();
+    return await db!.insert(
+      'LOG',
+      {
+        'LogTime': DateTime.now().millisecondsSinceEpoch, // Store current time
+        'Status': status,
+      },
+    );
+  }
+
+  // Fetch all log entries
+  Future<List<Map<String, dynamic>>> getLogs() async {
+    final db = await setAlarmLogs();
+    return await db!.query('LOG');
+  }
+
+  // Update a log entry
+  Future<int> updateLog(int logId, String newStatus) async {
+    final db = await setAlarmLogs();
+    return await db!.update(
+      'LOG',
+      {
+        'Status': newStatus,
+      },
+      where: 'LogID = ?',
+      whereArgs: [logId],
+    );
+  }
+
+
+
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
     final sql = await IsarDb().getAlarmSQLiteDatabase();
@@ -149,9 +201,13 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    await IsarDb().insertLog('Alarm added ${alarmRecord.alarmTime}');
     final sqlmap = alarmRecord.toSQFliteMap();
     print(sqlmap);
     await sql!.insert('alarms', sqlmap);
+    List a = await IsarDb().getLogs();
+    print(a);
+
     return alarmRecord;
   }
 
@@ -197,7 +253,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }
@@ -327,6 +384,8 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}');
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),
@@ -402,6 +461,8 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
+    await IsarDb().insertLog('Alarm deleted ${tobedeleted!.alarmTime}');
+
     await sql!.delete(
       'alarms',
       where: 'alarmID = ?',
@@ -634,27 +695,32 @@ class IsarDb {
     if (ringtoneCount.isEmpty) {
       await db.writeTxn(() async {
         await db.ringtoneModels.importJson([
-          {'isarId' : fastHash('Digital Alarm 1'),
+          {
+            'isarId': fastHash('Digital Alarm 1'),
             'ringtoneName': 'Digital Alarm 1',
             'ringtonePath': 'ringtones/digialarm.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('Digital Alarm 2'),
+          {
+            'isarId': fastHash('Digital Alarm 2'),
             'ringtoneName': 'Digital Alarm 2',
             'ringtonePath': 'ringtones/digialarm2.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('Digital Alarm 3'),
+          {
+            'isarId': fastHash('Digital Alarm 3'),
             'ringtoneName': 'Digital Alarm 3',
             'ringtonePath': 'ringtones/digialarm3.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('Mystery'),
+          {
+            'isarId': fastHash('Mystery'),
             'ringtoneName': 'Mystery',
             'ringtonePath': 'ringtones/mystery.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('New Day'),
+          {
+            'isarId': fastHash('New Day'),
             'ringtoneName': 'New Day',
             'ringtonePath': 'ringtones/newday.mp3',
             'currentCounterOfUsage': 0

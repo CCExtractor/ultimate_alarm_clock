@@ -155,6 +155,8 @@ class AlarmControlController extends GetxController {
     super.onInit();
     currentlyRingingAlarm.value = Get.arguments;
     print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
+    IsarDb()
+        .insertLog('Alarm ringing ${currentlyRingingAlarm.value.alarmTime}');
     if (currentlyRingingAlarm.value.isGuardian) {
       guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         print(guardianCoundown.value);
