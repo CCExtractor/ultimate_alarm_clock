@@ -16,13 +16,14 @@ Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print("hello");
   await Permission.notification.isDenied.then((value) {
     if (value) {
       Permission.notification.request();
     }
   });
 
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   await Get.putAsync(() => GetStorageProvider().init());
 
@@ -32,8 +33,8 @@ void main() async {
   final ThemeController themeController = Get.put(ThemeController());
 
   AudioPlayer.global.setAudioContext(
-    const AudioContext(
-      android: AudioContextAndroid(
+    AudioContext(
+      android: const AudioContextAndroid(
         audioMode: AndroidAudioMode.ringtone,
         contentType: AndroidContentType.music,
         usageType: AndroidUsageType.alarm,
