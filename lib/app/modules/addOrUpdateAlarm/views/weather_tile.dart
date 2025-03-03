@@ -44,7 +44,7 @@ class WeatherTile extends StatelessWidget {
             ),
           );
         },
-        // Wrap the row in an Expanded or Flexible if needed for layout
+      
         title: Row(
           children: [
             Expanded(
