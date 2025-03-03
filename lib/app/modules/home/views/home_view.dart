@@ -35,8 +35,8 @@ class HomeView extends GetView<HomeController> {
         () => Visibility(
             visible: controller.inMultipleSelectMode.value ? false : true,
             child: Container(
-              height: controller.scalingFactor.value * 70,
-              width: controller.scalingFactor.value * 70,
+              height: width * 0.13,
+              width: width * 0.13,
               child: FloatingActionButton(
                 onPressed: () {
                   Utils.hapticFeedback();
