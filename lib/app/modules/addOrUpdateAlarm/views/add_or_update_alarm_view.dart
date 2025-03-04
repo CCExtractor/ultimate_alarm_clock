@@ -34,6 +34,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
+import 'dart:io';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({Key? key}) : super(key: key);
@@ -1030,10 +1031,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         onPressed: () async {
                           Utils.hapticFeedback();
                           await controller.checkOverlayPermissionAndNavigate();
-
-                          if ((await Permission.systemAlertWindow.isGranted) &&
-                              (await Permission
-                                  .ignoreBatteryOptimizations.isGranted)) {
+                          if (await permissionHandler()) {
                             if (!controller.homeController.isProfile.value) {
                               if (controller.userModel.value != null) {
                                 controller.offsetDetails[
@@ -1179,5 +1177,17 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
         ),
       ),
     );
+  }
+
+  Future<bool> permissionHandler() async {
+    if(Platform.isAndroid){
+      return (await Permission.systemAlertWindow.isGranted)
+      && (await Permission.ignoreBatteryOptimizations.isGranted);
+    }
+    if(Platform.isIOS){
+      // Since permission is to handeled on the native side.
+      return true;
+    }
+    return false;
   }
 }

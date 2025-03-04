@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
@@ -131,101 +132,105 @@ class HomeController extends GetxController {
   }
 
   initStream(UserModel? user) async {
-    firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
     isarStreamAlarms = IsarDb.getAlarms(selectedProfile.value);
-    sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
-    Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest2(
-      firestoreStreamAlarms!,
-      isarStreamAlarms!,
-      (firestoreData, isarData) {
-        List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
-        latestFirestoreAlarms = firestoreDocuments.map((doc) {
-          return AlarmModel.fromDocumentSnapshot(
-            documentSnapshot: doc,
-            user: user,
-          );
-        }).toList();
+    return isarStreamAlarms;
 
-        latestIsarAlarms = isarData as List<AlarmModel>;
+    // Below code is commented because firebase is not implemented correctly.
+    //
+    // firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
+    // sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
+    // Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest2(
+    //   firestoreStreamAlarms!,
+    //   isarStreamAlarms!,
+    //   (firestoreData, isarData) {
+    //     List<DocumentSnapshot> firestoreDocuments = firestoreData.docs;
+    //     latestFirestoreAlarms = firestoreDocuments.map((doc) {
+    //       return AlarmModel.fromDocumentSnapshot(
+    //         documentSnapshot: doc,
+    //         user: user,
+    //       );
+    //     }).toList();
 
-        List<AlarmModel> alarms = [
-          ...latestFirestoreAlarms,
-          ...latestIsarAlarms,
-        ];
+    //     latestIsarAlarms = isarData as List<AlarmModel>;
 
-        if (isSortedAlarmListEnabled.value) {
-          alarms.sort((a, b) {
-            final String timeA = a.alarmTime;
-            final String timeB = b.alarmTime;
+    //     List<AlarmModel> alarms = [
+    //       ...latestFirestoreAlarms,
+    //       ...latestIsarAlarms,
+    //     ];
 
-            // Convert the alarm time strings to DateTime objects for comparison
-            DateTime dateTimeA = DateFormat('HH:mm').parse(timeA);
-            DateTime dateTimeB = DateFormat('HH:mm').parse(timeB);
+    //     if (isSortedAlarmListEnabled.value) {
+    //       alarms.sort((a, b) {
+    //         final String timeA = a.alarmTime;
+    //         final String timeB = b.alarmTime;
 
-            // Compare the DateTime objects to sort in ascending order
-            return dateTimeA.compareTo(dateTimeB);
-          });
-        } else {
-          alarms.sort((a, b) {
-            // First sort by isEnabled
-            if (a.isEnabled != b.isEnabled) {
-              return a.isEnabled ? -1 : 1;
-            }
+    //         // Convert the alarm time strings to DateTime objects for comparison
+    //         DateTime dateTimeA = DateFormat('HH:mm').parse(timeA);
+    //         DateTime dateTimeB = DateFormat('HH:mm').parse(timeB);
 
-            // Then sort by upcoming time
-            int aUpcomingTime = a.minutesSinceMidnight;
-            int bUpcomingTime = b.minutesSinceMidnight;
+    //         // Compare the DateTime objects to sort in ascending order
+    //         return dateTimeA.compareTo(dateTimeB);
+    //       });
+    //     } else {
+    //       alarms.sort((a, b) {
+    //         // First sort by isEnabled
+    //         if (a.isEnabled != b.isEnabled) {
+    //           return a.isEnabled ? -1 : 1;
+    //         }
 
-            // Check if alarm repeats on any day
-            bool aRepeats = a.days.any((day) => day);
-            bool bRepeats = b.days.any((day) => day);
+    //         // Then sort by upcoming time
+    //         int aUpcomingTime = a.minutesSinceMidnight;
+    //         int bUpcomingTime = b.minutesSinceMidnight;
 
-            // If alarm repeats on any day, find the next up+coming day
-            if (aRepeats) {
-              int currentDay = DateTime.now().weekday - 1;
-              for (int i = 0; i < a.days.length; i++) {
-                int dayIndex = (currentDay + i) % a.days.length;
-                if (a.days[dayIndex]) {
-                  aUpcomingTime += i * Duration.minutesPerDay;
-                  break;
-                }
-              }
-            } else {
-              // If alarm is one-time and has already passed, set upcoming time
-              // to next day
-              if (aUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
-                aUpcomingTime += Duration.minutesPerDay;
-              }
-            }
+    //         // Check if alarm repeats on any day
+    //         bool aRepeats = a.days.any((day) => day);
+    //         bool bRepeats = b.days.any((day) => day);
 
-            if (bRepeats) {
-              int currentDay = DateTime.now().weekday - 1;
-              for (int i = 0; i < b.days.length; i++) {
-                int dayIndex = (currentDay + i) % b.days.length;
-                if (b.days[dayIndex]) {
-                  bUpcomingTime += i * Duration.minutesPerDay;
-                  break;
-                }
-              }
-            } else {
-              // If alarm is one-time and has already passed, set upcoming time
-              // to next day
-              if (bUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
-                bUpcomingTime += Duration.minutesPerDay;
-              }
-            }
+    //         // If alarm repeats on any day, find the next up+coming day
+    //         if (aRepeats) {
+    //           int currentDay = DateTime.now().weekday - 1;
+    //           for (int i = 0; i < a.days.length; i++) {
+    //             int dayIndex = (currentDay + i) % a.days.length;
+    //             if (a.days[dayIndex]) {
+    //               aUpcomingTime += i * Duration.minutesPerDay;
+    //               break;
+    //             }
+    //           }
+    //         } else {
+    //           // If alarm is one-time and has already passed, set upcoming time
+    //           // to next day
+    //           if (aUpcomingTime <=
+    //               DateTime.now().hour * 60 + DateTime.now().minute) {
+    //             aUpcomingTime += Duration.minutesPerDay;
+    //           }
+    //         }
 
-            return aUpcomingTime.compareTo(bUpcomingTime);
-          });
-        }
+    //         if (bRepeats) {
+    //           int currentDay = DateTime.now().weekday - 1;
+    //           for (int i = 0; i < b.days.length; i++) {
+    //             int dayIndex = (currentDay + i) % b.days.length;
+    //             if (b.days[dayIndex]) {
+    //               bUpcomingTime += i * Duration.minutesPerDay;
+    //               break;
+    //             }
+    //           }
+    //         } else {
+    //           // If alarm is one-time and has already passed, set upcoming time
+    //           // to next day
+    //           if (bUpcomingTime <=
+    //               DateTime.now().hour * 60 + DateTime.now().minute) {
+    //             bUpcomingTime += Duration.minutesPerDay;
+    //           }
+    //         }
 
-        return alarms;
-      },
-    );
+    //         return aUpcomingTime.compareTo(bUpcomingTime);
+    //       });
+    //     }
 
-    return streamAlarms;
+    //     return alarms;
+    //   },
+    // );
+
+    // return streamAlarms;
   }
 
   void readProfileName() async {

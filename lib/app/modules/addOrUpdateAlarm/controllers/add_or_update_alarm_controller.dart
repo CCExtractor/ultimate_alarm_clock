@@ -179,83 +179,93 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   checkOverlayPermissionAndNavigate() async {
-    if (!(await Permission.systemAlertWindow.isGranted) &&
-        !(await Permission.ignoreBatteryOptimizations.isGranted)) {
-      Get.defaultDialog(
-        backgroundColor: themeController.secondaryBackgroundColor.value,
-        title: 'Permission Required',
-        titleStyle: TextStyle(
-          color: themeController.primaryTextColor.value,
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        titlePadding: const EdgeInsets.only(top: 30, right: 40),
-        content: const Text(
-          'This app requires permission to draw overlays,send notifications'
-          ' and Ignore batter optimization.',
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
-            ),
-            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
-            onPressed: () {
-              Get.back();
-            },
+    if (Platform.isAndroid) {
+      if (!(await Permission.systemAlertWindow.isGranted) &&
+          !(await Permission.ignoreBatteryOptimizations.isGranted)) {
+        Get.defaultDialog(
+          backgroundColor: themeController.secondaryBackgroundColor.value,
+          title: 'Permission Required',
+          titleStyle: TextStyle(
+            color: themeController.primaryTextColor.value,
           ),
-          const SizedBox(
-            width: 10,
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          titlePadding: const EdgeInsets.only(top: 30, right: 40),
+          content: const Text(
+            'This app requires permission to draw overlays,send notifications'
+            ' and Ignore batter optimization.',
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Get.back();
+              },
             ),
-            child: const Text(
-              'Grant Permission',
-              style: TextStyle(color: Colors.black),
+            const SizedBox(
+              width: 10,
             ),
-            onPressed: () async {
-              Get.back();
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kprimaryColor,
+              ),
+              child: const Text(
+                'Grant Permission',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () async {
+                Get.back();
 
-              if (Platform.isAndroid) {
-                // Request overlay permission
-                if (!(await Permission.systemAlertWindow.isGranted)) {
-                  final status = await Permission.systemAlertWindow.request();
-                  if (!status.isGranted) {
-                    debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                if (Platform.isAndroid) {
+                  // Request overlay permission
+                  if (!(await Permission.systemAlertWindow.isGranted)) {
+                    final status = await Permission.systemAlertWindow.request();
+                    if (!status.isGranted) {
+                      debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
+                      return;
+                    }
+                  }
+
+                  if (!(await Permission
+                      .ignoreBatteryOptimizations.isGranted)) {
+                    bool requested = await Permission.ignoreBatteryOptimizations
+                        .request()
+                        .isGranted;
+                    if (!requested) {
+                      debugPrint(
+                        'IGNORE_BATTERY_OPTIMIZATION permission denied!',
+                      );
+                      return;
+                    }
+                  }
+                }
+
+                // Request notification permission
+                if (!await Permission.notification.isGranted) {
+                  final status = await Permission.notification.request();
+                  if (status != PermissionStatus.granted) {
+                    debugPrint('Notification permission denied!');
                     return;
                   }
                 }
 
-                if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
-                  bool requested = await Permission.ignoreBatteryOptimizations
-                      .request()
-                      .isGranted;
-                  if (!requested) {
-                    debugPrint(
-                      'IGNORE_BATTERY_OPTIMIZATION permission denied!',
-                    );
-                    return;
-                  }
-                }
-              }
+                Get.back();
+              },
+            ),
+          ],
+        );
+      } else {
+        Get.back();
+      }
+    }
 
-              // Request notification permission
-              if (!await Permission.notification.isGranted) {
-                final status = await Permission.notification.request();
-                if (status != PermissionStatus.granted) {
-                  debugPrint('Notification permission denied!');
-                  return;
-                }
-              }
-
-              Get.back();
-            },
-          ),
-        ],
-      );
-    } else {
+    if (Platform.isIOS){
+      // Notification permission is handled from the native side.
+      // Need Overlay & BatteryOptimization permission
       Get.back();
     }
   }
@@ -757,7 +767,7 @@ class AddOrUpdateAlarmController extends GetxController {
       markersList.add(
         Marker(
           point: selectedPoint.value,
-          child: const Icon(
+          builder: (ctx) => const Icon(
             Icons.location_on,
             size: 35,
             color: Colors.black,
@@ -940,7 +950,7 @@ class AddOrUpdateAlarmController extends GetxController {
         markersList.add(
           Marker(
             point: selectedPoint.value,
-            child: const Icon(
+            builder: (ctx) => const Icon(
               Icons.location_on,
               size: 35,
               color: Colors.black,

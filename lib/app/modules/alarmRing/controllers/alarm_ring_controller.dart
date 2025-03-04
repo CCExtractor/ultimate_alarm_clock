@@ -199,7 +199,7 @@ class AlarmControlController extends GetxController {
     });
 
     // Preventing app from being minimized!
-    _subscription = FGBGEvents.instance.stream.listen((event) {
+    _subscription = FGBGEvents.stream.listen((event) {
       if (event == FGBGType.background) {
         alarmChannel.invokeMethod('bringAppToForeground');
       }
