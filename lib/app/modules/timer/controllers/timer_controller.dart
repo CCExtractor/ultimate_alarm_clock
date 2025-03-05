@@ -18,15 +18,6 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   RxList timers = [].obs;
   RxList isRinging = [].obs;
 
-  Timer? _timerCounter;
-
-  late int currentTimerIsarId;
-  var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
-
-  final RxList timerList = [].obs;
-
-  String strDigits(int n) => n.toString().padLeft(2, '0');
-
   getFakeTimerModel() async {
     TimerModel fakeTimer = await Utils.genFakeTimerModel();
     return fakeTimer;
@@ -35,6 +26,13 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   updateTimerInfo() async {
     timerList.value = await IsarDb.getAllTimers();
   }
+
+  late int currentTimerIsarId;
+  var hours = 0.obs, minutes = 1.obs, seconds = 0.obs;
+
+  String strDigits(int n) => n.toString().padLeft(2, '0');
+
+  final RxList timerList = [].obs;
 
   @override
   Future<void> onInit() async {
@@ -55,14 +53,13 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   @override
   Future<void> onClose() async {
     super.onClose();
-    _timerCounter?.cancel();
   }
 
   void startRinger(int id) async {
     try {
-      isRinging.add(id);
-      print(isRinging);
-      if (isRinging.length == 1) {
+      isRinging.value.add(id);
+      print(isRinging.value);
+      if (isRinging.value.length == 1) {
         await timerChannel.invokeMethod('playDefaultAlarm');
       }
     } on PlatformException catch (e) {
@@ -72,9 +69,9 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
 
   void stopRinger(int id) async {
     try {
-      isRinging.remove(id);
-      print(isRinging);
-      if (isRinging.isEmpty) {
+      isRinging.value.remove(id);
+      print(isRinging.value);
+      if (isRinging.value.length == 0) {
         await timerChannel.invokeMethod('stopDefaultAlarm');
       }
     } on PlatformException catch (e) {
@@ -84,7 +81,9 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
 
   Future<void> createTimer() async {
     TimerModel timerRecord = await getFakeTimerModel();
+
     timerRecord.startedOn = DateTime.now().toString();
+
     timerRecord.timerValue = Utils.getMillisecondsToAlarm(
       DateTime.now(),
       DateTime.now().add(remainingTime.value),
@@ -92,6 +91,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     timerRecord.ringtoneName = 'Default';
     timerRecord.timerName =
         '${Utils.formatMilliseconds(timerRecord.timerValue)} Timer';
+
     await IsarDb.insertTimer(timerRecord);
     updateTimerInfo();
   }
@@ -103,76 +103,6 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
 
   cancelTimer() async {
     await timerChannel.invokeMethod('cancelTimer');
-  }
-
-  void startTimer(TimerModel timer) {
-    _timerCounter = Timer.periodic(Duration(seconds: 1), (timerTicker) {
-      if (timer.timeElapsed < timer.timerValue) {
-        timer.timeElapsed += 1000;
-        IsarDb.updateTimerTick(timer);
-      } else {
-        stopTimer();
-        startRinger(timer.timerId);
-      }
-    });
-  }
-
-  void stopTimer() {
-    _timerCounter?.cancel();
-  }
-
-  void initializeTimer(TimerModel timer) {
-    if (Utils.getDifferenceMillisFromNow(timer.startedOn, timer.timerValue) <= 0 &&
-        timer.isPaused == 0) {
-      timer.isPaused = 1;
-      timer.timeElapsed = 0;
-      IsarDb.updateTimerPauseStatus(timer);
-    } else if (Utils.getDifferenceMillisFromNow(timer.startedOn, timer.timerValue) <
-        timer.timerValue && timer.isPaused == 0) {
-      timer.timeElapsed = timer.timerValue -
-          Utils.getDifferenceMillisFromNow(timer.startedOn, timer.timerValue);
-      IsarDb.updateTimerPauseStatus(timer);
-    }
-    if (timer.isPaused == 0) {
-      startTimer(timer);
-    }
-  }
-
-  Future<void> setPresetTimer(Duration presetDuration) async {
-    remainingTime.value = presetDuration;
-    await createTimer();
-  }
-
-  void resetTimer(TimerModel timer) {
-    if (_timerCounter != null && timer.isPaused == 0) {
-      stopTimer();
-    }
-    timer.timeElapsed = 0;
-    IsarDb.updateTimerTick(timer);
-    if (_timerCounter != null && timer.isPaused == 0) {
-      timer.startedOn = DateTime.now().toString();
-      IsarDb.updateTimerTick(timer).then((value) => startTimer(timer));
-    }
-  }
-
-  void toggleTimer(TimerModel timer) {
-    if (timer.isPaused == 0) {
-      stopTimer();
-    } else {
-      startTimer(timer);
-    }
-    timer.isPaused = timer.isPaused == 0 ? 1 : 0;
-    IsarDb.updateTimerPauseStatus(timer);
-  }
-
-  void completeTimer(TimerModel timer) {
-    if (timer.timeElapsed >= timer.timerValue) {
-      stopRinger(timer.timerId);
-      timer.timeElapsed = 0;
-      IsarDb.updateTimerTick(timer).then(
-          (value) => IsarDb.updateTimerPauseStatus(timer));
-      timer.isPaused = 1;
-    }
   }
 
   @override
@@ -205,4 +135,8 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       Get.back();
     }
   }
+  Future<void> setPresetTimer(Duration presetDuration) async {
+  remainingTime.value = presetDuration;
+  await createTimer();
+}
 }
