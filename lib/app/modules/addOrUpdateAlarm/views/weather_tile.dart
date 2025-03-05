@@ -22,9 +22,8 @@ class WeatherTile extends StatelessWidget {
 
     return Container(
       child: ListTile(
-        onTap: () async {
+        onTap: () {
           Utils.hapticFeedback();
-          await controller.checkAndRequestPermission();
           Get.defaultDialog(
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
             backgroundColor: themeController.secondaryBackgroundColor.value,
@@ -114,11 +113,6 @@ class WeatherTile extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 15.0),
                               child: Text(
-                                // 'This feature will automatically'
-                                // ' cancel the alarm if the current'
-                                // ' weather matches your chosen'
-                                // ' weather conditions, allowing you'
-                                // ' to sleep better!',
                                 'weatherDescription'.tr,
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
