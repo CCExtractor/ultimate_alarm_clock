@@ -83,7 +83,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         horizontal: 10.0,
       ),
       child: Container(
-        height: context.height / 3.0, // changed from 3.3 to 3.0
+        height: context.height / 3.0, 
         width: context.width,
         child: Obx(
           () => Card(
@@ -155,7 +155,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     icon: Icon(
                                       Icons.refresh,
                                       size: 18,
-                                      color: Colors.white, // Changed icon color to white
+                                      color: Colors.white,
                                     ),
                                   ),
                                   IconButton(
@@ -168,7 +168,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     icon: Icon(
                                       Icons.close,
                                       size: 18,
-                                      color: Colors.white, // Changed icon color to white
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -238,7 +238,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                           : Icons.play_arrow,
                                       size: 30,
                                       color:
-                                          Colors.white, // Changed icon color to white
+                                          Colors.white,
                                     ),
                                   ),
                                 )
