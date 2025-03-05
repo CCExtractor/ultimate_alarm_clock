@@ -329,7 +329,7 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   Future<void> getLocation() async {
-    if (await checkAndRequestLocationPermission()) {
+    if (await checkAndRequestPermission()) {
       const timeLimit = Duration(seconds: 10);
       await FlLocation.getLocation(
         timeLimit: timeLimit,
@@ -341,61 +341,10 @@ class AddOrUpdateAlarmController extends GetxController {
       });
     }
   }
-  Future<bool> checkAndRequestLocationPermission() async {
-    if (!await FlLocation.isLocationServicesEnabled) {
-      return false;
-    }
-
-    var locationPermission = await FlLocation.checkLocationPermission();
-    if (locationPermission == LocationPermission.deniedForever) {
-      return false;
-    } else if (locationPermission == LocationPermission.denied) {
-      bool? shouldAskPermission = await Get.defaultDialog<bool>(
-        backgroundColor: themeController.secondaryBackgroundColor.value,
-        barrierDismissible: false,
-        title: 'Location Permission',
-        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        titlePadding: const EdgeInsets.only(top: 30, right: 40),
-        titleStyle: TextStyle(color: themeController.primaryTextColor.value),
-        content: const Text(
-          'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.',
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(backgroundColor: kprimaryColor),
-            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
-            onPressed: () {
-              Get.back(result: false);
-            },
-          ),
-          const SizedBox(width: 10),
-          TextButton(
-            style: TextButton.styleFrom(backgroundColor: kprimaryColor),
-            child: const Text('Allow', style: TextStyle(color: Colors.black)),
-            onPressed: () {
-              Get.back(result: true);
-            },
-          ),
-        ],
-        cancelTextColor: Colors.black,
-        confirmTextColor: Colors.black,
-      );
-
-      if (shouldAskPermission == false) {
-        return false;
-      }
-      locationPermission = await FlLocation.requestLocationPermission();
-      if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) return false;
-    }
-    return true;
-  }
-
-
 
   Future<bool> checkAndRequestPermission({bool? background}) async {
     if (!await FlLocation.isLocationServicesEnabled) {
-     
+      // Location services are disabled.
       return false;
     }
 
