@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -30,6 +31,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
+  MethodChannel alarmChannel = const MethodChannel('ulticlock');
 
   final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   var alarmID = const Uuid().v4();
@@ -646,10 +648,16 @@ class AddOrUpdateAlarmController extends GetxController {
       if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == false) {
         alarmData.firestoreId = alarmRecord.value.firestoreId;
         await FirestoreDb.updateAlarm(alarmRecord.value.ownerId, alarmData);
+        if(Platform.isIOS){
+          alarmChannel.invokeMethod('scheduleAlarm');
+        }
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
         await IsarDb.deleteAlarm(alarmRecord.value.isarId);
         createAlarm(alarmData);
+        if(Platform.isIOS){
+          alarmChannel.invokeMethod('scheduleAlarm');
+        }
       }
     } else {
       // Making sure the alarm wasn't suddenly updated to be an offline alarm
@@ -657,6 +665,9 @@ class AddOrUpdateAlarmController extends GetxController {
       if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
         alarmData.isarId = alarmRecord.value.isarId;
         await IsarDb.updateAlarm(alarmData);
+        if(Platform.isIOS){
+          alarmChannel.invokeMethod('scheduleAlarm');
+        }
       } else {
         // Deleting alarm on firestore to ensure no duplicate entry
         await FirestoreDb.deleteAlarm(
@@ -664,6 +675,9 @@ class AddOrUpdateAlarmController extends GetxController {
           alarmRecord.value.firestoreId!,
         );
         createAlarm(alarmData);
+        if(Platform.isIOS){
+          alarmChannel.invokeMethod('scheduleAlarm');
+        }
       }
     }
 

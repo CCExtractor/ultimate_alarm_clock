@@ -243,7 +243,9 @@ import BackgroundTasks
         location: String,
         isWeather: Bool,
         weatherTypes: String
-    ) {}
+    ) {
+        self.cancelAllScheduledAlarms()
+    }
     
     private func cancelAllScheduledAlarms() {
         AppDelegate.userNotification.removeAllPendingNotificationRequests()
