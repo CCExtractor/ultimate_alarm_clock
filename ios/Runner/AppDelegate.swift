@@ -3,6 +3,7 @@ import UIKit
 import AVFoundation
 import UserNotifications
 import FMDB
+import BackgroundTasks
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -17,6 +18,7 @@ import FMDB
     static var alarmConfig: [String: Bool] = ["shouldAlarmRing": false, "alarmIgnore": false]
     private static var audioPlayer: AVAudioPlayer?
     private static let userNotification = UNUserNotificationCenter.current()
+    private static let operationQueue = OperationQueue()
     
   override func application(
     _ application: UIApplication,
@@ -29,6 +31,10 @@ import FMDB
       AppDelegate.userNotification.delegate = self
       
       NSLog("Log:HERE I AM")
+      
+      BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.ccextractor.ultimateAlarmClock.Runner.refresh", using: nil) { task in
+           self.handleAppRefresh(task: task as! BGAppRefreshTask)
+      }
       
       let methodChannel1 = FlutterMethodChannel(
         name: AppDelegate.CHANNEL1,
@@ -128,6 +134,43 @@ import FMDB
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+    
+    func scheduleAppRefresh() {
+       let request = BGAppRefreshTaskRequest(identifier: "com.ccextractor.ultimateAlarmClock.Runner.refresh")
+       // Fetch no earlier than 15 minutes from now.
+       request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
+            
+       do {
+          try BGTaskScheduler.shared.submit(request)
+       } catch {
+          NSLog("Log:Could not schedule app refresh: \(error)")
+       }
+    }
+    
+    func handleAppRefresh(task: BGAppRefreshTask) {
+       // Schedule a new refresh task.
+        self.scheduleAppRefresh()
+
+
+       // Create an operation that performs the main part of the background task.
+       let operation = RefreshAppContentsOperation()
+       
+       // Provide the background task with an expiration handler that cancels the operation.
+       task.expirationHandler = {
+          operation.cancel()
+       }
+
+
+       // Inform the system that the background task is complete
+       // when the operation completes.
+       operation.completionBlock = {
+          task.setTaskCompleted(success: !operation.isCancelled)
+       }
+
+
+       // Start the operation.
+        AppDelegate.operationQueue.addOperation(operation)
+     }
     
     override func userNotificationCenter(
         _ center: UNUserNotificationCenter,

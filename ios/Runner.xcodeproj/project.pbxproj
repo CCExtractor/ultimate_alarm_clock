@@ -19,6 +19,7 @@
 		A4436C3E2D79D8B0005C26AF /* digialarm3.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4436C3B2D79D8B0005C26AF /* digialarm3.wav */; };
 		A4436C412D79D8CF005C26AF /* mystery.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4436C3F2D79D8CF005C26AF /* mystery.wav */; };
 		A4436C422D79D8CF005C26AF /* newday.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4436C402D79D8CF005C26AF /* newday.wav */; };
+		A4ED946C2D7E3B11000C81B3 /* RefreshTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4ED946B2D7E3AF6000C81B3 /* RefreshTask.swift */; };
 		A4FFEFF42D77531000E1F388 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FFEFF32D77531000E1F388 /* DatabaseHelper.swift */; };
 		A4FFEFF62D77574100E1F388 /* GetLatestAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FFEFF52D77573000E1F388 /* GetLatestAlarm.swift */; };
 		A4FFEFF92D7777C300E1F388 /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = A4FFEFF82D7777C300E1F388 /* FMDB */; };
@@ -77,6 +78,7 @@
 		A4436C3B2D79D8B0005C26AF /* digialarm3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = digialarm3.wav; sourceTree = "<group>"; };
 		A4436C3F2D79D8CF005C26AF /* mystery.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = mystery.wav; sourceTree = "<group>"; };
 		A4436C402D79D8CF005C26AF /* newday.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = newday.wav; sourceTree = "<group>"; };
+		A4ED946B2D7E3AF6000C81B3 /* RefreshTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTask.swift; sourceTree = "<group>"; };
 		A4FFEFF32D77531000E1F388 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		A4FFEFF52D77573000E1F388 /* GetLatestAlarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestAlarm.swift; sourceTree = "<group>"; };
 		A4FFEFFA2D77780000E1F388 /* AlarmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmModel.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				A4ED946B2D7E3AF6000C81B3 /* RefreshTask.swift */,
 				A4FFEFFA2D77780000E1F388 /* AlarmModel.swift */,
 				A4FFEFF52D77573000E1F388 /* GetLatestAlarm.swift */,
 				A4FFEFF32D77531000E1F388 /* DatabaseHelper.swift */,
@@ -428,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4ED946C2D7E3B11000C81B3 /* RefreshTask.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				A4FFEFF62D77574100E1F388 /* GetLatestAlarm.swift in Sources */,
 				A4FFEFFB2D77780000E1F388 /* AlarmModel.swift in Sources */,
@@ -526,6 +530,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9KKL24ATA;
 				ENABLE_BITCODE = NO;
@@ -535,8 +541,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.ultimateAlarmClock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kush.ultimateAlarmClock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -713,6 +720,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9KKL24ATA;
 				ENABLE_BITCODE = NO;
@@ -722,8 +731,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.ultimateAlarmClock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kush.ultimateAlarmClock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -738,6 +748,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9KKL24ATA;
 				ENABLE_BITCODE = NO;
@@ -747,8 +759,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ccextractor.ultimateAlarmClock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kush.ultimateAlarmClock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

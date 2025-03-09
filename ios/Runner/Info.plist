@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.ccextractor.ultimateAlarmClock.Runner.triggerAlarm</string>
+		<string>com.ccextractor.ultimateAlarmClock.Runner.refresh</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
