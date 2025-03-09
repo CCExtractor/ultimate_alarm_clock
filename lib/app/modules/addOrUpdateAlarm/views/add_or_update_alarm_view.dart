@@ -1185,7 +1185,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
       && (await Permission.ignoreBatteryOptimizations.isGranted);
     }
     if(Platform.isIOS){
-      // Since permission is to handeled on the native side.
+      // There ain't no systemAlertWindow & ignoreBatteryOptimizations in iOS
       return true;
     }
     return false;

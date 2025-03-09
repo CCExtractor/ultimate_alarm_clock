@@ -259,6 +259,7 @@ class AddOrUpdateAlarmController extends GetxController {
           ],
         );
       } else {
+        // There ain't no systemAlertWindow and ignoreBatteryOptimizations on iOS
         Get.back();
       }
     }

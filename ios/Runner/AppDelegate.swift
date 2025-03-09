@@ -26,6 +26,8 @@ import FMDB
       let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
       self.requestNotificationAuth()
       
+      AppDelegate.userNotification.delegate = self
+      
       NSLog("Log:HERE I AM")
       
       let methodChannel1 = FlutterMethodChannel(
@@ -43,8 +45,11 @@ import FMDB
               NSLog("Log:FLUTTER CALLED SCHEDULE")
               var dbHelper: DatabaseHelper = DatabaseHelper()
               var db: FMDatabase? = dbHelper.database
-              // get profile from the flutter side
-              let profile = "Default"
+              
+              let sharedDefaults = UserDefaults.standard
+              let profile = sharedDefaults.string(forKey: "flutter.profile") ?? "Default"
+              NSLog("Log:Profile: \(profile)")
+              
               var ringTime: [String: Any]? = getLatestAlarm(db: db, profile: profile)
               
               guard let interval = ringTime?["interval"] else {
@@ -54,7 +59,8 @@ import FMDB
                   return
               }
               guard let ringTime = ringTime else {
-                  print("ringTime is nil")
+                  NSLog("Log:FLUTTER CALLED CANCEL ALARMS")
+                  self.cancelAllScheduledAlarms()
                   return
               }
               NSLog("Log:TIME TO ALARM(seconds): \(interval)")
@@ -123,12 +129,31 @@ import FMDB
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     
-//    override func userNotificationCenter(_ center: UNUserNotificationCenter,
-//                                willPresent notification: UNNotification,
-//                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//        self.playDefaultAlarm()
-//        completionHandler([.banner, .sound])
-//    }
+    override func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        let userInfo = response.notification.request.content.userInfo
+        NSLog("Log:Notification Tapped: \(userInfo)")
+
+        // Call your method
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        let channel = FlutterMethodChannel(
+          name: AppDelegate.CHANNEL1,
+          binaryMessenger: controller.binaryMessenger
+        )
+        let arguments: [String: Bool] = [
+            "alarmRing": true,
+            "isAlarm": true,
+            "shouldAlarmRing": true,
+            "alarmIgnore": false
+        ]
+        
+        channel.invokeMethod("appStartup", arguments: arguments )
+
+        completionHandler()
+    }
     
     private func playDefaultAlarm() {
         guard let soundURL = Bundle.main.url(forResource: "digialarm", withExtension: "wav") else {
@@ -177,7 +202,10 @@ import FMDB
         weatherTypes: String
     ) {}
     
-    private func cancelAllScheduledAlarms() {}
+    private func cancelAllScheduledAlarms() {
+        AppDelegate.userNotification.removeAllPendingNotificationRequests()
+        NSLog("Log:REMOVED ALL NOTIFICATION REQUESTS")
+    }
     
     private func scheduleNotification(
         uuid: String,
@@ -189,20 +217,21 @@ import FMDB
         content.title = title
         content.body = body
         //content.sound = UNNotificationSound.default
-        content.sound = UNNotificationSound(named: UNNotificationSoundName("newday.wav"))
+        content.sound = UNNotificationSound(named: UNNotificationSoundName("digialarm.wav"))
         // intereption level only ios >= 15.0
         content.interruptionLevel = UNNotificationInterruptionLevel.timeSensitive
+        content.userInfo = ["ID": "test"]
         
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
-        
-        do {
-            try AppDelegate.userNotification.add(request)
-        } catch {
-            NSLog("Log:ERROR SCHEDULING NOTIFICATION AT INTERVAL: \(interval)")
-            return
+        for index in 0...60 {
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval+Double(index*5), repeats: false)
+            let request = UNNotificationRequest(identifier: uuid+String(index), content: content, trigger: trigger)
+            
+            do {
+                try AppDelegate.userNotification.add(request, withCompletionHandler: nil)
+            } catch {
+                NSLog("Log:ERROR SCHEDULING NOTIFICATION AT INTERVAL: \(interval)")
+                return
+            }
         }
         
         NSLog("Log:ALARM SCHEDULED AFTER: \(interval) seconds")

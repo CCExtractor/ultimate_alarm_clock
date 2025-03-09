@@ -16,7 +16,6 @@ Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print("hello");
   await Permission.notification.isDenied.then((value) {
     if (value) {
       Permission.notification.request();

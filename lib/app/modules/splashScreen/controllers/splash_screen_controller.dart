@@ -157,8 +157,8 @@ class SplashScreenController extends GetxController {
 
               TimeOfDay latestAlarmTimeOfDay =
                   Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-// This condition will never satisfy because this will only occur if fake mode
-// is returned as latest alarm
+                  // This condition will never satisfy because this will only occur if fake mode
+                  // is returned as latest alarm
               if (latestAlarm.isEnabled == false) {
                 debugPrint('STOPPED IF CONDITION with latest = '
                     '${latestAlarmTimeOfDay.toString()} and ');
