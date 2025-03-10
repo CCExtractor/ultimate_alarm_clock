@@ -299,7 +299,7 @@ Before getting started, ensure you have the following prerequisites installed on
    Change your working directory to the project folder:
 
    ```bash
-   cd ultimate-alarm-clock
+   cd ultimate_alarm_clock
    ```
 
 3. **Install Dependencies**:
