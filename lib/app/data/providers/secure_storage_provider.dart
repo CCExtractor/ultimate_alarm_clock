@@ -107,7 +107,7 @@ class SecureStorageProvider {
     );
   }
 
-  //check 24 hrs enabled
+  // Check 24 hrs enabled
   Future<bool> read24HoursEnabled({required String key}) async {
     return await _secureStorage.read(key: key) == 'true';
   }
@@ -211,5 +211,16 @@ class SecureStorageProvider {
       key: 'timer_id',
       value: timerId.toString(),
     );
+  }
+
+  
+  Future<void> writeChallengeTimeLimit(int timeLimit) async {
+    await _secureStorage.write(key: 'challengeTimeLimit', value: timeLimit.toString());
+  }
+
+  
+  Future<int> readChallengeTimeLimit() async {
+    String? timeLimit = await _secureStorage.read(key: 'challengeTimeLimit');
+    return timeLimit != null ? int.parse(timeLimit) : 30;
   }
 }
