@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
@@ -131,9 +132,10 @@ class HomeController extends GetxController {
   }
 
   initStream(UserModel? user) async {
-    firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
-    isarStreamAlarms = IsarDb.getAlarms(selectedProfile.value);
     sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
+    isarStreamAlarms = IsarDb.getAlarms(selectedProfile.value);
+    firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
+    
     Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest2(
       firestoreStreamAlarms!,
       isarStreamAlarms!,
