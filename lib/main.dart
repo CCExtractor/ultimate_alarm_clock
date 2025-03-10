@@ -78,3 +78,34 @@ class UltimateAlarmClockApp extends StatelessWidget {
     );
   }
 }
+
+
+class CreateAlarmScreen extends StatelessWidget {
+  const CreateAlarmScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Create Alarm")),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Action to create an alarm
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(200, 50), // Fixed size
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24), // Reduced padding
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10), // Smooth button edges
+            ),
+            backgroundColor: Colors.blue, // Change color if needed
+          ),
+          child: const Text(
+            "Create Alarm",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white), // Adjust text style
+          ),
+        ),
+      ),
+    );
+  }
+}
