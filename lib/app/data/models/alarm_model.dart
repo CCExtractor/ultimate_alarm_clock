@@ -418,17 +418,13 @@ class AlarmModel {
   }
 
   String boolListToString(List<bool> boolList) {
-    // Rotate the list to start with Sunday
     var rotatedList =
         [boolList.last] + boolList.sublist(0, boolList.length - 1);
-    // Convert the list of bools to a string of 1s and 0s
     return rotatedList.map((b) => b ? '1' : '0').join();
   }
 
   List<bool> stringToBoolList(String s) {
-    // Rotate the string to start with Monday
     final rotatedString = s.substring(1) + s[0];
-    // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
   }
 }

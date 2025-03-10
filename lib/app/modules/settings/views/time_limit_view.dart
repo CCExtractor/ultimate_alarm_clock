@@ -26,12 +26,10 @@ class TimeLimitView extends StatelessWidget {
       () => InkWell(
         onTap: () {
           Utils.hapticFeedback();
-          // Store the initial value before any changes.
           initialTimeLimit = controller.challengeTimeLimit.value;
           Get.defaultDialog(
             onWillPop: () async {
               Get.back();
-              // Resetting the value to its initial state if the user cancels changes.
               controller.challengeTimeLimit.value = initialTimeLimit;
               return true;
             },
