@@ -102,7 +102,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                                   controller.selectedProfile.value,))!;
                           controller.isProfileUpdate.value = false;
                           Get.toNamed(
-                            '/add-update-alarm',
+                            '/add-update-alarm',arguments: controller.genFakeAlarmModel(),
                           );
                         },
                         child: const Padding(
