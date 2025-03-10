@@ -19,6 +19,7 @@
 		A4436C3E2D79D8B0005C26AF /* digialarm3.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4436C3B2D79D8B0005C26AF /* digialarm3.wav */; };
 		A4436C412D79D8CF005C26AF /* mystery.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4436C3F2D79D8CF005C26AF /* mystery.wav */; };
 		A4436C422D79D8CF005C26AF /* newday.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4436C402D79D8CF005C26AF /* newday.wav */; };
+		A4C2627A2D7E64EF00B1ED84 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4C262792D7E64EF00B1ED84 /* GoogleService-Info.plist */; };
 		A4ED946C2D7E3B11000C81B3 /* RefreshTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4ED946B2D7E3AF6000C81B3 /* RefreshTask.swift */; };
 		A4FFEFF42D77531000E1F388 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FFEFF32D77531000E1F388 /* DatabaseHelper.swift */; };
 		A4FFEFF62D77574100E1F388 /* GetLatestAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FFEFF52D77573000E1F388 /* GetLatestAlarm.swift */; };
@@ -78,6 +79,7 @@
 		A4436C3B2D79D8B0005C26AF /* digialarm3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = digialarm3.wav; sourceTree = "<group>"; };
 		A4436C3F2D79D8CF005C26AF /* mystery.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = mystery.wav; sourceTree = "<group>"; };
 		A4436C402D79D8CF005C26AF /* newday.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = newday.wav; sourceTree = "<group>"; };
+		A4C262792D7E64EF00B1ED84 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A4ED946B2D7E3AF6000C81B3 /* RefreshTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTask.swift; sourceTree = "<group>"; };
 		A4FFEFF32D77531000E1F388 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		A4FFEFF52D77573000E1F388 /* GetLatestAlarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestAlarm.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				A4C262792D7E64EF00B1ED84 /* GoogleService-Info.plist */,
 				A4436C3F2D79D8CF005C26AF /* mystery.wav */,
 				A4436C402D79D8CF005C26AF /* newday.wav */,
 				A4436C392D79D8B0005C26AF /* digialarm.wav */,
@@ -299,6 +302,7 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				A4436C3C2D79D8B0005C26AF /* digialarm2.wav in Resources */,
+				A4C2627A2D7E64EF00B1ED84 /* GoogleService-Info.plist in Resources */,
 				A4436C3D2D79D8B0005C26AF /* digialarm.wav in Resources */,
 				A4436C3E2D79D8B0005C26AF /* digialarm3.wav in Resources */,
 			);

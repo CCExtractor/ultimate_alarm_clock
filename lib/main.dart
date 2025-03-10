@@ -22,7 +22,7 @@ void main() async {
     }
   });
 
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   await Get.putAsync(() => GetStorageProvider().init());
 
