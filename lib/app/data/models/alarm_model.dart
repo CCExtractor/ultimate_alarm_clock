@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
-
 import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -59,57 +58,63 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+
+  // New optional field for a custom challenge time limit in seconds.
+  int? challengeTimeLimit;
+
   @ignore
   Map? offsetDetails;
 
-  AlarmModel(
-      {required this.alarmTime,
-      required this.alarmID,
-      this.sharedUserIds = const [],
-      required this.ownerId,
-      required this.ownerName,
-      required this.lastEditedUserId,
-      required this.mutexLock,
-      this.isEnabled = true,
-      required this.days,
-      required this.intervalToAlarm,
-      required this.isActivityEnabled,
-      required this.minutesSinceMidnight,
-      required this.isLocationEnabled,
-      required this.isSharedAlarmEnabled,
-      required this.isWeatherEnabled,
-      required this.location,
-      required this.weatherTypes,
-      required this.isMathsEnabled,
-      required this.mathsDifficulty,
-      required this.numMathsQuestions,
-      required this.isShakeEnabled,
-      required this.shakeTimes,
-      required this.isQrEnabled,
-      required this.qrValue,
-      required this.isPedometerEnabled,
-      required this.numberOfSteps,
-      required this.activityInterval,
-      this.offsetDetails = const {},
-      required this.mainAlarmTime,
-      required this.label,
-      required this.isOneTime,
-      required this.snoozeDuration,
-      required this.gradient,
-      required this.ringtoneName,
-      required this.note,
-      required this.deleteAfterGoesOff,
-      required this.showMotivationalQuote,
-      required this.volMax,
-      required this.volMin,
-      required this.activityMonitor,
-      required this.ringOn,
-      required this.alarmDate,
-      required this.profile,
-      required this.isGuardian,
-      required this.guardianTimer,
-      required this.guardian,
-      required this.isCall});
+  AlarmModel({
+    required this.alarmTime,
+    required this.alarmID,
+    this.sharedUserIds = const [],
+    required this.ownerId,
+    required this.ownerName,
+    required this.lastEditedUserId,
+    required this.mutexLock,
+    this.isEnabled = true,
+    required this.days,
+    required this.intervalToAlarm,
+    required this.isActivityEnabled,
+    required this.minutesSinceMidnight,
+    required this.isLocationEnabled,
+    required this.isSharedAlarmEnabled,
+    required this.isWeatherEnabled,
+    required this.location,
+    required this.weatherTypes,
+    required this.isMathsEnabled,
+    required this.mathsDifficulty,
+    required this.numMathsQuestions,
+    required this.isShakeEnabled,
+    required this.shakeTimes,
+    required this.isQrEnabled,
+    required this.qrValue,
+    required this.isPedometerEnabled,
+    required this.numberOfSteps,
+    required this.activityInterval,
+    this.offsetDetails = const {},
+    required this.mainAlarmTime,
+    required this.label,
+    required this.isOneTime,
+    required this.snoozeDuration,
+    required this.gradient,
+    required this.ringtoneName,
+    required this.note,
+    required this.deleteAfterGoesOff,
+    required this.showMotivationalQuote,
+    required this.volMax,
+    required this.volMin,
+    required this.activityMonitor,
+    required this.ringOn,
+    required this.alarmDate,
+    required this.profile,
+    required this.isGuardian,
+    required this.guardianTimer,
+    required this.guardian,
+    required this.isCall,
+    this.challengeTimeLimit,
+  });
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -122,7 +127,6 @@ class AlarmModel {
     if (isSharedAlarmEnabled && user != null) {
       mainAlarmTime = documentSnapshot['alarmTime'];
       // Using offsetted time only if it is enabled
-
       alarmTime = (offsetDetails![user.id]['offsetDuration'] != 0)
           ? offsetDetails![user.id]['offsettedTime']
           : documentSnapshot['alarmTime'];
@@ -179,6 +183,11 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+
+    // Read the optional challengeTimeLimit if available.
+    challengeTimeLimit = documentSnapshot.data().toString().contains('challengeTimeLimit')
+        ? documentSnapshot['challengeTimeLimit']
+        : null;
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -231,6 +240,7 @@ class AlarmModel {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
+      challengeTimeLimit: map['challengeTimeLimit'],
     );
   }
 
@@ -283,6 +293,7 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
+      'challengeTimeLimit': challengeTimeLimit,
     };
   }
 
@@ -338,14 +349,13 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
+
+    // Read challengeTimeLimit if available.
+    challengeTimeLimit = alarmData['challengeTimeLimit'];
   }
 
-  AlarmModel.fromJson(String alarmData, UserModel? user) {
-    AlarmModel.fromMap(jsonDecode(alarmData));
-  }
-
-  static String toJson(AlarmModel alarmRecord) {
-    return jsonEncode(AlarmModel.toMap(alarmRecord));
+  String toJson() {
+    return jsonEncode(AlarmModel.toMap(this));
   }
 
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
@@ -390,12 +400,14 @@ class AlarmModel {
       'volMax': alarmRecord.volMax,
       'activityMonitor': alarmRecord.activityMonitor,
       'alarmDate': alarmRecord.alarmDate,
+      'ringOn': alarmRecord.ringOn,
       'profile': alarmRecord.profile,
       'isGuardian': alarmRecord.isGuardian,
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'challengeTimeLimit': alarmRecord.challengeTimeLimit,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
