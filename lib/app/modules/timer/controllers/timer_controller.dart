@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/data/models/timer_preset.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 
 class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   MethodChannel timerChannel = const MethodChannel('timer');
@@ -17,6 +19,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   ScrollController scrollController = ScrollController();
   RxList timers = [].obs;
   RxList isRinging = [].obs;
+  RxList<TimerPreset> customPresets = <TimerPreset>[].obs;
 
   getFakeTimerModel() async {
     TimerModel fakeTimer = await Utils.genFakeTimerModel();
@@ -40,6 +43,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     WidgetsBinding.instance.addObserver(this);
     isarTimers = IsarDb.getTimers();
     updateTimerInfo();
+    loadCustomPresets();
     scrollController.addListener(() {
       if (scrollController.offset < scrollController.position.maxScrollExtent &&
           !scrollController.position.outOfRange) {
@@ -135,10 +139,37 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       Get.back();
     }
   }
+
   Future<void> setPresetTimer(Duration presetDuration) async {
-  remainingTime.value = presetDuration;
-  await createTimer();
-}
-}
+    remainingTime.value = presetDuration;
+    await createTimer();
+  }
 
+  void loadCustomPresets() async {
+    final storage = Get.find<GetStorageProvider>();
+    List<Map<String, dynamic>> presetsJson =
+        await storage.readTimerPreset('customPresets');
+    customPresets.value =
+        presetsJson.map((json) => TimerPreset.fromJson(json)).toList();
+  }
 
+  void saveCustomPreset(Duration duration) async {
+    final storage = Get.find<GetStorageProvider>();
+    if (customPresets.any((preset) => preset.duration == duration)) {
+      return;
+    }
+    TimerPreset preset = TimerPreset(duration: duration);
+    customPresets.add(preset);
+    List<Map<String, dynamic>> presetsJson =
+        customPresets.map((preset) => preset.toJson()).toList();
+    await storage.writeTimerPreset('customPresets', presetsJson);
+  }
+
+  void deleteCustomPreset(int index) async {
+    final storage = Get.find<GetStorageProvider>();
+    customPresets.removeAt(index);
+    List<Map<String, dynamic>> presetsJson =
+        customPresets.map((preset) => preset.toJson()).toList();
+    await storage.writeTimerPreset('customPresets', presetsJson);
+  }
+}
