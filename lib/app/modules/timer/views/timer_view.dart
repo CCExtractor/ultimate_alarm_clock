@@ -784,6 +784,7 @@ class TimerView extends GetView<TimerController> {
                                 controller.hours.value = 0;
                                 controller.minutes.value = 1;
                                 controller.seconds.value = 0;
+                                inputTimeController.setTextFieldTimerTime(); 
 
                                 Get.back();
                               },
