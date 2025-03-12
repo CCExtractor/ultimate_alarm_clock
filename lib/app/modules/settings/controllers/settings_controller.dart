@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
-
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -14,6 +12,7 @@ import 'package:fl_location/fl_location.dart';
 
 import '../../../data/providers/get_storage_provider.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 
 class SettingsController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
@@ -65,6 +64,12 @@ class SettingsController extends GetxController {
     },
   };
 
+  // ChallengeSettingsController properties
+  final RxInt challengeTimeLimit = 30.obs;
+  AlarmModel? alarmRecord;
+
+  SettingsController({this.alarmRecord});
+
   @override
   void onInit() async {
     super.onInit();
@@ -74,10 +79,31 @@ class SettingsController extends GetxController {
       userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
+    _loadChallengeSettings();
   }
 
-  // Logins user using GoogleSignIn
+  void _loadChallengeSettings() async {
+    int storedTimeLimit = await _secureStorageProvider.readChallengeTimeLimit();
+    challengeTimeLimit.value = storedTimeLimit;
+    if (alarmRecord != null) {
+      alarmRecord!.challengeTimeLimit = storedTimeLimit;
+    }
+  }
 
+  void updateTimeLimit(int newLimit) {
+    challengeTimeLimit.value = newLimit;
+    if (alarmRecord != null) {
+      alarmRecord!.challengeTimeLimit = newLimit;
+    }
+    _secureStorageProvider.writeChallengeTimeLimit(newLimit);
+  }
+
+  void saveSettings() {
+    if (alarmRecord != null) {
+      alarmRecord!.challengeTimeLimit = challengeTimeLimit.value;
+    }
+    _secureStorageProvider.writeChallengeTimeLimit(challengeTimeLimit.value);
+  }
   Future<void> logoutGoogle() async {
     await GoogleCloudProvider.logoutGoogle();
     await SecureStorageProvider().deleteUserModel();
@@ -94,13 +120,9 @@ class SettingsController extends GetxController {
   getKey(ApiKeys key) async {
     return await _secureStorageProvider.retrieveApiKey(key);
   }
-
-  // Add weather state to the flutter secure storage
   addWeatherState(String weatherState) async {
     await _secureStorageProvider.storeWeatherState(weatherState);
   }
-
-  // Get weather state from the flutter secure storage
   getWeatherState() async {
     return await _secureStorageProvider.retrieveWeatherState();
   }
@@ -108,7 +130,6 @@ class SettingsController extends GetxController {
   Future<bool> isApiKeyValid(String apiKey) async {
     final weather = WeatherFactory(apiKey);
     try {
-      // ignore: unused_local_variable
       final currentWeather = await weather.currentWeatherByLocation(
         currentPoint.value.latitude,
         currentPoint.value.longitude,
@@ -135,28 +156,22 @@ class SettingsController extends GetxController {
 
   Future<bool> _checkAndRequestPermission({bool? background}) async {
     if (!await FlLocation.isLocationServicesEnabled) {
-      // Location services are disabled.
       return false;
     }
 
     var locationPermission = await FlLocation.checkLocationPermission();
     if (locationPermission == LocationPermission.deniedForever) {
-      // Cannot request runtime permission because location permission is
-      // denied forever.
       return false;
     } else if (locationPermission == LocationPermission.denied) {
-      // Ask the user for location permission.
       locationPermission = await FlLocation.requestLocationPermission();
       if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) return false;
+          locationPermission == LocationPermission.deniedForever)
+        return false;
     }
-
-    // Location permission must always be allowed (LocationPermission.always)
-    // to collect location data in the background.
     if (background == true &&
-        locationPermission == LocationPermission.whileInUse) return false;
+        locationPermission == LocationPermission.whileInUse)
+      return false;
 
-    // Location services has been enabled and permission have been granted.
     return true;
   }
 
@@ -171,25 +186,12 @@ class SettingsController extends GetxController {
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
     currentLanguage.value = await storage.readCurrentLanguage();
-
-    // Store the retrieved API key from the flutter secure storage
     String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
-
-    // If the API key has been previously stored there
     if (retrievedAPIKey != null) {
-      // Assign the controller's text to the retrieved API key so that
-      // when the user comes to update their API key, they're able
-      // to see the previously added API key
       apiKey.text = retrievedAPIKey;
     }
-
-    // Store the retrieved weather state from the flutter secure storage
     String? retrievedWeatherState = await getWeatherState();
-
-    // If the weather state has been previously stored there
     if (retrievedWeatherState != null) {
-      // Assign the weatherKeyState to the previously stored weather state,
-      // but first convert the stored string to the WeatherKeyState enum
       weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
             (weatherState) => weatherState.name == retrievedWeatherState,
           ) ??
