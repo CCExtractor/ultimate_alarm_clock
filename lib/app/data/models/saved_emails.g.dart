@@ -39,7 +39,7 @@ const Saved_EmailsSchema = CollectionSchema(
   getId: _saved_EmailsGetId,
   getLinks: _saved_EmailsGetLinks,
   attach: _saved_EmailsAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _saved_EmailsEstimateSize(

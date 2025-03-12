@@ -249,7 +249,7 @@ const ProfileModelSchema = CollectionSchema(
   getId: _profileModelGetId,
   getLinks: _profileModelGetLinks,
   attach: _profileModelAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _profileModelEstimateSize(
