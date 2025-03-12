@@ -35,14 +35,15 @@ import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
 
-class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  AddOrUpdateAlarmView({Key? key}) : super(key: key);
+import 'package:get/get.dart';
 
-  final ThemeController themeController = Get.find<ThemeController>();
-  final InputTimeController inputTimeController =
-      Get.put(InputTimeController());
-  final SettingsController settingsController = Get.find<SettingsController>();
+class AddOrUpdateAlarmController extends GetxController {
+  RxBool deleteAfterGoesOff = false.obs;
 
+  void toggleDeleteAfterGoesOff() {
+    deleteAfterGoesOff.value = !deleteAfterGoesOff.value;
+    update(); // Ensures UI updates properly
+  }
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
