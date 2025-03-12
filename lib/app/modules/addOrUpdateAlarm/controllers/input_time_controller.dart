@@ -34,9 +34,9 @@ class InputTimeController extends GetxController {
   void onInit() {
     isTimePicker.value = true;
     isTimePickerTimer.value = true;
-    inputHoursControllerTimer.text = '0';    //It sets the hour field to 0 initially
-    inputMinutesControllerTimer.text = '1';  //It sets the minutes field to 0 initially
-    inputSecondsControllerTimer.text = '0';  //It sets the seconds field to 0, for setting it to 1 minute timer initially
+    inputHoursControllerTimer.text = '0';
+    inputMinutesControllerTimer.text = '1';
+    inputSecondsControllerTimer.text = '0';
     super.onInit();
   }
 
