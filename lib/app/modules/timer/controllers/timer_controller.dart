@@ -140,5 +140,3 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   await createTimer();
 }
 }
-
-

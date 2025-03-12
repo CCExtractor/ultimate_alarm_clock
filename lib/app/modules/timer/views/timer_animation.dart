@@ -63,7 +63,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 widget.timer.startedOn, widget.timer.timerValue) <
             widget.timer.timerValue &&
         widget.timer.isPaused == 0) {
-      widget.timer.timeElapsed =widget.timer.timerValue-Utils.getDifferenceMillisFromNow(
+      widget.timer.timeElapsed = widget.timer.timerValue - Utils.getDifferenceMillisFromNow(
           widget.timer.startedOn, widget.timer.timerValue);
       IsarDb.updateTimerPauseStatus(widget.timer);
     }
@@ -74,7 +74,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
 
   @override
   void dispose() {
-    _timerCounter!.cancel();
+    _timerCounter?.cancel();
     super.dispose();
   }
 
@@ -85,7 +85,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         horizontal: 10.0,
       ),
       child: Container(
-        height: context.height / 3.0, // changed from 3.3 to 3.0
+        height: context.height / 3.0, 
         width: context.width,
         child: Obx(
           () => Card(
@@ -114,72 +114,90 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                   ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 25.0,
-                        right: 20.0,
-                        top: 20.0,
-                        bottom: 30.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  widget.timer.timerName,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: kprimaryColor,
+                                      fontSize: 18),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (_timerCounter != null &&
+                                            widget.timer.isPaused == 0) {
+                                          stopTimer();
+                                        }
+                                        widget.timer.timeElapsed = 0;
+                                        IsarDb.updateTimerTick(widget.timer);
+                                        if (_timerCounter != null &&
+                                            widget.timer.isPaused == 0) {
+                                          widget.timer.startedOn =
+                                              DateTime.now().toString();
+                                          IsarDb.updateTimerTick(widget.timer)
+                                              .then((value) => startTimer());
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.refresh,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.stopRinger(
+                                          widget.timer.timerId);
+                                      controller.deleteTimer(
+                                          widget.timer.timerId);
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      widget.timer.timerName,
-                                      overflow: TextOverflow.ellipsis,
-                                      // Set overflow property here
+                                Obx(
+                                  () => AnimatedContainer(
+                                    duration: Duration(seconds: 1),
+                                    child: Text(
+                                      '${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}',
                                       style: Theme.of(
                                         context,
-                                      ).textTheme.bodySmall!.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: kprimaryColor,
-                                          fontSize: 18),
-                                    ),
-                                    Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 16.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            if (_timerCounter != null &&
-                                                widget.timer.isPaused == 0) {
-                                              stopTimer();
-                                            }
-                                            widget.timer.timeElapsed = 0;
-                                            IsarDb.updateTimerTick(widget.timer);
-                                            if (_timerCounter != null &&
-                                                widget.timer.isPaused == 0) {
-                                              widget.timer.startedOn =
-                                                  DateTime.now().toString();
-                                              IsarDb.updateTimerTick(widget.timer)
-                                                  .then((value) => startTimer());
-                                            }
-                                          });
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: themeController.primaryBackgroundColor.value,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(4.0),
-                                            child: Icon(
-                                              Icons.refresh,
-                                              size: 18,
-                                            ),
+                                      ).textTheme.displayLarge!.copyWith(
+                                            color: themeController.primaryTextColor.value,
+                                            fontSize: 44,
                                           ),
-                                        ),
-                                      ),
                                     ),
+
                                     InkWell(
                                       onTap: () {
                                         controller
@@ -271,11 +289,58 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                             ),
                                           ))
                                     ],
+
                                   ),
                                 ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      widget.timer.isPaused == 0
+                                          ? stopTimer()
+                                          : startTimer();
+                                      widget.timer.isPaused =
+                                          widget.timer.isPaused == 0
+                                              ? 1
+                                              : 0;
+                                      IsarDb.updateTimerPauseStatus(
+                                          widget.timer);
+                                    });
+                                    if (widget.timer.timeElapsed >=
+                                        widget.timer.timerValue) {
+                                      controller.stopRinger(
+                                          widget.timer.timerId);
+                                      setState(() {
+                                        widget.timer.timeElapsed = 0;
+                                        IsarDb.updateTimerTick(
+                                                widget.timer)
+                                            .then((value) => IsarDb
+                                                .updateTimerPauseStatus(
+                                                    widget.timer));
+                                        widget.timer.isPaused = 1;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: kprimaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(80)),
+                                    width: 80,
+                                    height: 80,
+                                    child: Icon(
+                                      widget.timer.isPaused == 0
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                      size: 30,
+                                      color:
+                                          Colors.white,
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),
+                          Spacer(),
                         ],
                       ),
                     ),
