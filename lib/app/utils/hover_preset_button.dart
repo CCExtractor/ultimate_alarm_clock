@@ -25,7 +25,7 @@ Widget hoverPresetButton(BuildContext context, String label, Duration duration) 
 
       backgroundColor: themeController.primaryColor.value,
       shadowColor: Colors.transparent,
-      fixedSize: Size(
+      minimumSize: Size(
         width * 0.02,
         height * 0.01,
       ),
