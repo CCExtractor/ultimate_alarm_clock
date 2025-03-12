@@ -26,6 +26,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TimerController controller = Get.find<TimerController>();
   ThemeController themeController = Get.find<ThemeController>();
+  var width = Get.width;
+  var height = Get.height;
 
   Timer? _timerCounter;
   void startTimer() {
@@ -257,8 +259,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                                   color: kprimaryColor,
                                                   borderRadius:
                                                       BorderRadius.circular(80)),
-                                              width: 80,
-                                              height: 80,
+                                              width: width * 0.14,
+                                              height: width * 0.14,
                                               child: Icon(
                                                 widget.timer.isPaused == 0
                                                     ? Icons.pause
