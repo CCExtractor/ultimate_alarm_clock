@@ -34,6 +34,12 @@ class InputTimeController extends GetxController {
   void onInit() {
     isTimePicker.value = true;
     isTimePickerTimer.value = true;
+    
+    // Initialize text fields with current time
+    Future.delayed(Duration.zero, () {
+      initializeTimeTextFields();
+    });
+    
     super.onInit();
   }
 
@@ -48,6 +54,38 @@ class InputTimeController extends GetxController {
 
   void changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
+    
+    // Initialize text fields when opening the time picker
+    if (isTimePicker.value) {
+      initializeTimeTextFields();
+    }
+  }
+
+  // Initialize text fields with current time values
+  void initializeTimeTextFields() {
+    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
+    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+    
+    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+    
+    // Set hours text field
+    if (settingsController.is24HrsEnabled.value) {
+      inputHrsController.text = selectedDateTime.value.hour.toString();
+    } else {
+      int displayHour = selectedDateTime.value.hour;
+      if (displayHour == 0) {
+        displayHour = 12;
+      } else if (displayHour > 12) {
+        displayHour -= 12;
+      }
+      inputHrsController.text = displayHour.toString();
+    }
+    
+    // Set minutes text field with leading zero if needed
+    inputMinutesController.text = selectedDateTime.value.minute.toString().padLeft(2, '0');
+    
+    // Store the current display hour for boundary checking
+    _previousDisplayHour = int.tryParse(inputHrsController.text);
   }
 
 
@@ -103,24 +141,13 @@ class InputTimeController extends GetxController {
 
   void setTime() {
     AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
-    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
-
-
-    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
-    inputHrsController.text = settingsController.is24HrsEnabled.value
-        ? selectedDateTime.value.hour.toString()
-        : (selectedDateTime.value.hour == 0
-            ? '12'
-            : (selectedDateTime.value.hour > 12
-                ? (selectedDateTime.value.hour - 12).toString()
-                : selectedDateTime.value.hour.toString()));
-    inputMinutesController.text = selectedDateTime.value.minute.toString();
-
-
-    toggleIfAtBoundary();
-
+    
     try {
-      int hour = int.parse(inputHrsController.text);
+      // Handle empty input fields gracefully
+      int hour = inputHrsController.text.isEmpty ? 0 : int.parse(inputHrsController.text);
+      int minute = inputMinutesController.text.isEmpty ? 0 : int.parse(inputMinutesController.text);
+      
+      // Apply AM/PM logic
       if (!settingsController.is24HrsEnabled.value) {
         if (isAM.value) {
           if (hour == 12) hour = 0; 
@@ -129,7 +156,6 @@ class InputTimeController extends GetxController {
         }
       }
 
-      int minute = int.parse(inputMinutesController.text);
       final time = TimeOfDay(hour: hour, minute: minute);
       DateTime today = DateTime.now();
       DateTime tomorrow = today.add(Duration(days: 1));
@@ -140,9 +166,11 @@ class InputTimeController extends GetxController {
       int day = isNextDay ? tomorrow.day : today.day;
       int month = isNextMonth ? tomorrow.month : today.month;
       int year = isNextYear ? tomorrow.year : today.year;
+      
       selectedDateTime.value = DateTime(year, month, day, time.hour, time.minute);
       addOrUpdateAlarmController.selectedTime.value = selectedDateTime.value;
 
+      // Update controller values
       if (!settingsController.is24HrsEnabled.value) {
         if (selectedDateTime.value.hour == 0) {
           addOrUpdateAlarmController.hours.value = 12;
@@ -152,17 +180,19 @@ class InputTimeController extends GetxController {
           addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
         }
       } else {
-        addOrUpdateAlarmController.hours.value =
-            convert24(selectedDateTime.value.hour, addOrUpdateAlarmController.meridiemIndex.value);
+        addOrUpdateAlarmController.hours.value = selectedDateTime.value.hour;
       }
+      
       addOrUpdateAlarmController.minutes.value = selectedDateTime.value.minute;
+      
+      // Update meridiem index based on hour
       if (selectedDateTime.value.hour >= 12) {
         addOrUpdateAlarmController.meridiemIndex.value = 1;
       } else {
         addOrUpdateAlarmController.meridiemIndex.value = 0;
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Error in setTime: ${e.toString()}");
     }
   }
 
@@ -206,6 +236,11 @@ class LimitRange extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    // Allow empty string or backspace operations
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+    
     try {
       int value = int.parse(newValue.text);
       if (value < minRange) return TextEditingValue(text: minRange.toString());
@@ -213,7 +248,8 @@ class LimitRange extends TextInputFormatter {
       return newValue;
     } catch (e) {
       debugPrint(e.toString());
-      return newValue;
+      // If we can't parse the value, return the old value to prevent invalid input
+      return oldValue;
     }
   }
 }
