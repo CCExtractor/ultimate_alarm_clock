@@ -697,7 +697,7 @@ class Utils {
                   child: TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                        kprimaryColor,
+                        getPrimaryColorTheme(),
                       ),
                     ),
                     onPressed: () {

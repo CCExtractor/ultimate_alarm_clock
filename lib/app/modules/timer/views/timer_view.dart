@@ -83,7 +83,7 @@ class TimerView extends GetView<TimerController> {
                   Utils.hapticFeedback();
                   timerSelector(context, width, height);
                 },
-                backgroundColor: kprimaryColor,
+                backgroundColor: getPrimaryColorTheme(),
                 child: const Icon(
                   Icons.add_alarm,
                   color: ksecondaryBackgroundColor,
@@ -106,10 +106,10 @@ class TimerView extends GetView<TimerController> {
                   stream: IsarDb.getTimers(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
+                      return  Center(
                         child: CircularProgressIndicator.adaptive(
                           backgroundColor: Colors.transparent,
-                          valueColor: AlwaysStoppedAnimation(kprimaryColor),
+                          valueColor: AlwaysStoppedAnimation(getPrimaryColorTheme()),
                         ),
                       );
                     } else {
@@ -330,7 +330,7 @@ class TimerView extends GetView<TimerController> {
                                               .copyWith(
                                                 fontSize: 30,
                                                 fontWeight: FontWeight.bold,
-                                                color: kprimaryColor,
+                                                color: getPrimaryColorTheme(),
                                               ),
                                           textStyle: Theme.of(context)
                                               .textTheme
@@ -415,7 +415,7 @@ class TimerView extends GetView<TimerController> {
                                               .copyWith(
                                                 fontSize: 30,
                                                 fontWeight: FontWeight.bold,
-                                                color: kprimaryColor,
+                                                color: getPrimaryColorTheme(),
                                               ),
                                           textStyle: Theme.of(context)
                                               .textTheme
@@ -500,7 +500,7 @@ class TimerView extends GetView<TimerController> {
                                               .copyWith(
                                                 fontSize: 30,
                                                 fontWeight: FontWeight.bold,
-                                                color: kprimaryColor,
+                                                color: getPrimaryColorTheme(),
                                               ),
                                           textStyle: Theme.of(context)
                                               .textTheme

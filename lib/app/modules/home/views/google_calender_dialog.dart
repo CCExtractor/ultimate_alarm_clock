@@ -21,14 +21,14 @@ Future<Widget> googleCalenderDialog(
       child: SizedBox(
         height: controller.scalingFactor.value * 350,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding:  EdgeInsets.all(8.0),
           child: controller.calendarFetchStatus == 'Loading'
-              ? const SizedBox(
+              ?  SizedBox(
                   child: Center(
                     child: CircularProgressIndicator(
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation(
-                        kprimaryColor,
+                        getPrimaryColorTheme(),
                       ),
                     ),
                   ),
@@ -41,8 +41,8 @@ Future<Widget> googleCalenderDialog(
                       children: [
                         SvgPicture.asset(
                           'assets/images/GC.svg',
-                          colorFilter: const ColorFilter.mode(
-                            kprimaryColor,
+                          colorFilter:  ColorFilter.mode(
+                            getPrimaryColorTheme(),
                             BlendMode.srcIn,
                           ),
                           height: 30 * controller.scalingFactor.value,
@@ -101,7 +101,7 @@ Future<Widget> googleCalenderDialog(
                                                     const EdgeInsets.all(8.0),
                                                 child: Icon(
                                                   Icons.calendar_month,
-                                                  color: kprimaryColor,
+                                                  color: getPrimaryColorTheme(),
                                                 ),
                                               ),
                                               Text(
@@ -160,12 +160,12 @@ Future<Widget> googleCalenderDialog(
                                                       Axis.horizontal,
                                                   child: Row(
                                                     children: [
-                                                      const Padding(
+                                                       Padding(
                                                         padding:
                                                             EdgeInsets.all(8.0),
                                                         child: Icon(
                                                           Icons.calendar_month,
-                                                          color: kprimaryColor,
+                                                          color: getPrimaryColorTheme(),
                                                         ),
                                                       ),
                                                       Text(
@@ -198,7 +198,7 @@ Future<Widget> googleCalenderDialog(
                                                         child: Icon(
                                                           Icons
                                                               .watch_later_outlined,
-                                                          color: kprimaryColor,
+                                                          color: getPrimaryColorTheme(),
                                                         ),
                                                       ),
                                                       Text(
@@ -250,7 +250,7 @@ Future<Widget> googleCalenderDialog(
                                                     BorderRadius.circular(
                                                   16,
                                                 ),
-                                                color: kprimaryColor,
+                                                color: getPrimaryColorTheme(),
                                               ),
                                               child: Padding(
                                                 padding:

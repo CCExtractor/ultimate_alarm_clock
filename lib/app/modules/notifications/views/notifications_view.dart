@@ -68,7 +68,7 @@ class NotificationsView extends GetView<NotificationsController> {
                                               ? "${controller.notifications[index]['profileName']} ?"
                                               : "${controller.notifications[index]['alarmTime']} ?",
                                           style: TextStyle(
-                                            color: kprimaryColor,
+                                            color: getPrimaryColorTheme(),
                                             fontSize: controller.homeController
                                                     .scalingFactor *
                                                 20,
@@ -115,7 +115,7 @@ class NotificationsView extends GetView<NotificationsController> {
                                                           controller
                                                                   .allProfiles[
                                                               index]
-                                                      ? kprimaryColor
+                                                      ? getPrimaryColorTheme()
                                                       : ksecondaryBackgroundColor,
                                                   title: Text(
                                                     controller
@@ -234,7 +234,7 @@ class NotificationsView extends GetView<NotificationsController> {
                               .substring(0, 2)
                               .toUpperCase(),
                           style: TextStyle(
-                            color: ksecondaryColor,
+                            color: getSecondaryColorTheme(),
                             fontSize:
                                 controller.homeController.scalingFactor * 20,
                             fontWeight: FontWeight.w700,
@@ -243,7 +243,7 @@ class NotificationsView extends GetView<NotificationsController> {
                       : Icon(
                           Icons.alarm,
                           size: controller.homeController.scalingFactor * 20,
-                          color: ksecondaryColor,
+                          color: getSecondaryColorTheme(),
                         ),
                 ),
               ),
@@ -275,7 +275,7 @@ class NotificationsView extends GetView<NotificationsController> {
                     ? Text(
                         notification['profileName'],
                         style: TextStyle(
-                          color: kprimaryColor,
+                          color: getPrimaryColorTheme(),
                           fontSize:
                               controller.homeController.scalingFactor * 20,
                           fontWeight: FontWeight.w700,
@@ -284,7 +284,7 @@ class NotificationsView extends GetView<NotificationsController> {
                     : Text(
                         notification['alarmTime'],
                         style: TextStyle(
-                          color: kprimaryColor,
+                          color: getPrimaryColorTheme(),
                           fontSize:
                               controller.homeController.scalingFactor * 20,
                           fontWeight: FontWeight.w700,

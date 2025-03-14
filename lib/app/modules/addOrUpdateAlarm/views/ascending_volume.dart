@@ -93,7 +93,7 @@ class AscendingVolumeTile extends StatelessWidget {
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kprimaryColor,
+                      backgroundColor: getPrimaryColorTheme(),
                     ),
                     child: Text(
                       'Apply Gradient'.tr,

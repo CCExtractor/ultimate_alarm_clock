@@ -58,7 +58,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                                   end: Alignment.topCenter,
                                   stops: const [0.2, 0.2],
                                   colors: [
-                                    kprimaryColor,
+                                    getPrimaryColorTheme(),
                                     themeController.secondaryBackgroundColor.value,
                                   ],
                                 ),
@@ -168,7 +168,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
               ),
               decoration: BoxDecoration(
                   color: profile.profileName == controller.selectedProfile.value
-                      ? kprimaryColor.withOpacity(0.5)
+                      ? getPrimaryColorTheme().withOpacity(0.5)
                       : themeController.secondaryBackgroundColor.value,
                   borderRadius: BorderRadius.circular(18),),
               child: Text(

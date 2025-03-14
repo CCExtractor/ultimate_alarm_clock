@@ -38,7 +38,7 @@ class TimerRingView extends GetView<TimerRingController> {
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    kprimaryColor,
+                    getPrimaryColorTheme(),
                   ),
                 ),
                 onPressed: () async {

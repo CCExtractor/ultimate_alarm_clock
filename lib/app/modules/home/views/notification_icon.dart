@@ -43,8 +43,8 @@ Widget notificationIcon(HomeController controller) {
                                 top: -3,
                                 child: Text(
                                   '${notif.length}',
-                                  style: const TextStyle(
-                                    color: kprimaryColor,
+                                  style: TextStyle(
+                                    color: getPrimaryColorTheme(),
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

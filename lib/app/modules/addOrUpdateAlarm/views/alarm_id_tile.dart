@@ -82,7 +82,7 @@ class AlarmIDTile extends StatelessWidget {
                             child: TextButton(
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                  kprimaryColor,
+                                  getPrimaryColorTheme(),
                                 ),
                               ),
                               child: Text(

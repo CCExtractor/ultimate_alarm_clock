@@ -72,15 +72,15 @@ class _CustomErrorScreenState extends State<CustomErrorScreen> {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(
-                        color: kprimaryColor,
+                      side:  BorderSide(
+                        color: getPrimaryColorTheme(),
                         width: 1,
                       ),
                     ),
                     child: Text(
                       'Navigate to Home',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: kprimaryColor,
+                            color: getPrimaryColorTheme(),
                           ),
                     ),
                   ),
