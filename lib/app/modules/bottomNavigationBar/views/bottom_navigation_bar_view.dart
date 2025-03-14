@@ -28,11 +28,11 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
                 },
               );
             } else {
-              return const Center(
+              return  Center(
                 child: CircularProgressIndicator.adaptive(
                   backgroundColor: Colors.transparent,
                   valueColor: AlwaysStoppedAnimation(
-                    kprimaryColor,
+                    getPrimaryColorTheme(),
                   ),
                 ),
               );
@@ -66,7 +66,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           },
           currentIndex: controller.activeTabIndex.value,
           selectedLabelStyle: TextStyle(
-            color: kprimaryColor,
+            color: getPrimaryColorTheme(),
             fontSize: 14,
             decorationColor:
                 themeController.primaryBackgroundColor.value,

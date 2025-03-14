@@ -65,7 +65,7 @@ class RepeatTile extends StatelessWidget {
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                kprimaryColor,
+                                getPrimaryColorTheme(),
                               ),
                             ),
                             onPressed: () {
@@ -168,7 +168,7 @@ class RepeatTile extends StatelessWidget {
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.5),
                   ),
-                  activeColor: kprimaryColor.withOpacity(0.8),
+                  activeColor: getPrimaryColorTheme().withOpacity(0.8),
                   value: controller.isDailySelected.value,
                   onChanged: (value) {
                     Utils.hapticFeedback();
@@ -213,7 +213,7 @@ class RepeatTile extends StatelessWidget {
                   color:
                       themeController.primaryTextColor.value.withOpacity(0.5),
                 ),
-                activeColor: kprimaryColor.withOpacity(0.8),
+                activeColor: getPrimaryColorTheme().withOpacity(0.8),
                 value: controller.repeatDays[dayIndex],
                 onChanged: (value) {
                   Utils.hapticFeedback();
@@ -308,7 +308,7 @@ class RepeatTile extends StatelessWidget {
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: kprimaryColor,
+                            backgroundColor: getPrimaryColorTheme(),
                           ),
                           child: Text(
                             'Done'.tr,
@@ -341,7 +341,7 @@ class RepeatTile extends StatelessWidget {
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.5),
                   ),
-                  activeColor: kprimaryColor.withOpacity(0.8),
+                  activeColor: getPrimaryColorTheme().withOpacity(0.8),
                   value: controller.isCustomSelected.value,
                   onChanged: (value) {
                     Utils.hapticFeedback();
@@ -391,7 +391,7 @@ class RepeatTile extends StatelessWidget {
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.5),
                   ),
-                  activeColor: kprimaryColor.withOpacity(0.8),
+                  activeColor: getPrimaryColorTheme().withOpacity(0.8),
                   value: controller.isWeekdaysSelected.value,
                   onChanged: (value) {
                     Utils.hapticFeedback();

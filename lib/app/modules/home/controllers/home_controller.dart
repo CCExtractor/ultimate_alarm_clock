@@ -547,7 +547,7 @@ class HomeController extends GetxController {
           TextButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                kprimaryColor,
+                getPrimaryColorTheme(),
               ),
             ),
             onPressed: () {
@@ -630,7 +630,7 @@ class HomeController extends GetxController {
                     Get.back();
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
                   ),
                   child: Text(
                     'Cancel'.tr,

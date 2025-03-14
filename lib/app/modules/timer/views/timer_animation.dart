@@ -61,8 +61,9 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 widget.timer.startedOn, widget.timer.timerValue) <
             widget.timer.timerValue &&
         widget.timer.isPaused == 0) {
-      widget.timer.timeElapsed = widget.timer.timerValue - Utils.getDifferenceMillisFromNow(
-          widget.timer.startedOn, widget.timer.timerValue);
+      widget.timer.timeElapsed = widget.timer.timerValue -
+          Utils.getDifferenceMillisFromNow(
+              widget.timer.startedOn, widget.timer.timerValue);
       IsarDb.updateTimerPauseStatus(widget.timer);
     }
     if (widget.timer.isPaused == 0) {
@@ -83,7 +84,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         horizontal: 10.0,
       ),
       child: Container(
-        height: context.height / 3.0, 
+        height: context.height / 3.0,
         width: context.width,
         child: Obx(
           () => Card(
@@ -128,7 +129,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     context,
                                   ).textTheme.bodySmall!.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: kprimaryColor,
+                                      color: getPrimaryColorTheme(),
                                       fontSize: 18),
                                 ),
                               ),
@@ -160,10 +161,10 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.stopRinger(
-                                          widget.timer.timerId);
-                                      controller.deleteTimer(
-                                          widget.timer.timerId);
+                                      controller
+                                          .stopRinger(widget.timer.timerId);
+                                      controller
+                                          .deleteTimer(widget.timer.timerId);
                                     },
                                     icon: Icon(
                                       Icons.close,
@@ -177,11 +178,9 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                           ),
                           Spacer(),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Obx(
                                   () => AnimatedContainer(
@@ -191,7 +190,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                       style: Theme.of(
                                         context,
                                       ).textTheme.displayLarge!.copyWith(
-                                            color: themeController.primaryTextColor.value,
+                                            color: themeController
+                                                .primaryTextColor.value,
                                             fontSize: 44,
                                           ),
                                     ),
@@ -204,22 +204,19 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                           ? stopTimer()
                                           : startTimer();
                                       widget.timer.isPaused =
-                                          widget.timer.isPaused == 0
-                                              ? 1
-                                              : 0;
+                                          widget.timer.isPaused == 0 ? 1 : 0;
                                       IsarDb.updateTimerPauseStatus(
                                           widget.timer);
                                     });
                                     if (widget.timer.timeElapsed >=
                                         widget.timer.timerValue) {
-                                      controller.stopRinger(
-                                          widget.timer.timerId);
+                                      controller
+                                          .stopRinger(widget.timer.timerId);
                                       setState(() {
                                         widget.timer.timeElapsed = 0;
-                                        IsarDb.updateTimerTick(
-                                                widget.timer)
-                                            .then((value) => IsarDb
-                                                .updateTimerPauseStatus(
+                                        IsarDb.updateTimerTick(widget.timer)
+                                            .then((value) =>
+                                                IsarDb.updateTimerPauseStatus(
                                                     widget.timer));
                                         widget.timer.isPaused = 1;
                                       });
@@ -227,7 +224,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: kprimaryColor,
+                                        color: getPrimaryColorTheme(),
                                         borderRadius:
                                             BorderRadius.circular(80)),
                                     width: 80,
@@ -237,8 +234,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                           ? Icons.pause
                                           : Icons.play_arrow,
                                       size: 30,
-                                      color:
-                                          Colors.white,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 )

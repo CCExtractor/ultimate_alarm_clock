@@ -39,7 +39,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                 minHeight: 2,
                 value: controller.progress.value,
                 backgroundColor: Colors.grey,
-                valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
+                valueColor:  AlwaysStoppedAnimation<Color>(getPrimaryColorTheme()),
               ),
             ),
             Expanded(

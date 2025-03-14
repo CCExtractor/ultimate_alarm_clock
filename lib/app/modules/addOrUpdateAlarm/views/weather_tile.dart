@@ -124,7 +124,7 @@ class WeatherTile extends StatelessWidget {
                               child: TextButton(
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                    kprimaryColor,
+                                    getPrimaryColorTheme(),
                                   ),
                                 ),
                                 onPressed: () {
@@ -225,7 +225,7 @@ class WeatherOption extends StatelessWidget {
                       themeController.primaryTextColor.value.withOpacity(0.5),
                 ),
                 value: controller.selectedWeather.contains(type),
-                activeColor: kprimaryColor.withOpacity(0.8),
+                activeColor: getPrimaryColorTheme().withOpacity(0.8),
                 onChanged: (value) {
                   Utils.hapticFeedback();
                   if (controller.selectedWeather.contains(type)) {

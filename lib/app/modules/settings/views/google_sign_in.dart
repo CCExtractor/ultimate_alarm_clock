@@ -56,7 +56,7 @@ class GoogleSignIn extends StatelessWidget {
                   ),
                   TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
                     ),
                     child: Obx(
                       () => Text(
@@ -97,7 +97,7 @@ class GoogleSignIn extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              MaterialStateProperty.all(getPrimaryColorTheme()),
                         ),
                         child: Obx(
                           () => Text(
@@ -253,7 +253,7 @@ class GoogleSignIn extends StatelessWidget {
                                 child: TextButton(
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                      kprimaryColor,
+                                      getPrimaryColorTheme(),
                                     ),
                                   ),
                                   onPressed: () {

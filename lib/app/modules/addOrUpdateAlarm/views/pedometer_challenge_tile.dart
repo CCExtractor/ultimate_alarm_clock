@@ -107,7 +107,7 @@ class PedometerChallenge extends StatelessWidget {
                               Get.back();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: kprimaryColor,
+                              backgroundColor: getPrimaryColorTheme(),
                               // Set the desired background color
                             ),
                             child: Text(

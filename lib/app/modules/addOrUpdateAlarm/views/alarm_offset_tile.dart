@@ -65,7 +65,7 @@ class AlarmOffset extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: (controller
                                         .isOffsetBefore.value)
-                                    ? kprimaryColor
+                                    ? getPrimaryColorTheme()
                                     : themeController.primaryTextColor.value.withOpacity(0.10),
                                 foregroundColor:
                                     (controller.isOffsetBefore.value)
@@ -87,7 +87,7 @@ class AlarmOffset extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: (!controller
                                         .isOffsetBefore.value)
-                                    ? kprimaryColor
+                                    ? getPrimaryColorTheme()
                                     : themeController.primaryTextColor.value
                                             .withOpacity(0.10),
                                 foregroundColor:

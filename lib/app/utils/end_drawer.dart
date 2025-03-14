@@ -19,7 +19,7 @@ Widget buildEndDrawer(BuildContext context) {
       child: Column(
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: kLightSecondaryColor),
+            decoration: BoxDecoration(color: getSecondaryColorTheme()),
             child: Center(
               child: Row(
                 children: [

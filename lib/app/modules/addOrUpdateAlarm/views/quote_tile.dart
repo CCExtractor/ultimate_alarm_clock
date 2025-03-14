@@ -34,7 +34,7 @@ class QuoteTile extends StatelessWidget {
         trailing: Obx(
           () => Switch.adaptive(
             value: controller.showMotivationalQuote.value,
-            activeColor: ksecondaryColor,
+            activeColor: getSecondaryColorTheme(),
             onChanged: (value) {
               controller.showMotivationalQuote.value = value;
             },

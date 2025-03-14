@@ -145,8 +145,8 @@ class HomeView extends GetView<HomeController> {
                                               child: SvgPicture.asset(
                                                 'assets/images/GC.svg',
                                                 colorFilter:
-                                                    const ColorFilter.mode(
-                                                  kprimaryColor,
+                                                     ColorFilter.mode(
+                                                  getPrimaryColorTheme(),
                                                   BlendMode.srcIn,
                                                 ),
                                                 height: 30 *
@@ -463,11 +463,11 @@ class HomeView extends GetView<HomeController> {
                                 stream: streamAlarms,
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
-                                    return const Center(
+                                    return  Center(
                                       child: CircularProgressIndicator.adaptive(
                                         backgroundColor: Colors.transparent,
                                         valueColor: AlwaysStoppedAnimation(
-                                          kprimaryColor,
+                                          getPrimaryColorTheme(),
                                         ),
                                       ),
                                     );
@@ -717,14 +717,14 @@ class HomeView extends GetView<HomeController> {
                                                                             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                                                                   fontWeight: FontWeight.w500,
                                                                                   color: alarm.isEnabled == true
-                                                                                      ? kprimaryColor
+                                                                                      ? getPrimaryColorTheme()
                                                                                       : themeController.primaryDisabledTextColor.value,
                                                                                 ),
                                                                           ),
                                                                           if (alarm.label.isNotEmpty)
                                                                             VerticalDivider(
                                                                               color: alarm.isEnabled == true
-                                                                                  ? kprimaryColor
+                                                                                  ? getPrimaryColorTheme()
                                                                                   : themeController.primaryDisabledTextColor.value,
                                                                               thickness: 1.4,
                                                                               width: 6,
@@ -740,7 +740,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                                                                       fontWeight: FontWeight.w500,
                                                                                       color: alarm.isEnabled == true
-                                                                                          ? kprimaryColor
+                                                                                          ? getPrimaryColorTheme()
                                                                                           : themeController.primaryDisabledTextColor.value,
                                                                                     ),
                                                                               ),
@@ -933,7 +933,7 @@ class HomeView extends GetView<HomeController> {
                                                                           Expanded(
                                                                             flex: 0,
                                                                             child: Switch.adaptive(
-                                                                              activeColor: ksecondaryColor,
+                                                                              activeColor: getSecondaryColorTheme(),
                                                                               value: alarm.isEnabled,
                                                                               onChanged: (bool value) async {
                                                                                 Utils.hapticFeedback();
@@ -1052,10 +1052,10 @@ class HomeView extends GetView<HomeController> {
                                 },
                               );
                             } else {
-                              return const CircularProgressIndicator.adaptive(
+                              return  CircularProgressIndicator.adaptive(
                                 backgroundColor: Colors.transparent,
                                 valueColor: AlwaysStoppedAnimation(
-                                  kprimaryColor,
+                                  getPrimaryColorTheme(),
                                 ),
                               );
                             }
@@ -1118,7 +1118,7 @@ class HomeView extends GetView<HomeController> {
                     Get.back(result: true); // User confirmed
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
                   ),
                   child: Text(
                     'delete'.tr,

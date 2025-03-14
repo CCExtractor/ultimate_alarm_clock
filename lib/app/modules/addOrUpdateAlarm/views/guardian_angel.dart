@@ -130,7 +130,7 @@ class GuardianAngel extends StatelessWidget {
                 () {
                   return Switch.adaptive(
                     value: controller.isGuardian.value,
-                    activeColor: ksecondaryColor,
+                    activeColor: getSecondaryColorTheme(),
                     onChanged: (value) async {
                       Utils.hapticFeedback();
                       controller.isGuardian.value = value;
@@ -162,7 +162,7 @@ class GuardianAngel extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: (val == 0 && !controller.isCall.value) ||
                           (val == 1 && controller.isCall.value)
-                      ? kprimaryColor
+                      ? getPrimaryColorTheme()
                       : kLightPrimaryDisabledTextColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
