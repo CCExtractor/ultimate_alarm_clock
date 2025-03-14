@@ -1014,7 +1014,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(getPrimaryColorTheme()),
+                              WidgetStateProperty.all(getPrimaryColorTheme()),
                         ),
                         child: Text(
                           (controller.alarmRecord.value.alarmID == '')

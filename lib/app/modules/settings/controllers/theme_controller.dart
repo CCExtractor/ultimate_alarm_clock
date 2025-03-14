@@ -77,12 +77,13 @@ class ThemeController extends GetxController {
 
     if (activeScheme != null) {
       // Use dynamic colors if available
+      bool isDarkTheme = activeScheme.brightness == Brightness.dark;
       primaryColor.value = activeScheme.primary;
       secondaryColor.value = activeScheme.secondary;
       primaryBackgroundColor.value = activeScheme.surface;
       secondaryBackgroundColor.value = activeScheme.surfaceVariant;
       primaryTextColor.value = activeScheme.onSurface;
-      secondaryTextColor.value = activeScheme.onSurfaceVariant;
+      secondaryTextColor.value = isDarkTheme ? Colors.black87 : Colors.white70;
       primaryDisabledTextColor.value = activeScheme.onSurface.withOpacity(0.38);
     } else {
       // Fall back to predefined colors
