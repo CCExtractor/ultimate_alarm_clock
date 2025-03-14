@@ -817,7 +817,7 @@ class TimerView extends GetView<TimerController> {
             Visibility(
               visible: controller.timerList.length > 2,
               child: Positioned(
-                top: calculateTopPosition(),
+                top: 60,
                 child: Material(
                   elevation: 5.0,
                   color: Colors.transparent,
@@ -862,15 +862,5 @@ class TimerView extends GetView<TimerController> {
         );
       },
     );
-  }
-
-  double calculateTopPosition() {
-    final RenderBox? renderBox =
-        dialogKey.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      final position = renderBox.localToGlobal(Offset.zero);
-      return position.dy - 100;
-    }
-    return 160;
   }
 }
