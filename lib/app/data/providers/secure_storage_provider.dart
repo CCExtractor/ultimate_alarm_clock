@@ -111,6 +111,9 @@ class SecureStorageProvider {
   Future<bool> read24HoursEnabled({required String key}) async {
     return await _secureStorage.read(key: key) == 'true';
   }
+  Future<bool> readFlipToSnooze({required String key}) async {
+    return await _secureStorage.read(key: key) == 'true';
+  }
 
   Future<void> write24HoursEnabled({
     required String key,
