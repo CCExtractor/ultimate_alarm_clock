@@ -22,6 +22,8 @@ class SettingsController extends GetxController {
   final _hapticFeedbackKey = 'haptic_feedback';
   var is24HrsEnabled = false.obs;
   final _f24HrsEnabledKey = '24_hours_format';
+  var isFlipToSnooze = false.obs;
+  final _flipToSnooze = 'flip_to_snooze';
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
   var currentLanguage = 'en_US'.obs;
@@ -166,6 +168,8 @@ class SettingsController extends GetxController {
 
     is24HrsEnabled.value =
         await _secureStorageProvider.read24HoursEnabled(key: _f24HrsEnabledKey);
+    isFlipToSnooze.value =
+    await _secureStorageProvider.readFlipToSnooze(key: _flipToSnooze);
 
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
@@ -219,6 +223,16 @@ class SettingsController extends GetxController {
   void toggle24HoursFormat(bool enabled) {
     is24HrsEnabled.value = enabled;
     _save24HoursFormatPreference();
+  }
+  void _savePreferenceFTS() async {
+    await _secureStorageProvider.writeHapticFeedbackValue(
+      key: _flipToSnooze,
+      isHapticFeedbackEnabled: isFlipToSnooze.value,
+    );
+  }
+  void toggleFlipToSnooze(bool enabled) {
+    isFlipToSnooze.value = enabled;
+    _savePreferenceFTS();
   }
 
   void _saveSortedAlarmListPreference() async {
