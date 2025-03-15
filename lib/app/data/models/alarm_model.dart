@@ -62,6 +62,9 @@ class AlarmModel {
   @ignore
   Map? offsetDetails;
 
+  @Index()
+  late DateTime lastModifiedDate;
+
   AlarmModel(
       {required this.alarmTime,
       required this.alarmID,
@@ -109,7 +112,10 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      DateTime? lastModifiedDate}) {
+    this.lastModifiedDate = lastModifiedDate ?? DateTime.now();
+  }
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -337,7 +343,6 @@ class AlarmModel {
     guardianTimer = alarmData['guardianTimer'];
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
-    ringOn = alarmData['ringOn'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
