@@ -159,7 +159,7 @@ class WeatherTile extends StatelessWidget {
             children: [
               Obx(
                 () => Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width * 0.2, // Adjust width dynamically
                   alignment: Alignment.centerRight,
                   child: Text(
                     controller.weatherTypes.value,
