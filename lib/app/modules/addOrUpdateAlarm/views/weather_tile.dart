@@ -153,32 +153,37 @@ class WeatherTile extends StatelessWidget {
             ),
           ],
         ),
-        trailing: InkWell(
-          child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Obx(
-                () => Container(
-                  width: 150,
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    controller.weatherTypes.value,
-                    textAlign: TextAlign.right,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: (controller.isWeatherEnabled.value == false)
-                              ? kprimaryDisabledTextColor
-                              : themeController.primaryTextColor.value,
-                        ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+        trailing: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: width * 0.5),
+          child: IntrinsicWidth(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Obx(
+                      () => Text(
+                        controller.weatherTypes.value,
+                        textAlign: TextAlign.end,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: (controller.isWeatherEnabled.value == false)
+                                  ? kprimaryDisabledTextColor
+                                  : themeController.primaryTextColor.value,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              const Icon(
-                Icons.chevron_right,
-                color: kprimaryDisabledTextColor,
-              ),
-            ],
+                const Icon(
+                  Icons.chevron_right,
+                  color: kprimaryDisabledTextColor,
+                  size: 20,
+                ),
+              ],
+            ),
           ),
         ),
       ),
