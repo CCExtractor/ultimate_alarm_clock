@@ -65,6 +65,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+dependency_overrides:
+ sensors_plus: ^6.1.1
+
 flutter_native_splash:
   android: true
   ios: true

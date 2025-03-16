@@ -38,7 +38,7 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
           color: widget.themeController.secondaryBackgroundColor.value,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 20),
+          padding: containerPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,7 +46,8 @@ class _EnableSortedAlarmListState extends State<EnableSortedAlarmList> {
                 child: Text(
                   'Enable Sorted Alarm List'.tr,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: widget.themeController.primaryTextColor.value),
+                        color: widget.themeController.primaryTextColor.value,
+                      ),
                 ),
               ),
               Obx(
