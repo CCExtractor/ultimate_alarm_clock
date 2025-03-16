@@ -69,121 +69,125 @@ class WeatherTile extends StatelessWidget {
             ),
           );
         },
-        title: Row(
-          children: [
-            FittedBox(
-              alignment: Alignment.centerLeft,
-              fit: BoxFit.scaleDown,
-              child: Text(
+        title: Flexible(  
+          flex: 2,
+          child: Row(
+            children: [
+              Text(
                 'Weather Condition'.tr,
                 style: TextStyle(
                   color: themeController.primaryTextColor.value,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.info_sharp,
-                size: 21,
-                color: themeController.primaryTextColor.value.withOpacity(0.3),
-              ),
-              onPressed: () {
-                Utils.hapticFeedback();
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor:
-                      themeController.secondaryBackgroundColor.value,
-                  builder: (context) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(
-                              Icons.cloudy_snowing,
-                              color: themeController.primaryTextColor.value,
-                              size: height * 0.1,
-                            ),
-                            Text(
-                              'Weather based cancellation'.tr,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.displayMedium,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
-                              child: Text(
-                                'weatherDescription'.tr,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center,
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: Icon(
+                  Icons.info_sharp,
+                  size: 21,
+                  color: themeController.primaryTextColor.value.withOpacity(0.3),
+                ),
+                onPressed: () {
+                  Utils.hapticFeedback();
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor:
+                    themeController.secondaryBackgroundColor.value,
+                    builder: (context) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(
+                                Icons.cloudy_snowing,
+                                color: themeController.primaryTextColor.value,
+                                size: height * 0.1,
                               ),
-                            ),
-                            SizedBox(
-                              width: width,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    kprimaryColor,
+                              Text(
+                                'Weather based cancellation'.tr,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.displayMedium,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  'weatherDescription'.tr,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width,
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      kprimaryColor,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Utils.hapticFeedback();
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Understood'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                      color: themeController
+                                          .secondaryTextColor.value,
+                                    ),
                                   ),
                                 ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  Get.back();
-                                },
-                                child: Text(
-                                  'Understood'.tr,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall!
-                                      .copyWith(
-                                        color: themeController
-                                            .secondaryTextColor.value,
-                                      ),
-                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-        trailing: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: width * 0.5),
-          child: IntrinsicWidth(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Obx(
-                      () => Text(
-                        controller.weatherTypes.value,
-                        textAlign: TextAlign.end,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: (controller.isWeatherEnabled.value == false)
-                                  ? kprimaryDisabledTextColor
-                                  : themeController.primaryTextColor.value,
-                            ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.chevron_right,
-                  color: kprimaryDisabledTextColor,
-                  size: 20,
-                ),
-              ],
-            ),
+        trailing: Flexible(
+          flex: 3,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                child: Obx(() {
+                  String text = controller.weatherTypes.value;
+                  if (text.length > 20) {
+                    // Get first weather type and add ellipsis
+                    text = text.split(',').first.trim() + '...';
+                  }
+                  return Text(
+                    text,
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: (controller.isWeatherEnabled.value == false)
+                              ? kprimaryDisabledTextColor
+                              : themeController.primaryTextColor.value,
+                          fontSize: 13.0,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }),
+              ),
+              const SizedBox(width: 4),
+              const Icon(
+                Icons.chevron_right,
+                color: kprimaryDisabledTextColor,
+                size: 18,
+              ),
+            ],
           ),
         ),
       ),
@@ -223,11 +227,11 @@ class WeatherOption extends StatelessWidget {
         child: Row(
           children: [
             Obx(
-              () => Checkbox.adaptive(
+                  () => Checkbox.adaptive(
                 side: BorderSide(
                   width: width * 0.0015,
                   color:
-                      themeController.primaryTextColor.value.withOpacity(0.5),
+                  themeController.primaryTextColor.value.withOpacity(0.5),
                 ),
                 value: controller.selectedWeather.contains(type),
                 activeColor: kprimaryColor.withOpacity(0.8),
@@ -244,8 +248,8 @@ class WeatherOption extends StatelessWidget {
             Text(
               label.tr,
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontSize: 15,
-                  ),
+                fontSize: 15,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ],
