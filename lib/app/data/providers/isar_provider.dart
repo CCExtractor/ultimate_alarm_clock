@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
@@ -12,7 +13,6 @@ import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:sqflite/sqflite.dart';
 
 class IsarDb {
   static final IsarDb _instance = IsarDb._internal();
@@ -177,7 +177,8 @@ class IsarDb {
   static Future<ProfileModel?> getProfile(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
     print('$a appkle');
     return a;
   }
@@ -196,7 +197,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }
@@ -372,7 +374,7 @@ class IsarDb {
       'profileName': currentProfileName,
       'profileData': ProfileModel.toMap(currentProfile!),
       'alarmData': alarmMaps,
-      'owner': ''
+      'owner': '',
     };
     return profileSet;
   }
@@ -633,30 +635,35 @@ class IsarDb {
     if (ringtoneCount.isEmpty) {
       await db.writeTxn(() async {
         await db.ringtoneModels.importJson([
-          {'isarId' : fastHash('Digital Alarm 1'),
+          {
+            'isarId': fastHash('Digital Alarm 1'),
             'ringtoneName': 'Digital Alarm 1',
             'ringtonePath': 'ringtones/digialarm.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('Digital Alarm 2'),
+          {
+            'isarId': fastHash('Digital Alarm 2'),
             'ringtoneName': 'Digital Alarm 2',
             'ringtonePath': 'ringtones/digialarm2.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('Digital Alarm 3'),
+          {
+            'isarId': fastHash('Digital Alarm 3'),
             'ringtoneName': 'Digital Alarm 3',
             'ringtonePath': 'ringtones/digialarm3.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('Mystery'),
+          {
+            'isarId': fastHash('Mystery'),
             'ringtoneName': 'Mystery',
             'ringtonePath': 'ringtones/mystery.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
-          {'isarId' : fastHash('New Day'),
+          {
+            'isarId': fastHash('New Day'),
             'ringtoneName': 'New Day',
             'ringtonePath': 'ringtones/newday.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
         ]);
       });
