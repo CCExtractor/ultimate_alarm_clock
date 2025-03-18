@@ -65,7 +65,7 @@ class SortOptionsView extends StatelessWidget {
                 Text(
                   'Sort By'.tr,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: themeController.secondaryTextColor.value,
+                        color: themeController.primaryTextColor.value,
                       ),
                 ),
                 const SizedBox(height: 5),
@@ -103,7 +103,7 @@ class SortOptionsView extends StatelessWidget {
                   Text(
                     'Direction'.tr,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: themeController.secondaryTextColor.value,
+                          color: themeController.primaryTextColor.value,
                         ),
                   ),
                   const SizedBox(height: 5),
