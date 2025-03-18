@@ -12,7 +12,6 @@ import 'package:fl_location/fl_location.dart';
 
 import '../../../data/providers/get_storage_provider.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 
 class SettingsController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
@@ -21,6 +20,7 @@ class SettingsController extends GetxController {
   final _hapticFeedbackKey = 'haptic_feedback';
   var is24HrsEnabled = false.obs;
   final _f24HrsEnabledKey = '24_hours_format';
+  final RxInt challengeTimeLimit = 30.obs;
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
   var currentLanguage = 'en_US'.obs;
@@ -64,12 +64,6 @@ class SettingsController extends GetxController {
     },
   };
 
-  // ChallengeSettingsController properties
-  final RxInt challengeTimeLimit = 30.obs;
-  AlarmModel? alarmRecord;
-
-  SettingsController({this.alarmRecord});
-
   @override
   void onInit() async {
     super.onInit();
@@ -83,27 +77,17 @@ class SettingsController extends GetxController {
   }
 
   void _loadChallengeSettings() async {
+    // Store the retrieved challenge time limit from secure storage
     int storedTimeLimit = await _secureStorageProvider.readChallengeTimeLimit();
     challengeTimeLimit.value = storedTimeLimit;
-    if (alarmRecord != null) {
-      alarmRecord!.challengeTimeLimit = storedTimeLimit;
-    }
   }
 
   void updateTimeLimit(int newLimit) {
     challengeTimeLimit.value = newLimit;
-    if (alarmRecord != null) {
-      alarmRecord!.challengeTimeLimit = newLimit;
-    }
     _secureStorageProvider.writeChallengeTimeLimit(newLimit);
   }
 
-  void saveSettings() {
-    if (alarmRecord != null) {
-      alarmRecord!.challengeTimeLimit = challengeTimeLimit.value;
-    }
-    _secureStorageProvider.writeChallengeTimeLimit(challengeTimeLimit.value);
-  }
+  // Logins user using GoogleSignIn
   Future<void> logoutGoogle() async {
     await GoogleCloudProvider.logoutGoogle();
     await SecureStorageProvider().deleteUserModel();
@@ -120,9 +104,11 @@ class SettingsController extends GetxController {
   getKey(ApiKeys key) async {
     return await _secureStorageProvider.retrieveApiKey(key);
   }
+  
   addWeatherState(String weatherState) async {
     await _secureStorageProvider.storeWeatherState(weatherState);
   }
+  
   getWeatherState() async {
     return await _secureStorageProvider.retrieveWeatherState();
   }
@@ -186,10 +172,19 @@ class SettingsController extends GetxController {
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
     currentLanguage.value = await storage.readCurrentLanguage();
+
+    // Store the retrieved API key from the flutter secure storage
     String? retrievedAPIKey = await getKey(ApiKeys.openWeatherMap);
+
+    // If the API key has been previously stored there
     if (retrievedAPIKey != null) {
+      // Assign the controller's text to the retrieved API key so that
+      // when the user comes to update their API key, they're able
+      // to see the previously added API key
       apiKey.text = retrievedAPIKey;
     }
+
+    // Store the retrieved weather state from the flutter secure storage
     String? retrievedWeatherState = await getWeatherState();
     if (retrievedWeatherState != null) {
       weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(

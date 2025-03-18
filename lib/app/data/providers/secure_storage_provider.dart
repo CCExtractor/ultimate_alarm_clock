@@ -215,12 +215,12 @@ class SecureStorageProvider {
 
   
   Future<void> writeChallengeTimeLimit(int timeLimit) async {
-    await _secureStorage.write(key: 'challengeTimeLimit', value: timeLimit.toString());
-  }
+  await _secureStorage.write(key: 'challengeTimeLimit', value: timeLimit.toString());
+}
 
   
   Future<int> readChallengeTimeLimit() async {
-    String? timeLimit = await _secureStorage.read(key: 'challengeTimeLimit');
-    return timeLimit != null ? int.parse(timeLimit) : 30;
-  }
+  String? timeLimit = await _secureStorage.read(key: 'challengeTimeLimit');
+  return timeLimit != null ? int.parse(timeLimit) : 30;
+}
 }

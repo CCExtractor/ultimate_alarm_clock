@@ -155,7 +155,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                       ),
                                       Obx(
                                         () => Icon(
-                                          controller.isMathsOngoing.value ==
+                                          controller.isQrOngoing.value ==
                                                   Status.completed
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,

@@ -56,7 +56,7 @@ class TimeLimitView extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      controller.saveSettings();
+                      // controller.saveSettings();
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(

@@ -58,10 +58,6 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
-
-  // New optional field for a custom challenge time limit in seconds.
-  int? challengeTimeLimit;
-
   @ignore
   Map? offsetDetails;
 
@@ -113,7 +109,6 @@ class AlarmModel {
     required this.guardianTimer,
     required this.guardian,
     required this.isCall,
-    this.challengeTimeLimit,
   });
 
   AlarmModel.fromDocumentSnapshot({
@@ -183,11 +178,6 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
-
-    // Read the optional challengeTimeLimit if available.
-    challengeTimeLimit = documentSnapshot.data().toString().contains('challengeTimeLimit')
-        ? documentSnapshot['challengeTimeLimit']
-        : null;
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -240,7 +230,6 @@ class AlarmModel {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
-      challengeTimeLimit: map['challengeTimeLimit'],
     );
   }
 
@@ -293,7 +282,6 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
-      'challengeTimeLimit': challengeTimeLimit,
     };
   }
 
@@ -349,9 +337,6 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
-
-    // Read challengeTimeLimit if available.
-    challengeTimeLimit = alarmData['challengeTimeLimit'];
   }
 
   String toJson() {
@@ -407,7 +392,6 @@ class AlarmModel {
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
       'ringOn': alarmRecord.ringOn,
-      'challengeTimeLimit': alarmRecord.challengeTimeLimit,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
@@ -418,8 +402,11 @@ class AlarmModel {
   }
 
   String boolListToString(List<bool> boolList) {
+    // Rotate the list to start with Sunday
     var rotatedList =
         [boolList.last] + boolList.sublist(0, boolList.length - 1);
+      
+    // Convert the list of bools to a string of 1s and 0s
     return rotatedList.map((b) => b ? '1' : '0').join();
   }
 
