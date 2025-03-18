@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
-import 'package:ultimate_alarm_clock/app/data/models/sort_mode.dart';
+import 'package:ultimate_alarm_clock/app/data/models/sort_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
@@ -82,7 +82,6 @@ class SettingsController extends GetxController {
     }
     _loadPreference();
     
-    // Load sort preferences
     String? savedSortMode = await _secureStorageProvider.readSortMode(_sortModeKey);
     String? savedSortDirection = await _secureStorageProvider.readSortDirection(_sortDirectionKey);
     

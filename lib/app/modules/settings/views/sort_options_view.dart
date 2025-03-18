@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ultimate_alarm_clock/app/data/models/sort_mode.dart';
+import 'package:ultimate_alarm_clock/app/data/models/sort_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -40,7 +40,7 @@ class SortOptionsView extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 15),
-              // Enable/Disable sorting switch
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,7 +60,7 @@ class SortOptionsView extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              // Sort Mode Dropdown
+              
               if (controller.isSortedAlarmListEnabled.value) ...[
                 Text(
                   'Sort By'.tr,
@@ -98,7 +98,7 @@ class SortOptionsView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                // Sort Direction
+              
                 if (controller.currentSortMode.value != AlarmSortMode.customOrder) ...[
                   Text(
                     'Direction'.tr,

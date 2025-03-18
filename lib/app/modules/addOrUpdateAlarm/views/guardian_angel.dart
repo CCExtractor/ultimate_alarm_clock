@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:intl_phone_number_input/src/models/country_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class GuardianAngel extends GetView<AddOrUpdateAlarmController> {
+class GuardianAngel extends StatelessWidget {
   const GuardianAngel({
     super.key,
     required this.controller,
@@ -16,6 +17,12 @@ class GuardianAngel extends GetView<AddOrUpdateAlarmController> {
 
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;
+
+  static int orderedCountryCode(Country countryA, Country countryB) {
+    String dialCodeA = countryA.dialCode?.replaceAll('+', '') ?? '0';
+    String dialCodeB = countryB.dialCode?.replaceAll('+', '') ?? '0';
+    return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,29 +49,15 @@ class GuardianAngel extends GetView<AddOrUpdateAlarmController> {
                           padding: const EdgeInsets.all(8.0),
                           child: InternationalPhoneNumberInput(
                             textFieldController: controller.contactTextEditingController,
-                            onInputChanged: (PhoneNumber number) {
-                              controller.guardian.value = number.phoneNumber ?? '';
-                            },
+                            onInputChanged: (value) {},
+                            onInputValidated: (value) {},
+                            spaceBetweenSelectorAndTextField: 0,
                             selectorConfig: const SelectorConfig(
-                              selectorType: PhoneInputSelectorType.DIALOG,
                               showFlags: true,
                               setSelectorButtonAsPrefixIcon: true,
                               leadingPadding: 0,
                               trailingSpace: false,
-                            ),
-                            ignoreBlank: false,
-                            autoValidateMode: AutovalidateMode.disabled,
-                            selectorTextStyle: TextStyle(color: themeController.primaryTextColor.value),
-                            formatInput: true,
-                            keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                            inputDecoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(bottom: 15, left: 0),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: themeController.primaryTextColor.value),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: themeController.primaryTextColor.value),
-                              ),
+                              countryComparator: orderedCountryCode,
                             ),
                           ),
                         ),

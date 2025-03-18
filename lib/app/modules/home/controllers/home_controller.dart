@@ -19,7 +19,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import 'package:ultimate_alarm_clock/app/data/models/sort_mode.dart';
+import 'package:ultimate_alarm_clock/app/data/models/sort_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 import '../../../data/models/profile_model.dart';
@@ -154,8 +154,6 @@ class HomeController extends GetxController {
           ...latestFirestoreAlarms,
           ...latestIsarAlarms,
         ];
-
-        // Use the proper sorting functionality
         sortAlarms(alarms);
 
         return alarms;
@@ -679,8 +677,6 @@ class HomeController extends GetxController {
     if (!settingsController.isSortedAlarmListEnabled.value) {
       return;
     }
-
-    // Create a copy of the list to sort
     List<AlarmModel> sortedAlarms = List.from(alarms);
 
     switch (settingsController.currentSortMode.value) {
@@ -700,28 +696,23 @@ class HomeController extends GetxController {
         _lastModifiedSort(sortedAlarms);
         break;
       case AlarmSortMode.customOrder:
-        // Custom order is handled by drag and drop
         break;
     }
-
-    // Apply reverse sort if direction is descending
     if (settingsController.currentSortDirection.value == SortDirection.descending) {
       sortedAlarms = sortedAlarms.reversed.toList();
     }
-
-    // Clear and update the original list
     alarms.clear();
     alarms.addAll(sortedAlarms);
   }
 
   void _defaultSort(List<AlarmModel> alarms) {
     alarms.sort((a, b) {
-      // First sort by isEnabled
+      
       if (a.isEnabled != b.isEnabled) {
         return a.isEnabled ? -1 : 1;
       }
 
-      // Then sort by upcoming time
+      
       return _compareUpcomingTime(a, b);
     });
   }
@@ -740,12 +731,11 @@ class HomeController extends GetxController {
 
   void _creationDateSort(List<AlarmModel> alarms) {
     alarms.sort((a, b) {
-      return b.alarmID.compareTo(a.alarmID); // Assuming alarmID is sequential
+      return b.alarmID.compareTo(a.alarmID);
     });
   }
 
   void _lastModifiedSort(List<AlarmModel> alarms) {
-    // Assuming we add lastModifiedDate to AlarmModel
     alarms.sort((a, b) {
       return b.lastModifiedDate.compareTo(a.lastModifiedDate);
     });
@@ -755,11 +745,11 @@ class HomeController extends GetxController {
     int aUpcomingTime = a.minutesSinceMidnight;
     int bUpcomingTime = b.minutesSinceMidnight;
 
-    // Check if alarm repeats on any day
+    
     bool aRepeats = a.days.any((day) => day);
     bool bRepeats = b.days.any((day) => day);
 
-    // Calculate next occurrence for repeating alarms
+    
     if (aRepeats) {
       aUpcomingTime = _calculateNextOccurrence(a);
     } else if (aUpcomingTime <= DateTime.now().hour * 60 + DateTime.now().minute) {
@@ -780,30 +770,28 @@ class HomeController extends GetxController {
     int minutesSinceMidnight = alarm.minutesSinceMidnight;
     int currentTimeInMinutes = DateTime.now().hour * 60 + DateTime.now().minute;
 
-    // Find the next day when the alarm is scheduled
+    
     for (int i = 0; i < alarm.days.length; i++) {
       int dayIndex = (currentDay + i) % alarm.days.length;
       if (alarm.days[dayIndex]) {
         if (i == 0 && minutesSinceMidnight <= currentTimeInMinutes) {
-          continue; // Skip today if alarm time has passed
+          continue; 
         }
         return minutesSinceMidnight + i * Duration.minutesPerDay;
       }
     }
 
-    // If we get here, the next occurrence is on the first enabled day next week
     for (int i = 0; i < alarm.days.length; i++) {
       if (alarm.days[i]) {
         return minutesSinceMidnight + (7 - currentDay + i) * Duration.minutesPerDay;
       }
     }
 
-    return minutesSinceMidnight; // Fallback
+    return minutesSinceMidnight;
   }
 
-  // Add this method to refresh the alarm list when sort settings change
   void refreshAlarmList() {
-    // Trigger a rebuild of the alarm list
+    
     update();
   }
 }

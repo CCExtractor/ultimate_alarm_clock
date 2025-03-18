@@ -1,10 +1,10 @@
 enum AlarmSortMode {
-  defaultSort, // Current implementation (enabled + next occurrence)
-  timeOfDay, // Sort by time regardless of enabled status
-  label, // Alphabetical sorting by label
-  creationDate, // Most recently created first
-  lastModified, // Most recently modified first
-  customOrder; // Manual drag-and-drop ordering
+  defaultSort, 
+  timeOfDay, 
+  label, 
+  creationDate,
+  lastModified,
+  customOrder;
 
   String get displayName {
     switch (this) {

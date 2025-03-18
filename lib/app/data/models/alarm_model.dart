@@ -185,8 +185,6 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
-    
-    // Handle lastModifiedDate field
     lastModifiedDate = documentSnapshot['lastModifiedDate'] != null
         ? (documentSnapshot['lastModifiedDate'] as firestore.Timestamp).toDate()
         : DateTime.now();
