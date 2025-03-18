@@ -185,6 +185,11 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    
+    // Handle lastModifiedDate field
+    lastModifiedDate = documentSnapshot['lastModifiedDate'] != null
+        ? (documentSnapshot['lastModifiedDate'] as firestore.Timestamp).toDate()
+        : DateTime.now();
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -400,7 +405,8 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'lastModifiedDate': firestore.Timestamp.fromDate(alarmRecord.lastModifiedDate),
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

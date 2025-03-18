@@ -7,7 +7,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class GuardianAngel extends StatelessWidget {
+class GuardianAngel extends GetView<AddOrUpdateAlarmController> {
   const GuardianAngel({
     super.key,
     required this.controller,
@@ -19,93 +19,97 @@ class GuardianAngel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if using Firestore and the current user is the owner
-    // and if not using, just show the tile
-
     return Column(
       children: [
         ListTile(
           onTap: () async {
-      var phonePerm =
-          await Permission.phone.request().isGranted;
-      var smsPerm = await Permission.sms.request().isGranted;
+            var phonePerm = await Permission.phone.request().isGranted;
+            var smsPerm = await Permission.sms.request().isGranted;
 
-      if (phonePerm && smsPerm) {
-        Get.dialog(
-          Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-            ),
-            backgroundColor: themeController
-                .secondaryBackgroundColor.value,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InternationalPhoneNumberInput(
-                      textFieldController: controller
-                          .contactTextEditingController,
-                      onInputChanged: (value) {},
-                      onInputValidated: (value) {},
-                      spaceBetweenSelectorAndTextField: 0,
-                      selectorConfig: const SelectorConfig(
-                        showFlags: true,
-                        setSelectorButtonAsPrefixIcon: true,
-                        leadingPadding: 0,
-                        trailingSpace: false,
-                        countryComparator: orderedCountryCode,
-                      ),
-                    ),
+            if (phonePerm && smsPerm) {
+              Get.dialog(
+                Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: controller
-                          .homeController.scalingFactor *
-                          8,
-                      horizontal: controller
-                          .homeController.scalingFactor *
-                          4,
-                    ),
-                    child: Row(
+                  backgroundColor: themeController.secondaryBackgroundColor.value,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Option(0, Icons.sms, 'Text'),
-                        Option(1, Icons.call, 'Call'),
-                        const Spacer(),
-                        Submit(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: InternationalPhoneNumberInput(
+                            textFieldController: controller.contactTextEditingController,
+                            onInputChanged: (PhoneNumber number) {
+                              controller.guardian.value = number.phoneNumber ?? '';
+                            },
+                            selectorConfig: const SelectorConfig(
+                              selectorType: PhoneInputSelectorType.DIALOG,
+                              showFlags: true,
+                              setSelectorButtonAsPrefixIcon: true,
+                              leadingPadding: 0,
+                              trailingSpace: false,
+                            ),
+                            ignoreBlank: false,
+                            autoValidateMode: AutovalidateMode.disabled,
+                            selectorTextStyle: TextStyle(color: themeController.primaryTextColor.value),
+                            formatInput: true,
+                            keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                            inputDecoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(bottom: 15, left: 0),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: themeController.primaryTextColor.value),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: themeController.primaryTextColor.value),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: controller.homeController.scalingFactor * 8,
+                            horizontal: controller.homeController.scalingFactor * 4,
+                          ),
+                          child: Row(
+                            children: [
+                              Option(0, Icons.sms, 'Text'),
+                              Option(1, Icons.call, 'Call'),
+                              const Spacer(),
+                              Submit(),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }
-    },
-    title: Row(
-      children: [
-        FittedBox(
-          fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-              child: Obx(
-                () => Text(
-                  'Guardian Angel'.tr,
-                  style: TextStyle(
-                    color: themeController.primaryTextColor.value,
+                ),
+              );
+            }
+          },
+          title: Row(
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Obx(
+                  () => Text(
+                    'Guardian Angel'.tr,
+                    style: TextStyle(
+                      color: themeController.primaryTextColor.value,
+                    ),
                   ),
                 ),
               ),
-             ),
               Obx(
                 () => IconButton(
                   icon: Icon(
-                      Icons.info_sharp,
-                      size: 21,
-                      color: themeController.primaryTextColor.value.withOpacity(0.3),
-                    ),
+                    Icons.info_sharp,
+                    size: 21,
+                    color: themeController.primaryTextColor.value.withOpacity(0.3),
+                  ),
                   onPressed: () {
                     Utils.showModal(
                       context: context,

@@ -1075,6 +1075,7 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      lastModifiedDate: DateTime.now(),
     );
   }
 
@@ -1351,7 +1352,6 @@ class AddOrUpdateAlarmController extends GetxController {
     storage.writeProfile(profileModel.profileName);
     homeController.writeProfileName(profileModel.profileName);
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1360,3 +1360,4 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+}

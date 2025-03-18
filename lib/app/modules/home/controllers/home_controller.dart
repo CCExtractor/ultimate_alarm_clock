@@ -155,73 +155,8 @@ class HomeController extends GetxController {
           ...latestIsarAlarms,
         ];
 
-        if (isSortedAlarmListEnabled.value) {
-          alarms.sort((a, b) {
-            final String timeA = a.alarmTime;
-            final String timeB = b.alarmTime;
-
-            // Convert the alarm time strings to DateTime objects for comparison
-            DateTime dateTimeA = DateFormat('HH:mm').parse(timeA);
-            DateTime dateTimeB = DateFormat('HH:mm').parse(timeB);
-
-            // Compare the DateTime objects to sort in ascending order
-            return dateTimeA.compareTo(dateTimeB);
-          });
-        } else {
-          alarms.sort((a, b) {
-            // First sort by isEnabled
-            if (a.isEnabled != b.isEnabled) {
-              return a.isEnabled ? -1 : 1;
-            }
-
-            // Then sort by upcoming time
-            int aUpcomingTime = a.minutesSinceMidnight;
-            int bUpcomingTime = b.minutesSinceMidnight;
-
-            // Check if alarm repeats on any day
-            bool aRepeats = a.days.any((day) => day);
-            bool bRepeats = b.days.any((day) => day);
-
-            // If alarm repeats on any day, find the next up+coming day
-            if (aRepeats) {
-              int currentDay = DateTime.now().weekday - 1;
-              for (int i = 0; i < a.days.length; i++) {
-                int dayIndex = (currentDay + i) % a.days.length;
-                if (a.days[dayIndex]) {
-                  aUpcomingTime += i * Duration.minutesPerDay;
-                  break;
-                }
-              }
-            } else {
-              // If alarm is one-time and has already passed, set upcoming time
-              // to next day
-              if (aUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
-                aUpcomingTime += Duration.minutesPerDay;
-              }
-            }
-
-            if (bRepeats) {
-              int currentDay = DateTime.now().weekday - 1;
-              for (int i = 0; i < b.days.length; i++) {
-                int dayIndex = (currentDay + i) % b.days.length;
-                if (b.days[dayIndex]) {
-                  bUpcomingTime += i * Duration.minutesPerDay;
-                  break;
-                }
-              }
-            } else {
-              // If alarm is one-time and has already passed, set upcoming time
-              // to next day
-              if (bUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
-                bUpcomingTime += Duration.minutesPerDay;
-              }
-            }
-
-            return aUpcomingTime.compareTo(bUpcomingTime);
-          });
-        }
+        // Use the proper sorting functionality
+        sortAlarms(alarms);
 
         return alarms;
       },
@@ -745,21 +680,24 @@ class HomeController extends GetxController {
       return;
     }
 
+    // Create a copy of the list to sort
+    List<AlarmModel> sortedAlarms = List.from(alarms);
+
     switch (settingsController.currentSortMode.value) {
       case AlarmSortMode.defaultSort:
-        _defaultSort(alarms);
+        _defaultSort(sortedAlarms);
         break;
       case AlarmSortMode.timeOfDay:
-        _timeOfDaySort(alarms);
+        _timeOfDaySort(sortedAlarms);
         break;
       case AlarmSortMode.label:
-        _labelSort(alarms);
+        _labelSort(sortedAlarms);
         break;
       case AlarmSortMode.creationDate:
-        _creationDateSort(alarms);
+        _creationDateSort(sortedAlarms);
         break;
       case AlarmSortMode.lastModified:
-        _lastModifiedSort(alarms);
+        _lastModifiedSort(sortedAlarms);
         break;
       case AlarmSortMode.customOrder:
         // Custom order is handled by drag and drop
@@ -768,8 +706,12 @@ class HomeController extends GetxController {
 
     // Apply reverse sort if direction is descending
     if (settingsController.currentSortDirection.value == SortDirection.descending) {
-      alarms = alarms.reversed.toList();
+      sortedAlarms = sortedAlarms.reversed.toList();
     }
+
+    // Clear and update the original list
+    alarms.clear();
+    alarms.addAll(sortedAlarms);
   }
 
   void _defaultSort(List<AlarmModel> alarms) {
