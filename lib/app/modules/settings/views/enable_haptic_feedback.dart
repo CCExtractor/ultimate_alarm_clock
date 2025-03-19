@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class EnableHapticFeedback extends StatefulWidget {
   const EnableHapticFeedback({
@@ -35,7 +35,7 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
             widget.themeController.currentTheme.value == ThemeMode.light,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 20),
+        padding: containerPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

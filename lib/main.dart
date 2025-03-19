@@ -1,15 +1,16 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-
-import 'package:ultimate_alarm_clock/app/utils/language.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/local_notification.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
+import 'package:ultimate_alarm_clock/app/utils/language.dart';
+
 import 'app/routes/app_pages.dart';
 
 Locale? loc;
@@ -28,6 +29,7 @@ void main() async {
 
   final storage = Get.find<GetStorageProvider>();
   loc = await storage.readLocale();
+  await LocalNotification.initNotification();
 
   final ThemeController themeController = Get.put(ThemeController());
 
@@ -54,7 +56,6 @@ void main() async {
   );
 }
 
-
 class UltimateAlarmClockApp extends StatelessWidget {
   const UltimateAlarmClockApp({super.key});
   @override
@@ -68,7 +69,7 @@ class UltimateAlarmClockApp extends StatelessWidget {
       getPages: AppPages.routes,
       translations: AppTranslations(),
       locale: loc,
-      fallbackLocale: Locale('en', 'US'),
+      fallbackLocale: const Locale('en', 'US'),
       builder: (BuildContext context, Widget? error) {
         ErrorWidget.builder = (FlutterErrorDetails? error) {
           return CustomErrorScreen(errorDetails: error!);

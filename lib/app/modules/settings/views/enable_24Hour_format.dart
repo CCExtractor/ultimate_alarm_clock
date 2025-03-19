@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class Enable24HourFormat extends StatefulWidget {
   const Enable24HourFormat({
@@ -31,10 +31,11 @@ class _Enable24HourFormatState extends State<Enable24HourFormat> {
       width: widget.width * 0.91,
       height: widget.height * 0.1,
       decoration: Utils.getCustomTileBoxDecoration(
-        isLightMode: widget.themeController.currentTheme.value == ThemeMode.light,
+        isLightMode:
+            widget.themeController.currentTheme.value == ThemeMode.light,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 20),
+        padding: containerPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -41,7 +41,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
               widget.themeController.currentTheme.value == ThemeMode.light,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 20),
+          padding: containerPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
