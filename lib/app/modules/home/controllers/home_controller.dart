@@ -511,7 +511,7 @@ class HomeController extends GetxController {
 
         try {
           if (isSharedAlarmEnabled) {
-            // Store alarm before deletion for potential undo
+            
             AlarmModel? alarmToDelete = await FirestoreDb.getAlarm(userModel.value, alarmId);
             if (alarmToDelete != null) {
               deletedAlarms.add(alarmToDelete);
@@ -519,7 +519,7 @@ class HomeController extends GetxController {
               successCount++;
             }
           } else {
-            // Store alarm before deletion for potential undo
+            
             AlarmModel? alarmToDelete = await IsarDb.getAlarm(alarmId);
             if (alarmToDelete != null) {
               deletedAlarms.add(alarmToDelete);
@@ -551,7 +551,7 @@ class HomeController extends GetxController {
           ),
           mainButton: TextButton(
             onPressed: () async {
-              // Restore all deleted alarms
+              
               for (var alarm in deletedAlarms) {
                 if (alarm.isSharedAlarmEnabled) {
                   await FirestoreDb.addAlarm(userModel.value, alarm);
@@ -559,7 +559,7 @@ class HomeController extends GetxController {
                   await IsarDb.addAlarm(alarm);
                 }
               }
-              // Refresh the view after restoring
+              
               refreshTimer = true;
               refreshUpcomingAlarms();
             },
@@ -570,7 +570,7 @@ class HomeController extends GetxController {
           ),
         );
 
-        // Clear selection after successful deletion
+        
         selectedAlarmSet.clear();
         numberOfAlarmsSelected.value = 0;
       } else {

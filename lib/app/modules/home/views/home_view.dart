@@ -366,7 +366,7 @@ class HomeView extends GetView<HomeController> {
                                                             () => InkWell(
                                                               onTap: () async {
                                                                 if (controller.numberOfAlarmsSelected.value > 0) {
-                                                                  // Show confirmation dialog
+                                                                  
                                                                   bool confirm = await Get.defaultDialog(
                                                                     title: 'Confirmation'.tr,
                                                                     titleStyle: Theme.of(context).textTheme.displaySmall,
@@ -415,7 +415,7 @@ class HomeView extends GetView<HomeController> {
                                                                   );
 
                                                                   if (confirm == true) {
-                                                                    // Deleting the alarms
+                                                                    
                                                                     await controller.deleteAlarms();
 
                                                                     // Closing the multiple select mode
@@ -425,7 +425,7 @@ class HomeView extends GetView<HomeController> {
                                                                     controller.numberOfAlarmsSelected.value = 0;
                                                                     controller.selectedAlarmSet.clear();
                                                                     
-                                                                    // After deleting alarms, refreshing to schedule latest one
+                                                                    
                                                                     controller.refreshTimer = true;
                                                                     controller.refreshUpcomingAlarms();
                                                                   }
@@ -566,7 +566,7 @@ class HomeView extends GetView<HomeController> {
                                                       alarm,
                                                     );
                                                   }
-                                                  // Refresh the view regardless of confirmation
+                                                  
                                                   Get.offNamedUntil(
                                                     '/bottom-navigation-bar',
                                                     (route) =>

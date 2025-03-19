@@ -67,7 +67,7 @@ class _ToggleButtonState extends State<ToggleButton> {
               // Reduce the number of alarms selected
               widget.controller.numberOfAlarmsSelected.value--;
 
-              // Remove the alarm from selected set
+              
               widget.controller.selectedAlarmSet.removeWhere(
                 (element) => 
                   alarm.isSharedAlarmEnabled 
@@ -85,12 +85,12 @@ class _ToggleButtonState extends State<ToggleButton> {
                 !widget.controller.isAllAlarmsSelected.value;
 
             if (widget.controller.isAllAlarmsSelected.value) {
-              // Select all alarms
+              
               widget.controller.addAllAlarmsToSelectedAlarmSet();
               widget.controller.numberOfAlarmsSelected.value = 
                   widget.controller.alarmListPairs.first.length;
             } else {
-              // Deselect all alarms
+              
               widget.controller.removeAllAlarmsFromSelectedAlarmSet();
               widget.controller.numberOfAlarmsSelected.value = 0;
             }
