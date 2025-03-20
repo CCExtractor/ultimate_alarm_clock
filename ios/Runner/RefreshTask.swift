@@ -28,7 +28,7 @@ class RefreshAppContentsOperation: Operation {
     private func fetchDataAndUpdate() {
         
         NSLog("Log:Fetching new data...")
-        self.playDefaultAlarm()
+        // self.playDefaultAlarm()
         NSLog("Log:Data updated successfully!")
     }
     
