@@ -58,6 +58,32 @@ class IsarDb {
     return db;
   }
 
+  Future<Database?> getHistorySQLiteDatabase() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/history.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE alarmHistory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            didAlarmRing INTEGER,
+            alarmTime TEXT NOT NULL,
+            reason TEXT,
+            activityInterval INTEGER,
+            location TEXT,
+            locationAtAlarmTime TEXT,
+            distance INTEGER,
+            weatherTypes TEXT,
+            weatherAtAlarmTime TEXT   
+          )
+        ''');
+      },
+    );
+    return db;
+  }
+
   void _onCreate(Database db, int version) async {
     // Create tables for alarms and ringtones (modify column types as needed)
     await db.execute('''
@@ -162,6 +188,14 @@ class IsarDb {
     });
     return profileModel;
   }
+
+  static Future<List<Map<String, dynamic>>> getAllHistory() async {
+    final db = await IsarDb().getHistorySQLiteDatabase();
+    if (db == null) return [];
+
+    return await db.query('alarmHistory');
+  }
+
 
   static Stream<List<ProfileModel>> getProfiles() async* {
     try {
