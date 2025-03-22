@@ -124,14 +124,14 @@ Widget buildEndDrawer(BuildContext context) {
             },
             contentPadding: const EdgeInsets.only(left: 20, right: 44),
             title: Text(
-              'Alarm Histroy'.tr,
+              'Alarm History'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.8),
                   ),
             ),
             leading: Icon(
-              Icons.info_outline,
+              Icons.history,
               size: 26,
               color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),

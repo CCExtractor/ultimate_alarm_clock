@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -20,6 +21,10 @@ import kotlinx.coroutines.runBlocking
 import java.util.Timer
 import kotlin.concurrent.schedule
 import android.content.pm.ServiceInfo
+import android.database.sqlite.SQLiteDatabase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class WeatherFetcherService() : Service() {
@@ -78,6 +83,9 @@ class WeatherFetcherService() : Service() {
         return location
     }
     suspend fun fetchWeather(){
+        val dbHelper = HistoryDbHelper(this@WeatherFetcherService)
+        val historyDb: SQLiteDatabase = dbHelper.writableDatabase
+
         var currentWeather = ""
         val request = GsonRequest(OPEN_METEO_URL, WeatherModel::class.java,
             { response ->
@@ -101,6 +109,16 @@ class WeatherFetcherService() : Service() {
                 Log.d("Weather",currentWeather)
                 if(weatherTypes.contains(currentWeather)){
                     shouldRing = false
+
+                    val values = ContentValues().apply {
+                        put("didAlarmRing", 0)
+                        put("alarmTime", getCurrentTime())
+                        put("reason", "weather")
+                        put("weatherTypes", weatherTypes)
+                        put("weatherAtAlarmTime", currentWeather)
+                    }
+                    historyDb.insert("alarmHistory", null, values)
+                    historyDb.close()
 
                     if(shouldRing==false)
                     
@@ -128,6 +146,17 @@ class WeatherFetcherService() : Service() {
                             Timer().schedule(9000) {
                                 println("ANDROID STARTING APP")
                                 this@WeatherFetcherService.startActivity(flutterIntent)
+
+                                val values = ContentValues().apply {
+                                    put("didAlarmRing", 1)
+                                    put("alarmTime", getCurrentTime())
+                                    put("reason", "weather")
+                                    put("weatherTypes", weatherTypes)
+                                    put("weatherAtAlarmTime", currentWeather)
+                                }
+                                historyDb.insert("alarmHistory", null, values)
+                                historyDb.close()
+
                                 Timer().schedule(3000) {
                                     stopSelf()
                                 }
@@ -189,6 +218,11 @@ class WeatherFetcherService() : Service() {
             .setCategory(Notification.CATEGORY_SERVICE)
 
         return notification.build()
+    }
+
+    private fun getCurrentTime(): String {
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        return formatter.format(Date())
     }
 
     override fun onDestroy() {

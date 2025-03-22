@@ -5,10 +5,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.content.SharedPreferences
+import android.database.sqlite.SQLiteDatabase
 import android.hardware.display.DisplayManager
 import android.os.IBinder
 import android.os.SystemClock.sleep
@@ -17,6 +19,9 @@ import androidx.core.app.NotificationCompat
 import com.ultimate_alarm_clock.Utilities.LocationHelper
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 import kotlin.math.atan2
@@ -38,6 +43,9 @@ class LocationFetcherService : Service() {
 
         sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+
+        val dbHelper = HistoryDbHelper(this@LocationFetcherService)
+        val historyDb: SQLiteDatabase = dbHelper.writableDatabase
 
         createNotificationChannel()
         startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
@@ -90,16 +98,41 @@ class LocationFetcherService : Service() {
                 }
 
             Timer().schedule(9000){
-            println("ANDROID STARTING APP")
-            this@LocationFetcherService.startActivity(flutterIntent)
+                println("ANDROID STARTING APP")
+                this@LocationFetcherService.startActivity(flutterIntent)
+
+                var locationAtAlarmTime = destinationLatitude.toString() + "," + destinationLongitude.toString()
+                var currLocation = currentLatitude.toString() + "," + currentLongitude.toString()
+                val values = ContentValues().apply {
+                    put("didAlarmRing", 1)
+                    put("alarmTime", getCurrentTime())
+                    put("reason", "location")
+                    put("location", currLocation)
+                    put("locationAtAlarmTime", locationAtAlarmTime)
+                    put("distance", distance.toInt())
+                }
+                historyDb.insert("alarmHistory", null, values)
+                historyDb.close()
+
                 Timer().schedule(3000){
                     stopSelf()
                 }
             }
-
-
         }
         if(distance < 500.0){
+            var locationAtAlarmTime = destinationLatitude.toString() + "," + destinationLongitude.toString()
+            var currLocation = currentLatitude.toString() + "," + currentLongitude.toString()
+            val values = ContentValues().apply {
+                put("didAlarmRing", 0)
+                put("alarmTime", getCurrentTime())
+                put("reason", "location")
+                put("location", currLocation)
+                put("locationAtAlarmTime", locationAtAlarmTime)
+                put("distance", distance.toInt())
+            }
+            historyDb.insert("alarmHistory", null, values)
+            historyDb.close()
+
             Timer().schedule(9000){
                 Timer().schedule(3000){
                     stopSelf()
@@ -183,6 +216,11 @@ class LocationFetcherService : Service() {
 
         val distance = earthRadius * c * 1000 // Convert to meters
         return distance
+    }
+
+    private fun getCurrentTime(): String {
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        return formatter.format(Date())
     }
 }
 
