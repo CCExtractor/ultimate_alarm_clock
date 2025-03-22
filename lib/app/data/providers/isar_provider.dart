@@ -58,6 +58,24 @@ class IsarDb {
     return db;
   }
 
+  Future<Database?> setAlarmLogs() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/AlarmLogs.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE LOG (
+          LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+          LogTime DATETIME NOT NULL,            
+          Status VARCHAR(50) NOT NULL)
+        ''');
+      },
+    );
+    return db;
+  }
+
   void _onCreate(Database db, int version) async {
     // Create tables for alarms and ringtones (modify column types as needed)
     await db.execute('''
@@ -123,6 +141,7 @@ class IsarDb {
     ''');
   }
 
+
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
@@ -140,6 +159,35 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
+  Future<int> insertLog(String status) async {
+    final db = await setAlarmLogs();
+    return await db!.insert(
+      'LOG',
+      {
+        'LogTime': DateTime.now().millisecondsSinceEpoch, // Store current time
+        'Status': status,
+      },
+    );
+  }
+
+  // Fetch all log entries
+  Future<List<Map<String, dynamic>>> getLogs() async {
+    final db = await setAlarmLogs();
+    return await db!.query('LOG');
+  }
+
+  // Update a log entry
+  Future<int> updateLog(int logId, String newStatus) async {
+    final db = await setAlarmLogs();
+    return await db!.update(
+      'LOG',
+      {
+        'Status': newStatus,
+      },
+      where: 'LogID = ?',
+      whereArgs: [logId],
+    );
+  }
 
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
@@ -151,6 +199,8 @@ class IsarDb {
     final sqlmap = alarmRecord.toSQFliteMap();
     print(sqlmap);
     await sql!.insert('alarms', sqlmap);
+    List a = await IsarDb().getLogs();
+    print(a);
     return alarmRecord;
   }
 
@@ -196,7 +246,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+     final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }

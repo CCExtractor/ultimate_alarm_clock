@@ -24,8 +24,9 @@ class BootReceiver : BroadcastReceiver() {
             val profile = sharedPreferences.getString("flutter.profile", "Default")
 
             val dbHelper = DatabaseHelper(context)
+            val logdbHelper = LogDatabaseHelper(context)
             val db = dbHelper.readableDatabase
-            val ringTime = getLatestAlarm(db, true, profile?:"Default")
+            val ringTime = getLatestAlarm(db, true, profile?:"Default", context)
             db.close()
             if (ringTime != null) {
                 scheduleAlarm(ringTime["interval"]!! as Long, context, ringTime["isActivity"]!!)
@@ -63,6 +64,7 @@ class BootReceiver : BroadcastReceiver() {
         }
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     fun scheduleAlarm(milliSeconds: Long, context: Context, activityMonitor: Any) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
@@ -82,14 +84,15 @@ class BootReceiver : BroadcastReceiver() {
         // Schedule the alarm
         val tenMinutesInMilliseconds = 600000L
         val preTriggerTime =
-            SystemClock.elapsedRealtime() + (milliSeconds - tenMinutesInMilliseconds)
+            System.currentTimeMillis() + (milliSeconds - tenMinutesInMilliseconds)
 
         // Schedule the alarm
-        val triggerTime = SystemClock.elapsedRealtime() + milliSeconds
+        val triggerTime = System.currentTimeMillis() + milliSeconds
+
         if (activityMonitor == 1) {
-            alarmManager.setExact(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                preTriggerTime,
+            val alarmClockInfo = AlarmManager.AlarmClockInfo(preTriggerTime, pendingIntent)
+            alarmManager.setAlarmClock(
+                alarmClockInfo,
                 pendingActivityCheckIntent
             )
         } else {
@@ -101,8 +104,8 @@ class BootReceiver : BroadcastReceiver() {
             editor.putLong("flutter.is_screen_on", 0L)
             editor.apply()
         }
-
-        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+        val clockInfo = AlarmManager.AlarmClockInfo(triggerTime, pendingIntent)
+        alarmManager.setAlarmClock(clockInfo, pendingIntent)
 
     }
 
@@ -153,6 +156,4 @@ class BootReceiver : BroadcastReceiver() {
             String.format("%02d:%02d", minutes, seconds)
         }
     }
-
-
 }
