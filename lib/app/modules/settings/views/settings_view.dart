@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/customize_undo_duration.dart';
 
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_24Hour_format.dart';
-
+import 'package:ultimate_alarm_clock/app/modules/debug/views/debug_screen.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_feedback.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/language_menu.dart';
@@ -114,6 +114,34 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(
                   height: 20,
                 ),
+                GestureDetector(
+                  onTap: (){
+                    Get.to(DebugScreen());
+                  },
+                  child: Container(
+                    width: width * 0.91,
+                    height: height * 0.1,
+                    decoration: Utils.getCustomTileBoxDecoration(
+                      isLightMode:
+                      controller.themeController.currentTheme.value == ThemeMode.light,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Debug screen',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                  
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

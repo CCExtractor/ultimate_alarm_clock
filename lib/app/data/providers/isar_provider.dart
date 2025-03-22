@@ -160,20 +160,42 @@ class IsarDb {
     return Future.value(Isar.getInstance());
   }
   Future<int> insertLog(String status) async {
-    final db = await setAlarmLogs();
-    return await db!.insert(
-      'LOG',
-      {
-        'LogTime': DateTime.now().millisecondsSinceEpoch, // Store current time
-        'Status': status,
-      },
-    );
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return -1;
+      }
+      final result = await db.insert(
+        'LOG',
+        {
+          'LogTime': DateTime.now().millisecondsSinceEpoch,
+          'Status': status,
+        },
+      );
+      debugPrint('Successfully inserted log: $status');
+      return result;
+    } catch (e) {
+      debugPrint('Error inserting log: $e');
+      return -1;
+    }
   }
 
   // Fetch all log entries
   Future<List<Map<String, dynamic>>> getLogs() async {
-    final db = await setAlarmLogs();
-    return await db!.query('LOG');
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return [];
+      }
+      final logs = await db.query('LOG');
+      debugPrint('Successfully retrieved ${logs.length} logs');
+      return logs;
+    } catch (e) {
+      debugPrint('Error retrieving logs: $e');
+      return [];
+    }
   }
 
   // Update a log entry
@@ -377,6 +399,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}');
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),
@@ -452,6 +475,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
+    await IsarDb().insertLog('Alarm deleted ${tobedeleted!.alarmTime}');
     await sql!.delete(
       'alarms',
       where: 'alarmID = ?',
