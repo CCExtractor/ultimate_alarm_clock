@@ -40,23 +40,23 @@ class AlarmReceiver : BroadcastReceiver() {
             println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)
 
-            // if alarm ring and Screen Activity is turned on
-            if(Math.abs(screenOnTimeInMillis - screenOffTimeInMillis) < 180000) {
+            if((screenOnTimeInMillis - screenOffTimeInMillis) == 0L) {
+                // if alarm rings (no smart controls used)
                 val values = ContentValues().apply {
                     put("didAlarmRing", 1)
                     put("alarmTime", getCurrentTime())
-                    put("reason", "activity")
-                    put("activityInterval", Math.abs(screenOnTimeInMillis - screenOffTimeInMillis))
                 }
                 historyDb.insert("alarmHistory", null, values)
                 historyDb.close()
                 return
             }
 
-            // if alarm rings (no smart controls used)
+            // if alarm rings and Screen Activity is turned on
             val values = ContentValues().apply {
                 put("didAlarmRing", 1)
                 put("alarmTime", getCurrentTime())
+                put("reason", "activity")
+                put("activityInterval", Math.abs(screenOnTimeInMillis - screenOffTimeInMillis))
             }
             historyDb.insert("alarmHistory", null, values)
             historyDb.close()

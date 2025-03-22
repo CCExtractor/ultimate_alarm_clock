@@ -45,11 +45,13 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
             alignment: Alignment.topCenter,
             child:
              ListView.builder(
+              scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               itemCount: controller.history.value.length,
               itemBuilder: (context, index) {
-                final data = controller.history.value[index];
+                final length = controller.history.value.length;
+                final data = controller.history.value[length-index-1];
 
                 bool didAlarmRing = data['didAlarmRing'] == 1;
                 String? reason = data['reason'];
@@ -111,7 +113,7 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                       );
                 }
                 else if(reason == 'activity'){
-                  int activityInterval = data['activityInterval'];
+                  //int activityInterval = data['activityInterval'];
                   return 
                       Padding(
                         padding: const EdgeInsets.all(8),
@@ -163,19 +165,19 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                                       Text('Screen Activity Based Alarm')
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Screen Activity Time:',
-                                        style: TextStyle(
-                                          color: themeController.primaryDisabledTextColor.value,
-                                          fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      SizedBox(width: 5,),
-                                      Text(activityInterval.toString())
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Text(
+                                  //       'Screen Activity Time:',
+                                  //       style: TextStyle(
+                                  //         color: themeController.primaryDisabledTextColor.value,
+                                  //         fontWeight: FontWeight.bold
+                                  //       ),
+                                  //     ),
+                                  //     SizedBox(width: 5,),
+                                  //     Text(activityInterval.toString())
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             )
@@ -225,6 +227,7 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                             Padding(
                               padding: EdgeInsets.only(left: 25, right: 10, top: 0, bottom: 20),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -239,7 +242,8 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                                       Text('Location Based Alarm')
                                     ],
                                   ),
-                                  Row(
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Location Set:',
@@ -252,7 +256,9 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                                       Text(location)
                                     ],
                                   ),
-                                  Row(
+                                  SizedBox(height: 5,),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Location At Alarm Time:',
@@ -265,6 +271,7 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                                       Text(locationAtAlarmTime)
                                     ],
                                   ),
+                                  SizedBox(height: 5,),
                                   Row(
                                     children: [
                                       Text(
@@ -287,7 +294,7 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                 }
                 else if (reason == 'weather'){
                   String weatherTypes = data['weatherTypes'];
-                  String weatherAtAlarmTime = data['locationAtAlarmTime'];
+                  String weatherAtAlarmTime = data['weatherAtAlarmTime'];
 
                   return 
                       Padding(
@@ -326,6 +333,7 @@ class AlarmHistoryView extends GetView<AlarmHistoryController> {
                             Padding(
                               padding: EdgeInsets.only(left: 25, right: 10, top: 0, bottom: 20),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
