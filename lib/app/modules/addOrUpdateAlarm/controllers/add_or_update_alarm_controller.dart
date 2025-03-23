@@ -1241,7 +1241,13 @@ class AddOrUpdateAlarmController extends GetxController {
     selectedDate.value = (await showDatePicker(
           builder: (BuildContext context, Widget? child) {
             return Theme(
-              data: ThemeData.dark().copyWith(
+              data: themeController.currentTheme.value == ThemeMode.light
+                  ? ThemeData.light().copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: kprimaryColor,
+                ),
+              )
+                  : ThemeData.dark().copyWith(
                 colorScheme: const ColorScheme.dark(
                   primary: kprimaryColor,
                 ),
