@@ -198,6 +198,21 @@ class IsarDb {
     }
   }
 
+  Future<void> clearLogs() async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return;
+      }
+      await db.delete('LOG');
+      debugPrint('Successfully cleared all logs');
+    } catch (e) {
+      debugPrint('Error clearing logs: $e');
+      rethrow;
+    }
+  }
+
   // Update a log entry
   Future<int> updateLog(int logId, String newStatus) async {
     final db = await setAlarmLogs();
