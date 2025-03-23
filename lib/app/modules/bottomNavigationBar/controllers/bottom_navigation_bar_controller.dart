@@ -4,6 +4,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/home/views/home_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/views/stopwatch_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/worldClockPage/views/world_clock_view.dart';
 
 class BottomNavigationBarController extends GetxController
     with WidgetsBindingObserver {
@@ -16,6 +17,7 @@ class BottomNavigationBarController extends GetxController
     HomeView(),
     StopwatchView(),
     TimerView(),
+    WorldClockView(),
   ];
 
   @override
@@ -46,6 +48,5 @@ class BottomNavigationBarController extends GetxController
   void changeTab(int index) {
     activeTabIndex.value = index;
     _saveState();
-
   }
 }

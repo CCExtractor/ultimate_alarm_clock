@@ -27,7 +27,8 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
                   controller.changeTab(index);
                 },
               );
-            } else {
+            }
+            else {
               return const Center(
                 child: CircularProgressIndicator.adaptive(
                   backgroundColor: Colors.transparent,
@@ -45,29 +46,31 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           useLegacyColorScheme: false,
           items: [
             BottomNavigationBarItem(
-              icon: const Icon(Icons.alarm),
+              icon: const Icon(Icons.alarm, size: 20),
               label: 'Alarm'.tr,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.timer_outlined),
+              icon: const Icon(Icons.timer_outlined, size: 20),
               label: 'StopWatch'.tr,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.timelapse_outlined),
+              icon: const Icon(Icons.timelapse_outlined, size: 20),
               label: 'Timer'.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.more_time_outlined, size: 20),
+              label: 'WorldClock'.tr,
             ),
           ],
           onTap: (index) {
             Utils.hapticFeedback();
             controller.changeTab(index);
-            pageController.jumpToPage(
-              index,
-            );
+            pageController.jumpToPage(index);
           },
           currentIndex: controller.activeTabIndex.value,
           selectedLabelStyle: TextStyle(
             color: kprimaryColor,
-            fontSize: 14,
+            fontSize: 12,
             decorationColor:
                 themeController.primaryBackgroundColor.value,
             decorationThickness: 0.8,

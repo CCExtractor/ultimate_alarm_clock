@@ -7,7 +7,5 @@ class TimerBinding extends Bindings {
     Get.put<TimerController>(
       TimerController(),
     );
-
-
   }
 }
