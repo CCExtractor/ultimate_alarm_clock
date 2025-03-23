@@ -61,6 +61,8 @@ class AlarmModel {
   late bool isCall;
   @ignore
   Map? offsetDetails;
+  @ignore
+  bool preview = false;
 
   AlarmModel(
       {required this.alarmTime,
