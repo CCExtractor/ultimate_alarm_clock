@@ -973,7 +973,7 @@ class HomeView extends GetView<HomeController> {
                                                                               onSelected: (value) async {
                                                                                 Utils.hapticFeedback();
                                                                                 if (value == 0) {
-                                                                                  alarm.preview = true;  // Add this line
+                                                                                  alarm.preview = true;  
                                                                                   Get.back();
                                                                                   Get.offNamed('/alarm-ring', arguments: alarm);
                                                                                 } else if (value == 1) {
