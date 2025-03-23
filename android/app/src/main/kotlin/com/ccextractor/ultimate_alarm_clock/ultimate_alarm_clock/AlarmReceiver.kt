@@ -11,9 +11,9 @@ class AlarmReceiver : BroadcastReceiver() {
             return
         }
 
-  
 
 
+        val logdbHelper = LogDatabaseHelper(context);
         val flutterIntent = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
@@ -38,4 +38,3 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
 }
-

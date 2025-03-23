@@ -48,22 +48,25 @@ class SnoozeDurationTile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          NumberPicker(
-                            value: controller.snoozeDuration.value <= 0
-                                ? 1
-                                : controller.snoozeDuration
-                                    .value, 
-                            minValue: 1,
-                            maxValue: 1440,
-                            onChanged: (value) {
-                              Utils.hapticFeedback();
-                              controller.snoozeDuration.value = value;
-                            },
+                          Obx(
+                            () => NumberPicker(
+                              value: controller.snoozeDuration.value <= 0
+                                  ? 1
+                                  : controller.snoozeDuration.value,
+                              minValue: 1,
+                              maxValue: 60,
+                              onChanged: (value) {
+                                Utils.hapticFeedback();
+                                controller.snoozeDuration.value = value;
+                              },
+                            ),
                           ),
-                          Text(
-                            controller.snoozeDuration.value > 1
-                                ? 'minutes'.tr
-                                : 'minute'.tr,
+                          Obx(
+                            () => Text(
+                              controller.snoozeDuration.value > 1
+                                  ? 'minutes'.tr
+                                  : 'minute'.tr,
+                            ),
                           ),
                         ],
                       ),
