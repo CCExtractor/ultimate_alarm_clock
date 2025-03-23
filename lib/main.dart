@@ -13,6 +13,7 @@ import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
 import 'app/routes/app_pages.dart';
 
 Locale? loc;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.notification.isDenied.then((value) {
