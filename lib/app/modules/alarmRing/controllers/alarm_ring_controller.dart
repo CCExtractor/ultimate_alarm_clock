@@ -48,6 +48,7 @@ class AlarmControlController extends GetxController {
   late double initialVolume;
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
+  RxBool isPreviewMode = false.obs;
 
 
 
@@ -173,6 +174,8 @@ class AlarmControlController extends GetxController {
     super.onInit();
     startListeningToFlip();
 
+    // Check if this is preview mode - when user clicks "Preview Alarm" in menu
+    isPreviewMode.value = Get.arguments?.preview == true;
     currentlyRingingAlarm.value = Get.arguments;
     print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
      IsarDb()
