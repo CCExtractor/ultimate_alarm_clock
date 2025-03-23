@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
-
 import 'package:isar/isar.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -62,54 +61,55 @@ class AlarmModel {
   @ignore
   Map? offsetDetails;
 
-  AlarmModel(
-      {required this.alarmTime,
-      required this.alarmID,
-      this.sharedUserIds = const [],
-      required this.ownerId,
-      required this.ownerName,
-      required this.lastEditedUserId,
-      required this.mutexLock,
-      this.isEnabled = true,
-      required this.days,
-      required this.intervalToAlarm,
-      required this.isActivityEnabled,
-      required this.minutesSinceMidnight,
-      required this.isLocationEnabled,
-      required this.isSharedAlarmEnabled,
-      required this.isWeatherEnabled,
-      required this.location,
-      required this.weatherTypes,
-      required this.isMathsEnabled,
-      required this.mathsDifficulty,
-      required this.numMathsQuestions,
-      required this.isShakeEnabled,
-      required this.shakeTimes,
-      required this.isQrEnabled,
-      required this.qrValue,
-      required this.isPedometerEnabled,
-      required this.numberOfSteps,
-      required this.activityInterval,
-      this.offsetDetails = const {},
-      required this.mainAlarmTime,
-      required this.label,
-      required this.isOneTime,
-      required this.snoozeDuration,
-      required this.gradient,
-      required this.ringtoneName,
-      required this.note,
-      required this.deleteAfterGoesOff,
-      required this.showMotivationalQuote,
-      required this.volMax,
-      required this.volMin,
-      required this.activityMonitor,
-      required this.ringOn,
-      required this.alarmDate,
-      required this.profile,
-      required this.isGuardian,
-      required this.guardianTimer,
-      required this.guardian,
-      required this.isCall});
+  AlarmModel({
+    required this.alarmTime,
+    required this.alarmID,
+    this.sharedUserIds = const [],
+    required this.ownerId,
+    required this.ownerName,
+    required this.lastEditedUserId,
+    required this.mutexLock,
+    this.isEnabled = true,
+    required this.days,
+    required this.intervalToAlarm,
+    required this.isActivityEnabled,
+    required this.minutesSinceMidnight,
+    required this.isLocationEnabled,
+    required this.isSharedAlarmEnabled,
+    required this.isWeatherEnabled,
+    required this.location,
+    required this.weatherTypes,
+    required this.isMathsEnabled,
+    required this.mathsDifficulty,
+    required this.numMathsQuestions,
+    required this.isShakeEnabled,
+    required this.shakeTimes,
+    required this.isQrEnabled,
+    required this.qrValue,
+    required this.isPedometerEnabled,
+    required this.numberOfSteps,
+    required this.activityInterval,
+    this.offsetDetails = const {},
+    required this.mainAlarmTime,
+    required this.label,
+    required this.isOneTime,
+    required this.snoozeDuration,
+    required this.gradient,
+    required this.ringtoneName,
+    required this.note,
+    required this.deleteAfterGoesOff,
+    required this.showMotivationalQuote,
+    required this.volMax,
+    required this.volMin,
+    required this.activityMonitor,
+    required this.ringOn,
+    required this.alarmDate,
+    required this.profile,
+    required this.isGuardian,
+    required this.guardianTimer,
+    required this.guardian,
+    required this.isCall,
+  });
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -122,7 +122,6 @@ class AlarmModel {
     if (isSharedAlarmEnabled && user != null) {
       mainAlarmTime = documentSnapshot['alarmTime'];
       // Using offsetted time only if it is enabled
-
       alarmTime = (offsetDetails![user.id]['offsetDuration'] != 0)
           ? offsetDetails![user.id]['offsettedTime']
           : documentSnapshot['alarmTime'];
@@ -340,12 +339,8 @@ class AlarmModel {
     ringOn = alarmData['ringOn'];
   }
 
-  AlarmModel.fromJson(String alarmData, UserModel? user) {
-    AlarmModel.fromMap(jsonDecode(alarmData));
-  }
-
-  static String toJson(AlarmModel alarmRecord) {
-    return jsonEncode(AlarmModel.toMap(alarmRecord));
+  String toJson() {
+    return jsonEncode(AlarmModel.toMap(this));
   }
 
   static Map<String, dynamic> toMap(AlarmModel alarmRecord) {
@@ -390,12 +385,13 @@ class AlarmModel {
       'volMax': alarmRecord.volMax,
       'activityMonitor': alarmRecord.activityMonitor,
       'alarmDate': alarmRecord.alarmDate,
+      'ringOn': alarmRecord.ringOn,
       'profile': alarmRecord.profile,
       'isGuardian': alarmRecord.isGuardian,
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
@@ -409,14 +405,13 @@ class AlarmModel {
     // Rotate the list to start with Sunday
     var rotatedList =
         [boolList.last] + boolList.sublist(0, boolList.length - 1);
+      
     // Convert the list of bools to a string of 1s and 0s
     return rotatedList.map((b) => b ? '1' : '0').join();
   }
 
   List<bool> stringToBoolList(String s) {
-    // Rotate the string to start with Monday
     final rotatedString = s.substring(1) + s[0];
-    // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
   }
 }

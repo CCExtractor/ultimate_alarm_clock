@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_haptic_fe
 import 'package:ultimate_alarm_clock/app/modules/settings/views/enable_sorted_alarm_list.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/language_menu.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/views/time_limit_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
@@ -113,6 +114,12 @@ class SettingsView extends GetView<SettingsController> {
                 const SizedBox(
                   height: 20,
                 ),
+                TimeLimitView(
+                  controller: controller,
+                  height: height, 
+                  width: width,
+                  themeController: controller.themeController,
+                )
               ],
             ),
           ),

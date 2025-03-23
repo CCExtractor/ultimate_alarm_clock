@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
-
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -22,6 +20,7 @@ class SettingsController extends GetxController {
   final _hapticFeedbackKey = 'haptic_feedback';
   var is24HrsEnabled = false.obs;
   final _f24HrsEnabledKey = '24_hours_format';
+  final RxInt challengeTimeLimit = 30.obs;
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
   var currentLanguage = 'en_US'.obs;
@@ -74,10 +73,21 @@ class SettingsController extends GetxController {
       userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
+    _loadChallengeSettings();
+  }
+
+  void _loadChallengeSettings() async {
+    // Store the retrieved challenge time limit from secure storage
+    int storedTimeLimit = await _secureStorageProvider.readChallengeTimeLimit();
+    challengeTimeLimit.value = storedTimeLimit;
+  }
+
+  void updateTimeLimit(int newLimit) {
+    challengeTimeLimit.value = newLimit;
+    _secureStorageProvider.writeChallengeTimeLimit(newLimit);
   }
 
   // Logins user using GoogleSignIn
-
   Future<void> logoutGoogle() async {
     await GoogleCloudProvider.logoutGoogle();
     await SecureStorageProvider().deleteUserModel();
@@ -94,13 +104,11 @@ class SettingsController extends GetxController {
   getKey(ApiKeys key) async {
     return await _secureStorageProvider.retrieveApiKey(key);
   }
-
-  // Add weather state to the flutter secure storage
+  
   addWeatherState(String weatherState) async {
     await _secureStorageProvider.storeWeatherState(weatherState);
   }
-
-  // Get weather state from the flutter secure storage
+  
   getWeatherState() async {
     return await _secureStorageProvider.retrieveWeatherState();
   }
@@ -108,7 +116,6 @@ class SettingsController extends GetxController {
   Future<bool> isApiKeyValid(String apiKey) async {
     final weather = WeatherFactory(apiKey);
     try {
-      // ignore: unused_local_variable
       final currentWeather = await weather.currentWeatherByLocation(
         currentPoint.value.latitude,
         currentPoint.value.longitude,
@@ -135,28 +142,22 @@ class SettingsController extends GetxController {
 
   Future<bool> _checkAndRequestPermission({bool? background}) async {
     if (!await FlLocation.isLocationServicesEnabled) {
-      // Location services are disabled.
       return false;
     }
 
     var locationPermission = await FlLocation.checkLocationPermission();
     if (locationPermission == LocationPermission.deniedForever) {
-      // Cannot request runtime permission because location permission is
-      // denied forever.
       return false;
     } else if (locationPermission == LocationPermission.denied) {
-      // Ask the user for location permission.
       locationPermission = await FlLocation.requestLocationPermission();
       if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) return false;
+          locationPermission == LocationPermission.deniedForever)
+        return false;
     }
-
-    // Location permission must always be allowed (LocationPermission.always)
-    // to collect location data in the background.
     if (background == true &&
-        locationPermission == LocationPermission.whileInUse) return false;
+        locationPermission == LocationPermission.whileInUse)
+      return false;
 
-    // Location services has been enabled and permission have been granted.
     return true;
   }
 
@@ -185,11 +186,7 @@ class SettingsController extends GetxController {
 
     // Store the retrieved weather state from the flutter secure storage
     String? retrievedWeatherState = await getWeatherState();
-
-    // If the weather state has been previously stored there
     if (retrievedWeatherState != null) {
-      // Assign the weatherKeyState to the previously stored weather state,
-      // but first convert the stored string to the WeatherKeyState enum
       weatherKeyState.value = WeatherKeyState.values.firstWhereOrNull(
             (weatherState) => weatherState.name == retrievedWeatherState,
           ) ??

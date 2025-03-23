@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart'; // Import secure storage provider
 
 class AlarmChallengeController extends GetxController {
   AlarmModel alarmRecord = Get.arguments;
@@ -42,6 +43,7 @@ class AlarmChallengeController extends GetxController {
   bool shouldProcessStepCount = false;
 
   late Stream<StepCount> _stepCountStream;
+  Timer? _timer;
 
   void onButtonPressed(String buttonText) {
     displayValue.value += buttonText;
@@ -89,7 +91,7 @@ class AlarmChallengeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    _startTimer();
+    await _startTimer();
 
     String ringtoneName = alarmRecord.ringtoneName;
 
@@ -199,29 +201,23 @@ class AlarmChallengeController extends GetxController {
     }
   }
 
-  void _startTimer() async {
-    const duration = Duration(seconds: 15);
-    const totalIterations = 1500000;
-    const decrement = 0.000001;
-
-    for (var i = totalIterations; i > 0; i--) {
-      if (!isTimerEnabled) {
-        debugPrint('THIS IS THE BUG');
-        break;
-      }
-      if (progress.value <= 0.0) {
+  Future<void> _startTimer() async {
+    int challengeTimeLimit = await SecureStorageProvider().readChallengeTimeLimit();
+    progress.value = 1.0;
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if (progress.value > 0) {
+        progress.value -= 1 / (challengeTimeLimit * 10);
+      } else {
+        timer.cancel();
         shouldProcessStepCount = false;
         Get.until((route) => route.settings.name == '/alarm-ring');
-        break;
       }
-      await Future.delayed(duration ~/ i);
-      progress.value -= decrement;
-    }
+    });
   }
 
   restartTimer() {
-    progress.value = 1.0; // Reset the progress to its initial value
-    _startTimer(); // Start a new timer
+    _timer?.cancel();
+    _startTimer();
   }
 
   isChallengesComplete() {
@@ -235,7 +231,7 @@ class AlarmChallengeController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-
+    _timer?.cancel();
     shouldProcessStepCount = false;
 
     String ringtoneName = alarmRecord.ringtoneName;
@@ -255,4 +251,3 @@ class AlarmChallengeController extends GetxController {
   }
 }
 }
-
