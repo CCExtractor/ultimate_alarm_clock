@@ -200,8 +200,17 @@ class GuardianAngel extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(28),
               onTap: () {
-                controller.isGuardian.value = true;
-                Get.back();
+                if (controller.contactTextEditingController.text.isNotEmpty) {
+                  controller.guardian.value = controller.contactTextEditingController.text;
+                  controller.isGuardian.value = true;
+                  Get.back();
+                } else {
+                  Get.snackbar(
+                    'Error',
+                    'Please enter a phone number',
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                }
               },
               child: Container(
                 decoration: BoxDecoration(
