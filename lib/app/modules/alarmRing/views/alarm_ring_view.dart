@@ -13,8 +13,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
 
   ThemeController themeController = Get.find<ThemeController>();
 
-  Obx getAddSnoozeButtons(
-      BuildContext context, int snoozeMinutes, String title) {
+  Obx getAddSnoozeButtons(BuildContext context, int snoozeMinutes, String title){
     return Obx(
       () => TextButton(
         style: ButtonStyle(
@@ -48,7 +47,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
         if (didPop) {
           return;
         }
-
         Get.snackbar(
           'Note'.tr,
           "You can't go back while the alarm is ringing".tr,
@@ -82,10 +80,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                 : (controller.is24HourFormat.value)
                                     ? '${controller.timeNow24Hr}'
                                     : '${controller.timeNow[0]} ${controller.timeNow[1]}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayLarge!
-                                .copyWith(fontSize: 50),
+                            style: Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 50),
                           ),
                           const SizedBox(
                             height: 20,
@@ -224,29 +219,29 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  color: Colors.red,
-                  child: TextButton(
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Get.offNamed('/bottom-navigation-bar');
-                    },
-                    child: Text(
-                      'Exit Preview'.tr,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   bottom: 0,
+              //   left: 0,
+              //   right: 0,
+              //   child: Container(
+              //     width: double.infinity,
+              //     height: 60,
+              //     color: Colors.red,
+              //     child: TextButton(
+              //       onPressed: () {
+              //         Utils.hapticFeedback();
+              //         Get.offNamed('/bottom-navigation-bar');
+              //       },
+              //       child: Text(
+              //         'Exit Preview'.tr,
+              //         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              //               color: Colors.white,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

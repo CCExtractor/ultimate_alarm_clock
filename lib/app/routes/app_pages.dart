@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-
+import 'package:ultimate_alarm_clock/app/modules/worldClockPage/views/world_clock_view.dart';
 import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
 import '../modules/addOrUpdateAlarm/bindings/add_or_update_alarm_binding.dart';
@@ -36,26 +36,31 @@ class AppPages {
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
+
     GetPage(
       name: _Paths.HOME,
       page: () => HomeView(),
       binding: HomeBinding(),
     ),
+
     GetPage(
       name: _Paths.ADD_OR_UPDATE_ALARM,
       page: () => AddOrUpdateAlarmView(),
       binding: AddOrUpdateAlarmBinding(),
     ),
+
     GetPage(
       name: _Paths.ALARM_RING,
       page: () => AlarmControlView(),
       binding: AlarmControlBinding(),
     ),
+
     GetPage(
       name: _Paths.SETTINGS,
       page: () => SettingsView(),
       binding: SettingsBinding(),
     ),
+
     GetPage(
       name: _Paths.ALARM_CHALLENGE,
       page: () => AlarmChallengeView(),
@@ -67,11 +72,13 @@ class AppPages {
       page: () => AboutView(),
       binding: AboutBinding(),
     ),
+
     GetPage(
       name: _Paths.BOTTOM_NAVIGATION_BAR,
       page: () => BottomNavigationBarView(),
       binding: BottomNavigationBarBinding(),
     ),
+
     GetPage(
       name: _Paths.TIMER_RING,
       page: () => TimerRingView(),
@@ -83,10 +90,17 @@ class AppPages {
       page: () => StopwatchView(),
       binding: StopwatchBinding(),
     ),
+
     GetPage(
       name: _Paths.NOTIFICATIONS,
       page: () => const NotificationsView(),
       binding: NotificationsBinding(),
     ),
+
+    // GetPage(
+    //   name: _Paths.WORLDCLOCK,
+    //   page: () => const WorldClockView(),
+    //   binding: WorldClockBinding(),
+    // ),
   ];
 }
