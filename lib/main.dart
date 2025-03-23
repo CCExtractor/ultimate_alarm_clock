@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-
+import 'package:sqflite/sqflite.dart';
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
