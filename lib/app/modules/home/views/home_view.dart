@@ -973,9 +973,10 @@ class HomeView extends GetView<HomeController> {
                                                                               onSelected: (value) async {
                                                                                 Utils.hapticFeedback();
                                                                                 if (value == 0) {
-                                                                                  alarm.preview = true;  
-                                                                                  Get.back();
-                                                                                  Get.offNamed('/alarm-ring', arguments: alarm);
+                                                                                  Get.toNamed('/alarm-ring', arguments: {
+                                                                                    'alarm': alarm,
+                                                                                    'preview': true
+                                                                                  });
                                                                                 } else if (value == 1) {
                                                                                   debugPrint(alarm.isSharedAlarmEnabled.toString());
 
