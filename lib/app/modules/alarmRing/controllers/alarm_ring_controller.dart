@@ -48,6 +48,7 @@ class AlarmControlController extends GetxController {
   late double initialVolume;
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
+  bool wasFlipped = false;
 
 
 
@@ -158,20 +159,98 @@ class AlarmControlController extends GetxController {
       }
     });
   }
-  void startListeningToFlip() {
-    _sensorSubscription = accelerometerEvents.listen((event) {
-      if (event.z < -8) { // Device is flipped (screen down)
+ void startListeningToFlip() {
+  // Track initial device orientation to prevent false triggers
+  bool initialOrientationChecked = false;
+  bool initiallyFaceDown = false;
+  
+  _sensorSubscription = accelerometerEvents.listen((event) {
+    // First, determine the initial orientation of the device
+    if (!initialOrientationChecked) {
+      initiallyFaceDown = event.z < -8;
+      initialOrientationChecked = true;
+     
+      return; // Wait for next reading before processing flips
+    }
+    
+    // If device was initially face down, wait until it's face up before tracking flips
+    if (initiallyFaceDown && event.z > -2) {
+      initiallyFaceDown = false;
+      print("Device now face up, will start tracking flips");
+    }
+    
+    // Only process flip events if device wasn't initially face down or has been turned face up
+    if (!initiallyFaceDown) {
+      // Device is now face down (z < -8) and wasn't previously flipped
+      if (event.z < -8 && !wasFlipped) {
         if (!isSnoozing.value && settingsController.isFlipToSnooze.value == true) {
-          startSnooze();
+        
+          startFlipSnooze();
+          wasFlipped = true;
         }
+      } 
+      // Device is now face up (z > -2) and was previously flipped
+      else if (event.z > -2 && wasFlipped) {
+       
+        wasFlipped = false;
       }
-    });
+    }
+  });
+}
+
+void startFlipSnooze() async {
+ 
+  Vibration.cancel();
+  if (vibrationTimer != null) {
+    vibrationTimer!.cancel();
   }
+  
+  // Cancel guardian timer if it's active
+  if (currentlyRingingAlarm.value.isGuardian) {
+    guardianTimer.cancel();
+  }
+  
+  isSnoozing.value = true;
+
+  String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
+  AudioUtils.stopAlarm(ringtoneName: ringtoneName);
+
+  // Always use 1 minute as default snooze time for flip
+  minutes.value = 1;
+  seconds.value = 0;
+
+  if (_currentTimeTimer != null && _currentTimeTimer!.isActive) {
+    _currentTimeTimer!.cancel();
+  }
+
+  _currentTimeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    if (minutes.value == 0 && seconds.value == 0) {
+      timer.cancel();
+      vibrationTimer =
+          Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+            Vibration.vibrate(pattern: [500, 3000]);
+          });
+
+      AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+      startTimer();
+    } else if (seconds.value == 0) {
+      minutes.value--;
+      seconds.value = 59;
+    } else {
+      seconds.value--;
+    }
+  });
+}
+
 
   @override
   void onInit() async {
     super.onInit();
-    startListeningToFlip();
+    // Initialize wasFlipped before starting sensor listener
+  wasFlipped = false;
+  startListeningToFlip();
+  
+    
 
     currentlyRingingAlarm.value = Get.arguments;
     print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
