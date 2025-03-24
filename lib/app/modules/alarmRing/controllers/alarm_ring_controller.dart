@@ -334,7 +334,7 @@ class AlarmControlController extends GetxController {
       stream: AudioStream.alarm,
     );
 
-    // Handle one-time alarm dismissal
+    
     if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
       currentlyRingingAlarm.value.isEnabled = false;
       if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {

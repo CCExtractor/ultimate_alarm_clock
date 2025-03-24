@@ -193,7 +193,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               .currentlyRingingAlarm.value.isGuardian) {
                             controller.guardianTimer.cancel();
                           }
-                          // Disable one-time alarm when dismissed
+                          
                           if (controller.currentlyRingingAlarm.value.days.every((element) => element == false)) {
                             controller.currentlyRingingAlarm.value.isEnabled = false;
                             if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
