@@ -32,16 +32,13 @@ class _ToggleButtonState extends State<ToggleButton> {
           if (widget.isSelected == null) {
             // Toggle the value of that particular alarm
             widget.controller.alarmListPairs.second[widget.alarmIndex!].value =
-                !widget
-                    .controller.alarmListPairs.second[widget.alarmIndex!].value;
+                !widget.controller.alarmListPairs.second[widget.alarmIndex!].value;
 
             // Storing the value of the toggle button for that particular alarm
-            var buttonValue = widget
-                .controller.alarmListPairs.second[widget.alarmIndex!].value;
+            var buttonValue = widget.controller.alarmListPairs.second[widget.alarmIndex!].value;
 
             // Storing the alarm model
-            AlarmModel alarm =
-                widget.controller.alarmListPairs.first[widget.alarmIndex!];
+            AlarmModel alarm = widget.controller.alarmListPairs.first[widget.alarmIndex!];
 
             // If the alarm is selected
             if (buttonValue) {
@@ -50,9 +47,6 @@ class _ToggleButtonState extends State<ToggleButton> {
 
               // Add this alarm to selected alarm set
               widget.controller.selectedAlarmSet.add(
-                // If the isSharedAlarmEnabled is true, then add firestore id
-                // and isSharedAlarmEnabled, else add isar id
-                // and isSharedAlarmEnabled
                 alarm.isSharedAlarmEnabled
                     ? Pair(
                         alarm.firestoreId,
@@ -73,44 +67,31 @@ class _ToggleButtonState extends State<ToggleButton> {
               // Reduce the number of alarms selected
               widget.controller.numberOfAlarmsSelected.value--;
 
-              // If isSharedAlarmEnabled is true, then remove the alarm with
-              // the firestore id, else with the isar id
-              alarm.isSharedAlarmEnabled
-                  ? widget.controller.selectedAlarmSet.removeWhere(
-                      (element) => alarm.firestoreId == element.first,
-                    )
-                  : widget.controller.selectedAlarmSet.removeWhere(
-                      (element) => alarm.isarId == element.first,
-                    );
+              
+              widget.controller.selectedAlarmSet.removeWhere(
+                (element) => 
+                  alarm.isSharedAlarmEnabled 
+                    ? alarm.firestoreId == element.first
+                    : alarm.isarId == element.first,
+              );
 
               // If all alarms are not selected, then set all alarm
               // select button at the top to false
-              if (widget.controller.numberOfAlarmsSelected.value <
-                  widget.controller.alarmListPairs.first.length) {
-                widget.controller.isAllAlarmsSelected.value = false;
-              }
+              widget.controller.isAllAlarmsSelected.value = false;
             }
           } else {
             // Toggle the all alarm select button
             widget.controller.isAllAlarmsSelected.value =
                 !widget.controller.isAllAlarmsSelected.value;
 
-            // Store the all alarm select button's value
-            var buttonValue = widget.controller.isAllAlarmsSelected.value;
-
-            // If it is selected
-            if (buttonValue) {
-              // Add all alarms to the selected alarm set
+            if (widget.controller.isAllAlarmsSelected.value) {
+              
               widget.controller.addAllAlarmsToSelectedAlarmSet();
-
-              // Set the number of alarms selected to number of alarms
-              widget.controller.numberOfAlarmsSelected.value =
+              widget.controller.numberOfAlarmsSelected.value = 
                   widget.controller.alarmListPairs.first.length;
             } else {
-              // Remove all alarms from the selected alarm set
+              
               widget.controller.removeAllAlarmsFromSelectedAlarmSet();
-
-              // Set the number of alarms selected to zero
               widget.controller.numberOfAlarmsSelected.value = 0;
             }
           }

@@ -15,10 +15,11 @@ class AlarmReceiver : BroadcastReceiver() {
         if (context == null || intent == null) {
             return
         }
-
+        
         val dbHelper = HistoryDbHelper(context)
         val historyDb: SQLiteDatabase = dbHelper.writableDatabase
 
+        val logdbHelper = LogDatabaseHelper(context);
         val flutterIntent = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
@@ -80,4 +81,3 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
 }
-

@@ -26,6 +26,8 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TimerController controller = Get.find<TimerController>();
   ThemeController themeController = Get.find<ThemeController>();
+  var width = Get.width;
+  var height = Get.height;
 
   Timer? _timerCounter;
   void startTimer() {
@@ -177,75 +179,72 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                           ),
                           Spacer(),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Obx(
                                   () => AnimatedContainer(
                                     duration: Duration(seconds: 1),
                                     child: Text(
                                       '${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.displayLarge!.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge!
+                                          .copyWith(
                                             color: themeController.primaryTextColor.value,
                                             fontSize: 44,
                                           ),
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      widget.timer.isPaused == 0
-                                          ? stopTimer()
-                                          : startTimer();
-                                      widget.timer.isPaused =
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          if (widget.timer.isPaused == 0) {
+                                            stopTimer();
+                                          } else {
+                                            startTimer();
+                                          }
+                                          widget.timer.isPaused =
+                                              widget.timer.isPaused == 0 ? 1 : 0;
+                                          IsarDb.updateTimerPauseStatus(widget.timer);
+                                        });
+                                        if (widget.timer.timeElapsed >=
+                                            widget.timer.timerValue) {
+                                          controller.stopRinger(widget.timer.timerId);
+                                          setState(() {
+                                            widget.timer.timeElapsed = 0;
+                                            IsarDb.updateTimerTick(widget.timer)
+                                                .then((value) =>
+                                                    IsarDb.updateTimerPauseStatus(
+                                                        widget.timer));
+                                            widget.timer.isPaused = 1;
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: kprimaryColor,
+                                            borderRadius: BorderRadius.circular(80)),
+                                        width: 80,
+                                        height: 80,
+                                        child: Icon(
                                           widget.timer.isPaused == 0
-                                              ? 1
-                                              : 0;
-                                      IsarDb.updateTimerPauseStatus(
-                                          widget.timer);
-                                    });
-                                    if (widget.timer.timeElapsed >=
-                                        widget.timer.timerValue) {
-                                      controller.stopRinger(
-                                          widget.timer.timerId);
-                                      setState(() {
-                                        widget.timer.timeElapsed = 0;
-                                        IsarDb.updateTimerTick(
-                                                widget.timer)
-                                            .then((value) => IsarDb
-                                                .updateTimerPauseStatus(
-                                                    widget.timer));
-                                        widget.timer.isPaused = 1;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: kprimaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(80)),
-                                    width: 80,
-                                    height: 80,
-                                    child: Icon(
-                                      widget.timer.isPaused == 0
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                      size: 30,
-                                      color:
-                                          Colors.white,
+                                              ? Icons.pause
+                                              : Icons.play_arrow,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                )
+                                  ],
+                                ),
                               ],
                             ),
                           ),
-                          Spacer(),
                         ],
                       ),
                     ),

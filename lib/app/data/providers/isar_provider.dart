@@ -57,7 +57,7 @@ class IsarDb {
     );
     return db;
   }
-
+  
   Future<Database?> getHistorySQLiteDatabase() async {
     Database? db;
     final dir = await getDatabasesPath();
@@ -78,6 +78,25 @@ class IsarDb {
             weatherTypes TEXT,
             weatherAtAlarmTime TEXT   
           )
+        ''');
+      },
+    );
+    return db;
+  }
+
+  
+  Future<Database?> setAlarmLogs() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/AlarmLogs.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE LOG (
+          LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+          LogTime DATETIME NOT NULL,            
+          Status VARCHAR(50) NOT NULL)
         ''');
       },
     );
@@ -149,6 +168,7 @@ class IsarDb {
     ''');
   }
 
+
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
@@ -166,6 +186,72 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
+  Future<int> insertLog(String status) async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return -1;
+      }
+      final result = await db.insert(
+        'LOG',
+        {
+          'LogTime': DateTime.now().millisecondsSinceEpoch,
+          'Status': status,
+        },
+      );
+      debugPrint('Successfully inserted log: $status');
+      return result;
+    } catch (e) {
+      debugPrint('Error inserting log: $e');
+      return -1;
+    }
+  }
+
+  // Fetch all log entries
+  Future<List<Map<String, dynamic>>> getLogs() async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return [];
+      }
+      final logs = await db.query('LOG');
+      debugPrint('Successfully retrieved ${logs.length} logs');
+      return logs;
+    } catch (e) {
+      debugPrint('Error retrieving logs: $e');
+      return [];
+    }
+  }
+
+  Future<void> clearLogs() async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return;
+      }
+      await db.delete('LOG');
+      debugPrint('Successfully cleared all logs');
+    } catch (e) {
+      debugPrint('Error clearing logs: $e');
+      rethrow;
+    }
+  }
+
+  // Update a log entry
+  Future<int> updateLog(int logId, String newStatus) async {
+    final db = await setAlarmLogs();
+    return await db!.update(
+      'LOG',
+      {
+        'Status': newStatus,
+      },
+      where: 'LogID = ?',
+      whereArgs: [logId],
+    );
+  }
 
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
@@ -177,6 +263,8 @@ class IsarDb {
     final sqlmap = alarmRecord.toSQFliteMap();
     print(sqlmap);
     await sql!.insert('alarms', sqlmap);
+    List a = await IsarDb().getLogs();
+    print(a);
     return alarmRecord;
   }
 
@@ -230,7 +318,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+     final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }
@@ -360,6 +449,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}');
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),
@@ -435,6 +525,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
+    await IsarDb().insertLog('Alarm deleted ${tobedeleted!.alarmTime}');
     await sql!.delete(
       'alarms',
       where: 'alarmID = ?',
