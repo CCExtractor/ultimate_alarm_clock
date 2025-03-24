@@ -174,9 +174,16 @@ class AlarmControlController extends GetxController {
     super.onInit();
     startListeningToFlip();
 
-    // Check if this is preview mode - when user clicks "Preview Alarm" in menu
-    isPreviewMode.value = Get.arguments?.preview == true;
-    currentlyRingingAlarm.value = Get.arguments;
+    // Extract alarm and preview flag from arguments
+    final args = Get.arguments;
+    if (args is Map) {
+      currentlyRingingAlarm.value = args['alarm'];
+      isPreviewMode.value = args['preview'] ?? false;
+    } else {
+      currentlyRingingAlarm.value = args;
+      isPreviewMode.value = false;
+    }
+
     print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
      IsarDb()
         .insertLog('Alarm ringing ${currentlyRingingAlarm.value.alarmTime}');
