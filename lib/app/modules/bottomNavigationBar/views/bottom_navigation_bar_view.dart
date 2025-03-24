@@ -6,10 +6,13 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
-  PageController pageController = PageController();
+  late final PageController pageController;
   final ThemeController themeController = Get.find<ThemeController>();
 
-  BottomNavigationBarView({super.key});
+  BottomNavigationBarView({super.key}) {
+    pageController = PageController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,8 +21,9 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           future: controller.loadSavedState(),
           builder: (context, snapshot) {
             if (controller.hasloaded.value != false) {
-              pageController =
-                  PageController(initialPage: controller.activeTabIndex.value);
+              if (pageController.hasClients && pageController.page != controller.activeTabIndex.value) {
+                pageController.jumpToPage(controller.activeTabIndex.value);
+              }
               return PageView(
                 controller: pageController,
                 children: controller.pages,
