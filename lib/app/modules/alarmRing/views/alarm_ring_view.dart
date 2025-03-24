@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
@@ -185,11 +187,23 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             kprimaryColor,
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           Utils.hapticFeedback();
                           if (controller
                               .currentlyRingingAlarm.value.isGuardian) {
                             controller.guardianTimer.cancel();
+                          }
+                          // Disable one-time alarm when dismissed
+                          if (controller.currentlyRingingAlarm.value.days.every((element) => element == false)) {
+                            controller.currentlyRingingAlarm.value.isEnabled = false;
+                            if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+                              await IsarDb.updateAlarm(controller.currentlyRingingAlarm.value);
+                            } else {
+                              await FirestoreDb.updateAlarm(
+                                controller.currentlyRingingAlarm.value.ownerId,
+                                controller.currentlyRingingAlarm.value,
+                              );
+                            }
                           }
                           if (Utils.isChallengeEnabled(
                             controller.currentlyRingingAlarm.value,

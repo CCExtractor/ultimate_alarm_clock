@@ -132,25 +132,6 @@ class SplashScreenController extends GetxController {
                     currentlyRingingAlarm.value,
                   );
                 }
-              } else if (currentlyRingingAlarm.value.isOneTime == true) {
-                // If the alarm has to repeat on one day, but ring just once,
-                // we will keep seting its days to false until it will never ring
-                int currentDay = DateTime.now().weekday - 1;
-                currentlyRingingAlarm.value.days[currentDay] = false;
-
-                if (currentlyRingingAlarm.value.days
-                    .every((element) => element == false)) {
-                  currentlyRingingAlarm.value.isEnabled = false;
-                }
-
-                if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-                  IsarDb.updateAlarm(currentlyRingingAlarm.value);
-                } else {
-                  FirestoreDb.updateAlarm(
-                    currentlyRingingAlarm.value.ownerId,
-                    currentlyRingingAlarm.value,
-                  );
-                }
               }
 
               AlarmModel latestAlarm = await getNextAlarm();
