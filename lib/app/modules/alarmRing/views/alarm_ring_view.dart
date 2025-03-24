@@ -251,7 +251,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                     child: TextButton(
                       onPressed: () {
                         Utils.hapticFeedback();
-                        Get.offNamed('/bottom-navigation-bar');
+                        Get.offAllNamed('/bottom-navigation-bar');
                       },
                       child: Text(
                         'Exit Preview'.tr,
