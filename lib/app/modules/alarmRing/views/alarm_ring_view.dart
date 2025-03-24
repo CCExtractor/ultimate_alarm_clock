@@ -224,29 +224,31 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  color: Colors.red,
-                  child: TextButton(
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Get.offNamed('/bottom-navigation-bar');
-                    },
-                    child: Text(
-                      'Exit Preview'.tr,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+              // Exit Preview button - only show in preview mode
+              if (controller.isPreviewMode.value)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    width: double.infinity,
+                    height: 60,
+                    color: Colors.red,
+                    child: TextButton(
+                      onPressed: () {
+                        Utils.hapticFeedback();
+                        Get.offNamed('/bottom-navigation-bar');
+                      },
+                      child: Text(
+                        'Exit Preview'.tr,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
