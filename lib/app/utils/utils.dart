@@ -76,6 +76,7 @@ class Utils {
     guardian: '',
     isCall: false,
     ringOn: false,
+    lastModifiedDate: DateTime.now(),
   );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {

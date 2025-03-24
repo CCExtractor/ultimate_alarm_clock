@@ -62,6 +62,9 @@ class AlarmModel {
   @ignore
   Map? offsetDetails;
 
+  @Index()
+  late DateTime lastModifiedDate;
+
   AlarmModel(
       {required this.alarmTime,
       required this.alarmID,
@@ -109,7 +112,10 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      DateTime? lastModifiedDate}) {
+    this.lastModifiedDate = lastModifiedDate ?? DateTime.now();
+  }
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -179,6 +185,9 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    lastModifiedDate = documentSnapshot['lastModifiedDate'] != null
+        ? (documentSnapshot['lastModifiedDate'] as firestore.Timestamp).toDate()
+        : DateTime.now();
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -337,7 +346,6 @@ class AlarmModel {
     guardianTimer = alarmData['guardianTimer'];
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
-    ringOn = alarmData['ringOn'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -395,7 +403,8 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'lastModifiedDate': firestore.Timestamp.fromDate(alarmRecord.lastModifiedDate),
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

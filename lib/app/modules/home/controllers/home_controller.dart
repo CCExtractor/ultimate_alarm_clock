@@ -19,6 +19,8 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/data/models/sort_model.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 
 import '../../../data/models/profile_model.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
@@ -152,74 +154,7 @@ class HomeController extends GetxController {
           ...latestFirestoreAlarms,
           ...latestIsarAlarms,
         ];
-
-        if (isSortedAlarmListEnabled.value) {
-          alarms.sort((a, b) {
-            final String timeA = a.alarmTime;
-            final String timeB = b.alarmTime;
-
-            // Convert the alarm time strings to DateTime objects for comparison
-            DateTime dateTimeA = DateFormat('HH:mm').parse(timeA);
-            DateTime dateTimeB = DateFormat('HH:mm').parse(timeB);
-
-            // Compare the DateTime objects to sort in ascending order
-            return dateTimeA.compareTo(dateTimeB);
-          });
-        } else {
-          alarms.sort((a, b) {
-            // First sort by isEnabled
-            if (a.isEnabled != b.isEnabled) {
-              return a.isEnabled ? -1 : 1;
-            }
-
-            // Then sort by upcoming time
-            int aUpcomingTime = a.minutesSinceMidnight;
-            int bUpcomingTime = b.minutesSinceMidnight;
-
-            // Check if alarm repeats on any day
-            bool aRepeats = a.days.any((day) => day);
-            bool bRepeats = b.days.any((day) => day);
-
-            // If alarm repeats on any day, find the next up+coming day
-            if (aRepeats) {
-              int currentDay = DateTime.now().weekday - 1;
-              for (int i = 0; i < a.days.length; i++) {
-                int dayIndex = (currentDay + i) % a.days.length;
-                if (a.days[dayIndex]) {
-                  aUpcomingTime += i * Duration.minutesPerDay;
-                  break;
-                }
-              }
-            } else {
-              // If alarm is one-time and has already passed, set upcoming time
-              // to next day
-              if (aUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
-                aUpcomingTime += Duration.minutesPerDay;
-              }
-            }
-
-            if (bRepeats) {
-              int currentDay = DateTime.now().weekday - 1;
-              for (int i = 0; i < b.days.length; i++) {
-                int dayIndex = (currentDay + i) % b.days.length;
-                if (b.days[dayIndex]) {
-                  bUpcomingTime += i * Duration.minutesPerDay;
-                  break;
-                }
-              }
-            } else {
-              // If alarm is one-time and has already passed, set upcoming time
-              // to next day
-              if (bUpcomingTime <=
-                  DateTime.now().hour * 60 + DateTime.now().minute) {
-                bUpcomingTime += Duration.minutesPerDay;
-              }
-            }
-
-            return aUpcomingTime.compareTo(bUpcomingTime);
-          });
-        }
+        sortAlarms(alarms);
 
         return alarms;
       },
@@ -825,5 +760,129 @@ class HomeController extends GetxController {
         guardian: profileModel.value.guardian,
         isCall: profileModel.value.isCall,
         ringOn: false);
+  }
+
+  void sortAlarms(List<AlarmModel> alarms) {
+    final settingsController = Get.find<SettingsController>();
+    
+    if (!settingsController.isSortedAlarmListEnabled.value) {
+      return;
+    }
+    List<AlarmModel> sortedAlarms = List.from(alarms);
+
+    switch (settingsController.currentSortMode.value) {
+      case AlarmSortMode.defaultSort:
+        _defaultSort(sortedAlarms);
+        break;
+      case AlarmSortMode.timeOfDay:
+        _timeOfDaySort(sortedAlarms);
+        break;
+      case AlarmSortMode.label:
+        _labelSort(sortedAlarms);
+        break;
+      case AlarmSortMode.creationDate:
+        _creationDateSort(sortedAlarms);
+        break;
+      case AlarmSortMode.lastModified:
+        _lastModifiedSort(sortedAlarms);
+        break;
+      case AlarmSortMode.customOrder:
+        break;
+    }
+    if (settingsController.currentSortDirection.value == SortDirection.descending) {
+      sortedAlarms = sortedAlarms.reversed.toList();
+    }
+    alarms.clear();
+    alarms.addAll(sortedAlarms);
+  }
+
+  void _defaultSort(List<AlarmModel> alarms) {
+    alarms.sort((a, b) {
+      
+      if (a.isEnabled != b.isEnabled) {
+        return a.isEnabled ? -1 : 1;
+      }
+
+      
+      return _compareUpcomingTime(a, b);
+    });
+  }
+
+  void _timeOfDaySort(List<AlarmModel> alarms) {
+    alarms.sort((a, b) {
+      return a.minutesSinceMidnight.compareTo(b.minutesSinceMidnight);
+    });
+  }
+
+  void _labelSort(List<AlarmModel> alarms) {
+    alarms.sort((a, b) {
+      return (a.label ?? '').compareTo(b.label ?? '');
+    });
+  }
+
+  void _creationDateSort(List<AlarmModel> alarms) {
+    alarms.sort((a, b) {
+      return b.alarmID.compareTo(a.alarmID);
+    });
+  }
+
+  void _lastModifiedSort(List<AlarmModel> alarms) {
+    alarms.sort((a, b) {
+      return b.lastModifiedDate.compareTo(a.lastModifiedDate);
+    });
+  }
+
+  int _compareUpcomingTime(AlarmModel a, AlarmModel b) {
+    int aUpcomingTime = a.minutesSinceMidnight;
+    int bUpcomingTime = b.minutesSinceMidnight;
+
+    
+    bool aRepeats = a.days.any((day) => day);
+    bool bRepeats = b.days.any((day) => day);
+
+    
+    if (aRepeats) {
+      aUpcomingTime = _calculateNextOccurrence(a);
+    } else if (aUpcomingTime <= DateTime.now().hour * 60 + DateTime.now().minute) {
+      aUpcomingTime += Duration.minutesPerDay;
+    }
+
+    if (bRepeats) {
+      bUpcomingTime = _calculateNextOccurrence(b);
+    } else if (bUpcomingTime <= DateTime.now().hour * 60 + DateTime.now().minute) {
+      bUpcomingTime += Duration.minutesPerDay;
+    }
+
+    return aUpcomingTime.compareTo(bUpcomingTime);
+  }
+
+  int _calculateNextOccurrence(AlarmModel alarm) {
+    int currentDay = DateTime.now().weekday - 1;
+    int minutesSinceMidnight = alarm.minutesSinceMidnight;
+    int currentTimeInMinutes = DateTime.now().hour * 60 + DateTime.now().minute;
+
+    
+    for (int i = 0; i < alarm.days.length; i++) {
+      int dayIndex = (currentDay + i) % alarm.days.length;
+      if (alarm.days[dayIndex]) {
+        if (i == 0 && minutesSinceMidnight <= currentTimeInMinutes) {
+          continue; 
+        }
+        return minutesSinceMidnight + i * Duration.minutesPerDay;
+      }
+    }
+
+    for (int i = 0; i < alarm.days.length; i++) {
+      if (alarm.days[i]) {
+        return minutesSinceMidnight + (7 - currentDay + i) * Duration.minutesPerDay;
+      }
+    }
+
+    return minutesSinceMidnight;
+  }
+
+  void refreshAlarmList() {
+    
+    update();
   }
 }

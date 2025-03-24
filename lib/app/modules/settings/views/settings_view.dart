@@ -10,6 +10,8 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/views/sort_options_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -120,6 +122,15 @@ class SettingsView extends GetView<SettingsController> {
                 ),
                 const SizedBox(
                   height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: SortOptionsView(
+                    controller: controller,
+                    themeController: Get.find<ThemeController>(),
+                    height: height,
+                    width: width,
+                  ),
                 ),
               ],
             ),

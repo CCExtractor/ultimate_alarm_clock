@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/sort_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
@@ -67,6 +68,12 @@ class SettingsController extends GetxController {
     },
   };
 
+  final _sortModeKey = 'sortMode';
+  final _sortDirectionKey = 'sortDirection';
+  
+  final Rx<AlarmSortMode> currentSortMode = AlarmSortMode.defaultSort.obs;
+  final Rx<SortDirection> currentSortDirection = SortDirection.ascending.obs;
+
   @override
   void onInit() async {
     super.onInit();
@@ -76,6 +83,17 @@ class SettingsController extends GetxController {
       userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
+    
+    String? savedSortMode = await _secureStorageProvider.readSortMode(_sortModeKey);
+    String? savedSortDirection = await _secureStorageProvider.readSortDirection(_sortDirectionKey);
+    
+    currentSortMode.value = savedSortMode != null 
+        ? AlarmSortMode.values.firstWhere((e) => e.name == savedSortMode)
+        : AlarmSortMode.defaultSort;
+        
+    currentSortDirection.value = savedSortDirection != null
+        ? SortDirection.values.firstWhere((e) => e.name == savedSortDirection)
+        : SortDirection.ascending;
   }
 
   // Logins user using GoogleSignIn
@@ -255,5 +273,28 @@ class SettingsController extends GetxController {
     local.value = Get.locale.toString();
     storage.writeCurrentLanguage(local.value);
     storage.writeLocale(languageCode, countryCode);
+  }
+
+  void _saveSortPreferences() async {
+    await _secureStorageProvider.writeSortMode(
+      _sortModeKey,
+      currentSortMode.value.name,
+    );
+    await _secureStorageProvider.writeSortDirection(
+      _sortDirectionKey,
+      currentSortDirection.value.name,
+    );
+  }
+
+  void updateSortMode(AlarmSortMode mode) {
+    currentSortMode.value = mode;
+    _saveSortPreferences();
+    homeController.refreshAlarmList();
+  }
+
+  void updateSortDirection(SortDirection direction) {
+    currentSortDirection.value = direction;
+    _saveSortPreferences();
+    homeController.refreshAlarmList();
   }
 }

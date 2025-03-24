@@ -215,4 +215,20 @@ class SecureStorageProvider {
       value: timerId.toString(),
     );
   }
+
+  Future<String?> readSortMode(String key) async {
+    return await _secureStorage.read(key: key);
+  }
+
+  Future<String?> readSortDirection(String key) async {
+    return await _secureStorage.read(key: key);
+  }
+
+  Future<void> writeSortMode(String key, String value) async {
+    await _secureStorage.write(key: key, value: value);
+  }
+
+  Future<void> writeSortDirection(String key, String value) async {
+    await _secureStorage.write(key: key, value: value);
+  }
 }
