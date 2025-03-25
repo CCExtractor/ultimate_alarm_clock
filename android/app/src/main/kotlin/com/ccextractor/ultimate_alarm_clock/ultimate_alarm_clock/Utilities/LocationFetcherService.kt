@@ -97,14 +97,16 @@ class LocationFetcherService : Service() {
             Timer().schedule(9000){
             println("ANDROID STARTING APP")
             this@LocationFetcherService.startActivity(flutterIntent)
-                var locationAtAlarmTime = "$destinationLatitude,$destinationLongitude"
-                var currLocation = "$currentLatitude,$currentLongitude"
                 val log = mapOf(
                     "Did Alarm Ring:" to "Yes",
                     "Alarm Type:" to "Location Based Alarm",
                     "Distance:" to distance.toString(),
-                    "Location set by User:" to currLocation,
-                    "Location at Alarm TIme:" to locationAtAlarmTime
+                    "Location set by User:" to "",
+                    "Lat: " to destinationLatitude.toString(),
+                    "Long: " to destinationLongitude.toString(),
+                    "Location at Alarm Time:" to "",
+                    "Lat: " to currentLatitude.toString(),
+                    "Long: " to currentLongitude.toString()
                 )
                 logdbHelper.insertLog("Alarm rings: ${getCurrentTime()}", log)
                 Timer().schedule(3000){
@@ -121,8 +123,12 @@ class LocationFetcherService : Service() {
                 "Did Alarm Ring:" to "No",
                 "Alarm Type:" to "Location Based Alarm",
                 "Distance:" to distance.toString(),
-                "Location set by User:" to currLocation,
-                "Location at Alarm TIme:" to locationAtAlarmTime
+                "Location set by User:" to "",
+                "Lat: " to destinationLatitude.toString(),
+                "Long: " to destinationLongitude.toString(),
+                "Location at Alarm Time:" to "",
+                "Lat: " to currentLatitude.toString(),
+                "Long: " to currentLongitude.toString()
             )
             logdbHelper.insertLog("Alarm didn't ring: ${getCurrentTime()}", log)
             Timer().schedule(9000){
