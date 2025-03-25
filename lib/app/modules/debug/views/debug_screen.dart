@@ -402,10 +402,7 @@ class _TerminalScreenState extends State<DebugScreen> {
                           ),
                         ),
                         children: [
-                          if(logDataMap.isEmpty) const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('No extra information'),
-                          ),
+                          if(logDataMap.isEmpty) Text('No extra information'),
                           ...logDataMap.entries.map((data) {
                             return Padding(
                               padding: EdgeInsets.only(left: 25, right: 10),
@@ -423,7 +420,8 @@ class _TerminalScreenState extends State<DebugScreen> {
                                 ],
                               ),
                             );
-                          })
+                          }),
+                          const SizedBox(height: 15,),
                         ],
                       );
                     },
