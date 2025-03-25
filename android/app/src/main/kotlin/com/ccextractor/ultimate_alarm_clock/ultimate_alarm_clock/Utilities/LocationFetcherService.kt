@@ -105,8 +105,8 @@ class LocationFetcherService : Service() {
                     "Lat: " to destinationLatitude.toString(),
                     "Long: " to destinationLongitude.toString(),
                     "Location at Alarm Time:" to "",
-                    "Lat: " to currentLatitude.toString(),
-                    "Long: " to currentLongitude.toString()
+                    "CurrLat: " to currentLatitude.toString(),
+                    "CurrLong: " to currentLongitude.toString()
                 )
                 logdbHelper.insertLog("Alarm rings: ${getCurrentTime()}", log)
                 Timer().schedule(3000){
@@ -127,8 +127,8 @@ class LocationFetcherService : Service() {
                 "Lat: " to destinationLatitude.toString(),
                 "Long: " to destinationLongitude.toString(),
                 "Location at Alarm Time:" to "",
-                "Lat: " to currentLatitude.toString(),
-                "Long: " to currentLongitude.toString()
+                "CurrLat: " to currentLatitude.toString(),
+                "CurrLong: " to currentLongitude.toString()
             )
             logdbHelper.insertLog("Alarm didn't ring: ${getCurrentTime()}", log)
             Timer().schedule(9000){
