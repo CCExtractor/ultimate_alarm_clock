@@ -20,6 +20,9 @@ import kotlinx.coroutines.runBlocking
 import java.util.Timer
 import kotlin.concurrent.schedule
 import android.content.pm.ServiceInfo
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class WeatherFetcherService() : Service() {
@@ -78,6 +81,7 @@ class WeatherFetcherService() : Service() {
         return location
     }
     suspend fun fetchWeather(){
+        val logdbHelper = LogDatabaseHelper(this@WeatherFetcherService)
         var currentWeather = ""
         val request = GsonRequest(OPEN_METEO_URL, WeatherModel::class.java,
             { response ->
@@ -105,6 +109,13 @@ class WeatherFetcherService() : Service() {
                     if(shouldRing==false)
                     
                     {
+                        val log = mapOf(
+                            "Did Alarm Ring:" to "No",
+                            "Alarm Type:" to "Weather Based Alarm",
+                            "Weather Types:" to weatherTypes,
+                            "Weather at Alarm Time:" to currentWeather
+                        )
+                        logdbHelper.insertLog("Alarm didn't ring: ${getCurrentTime()}", log)
                         Timer().schedule(3000) {
                             stopSelf()
                         }
@@ -128,6 +139,13 @@ class WeatherFetcherService() : Service() {
                             Timer().schedule(9000) {
                                 println("ANDROID STARTING APP")
                                 this@WeatherFetcherService.startActivity(flutterIntent)
+                                val log = mapOf(
+                                    "Did Alarm Ring:" to "Yes",
+                                    "Alarm Type:" to "Weather Based Alarm",
+                                    "Weather Types:" to weatherTypes,
+                                    "Weather at Alarm Time:" to currentWeather
+                                )
+                                logdbHelper.insertLog("Alarm rings: ${getCurrentTime()}", log)
                                 Timer().schedule(3000) {
                                     stopSelf()
                                 }
@@ -189,6 +207,11 @@ class WeatherFetcherService() : Service() {
             .setCategory(Notification.CATEGORY_SERVICE)
 
         return notification.build()
+    }
+
+    private fun getCurrentTime(): String {
+        val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return formatter.format(Date())
     }
 
     override fun onDestroy() {

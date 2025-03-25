@@ -69,7 +69,10 @@ class IsarDb {
           CREATE TABLE LOG (
           LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
           LogTime DATETIME NOT NULL,            
-          Status VARCHAR(50) NOT NULL)
+          Status INTEGER NOT NULL DEFAULT 0,
+          LogMsg TEXT NOT NULL DEFAULT 'No message',
+          LogData TEXT
+          )
         ''');
       },
     );
@@ -159,7 +162,7 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
-  Future<int> insertLog(String status) async {
+  Future<int> insertLog(String msg, {int status = 0}) async {
     try {
       final db = await setAlarmLogs();
       if (db == null) {
@@ -171,6 +174,7 @@ class IsarDb {
         {
           'LogTime': DateTime.now().millisecondsSinceEpoch,
           'Status': status,
+          'LogMsg': msg,
         },
       );
       debugPrint('Successfully inserted log: $status');
@@ -211,19 +215,6 @@ class IsarDb {
       debugPrint('Error clearing logs: $e');
       rethrow;
     }
-  }
-
-  // Update a log entry
-  Future<int> updateLog(int logId, String newStatus) async {
-    final db = await setAlarmLogs();
-    return await db!.update(
-      'LOG',
-      {
-        'Status': newStatus,
-      },
-      where: 'LogID = ?',
-      whereArgs: [logId],
-    );
   }
 
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {

@@ -17,6 +17,9 @@ import androidx.core.app.NotificationCompat
 import com.ultimate_alarm_clock.Utilities.LocationHelper
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 import kotlin.math.atan2
@@ -35,6 +38,8 @@ class LocationFetcherService : Service() {
 
     override fun onCreate() = runBlocking {
         super.onCreate()
+
+        val logdbHelper = LogDatabaseHelper(this@LocationFetcherService)
 
         sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
@@ -92,6 +97,16 @@ class LocationFetcherService : Service() {
             Timer().schedule(9000){
             println("ANDROID STARTING APP")
             this@LocationFetcherService.startActivity(flutterIntent)
+                var locationAtAlarmTime = "$destinationLatitude,$destinationLongitude"
+                var currLocation = "$currentLatitude,$currentLongitude"
+                val log = mapOf(
+                    "Did Alarm Ring:" to "Yes",
+                    "Alarm Type:" to "Location Based Alarm",
+                    "Distance:" to distance.toString(),
+                    "Location set by User:" to currLocation,
+                    "Location at Alarm TIme:" to locationAtAlarmTime
+                )
+                logdbHelper.insertLog("Alarm rings: ${getCurrentTime()}", log)
                 Timer().schedule(3000){
                     stopSelf()
                 }
@@ -100,6 +115,16 @@ class LocationFetcherService : Service() {
 
         }
         if(distance < 500.0){
+            var locationAtAlarmTime = "$destinationLatitude,$destinationLongitude"
+            var currLocation = "$currentLatitude,$currentLongitude"
+            val log = mapOf(
+                "Did Alarm Ring:" to "No",
+                "Alarm Type:" to "Location Based Alarm",
+                "Distance:" to distance.toString(),
+                "Location set by User:" to currLocation,
+                "Location at Alarm TIme:" to locationAtAlarmTime
+            )
+            logdbHelper.insertLog("Alarm didn't ring: ${getCurrentTime()}", log)
             Timer().schedule(9000){
                 Timer().schedule(3000){
                     stopSelf()
@@ -113,6 +138,11 @@ class LocationFetcherService : Service() {
     suspend fun fetchLocation(): String {
         val location = LocationHelper(this).getCurrentLocation()
         return location
+    }
+
+    private fun getCurrentTime(): String {
+        val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return formatter.format(Date())
     }
 
     private fun createNotificationChannel() {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';
@@ -169,11 +171,11 @@ class _TerminalScreenState extends State<DebugScreen> {
     }
   }
 
-  Color _getLogLevelColor(String status) {
+  int _getLogLevel(String status) {
     status = status.toLowerCase();
-    if (status.contains('error')) return Colors.red;
-    if (status.contains('warning')) return Colors.orange;
-    return Colors.green;
+    if (status.contains('error')) return 2;
+    if (status.contains('warning')) return 1;
+    return 0;
   }
 
   @override
@@ -348,6 +350,7 @@ class _TerminalScreenState extends State<DebugScreen> {
                   )
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
+                    physics: const BouncingScrollPhysics(),
                     separatorBuilder: (context, _) {
                       return SizedBox(height: height * 0.02);
                     },
@@ -358,66 +361,70 @@ class _TerminalScreenState extends State<DebugScreen> {
                       final formattedTime = Utils.getFormattedDate(logTime);
                       final formattedHour = logTime.hour.toString().padLeft(2, '0');
                       final formattedMinute = logTime.minute.toString().padLeft(2, '0');
-                      final logLevelColor = _getLogLevelColor(log['Status']);
+                      int logLevel = log['Status'];
+                      final logMsg = log['LogMsg'];
+                      final logData = log['LogData'];
+                      Map<String, dynamic> logDataMap = {};
 
-                      return Container(
-                        width: width * 0.91,
-                        decoration: Utils.getCustomTileBoxDecoration(
-                          isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                      if(logData != null) {
+                        debugPrint('LogData: $logData');
+                        logDataMap = jsonDecode(logData);
+                      }
+
+                      return ExpansionTile(
+                        collapsedBackgroundColor: themeController.secondaryBackgroundColor.value,
+                        backgroundColor: themeController.secondaryBackgroundColor.value,
+                        textColor: Colors.white,
+                        collapsedIconColor: Colors.white,
+                        iconColor: Colors.white,
+                        collapsedShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        title: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 8,
-                                        height: 8,
-                                        decoration: BoxDecoration(
-                                          color: logLevelColor,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'LogID: ${log['LogID']}',
-                                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                              color: themeController.primaryTextColor.value,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$formattedHour:$formattedMinute',
-                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                          color: themeController.primaryTextColor.value.withOpacity(0.75),
-                                        ),
-                                  ),
-                                ],
+                                  Text(formattedTime, style: TextStyle(color: themeController.primaryDisabledTextColor.value, fontWeight: FontWeight.bold),),
+                                  Text(logMsg, style: TextStyle(fontSize: 15),)
+                                ]
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                formattedTime,
-                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                      color: themeController.primaryTextColor.value.withOpacity(0.5),
-                                    ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                log['Status'],
-                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                      color: themeController.primaryTextColor.value,
-                                    ),
-                              ),
+                              Icon(logLevel == 0?Icons.info:(logLevel==1?Icons.info:Icons.error),
+                                color: logLevel == 0?Colors.green:(logLevel==1?Colors.orange:Colors.red),
+                              )
                             ],
                           ),
                         ),
+                        children: [
+                          if(logDataMap.isEmpty) const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('No extra information'),
+                          ),
+                          ...logDataMap.entries.map((data) {
+                            return Padding(
+                              padding: EdgeInsets.only(left: 25, right: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    data.key,
+                                    style: TextStyle(
+                                      color: themeController.primaryDisabledTextColor.value,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Text(data.value.toString())
+                                ],
+                              ),
+                            );
+                          })
+                        ],
                       );
                     },
                   ),
