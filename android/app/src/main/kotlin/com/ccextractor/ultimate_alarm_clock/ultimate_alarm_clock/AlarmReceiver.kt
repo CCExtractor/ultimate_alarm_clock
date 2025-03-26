@@ -1,8 +1,13 @@
 package com.ccextractor.ultimate_alarm_clock
 
 import android.content.BroadcastReceiver
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -10,8 +15,9 @@ class AlarmReceiver : BroadcastReceiver() {
         if (context == null || intent == null) {
             return
         }
-
-
+        
+        val dbHelper = HistoryDbHelper(context)
+        val historyDb: SQLiteDatabase = dbHelper.writableDatabase
 
         val logdbHelper = LogDatabaseHelper(context);
         val flutterIntent = Intent(context, MainActivity::class.java).apply {
@@ -34,7 +40,44 @@ class AlarmReceiver : BroadcastReceiver() {
         if (Math.abs(screenOnTimeInMillis - screenOffTimeInMillis) < 180000 || screenOnTimeInMillis - screenOffTimeInMillis == 0L) {
             println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)
+
+            if((screenOnTimeInMillis - screenOffTimeInMillis) == 0L) {
+                // if alarm rings (no smart controls used)
+                val values = ContentValues().apply {
+                    put("didAlarmRing", 1)
+                    put("alarmTime", getCurrentTime())
+                }
+                historyDb.insert("alarmHistory", null, values)
+                historyDb.close()
+                return
+            }
+
+            // if alarm rings and Screen Activity is turned on
+            val values = ContentValues().apply {
+                put("didAlarmRing", 1)
+                put("alarmTime", getCurrentTime())
+                put("reason", "activity")
+                put("activityInterval", Math.abs(screenOnTimeInMillis - screenOffTimeInMillis))
+            }
+            historyDb.insert("alarmHistory", null, values)
+            historyDb.close()
+            return
         }
+
+        // alarm did not ring because screen activity was more than specified.
+        val values = ContentValues().apply {
+            put("didAlarmRing", 0)
+            put("alarmTime", getCurrentTime())
+            put("reason", "activity")
+            put("activityInterval", Math.abs(screenOnTimeInMillis - screenOffTimeInMillis))
+        }
+        historyDb.insert("alarmHistory", null, values)
+        historyDb.close()
+    }
+
+    private fun getCurrentTime(): String {
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        return formatter.format(Date())
     }
 
 }

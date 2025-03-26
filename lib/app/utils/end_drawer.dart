@@ -137,6 +137,26 @@ Widget buildEndDrawer(BuildContext context) {
               color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
           ),
+          ListTile(
+            onTap: () {
+              Utils.hapticFeedback();
+              Get.back();
+              Get.toNamed(Routes.HISTORY);
+            },
+            contentPadding: const EdgeInsets.only(left: 20, right: 44),
+            title: Text(
+              'Alarm History'.tr,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.8),
+                  ),
+            ),
+            leading: Icon(
+              Icons.history,
+              size: 26,
+              color: themeController.primaryTextColor.value.withOpacity(0.8),
+            ),
+          ),
         ],
       ),
     ),

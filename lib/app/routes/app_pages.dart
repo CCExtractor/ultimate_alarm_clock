@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmHistory/bindings/alarm_history_bindings.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmHistory/views/alarm_history_view.dart';
 
 import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
@@ -87,6 +89,11 @@ class AppPages {
       name: _Paths.NOTIFICATIONS,
       page: () => const NotificationsView(),
       binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY,
+      page: () => AlarmHistoryView(),
+      binding: AlarmHistoryBinding(),
     ),
   ];
 }
