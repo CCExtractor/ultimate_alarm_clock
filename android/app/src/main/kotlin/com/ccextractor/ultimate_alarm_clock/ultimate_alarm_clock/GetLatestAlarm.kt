@@ -135,7 +135,11 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
             val logDetails = """
                 Alarm Scheduled for ${setAlarm.alarmTime}
             """.trimIndent()
-            logdbHelper.insertLog(logDetails)
+            logdbHelper.insertLog(
+                "Alarm Scheduled for ${setAlarm.alarmTime}",
+                LogDatabaseHelper.Status.SUCCESS,
+                LogDatabaseHelper.LogType.DEV
+            )
 
             // Return the latest alarm details
             val a = mapOf(

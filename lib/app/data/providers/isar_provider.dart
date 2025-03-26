@@ -14,6 +14,30 @@ import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dar
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
+enum Status {
+  error('ERROR'),
+  success('SUCCESS'),
+  warning('WARNING');
+
+  final String value;
+  const Status(this.value);
+
+  @override
+  String toString() => value;
+}
+
+enum LogType {
+  dev("DEV"),
+  normal("NORMAL");
+
+  final String value;
+  const LogType(this.value);
+
+  @override
+  String toString() => value;
+}
+
+
 class IsarDb {
   static final IsarDb _instance = IsarDb._internal();
   late Future<Isar> db;
@@ -67,9 +91,14 @@ class IsarDb {
       onCreate: (Database db, int version) async {
         await db.execute('''
           CREATE TABLE LOG (
-          LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
-          LogTime DATETIME NOT NULL,            
-          Status VARCHAR(50) NOT NULL)
+            LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+            LogTime DATETIME NOT NULL,            
+            Status TEXT CHECK(Status IN ('ERROR', 'SUCCESS', 'WARNING')) NOT NULL,
+            LogType TEXT CHECK(LogType IN ('DEV', 'NORMAL')) NOT NULL,
+            Message TEXT NOT NULL,
+            HasRung INTEGER DEFAULT 0,
+            AlarmID TEXT
+          )
         ''');
       },
     );
@@ -159,21 +188,26 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
-  Future<int> insertLog(String status) async {
+  Future<int> insertLog(String msg, {Status status = Status.warning, LogType type = LogType.dev, int hasRung = 0}) async {
     try {
       final db = await setAlarmLogs();
       if (db == null) {
         debugPrint('Failed to initialize database for logs');
         return -1;
       }
+      String st = status.toString();
+      String t = type.toString();
       final result = await db.insert(
         'LOG',
         {
           'LogTime': DateTime.now().millisecondsSinceEpoch,
-          'Status': status,
+          'Status': st,
+          'LogType': t,
+          'Message': msg,
+          'HasRung': hasRung,
         },
       );
-      debugPrint('Successfully inserted log: $status');
+      debugPrint('Successfully inserted log: $msg');
       return result;
     } catch (e) {
       debugPrint('Error inserting log: $e');
@@ -211,19 +245,6 @@ class IsarDb {
       debugPrint('Error clearing logs: $e');
       rethrow;
     }
-  }
-
-  // Update a log entry
-  Future<int> updateLog(int logId, String newStatus) async {
-    final db = await setAlarmLogs();
-    return await db!.update(
-      'LOG',
-      {
-        'Status': newStatus,
-      },
-      where: 'LogID = ?',
-      whereArgs: [logId],
-    );
   }
 
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {
@@ -414,7 +435,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
-    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}');
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}', status: Status.success, type: LogType.normal);
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),

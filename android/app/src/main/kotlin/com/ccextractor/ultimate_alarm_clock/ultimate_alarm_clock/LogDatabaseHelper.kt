@@ -16,13 +16,36 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         private const val COLUMN_STATUS = "Status"
     }
 
+    enum class Status(val value: String) {
+        ERROR("ERROR"),
+        SUCCESS("SUCCESS"),
+        WARNING("WARNING");
+
+        override fun toString(): String {
+            return value
+        }
+    }
+
+    enum class LogType(val value: String) {
+        DEV("DEV"),
+        NORMAL("NORMAL");
+
+        override fun toString(): String {
+            return value
+        }
+    }
+
     override fun onCreate(db: SQLiteDatabase?) {
         // Create the LOG table
         val createTableQuery = """
-            CREATE TABLE $TABLE_NAME (
-                $COLUMN_LOG_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMN_LOG_TIME DATETIME NOT NULL,
-                $COLUMN_STATUS TEXT NOT NULL
+            CREATE TABLE LOG (
+                LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+                LogTime DATETIME NOT NULL,            
+                Status TEXT CHECK(Status IN ('ERROR', 'SUCCESS', 'WARNING')) NOT NULL,
+                LogType TEXT CHECK(LogType IN ('DEV', 'NORMAL')) NOT NULL,
+                Message TEXT NOT NULL,
+                HasRung INTEGER DEFAULT 0,
+                AlarmID TEXT
             )
         """.trimIndent()
         db?.execSQL(createTableQuery)
@@ -35,11 +58,17 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
 
     // Insert a log entry
-    fun insertLog(status: String): Long {
+    fun insertLog(msg: String, status: Status = Status.WARNING, type: LogType = LogType.DEV, hasRung: Int = 0, alarmID: String = ""): Long {
         val db = writableDatabase
+        val status = status.toString()
+        val type = type.toString()
         val values = ContentValues().apply {
-            put(COLUMN_LOG_TIME, System.currentTimeMillis()) // Store current time as milliseconds
-            put(COLUMN_STATUS, status)
+            put("LogTime", System.currentTimeMillis()) // Store current time as milliseconds
+            put("Status", status)
+            put("LogType", type)
+            put("Message", msg)
+            put("HasRung", hasRung)
+            put("AlarmID", alarmID)
         }
         return db.insert(TABLE_NAME, null, values)
     }
