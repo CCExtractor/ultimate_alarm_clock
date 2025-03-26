@@ -92,7 +92,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DEBUG,
-      page: () => const DebugView(),
+      page: () => DebugView(),
       binding: DebugBinding(),
     ),
   ];

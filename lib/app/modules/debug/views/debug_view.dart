@@ -9,7 +9,9 @@ import '../controllers/debug_controller.dart';
 import '../../../data/models/debug_model.dart';
 
 class DebugView extends GetView<DebugController> {
-  const DebugView({Key? key}) : super(key: key);
+  DebugView({super.key});
+
+  ThemeController themeController = Get.find<ThemeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,10 @@ class DebugView extends GetView<DebugController> {
               ),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.developer_mode),
+            onPressed: controller.toggleDevMode,
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: controller.fetchLogs,
@@ -175,11 +181,9 @@ class DebugView extends GetView<DebugController> {
                           ),
                     ),
                   )
-                : ListView.separated(
+                : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    separatorBuilder: (context, _) {
-                      return SizedBox(height: height * 0.02);
-                    },
+                    physics: const BouncingScrollPhysics(),
                     itemCount: controller.filteredLogs.length,
                     itemBuilder: (context, index) {
                       final log = controller.filteredLogs[index];
@@ -188,65 +192,68 @@ class DebugView extends GetView<DebugController> {
                       final formattedHour = logTime.hour.toString().padLeft(2, '0');
                       final formattedMinute = logTime.minute.toString().padLeft(2, '0');
                       final logLevelColor = controller.getLogLevelColor(log['Status']);
+                      final status = log['Status'];
+                      final logType = log['LogType'];
+                      final logMsg = log['Message'];
+                      final hasRung = log['HasRung'];
+                      final alarmID = log['AlarmID'];
 
-                      return Container(
-                        width: width * 0.91,
-                        decoration: Utils.getCustomTileBoxDecoration(
-                          isLightMode: controller.themeController.currentTheme.value == ThemeMode.light,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                      if(!controller.isDevMode.value && logType == 'DEV') {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Column(
+                        children: [
+                          ExpansionTile(
+                            collapsedBackgroundColor: themeController.secondaryBackgroundColor.value,
+                            backgroundColor: themeController.secondaryBackgroundColor.value,
+                            textColor: Colors.white,
+                            collapsedIconColor: Colors.white,
+                            iconColor: Colors.white,
+                            collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            title: Padding(
+                              padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        width: 8,
-                                        height: 8,
-                                        decoration: BoxDecoration(
-                                          color: logLevelColor,
-                                          shape: BoxShape.circle,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Text('$formattedHour:$formattedMinute', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),),
+                                          const SizedBox(width: 8),
+                                          Text(formattedTime, style: TextStyle(color: themeController.primaryDisabledTextColor.value, fontWeight: FontWeight.w600, fontSize: 12),),
+                                        ],
                                       ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'LogID: ${log['LogID']}',
-                                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                              color: controller.themeController.primaryTextColor.value,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.55,
+                                        child: Text(logMsg, style: const TextStyle(fontSize: 15), maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                                    ]
                                   ),
-                                  Text(
-                                    '$formattedHour:$formattedMinute',
-                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                          color: controller.themeController.primaryTextColor.value.withOpacity(0.75),
-                                        ),
-                                  ),
+                                  Icon(status == 'SUCCESS'?Icons.check_circle :(status=='WARNING'?Icons.info:Icons.error),
+                                    color: status == 'SUCCESS'?Colors.green:(status=='WARNING'?Colors.orange:Colors.red),
+                                  )
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                formattedTime,
-                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                      color: controller.themeController.primaryTextColor.value.withOpacity(0.5),
-                                    ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                log['Status'],
-                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                      color: controller.themeController.primaryTextColor.value,
-                                    ),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+                                child: Text(
+                                  logMsg,
+                                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                                ),
                               ),
                             ],
                           ),
-                        ),
+                          const SizedBox(height: 10),
+                        ],
                       );
                     },
                   )),
