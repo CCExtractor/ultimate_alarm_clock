@@ -188,7 +188,7 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
-  Future<int> insertLog(String msg, {Status status = Status.warning, LogType type = LogType.dev, int hasRung = 0}) async {
+  Future<int> insertLog(String msg, {Status status = Status.warning, LogType type = LogType.dev, int hasRung = 0, String alarmID = ''}) async {
     try {
       final db = await setAlarmLogs();
       if (db == null) {
@@ -205,9 +205,10 @@ class IsarDb {
           'LogType': t,
           'Message': msg,
           'HasRung': hasRung,
+          'AlarmID': alarmID,
         },
       );
-      debugPrint('Successfully inserted log: $msg');
+      debugPrint('Successfully inserted log: $msg with AlarmID: $alarmID');
       return result;
     } catch (e) {
       debugPrint('Error inserting log: $e');
@@ -257,6 +258,7 @@ class IsarDb {
     final sqlmap = alarmRecord.toSQFliteMap();
     print(sqlmap);
     await sql!.insert('alarms', sqlmap);
+    await IsarDb().insertLog('Alarm created ${alarmRecord.alarmTime}', status: Status.success, type: LogType.normal, alarmID: alarmRecord.alarmID);
     List a = await IsarDb().getLogs();
     print(a);
     return alarmRecord;
@@ -435,7 +437,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
-    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}', status: Status.success, type: LogType.normal);
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}', status: Status.success, type: LogType.normal, alarmID: alarmRecord.alarmID);
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),
@@ -448,6 +450,17 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     return db.alarmModels.get(id);
+  }
+
+  static Future<AlarmModel?> getAlarmByID(String alarmID) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final alarms = await db.alarmModels
+        .where()
+        .filter()
+        .alarmIDEqualTo(alarmID)
+        .findAll();
+    return alarms.isNotEmpty ? alarms.first : null;
   }
 
   static getAlarms(String name) async* {
@@ -511,7 +524,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
-    await IsarDb().insertLog('Alarm deleted ${tobedeleted!.alarmTime}');
+    await IsarDb().insertLog('Alarm deleted ${tobedeleted!.alarmTime}', alarmID: tobedeleted!.alarmID);
     await sql!.delete(
       'alarms',
       where: 'alarmID = ?',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 
@@ -66,6 +67,7 @@ class SettingsController extends GetxController {
       'description': 'Spanish',
     },
   };
+  final isDevMode = false.obs;
 
   @override
   void onInit() async {
@@ -76,6 +78,8 @@ class SettingsController extends GetxController {
       userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
+    // Load developer mode setting
+    isDevMode.value = Get.find<SharedPreferences>().getBool('isDevMode') ?? false;
   }
 
   // Logins user using GoogleSignIn
@@ -255,5 +259,11 @@ class SettingsController extends GetxController {
     local.value = Get.locale.toString();
     storage.writeCurrentLanguage(local.value);
     storage.writeLocale(languageCode, countryCode);
+  }
+
+  void toggleDevMode(bool value) {
+    isDevMode.value = value;
+    // Save to shared preferences
+    Get.find<SharedPreferences>().setBool('isDevMode', value);
   }
 }

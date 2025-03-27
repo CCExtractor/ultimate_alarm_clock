@@ -5,12 +5,15 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'dart:async';
 import '../../../data/providers/isar_provider.dart';
 import '../../../modules/settings/controllers/theme_controller.dart';
+import '../../../modules/settings/controllers/settings_controller.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/constants.dart';
 import '../../../data/models/debug_model.dart';
+import '../../../data/models/alarm_model.dart';
 
 class DebugController extends GetxController {
   final ThemeController themeController = Get.find<ThemeController>();
+  final SettingsController settingsController = Get.find<SettingsController>();
   final TextEditingController searchController = TextEditingController();
   
   var logs = <Map<String, dynamic>>[].obs;
@@ -29,6 +32,8 @@ class DebugController extends GetxController {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       fetchLogs();
     });
+    
+    isDevMode.value = settingsController.isDevMode.value;
   }
 
   @override
@@ -39,7 +44,8 @@ class DebugController extends GetxController {
   }
 
   void toggleDevMode() {
-    isDevMode.value = !isDevMode.value;
+    settingsController.toggleDevMode(!settingsController.isDevMode.value);
+    isDevMode.value = settingsController.isDevMode.value;
     fetchLogs();
   }
 
@@ -173,5 +179,245 @@ class DebugController extends GetxController {
     if (status.contains('error')) return Colors.red;
     if (status.contains('warning')) return Colors.orange;
     return Colors.green;
+  }
+
+  Future<Widget> getAlarmDetailsWidget(String? alarmID, String logMsg, String status, bool hasRung) async {
+    
+    String? effectiveAlarmID = alarmID;
+    if (effectiveAlarmID == null || effectiveAlarmID.isEmpty) {
+    
+      final idMatch = RegExp(r'ID: (\d+)|alarmID: (\d+)').firstMatch(logMsg);
+      if (idMatch != null) {
+        effectiveAlarmID = idMatch.group(1) ?? idMatch.group(2);
+      }
+    }
+
+    if (effectiveAlarmID == null || effectiveAlarmID.isEmpty) {
+      debugPrint('No alarm ID found in log message: $logMsg');
+      return const SizedBox.shrink();
+    }
+
+    try {
+      debugPrint('Fetching alarm details for ID: $effectiveAlarmID');
+      final alarm = await IsarDb.getAlarmByID(effectiveAlarmID);
+      if (alarm == null) {
+        debugPrint('No alarm found for ID: $effectiveAlarmID');
+        return const SizedBox.shrink();
+      }
+
+      debugPrint('Found alarm: ${alarm.alarmID} with time: ${alarm.alarmTime}');
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            
+            if (!logMsg.toLowerCase().contains('alarm deleted')) ...[
+              const SizedBox(height: 10),
+              Text(
+                'Alarm Details:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.7),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Time: ${alarm.alarmTime}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              if (alarm.label.isNotEmpty)
+                Text(
+                  'Label: ${alarm.label}',
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                ),
+              if (alarm.ringtoneName.isNotEmpty)
+                Text(
+                  'Ringtone: ${alarm.ringtoneName}',
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                ),
+              if (alarm.note.isNotEmpty)
+                Text(
+                  'Notes: ${alarm.note}',
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                ),
+              if (alarm.isMathsEnabled || alarm.isShakeEnabled || alarm.isQrEnabled || 
+                  alarm.isPedometerEnabled || alarm.isLocationEnabled || alarm.isWeatherEnabled) ...[
+                const SizedBox(height: 10),
+                Text(
+                  'Challenge Settings:',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white.withOpacity(0.7),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                if (alarm.isMathsEnabled)
+                  Text(
+                    'Math Challenge: Enabled',
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                if (alarm.isShakeEnabled)
+                  Text(
+                    'Shake Challenge: Enabled',
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                if (alarm.isQrEnabled)
+                  Text(
+                    'QR Challenge: Enabled',
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                if (alarm.isPedometerEnabled)
+                  Text(
+                    'Pedometer Challenge: Enabled',
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                if (alarm.isLocationEnabled)
+                  Text(
+                    'Location Challenge: Enabled',
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                if (alarm.isWeatherEnabled) ...[
+                  Text(
+                    'Weather Condition: ${alarm.weatherTypes.map((type) {
+                      switch (type) {
+                        case 0: return 'Sunny';
+                        case 1: return 'Cloudy';
+                        case 2: return 'Rainy';
+                        case 3: return 'Windy';
+                        case 4: return 'Stormy';
+                        default: return 'Unknown';
+                      }
+                    }).join(", ")}',
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ],
+              ],
+            ],
+
+            if (logMsg.toLowerCase().contains('alarm deleted')) ...[
+              const SizedBox(height: 10),
+              Text(
+                'Deleted Alarm Details:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.7),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Time: ${logMsg.split(' ').last}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
+            if (logMsg.toLowerCase().contains('alarm scheduled')) ...[
+              const SizedBox(height: 10),
+              Text(
+                'Schedule Details:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.7),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Scheduled Time: ${logMsg.split(' ').last}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              Text(
+                'Status: ${status == 'SUCCESS' ? 'Successfully Scheduled' : 'Failed to Schedule'}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
+            if (logMsg.toLowerCase().contains('alarm ringing')) ...[
+              const SizedBox(height: 10),
+              Text(
+                'Ringing Details:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.7),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Ringing Time: ${logMsg.split(' ').last}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              Text(
+                'Status: ${status == 'SUCCESS' ? 'Successfully Ringing' : 'Failed to Ring'}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              Text(
+                'Has Rung: ${hasRung ? 'Yes' : 'No'}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
+            
+            if (settingsController.isDevMode.value) ...[
+              const SizedBox(height: 10),
+              Text(
+                'DEV:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.7),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Alarm ID: ${alarm.alarmID}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              Text(
+                'Created At: ${Utils.getFormattedDate(DateTime.fromMillisecondsSinceEpoch(alarm.activityMonitor))}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              Text(
+                'Updated At: ${Utils.getFormattedDate(DateTime.fromMillisecondsSinceEpoch(alarm.activityMonitor))}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              Text(
+                'Is Active: ${alarm.isEnabled}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              if (alarm.isLocationEnabled)
+                Text(
+                  'Location: ${alarm.location}',
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                ),
+              Text(
+                'Is Recurring: ${!alarm.isOneTime}',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              if (!alarm.isOneTime) ...[
+                Text(
+                  'Recurring Days: ${alarm.days.map((day) => day ? 'Enabled' : 'Disabled').join(", ")}',
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                ),
+              ],
+            
+              if (logMsg.toLowerCase().contains('kotlin error') || logMsg.toLowerCase().contains('android error'))
+                Text(
+                  'Kotlin Error: ${logMsg.split('Error:').last.trim()}',
+                  style: const TextStyle(fontSize: 14, color: Colors.red),
+                ),
+            ],
+          ],
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error loading alarm details: $e');
+      return Text(
+        'Error loading alarm details: $e',
+        style: const TextStyle(color: Colors.red),
+      );
+    }
   }
 } 

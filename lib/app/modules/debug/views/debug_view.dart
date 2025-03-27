@@ -7,11 +7,67 @@ import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 import '../controllers/debug_controller.dart';
 import '../../../data/models/debug_model.dart';
+import '../../../data/models/alarm_model.dart';
 
 class DebugView extends GetView<DebugController> {
   DebugView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
+
+  Widget _buildExpandedContent(BuildContext context, String? alarmID, String logMsg, String status, bool hasRung) {
+    if (alarmID == null || alarmID.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
+      ),
+      child: FutureBuilder<Widget>(
+        future: controller.getAlarmDetailsWidget(alarmID, logMsg, status, hasRung),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          if (snapshot.hasError) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Error loading alarm details: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      logMsg,
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                    const SizedBox(height: 10),
+                    snapshot.data!,
+                  ],
+                ),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +78,7 @@ class DebugView extends GetView<DebugController> {
       appBar: AppBar(
         backgroundColor: controller.themeController.secondaryBackgroundColor.value,
         title: Text(
-          'Debug Logs'.tr,
+          'Alarm History'.tr,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: controller.themeController.primaryTextColor.value,
               ),
@@ -195,62 +251,120 @@ class DebugView extends GetView<DebugController> {
                       final status = log['Status'];
                       final logType = log['LogType'];
                       final logMsg = log['Message'];
-                      final hasRung = log['HasRung'];
+                      final hasRung = log['HasRung'] == 1;
                       final alarmID = log['AlarmID'];
 
-                      if(!controller.isDevMode.value && logType == 'DEV') {
+                      print('Debug - Log Entry:');
+                      print('Message: $logMsg');
+                      print('AlarmID: $alarmID');
+                      print('HasRung: $hasRung');
+                      print('Status: $status');
+                      print('LogType: $logType');
+
+                      if(!controller.settingsController.isDevMode.value && logType == 'DEV') {
                         return const SizedBox.shrink();
                       }
 
                       return Column(
                         children: [
-                          ExpansionTile(
-                            collapsedBackgroundColor: themeController.secondaryBackgroundColor.value,
-                            backgroundColor: themeController.secondaryBackgroundColor.value,
-                            textColor: Colors.white,
-                            collapsedIconColor: Colors.white,
-                            iconColor: Colors.white,
-                            collapsedShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                          Container(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width,
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text('$formattedHour:$formattedMinute', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),),
-                                          const SizedBox(width: 8),
-                                          Text(formattedTime, style: TextStyle(color: themeController.primaryDisabledTextColor.value, fontWeight: FontWeight.w600, fontSize: 12),),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.55,
-                                        child: Text(logMsg, style: const TextStyle(fontSize: 15), maxLines: 1, overflow: TextOverflow.ellipsis,)),
-                                    ]
-                                  ),
-                                  Icon(status == 'SUCCESS'?Icons.check_circle :(status=='WARNING'?Icons.info:Icons.error),
-                                    color: status == 'SUCCESS'?Colors.green:(status=='WARNING'?Colors.orange:Colors.red),
-                                  )
-                                ],
+                            child: ExpansionTile(
+                              collapsedBackgroundColor: themeController.secondaryBackgroundColor.value,
+                              backgroundColor: themeController.secondaryBackgroundColor.value,
+                              textColor: Colors.white,
+                              collapsedIconColor: Colors.white,
+                              iconColor: Colors.white,
+                              collapsedShape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
-                                child: Text(
-                                  logMsg,
-                                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              title: Padding(
+                                padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text('$formattedHour:$formattedMinute', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),),
+                                              const SizedBox(width: 8),
+                                              Text(formattedTime, style: TextStyle(color: themeController.primaryDisabledTextColor.value, fontWeight: FontWeight.w600, fontSize: 12),),
+                                            ],
+                                          ),
+                                          Text(logMsg, style: const TextStyle(fontSize: 15), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                        ]
+                                      ),
+                                    ),
+                                    Icon(status == 'SUCCESS'?Icons.check_circle :(status=='WARNING'?Icons.info:Icons.error),
+                                      color: status == 'SUCCESS'?Colors.green:(status=='WARNING'?Colors.orange:Colors.red),
+                                    )
+                                  ],
                                 ),
                               ),
-                            ],
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(
+                                    maxHeight: MediaQuery.of(context).size.height * 0.6,
+                                  ),
+                                  child: FutureBuilder<Widget>(
+                                    future: controller.getAlarmDetailsWidget(
+                                      log['AlarmID'],
+                                      logMsg,
+                                      status,
+                                      hasRung,
+                                    ),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            'Error loading alarm details: ${snapshot.error}',
+                                            style: const TextStyle(color: Colors.red),
+                                          ),
+                                        );
+                                      }
+                                      if (snapshot.hasData) {
+                                        return SingleChildScrollView(
+                                          physics: const BouncingScrollPhysics(),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  logMsg,
+                                                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                                                ),
+                                                const SizedBox(height: 10),
+                                                snapshot.data!,
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return const SizedBox.shrink();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 10),
                         ],
