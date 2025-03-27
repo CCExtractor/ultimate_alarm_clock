@@ -42,10 +42,10 @@ class AlarmDetailsWidget extends StatelessWidget {
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
         ],
-        if (logMsg.toLowerCase().contains('alarm scheduled')) ...[
+        if (!logMsg.toLowerCase().contains('alarm deleted')) ...[
           const SizedBox(height: 10),
           Text(
-            'Schedule Details:',
+            logMsg.toLowerCase().contains('alarm scheduled') ? 'Schedule Details:' : 'Ringing Details:',
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.7),
@@ -54,125 +54,78 @@ class AlarmDetailsWidget extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            'Scheduled Time: ${logMsg.split(' ').last}',
+            'Time: ${alarm.alarmTime}',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
           Text(
-            'Status: ${status == 'SUCCESS' ? 'Successfully Scheduled' : 'Failed to Schedule'}',
+            'Status: ${status == 'SUCCESS' ? (logMsg.toLowerCase().contains('alarm scheduled') ? 'Successfully Scheduled' : 'Successfully Ringing') : (logMsg.toLowerCase().contains('alarm scheduled') ? 'Failed to Schedule' : 'Failed to Ring')}',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        ],
-        if (logMsg.toLowerCase().contains('alarm ringing')) ...[
-          const SizedBox(height: 10),
-          Text(
-            'Ringing Details:',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white.withOpacity(0.7),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            'Ringing Time: ${logMsg.split(' ').last}',
-            style: const TextStyle(fontSize: 14, color: Colors.white),
-          ),
-          Text(
-            'Status: ${status == 'SUCCESS' ? 'Successfully Ringing' : 'Failed to Ring'}',
-            style: const TextStyle(fontSize: 14, color: Colors.white),
-          ),
-          Text(
+          if (!logMsg.toLowerCase().contains('alarm scheduled')) Text(
             'Has Rung: ${hasRung ? 'Yes' : 'No'}',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        ],
-        const SizedBox(height: 10),
-        Text(
-          'Alarm Details:',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.white.withOpacity(0.7),
-            fontWeight: FontWeight.bold,
+          if (alarm.label.isNotEmpty) Text(
+            'Label: ${alarm.label}',
+            style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        ),
-        const SizedBox(height: 5),
-        Text(
-          'Time: ${alarm.alarmTime}',
-          style: const TextStyle(fontSize: 14, color: Colors.white),
-        ),
-        Text(
-          'Label: ${alarm.label}',
-          style: const TextStyle(fontSize: 14, color: Colors.white),
-        ),
-        Text(
-          'Ringtone: ${alarm.ringtoneName}',
-          style: const TextStyle(fontSize: 14, color: Colors.white),
-        ),
-        if (alarm.note.isNotEmpty)
-          Text(
+          if (alarm.ringtoneName.isNotEmpty) Text(
+            'Ringtone: ${alarm.ringtoneName}',
+            style: const TextStyle(fontSize: 14, color: Colors.white),
+          ),
+          if (alarm.note.isNotEmpty) Text(
             'Note: ${alarm.note}',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        if (alarm.isGuardian)
-          Text(
-            'Guardian Mode: Enabled',
+          if (alarm.isGuardian) Text(
+            'Guardian Mode: ${logMsg.toLowerCase().contains('alarm scheduled') ? 'Enabled' : 'Active'}',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        if (alarm.isMathsEnabled)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Math Challenge: Enabled',
-                style: const TextStyle(fontSize: 14, color: Colors.white),
-              ),
-              Text(
-                'Difficulty: ${Utils.getDifficultyLabel(Utils.getDifficulty(alarm.mathsDifficulty.toDouble()))}',
-                style: const TextStyle(fontSize: 12, color: Colors.white70),
-              ),
-              Text(
-                'Questions: ${alarm.numMathsQuestions}',
-                style: const TextStyle(fontSize: 12, color: Colors.white70),
-              ),
-            ],
-          ),
-        if (alarm.isShakeEnabled)
-          Text(
-            'Shake Challenge: Enabled (${alarm.shakeTimes} shakes)',
+          if (alarm.isOneTime) Text(
+            'Type: One-time Alarm',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        if (alarm.isQrEnabled)
-          Text(
-            'QR Challenge: Enabled',
+          if (!alarm.isOneTime) Text(
+            'Type: Recurring (${alarm.days.asMap().entries.where((e) => e.value).map((e) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][e.key]).join(', ')})',
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
-        if (alarm.isPedometerEnabled)
-          Text(
-            'Step Challenge: Enabled (${alarm.numberOfSteps} steps)',
-            style: const TextStyle(fontSize: 14, color: Colors.white),
-          ),
-        if (alarm.isLocationEnabled)
-          Text(
-            'Location Challenge: Enabled',
-            style: const TextStyle(fontSize: 14, color: Colors.white),
-          ),
-        if (alarm.isWeatherEnabled)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Weather Condition: Enabled',
-                style: const TextStyle(fontSize: 14, color: Colors.white),
+          if (Utils.isChallengeEnabled(alarm)) ...[
+            const SizedBox(height: 5),
+            Text(
+              'Challenges Required:',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white.withOpacity(0.7),
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                'Selected Conditions: ${Utils.getFormattedWeatherTypes(Utils.getWeatherTypesFromInt(alarm.weatherTypes))}',
-                style: const TextStyle(fontSize: 12, color: Colors.white70),
-              ),
-            ],
-          ),
-        if (settingsController.isDevMode.value) ...[
+            ),
+            if (alarm.isMathsEnabled) Text(
+              '• Math (${alarm.numMathsQuestions} questions, ${Utils.getDifficultyLabel(Utils.getDifficulty(alarm.mathsDifficulty.toDouble()))} difficulty)',
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
+            if (alarm.isShakeEnabled) Text(
+              '• Shake (${alarm.shakeTimes} shakes)',
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
+            if (alarm.isQrEnabled) Text(
+              '• QR Code Scan',
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
+            if (alarm.isPedometerEnabled) Text(
+              '• Steps (${alarm.numberOfSteps} steps)',
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
+            if (alarm.isLocationEnabled) Text(
+              '• Location Check',
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
+            if (alarm.isWeatherEnabled) Text(
+              '• Weather (${Utils.getFormattedWeatherTypes(Utils.getWeatherTypesFromInt(alarm.weatherTypes))})',
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
+          ],
+        ],
+        if (settingsController.isDevMode.value && !logMsg.toLowerCase().contains('alarm deleted')) ...[
           const SizedBox(height: 10),
           Text(
             'DEV:',

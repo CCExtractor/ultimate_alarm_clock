@@ -303,8 +303,21 @@ class DebugView extends GetView<DebugController> {
                                         ]
                                       ),
                                     ),
-                                    Icon(status == 'SUCCESS'?Icons.check_circle :(status=='WARNING'?Icons.info:Icons.error),
-                                      color: status == 'SUCCESS'?Colors.green:(status=='WARNING'?Colors.orange:Colors.red),
+                                    Icon(
+                                      logMsg.toLowerCase().contains('alarm deleted') 
+                                          ? Icons.delete_forever
+                                          : status == 'SUCCESS'
+                                              ? Icons.check_circle 
+                                              : (status=='WARNING'
+                                                  ? Icons.info
+                                                  : Icons.error),
+                                      color: logMsg.toLowerCase().contains('alarm deleted')
+                                          ? Colors.red
+                                          : status == 'SUCCESS'
+                                              ? Colors.green
+                                              : (status=='WARNING'
+                                                  ? Colors.orange
+                                                  : Colors.red),
                                     )
                                   ],
                                 ),
