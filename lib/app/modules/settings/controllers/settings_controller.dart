@@ -27,6 +27,7 @@ class SettingsController extends GetxController {
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
   var currentLanguage = 'en_US'.obs;
+  var isMaterial3Enabled = true.obs;
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
   final currentPoint = LatLng(0, 0).obs;

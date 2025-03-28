@@ -73,11 +73,11 @@ class SharedUsers extends StatelessWidget {
                                 ) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return const Center(
+                                    return Center(
                                       child: CircularProgressIndicator.adaptive(
-                                        backgroundColor: kprimaryColor,
+                                        backgroundColor: getPrimaryColorTheme(),
                                         valueColor: AlwaysStoppedAnimation(
-                                          kprimaryColor,
+                                          getPrimaryColorTheme(),
                                         ),
                                       ),
                                     );

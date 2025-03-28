@@ -197,7 +197,7 @@ class AddOrUpdateAlarmController extends GetxController {
         actions: [
           TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
+              backgroundColor: getPrimaryColorTheme(),
             ),
             child: const Text('Cancel', style: TextStyle(color: Colors.black)),
             onPressed: () {
@@ -209,7 +209,7 @@ class AddOrUpdateAlarmController extends GetxController {
           ),
           TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
+              backgroundColor: getPrimaryColorTheme(),
             ),
             child: const Text(
               'Grant Permission',
@@ -290,7 +290,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
                     ),
                     child: Text(
                       'Cancel'.tr,
@@ -370,7 +370,7 @@ class AddOrUpdateAlarmController extends GetxController {
         actions: [
           TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
+              backgroundColor: getPrimaryColorTheme(),
             ),
             child: const Text('Cancel', style: TextStyle(color: Colors.black)),
             onPressed: () {
@@ -382,7 +382,7 @@ class AddOrUpdateAlarmController extends GetxController {
           ),
           TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
+              backgroundColor: getPrimaryColorTheme(),
             ),
             child: const Text('Allow', style: TextStyle(color: Colors.black)),
             onPressed: () {
@@ -465,7 +465,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              MaterialStateProperty.all(getPrimaryColorTheme()),
                         ),
                         child: Text(
                           'Save',
@@ -485,7 +485,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              MaterialStateProperty.all(getPrimaryColorTheme()),
                         ),
                         child: Text(
                           'Retake',
@@ -505,7 +505,7 @@ class AddOrUpdateAlarmController extends GetxController {
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),
+                                MaterialStateProperty.all(getPrimaryColorTheme()),
                           ),
                           child: Text(
                             'Disable',
@@ -572,7 +572,7 @@ class AddOrUpdateAlarmController extends GetxController {
         },
         confirm: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+            backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
           ),
           child: Obx(
             () => Text(
@@ -1241,6 +1241,11 @@ class AddOrUpdateAlarmController extends GetxController {
     selectedDate.value = (await showDatePicker(
           builder: (BuildContext context, Widget? child) {
             return Theme(
+
+              data: ThemeData.dark().copyWith(
+                colorScheme: ColorScheme.dark(
+                  primary: getPrimaryColorTheme(),
+
               data: themeController.currentTheme.value == ThemeMode.light
                   ? ThemeData.light().copyWith(
                 colorScheme: const ColorScheme.light(
@@ -1250,6 +1255,7 @@ class AddOrUpdateAlarmController extends GetxController {
                   : ThemeData.dark().copyWith(
                 colorScheme: const ColorScheme.dark(
                   primary: kprimaryColor,
+
                 ),
               ),
               child: child!,

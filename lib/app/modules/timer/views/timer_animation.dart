@@ -63,8 +63,9 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 widget.timer.startedOn, widget.timer.timerValue) <
             widget.timer.timerValue &&
         widget.timer.isPaused == 0) {
-      widget.timer.timeElapsed = widget.timer.timerValue - Utils.getDifferenceMillisFromNow(
-          widget.timer.startedOn, widget.timer.timerValue);
+      widget.timer.timeElapsed = widget.timer.timerValue -
+          Utils.getDifferenceMillisFromNow(
+              widget.timer.startedOn, widget.timer.timerValue);
       IsarDb.updateTimerPauseStatus(widget.timer);
     }
     if (widget.timer.isPaused == 0) {
@@ -85,7 +86,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         horizontal: 10.0,
       ),
       child: Container(
-        height: context.height / 3.0, 
+        height: context.height / 3.0,
         width: context.width,
         child: Obx(
           () => Card(
@@ -130,7 +131,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     context,
                                   ).textTheme.bodySmall!.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: kprimaryColor,
+                                      color: getPrimaryColorTheme(),
                                       fontSize: 18),
                                 ),
                               ),
@@ -162,10 +163,10 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.stopRinger(
-                                          widget.timer.timerId);
-                                      controller.deleteTimer(
-                                          widget.timer.timerId);
+                                      controller
+                                          .stopRinger(widget.timer.timerId);
+                                      controller
+                                          .deleteTimer(widget.timer.timerId);
                                     },
                                     icon: Icon(
                                       Icons.close,
@@ -188,16 +189,64 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                     duration: Duration(seconds: 1),
                                     child: Text(
                                       '${Utils.formatMilliseconds(widget.timer.timerValue - widget.timer.timeElapsed)}',
+
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayLarge!.copyWith(
+                                            color: themeController
+                                                .primaryTextColor.value,
+
                                       style: Theme.of(context)
                                           .textTheme
                                           .displayLarge!
                                           .copyWith(
                                             color: themeController.primaryTextColor.value,
+
                                             fontSize: 44,
                                           ),
                                     ),
                                   ),
                                 ),
+
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      widget.timer.isPaused == 0
+                                          ? stopTimer()
+                                          : startTimer();
+                                      widget.timer.isPaused =
+                                          widget.timer.isPaused == 0 ? 1 : 0;
+                                      IsarDb.updateTimerPauseStatus(
+                                          widget.timer);
+                                    });
+                                    if (widget.timer.timeElapsed >=
+                                        widget.timer.timerValue) {
+                                      controller
+                                          .stopRinger(widget.timer.timerId);
+                                      setState(() {
+                                        widget.timer.timeElapsed = 0;
+                                        IsarDb.updateTimerTick(widget.timer)
+                                            .then((value) =>
+                                                IsarDb.updateTimerPauseStatus(
+                                                    widget.timer));
+                                        widget.timer.isPaused = 1;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: getPrimaryColorTheme(),
+                                        borderRadius:
+                                            BorderRadius.circular(80)),
+                                    width: 80,
+                                    height: 80,
+                                    child: Icon(
+                                      widget.timer.isPaused == 0
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                      size: 30,
+                                      color: Colors.white,
+
                                 Row(
                                   children: [
                                     GestureDetector(
@@ -239,6 +288,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                           color: Colors.white,
                                         ),
                                       ),
+
                                     ),
                                   ],
                                 ),

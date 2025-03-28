@@ -59,7 +59,7 @@ class LocationTile extends StatelessWidget {
                       fillColor: MaterialStateProperty.all(
                         (controller.isLocationEnabled.value == true)
                             ? themeController.primaryDisabledTextColor.value
-                            : kprimaryColor,
+                            : getPrimaryColorTheme(),
                       ),
                       value: !controller.isLocationEnabled.value,
                       groupValue: true,
@@ -131,7 +131,7 @@ class LocationTile extends StatelessWidget {
                     const SizedBox(height: 10),
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                        backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
                       ),
                       child: Text(
                         'Save',

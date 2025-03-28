@@ -100,8 +100,8 @@ class MathsChallenge extends StatelessWidget {
                       Slider.adaptive(
                         min: 0.0,
                         max: 2.0,
-                        thumbColor: kprimaryColor,
-                        activeColor: kprimaryColor,
+                        thumbColor: getPrimaryColorTheme(),
+                        activeColor: getPrimaryColorTheme(),
                         divisions: 2,
                         value: controller.mathsSliderValue.value,
                         onChanged: (newValue) {
@@ -144,7 +144,7 @@ class MathsChallenge extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              MaterialStateProperty.all(getPrimaryColorTheme()),
                         ),
                         child: Text(
                           'Save'.tr,

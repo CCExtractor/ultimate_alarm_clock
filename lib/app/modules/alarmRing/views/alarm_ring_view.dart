@@ -184,7 +184,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            kprimaryColor,
+                            getPrimaryColorTheme(),
                           ),
                         ),
                         onPressed: () async {

@@ -31,11 +31,87 @@ class _ProfileSelectState extends State<ProfileSelect> {
 
   @override
   Widget build(BuildContext context) {
+
+    return Obx(() => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        transitionBuilder: (child, animation) {
+          return SizeTransition(
+              sizeFactor: animation, axis: Axis.horizontal, child: child,);
+        },
+        child: !controller.expandProfile.value
+            ? InkWell(
+                onTap: () async {
+                  controller.isProfile.value = true;
+                  controller.isProfileUpdate.value = true;
+                  Get.toNamed('/add-update-alarm',
+                      arguments: controller.genFakeAlarmModel(),);
+                },
+                child: Container(
+                  key: const ValueKey(1),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 18 * controller.scalingFactor.value,
+                        ),
+                        child: Obx(
+                          () => Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24 * controller.scalingFactor.value,
+                              vertical: 4 * controller.scalingFactor.value,
+                            ),
+                            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 2 / 3),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.topCenter,
+                                  stops: const [0.2, 0.2],
+                                  colors: [
+                                    getPrimaryColorTheme(),
+                                    themeController.secondaryBackgroundColor.value,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(18),),
+                            child: Text(
+                                  '${controller.selectedProfile}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                        color: themeController.primaryTextColor.value.withOpacity(
+                                                0.75,
+                                              ),
+                                        fontSize:
+                                          22 * controller.scalingFactor.value,
+                                    overflow: TextOverflow.ellipsis
+                                    ,),
+                              ),),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(28),
+                          onTap: () {
+                            controller.expandProfile.value =
+                                !controller.expandProfile.value;
+                          },
+                          child: const Padding(
+                                                      padding: EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.arrow_forward_ios),
+                                                    ),
+                        ),
+                      ),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(28),
+                        onTap: () async {
+
     return Obx(() => Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
               onPressed: () async {
+
                           controller.isProfile.value = true;
                           controller.profileModel.value =
                               (await IsarDb.getProfile(
@@ -101,7 +177,11 @@ class _ProfileSelectState extends State<ProfileSelect> {
               ),
               decoration: BoxDecoration(
                   color: profile.profileName == controller.selectedProfile.value
+
+                      ? getPrimaryColorTheme().withOpacity(0.5)
+
                       ? kprimaryColor
+
                       : themeController.secondaryBackgroundColor.value,
                   borderRadius: BorderRadius.circular(30),),
               child: Text(

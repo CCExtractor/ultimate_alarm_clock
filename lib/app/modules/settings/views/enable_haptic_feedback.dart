@@ -48,7 +48,7 @@ class _EnableHapticFeedbackState extends State<EnableHapticFeedback> {
             Obx(
               () => Switch.adaptive(
                 value: widget.controller.isHapticFeedbackEnabled.value,
-                activeColor: ksecondaryColor,
+                activeColor: getSecondaryColorTheme(),
                 onChanged: (bool value) async {
                   widget.controller.toggleHapticFeedback(value);
                   Utils.hapticFeedback();

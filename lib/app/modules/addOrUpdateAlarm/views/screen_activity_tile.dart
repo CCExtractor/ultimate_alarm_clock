@@ -47,7 +47,7 @@ class ScreenActivityTile extends StatelessWidget {
                       children: [
                         Switch.adaptive(
                           value: controller.useScreenActivity.value,
-                          activeColor: ksecondaryColor,
+                          activeColor: getSecondaryColorTheme(),
                           onChanged: (value) {
                             controller.useScreenActivity.value = value;
                             if (!value)
@@ -84,7 +84,7 @@ class ScreenActivityTile extends StatelessWidget {
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kprimaryColor,
+                      backgroundColor: getPrimaryColorTheme(),
                       // Set the desired background color
                     ),
                     child: Text(
@@ -116,7 +116,7 @@ class ScreenActivityTile extends StatelessWidget {
               Obx(
                 () => Switch.adaptive(
                   value: controller.useScreenActivity.value,
-                  activeColor: ksecondaryColor,
+                  activeColor: getSecondaryColorTheme(),
                   onChanged: (value) {
                     controller.useScreenActivity.value = value;
                     if (!value)
