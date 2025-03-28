@@ -213,6 +213,26 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 .hapticFeedback();
                                                             controller.hours
                                                                 .value = value;
+
+                                                            // Update the selected time with proper format handling
+                                                            int hourValue;
+                                                            if (settingsController
+                                                                .is24HrsEnabled
+                                                                .value) {
+                                                              // In 24-hour mode, use the value directly
+                                                              hourValue = value;
+                                                            } else {
+                                                              // In 12-hour mode, convert based on AM/PM
+                                                              hourValue =
+                                                                  inputTimeController
+                                                                      .convert24(
+                                                                value,
+                                                                controller
+                                                                    .meridiemIndex
+                                                                    .value,
+                                                              );
+                                                            }
+
                                                             controller
                                                                     .selectedTime
                                                                     .value =
@@ -229,18 +249,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .selectedTime
                                                                   .value
                                                                   .day,
-                                                              inputTimeController
-                                                                  .convert24(
-                                                                      value,
-                                                                      controller
-                                                                          .meridiemIndex
-                                                                          .value),
+                                                              hourValue,
                                                               controller
                                                                   .selectedTime
                                                                   .value
                                                                   .minute,
                                                             );
 
+                                                            // Update text controllers to reflect current format
                                                             inputTimeController
                                                                     .inputHrsController
                                                                     .text =
@@ -254,14 +270,21 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                     .minutes
                                                                     .value
                                                                     .toString();
-                                                            inputTimeController
-                                                                .changePeriod(
-                                                              controller.meridiemIndex
-                                                                          .value ==
-                                                                      0
-                                                                  ? 'AM'
-                                                                  : 'PM',
-                                                            );
+
+                                                            // Only update period for 12-hour format
+                                                            if (!settingsController
+                                                                .is24HrsEnabled
+                                                                .value) {
+                                                              inputTimeController
+                                                                  .changePeriod(
+                                                                controller.meridiemIndex
+                                                                            .value ==
+                                                                        0
+                                                                    ? 'AM'
+                                                                    : 'PM',
+                                                              );
+                                                            }
+
                                                             inputTimeController
                                                                 .setTime();
                                                           },
@@ -565,7 +588,6 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         width: 80,
                                                         child: TextField(
                                                           onChanged: (_) {
-                                                            
                                                             if (int.parse(inputTimeController
                                                                         .inputHrsController
                                                                         .text) ==

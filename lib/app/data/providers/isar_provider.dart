@@ -14,6 +14,30 @@ import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dar
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
+enum Status {
+  error('ERROR'),
+  success('SUCCESS'),
+  warning('WARNING');
+
+  final String value;
+  const Status(this.value);
+
+  @override
+  String toString() => value;
+}
+
+enum LogType {
+  dev("DEV"),
+  normal("NORMAL");
+
+  final String value;
+  const LogType(this.value);
+
+  @override
+  String toString() => value;
+}
+
+
 class IsarDb {
   static final IsarDb _instance = IsarDb._internal();
   late Future<Isar> db;
@@ -52,6 +76,29 @@ class IsarDb {
             ringtoneName text not null,
             timerName text not null,
             isPaused integer not null)
+        ''');
+      },
+    );
+    return db;
+  }
+
+  Future<Database?> setAlarmLogs() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/AlarmLogs.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE LOG (
+            LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+            LogTime DATETIME NOT NULL,            
+            Status TEXT CHECK(Status IN ('ERROR', 'SUCCESS', 'WARNING')) NOT NULL,
+            LogType TEXT CHECK(LogType IN ('DEV', 'NORMAL')) NOT NULL,
+            Message TEXT NOT NULL,
+            HasRung INTEGER DEFAULT 0,
+            AlarmID TEXT
+          )
         ''');
       },
     );
@@ -123,6 +170,7 @@ class IsarDb {
     ''');
   }
 
+
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
@@ -140,6 +188,64 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
+  Future<int> insertLog(String msg, {Status status = Status.warning, LogType type = LogType.dev, int hasRung = 0}) async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return -1;
+      }
+      String st = status.toString();
+      String t = type.toString();
+      final result = await db.insert(
+        'LOG',
+        {
+          'LogTime': DateTime.now().millisecondsSinceEpoch,
+          'Status': st,
+          'LogType': t,
+          'Message': msg,
+          'HasRung': hasRung,
+        },
+      );
+      debugPrint('Successfully inserted log: $msg');
+      return result;
+    } catch (e) {
+      debugPrint('Error inserting log: $e');
+      return -1;
+    }
+  }
+
+  // Fetch all log entries
+  Future<List<Map<String, dynamic>>> getLogs() async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return [];
+      }
+      final logs = await db.query('LOG');
+      debugPrint('Successfully retrieved ${logs.length} logs');
+      return logs;
+    } catch (e) {
+      debugPrint('Error retrieving logs: $e');
+      return [];
+    }
+  }
+
+  Future<void> clearLogs() async {
+    try {
+      final db = await setAlarmLogs();
+      if (db == null) {
+        debugPrint('Failed to initialize database for logs');
+        return;
+      }
+      await db.delete('LOG');
+      debugPrint('Successfully cleared all logs');
+    } catch (e) {
+      debugPrint('Error clearing logs: $e');
+      rethrow;
+    }
+  }
 
   static Future<AlarmModel> addAlarm(AlarmModel alarmRecord) async {
     final isarProvider = IsarDb();
@@ -151,6 +257,8 @@ class IsarDb {
     final sqlmap = alarmRecord.toSQFliteMap();
     print(sqlmap);
     await sql!.insert('alarms', sqlmap);
+    List a = await IsarDb().getLogs();
+    print(a);
     return alarmRecord;
   }
 
@@ -196,7 +304,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+     final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }
@@ -326,6 +435,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}', status: Status.success, type: LogType.normal);
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),
@@ -401,6 +511,7 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.delete(id);
     });
+    await IsarDb().insertLog('Alarm deleted ${tobedeleted!.alarmTime}');
     await sql!.delete(
       'alarms',
       where: 'alarmID = ?',

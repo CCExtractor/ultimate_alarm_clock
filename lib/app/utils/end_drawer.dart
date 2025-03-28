@@ -4,6 +4,9 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/modules/debug/views/debug_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/debug/views/debug_view.dart';
+import 'package:ultimate_alarm_clock/app/modules/debug/controllers/debug_controller.dart';
 
 Widget buildEndDrawer(BuildContext context) {
   ThemeController themeController = Get.find<ThemeController>();
@@ -74,6 +77,26 @@ Widget buildEndDrawer(BuildContext context) {
                   ),
                 ],
               ),
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              Utils.hapticFeedback();
+              Get.back();
+              Get.toNamed(Routes.DEBUG);
+            },
+            contentPadding: const EdgeInsets.only(left: 20, right: 44),
+            title: Text(
+              'Debug Logs'.tr,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.8),
+                  ),
+            ),
+            leading: Icon(
+              Icons.bug_report,
+              size: 26,
+              color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
           ),
           ListTile(

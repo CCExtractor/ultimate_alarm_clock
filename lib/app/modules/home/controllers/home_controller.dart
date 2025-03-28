@@ -490,16 +490,107 @@ class HomeController extends GetxController {
 
   // Delete alarms mentioned in the selected alarm set
   Future<void> deleteAlarms() async {
-    for (var alarm in selectedAlarmSet) {
-      var alarmId = alarm.first;
-      var isSharedAlarmEnabled = alarm.second;
+    try {
+      if (selectedAlarmSet.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'No alarms selected for deletion',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
 
-      isSharedAlarmEnabled
-          ? await FirestoreDb.deleteAlarm(
-              userModel.value,
-              alarmId,
-            )
-          : await IsarDb.deleteAlarm(alarmId);
+      int successCount = 0;
+      List<AlarmModel> deletedAlarms = [];
+
+      for (var alarm in selectedAlarmSet) {
+        var alarmId = alarm.first;
+        var isSharedAlarmEnabled = alarm.second;
+
+        try {
+          if (isSharedAlarmEnabled) {
+            
+            AlarmModel? alarmToDelete = await FirestoreDb.getAlarm(userModel.value, alarmId);
+            if (alarmToDelete != null) {
+              deletedAlarms.add(alarmToDelete);
+              await FirestoreDb.deleteAlarm(userModel.value, alarmId);
+              successCount++;
+            }
+          } else {
+            
+            AlarmModel? alarmToDelete = await IsarDb.getAlarm(alarmId);
+            if (alarmToDelete != null) {
+              deletedAlarms.add(alarmToDelete);
+              await IsarDb.deleteAlarm(alarmId);
+              successCount++;
+            }
+          }
+        } catch (e) {
+          debugPrint('Error deleting alarm: $e');
+          continue;
+        }
+      }
+
+      if (successCount > 0) {
+        if (Get.isSnackbarOpen) {
+          Get.closeAllSnackbars();
+        }
+
+        Get.snackbar(
+          'Success',
+          '$successCount ${successCount == 1 ? 'alarm' : 'alarms'} deleted',
+          duration: Duration(seconds: duration.toInt()),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          margin: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 15,
+          ),
+          mainButton: TextButton(
+            onPressed: () async {
+              
+              for (var alarm in deletedAlarms) {
+                if (alarm.isSharedAlarmEnabled) {
+                  await FirestoreDb.addAlarm(userModel.value, alarm);
+                } else {
+                  await IsarDb.addAlarm(alarm);
+                }
+              }
+              
+              refreshTimer = true;
+              refreshUpcomingAlarms();
+            },
+            child: Text(
+              'Undo',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+
+        
+        selectedAlarmSet.clear();
+        numberOfAlarmsSelected.value = 0;
+      } else {
+        Get.snackbar(
+          'Error',
+          'No alarms were deleted',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error in deleteAlarms: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to delete alarms',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

@@ -381,35 +381,81 @@ class HomeView extends GetView<HomeController> {
                                                           Obx(
                                                             () => InkWell(
                                                               onTap: () async {
+
                                                                 // Deleting the alarms
                                                                 await controller
                                                                     .deleteAlarms();
 
-                                                                // Closing the multiple select mode
-                                                                controller
-                                                                    .inMultipleSelectMode
-                                                                    .value = false;
-                                                                controller
-                                                                    .isAnyAlarmHolded
-                                                                    .value = false;
-                                                                controller
-                                                                    .isAllAlarmsSelected
-                                                                    .value = false;
-                                                                controller
-                                                                    .numberOfAlarmsSelected
-                                                                    .value = 0;
-                                                                controller
-                                                                    .selectedAlarmSet
-                                                                    .clear();
-                                                                // After deleting alarms, refreshing to schedule latest one
-                                                                controller
-                                                                        .refreshTimer =
-                                                                    true;
-                                                                controller
-                                                                    .refreshUpcomingAlarms();
+                                                                if (controller.numberOfAlarmsSelected.value > 0) {
+                                                                  
+                                                                  bool confirm = await Get.defaultDialog(
+                                                                    title: 'Confirmation'.tr,
+                                                                    titleStyle: Theme.of(context).textTheme.displaySmall,
+                                                                    backgroundColor: themeController.secondaryBackgroundColor.value,
+                                                                    content: Column(
+                                                                      children: [
+                                                                        Text(
+                                                                          'Delete ${controller.numberOfAlarmsSelected.value} selected alarms?'.tr,
+                                                                          style: Theme.of(context).textTheme.bodyMedium,
+                                                                          textAlign: TextAlign.center,
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(top: 20),
+                                                                          child: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                            children: [
+                                                                              TextButton(
+                                                                                onPressed: () => Get.back(result: false),
+                                                                                style: ButtonStyle(
+                                                                                  backgroundColor: MaterialStateProperty.all(
+                                                                                    kprimaryTextColor.withOpacity(0.5),
+                                                                                  ),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  'Cancel'.tr,
+                                                                                  style: Theme.of(context).textTheme.displaySmall!,
+                                                                                ),
+                                                                              ),
+                                                                              TextButton(
+                                                                                onPressed: () => Get.back(result: true),
+                                                                                style: ButtonStyle(
+                                                                                  backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  'Delete'.tr,
+                                                                                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                                                    color: kprimaryBackgroundColor,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  );
+
+
+                                                                  if (confirm == true) {
+                                                                    
+                                                                    await controller.deleteAlarms();
+
+                                                                    // Closing the multiple select mode
+                                                                    controller.inMultipleSelectMode.value = false;
+                                                                    controller.isAnyAlarmHolded.value = false;
+                                                                    controller.isAllAlarmsSelected.value = false;
+                                                                    controller.numberOfAlarmsSelected.value = 0;
+                                                                    controller.selectedAlarmSet.clear();
+                                                                    
+                                                                    
+                                                                    controller.refreshTimer = true;
+                                                                    controller.refreshUpcomingAlarms();
+                                                                  }
+                                                                }
                                                               },
                                                               child: Icon(
                                                                 Icons.delete,
+
                                                                 color: controller
                                                                             .numberOfAlarmsSelected
                                                                             .value >
@@ -425,6 +471,12 @@ class HomeView extends GetView<HomeController> {
                                                                     controller
                                                                         .scalingFactor
                                                                         .value,
+
+                                                                color: controller.numberOfAlarmsSelected.value > 0
+                                                                    ? Colors.red
+                                                                    : themeController.primaryTextColor.value.withOpacity(0.75),
+                                                                size: 27 * controller.scalingFactor.value,
+
                                                               ),
                                                             ),
                                                           ),
@@ -551,29 +603,18 @@ class HomeView extends GetView<HomeController> {
                                                     context,
                                                   );
                                                   if (userConfirmed) {
-                                                    if (alarm
-                                                            .isSharedAlarmEnabled ==
-                                                        true) {
-                                                      await FirestoreDb
-                                                          .deleteAlarm(
-                                                        controller
-                                                            .userModel.value,
-                                                        alarm.firestoreId!,
-                                                      );
-                                                    } else {
-                                                      await IsarDb.deleteAlarm(
-                                                        alarm.isarId,
-                                                      );
-                                                    }
-                                                  } else {
-                                                    // do not delete on dismiss
-                                                    Get.offNamedUntil(
-                                                      '/bottom-navigation-bar',
-                                                      (route) =>
-                                                          route.settings.name ==
-                                                          '/splash-screen',
+                                                    await controller.swipeToDeleteAlarm(
+                                                      controller.userModel.value,
+                                                      alarm,
                                                     );
                                                   }
+                                                  
+                                                  Get.offNamedUntil(
+                                                    '/bottom-navigation-bar',
+                                                    (route) =>
+                                                        route.settings.name ==
+                                                        '/splash-screen',
+                                                  );
                                                 },
                                                 key: ValueKey(alarms[index]),
                                                 background: Container(
@@ -898,6 +939,7 @@ class HomeView extends GetView<HomeController> {
                                                                             ),
                                                                         ],
                                                                       ),
+
                                                                     ),
                                                                     Padding(
                                                                       padding:
@@ -955,6 +997,68 @@ class HomeView extends GetView<HomeController> {
                                                                                       } else if (value == 1) {
                                                                                         debugPrint(alarm.isSharedAlarmEnabled.toString());
 
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                  horizontal:
+                                                                      10.0,
+                                                                ),
+                                                                child: controller
+                                                                        .inMultipleSelectMode
+                                                                        .value
+                                                                    ? Column(
+                                                                        // Showing the toggle button
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Expanded(
+                                                                            flex: 0,
+                                                                            child: ToggleButton(
+                                                                              controller: controller,
+                                                                              alarmIndex: index,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      )
+                                                                    : Column(
+                                                                        // Showing the switch and pop up menu button
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Expanded(
+                                                                            flex: 0,
+                                                                            child: Switch.adaptive(
+                                                                              activeColor: ksecondaryColor,
+                                                                              value: alarm.isEnabled,
+                                                                              onChanged: (bool value) async {
+                                                                                Utils.hapticFeedback();
+                                                                                alarm.isEnabled = value;
+                                                                                if (alarm.isSharedAlarmEnabled == true) {
+                                                                                  await FirestoreDb.updateAlarm(alarm.ownerId, alarm);
+                                                                                } else {
+                                                                                  await IsarDb.updateAlarm(alarm);
+                                                                                }
+                                                                                controller.refreshTimer = true;
+                                                                                controller.refreshUpcomingAlarms();
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            flex: 0,
+                                                                            child: PopupMenuButton(
+                                                                              onSelected: (value) async {
+                                                                                Utils.hapticFeedback();
+                                                                                if (value == 0) {
+                                                                                  Get.toNamed('/alarm-ring', arguments: {
+                                                                                    'alarm': alarm,
+                                                                                    'preview': true
+                                                                                  });
+                                                                                } else if (value == 1) {
+                                                                                  debugPrint(alarm.isSharedAlarmEnabled.toString());
+
+
                                                                                         if (alarm.isSharedAlarmEnabled == true) {
                                                                                           await FirestoreDb.deleteAlarm(controller.userModel.value, alarm.firestoreId!);
                                                                                         } else {
@@ -968,7 +1072,7 @@ class HomeView extends GetView<HomeController> {
                                                                                         Get.snackbar(
                                                                                           'Alarm deleted',
                                                                                           'The alarm has been deleted.',
-                                                                                          duration: const Duration(seconds: 4),
+                                                                                          duration: Duration(seconds: controller.duration.toInt()),
                                                                                           snackPosition: SnackPosition.BOTTOM,
                                                                                           margin: const EdgeInsets.symmetric(
                                                                                             horizontal: 10,

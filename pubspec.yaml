@@ -37,6 +37,7 @@ dependencies:
   vibration: ^1.8.1
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
+  sensors_plus: ^1.4.1
   rxdart: ^0.27.7
   flutter:
     sdk: flutter
