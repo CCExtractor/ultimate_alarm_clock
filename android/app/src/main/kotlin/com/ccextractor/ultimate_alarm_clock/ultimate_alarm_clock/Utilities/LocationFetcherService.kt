@@ -44,6 +44,8 @@ class LocationFetcherService : Service() {
         var fetchLocationDeffered = async {
             fetchLocation()
         }
+
+        val logdbHelper = LogDatabaseHelper(this@LocationFetcherService)
         var destinationLongitude = 0.0
         var currentLongitude = 0.0
         var destinationLatitude = 0.0
@@ -92,6 +94,12 @@ class LocationFetcherService : Service() {
             Timer().schedule(9000){
             println("ANDROID STARTING APP")
             this@LocationFetcherService.startActivity(flutterIntent)
+                logdbHelper.insertLog(
+                    "Alarm is ringing. Alarm rings because you are ${distance}m away from chosen location",
+                    status = LogDatabaseHelper.Status.SUCCESS,
+                    type = LogDatabaseHelper.LogType.NORMAL,
+                    hasRung = 1
+                )
                 Timer().schedule(3000){
                     stopSelf()
                 }
@@ -100,6 +108,12 @@ class LocationFetcherService : Service() {
 
         }
         if(distance < 500.0){
+            logdbHelper.insertLog(
+                "Alarm didn't ring. Because you are only ${distance}m away from chosen location",
+                status = LogDatabaseHelper.Status.WARNING,
+                type = LogDatabaseHelper.LogType.NORMAL,
+                hasRung = 0
+            )
             Timer().schedule(9000){
                 Timer().schedule(3000){
                     stopSelf()

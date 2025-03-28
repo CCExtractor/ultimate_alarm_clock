@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
@@ -185,11 +187,23 @@ class AlarmControlView extends GetView<AlarmControlController> {
                             kprimaryColor,
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           Utils.hapticFeedback();
                           if (controller
                               .currentlyRingingAlarm.value.isGuardian) {
                             controller.guardianTimer.cancel();
+                          }
+                          
+                          if (controller.currentlyRingingAlarm.value.days.every((element) => element == false)) {
+                            controller.currentlyRingingAlarm.value.isEnabled = false;
+                            if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+                              await IsarDb.updateAlarm(controller.currentlyRingingAlarm.value);
+                            } else {
+                              await FirestoreDb.updateAlarm(
+                                controller.currentlyRingingAlarm.value.ownerId,
+                                controller.currentlyRingingAlarm.value,
+                              );
+                            }
                           }
                           if (Utils.isChallengeEnabled(
                             controller.currentlyRingingAlarm.value,
@@ -224,29 +238,31 @@ class AlarmControlView extends GetView<AlarmControlController> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  color: Colors.red,
-                  child: TextButton(
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Get.offNamed('/bottom-navigation-bar');
-                    },
-                    child: Text(
-                      'Exit Preview'.tr,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+              // Exit Preview button - only show in preview mode
+              if (controller.isPreviewMode.value)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    width: double.infinity,
+                    height: 60,
+                    color: Colors.red,
+                    child: TextButton(
+                      onPressed: () {
+                        Utils.hapticFeedback();
+                        Get.offAllNamed('/bottom-navigation-bar');
+                      },
+                      child: Text(
+                        'Exit Preview'.tr,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

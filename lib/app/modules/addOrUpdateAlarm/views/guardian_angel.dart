@@ -21,13 +21,9 @@ class GuardianAngel extends StatelessWidget {
   Widget build(BuildContext context) {
     // Check if using Firestore and the current user is the owner
     // and if not using, just show the tile
-
-    return Column(
-      children: [
-        ListTile(
-          onTap: () async {
-      var phonePerm =
-          await Permission.phone.request().isGranted;
+    
+    Future<void> showGuardianDialog() async {
+      var phonePerm = await Permission.phone.request().isGranted;
       var smsPerm = await Permission.sms.request().isGranted;
 
       if (phonePerm && smsPerm) {
@@ -36,8 +32,7 @@ class GuardianAngel extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
             ),
-            backgroundColor: themeController
-                .secondaryBackgroundColor.value,
+            backgroundColor: themeController.secondaryBackgroundColor.value,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -46,8 +41,7 @@ class GuardianAngel extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InternationalPhoneNumberInput(
-                      textFieldController: controller
-                          .contactTextEditingController,
+                      textFieldController: controller.contactTextEditingController,
                       onInputChanged: (value) {},
                       onInputValidated: (value) {},
                       spaceBetweenSelectorAndTextField: 0,
@@ -62,12 +56,8 @@ class GuardianAngel extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      vertical: controller
-                          .homeController.scalingFactor *
-                          8,
-                      horizontal: controller
-                          .homeController.scalingFactor *
-                          4,
+                      vertical: controller.homeController.scalingFactor * 8,
+                      horizontal: controller.homeController.scalingFactor * 4,
                     ),
                     child: Row(
                       children: [
@@ -84,28 +74,33 @@ class GuardianAngel extends StatelessWidget {
           ),
         );
       }
-    },
-    title: Row(
+    }
+
+    return Column(
       children: [
-        FittedBox(
-          fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-              child: Obx(
-                () => Text(
-                  'Guardian Angel'.tr,
-                  style: TextStyle(
-                    color: themeController.primaryTextColor.value,
+        ListTile(
+          onTap: showGuardianDialog,
+          title: Row(
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Obx(
+                  () => Text(
+                    'Guardian Angel'.tr,
+                    style: TextStyle(
+                      color: themeController.primaryTextColor.value,
+                    ),
                   ),
                 ),
               ),
-             ),
               Obx(
                 () => IconButton(
                   icon: Icon(
-                      Icons.info_sharp,
-                      size: 21,
-                      color: themeController.primaryTextColor.value.withOpacity(0.3),
-                    ),
+                    Icons.info_sharp,
+                    size: 21,
+                    color: themeController.primaryTextColor.value.withOpacity(0.3),
+                  ),
                   onPressed: () {
                     Utils.showModal(
                       context: context,
@@ -133,7 +128,13 @@ class GuardianAngel extends StatelessWidget {
                     activeColor: ksecondaryColor,
                     onChanged: (value) async {
                       Utils.hapticFeedback();
-                      controller.isGuardian.value = value;
+                      if (value) {
+                        await showGuardianDialog();
+                      } else {
+                        controller.isGuardian.value = false;
+                        controller.guardian.value = '';
+                        controller.contactTextEditingController.clear();
+                      }
                     },
                   );
                 },

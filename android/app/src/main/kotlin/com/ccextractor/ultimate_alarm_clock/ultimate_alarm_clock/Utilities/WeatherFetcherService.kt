@@ -79,6 +79,7 @@ class WeatherFetcherService() : Service() {
     }
     suspend fun fetchWeather(){
         var currentWeather = ""
+        val logdbHelper = LogDatabaseHelper(this@WeatherFetcherService)
         val request = GsonRequest(OPEN_METEO_URL, WeatherModel::class.java,
             { response ->
 
@@ -105,6 +106,12 @@ class WeatherFetcherService() : Service() {
                     if(shouldRing==false)
                     
                     {
+                        logdbHelper.insertLog(
+                            "Alarm didn't ring. Because it is ${currentWeather} outside. And, your specified weather types were: ${weatherTypes}",
+                            status = LogDatabaseHelper.Status.WARNING,
+                            type = LogDatabaseHelper.LogType.NORMAL,
+                            hasRung = 0
+                        )
                         Timer().schedule(3000) {
                             stopSelf()
                         }
@@ -128,6 +135,12 @@ class WeatherFetcherService() : Service() {
                             Timer().schedule(9000) {
                                 println("ANDROID STARTING APP")
                                 this@WeatherFetcherService.startActivity(flutterIntent)
+                                logdbHelper.insertLog(
+                                    "Alarm is ringing. The current weather is ${currentWeather}.",
+                                    status = LogDatabaseHelper.Status.SUCCESS,
+                                    type = LogDatabaseHelper.LogType.NORMAL,
+                                    hasRung = 1
+                                )
                                 Timer().schedule(3000) {
                                     stopSelf()
                                 }

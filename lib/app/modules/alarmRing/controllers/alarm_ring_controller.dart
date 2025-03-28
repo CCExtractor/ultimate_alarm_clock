@@ -48,7 +48,11 @@ class AlarmControlController extends GetxController {
   late double initialVolume;
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
+
   bool wasFlipped = false;
+
+  RxBool isPreviewMode = false.obs;
+
 
 
 
@@ -252,10 +256,17 @@ void startFlipSnooze() async {
   
     
 
-    currentlyRingingAlarm.value = Get.arguments;
+    // Extract alarm and preview flag from arguments
+    final args = Get.arguments;
+    if (args is Map) {
+      currentlyRingingAlarm.value = args['alarm'];
+      isPreviewMode.value = args['preview'] ?? false;
+    } else {
+      currentlyRingingAlarm.value = args;
+      isPreviewMode.value = false;
+    }
+
     print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
-     IsarDb()
-        .insertLog('Alarm ringing ${currentlyRingingAlarm.value.alarmTime}');
     if (currentlyRingingAlarm.value.isGuardian) {
       guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         print(guardianCoundown.value);
@@ -403,6 +414,18 @@ void startFlipSnooze() async {
       stream: AudioStream.alarm,
     );
 
+    
+    if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+      currentlyRingingAlarm.value.isEnabled = false;
+      if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+        await IsarDb.updateAlarm(currentlyRingingAlarm.value);
+      } else {
+        await FirestoreDb.updateAlarm(
+          currentlyRingingAlarm.value.ownerId,
+          currentlyRingingAlarm.value,
+        );
+      }
+    }
 
     _subscription.cancel();
     _currentTimeTimer?.cancel();

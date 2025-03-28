@@ -22,6 +22,8 @@ import '../modules/stopwatch/bindings/stopwatch_bindings.dart';
 import '../modules/stopwatch/views/stopwatch_view.dart';
 import '../modules/timerRing/bindings/timer_ring_binding.dart';
 import '../modules/timerRing/views/timer_ring_view.dart';
+import '../modules/debug/bindings/debug_binding.dart';
+import '../modules/debug/views/debug_view.dart';
 
 part 'app_routes.dart';
 
@@ -87,6 +89,11 @@ class AppPages {
       name: _Paths.NOTIFICATIONS,
       page: () => const NotificationsView(),
       binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.DEBUG,
+      page: () => DebugView(),
+      binding: DebugBinding(),
     ),
   ];
 }
