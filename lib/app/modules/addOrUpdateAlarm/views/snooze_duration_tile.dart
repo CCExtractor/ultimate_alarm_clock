@@ -51,9 +51,9 @@ class SnoozeDurationTile extends StatelessWidget {
                           Obx(
                             () => NumberPicker(
                               value: controller.snoozeDuration.value <= 0
-                                  ? 1
+                                  ? 0
                                   : controller.snoozeDuration.value,
-                              minValue: 1,
+                              minValue: 0,
                               maxValue: 60,
                               onChanged: (value) {
                                 Utils.hapticFeedback();
@@ -63,9 +63,11 @@ class SnoozeDurationTile extends StatelessWidget {
                           ),
                           Obx(
                             () => Text(
-                              controller.snoozeDuration.value > 1
+                              controller.snoozeDuration.value > 0
+                              ? controller.snoozeDuration.value > 1
                                   ? 'minutes'.tr
-                                  : 'minute'.tr,
+                                  : 'minute'.tr
+                              : 'Off'.tr,
                             ),
                           ),
                         ],
