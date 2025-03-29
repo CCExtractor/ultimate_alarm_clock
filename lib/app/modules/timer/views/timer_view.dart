@@ -18,7 +18,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../../../data/models/timer_model.dart';
 
 class TimerView extends GetView<TimerController> {
-  TimerView({Key? key}) : super(key: key);
+  TimerView({super.key});
   final GlobalKey dialogKey = GlobalKey();
   final ThemeController themeController = Get.find<ThemeController>();
   final InputTimeController inputTimeController =
@@ -75,7 +75,7 @@ class TimerView extends GetView<TimerController> {
         () => Visibility(
           visible:
               controller.isbottom.value && controller.timerList.length >= 3,
-          child: Container(
+          child: SizedBox(
             height: 85,
             child: FittedBox(
               child: FloatingActionButton(

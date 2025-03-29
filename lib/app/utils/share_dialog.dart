@@ -330,7 +330,7 @@ class ShareDialog extends StatelessWidget {
                      fontSize: homeController.scalingFactor * 30,
                      fontWeight: FontWeight.w700,
                    ),
-                 ),)
+                 ),),
             ],
           ),
         ),

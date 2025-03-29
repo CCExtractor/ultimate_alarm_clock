@@ -250,7 +250,7 @@ class AlarmChallengeController extends GetxController {
   if (displayValue.value.isNotEmpty) {
     displayValue.value = displayValue.value.substring(
       0, 
-      displayValue.value.length - 1
+      displayValue.value.length - 1,
     );
   }
 }

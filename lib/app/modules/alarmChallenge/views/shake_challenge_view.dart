@@ -9,7 +9,7 @@ import '../controllers/alarm_challenge_controller.dart';
 
 // ignore: must_be_immutable
 class ShakeChallengeView extends GetView<AlarmChallengeController> {
-  ShakeChallengeView({Key? key}) : super(key: key);
+  ShakeChallengeView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 

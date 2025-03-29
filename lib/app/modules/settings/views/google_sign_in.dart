@@ -56,7 +56,7 @@ class GoogleSignIn extends StatelessWidget {
                   ),
                   TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: WidgetStateProperty.all(kprimaryColor),
                     ),
                     child: Obx(
                       () => Text(
@@ -88,7 +88,7 @@ class GoogleSignIn extends StatelessWidget {
               children: [
                 Text(
                     // 'Do you want to unlink your Google account?',
-                    'unlinkAccount'.tr),
+                    'unlinkAccount'.tr,),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
@@ -97,7 +97,7 @@ class GoogleSignIn extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Obx(
                           () => Text(
@@ -118,7 +118,7 @@ class GoogleSignIn extends StatelessWidget {
                       ),
                       TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                             kprimaryTextColor.withOpacity(0.5),
                           ),
                         ),
@@ -146,7 +146,7 @@ class GoogleSignIn extends StatelessWidget {
           isLightMode: themeController.currentTheme.value == ThemeMode.light,
         ),
         child: Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: const EdgeInsets.only(left: 30, right: 30),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Obx(
@@ -156,7 +156,7 @@ class GoogleSignIn extends StatelessWidget {
                           ?
                           // 'Unlink ${controller.userModel!.email}'
                           'Unlink @usermail'.trParams(
-                              {'usermail': controller.userModel.value!.email})
+                              {'usermail': controller.userModel.value!.email},)
                           : 'Sign-In with Google'.tr,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             overflow: TextOverflow.ellipsis,
@@ -252,7 +252,7 @@ class GoogleSignIn extends StatelessWidget {
                                 width: width,
                                 child: TextButton(
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
+                                    backgroundColor: WidgetStateProperty.all(
                                       kprimaryColor,
                                     ),
                                   ),

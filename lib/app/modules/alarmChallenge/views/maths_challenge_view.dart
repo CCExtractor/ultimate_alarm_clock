@@ -7,7 +7,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 // ignore: must_be_immutable
 class MathsChallengeView extends GetView<AlarmChallengeController> {
-  MathsChallengeView({Key? key}) : super(key: key);
+  MathsChallengeView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 

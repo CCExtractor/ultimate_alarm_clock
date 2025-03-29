@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -11,16 +10,16 @@ import '../controllers/alarm_ring_controller.dart';
 
 // ignore: must_be_immutable
 class AlarmControlView extends GetView<AlarmControlController> {
-  AlarmControlView({Key? key}) : super(key: key);
+  AlarmControlView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
   Obx getAddSnoozeButtons(
-      BuildContext context, int snoozeMinutes, String title) {
+      BuildContext context, int snoozeMinutes, String title,) {
     return Obx(
       () => TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(
             themeController.secondaryBackgroundColor.value,
           ),
         ),
@@ -142,7 +141,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               width: width * 0.5,
                               child: TextButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
+                                  backgroundColor: WidgetStateProperty.all(
                                     themeController
                                         .secondaryBackgroundColor.value,
                                   ),
@@ -183,7 +182,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                       width: width * 0.8,
                       child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                             kprimaryColor,
                           ),
                         ),

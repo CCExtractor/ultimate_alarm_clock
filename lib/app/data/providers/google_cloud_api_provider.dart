@@ -23,7 +23,7 @@ class GoogleCloudProvider {
     Get.put(SettingsController());
     SettingsController settingsController = Get.find<SettingsController>();
 
-    if (await _firebaseAuthInstance.currentUser == null) {
+    if (_firebaseAuthInstance.currentUser == null) {
       var googleSignInAccount = await _googleSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
           await googleSignInAccount?.authentication;
@@ -120,6 +120,6 @@ class GoogleCloudProvider {
     homeController.isUserSignedIn.value = false;
     homeController.userModel.value = null;
     homeController.Calendars.value = [];
-    homeController.calendarFetchStatus.value = "Loading";
+    homeController.calendarFetchStatus.value = 'Loading';
   }
 }

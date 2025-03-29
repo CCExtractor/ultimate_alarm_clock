@@ -71,7 +71,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     try {
       isRinging.value.remove(id);
       print(isRinging.value);
-      if (isRinging.value.length == 0) {
+      if (isRinging.value.isEmpty) {
         await timerChannel.invokeMethod('stopDefaultAlarm');
       }
     } on PlatformException catch (e) {

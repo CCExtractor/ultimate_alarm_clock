@@ -21,7 +21,7 @@ class StopwatchController extends GetxController {
       final lapTime = currentTime - _lastFlagTime;
       hasFlags.value = true;
       flags.add(Flag(
-          number: flags.length + 1, lapTime: lapTime, totalTime: currentTime));
+          number: flags.length + 1, lapTime: lapTime, totalTime: currentTime,),);
       listKey.currentState
           ?.insertItem(0, duration: const Duration(milliseconds: 300));
       _lastFlagTime = currentTime;

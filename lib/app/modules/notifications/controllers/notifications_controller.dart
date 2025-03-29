@@ -39,14 +39,14 @@ class NotificationsController extends GetxController {
       for (final alarm in alarmList) {
         final a = AlarmModel.fromMap(alarm);
         a.profile = profile.profileName;
-        a.alarmID = Uuid().v4();
+        a.alarmID = const Uuid().v4();
         await IsarDb.addAlarm(a);
       }
     } else {
       await IsarDb.addProfile(profile);
       for (final alarm in alarmList) {
         final a = AlarmModel.fromMap(alarm);
-        a.alarmID = Uuid().v4();
+        a.alarmID = const Uuid().v4();
         await IsarDb.addAlarm(a);
       }
     }
@@ -54,8 +54,8 @@ class NotificationsController extends GetxController {
 
   Future importAlarm(String email, String alarmName) async {
     final alarmMap = await FirestoreDb.receiveAlarm(email, alarmName);
-    final alarm = await AlarmModel.fromMap(alarmMap);
-    alarm.alarmID = Uuid().v4();
+    final alarm = AlarmModel.fromMap(alarmMap);
+    alarm.alarmID = const Uuid().v4();
     alarm.profile = selectedProfile.value;
     await IsarDb.addAlarm(alarm);
   }

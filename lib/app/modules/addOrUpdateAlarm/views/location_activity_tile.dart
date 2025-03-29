@@ -56,7 +56,7 @@ class LocationTile extends StatelessWidget {
                       ),
                     ),
                     Radio(
-                      fillColor: MaterialStateProperty.all(
+                      fillColor: WidgetStateProperty.all(
                         (controller.isLocationEnabled.value == true)
                             ? themeController.primaryDisabledTextColor.value
                             : kprimaryColor,
@@ -124,14 +124,14 @@ class LocationTile extends StatelessWidget {
                           ),
                           Obx(() => MarkerLayer(
                               markers:
-                                  List<Marker>.from(controller.markersList))),
+                                  List<Marker>.from(controller.markersList),),),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                        backgroundColor: WidgetStateProperty.all(kprimaryColor),
                       ),
                       child: Text(
                         'Save',

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:get/get.dart';
-import '../../../data/providers/isar_provider.dart';
 import '../../../modules/settings/controllers/theme_controller.dart';
-import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 import '../controllers/debug_controller.dart';
 import '../../../data/models/debug_model.dart';
@@ -150,7 +147,7 @@ class DebugView extends GetView<DebugController> {
                               controller.selectedLogLevel.value = value;
                               controller.applyFilters();
                             },
-                          )),
+                          ),),
                     ),
                     const SizedBox(width: 8),
                     Container(
@@ -226,19 +223,19 @@ class DebugView extends GetView<DebugController> {
                                     children: [
                                       Row(
                                         children: [
-                                          Text('$formattedHour:$formattedMinute', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),),
+                                          Text('$formattedHour:$formattedMinute', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),),
                                           const SizedBox(width: 8),
                                           Text(formattedTime, style: TextStyle(color: themeController.primaryDisabledTextColor.value, fontWeight: FontWeight.w600, fontSize: 12),),
                                         ],
                                       ),
                                       SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.55,
-                                        child: Text(logMsg, style: const TextStyle(fontSize: 15), maxLines: 1, overflow: TextOverflow.ellipsis,)),
-                                    ]
+                                        child: Text(logMsg, style: const TextStyle(fontSize: 15), maxLines: 1, overflow: TextOverflow.ellipsis,),),
+                                    ],
                                   ),
                                   Icon(status == 'SUCCESS'?Icons.check_circle :(status=='WARNING'?Icons.info:Icons.error),
                                     color: status == 'SUCCESS'?Colors.green:(status=='WARNING'?Colors.orange:Colors.red),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -256,7 +253,7 @@ class DebugView extends GetView<DebugController> {
                         ],
                       );
                     },
-                  )),
+                  ),),
           ),
         ],
       ),

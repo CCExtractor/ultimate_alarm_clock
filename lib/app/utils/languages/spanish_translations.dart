@@ -229,7 +229,7 @@ class SpanishTranslations extends Translations {
           'Shake your phone!': '¡Agita tu teléfono!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "No puedes retroceder mientras suena la alarma",
+              'No puedes retroceder mientras suena la alarma',
           'Start Challenge': 'Comenzar el desafío',
           'Dismiss': 'Descartar',
           'Exit Preview': 'Salir de la vista previa',
@@ -272,7 +272,7 @@ class SpanishTranslations extends Translations {
           'Ascending Volume': 'Volumen ascendente',
           'Alarm deleted': 'Alarma eliminada',
           'Undo': 'Deshacer',
-          'The alarm has been deleted': 'La alarma ha sido eliminada'
+          'The alarm has been deleted': 'La alarma ha sido eliminada',
         },
       };
 }

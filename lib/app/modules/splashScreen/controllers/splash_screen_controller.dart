@@ -21,20 +21,20 @@ class SplashScreenController extends GetxController {
       homeController.genFakeAlarmModel().obs;
 
   getCurrentlyRingingAlarm() async {
-    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
+    AlarmModel alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel latestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+        await IsarDb.getLatestAlarm(alarmRecord, false);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
     return latestAlarm;
   }
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
@@ -103,7 +103,7 @@ class SplashScreenController extends GetxController {
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
-        print("shouldring: $shouldAlarmRing");
+        print('shouldring: $shouldAlarmRing');
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
           shouldNavigate = false;
@@ -153,11 +153,11 @@ class SplashScreenController extends GetxController {
                 try {
                   await alarmChannel.invokeMethod('scheduleAlarm', {
                     'milliSeconds': intervaltoAlarm,
-                    'activityMonitor': latestAlarm.activityMonitor
+                    'activityMonitor': latestAlarm.activityMonitor,
                   });
-                  print("Scheduled...");
+                  print('Scheduled...');
                 } on PlatformException catch (e) {
-                  print("Failed to schedule alarm: ${e.message}");
+                  print('Failed to schedule alarm: ${e.message}');
                 }
               }
               SystemNavigator.pop();

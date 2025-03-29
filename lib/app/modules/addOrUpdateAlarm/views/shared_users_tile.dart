@@ -112,12 +112,12 @@ class SharedUsers extends StatelessWidget {
                                                 trailing: TextButton(
                                                   style: ButtonStyle(
                                                     padding:
-                                                        MaterialStateProperty
+                                                        WidgetStateProperty
                                                             .all(
                                                       EdgeInsets.zero,
                                                     ),
                                                     minimumSize:
-                                                        MaterialStateProperty
+                                                        WidgetStateProperty
                                                             .all(
                                                       const Size(
                                                         80,
@@ -125,7 +125,7 @@ class SharedUsers extends StatelessWidget {
                                                       ),
                                                     ),
                                                     maximumSize:
-                                                        MaterialStateProperty
+                                                        WidgetStateProperty
                                                             .all(
                                                       const Size(
                                                         80,
@@ -133,7 +133,7 @@ class SharedUsers extends StatelessWidget {
                                                       ),
                                                     ),
                                                     backgroundColor:
-                                                        MaterialStateProperty
+                                                        WidgetStateProperty
                                                             .all(Colors.red),
                                                   ),
                                                   child: Text(

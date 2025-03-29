@@ -7,10 +7,10 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class WeatherTile extends StatelessWidget {
   const WeatherTile({
-    Key? key,
+    super.key,
     required this.controller,
     required this.themeController,
-  }) : super(key: key);
+  });
 
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;
@@ -123,7 +123,7 @@ class WeatherTile extends StatelessWidget {
                               width: width,
                               child: TextButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
+                                  backgroundColor: WidgetStateProperty.all(
                                     kprimaryColor,
                                   ),
                                 ),
@@ -193,12 +193,12 @@ class WeatherOption extends StatelessWidget {
   final ThemeController themeController;
 
   const WeatherOption({
-    Key? key,
+    super.key,
     required this.type,
     required this.label,
     required this.controller,
     required this.themeController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

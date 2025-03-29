@@ -17,7 +17,7 @@ class TimerModel {
       required this.ringtoneName,
       required this.timerName,
       this.isPaused = 0,
-      this.timeElapsed = 0});
+      this.timeElapsed = 0,});
 
   Map<String, dynamic> toMap() {
     return {

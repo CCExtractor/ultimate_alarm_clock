@@ -74,12 +74,12 @@ class _ProfileSelectState extends State<ProfileSelect> {
                       ),
                     );
                   }
-                  return SizedBox();
+                  return const SizedBox();
                 },
               ),
-            )
+            ),
           ],
-    ));
+    ),);
   }
 
   Widget profileCapsule(ProfileModel profile) {

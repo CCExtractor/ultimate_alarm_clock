@@ -70,7 +70,7 @@ class AlarmIDTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: Text(
                               //'To copy Alarm ID you have enable shared alarm!',
                               'toCopyAlarm'.tr,
@@ -81,7 +81,7 @@ class AlarmIDTile extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: TextButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                   kprimaryColor,
                                 ),
                               ),

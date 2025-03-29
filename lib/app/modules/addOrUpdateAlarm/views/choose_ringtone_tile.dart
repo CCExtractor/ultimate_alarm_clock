@@ -63,7 +63,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                 children: [
                   Obx(
                     () => Padding(
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       child: SizedBox(
                         width: width * 0.8,
                         height: height * 0.3,
@@ -71,10 +71,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                           elevation: 0,
                           color: themeController.secondaryBackgroundColor.value,
                           child: Scrollbar(
-                            radius: Radius.circular(5),
+                            radius: const Radius.circular(5),
                             thumbVisibility: true,
                             child: Padding(
-                              padding: EdgeInsets.only(right: 4),
+                              padding: const EdgeInsets.only(right: 4),
                               child: ListView.builder(
                                 itemCount:
                                     controller.customRingtoneNames.length,
@@ -83,7 +83,8 @@ class ChooseRingtoneTile extends StatelessWidget {
                                   return Obx(
                                     () => ListTile(
                                       onTap: () async {
-                                        await AudioUtils.stopPreviewCustomSound();
+                                        await AudioUtils
+                                            .stopPreviewCustomSound();
                                         controller.isPlaying.value = false;
                                         controller.previousRingtone =
                                             controller.customRingtoneName.value;
@@ -116,8 +117,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                   .customRingtoneName ==
                                               controller
                                                   .customRingtoneNames[index]
-                                          ? themeController.primaryBackgroundColor.value
-                                          : themeController.secondaryBackgroundColor.value,
+                                          ? themeController
+                                              .primaryBackgroundColor.value
+                                          : themeController
+                                              .secondaryBackgroundColor.value,
                                       title: Text(
                                         controller.customRingtoneNames[index],
                                         overflow: TextOverflow.ellipsis,
@@ -131,9 +134,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                     .customRingtoneNames[index])
                                               IconButton(
                                                 onPressed: () => onTapPreview(
-                                                    controller
-                                                            .customRingtoneNames[
-                                                        index]),
+                                                  controller
+                                                          .customRingtoneNames[
+                                                      index],
+                                                ),
                                                 icon: Icon(
                                                   (controller.isPlaying.value &&
                                                           controller
@@ -156,13 +160,15 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                           255,
                                                           116,
                                                           111,
-                                                          110) // Change this color to red
+                                                          110,
+                                                        ) // Change this color to red
                                                       : kprimaryColor,
                                                 ),
                                               ),
                                             if (!defaultRingtones.contains(
-                                                controller.customRingtoneNames[
-                                                    index]))
+                                              controller
+                                                  .customRingtoneNames[index],
+                                            ))
                                               IconButton(
                                                 onPressed: () async {
                                                   await controller
@@ -197,20 +203,200 @@ class ChooseRingtoneTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      OutlinedButton(
-                        onPressed: () async {
-                          Utils.hapticFeedback();
-                          await AudioUtils.stopPreviewCustomSound();
-                          controller.isPlaying.value = false;
-                          controller.previousRingtone =
-                              controller.customRingtoneName.value;
-                          await controller.saveCustomRingtone();
-                        },
-                        child: Text(
-                          'Upload Ringtone'.tr,
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: kprimaryColor,
+                      PopupMenuButton<String>(
+                        onSelected: (String value) async {
+                          if (value == 'upload') {
+                            Utils.hapticFeedback();
+                            await AudioUtils.stopPreviewCustomSound();
+                            controller.isPlaying.value = false;
+                            controller.previousRingtone =
+                                controller.customRingtoneName.value;
+                            await controller.saveCustomRingtone();
+                          } else if (value == 'system') {
+                            Utils.hapticFeedback();
+                            await AudioUtils.stopPreviewCustomSound();
+                            controller.isPlaying.value = false;
+
+                            // Load system ringtones
+                            await controller.loadSystemRingtones();
+
+                            // Show system ringtones dialog
+                            Get.dialog(
+                              Dialog(
+                                backgroundColor: themeController
+                                    .secondaryBackgroundColor.value,
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxHeight: MediaQuery.of(context)
+                                            .size
+                                            .height *
+                                        0.7, // Limit to 70% of screen height
                                   ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'System Ringtones'.tr,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Expanded(
+                                          child: Obx(() {
+                                            if (controller
+                                                .isLoadingSystemRingtones
+                                                .value) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (controller
+                                                .systemRingtones.isEmpty) {
+                                              return Center(
+                                                child: Text(
+                                                  'No system ringtones found'
+                                                      .tr,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              );
+                                            }
+
+                                            return ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: controller
+                                                  .systemRingtones.length,
+                                              itemBuilder: (context, index) {
+                                                final ringtone = controller
+                                                    .systemRingtones[index];
+                                                final title =
+                                                    ringtone['title'] as String;
+                                                final uri =
+                                                    ringtone['uri'] as String;
+
+                                                return ListTile(
+                                                  title: Text(
+                                                    title,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  onTap: () async {
+                                                    // Stop any playing preview
+                                                    await AudioUtils
+                                                        .stopPreviewCustomSound();
+                                                    await AudioUtils
+                                                        .stopSystemRingtone();
+
+                                                    // Save the selected system ringtone
+                                                    await controller
+                                                        .saveSystemRingtone(
+                                                            title, uri);
+                                                    Get.back(); // Close system ringtones dialog
+                                                  },
+                                                  trailing: IconButton(
+                                                    icon: const Icon(
+                                                        Icons.play_arrow),
+                                                    onPressed: () async {
+                                                      // Preview the ringtone
+                                                      await AudioUtils
+                                                          .stopPreviewCustomSound();
+                                                      await AudioUtils
+                                                          .stopSystemRingtone();
+                                                      await AudioUtils
+                                                          .playSystemRingtone(
+                                                              uri);
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            AudioUtils.stopSystemRingtone();
+                                            Get.back();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: kprimaryColor,
+                                          ),
+                                          child: Text('Cancel'.tr),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<String>>[
+                          PopupMenuItem<String>(
+                            value: 'upload',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.upload_file,
+                                    size: 20, color: kprimaryColor),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'Upload Ringtone'.tr,
+                                  style: TextStyle(
+                                    color:
+                                        themeController.primaryTextColor.value,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'system',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.phone_android,
+                                    size: 20, color: kprimaryColor),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'System Ringtones'.tr,
+                                  style: TextStyle(
+                                    color:
+                                        themeController.primaryTextColor.value,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        color: themeController.secondaryBackgroundColor.value,
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: OutlinedButton(
+                          onPressed: null,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.add,
+                                  size: 16, color: kprimaryColor),
+                              const SizedBox(width: 5),
+                              Text(
+                                'Add Ringtone'.tr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: kprimaryColor,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       ElevatedButton(
@@ -225,7 +411,10 @@ class ChooseRingtoneTile extends StatelessWidget {
                         ),
                         child: Text(
                           'Done'.tr,
-                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
                                 color: themeController.secondaryTextColor.value,
                               ),
                         ),

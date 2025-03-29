@@ -84,19 +84,19 @@ class InputTimeController extends GetxController {
       try {
         newHour = int.parse(rawHourText);
       } catch (e) {
-        debugPrint("toggleIfAtBoundary error parsing hour: $e");
+        debugPrint('toggleIfAtBoundary error parsing hour: $e');
         return;
       }
 
       if (newHour == 0) {
         newHour = 12;
       }
-      debugPrint("toggleIfAtBoundary: previousDisplayHour = $_previousDisplayHour, newHour = $newHour");
+      debugPrint('toggleIfAtBoundary: previousDisplayHour = $_previousDisplayHour, newHour = $newHour');
       if (_previousDisplayHour != null) {
         if ((_previousDisplayHour == 11 && newHour == 12) ||
             (_previousDisplayHour == 12 && newHour == 11)) {
           isAM.value = !isAM.value;
-          debugPrint("toggleIfAtBoundary: Toggled isAM to ${isAM.value}");
+          debugPrint('toggleIfAtBoundary: Toggled isAM to ${isAM.value}');
         }
       }
       _previousDisplayHour = newHour;
@@ -135,7 +135,7 @@ class InputTimeController extends GetxController {
       int minute = int.parse(inputMinutesController.text);
       final time = TimeOfDay(hour: hour, minute: minute);
       DateTime today = DateTime.now();
-      DateTime tomorrow = today.add(Duration(days: 1));
+      DateTime tomorrow = today.add(const Duration(days: 1));
 
       bool isNextDay = (time.hour == today.hour && time.minute < today.minute) || (time.hour < today.hour);
       bool isNextMonth = isNextDay && (today.day > tomorrow.day);
@@ -211,8 +211,9 @@ class LimitRange extends TextInputFormatter {
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     try {
       int value = int.parse(newValue.text);
-      if (value < minRange) return TextEditingValue(text: minRange.toString());
-      else if (value > maxRange) return TextEditingValue(text: maxRange.toString());
+      if (value < minRange) {
+        return TextEditingValue(text: minRange.toString());
+      } else if (value > maxRange) return TextEditingValue(text: maxRange.toString());
       return newValue;
     } catch (e) {
       debugPrint(e.toString());

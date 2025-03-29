@@ -27,8 +27,8 @@ enum Status {
 }
 
 enum LogType {
-  dev("DEV"),
-  normal("NORMAL");
+  dev('DEV'),
+  normal('NORMAL');
 
   final String value;
   const LogType(this.value);
@@ -482,7 +482,7 @@ class IsarDb {
       'profileName': currentProfileName,
       'profileData': ProfileModel.toMap(currentProfile!),
       'alarmData': alarmMaps,
-      'owner': ''
+      'owner': '',
     };
     return profileSet;
   }
@@ -515,7 +515,7 @@ class IsarDb {
     await sql!.delete(
       'alarms',
       where: 'alarmID = ?',
-      whereArgs: [tobedeleted!.alarmID],
+      whereArgs: [tobedeleted.alarmID],
     );
   }
 
@@ -747,27 +747,27 @@ class IsarDb {
           {'isarId' : fastHash('Digital Alarm 1'),
             'ringtoneName': 'Digital Alarm 1',
             'ringtonePath': 'ringtones/digialarm.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
           {'isarId' : fastHash('Digital Alarm 2'),
             'ringtoneName': 'Digital Alarm 2',
             'ringtonePath': 'ringtones/digialarm2.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
           {'isarId' : fastHash('Digital Alarm 3'),
             'ringtoneName': 'Digital Alarm 3',
             'ringtonePath': 'ringtones/digialarm3.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
           {'isarId' : fastHash('Mystery'),
             'ringtoneName': 'Mystery',
             'ringtonePath': 'ringtones/mystery.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
           {'isarId' : fastHash('New Day'),
             'ringtoneName': 'New Day',
             'ringtonePath': 'ringtones/newday.mp3',
-            'currentCounterOfUsage': 0
+            'currentCounterOfUsage': 0,
           },
         ]);
       });

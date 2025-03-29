@@ -9,10 +9,10 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class AscendingVolumeTile extends StatelessWidget {
   const AscendingVolumeTile({
-    Key? key,
+    super.key,
     required this.controller,
     required this.themeController,
-  }) : super(key: key);
+  });
 
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;

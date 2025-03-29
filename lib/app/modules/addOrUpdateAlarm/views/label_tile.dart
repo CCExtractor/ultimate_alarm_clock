@@ -94,7 +94,7 @@ class LabelTile extends StatelessWidget {
             buttonColor: themeController.secondaryBackgroundColor.value,
             confirm: TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                backgroundColor: WidgetStateProperty.all(kprimaryColor),
               ),
               child: Text(
                 'Save'.tr,

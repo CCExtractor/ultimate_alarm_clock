@@ -36,7 +36,7 @@ import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  AddOrUpdateAlarmView({Key? key}) : super(key: key);
+  AddOrUpdateAlarmView({super.key});
 
   final ThemeController themeController = Get.find<ThemeController>();
   final InputTimeController inputTimeController =
@@ -134,7 +134,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             TextButton(
                               style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all(kprimaryColor),
+                                    WidgetStateProperty.all(kprimaryColor),
                               ),
                               child: Obx(
                                 () => Text(
@@ -308,7 +308,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         kprimaryColor,
                                                                   ),
                                                           textStyle: Theme.of(
-                                                                  context)
+                                                                  context,)
                                                               .textTheme
                                                               .displayMedium!
                                                               .copyWith(
@@ -330,7 +330,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           child: Text(
                                                             ':',
                                                             style: Theme.of(
-                                                                    context)
+                                                                    context,)
                                                                 .textTheme
                                                                 .displayLarge!
                                                                 .copyWith(
@@ -418,7 +418,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         kprimaryColor,
                                                                   ),
                                                           textStyle: Theme.of(
-                                                                  context)
+                                                                  context,)
                                                               .textTheme
                                                               .displayMedium!
                                                               .copyWith(
@@ -447,7 +447,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                             child: Text(
                                                               ':',
                                                               style: Theme.of(
-                                                                      context)
+                                                                      context,)
                                                                   .textTheme
                                                                   .displayLarge!
                                                                   .copyWith(
@@ -549,13 +549,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 width * 0.2,
                                                             selectedTextStyle:
                                                                 Theme.of(
-                                                                        context)
+                                                                        context,)
                                                                     .textTheme
                                                                     .displayLarge!
                                                                     .copyWith(
                                                                       fontSize:
                                                                           Utils.getFontSize(
-                                                                              context),
+                                                                              context,),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -563,13 +563,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                           kprimaryColor,
                                                                     ),
                                                             textStyle: Theme.of(
-                                                                    context)
+                                                                    context,)
                                                                 .textTheme
                                                                 .displayMedium!
                                                                 .copyWith(
                                                                   fontSize: Utils
                                                                       .getFontSize(
-                                                                          context),
+                                                                          context,),
                                                                   color: themeController
                                                                       .primaryDisabledTextColor
                                                                       .value,
@@ -590,11 +590,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           onChanged: (_) {
                                                             if (int.parse(inputTimeController
                                                                         .inputHrsController
-                                                                        .text) ==
+                                                                        .text,) ==
                                                                     12 &&
                                                                 int.parse(inputTimeController
                                                                         .inputMinutesController
-                                                                        .text) ==
+                                                                        .text,) ==
                                                                     0) {
                                                               inputTimeController
                                                                   .isAM
@@ -620,16 +620,16 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           inputFormatters: [
                                                             FilteringTextInputFormatter
                                                                 .allow(RegExp(
-                                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                                                    '[1,2,3,4,5,6,7,8,9,0]',),),
                                                             LengthLimitingTextInputFormatter(
-                                                                2),
+                                                                2,),
                                                             LimitRange(
                                                                 0,
                                                                 settingsController
                                                                         .is24HrsEnabled
                                                                         .value
                                                                     ? 23
-                                                                    : 12),
+                                                                    : 12,),
                                                           ],
                                                         ),
                                                       ),
@@ -703,7 +703,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   .value,
                                                           items: [
                                                             'AM',
-                                                            'PM'
+                                                            'PM',
                                                           ].map(
                                                               (String period) {
                                                             return DropdownMenuItem<
@@ -717,7 +717,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                               (getPeriod) {
                                                             inputTimeController
                                                                 .changePeriod(
-                                                                    getPeriod!);
+                                                                    getPeriod!,);
 
                                                             inputTimeController
                                                                 .setTime();
@@ -811,7 +811,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ),
                                       Obx(
                                         () => (!controller.repeatDays.every(
-                                                (element) => element == false))
+                                                (element) => element == false,))
                                             ? RepeatOnceTile(
                                                 controller: controller,
                                                 themeController:
@@ -821,7 +821,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ),
                                       Obx(
                                         () => (!controller.repeatDays.every(
-                                                (element) => element == false))
+                                                (element) => element == false,))
                                             ? Divider(
                                                 color: themeController
                                                     .primaryDisabledTextColor
@@ -839,7 +839,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                       ),
                                       Obx(
                                         () => (controller.repeatDays.every(
-                                                (element) => element == false))
+                                                (element) => element == false,))
                                             ? DeleteAfterGoesOff(
                                                 controller: controller,
                                                 themeController:
@@ -1036,7 +1036,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           (controller.alarmRecord.value.alarmID == '')

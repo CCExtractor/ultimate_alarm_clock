@@ -20,7 +20,7 @@ import '../controllers/home_controller.dart';
 import 'notification_icon.dart';
 
 class HomeView extends GetView<HomeController> {
-  HomeView({Key? key}) : super(key: key);
+  HomeView({super.key});
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
 
@@ -34,7 +34,7 @@ class HomeView extends GetView<HomeController> {
       floatingActionButton: Obx(
         () => Visibility(
             visible: controller.inMultipleSelectMode.value ? false : true,
-            child: Container(
+            child: SizedBox(
               height: width * 0.13,
               width: width * 0.13,
               child: FloatingActionButton(
@@ -50,9 +50,9 @@ class HomeView extends GetView<HomeController> {
                     child: Icon(
                   Icons.add,
                   size: controller.scalingFactor.value * 30,
-                )),
+                ),),
               ),
-            )),
+            ),),
       ),
       endDrawer: buildEndDrawer(context),
       appBar: null,
@@ -309,7 +309,7 @@ class HomeView extends GetView<HomeController> {
                                                                 .value,
                                                       ),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   height: 35,
                                                   width: MediaQuery.of(context).size.width / 1.2,
                                                   child: Row(
@@ -347,7 +347,7 @@ class HomeView extends GetView<HomeController> {
                                                                   ),
                                                         );
                                                       }),
-                                                      Spacer(),
+                                                      const Spacer(),
                                                       Row(
                                                         children: [
                                                           // All alarm select button
@@ -386,7 +386,7 @@ class HomeView extends GetView<HomeController> {
                                                                               TextButton(
                                                                                 onPressed: () => Get.back(result: false),
                                                                                 style: ButtonStyle(
-                                                                                  backgroundColor: MaterialStateProperty.all(
+                                                                                  backgroundColor: WidgetStateProperty.all(
                                                                                     kprimaryTextColor.withOpacity(0.5),
                                                                                   ),
                                                                                 ),
@@ -398,7 +398,7 @@ class HomeView extends GetView<HomeController> {
                                                                               TextButton(
                                                                                 onPressed: () => Get.back(result: true),
                                                                                 style: ButtonStyle(
-                                                                                  backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                                                                                  backgroundColor: WidgetStateProperty.all(kprimaryColor),
                                                                                 ),
                                                                                 child: Text(
                                                                                   'Delete'.tr,
@@ -578,11 +578,11 @@ class HomeView extends GetView<HomeController> {
                                                 background: Container(
                                                   color: Colors.red,
                                                   // Set the background color to red
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                     horizontal: 20,
                                                   ),
                                                   alignment: Alignment.center,
-                                                  child: Icon(
+                                                  child: const Icon(
                                                     Icons.delete,
                                                     color: Colors.white,
                                                   ),
@@ -975,8 +975,8 @@ class HomeView extends GetView<HomeController> {
                                                                                 if (value == 0) {
                                                                                   Get.toNamed('/alarm-ring', arguments: {
                                                                                     'alarm': alarm,
-                                                                                    'preview': true
-                                                                                  });
+                                                                                    'preview': true,
+                                                                                  },);
                                                                                 } else if (value == 1) {
                                                                                   debugPrint(alarm.isSharedAlarmEnabled.toString());
 
@@ -1066,7 +1066,7 @@ class HomeView extends GetView<HomeController> {
                                             ),
                                           ),
                                         )
-                                      : SizedBox();
+                                      : const SizedBox();
                                       },
                                     );
                                   }
@@ -1125,7 +1125,7 @@ class HomeView extends GetView<HomeController> {
                     Get.back(result: false);
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
                       kprimaryTextColor.withOpacity(0.5),
                     ),
                   ),
@@ -1139,7 +1139,7 @@ class HomeView extends GetView<HomeController> {
                     Get.back(result: true); // User confirmed
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: WidgetStateProperty.all(kprimaryColor),
                   ),
                   child: Text(
                     'delete'.tr,

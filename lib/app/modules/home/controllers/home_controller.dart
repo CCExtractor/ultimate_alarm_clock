@@ -248,7 +248,7 @@ class HomeController extends GetxController {
     final checkDefault = await IsarDb.getProfile('Default');
     if (checkDefault == null) {
       IsarDb.addProfile(Utils.genDefaultProfileModel());
-      await storage.writeProfile("Default");
+      await storage.writeProfile('Default');
       profileModel.value = Utils.genDefaultProfileModel();
     }
     readProfileName();
@@ -563,7 +563,7 @@ class HomeController extends GetxController {
               refreshTimer = true;
               refreshUpcomingAlarms();
             },
-            child: Text(
+            child: const Text(
               'Undo',
               style: TextStyle(color: Colors.white),
             ),
@@ -637,7 +637,7 @@ class HomeController extends GetxController {
           ),
           TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 kprimaryColor,
               ),
             ),
@@ -721,7 +721,7 @@ class HomeController extends GetxController {
                     Get.back();
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                    backgroundColor: WidgetStateProperty.all(kprimaryColor),
                   ),
                   child: Text(
                     'Cancel'.tr,
@@ -752,7 +752,7 @@ class HomeController extends GetxController {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.red,
                         width: 1,
                       ),
@@ -824,6 +824,6 @@ class HomeController extends GetxController {
         guardianTimer: profileModel.value.guardianTimer,
         guardian: profileModel.value.guardian,
         isCall: profileModel.value.isCall,
-        ringOn: false);
+        ringOn: false,);
   }
 }

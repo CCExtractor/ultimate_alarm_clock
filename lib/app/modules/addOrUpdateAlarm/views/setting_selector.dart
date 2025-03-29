@@ -46,12 +46,12 @@ class SettingSelector extends StatelessWidget {
                         homeController: controller.homeController,
                         controller: controller,
                         themeController: controller.themeController,
-                      ));
+                      ),);
                     }
                   else{
                     await GoogleCloudProvider.getInstance();
 
-                  };
+                  }
                 } else {
                   controller.alarmSettingType.value = val;
                 }

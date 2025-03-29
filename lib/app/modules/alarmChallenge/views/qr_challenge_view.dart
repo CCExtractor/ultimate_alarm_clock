@@ -10,7 +10,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/alarm_challenge_controller.dart';
 
 class QRChallengeView extends GetView<AlarmChallengeController> {
-  QRChallengeView({Key? key}) : super(key: key);
+  QRChallengeView({super.key});
 
   ThemeController themeController = Get.find<ThemeController>();
 
@@ -143,7 +143,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                     TextButton(
                                                       style: ButtonStyle(
                                                         backgroundColor:
-                                                            MaterialStateProperty
+                                                            WidgetStateProperty
                                                                 .all(
                                                           kprimaryColor,
                                                         ),

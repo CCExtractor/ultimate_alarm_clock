@@ -97,7 +97,7 @@ class ShakeToDismiss extends StatelessWidget {
                         // ignore: require_trailing_commas
                         Text(controller.shakeTimes.value > 1
                             ? 'times'.tr
-                            : 'time'.tr),
+                            : 'time'.tr,),
                       ],
                     ),
                   ),

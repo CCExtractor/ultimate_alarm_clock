@@ -144,7 +144,7 @@ class MathsChallenge extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Save'.tr,
@@ -168,7 +168,7 @@ class MathsChallenge extends StatelessWidget {
                       ),
                       TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                             themeController.primaryTextColor.value.withOpacity(0.5),
                           ),
                         ),
@@ -221,7 +221,7 @@ class MathsChallenge extends StatelessWidget {
   }
 
   void _presetToInitial(
-      bool isMathsEnabled, double sliderValue, int noOfMathQues) {
+      bool isMathsEnabled, double sliderValue, int noOfMathQues,) {
     controller.isMathsEnabled.value = isMathsEnabled;
     controller.mathsSliderValue.value = sliderValue;
     controller.numMathsQuestions.value = noOfMathQues;

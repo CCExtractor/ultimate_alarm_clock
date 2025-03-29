@@ -61,10 +61,10 @@ class RepeatTile extends StatelessWidget {
                         width: width,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              left: 25, right: 25, bottom: 25),
+                              left: 25, right: 25, bottom: 25,),
                           child: TextButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                 kprimaryColor,
                               ),
                             ),

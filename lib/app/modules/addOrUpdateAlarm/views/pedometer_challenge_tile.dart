@@ -137,8 +137,8 @@ class PedometerChallenge extends StatelessWidget {
                 () => Text(
                   controller.numberOfSteps.value > 0
                       ? controller.numberOfSteps.value > 1
-                          ? '${controller.numberOfSteps.value} ' + 'steps'.tr
-                          : '${controller.numberOfSteps.value} ' + 'step'.tr
+                          ? '${controller.numberOfSteps.value} ${'steps'.tr}'
+                          : '${controller.numberOfSteps.value} ${'step'.tr}'
                       : 'Off'.tr,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: (controller.isPedometerEnabled.value == false)

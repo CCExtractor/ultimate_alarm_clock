@@ -48,7 +48,7 @@ class AudioUtils {
   ) async {
     try {
       var volume = await FlutterVolumeController.getVolume();
-      await audioPlayer.setVolume(volume??1.0);
+      await audioPlayer.setVolume(volume ?? 1.0);
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.DeviceFileSource(customRingtonePath));
     } catch (e) {
@@ -61,7 +61,7 @@ class AudioUtils {
   ) async {
     try {
       var volume = await FlutterVolumeController.getVolume();
-      await audioPlayer.setVolume(volume??1.0);
+      await audioPlayer.setVolume(volume ?? 1.0);
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.AssetSource(customRingtonePath));
     } catch (e) {
@@ -77,7 +77,7 @@ class AudioUtils {
         await initializeAudioSession();
       }
       var volume = await FlutterVolumeController.getVolume();
-      await audioPlayer.setVolume(volume??1.0);
+      await audioPlayer.setVolume(volume ?? 1.0);
       await audioSession!.setActive(true);
 
       String ringtoneName = alarmRecord.ringtoneName;
@@ -91,6 +91,9 @@ class AudioUtils {
         String customRingtonePath = customRingtone.ringtonePath;
         if (defaultRingtones.contains(ringtoneName)) {
           await playAssetSound(customRingtonePath);
+        } else if (customRingtonePath.startsWith('content://')) {
+          await alarmChannel
+              .invokeMethod('playSystemRingtone', {'uri': customRingtonePath});
         } else {
           await playCustomSound(customRingtonePath);
         }
@@ -133,7 +136,14 @@ class AudioUtils {
 
         if (customRingtone != null) {
           String customRingtonePath = customRingtone.ringtonePath;
-          await playCustomSound(customRingtonePath);
+          if (customRingtonePath.startsWith('content://')) {
+            await alarmChannel.invokeMethod(
+              'playSystemRingtone',
+              {'uri': customRingtonePath},
+            );
+          } else {
+            await playCustomSound(customRingtonePath);
+          }
         } else {
           await timerChannel.invokeMethod('playDefaultAlarm');
 
@@ -189,7 +199,14 @@ class AudioUtils {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
           await audioSession!.setActive(false);
           await audioSession!.setActive(true);
-          await playAssetSound(customRingtonePath);
+          if (customRingtonePath.startsWith('content://')) {
+            await alarmChannel.invokeMethod(
+              'playSystemRingtone',
+              {'uri': customRingtonePath},
+            );
+          } else {
+            await playCustomSound(customRingtonePath);
+          }
           isPreviewing = true;
         }
       } else {
@@ -203,7 +220,14 @@ class AudioUtils {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
           await audioSession!.setActive(false);
           await audioSession!.setActive(true);
-          await playCustomSound(customRingtonePath);
+          if (customRingtonePath.startsWith('content://')) {
+            await alarmChannel.invokeMethod(
+              'playSystemRingtone',
+              {'uri': customRingtonePath},
+            );
+          } else {
+            await playCustomSound(customRingtonePath);
+          }
           isPreviewing = true;
         }
       }
@@ -217,6 +241,7 @@ class AudioUtils {
       if (audioSession != null && isPreviewing) {
         await audioPlayer.stop();
         await alarmChannel.invokeMethod('stopDefaultAlarm');
+        await alarmChannel.invokeMethod('stopSystemRingtone');
         await audioSession!.setActive(false);
         isPreviewing = false;
       }
@@ -297,5 +322,52 @@ class AudioUtils {
     }
 
     return hash;
+  }
+
+  static Future<List<Map<String, dynamic>>> getSystemRingtones() async {
+    try {
+      final List<dynamic> ringtones =
+          await alarmChannel.invokeMethod('getSystemRingtones');
+
+      // Explicit conversion to avoid type errors
+      List<Map<String, dynamic>> result = [];
+      for (var item in ringtones) {
+        // Safely convert each map to the expected type
+        if (item is Map) {
+          Map<String, dynamic> ringtone = {
+            'title': item['title']?.toString() ?? '',
+            'uri': item['uri']?.toString() ?? ''
+          };
+          result.add(ringtone);
+        }
+      }
+
+      debugPrint("Processed ${result.length} system ringtones");
+      return result;
+    } on PlatformException catch (e) {
+      debugPrint('Failed to get system ringtones: ${e.message}');
+      return [];
+    } catch (e) {
+      debugPrint('Error processing system ringtones: $e');
+      return [];
+    }
+  }
+
+  static Future<void> playSystemRingtone(String uri) async {
+    try {
+      await alarmChannel.invokeMethod('playSystemRingtone', {'uri': uri});
+      isPreviewing = true;
+    } on PlatformException catch (e) {
+      debugPrint('Failed to play system ringtone: ${e.message}');
+    }
+  }
+
+  static Future<void> stopSystemRingtone() async {
+    try {
+      await alarmChannel.invokeMethod('stopSystemRingtone');
+      isPreviewing = false;
+    } on PlatformException catch (e) {
+      debugPrint('Failed to stop system ringtone: ${e.message}');
+    }
   }
 }

@@ -8,7 +8,7 @@ import '../../../utils/utils.dart';
 
 // ignore: must_be_immutable
 class StopwatchView extends GetView<StopwatchController> {
-  StopwatchView({Key? key}) : super(key: key);
+  StopwatchView({super.key});
   ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class StopwatchView extends GetView<StopwatchController> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
-                  heroTag: "flag",
+                  heroTag: 'flag',
                   onPressed: controller.addFlag,
                   child: Icon(
                     Icons.flag,
@@ -125,7 +125,7 @@ class StopwatchView extends GetView<StopwatchController> {
                   ),
                 ),
                 FloatingActionButton(
-                  heroTag: "start",
+                  heroTag: 'start',
                   onPressed: controller.toggleTimer,
                   child: Obx(
                     () => Icon(
@@ -138,9 +138,9 @@ class StopwatchView extends GetView<StopwatchController> {
                 ),
                 // Reset button
                 FloatingActionButton(
-                  heroTag: "stop",
+                  heroTag: 'stop',
                   onPressed: controller.resetTime,
-                  child: Icon(
+                  child: const Icon(
                     Icons.stop_rounded,
                     size: 33,
                   ),
@@ -210,6 +210,6 @@ class StopwatchView extends GetView<StopwatchController> {
             ),
           ],
         ),
-        endDrawer: buildEndDrawer(context));
+        endDrawer: buildEndDrawer(context),);
   }
 }

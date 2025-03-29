@@ -101,7 +101,7 @@ class ProfileModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,});
 
   ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -274,7 +274,7 @@ class ProfileModel {
       'guardianTimer': profileRecord.guardianTimer,
       'guardian': profileRecord.guardian,
       'isCall': profileRecord.isCall,
-      'ringOn': profileRecord.ringOn
+      'ringOn': profileRecord.ringOn,
     };
 
     if (profileRecord.isSharedAlarmEnabled) {

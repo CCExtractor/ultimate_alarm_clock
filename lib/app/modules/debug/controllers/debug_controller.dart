@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'dart:async';
 import '../../../data/providers/isar_provider.dart';
 import '../../../modules/settings/controllers/theme_controller.dart';
@@ -147,8 +145,6 @@ class DebugController extends GetxController {
               onPrimary: Colors.white,
               surface: themeController.secondaryBackgroundColor.value,
               onSurface: themeController.primaryTextColor.value,
-              background: themeController.primaryBackgroundColor.value,
-              onBackground: themeController.primaryTextColor.value,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(

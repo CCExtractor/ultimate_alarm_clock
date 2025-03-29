@@ -88,7 +88,7 @@ class SharedAlarm extends StatelessWidget {
                                         child: TextButton(
                                           style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                               kprimaryColor,
                                             ),
                                           ),
@@ -169,7 +169,7 @@ class SharedAlarm extends StatelessWidget {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(
+                                          WidgetStateProperty.all(
                                         kprimaryColor,
                                       ),
                                     ),
@@ -201,7 +201,7 @@ class SharedAlarm extends StatelessWidget {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(
+                                          WidgetStateProperty.all(
                                             themeController.primaryTextColor.value
                                                 .withOpacity(0.5),
                                       ),

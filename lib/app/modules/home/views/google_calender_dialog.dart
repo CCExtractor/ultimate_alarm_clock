@@ -96,9 +96,9 @@ Future<Widget> googleCalenderDialog(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Padding(
+                                              const Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                    EdgeInsets.all(8.0),
                                                 child: Icon(
                                                   Icons.calendar_month,
                                                   color: kprimaryColor,
@@ -189,9 +189,9 @@ Future<Widget> googleCalenderDialog(
                                                       Axis.horizontal,
                                                   child: Row(
                                                     children: [
-                                                      Padding(
+                                                      const Padding(
                                                         padding:
-                                                            const EdgeInsets
+                                                            EdgeInsets
                                                                 .all(
                                                           8.0,
                                                         ),
@@ -214,7 +214,7 @@ Future<Widget> googleCalenderDialog(
                                                                     .value[
                                                                         index]
                                                                     .start
-                                                                    .date),
+                                                                    .date,),
                                                       ),
                                                     ],
                                                   ),
@@ -242,7 +242,7 @@ Future<Widget> googleCalenderDialog(
                                                                   .Events
                                                                   .value[index]
                                                                   .start
-                                                                  .date)[10]);
+                                                                  .date,)[10],);
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -252,9 +252,9 @@ Future<Widget> googleCalenderDialog(
                                                 ),
                                                 color: kprimaryColor,
                                               ),
-                                              child: Padding(
+                                              child: const Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                    EdgeInsets.all(8.0),
                                                 child: Center(
                                                   child: Icon(
                                                     Icons
