@@ -5,12 +5,16 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'dart:async';
 import '../../../data/providers/isar_provider.dart';
 import '../../../modules/settings/controllers/theme_controller.dart';
+import '../../../modules/settings/controllers/settings_controller.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/constants.dart';
 import '../../../data/models/debug_model.dart';
+import '../../../data/models/alarm_model.dart';
+import '../views/alarm_details_widget.dart';
 
 class DebugController extends GetxController {
   final ThemeController themeController = Get.find<ThemeController>();
+  final SettingsController settingsController = Get.find<SettingsController>();
   final TextEditingController searchController = TextEditingController();
   
   var logs = <Map<String, dynamic>>[].obs;
@@ -29,6 +33,8 @@ class DebugController extends GetxController {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       fetchLogs();
     });
+    
+    isDevMode.value = settingsController.isDevMode.value;
   }
 
   @override
@@ -39,7 +45,8 @@ class DebugController extends GetxController {
   }
 
   void toggleDevMode() {
-    isDevMode.value = !isDevMode.value;
+    settingsController.toggleDevMode(!settingsController.isDevMode.value);
+    isDevMode.value = settingsController.isDevMode.value;
     fetchLogs();
   }
 
@@ -173,5 +180,43 @@ class DebugController extends GetxController {
     if (status.contains('error')) return Colors.red;
     if (status.contains('warning')) return Colors.orange;
     return Colors.green;
+  }
+
+  Future<Widget> getAlarmDetailsWidget(String? alarmID, String logMsg, String status, bool hasRung) async {
+    
+    String? effectiveAlarmID = alarmID;
+    if (effectiveAlarmID == null || effectiveAlarmID.isEmpty) {
+    
+      final idMatch = RegExp(r'ID: (\d+)|alarmID: (\d+)').firstMatch(logMsg);
+      if (idMatch != null) {
+        effectiveAlarmID = idMatch.group(1) ?? idMatch.group(2);
+      }
+    }
+
+    if (effectiveAlarmID == null || effectiveAlarmID.isEmpty) {
+      debugPrint('No alarm ID found in log message: $logMsg');
+      return const SizedBox.shrink();
+    }
+
+    try {
+      debugPrint('Fetching alarm details for ID: $effectiveAlarmID');
+      final alarm = await IsarDb.getAlarmByID(effectiveAlarmID);
+      if (alarm == null) {
+        debugPrint('No alarm found for ID: $effectiveAlarmID');
+        return const SizedBox.shrink();
+      }
+
+      debugPrint('Found alarm: ${alarm.alarmID} with time: ${alarm.alarmTime}');
+
+      return AlarmDetailsWidget(
+        alarm: alarm,
+        logMsg: logMsg,
+        status: status,
+        hasRung: hasRung,
+      );
+    } catch (e) {
+      debugPrint('Error getting alarm details: $e');
+      return const SizedBox.shrink();
+    }
   }
 } 

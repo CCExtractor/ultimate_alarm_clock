@@ -138,7 +138,8 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
             logdbHelper.insertLog(
                 "Alarm Scheduled for ${setAlarm.alarmTime}",
                 LogDatabaseHelper.Status.SUCCESS,
-                LogDatabaseHelper.LogType.DEV
+                LogDatabaseHelper.LogType.DEV,
+                alarmID = setAlarm.alarmId
             )
 
             // Return the latest alarm details
