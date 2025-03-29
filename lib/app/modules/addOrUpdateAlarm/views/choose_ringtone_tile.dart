@@ -251,7 +251,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                 .value) {
                                               return const Center(
                                                   child:
-                                                      CircularProgressIndicator());
+                                                      CircularProgressIndicator(),);
                                             }
 
                                             if (controller
@@ -293,12 +293,12 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                     // Save the selected system ringtone
                                                     await controller
                                                         .saveSystemRingtone(
-                                                            title, uri);
+                                                            title, uri,);
                                                     Get.back(); // Close system ringtones dialog
                                                   },
                                                   trailing: IconButton(
                                                     icon: const Icon(
-                                                        Icons.play_arrow),
+                                                        Icons.play_arrow,),
                                                     onPressed: () async {
                                                       // Preview the ringtone
                                                       await AudioUtils
@@ -307,7 +307,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                           .stopSystemRingtone();
                                                       await AudioUtils
                                                           .playSystemRingtone(
-                                                              uri);
+                                                              uri,);
                                                     },
                                                   ),
                                                 );
@@ -341,7 +341,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                             child: Row(
                               children: [
                                 const Icon(Icons.upload_file,
-                                    size: 20, color: kprimaryColor),
+                                    size: 20, color: kprimaryColor,),
                                 const SizedBox(width: 10),
                                 Text(
                                   'Upload Ringtone'.tr,
@@ -359,7 +359,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                             child: Row(
                               children: [
                                 const Icon(Icons.phone_android,
-                                    size: 20, color: kprimaryColor),
+                                    size: 20, color: kprimaryColor,),
                                 const SizedBox(width: 10),
                                 Text(
                                   'System Ringtones'.tr,
@@ -384,7 +384,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(Icons.add,
-                                  size: 16, color: kprimaryColor),
+                                  size: 16, color: kprimaryColor,),
                               const SizedBox(width: 5),
                               Text(
                                 'Add Ringtone'.tr,

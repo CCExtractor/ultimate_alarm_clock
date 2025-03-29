@@ -336,13 +336,13 @@ class AudioUtils {
         if (item is Map) {
           Map<String, dynamic> ringtone = {
             'title': item['title']?.toString() ?? '',
-            'uri': item['uri']?.toString() ?? ''
+            'uri': item['uri']?.toString() ?? '',
           };
           result.add(ringtone);
         }
       }
 
-      debugPrint("Processed ${result.length} system ringtones");
+      debugPrint('Processed ${result.length} system ringtones');
       return result;
     } on PlatformException catch (e) {
       debugPrint('Failed to get system ringtones: ${e.message}');

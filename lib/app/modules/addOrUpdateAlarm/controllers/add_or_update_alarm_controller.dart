@@ -1368,11 +1368,11 @@ class AddOrUpdateAlarmController extends GetxController {
     systemRingtones.value = await AudioUtils.getSystemRingtones();
 
     // Debug logging
-    debugPrint("Loaded ${systemRingtones.length} system ringtones");
+    debugPrint('Loaded ${systemRingtones.length} system ringtones');
     if (systemRingtones.isEmpty) {
-      debugPrint("No system ringtones found");
+      debugPrint('No system ringtones found');
     } else {
-      debugPrint("First ringtone: ${systemRingtones[0]}");
+      debugPrint('First ringtone: ${systemRingtones[0]}');
     }
 
     isLoadingSystemRingtones.value = false;
