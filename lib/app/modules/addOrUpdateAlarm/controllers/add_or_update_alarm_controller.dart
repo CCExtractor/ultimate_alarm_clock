@@ -1286,7 +1286,35 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   Future<void> createProfile() async {
-    profileModel = ProfileModel(
+    try {
+      if (profileTextEditingController.text.trim().isEmpty) {
+        Get.snackbar(
+          'Error',
+          'Profile name cannot be empty',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.all(10),
+        );
+        return;
+      }
+
+      bool exists = await IsarDb.profileExists(profileTextEditingController.text.trim());
+      if (exists) {
+        Get.snackbar(
+          'Error',
+          'A profile with this name already exists',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.all(10),
+        );
+        return;
+      }
+
+      profileModel = ProfileModel(
       profileName: profileTextEditingController.text,
       deleteAfterGoesOff: deleteAfterGoesOff.value,
       snoozeDuration: snoozeDuration.value,
@@ -1342,20 +1370,43 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
-    );
+      );
 
-    if (homeController.isProfileUpdate.value) {
-      var profileId =
-          await IsarDb.profileId(homeController.selectedProfile.value);
-      print(profileId);
-      if (profileId != 'null') profileModel.isarId = profileId;
-      print(profileModel.isarId);
-      await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+      if (homeController.isProfileUpdate.value) {
+        var profileId =
+            await IsarDb.profileId(homeController.selectedProfile.value);
+        print(profileId);
+        if (profileId != 'null') profileModel.isarId = profileId;
+        print(profileModel.isarId);
+        await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+      }
+
+      await IsarDb.addProfile(profileModel);
+      homeController.selectedProfile.value = profileModel.profileName;
+      storage.writeProfile(profileModel.profileName);
+      homeController.writeProfileName(profileModel.profileName);
+
+      Get.snackbar(
+        'Success',
+        'Profile created successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(10),
+      );
+    } catch (e) {
+      debugPrint('Error creating profile: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to create profile. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(10),
+      );
     }
-    await IsarDb.addProfile(profileModel);
-    homeController.selectedProfile.value = profileModel.profileName;
-    storage.writeProfile(profileModel.profileName);
-    homeController.writeProfileName(profileModel.profileName);
   }
 }
 

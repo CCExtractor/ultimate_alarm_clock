@@ -9,6 +9,7 @@ import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 
@@ -16,7 +17,9 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
@@ -36,6 +39,7 @@ class AlarmControlController extends GetxController {
   RxBool showButton = false.obs;
   StreamSubscription? _sensorSubscription;
   HomeController homeController = Get.find<HomeController>();
+  ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
   RxBool get is24HourFormat => settingsController.is24HrsEnabled;
   Rx<AlarmModel> currentlyRingingAlarm = Utils.alarmModelInit.obs;
@@ -49,9 +53,6 @@ class AlarmControlController extends GetxController {
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
   RxBool isPreviewMode = false.obs;
-
-
-
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -169,6 +170,68 @@ class AlarmControlController extends GetxController {
     });
   }
 
+  void showQuotePopup(Quote quote) {
+    Get.defaultDialog(
+      title: 'Motivational Quote',
+      titlePadding: const EdgeInsets.only(
+        top: 20,
+        bottom: 10,
+      ),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
+      titleStyle: TextStyle(
+        color: themeController.primaryTextColor.value,
+      ),
+      contentPadding: const EdgeInsets.all(20),
+      content: Column(
+        children: [
+          Obx(
+            () => Text(
+              quote.getQuote(),
+              style: TextStyle(
+                color: themeController.primaryTextColor.value,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Obx(
+              () => Text(
+                quote.getAuthor(),
+                style: TextStyle(
+                  color: themeController.primaryTextColor.value,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                kprimaryColor,
+              ),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                color: themeController.secondaryTextColor.value,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void onInit() async {
     super.onInit();
@@ -200,8 +263,6 @@ class AlarmControlController extends GetxController {
       });
     }
 
-
-
     showButton.value = true;
     initialVolume = await FlutterVolumeController.getVolume(
       stream: AudioStream.alarm,
@@ -211,16 +272,6 @@ class AlarmControlController extends GetxController {
 
     // _fadeInAlarmVolume();     TODO fix volume fade-in
 
-    if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
-      if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
-        FirestoreDb.deleteOneTimeAlarm(
-          currentlyRingingAlarm.value.ownerId,
-          currentlyRingingAlarm.value.firestoreId,
-        );
-      } else {
-        IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
-      }
-    }
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
@@ -279,6 +330,12 @@ class AlarmControlController extends GetxController {
 
     AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
+
+    if(currentlyRingingAlarm.value.showMotivationalQuote) {
+      Quote quote = Utils.getRandomQuote();
+      showQuotePopup(quote);
+    }
+
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
 
@@ -331,20 +388,34 @@ class AlarmControlController extends GetxController {
       initialVolume,
       stream: AudioStream.alarm,
     );
-
     
-    if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
-      currentlyRingingAlarm.value.isEnabled = false;
-      if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-        await IsarDb.updateAlarm(currentlyRingingAlarm.value);
-      } else {
-        await FirestoreDb.updateAlarm(
-          currentlyRingingAlarm.value.ownerId,
-          currentlyRingingAlarm.value,
-        );
+    if (!isPreviewMode.value) {
+      if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled && 
+            currentlyRingingAlarm.value.ownerId != null && 
+            currentlyRingingAlarm.value.firestoreId != null) {  
+          await FirestoreDb.deleteOneTimeAlarm(
+            currentlyRingingAlarm.value.ownerId,
+            currentlyRingingAlarm.value.firestoreId,
+          );
+        } else if (currentlyRingingAlarm.value.isarId > 0) {
+          
+          await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
+        }
+      } 
+      else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+        currentlyRingingAlarm.value.isEnabled = false;
+        if (!currentlyRingingAlarm.value.isSharedAlarmEnabled && 
+            currentlyRingingAlarm.value.isarId > 0) {
+          await IsarDb.updateAlarm(currentlyRingingAlarm.value);
+        } else if (currentlyRingingAlarm.value.ownerId != null) {
+          await FirestoreDb.updateAlarm(
+            currentlyRingingAlarm.value.ownerId,
+            currentlyRingingAlarm.value,
+          );
+        }
       }
     }
-
     _subscription.cancel();
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
