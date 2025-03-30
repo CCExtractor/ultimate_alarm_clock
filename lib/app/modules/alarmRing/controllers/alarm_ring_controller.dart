@@ -321,80 +321,44 @@ class AlarmControlController extends GetxController {
       initialVolume,
       stream: AudioStream.alarm,
     );
-
-    print("CLOSING ALARM: Preview Mode = ${isPreviewMode.value}, deleteAfterGoesOff = ${currentlyRingingAlarm.value.deleteAfterGoesOff}");
     
     if (!isPreviewMode.value) {
-      print("Not in preview mode, checking conditions");
-    
       if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
-        print("Deleting alarm because deleteAfterGoesOff is true");
         if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
-          print("Deleting shared alarm with ID: ${currentlyRingingAlarm.value.firestoreId}");
           if (currentlyRingingAlarm.value.ownerId != null && 
               currentlyRingingAlarm.value.firestoreId != null) {
-            try {
-              await FirestoreDb.deleteOneTimeAlarm(
-                currentlyRingingAlarm.value.ownerId,
-                currentlyRingingAlarm.value.firestoreId,
-              );
-              print("COMPLETED deleting shared alarm");
-            } catch (e) {
-              print("ERROR deleting shared alarm: $e");
-            }
+            await FirestoreDb.deleteOneTimeAlarm(
+              currentlyRingingAlarm.value.ownerId,
+              currentlyRingingAlarm.value.firestoreId,
+            );
             _subscription.cancel();
             _currentTimeTimer?.cancel();
             _sensorSubscription?.cancel();
             return;
-          } else {
-            print("ERROR: Cannot delete shared alarm - missing ownerId or firestoreId");
           }
         } else {
-          print("Deleting local alarm with ID: ${currentlyRingingAlarm.value.isarId}");
           if (currentlyRingingAlarm.value.isarId > 0) {
-            try {
-              await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
-              print("COMPLETED deleting local alarm");
-            } catch (e) {
-              print("ERROR deleting local alarm: $e");
-            }
-            
+            await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
             _subscription.cancel();
             _currentTimeTimer?.cancel();
             _sensorSubscription?.cancel();
             return;
-          } else {
-            print("ERROR: Cannot delete local alarm - invalid isarId: ${currentlyRingingAlarm.value.isarId}");
           }
         }
       } 
+      
       else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
-        print("Updating one-time alarm status");
         currentlyRingingAlarm.value.isEnabled = false;
         if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
           if (currentlyRingingAlarm.value.isarId > 0) {
-            try {
-              await IsarDb.updateAlarm(currentlyRingingAlarm.value);
-              print("COMPLETED updating local alarm");
-            } catch (e) {
-              print("ERROR updating local alarm: $e");
-            }
-          } else {
-            print("ERROR: Cannot update local one-time alarm - invalid isarId: ${currentlyRingingAlarm.value.isarId}");
+            await IsarDb.updateAlarm(currentlyRingingAlarm.value);
           }
         } else {
           if (currentlyRingingAlarm.value.ownerId != null) {
-            try {
-              await FirestoreDb.updateAlarm(
-                currentlyRingingAlarm.value.ownerId,
-                currentlyRingingAlarm.value,
-              );
-              print("COMPLETED updating shared alarm");
-            } catch (e) {
-              print("ERROR updating shared alarm: $e");
-            }
-          } else {
-            print("ERROR: Cannot update shared one-time alarm - missing ownerId");
+            await FirestoreDb.updateAlarm(
+              currentlyRingingAlarm.value.ownerId,
+              currentlyRingingAlarm.value,
+            );
           }
         }
       }
