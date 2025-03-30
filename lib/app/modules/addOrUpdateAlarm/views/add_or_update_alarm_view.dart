@@ -1189,8 +1189,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 debugPrint(e.toString());
                               }
                             } else {
-                              if (controller.profileTextEditingController.text
-                                  .isNotEmpty) controller.createProfile();
+                              controller.createProfile();
                             }
                           }
                         },
