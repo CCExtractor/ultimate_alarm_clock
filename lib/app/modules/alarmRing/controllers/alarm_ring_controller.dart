@@ -211,16 +211,6 @@ class AlarmControlController extends GetxController {
 
     // _fadeInAlarmVolume();     TODO fix volume fade-in
 
-    if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
-      if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
-        FirestoreDb.deleteOneTimeAlarm(
-          currentlyRingingAlarm.value.ownerId,
-          currentlyRingingAlarm.value.firestoreId,
-        );
-      } else {
-        IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
-      }
-    }
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
@@ -331,20 +321,34 @@ class AlarmControlController extends GetxController {
       initialVolume,
       stream: AudioStream.alarm,
     );
-
     
-    if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
-      currentlyRingingAlarm.value.isEnabled = false;
-      if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-        await IsarDb.updateAlarm(currentlyRingingAlarm.value);
-      } else {
-        await FirestoreDb.updateAlarm(
-          currentlyRingingAlarm.value.ownerId,
-          currentlyRingingAlarm.value,
-        );
+    if (!isPreviewMode.value) {
+      if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled && 
+            currentlyRingingAlarm.value.ownerId != null && 
+            currentlyRingingAlarm.value.firestoreId != null) {  
+          await FirestoreDb.deleteOneTimeAlarm(
+            currentlyRingingAlarm.value.ownerId,
+            currentlyRingingAlarm.value.firestoreId,
+          );
+        } else if (currentlyRingingAlarm.value.isarId > 0) {
+          
+          await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
+        }
+      } 
+      else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+        currentlyRingingAlarm.value.isEnabled = false;
+        if (!currentlyRingingAlarm.value.isSharedAlarmEnabled && 
+            currentlyRingingAlarm.value.isarId > 0) {
+          await IsarDb.updateAlarm(currentlyRingingAlarm.value);
+        } else if (currentlyRingingAlarm.value.ownerId != null) {
+          await FirestoreDb.updateAlarm(
+            currentlyRingingAlarm.value.ownerId,
+            currentlyRingingAlarm.value,
+          );
+        }
       }
     }
-
     _subscription.cancel();
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
