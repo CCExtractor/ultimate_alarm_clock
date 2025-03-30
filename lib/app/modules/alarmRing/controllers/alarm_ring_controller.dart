@@ -211,16 +211,6 @@ class AlarmControlController extends GetxController {
 
     // _fadeInAlarmVolume();     TODO fix volume fade-in
 
-    if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
-      if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
-        FirestoreDb.deleteOneTimeAlarm(
-          currentlyRingingAlarm.value.ownerId,
-          currentlyRingingAlarm.value.firestoreId,
-        );
-      } else {
-        IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
-      }
-    }
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
@@ -332,16 +322,81 @@ class AlarmControlController extends GetxController {
       stream: AudioStream.alarm,
     );
 
+    print("CLOSING ALARM: Preview Mode = ${isPreviewMode.value}, deleteAfterGoesOff = ${currentlyRingingAlarm.value.deleteAfterGoesOff}");
     
-    if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
-      currentlyRingingAlarm.value.isEnabled = false;
-      if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-        await IsarDb.updateAlarm(currentlyRingingAlarm.value);
-      } else {
-        await FirestoreDb.updateAlarm(
-          currentlyRingingAlarm.value.ownerId,
-          currentlyRingingAlarm.value,
-        );
+    if (!isPreviewMode.value) {
+      print("Not in preview mode, checking conditions");
+    
+      if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
+        print("Deleting alarm because deleteAfterGoesOff is true");
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
+          print("Deleting shared alarm with ID: ${currentlyRingingAlarm.value.firestoreId}");
+          if (currentlyRingingAlarm.value.ownerId != null && 
+              currentlyRingingAlarm.value.firestoreId != null) {
+            try {
+              await FirestoreDb.deleteOneTimeAlarm(
+                currentlyRingingAlarm.value.ownerId,
+                currentlyRingingAlarm.value.firestoreId,
+              );
+              print("COMPLETED deleting shared alarm");
+            } catch (e) {
+              print("ERROR deleting shared alarm: $e");
+            }
+            _subscription.cancel();
+            _currentTimeTimer?.cancel();
+            _sensorSubscription?.cancel();
+            return;
+          } else {
+            print("ERROR: Cannot delete shared alarm - missing ownerId or firestoreId");
+          }
+        } else {
+          print("Deleting local alarm with ID: ${currentlyRingingAlarm.value.isarId}");
+          if (currentlyRingingAlarm.value.isarId > 0) {
+            try {
+              await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
+              print("COMPLETED deleting local alarm");
+            } catch (e) {
+              print("ERROR deleting local alarm: $e");
+            }
+            
+            _subscription.cancel();
+            _currentTimeTimer?.cancel();
+            _sensorSubscription?.cancel();
+            return;
+          } else {
+            print("ERROR: Cannot delete local alarm - invalid isarId: ${currentlyRingingAlarm.value.isarId}");
+          }
+        }
+      } 
+      else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+        print("Updating one-time alarm status");
+        currentlyRingingAlarm.value.isEnabled = false;
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+          if (currentlyRingingAlarm.value.isarId > 0) {
+            try {
+              await IsarDb.updateAlarm(currentlyRingingAlarm.value);
+              print("COMPLETED updating local alarm");
+            } catch (e) {
+              print("ERROR updating local alarm: $e");
+            }
+          } else {
+            print("ERROR: Cannot update local one-time alarm - invalid isarId: ${currentlyRingingAlarm.value.isarId}");
+          }
+        } else {
+          if (currentlyRingingAlarm.value.ownerId != null) {
+            try {
+              await FirestoreDb.updateAlarm(
+                currentlyRingingAlarm.value.ownerId,
+                currentlyRingingAlarm.value,
+              );
+              print("COMPLETED updating shared alarm");
+            } catch (e) {
+              print("ERROR updating shared alarm: $e");
+            }
+          } else {
+            print("ERROR: Cannot update shared one-time alarm - missing ownerId");
+          }
+        }
       }
     }
 
