@@ -134,7 +134,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             TextButton(
                               style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all(kprimaryColor),
+                                    MaterialStateProperty.all(getPrimaryColorTheme()),
                               ),
                               child: Obx(
                                 () => Text(
@@ -305,7 +305,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         FontWeight
                                                                             .bold,
                                                                     color:
-                                                                        kprimaryColor,
+                                                                        getPrimaryColorTheme(),
                                                                   ),
                                                           textStyle: Theme.of(
                                                                   context)
@@ -415,7 +415,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                         FontWeight
                                                                             .bold,
                                                                     color:
-                                                                        kprimaryColor,
+                                                                        getPrimaryColorTheme(),
                                                                   ),
                                                           textStyle: Theme.of(
                                                                   context)
@@ -560,7 +560,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                           FontWeight
                                                                               .bold,
                                                                       color:
-                                                                          kprimaryColor,
+                                                                          getPrimaryColorTheme(),
                                                                     ),
                                                             textStyle: Theme.of(
                                                                     context)
@@ -750,17 +750,17 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                               border:
                                                                   Border.all(
                                                                 color:
-                                                                    kprimaryColor,
+                                                                    getPrimaryColorTheme(),
                                                                 width: 1.0,
                                                               ),
                                                             ),
                                                             padding:
                                                                 const EdgeInsets
                                                                     .all(5.0),
-                                                            child: const Icon(
+                                                            child: Icon(
                                                               Icons.done,
                                                               color:
-                                                                  kprimaryColor,
+                                                                  getPrimaryColorTheme(),
                                                             ),
                                                           ),
                                                         ),
@@ -1036,7 +1036,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(getPrimaryColorTheme()),
                         ),
                         child: Text(
                           (controller.alarmRecord.value.alarmID == '')

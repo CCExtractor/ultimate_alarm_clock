@@ -43,7 +43,7 @@ class ShareDialog extends StatelessWidget {
                         style: ButtonStyle(
                           backgroundColor: controller.selectedEmails.isNotEmpty
                               ? WidgetStateProperty.all(
-                                  ksecondaryColor,
+                                  getSecondaryColorTheme(),
                                 )
                               : WidgetStateProperty.all(
                                   kprimaryDisabledTextColor,
@@ -72,7 +72,7 @@ class ShareDialog extends StatelessWidget {
                               Icons.share,
                               color: controller.selectedEmails.isNotEmpty
                                   ? kprimaryBackgroundColor
-                                  : kprimaryColor,
+                                  : getPrimaryColorTheme(),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -98,9 +98,9 @@ class ShareDialog extends StatelessWidget {
                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
               title: Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.person,
-                    color: ksecondaryColor,
+                    color: getSecondaryColorTheme(),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -114,7 +114,7 @@ class ShareDialog extends StatelessWidget {
                   ),
                   IconButton(
                     splashRadius: homeController.scalingFactor * 16,
-                    color: kprimaryColor,
+                    color: getPrimaryColorTheme(),
                     onPressed: () {
                       controller.isAddUser.value = !controller.isAddUser.value;
                     },
@@ -145,9 +145,9 @@ class ShareDialog extends StatelessWidget {
                                 Get.snackbar('Error', 'Invalid email');
                               }
                             },
-                            icon: const Icon(
+                            icon:  Icon(
                               Icons.add_circle_outlined,
-                              color: kprimaryColor,
+                              color: getPrimaryColorTheme(),
                             ),
                           ),
                           prefixIcon: const Icon(Icons.alternate_email),
@@ -206,7 +206,7 @@ class ShareDialog extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: controller.selectedEmails.contains(email.email)
-                        ? kprimaryColor
+                        ? getPrimaryColorTheme()
                         : ksecondaryBackgroundColor,
                   ),
                   child: Padding(
@@ -218,7 +218,7 @@ class ShareDialog extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: homeController.scalingFactor * 15,
-                              color: ksecondaryColor,
+                              color: getSecondaryColorTheme(),
                             ),
                           ),
                   ),
@@ -285,7 +285,7 @@ class ShareDialog extends StatelessWidget {
                             .substring(0, 2)
                             .toUpperCase(),
                         style: TextStyle(
-                          color: ksecondaryColor,
+                          color: getSecondaryColorTheme(),
                           fontSize: homeController.scalingFactor * 30,
                           fontWeight: FontWeight.w700,
                         ),
@@ -313,7 +313,7 @@ class ShareDialog extends StatelessWidget {
 
                    homeController.selectedProfile.value,
                    style: TextStyle(
-                     color: kprimaryColor,
+                     color: getPrimaryColorTheme(),
                      fontSize: homeController.scalingFactor * 30,
                      fontWeight: FontWeight.w700,
                    ),                          overflow: TextOverflow.ellipsis,
@@ -326,7 +326,7 @@ class ShareDialog extends StatelessWidget {
                      ),
                    ), overflow: TextOverflow.ellipsis,
                    style: TextStyle(
-                     color: kprimaryColor,
+                     color: getPrimaryColorTheme(),
                      fontSize: homeController.scalingFactor * 30,
                      fontWeight: FontWeight.w700,
                    ),

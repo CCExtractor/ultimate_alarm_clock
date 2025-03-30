@@ -157,7 +157,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                                                           116,
                                                           111,
                                                           110) // Change this color to red
-                                                      : kprimaryColor,
+                                                      : getPrimaryColorTheme(),
                                                 ),
                                               ),
                                             if (!defaultRingtones.contains(
@@ -209,7 +209,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                         child: Text(
                           'Upload Ringtone'.tr,
                           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: kprimaryColor,
+                                    color: getPrimaryColorTheme(),
                                   ),
                         ),
                       ),
@@ -221,7 +221,7 @@ class ChooseRingtoneTile extends StatelessWidget {
                           Get.back();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: kprimaryColor,
+                          backgroundColor: getPrimaryColorTheme(),
                         ),
                         child: Text(
                           'Done'.tr,

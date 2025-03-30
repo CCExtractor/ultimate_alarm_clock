@@ -93,7 +93,7 @@ class NoteTile extends StatelessWidget {
             buttonColor: themeController.secondaryBackgroundColor.value,
             confirm: TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                backgroundColor: MaterialStateProperty.all(getPrimaryColorTheme()),
               ),
               child: Text(
                 'Save'.tr,

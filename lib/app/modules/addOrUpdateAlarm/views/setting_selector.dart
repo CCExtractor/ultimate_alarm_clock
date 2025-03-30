@@ -59,7 +59,7 @@ class SettingSelector extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: controller.alarmSettingType.value == val
-                      ? kprimaryColor
+                      ? getPrimaryColorTheme()
                       : controller.themeController.secondaryBackgroundColor.value,
                   borderRadius: BorderRadius.circular(20),
                 ),

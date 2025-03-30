@@ -35,7 +35,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                   value: controller.progress.value,
                   backgroundColor: Colors.grey,
                   valueColor:
-                      const AlwaysStoppedAnimation<Color>(kprimaryColor),
+                       AlwaysStoppedAnimation<Color>(getPrimaryColorTheme()),
                 ),
               ),
               Expanded(
@@ -215,7 +215,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: kprimaryColor.withOpacity(0.8),
+          backgroundColor: getPrimaryColorTheme().withOpacity(0.8),
           foregroundColor: themeController.secondaryTextColor.value,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),

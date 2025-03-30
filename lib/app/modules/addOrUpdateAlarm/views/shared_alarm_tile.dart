@@ -89,7 +89,7 @@ class SharedAlarm extends StatelessWidget {
                                           style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                              kprimaryColor,
+                                              getPrimaryColorTheme(),
                                             ),
                                           ),
                                           onPressed: () {
@@ -133,7 +133,7 @@ class SharedAlarm extends StatelessWidget {
                         controller.isSharedAlarmEnabled.value = value;
                       },
                       value: controller.isSharedAlarmEnabled.value,
-                      activeColor: ksecondaryColor,
+                      activeColor: getSecondaryColorTheme(),
                     ),
                   ),
                 )
@@ -170,7 +170,7 @@ class SharedAlarm extends StatelessWidget {
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                        kprimaryColor,
+                                        getPrimaryColorTheme(),
                                       ),
                                     ),
                                     child: FittedBox(

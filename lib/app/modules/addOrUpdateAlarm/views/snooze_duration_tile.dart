@@ -81,7 +81,7 @@ class SnoozeDurationTile extends StatelessWidget {
                           Get.back();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: kprimaryColor,
+                          backgroundColor: getPrimaryColorTheme(),
                         ),
                         child: Text(
                           'Done'.tr,

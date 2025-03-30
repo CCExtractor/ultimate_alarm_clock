@@ -47,7 +47,7 @@ class _Enable24HourFormatState extends State<Enable24HourFormat> {
             Obx(
               () => Switch.adaptive(
                 value: widget.controller.is24HrsEnabled.value,
-                activeColor: ksecondaryColor,
+                activeColor: getSecondaryColorTheme(),
                 onChanged: (bool value) async {
                   widget.controller.toggle24HoursFormat(value);
                   Utils.hapticFeedback();

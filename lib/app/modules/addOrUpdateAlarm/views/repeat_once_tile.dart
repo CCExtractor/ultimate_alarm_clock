@@ -46,7 +46,7 @@ class RepeatOnceTile extends StatelessWidget {
                       .every((element) => element == false)) {
                     return Switch.adaptive(
                       value: false,
-                      activeColor: ksecondaryColor,
+                      activeColor: getSecondaryColorTheme(),
                       onChanged: (value) {
                         Utils.hapticFeedback();
                         controller.isOneTime.value = true;
@@ -55,7 +55,7 @@ class RepeatOnceTile extends StatelessWidget {
                   }
                   return Switch.adaptive(
                     value: controller.isOneTime.value,
-                    activeColor: ksecondaryColor,
+                    activeColor: getSecondaryColorTheme(),
                     onChanged: (value) {
                       Utils.hapticFeedback();
                       controller.isOneTime.value = value;

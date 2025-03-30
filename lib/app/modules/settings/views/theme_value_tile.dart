@@ -55,7 +55,7 @@ class _ThemeValueTileState extends State<ThemeValueTile> {
                 () => Switch.adaptive(
                   value: widget.themeController.currentTheme.value ==
                       ThemeMode.light,
-                  activeColor: ksecondaryColor,
+                  activeColor: getSecondaryColorTheme(),
                   onChanged: (bool value) async {
                     widget.themeController.toggleThemeValue(value);
                     Get.changeThemeMode(
