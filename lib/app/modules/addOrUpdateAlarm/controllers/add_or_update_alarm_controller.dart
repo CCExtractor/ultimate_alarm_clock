@@ -1314,7 +1314,7 @@ class AddOrUpdateAlarmController extends GetxController {
         return;
       }
 
-      ProfileModel profileModel = ProfileModel(
+      profileModel = ProfileModel(
       profileName: profileTextEditingController.text,
       deleteAfterGoesOff: deleteAfterGoesOff.value,
       snoozeDuration: snoozeDuration.value,
