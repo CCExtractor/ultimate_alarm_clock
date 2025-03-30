@@ -53,9 +53,6 @@ class AlarmControlController extends GetxController {
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
   RxBool isPreviewMode = false.obs;
-  RxBool showQuote = false.obs;
-
-
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -333,7 +330,7 @@ class AlarmControlController extends GetxController {
 
     AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
-    
+
     if(currentlyRingingAlarm.value.showMotivationalQuote) {
       Quote quote = Utils.getRandomQuote();
       showQuotePopup(quote);
