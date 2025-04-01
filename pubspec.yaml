@@ -16,7 +16,7 @@ dependencies:
   get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
   cloud_firestore: ^4.4.5
-  intl: ^0.18.0
+  intl: ^0.20.2
   latlong2: ^0.8.1
   flutter_map: ^4.0.0
   fl_location: ^2.0.0+1
