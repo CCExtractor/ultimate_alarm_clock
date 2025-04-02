@@ -43,7 +43,8 @@ class AlarmReceiver : BroadcastReceiver() {
                     "Alarm is ringing",
                     status = LogDatabaseHelper.Status.SUCCESS,
                     type = LogDatabaseHelper.LogType.NORMAL,
-                    hasRung = 1
+                    hasRung = 1,
+                    alarmID = intent.getStringExtra("alarmID") ?: ""
                 )
                 return
             }
@@ -52,7 +53,8 @@ class AlarmReceiver : BroadcastReceiver() {
                 "Alarm is ringing. Your Screen Activity was less than what you specified",
                 status = LogDatabaseHelper.Status.SUCCESS,
                 type = LogDatabaseHelper.LogType.NORMAL,
-                hasRung = 1
+                hasRung = 1,
+                alarmID = intent.getStringExtra("alarmID") ?: ""
             )
             return
         }
@@ -61,7 +63,8 @@ class AlarmReceiver : BroadcastReceiver() {
             "Alarm didn't ring. Your Screen Activity was more than what you specified",
             status = LogDatabaseHelper.Status.WARNING,
             type = LogDatabaseHelper.LogType.NORMAL,
-            hasRung = 0
+            hasRung = 0,
+            alarmID = intent.getStringExtra("alarmID") ?: ""
         )
     }
 

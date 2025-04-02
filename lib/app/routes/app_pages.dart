@@ -91,7 +91,7 @@ class AppPages {
       binding: NotificationsBinding(),
     ),
     GetPage(
-      name: _Paths.DEBUG,
+      name: _Paths.ALARM_HISTORY,
       page: () => DebugView(),
       binding: DebugBinding(),
     ),
