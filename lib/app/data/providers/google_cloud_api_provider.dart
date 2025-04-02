@@ -27,11 +27,15 @@ class GoogleCloudProvider {
       var googleSignInAccount = await _googleSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
           await googleSignInAccount?.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      await _firebaseAuthInstance.signInWithCredential(credential);
+      if (googleAuth != null)
+      {
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        await _firebaseAuthInstance.signInWithCredential(credential);
+      }
+
 
       if (googleSignInAccount != null) {
         // Process successful sign-in

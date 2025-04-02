@@ -232,14 +232,21 @@ class HomeController extends GetxController {
     String profileName = await storage.readProfile();
     selectedProfile.value = profileName;
     ProfileModel? p = await IsarDb.getProfile(profileName);
-    profileModel.value = p!;
+    if (p != null)
+    {
+      profileModel.value = p!;
+    }
+    
   }
 
   void writeProfileName(String name) async {
     await storage.writeProfile(name);
     selectedProfile.value = name;
     ProfileModel? p = await IsarDb.getProfile(name);
-    profileModel.value = p!;
+    if (p != null)
+    {
+      profileModel.value = p!;
+    }
   }
 
   @override
