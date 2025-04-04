@@ -21,20 +21,18 @@ class SplashScreenController extends GetxController {
       homeController.genFakeAlarmModel().obs;
 
   getCurrentlyRingingAlarm() async {
-    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
-    AlarmModel latestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel alarmRecord = homeController.genFakeAlarmModel();
+    AlarmModel latestAlarm = await IsarDb.getLatestAlarm(alarmRecord, false);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
     return latestAlarm;
   }
 
   getNextAlarm() async {
-    UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
-    AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
-    AlarmModel isarLatestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+    AlarmModel alarmRecord = homeController.genFakeAlarmModel();
+    AlarmModel isarLatestAlarm = await IsarDb.getLatestAlarm(alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(userModel, alarmRecord, true);
     AlarmModel latestAlarm =
         Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
@@ -103,7 +101,7 @@ class SplashScreenController extends GetxController {
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
-        print("shouldring: $shouldAlarmRing");
+        print('shouldring: $shouldAlarmRing');
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
           shouldNavigate = false;
@@ -115,7 +113,10 @@ class SplashScreenController extends GetxController {
           } else {
             if (shouldAlarmRing) {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
-              Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
+              Get.offNamed(
+                '/alarm-ring',
+                arguments: currentlyRingingAlarm.value,
+              );
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               // If the alarm is set to NEVER repeat, then it will be chosen as
@@ -172,11 +173,11 @@ class SplashScreenController extends GetxController {
                 try {
                   await alarmChannel.invokeMethod('scheduleAlarm', {
                     'milliSeconds': intervaltoAlarm,
-                    'activityMonitor': latestAlarm.activityMonitor
+                    'activityMonitor': latestAlarm.activityMonitor,
                   });
-                  print("Scheduled...");
+                  print('Scheduled...');
                 } on PlatformException catch (e) {
-                  print("Failed to schedule alarm: ${e.message}");
+                  print('Failed to schedule alarm: ${e.message}');
                 }
               }
               SystemNavigator.pop();
@@ -189,7 +190,7 @@ class SplashScreenController extends GetxController {
       }
     });
     // Necessary when hot restarting
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (shouldNavigate == true) {
         Get.offNamed('/bottom-navigation-bar');
       }
