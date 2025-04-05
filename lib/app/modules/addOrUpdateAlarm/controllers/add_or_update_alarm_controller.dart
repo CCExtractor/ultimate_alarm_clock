@@ -113,6 +113,9 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
+  RxList<Map<String, dynamic>> systemRingtones = <Map<String, dynamic>>[].obs;
+  RxBool isLoadingSystemRingtones = false.obs;
+
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
@@ -290,7 +293,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      backgroundColor: WidgetStateProperty.all(kprimaryColor),
                     ),
                     child: Text(
                       'Cancel'.tr,
@@ -305,7 +308,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       Get.back();
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.red,
                         width: 1,
                       ),
@@ -465,7 +468,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Save',
@@ -485,7 +488,7 @@ class AddOrUpdateAlarmController extends GetxController {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
+                              WidgetStateProperty.all(kprimaryColor),
                         ),
                         child: Text(
                           'Retake',
@@ -505,7 +508,7 @@ class AddOrUpdateAlarmController extends GetxController {
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),
+                                WidgetStateProperty.all(kprimaryColor),
                           ),
                           child: Text(
                             'Disable',
@@ -572,7 +575,7 @@ class AddOrUpdateAlarmController extends GetxController {
         },
         confirm: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
+            backgroundColor: WidgetStateProperty.all(kprimaryColor),
           ),
           child: Obx(
             () => Text(
@@ -595,7 +598,7 @@ class AddOrUpdateAlarmController extends GetxController {
         cancel: Obx(
           () => TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 themeController.primaryTextColor.value.withOpacity(0.5),
               ),
             ),
@@ -669,7 +672,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     profileTextEditingController.text = homeController.isProfileUpdate.value
         ? homeController.selectedProfile.value
-        : "";
+        : '';
     emailTextEditingController.text = '';
 
     if (Get.arguments != null) {
@@ -1243,15 +1246,15 @@ class AddOrUpdateAlarmController extends GetxController {
             return Theme(
               data: themeController.currentTheme.value == ThemeMode.light
                   ? ThemeData.light().copyWith(
-                colorScheme: const ColorScheme.light(
-                  primary: kprimaryColor,
-                ),
-              )
+                      colorScheme: const ColorScheme.light(
+                        primary: kprimaryColor,
+                      ),
+                    )
                   : ThemeData.dark().copyWith(
-                colorScheme: const ColorScheme.dark(
-                  primary: kprimaryColor,
-                ),
-              ),
+                      colorScheme: const ColorScheme.dark(
+                        primary: kprimaryColor,
+                      ),
+                    ),
               child: child!,
             );
           },
@@ -1408,12 +1411,59 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
+
+  Future<void> loadSystemRingtones() async {
+    isLoadingSystemRingtones.value = true;
+
+    // No need for storage permission to access system ringtones
+    systemRingtones.value = await AudioUtils.getSystemRingtones();
+
+    // Debug logging
+    debugPrint('Loaded ${systemRingtones.length} system ringtones');
+    if (systemRingtones.isEmpty) {
+      debugPrint('No system ringtones found');
+    } else {
+      debugPrint('First ringtone: ${systemRingtones[0]}');
+    }
+
+    isLoadingSystemRingtones.value = false;
+  }
+
+  Future<void> saveSystemRingtone(String title, String uri) async {
+    try {
+      // Create a ringtone model for the system ringtone
+      RingtoneModel systemRingtone = RingtoneModel(
+        ringtoneName: title,
+        ringtonePath: uri,
+        currentCounterOfUsage: 1,
+      );
+
+      // Update previous ringtone counter
+      AudioUtils.updateRingtoneCounterOfUsage(
+        customRingtoneName: previousRingtone,
+        counterUpdate: CounterUpdate.decrement,
+      );
+
+      // Save the ringtone to the database
+      await IsarDb.addCustomRingtone(systemRingtone);
+
+      // Update the current ringtone name
+      customRingtoneName.value = title;
+
+      // Add to the list if not already present
+      if (!customRingtoneNames.contains(title)) {
+        customRingtoneNames.add(title);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }
 
-  int orderedCountryCode(Country countryA, Country countryB) {
-    // `??` for null safety of 'dialCode'
-    String dialCodeA = countryA.dialCode ?? '0';
-    String dialCodeB = countryB.dialCode ?? '0';
+int orderedCountryCode(Country countryA, Country countryB) {
+  // `??` for null safety of 'dialCode'
+  String dialCodeA = countryA.dialCode ?? '0';
+  String dialCodeB = countryB.dialCode ?? '0';
 
-    return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
-  }
+  return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
+}

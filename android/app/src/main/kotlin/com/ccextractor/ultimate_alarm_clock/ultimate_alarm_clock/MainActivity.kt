@@ -42,6 +42,105 @@ class MainActivity : FlutterActivity() {
         context.registerReceiver(TimerNotification(), intentFilter, Context.RECEIVER_EXPORTED)
     }
 
+    private fun getSystemRingtones(): List<Map<String, String>> {
+        val ringtoneList = mutableListOf<Map<String, String>>()
+        
+        try {
+            // Get alarm sounds
+            var manager = RingtoneManager(this)
+            manager.setType(RingtoneManager.TYPE_ALARM)
+            
+            var cursor = manager.cursor
+            Log.d("Ringtones", "Found ${cursor.count} alarm sounds")
+            
+            while (cursor.moveToNext()) {
+                try {
+                    val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+                    val uri = manager.getRingtoneUri(cursor.position).toString()
+                    
+                    ringtoneList.add(mapOf(
+                        "title" to "⏰ $title",
+                        "uri" to uri
+                    ))
+                } catch (e: Exception) {
+                    Log.e("Ringtones", "Error reading alarm sound", e)
+                }
+            }
+            
+            // Get notification sounds
+            manager = RingtoneManager(this)
+            manager.setType(RingtoneManager.TYPE_NOTIFICATION)
+            
+            cursor = manager.cursor
+            Log.d("Ringtones", "Found ${cursor.count} notification sounds")
+            
+            while (cursor.moveToNext()) {
+                try {
+                    val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+                    val uri = manager.getRingtoneUri(cursor.position).toString()
+                    
+                    ringtoneList.add(mapOf(
+                        "title" to "🔔 $title",
+                        "uri" to uri
+                    ))
+                } catch (e: Exception) {
+                    Log.e("Ringtones", "Error reading notification sound", e)
+                }
+            }
+            
+            // Get ringtones
+            manager = RingtoneManager(this)
+            manager.setType(RingtoneManager.TYPE_RINGTONE)
+            
+            cursor = manager.cursor
+            Log.d("Ringtones", "Found ${cursor.count} ringtones")
+            
+            while (cursor.moveToNext()) {
+                try {
+                    val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+                    val uri = manager.getRingtoneUri(cursor.position).toString()
+                    
+                    ringtoneList.add(mapOf(
+                        "title" to "📱 $title",
+                        "uri" to uri
+                    ))
+                } catch (e: Exception) {
+                    Log.e("Ringtones", "Error reading ringtone", e)
+                }
+            }
+            
+            // Also add default alarm sounds
+            try {
+                val defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+                val defaultRingtone = RingtoneManager.getRingtone(this, defaultUri)
+                val title = defaultRingtone.getTitle(this)
+                ringtoneList.add(mapOf(
+                    "title" to "⏰ Default: $title",
+                    "uri" to defaultUri.toString()
+                ))
+            } catch (e: Exception) {
+                Log.e("Ringtones", "Error getting default alarm", e)
+            }
+            
+            Log.d("Ringtones", "Total ringtones found: ${ringtoneList.size}")
+        } catch (e: Exception) {
+            Log.e("Ringtones", "Error retrieving system ringtones", e)
+        }
+        
+        return ringtoneList
+    }
+
+    private fun playSystemRingtone(uriString: String) {
+        stopSystemRingtone()
+        val uri = Uri.parse(uriString)
+        ringtone = RingtoneManager.getRingtone(applicationContext, uri)
+        ringtone?.play()
+    }
+
+    private fun stopSystemRingtone() {
+        ringtone?.stop()
+        ringtone = null
+    }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -134,6 +233,20 @@ class MainActivity : FlutterActivity() {
                 result.success(null)
             } else if (call.method == "stopDefaultAlarm") {
                 stopDefaultAlarm()
+                result.success(null)
+            } else if (call.method == "getSystemRingtones") {
+                val ringtones = getSystemRingtones()
+                result.success(ringtones)
+            } else if (call.method == "playSystemRingtone") {
+                val uri = call.argument<String>("uri")
+                if (uri != null) {
+                    playSystemRingtone(uri)
+                    result.success(null)
+                } else {
+                    result.error("INVALID_ARGUMENT", "URI cannot be null", null)
+                }
+            } else if (call.method == "stopSystemRingtone") {
+                stopSystemRingtone()
                 result.success(null)
             } else {
                 result.notImplemented()
@@ -293,5 +406,4 @@ class MainActivity : FlutterActivity() {
         intent.data = Uri.parse("package:${packageName}")
         startActivity(intent)
     }
-
 }
