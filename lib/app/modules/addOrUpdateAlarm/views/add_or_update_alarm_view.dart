@@ -36,7 +36,9 @@ import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  AddOrUpdateAlarmView({Key? key}) : super(key: key);
+  AddOrUpdateAlarmView({super.key}) {
+    inputTimeController.initTimeTextField();
+  }
 
   final ThemeController themeController = Get.find<ThemeController>();
   final InputTimeController inputTimeController =
@@ -620,16 +622,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           inputFormatters: [
                                                             FilteringTextInputFormatter
                                                                 .allow(RegExp(
-                                                                    '[1,2,3,4,5,6,7,8,9,0]')),
+                                                                    '[0-9]')),
                                                             LengthLimitingTextInputFormatter(
                                                                 2),
                                                             LimitRange(
-                                                                0,
-                                                                settingsController
-                                                                        .is24HrsEnabled
-                                                                        .value
-                                                                    ? 23
-                                                                    : 12),
+                                                              settingsController.is24HrsEnabled.value ? 0 : 1,
+                                                              settingsController.is24HrsEnabled.value ? 23 : 12,
+                                                            ),
                                                           ],
                                                         ),
                                                       ),
@@ -1189,8 +1188,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 debugPrint(e.toString());
                               }
                             } else {
-                              if (controller.profileTextEditingController.text
-                                  .isNotEmpty) controller.createProfile();
+                              controller.createProfile();
                             }
                           }
                         },

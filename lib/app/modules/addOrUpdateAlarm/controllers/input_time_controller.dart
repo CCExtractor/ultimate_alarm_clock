@@ -40,6 +40,21 @@ class InputTimeController extends GetxController {
     super.onInit();
   }
 
+  void initTimeTextField() {
+    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
+    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+
+    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+    inputHrsController.text = settingsController.is24HrsEnabled.value
+        ? selectedDateTime.value.hour.toString()
+        : (selectedDateTime.value.hour == 0
+            ? '12'
+            : (selectedDateTime.value.hour > 12
+                ? (selectedDateTime.value.hour - 12).toString()
+                : selectedDateTime.value.hour.toString()));
+    inputMinutesController.text = selectedDateTime.value.minute.toString().padLeft(2, '0');
+  }
+
 
   final isAM = true.obs;
 
@@ -51,6 +66,10 @@ class InputTimeController extends GetxController {
 
   void changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
+
+    if (isTimePicker.value) {
+      initTimeTextField();
+    }
   }
 
 
@@ -108,18 +127,6 @@ class InputTimeController extends GetxController {
     AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
     selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
 
-
-    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
-    inputHrsController.text = settingsController.is24HrsEnabled.value
-        ? selectedDateTime.value.hour.toString()
-        : (selectedDateTime.value.hour == 0
-            ? '12'
-            : (selectedDateTime.value.hour > 12
-                ? (selectedDateTime.value.hour - 12).toString()
-                : selectedDateTime.value.hour.toString()));
-    inputMinutesController.text = selectedDateTime.value.minute.toString();
-
-
     toggleIfAtBoundary();
 
     try {
@@ -135,7 +142,7 @@ class InputTimeController extends GetxController {
       int minute = int.parse(inputMinutesController.text);
       final time = TimeOfDay(hour: hour, minute: minute);
       DateTime today = DateTime.now();
-      DateTime tomorrow = today.add(Duration(days: 1));
+      DateTime tomorrow = today.add(const Duration(days: 1));
 
       bool isNextDay = (time.hour == today.hour && time.minute < today.minute) || (time.hour < today.hour);
       bool isNextMonth = isNextDay && (today.day > tomorrow.day);
@@ -210,6 +217,9 @@ class LimitRange extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     try {
+      if (newValue.text.isEmpty) {
+        return newValue;
+      }
       int value = int.parse(newValue.text);
       if (value < minRange) return TextEditingValue(text: minRange.toString());
       else if (value > maxRange) return TextEditingValue(text: maxRange.toString());

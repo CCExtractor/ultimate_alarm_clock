@@ -134,9 +134,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         visible: !controller.isSnoozing.value,
                         child: Obx(
                           () => Padding(
-                            padding: Get.arguments != null
-                                ? const EdgeInsets.symmetric(vertical: 90.0)
-                                : EdgeInsets.zero,
+                            padding: const EdgeInsets.symmetric(vertical: 90.0),
                             child: SizedBox(
                               height: height * 0.07,
                               width: width * 0.5,
@@ -213,7 +211,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               arguments: controller.currentlyRingingAlarm.value,
                             );
                           } else {
-                            Get.offNamed(
+                            Get.offAllNamed(
                               '/bottom-navigation-bar',
                               arguments: controller.currentlyRingingAlarm.value,
                             );
