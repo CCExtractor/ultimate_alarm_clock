@@ -260,6 +260,8 @@ class HomeController extends GetxController {
     }
     readProfileName();
 
+    userModel.value = await SecureStorageProvider().retrieveUserModel();
+    if (userModel.value == null){
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         isUserSignedIn.value = false;
@@ -267,6 +269,11 @@ class HomeController extends GetxController {
         isUserSignedIn.value = true;
       }
     });
+    }
+    else {
+        isUserSignedIn.value = true;
+    }
+
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
         .readSortedAlarmListValue(key: 'sorted_alarm_list');
