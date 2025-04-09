@@ -39,7 +39,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
     isarTimers = IsarDb.getTimers();
-    updateTimerInfo();
+    await updateTimerInfo();
     scrollController.addListener(() {
       if (scrollController.offset < scrollController.position.maxScrollExtent &&
           !scrollController.position.outOfRange) {
@@ -93,12 +93,12 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
         '${Utils.formatMilliseconds(timerRecord.timerValue)} Timer';
 
     await IsarDb.insertTimer(timerRecord);
-    updateTimerInfo();
+    await updateTimerInfo();
   }
 
   deleteTimer(int id) async {
     await IsarDb.deleteTimer(id).then((value) => updateTimerInfo());
-    updateTimerInfo();
+    await updateTimerInfo();
   }
 
   cancelTimer() async {
