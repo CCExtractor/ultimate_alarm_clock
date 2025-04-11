@@ -16,6 +16,7 @@ abstract class Routes {
   static const ADD_OR_UPDATE_PROFILE = _Paths.ADD_OR_UPDATE_PROFILE;
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
   static const DEBUG = _Paths.DEBUG;
+  static const SNOOZE_SETTINGS = _Paths.SNOOZE_SETTINGS;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const ADD_OR_UPDATE_PROFILE = '/add-or-update-profile';
   static const NOTIFICATIONS = '/notifications';
   static const DEBUG = '/debug';
+  static const SNOOZE_SETTINGS = '/snooze-settings';
 }

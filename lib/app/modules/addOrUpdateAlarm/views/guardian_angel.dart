@@ -50,7 +50,7 @@ class GuardianAngel extends StatelessWidget {
                         setSelectorButtonAsPrefixIcon: true,
                         leadingPadding: 0,
                         trailingSpace: false,
-                        countryComparator: orderedCountryCode,
+                        // countryComparator: orderedCountryCode,
                       ),
                     ),
                   ),

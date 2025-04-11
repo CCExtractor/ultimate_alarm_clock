@@ -298,7 +298,8 @@ data class AlarmModel(
     val location: String,
     val alarmDate: String,
     val alarmId: String,
-    val ringOn: Int
+    val ringOn: Int,
+    val maxSnoozeCount: Int = 3
 ) {
     companion object {
         @SuppressLint("Range")
@@ -316,6 +317,11 @@ data class AlarmModel(
             val alarmDate = cursor.getString(cursor.getColumnIndex("alarmDate"))
             val alarmId = cursor.getString(cursor.getColumnIndex("alarmID"))
             val ringOn = cursor.getInt(cursor.getColumnIndex("ringOn"))
+            val maxSnoozeCount = try {
+                cursor.getInt(cursor.getColumnIndex("maxSnoozeCount"))
+            } catch (e: Exception) {
+                3 // Default value if column doesn't exist
+            }
             return AlarmModel(
                 id,
                 minutesSinceMidnight,
@@ -329,7 +335,8 @@ data class AlarmModel(
                 location,
                 alarmDate,
                 alarmId,
-                ringOn
+                ringOn,
+                maxSnoozeCount
             )
         }
     }

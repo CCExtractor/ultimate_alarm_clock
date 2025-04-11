@@ -24,6 +24,8 @@ import '../modules/timerRing/bindings/timer_ring_binding.dart';
 import '../modules/timerRing/views/timer_ring_view.dart';
 import '../modules/debug/bindings/debug_binding.dart';
 import '../modules/debug/views/debug_view.dart';
+import '../modules/snoozeSettings/bindings/snooze_settings_binding.dart';
+import '../modules/snoozeSettings/views/snooze_settings_view.dart';
 
 part 'app_routes.dart';
 
@@ -94,6 +96,11 @@ class AppPages {
       name: _Paths.DEBUG,
       page: () => DebugView(),
       binding: DebugBinding(),
+    ),
+    GetPage(
+      name: _Paths.SNOOZE_SETTINGS,
+      page: () => const SnoozeSettingsView(),
+      binding: SnoozeSettingsBinding(),
     ),
   ];
 }

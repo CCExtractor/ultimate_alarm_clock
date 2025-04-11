@@ -26,9 +26,9 @@ class FirestoreDb {
     Database? db;
 
     final dir = await getDatabasesPath();
-    final dbPath = '$dir/alarms.db';
+    final dbPath = '$dir/firestore_alarms.db';
     print(dir);
-    db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
+    db = await openDatabase(dbPath, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return db;
   }
 
@@ -82,8 +82,8 @@ class FirestoreDb {
         guardianTimer INTEGER,
         guardian TEXT,
         isCall INTEGER,
-        ringOn INTEGER
-
+        ringOn INTEGER,
+        maxSnoozeCount INTEGER DEFAULT 3
       )
     ''');
     await db.execute('''
@@ -94,6 +94,18 @@ class FirestoreDb {
         currentCounterOfUsage INTEGER NOT NULL DEFAULT 0
       )
     ''');
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add maxSnoozeCount column if upgrading from version 1 to 2
+      try {
+        await db.execute('ALTER TABLE alarms ADD COLUMN maxSnoozeCount INTEGER DEFAULT 3');
+        print('Successfully added maxSnoozeCount column to alarms table in FirestoreDb');
+      } catch (e) {
+        print('Error adding maxSnoozeCount column to FirestoreDb: $e');
+      }
+    }
   }
 
   static CollectionReference _alarmsCollection(UserModel? user) {

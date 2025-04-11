@@ -40,6 +40,7 @@ class ProfileModel {
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
+  late int maxSnoozeCount;
   late int gradient;
   late String ringtoneName;
   late String note;
@@ -88,6 +89,7 @@ class ProfileModel {
       required this.label,
       required this.isOneTime,
       required this.snoozeDuration,
+      this.maxSnoozeCount = 3,
       required this.gradient,
       required this.ringtoneName,
       required this.note,
@@ -121,6 +123,7 @@ class ProfileModel {
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
+    maxSnoozeCount = documentSnapshot['maxSnoozeCount'] ?? 3;
     gradient = documentSnapshot['gradient'];
     label = documentSnapshot['label'];
     isOneTime = documentSnapshot['isOneTime'];
@@ -173,6 +176,7 @@ class ProfileModel {
     // Making sure the profiles work with the offsets
     profileName = profileData['profileName'];
     snoozeDuration = profileData['snoozeDuration'];
+    maxSnoozeCount = profileData['maxSnoozeCount'] ?? 3;
     gradient = profileData['gradient'];
     isSharedAlarmEnabled = profileData['isSharedAlarmEnabled'];
     minutesSinceMidnight = profileData['minutesSinceMidnight'];
@@ -261,6 +265,7 @@ class ProfileModel {
       'isPedometerEnabled': profileRecord.isPedometerEnabled,
       'numberOfSteps': profileRecord.numberOfSteps,
       'snoozeDuration': profileRecord.snoozeDuration,
+      'maxSnoozeCount': profileRecord.maxSnoozeCount,
       'gradient': profileRecord.gradient,
       'ringtoneName': profileRecord.ringtoneName,
       'note': profileRecord.note,

@@ -56,52 +56,7 @@ class IsarDb {
 
     final dir = await getDatabasesPath();
     final dbPath = '$dir/alarms.db';
-    db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
-    return db;
-  }
-
-  Future<Database?> getTimerSQLiteDatabase() async {
-    Database? db;
-    final dir = await getDatabasesPath();
-    db = await openDatabase(
-      '$dir/timer.db',
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('''
-          CREATE TABLE timers ( 
-            id integer primary key autoincrement, 
-            startedOn text not null,
-            timerValue integer not null,
-            timeElapsed integer not null,
-            ringtoneName text not null,
-            timerName text not null,
-            isPaused integer not null)
-        ''');
-      },
-    );
-    return db;
-  }
-
-  Future<Database?> setAlarmLogs() async {
-    Database? db;
-    final dir = await getDatabasesPath();
-    db = await openDatabase(
-      '$dir/AlarmLogs.db',
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('''
-          CREATE TABLE LOG (
-            LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
-            LogTime DATETIME NOT NULL,            
-            Status TEXT CHECK(Status IN ('ERROR', 'SUCCESS', 'WARNING')) NOT NULL,
-            LogType TEXT CHECK(LogType IN ('DEV', 'NORMAL')) NOT NULL,
-            Message TEXT NOT NULL,
-            HasRung INTEGER DEFAULT 0,
-            AlarmID TEXT
-          )
-        ''');
-      },
-    );
+    db = await openDatabase(dbPath, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return db;
   }
 
@@ -156,8 +111,8 @@ class IsarDb {
         guardianTimer INTEGER,
         guardian TEXT,
         isCall INTEGER,
-        ringOn INTEGER
-        
+        ringOn INTEGER DEFAULT 1,
+        maxSnoozeCount INTEGER DEFAULT 3
       )
     ''');
     await db.execute('''
@@ -170,6 +125,70 @@ class IsarDb {
     ''');
   }
 
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add maxSnoozeCount column if upgrading from version 1 to 2
+      try {
+        await db.execute('ALTER TABLE alarms ADD COLUMN maxSnoozeCount INTEGER DEFAULT 3');
+        print('Successfully added maxSnoozeCount column to alarms table');
+        
+        // Set default value for ringOn column if it exists
+        try {
+          await db.execute('UPDATE alarms SET ringOn = 1 WHERE ringOn IS NULL');
+          print('Successfully set default value for ringOn column');
+        } catch (e) {
+          print('Error setting default for ringOn: $e');
+        }
+      } catch (e) {
+        print('Error adding maxSnoozeCount column: $e');
+      }
+    }
+  }
+
+  Future<Database?> getTimerSQLiteDatabase() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/timer.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE timers ( 
+            id integer primary key autoincrement, 
+            startedOn text not null,
+            timerValue integer not null,
+            timeElapsed integer not null,
+            ringtoneName text not null,
+            timerName text not null,
+            isPaused integer not null)
+        ''');
+      },
+    );
+    return db;
+  }
+
+  Future<Database?> setAlarmLogs() async {
+    Database? db;
+    final dir = await getDatabasesPath();
+    db = await openDatabase(
+      '$dir/AlarmLogs.db',
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE LOG (
+            LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
+            LogTime DATETIME NOT NULL,            
+            Status TEXT CHECK(Status IN ('ERROR', 'SUCCESS', 'WARNING')) NOT NULL,
+            LogType TEXT CHECK(LogType IN ('DEV', 'NORMAL')) NOT NULL,
+            Message TEXT NOT NULL,
+            HasRung INTEGER DEFAULT 0,
+            AlarmID TEXT
+          )
+        ''');
+      },
+    );
+    return db;
+  }
 
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();

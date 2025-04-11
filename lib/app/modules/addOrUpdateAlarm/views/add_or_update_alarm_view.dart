@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/ascending_volume.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/combined_snooze_settings_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/delete_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
@@ -25,7 +26,6 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/setting_
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to_dismiss_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_alarm_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -208,8 +208,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                       .value
                                                                   ? 23
                                                                   : 12,
-                                                          value: controller
-                                                              .hours.value,
+                                                          value: (controller.hours.value < (settingsController.is24HrsEnabled.value ? 0 : 1)) 
+                                                                ? (settingsController.is24HrsEnabled.value ? 0 : 1)
+                                                                : controller.hours.value,
                                                           onChanged: (value) {
                                                             Utils
                                                                 .hapticFeedback();
@@ -348,8 +349,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                         NumberPicker(
                                                           minValue: 0,
                                                           maxValue: 59,
-                                                          value: controller
-                                                              .minutes.value,
+                                                          value: controller.minutes.value < 0 || controller.minutes.value > 59 
+                                                              ? 0 
+                                                              : controller.minutes.value,
                                                           onChanged: (value) {
                                                             Utils
                                                                 .hapticFeedback();
@@ -474,8 +476,16 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                             minValue: 0,
                                                             maxValue: 1,
                                                             value: controller
-                                                                .meridiemIndex
-                                                                .value,
+                                                                    .meridiemIndex
+                                                                    .value < 0 ||
+                                                                controller
+                                                                        .meridiemIndex
+                                                                        .value >
+                                                                    1
+                                                                ? 0
+                                                                : controller
+                                                                    .meridiemIndex
+                                                                    .value,
                                                             onChanged: (value) {
                                                               Utils
                                                                   .hapticFeedback();
@@ -828,7 +838,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               )
                                             : const SizedBox(),
                                       ),
-                                      SnoozeDurationTile(
+                                      CombinedSnoozeSettingsTile(
                                         controller: controller,
                                         themeController: themeController,
                                       ),
@@ -1021,6 +1031,80 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     height: height * 0.15,
                                   ),
                           ),
+                          Obx(
+                            () => controller.alarmSettingType.value == 4
+                                ? Column(
+                                    children: [
+                                      Obx(
+                                        () => (!controller.repeatDays.every(
+                                                (element) => element == false))
+                                            ? Divider(
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              )
+                                            : const SizedBox(),
+                                      ),
+                                      CombinedSnoozeSettingsTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
+                                      Obx(
+                                        () => (controller.repeatDays.every(
+                                                (element) => element == false))
+                                            ? DeleteAfterGoesOff(
+                                                controller: controller,
+                                                themeController:
+                                                    themeController,
+                                              )
+                                            : const SizedBox(),
+                                      ),
+                                      LabelTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
+                                      NoteTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
+                                      ChooseRingtoneTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                        height: height,
+                                        width: width,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
+                                      AscendingVolumeTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
+                                      QuoteTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox(),
+                          ),
                         ],
                       ),
               ),
@@ -1080,6 +1164,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 deleteAfterGoesOff:
                                     controller.deleteAfterGoesOff.value,
                                 snoozeDuration: controller.snoozeDuration.value,
+                                maxSnoozeCount: controller.maxSnoozeCount.value,
                                 volMax: controller.volMax.value,
                                 volMin: controller.volMin.value,
                                 gradient: controller.gradient.value,

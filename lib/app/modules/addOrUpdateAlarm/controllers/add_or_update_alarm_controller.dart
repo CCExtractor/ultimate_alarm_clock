@@ -84,6 +84,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxBool isOneTime = true.obs;
   final RxString label = ''.obs;
   final RxInt snoozeDuration = 1.obs;
+  final RxInt maxSnoozeCount = 3.obs;
   var customRingtoneName = 'Digital Alarm 1'.obs;
   var customRingtoneNames = [].obs;
   var previousRingtone = '';
@@ -705,6 +706,8 @@ class AddOrUpdateAlarmController extends GetxController {
       isActivityMonitorenabled.value =
           alarmRecord.value.isActivityEnabled ? 1 : 0;
       snoozeDuration.value = alarmRecord.value.snoozeDuration;
+      maxSnoozeCount.value = alarmRecord.value.maxSnoozeCount;
+      
       gradient.value = alarmRecord.value.gradient;
       volMin.value = alarmRecord.value.volMin;
       volMax.value = alarmRecord.value.volMax;
@@ -728,11 +731,14 @@ class AddOrUpdateAlarmController extends GetxController {
           hours.value = 12;
           meridiemIndex.value = 0;
         } else if (selectedTime.value.hour == 12) {
+          // hours.value = 12; // Ensure hours is never less than 1 in 12-hour format
           meridiemIndex.value = 1;
         } else if (selectedTime.value.hour > 12) {
           hours.value = selectedTime.value.hour - 12;
           meridiemIndex.value = 1;
         } else {
+          // Ensure hours is never less than 1 in 12-hour format
+          // hours.value = selectedTime.value.hour < 1 ? 1 : selectedTime.value.hour;
           meridiemIndex.value = 0;
         }
       }
@@ -748,7 +754,6 @@ class AddOrUpdateAlarmController extends GetxController {
 
       // Setting the old values for all the auto dismissal
       isActivityenabled.value = alarmRecord.value.isActivityEnabled;
-      useScreenActivity.value = alarmRecord.value.isActivityEnabled;
       activityInterval.value = alarmRecord.value.activityInterval ~/ 60000;
 
       isLocationEnabled.value = alarmRecord.value.isLocationEnabled;
@@ -837,11 +842,14 @@ class AddOrUpdateAlarmController extends GetxController {
           hours.value = 12;
           meridiemIndex.value = 0;
         } else if (selectedTime.value.hour == 12) {
+          hours.value = 12; // Ensure hours is never less than 1 in 12-hour format
           meridiemIndex.value = 1;
         } else if (selectedTime.value.hour > 12) {
           hours.value = selectedTime.value.hour - 12;
           meridiemIndex.value = 1;
         } else {
+          // Ensure hours is never less than 1 in 12-hour format
+          hours.value = selectedTime.value.hour < 1 ? 1 : selectedTime.value.hour;
           meridiemIndex.value = 0;
         }
       }
@@ -857,6 +865,7 @@ class AddOrUpdateAlarmController extends GetxController {
       'selectedTime': selectedTime.value,
       'daysRepeating': daysRepeating.value,
       'snoozeDuration': snoozeDuration.value,
+      'maxSnoozeCount': maxSnoozeCount.value,
       'deleteAfterGoesOff': deleteAfterGoesOff.value,
       'label': label.value,
       'note': note.value,
@@ -886,8 +895,6 @@ class AddOrUpdateAlarmController extends GetxController {
         null) {
       weatherApiKeyExists.value = true;
     }
-
-    // If there's an argument sent, we are in update mode
   }
 
   void addListeners() {
@@ -906,6 +913,7 @@ class AddOrUpdateAlarmController extends GetxController {
     });
 
     setupListener<int>(snoozeDuration, 'snoozeDuration');
+    setupListener<int>(maxSnoozeCount, 'maxSnoozeCount');
     setupListener<bool>(deleteAfterGoesOff, 'deleteAfterGoesOff');
     setupListener<String>(label, 'label');
     setupListener<String>(note, 'note');
@@ -1022,8 +1030,14 @@ class AddOrUpdateAlarmController extends GetxController {
       ownerId = alarmRecord.value.ownerId;
       ownerName = alarmRecord.value.ownerName;
     }
+    
+    // For future date alarms, ringOn should initially be false
+    // For all other alarms, ringOn should be true
+    bool shouldRingOn = isFutureDate.value ? false : true;
+    
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
+      maxSnoozeCount: maxSnoozeCount.value,
       volMax: volMax.value,
       volMin: volMin.value,
       gradient: gradient.value,
@@ -1074,7 +1088,7 @@ class AddOrUpdateAlarmController extends GetxController {
       guardianTimer: guardianTimer.value,
       guardian: guardian.value,
       isCall: isCall.value,
-      ringOn: isFutureDate.value,
+      ringOn: shouldRingOn,
     );
   }
 
@@ -1408,7 +1422,6 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1417,3 +1430,39 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+
+  void updateTime() {
+    // Ensure that minutes is within valid range
+    if (minutes.value < 0) minutes.value = 0;
+    if (minutes.value > 59) minutes.value = 59;
+    
+    TimeOfDay timeOfDay;
+    
+    if (!settingsController.is24HrsEnabled.value) {
+      // 12 hour mode
+      timeOfDay = TimeOfDay(
+        hour: (meridiemIndex.value == 1)
+            ? (hours.value == 12)
+                ? 12
+                : hours.value + 12
+            : (hours.value == 12)
+                ? 0
+                : hours.value,
+        minute: minutes.value,
+      );
+    } else {
+      // 24 hour mode
+      timeOfDay = TimeOfDay(hour: hours.value, minute: minutes.value);
+    }
+    
+    // Convert TimeOfDay to DateTime
+    final now = DateTime.now();
+    selectedTime.value = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      timeOfDay.hour,
+      timeOfDay.minute,
+    );
+  }
+}

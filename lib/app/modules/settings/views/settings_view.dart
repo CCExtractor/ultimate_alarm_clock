@@ -10,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/views/theme_value_tile
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/settings_controller.dart';
 import 'google_sign_in.dart';
+import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -120,6 +121,45 @@ class SettingsView extends GetView<SettingsController> {
                 ),
                 const SizedBox(
                   height: 20,
+                ),
+                GetBuilder<SettingsController>(
+                  builder: (controller) => SwitchListTile(
+                    title: Text(
+                      'Sorted Alarm List'.tr,
+                      style: TextStyle(
+                        color: controller.themeController.primaryTextColor.value,
+                      ),
+                    ),
+                    value: controller.isSortedAlarmListEnabled.value,
+                    activeColor: controller.themeController.primaryColor.value,
+                    inactiveTrackColor: controller.themeController.primaryDisabledTextColor.value,
+                    onChanged: (value) {
+                      Utils.hapticFeedback();
+                      controller.toggleSortedAlarmList(value);
+                    },
+                  ),
+                ),
+                Divider(
+                  color: controller.themeController.primaryDisabledTextColor.value,
+                ),
+                ListTile(
+                  title: Text(
+                    'Snooze Settings'.tr,
+                    style: TextStyle(
+                      color: controller.themeController.primaryTextColor.value,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: controller.themeController.primaryDisabledTextColor.value,
+                  ),
+                  onTap: () {
+                    Utils.hapticFeedback();
+                    Get.toNamed(Routes.SNOOZE_SETTINGS);
+                  },
+                ),
+                Divider(
+                  color: controller.themeController.primaryDisabledTextColor.value,
                 ),
               ],
             ),

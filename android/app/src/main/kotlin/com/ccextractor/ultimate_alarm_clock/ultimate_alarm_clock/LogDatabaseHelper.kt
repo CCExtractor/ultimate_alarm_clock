@@ -4,16 +4,18 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "AlarmLogs.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
         private const val TABLE_NAME = "LOG"
         private const val COLUMN_LOG_ID = "LogID"
         private const val COLUMN_LOG_TIME = "LogTime"
         private const val COLUMN_STATUS = "Status"
+        private const val TAG = "LogDatabaseHelper"
     }
 
     enum class Status(val value: String) {
@@ -52,9 +54,9 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        // Drop the table if it exists and recreate it
-        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        onCreate(db)
+        // Just log the upgrade and keep the existing data
+        Log.d(TAG, "Upgrading log database from version $oldVersion to $newVersion")
+        // No schema changes needed for the LOG table
     }
 
     // Insert a log entry
