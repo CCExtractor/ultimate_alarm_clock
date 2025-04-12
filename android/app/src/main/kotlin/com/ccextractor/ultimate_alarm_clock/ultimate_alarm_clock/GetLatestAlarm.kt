@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalTime
@@ -22,7 +21,6 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
     }
     val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
     val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-    Log.d("d", "cd ${currentDay}")
 
     // Initialize DatabaseHelper
     val logdbHelper = LogDatabaseHelper(context)
@@ -35,7 +33,6 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
         """, arrayOf(profile)
     )
     var selectedAlarm = null
-    Log.d("Alarm", cursor.count.toString())
 
     return if (cursor.count > 0) {
         // Parse the cursor into an AlarmModel object
@@ -49,7 +46,6 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
 
                 var dayfromToday = 0
                 var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                Log.d("d", "timeDiff ${timeDif}")
 
                 if ((alarm.days[currentDay] == '1' || alarm.days == "0000000") && timeDif > -1L) {
                     if (timeDif < intervaltoAlarm) {
@@ -80,7 +76,6 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
                     } else if (dayfromToday == 1) {
                         var timeDif =
                             getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
-                        Log.d("d", "timeDiff ${timeDif}")
 
                         if (timeDif < intervaltoAlarm && timeDif > -1L) {
                             intervaltoAlarm = timeDif
@@ -129,7 +124,6 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
         cursor.close()
 
         if (setAlarm != null) {
-            Log.d("Alarm", intervaltoAlarm.toString())
 
             // Add the latest alarm details to the LOG table
             val logDetails = """
@@ -151,7 +145,6 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
                 "weatherTypes" to setAlarm.weatherTypes,
                 "alarmID" to setAlarm.alarmId
             )
-            Log.d("s", "sdsd ${a}")
             return a
         }
         null
@@ -317,11 +310,7 @@ data class AlarmModel(
             val alarmDate = cursor.getString(cursor.getColumnIndex("alarmDate"))
             val alarmId = cursor.getString(cursor.getColumnIndex("alarmID"))
             val ringOn = cursor.getInt(cursor.getColumnIndex("ringOn"))
-            val maxSnoozeCount = try {
-                cursor.getInt(cursor.getColumnIndex("maxSnoozeCount"))
-            } catch (e: Exception) {
-                3 // Default value if column doesn't exist
-            }
+            val maxSnoozeCount = if (cursor.getColumnIndex("maxSnoozeCount") != -1) cursor.getInt(cursor.getColumnIndex("maxSnoozeCount")) else 3
             return AlarmModel(
                 id,
                 minutesSinceMidnight,

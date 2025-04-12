@@ -74,8 +74,6 @@ class AlarmControlController extends GetxController {
   }
 
   void startSnooze() async {
-    // Check if the user has reached the maximum number of snoozes allowed
-    // Handle the case where maxSnoozeCount is not properly set
     int maxCount = currentlyRingingAlarm.value.maxSnoozeCount > 0 ? 
                   currentlyRingingAlarm.value.maxSnoozeCount : 3;
                   
@@ -90,14 +88,10 @@ class AlarmControlController extends GetxController {
       );
       return;
     }
-
-    // Increment the snooze count
     snoozeCount.value++;
     
     Vibration.cancel();
-    if (vibrationTimer != null) {
-      vibrationTimer!.cancel();
-    }
+    vibrationTimer!.cancel();
     isSnoozing.value = true;
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
@@ -114,8 +108,6 @@ class AlarmControlController extends GetxController {
               Vibration.vibrate(pattern: [500, 3000]);
             });
 
-        // Make sure ringOn is set to true before playing the alarm
-        currentlyRingingAlarm.value.ringOn = true;
         AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
         startTimer();
@@ -262,122 +254,76 @@ class AlarmControlController extends GetxController {
     super.onInit();
     startListeningToFlip();
 
-    try {
-      // Extract alarm and preview flag from arguments
-      final args = Get.arguments;
-      if (args is Map) {
-        currentlyRingingAlarm.value = args['alarm'];
-        isPreviewMode.value = args['preview'] ?? false;
-      } else {
-        currentlyRingingAlarm.value = args;
-        isPreviewMode.value = false;
-      }
+    final args = Get.arguments;
+    if (args is Map) {
+      currentlyRingingAlarm.value = args['alarm'];
+      isPreviewMode.value = args['preview'] ?? false;
+    } else {
+      currentlyRingingAlarm.value = args;
+      isPreviewMode.value = false;
+    }
 
-      // Ensure alarm rings by setting ringOn to true
-      currentlyRingingAlarm.value.ringOn = true;
-
-      // Reset snoozeCount on init for each new alarm
-      snoozeCount.value = 0;
-
-      // Add a safe default value for maxSnoozeCount if not present
-      if (currentlyRingingAlarm.value.maxSnoozeCount <= 0) {
-        currentlyRingingAlarm.value.maxSnoozeCount = 3;
-      }
-      
-      print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
-      if (currentlyRingingAlarm.value.isGuardian) {
-        guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          print(guardianCoundown.value);
-          if (guardianCoundown.value == 0) {
-            currentlyRingingAlarm.value.isCall
-                ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
-                : Utils.sendSMS(currentlyRingingAlarm.value.guardian,
-                "Your Friend is not waking up \n - Ultimate Alarm Clock");
-            timer.cancel();
-          } else {
-            guardianCoundown.value = guardianCoundown.value - 1;
-          }
-        });
-      }
-
-      showButton.value = true;
-      initialVolume = await FlutterVolumeController.getVolume(
-        stream: AudioStream.alarm,
-      ) as double;
-
-      FlutterVolumeController.updateShowSystemUI(false);
-
-      // _fadeInAlarmVolume();     TODO fix volume fade-in
-
-      vibrationTimer =
-          Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
-            Vibration.vibrate(pattern: [500, 3000]);
-          });
-
-      // Preventing app from being minimized!
-      _subscription = FGBGEvents.stream.listen((event) {
-        if (event == FGBGType.background) {
-          alarmChannel.invokeMethod('bringAppToForeground');
+    if (currentlyRingingAlarm.value.isGuardian) {
+      guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (guardianCoundown.value == 0) {
+          currentlyRingingAlarm.value.isCall
+              ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
+              : Utils.sendSMS(currentlyRingingAlarm.value.guardian,
+              "Your Friend is not waking up \n - Ultimate Alarm Clock");
+          timer.cancel();
+        } else {
+          guardianCoundown.value = guardianCoundown.value - 1;
         }
       });
+    }
 
-      startTimer();
+    showButton.value = true;
+    initialVolume = await FlutterVolumeController.getVolume(
+      stream: AudioStream.alarm,
+    ) as double;
 
-      // Ensure alarm plays with ringOn = true
-      print("Playing alarm with ringOn = ${currentlyRingingAlarm.value.ringOn}");
-      AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+    FlutterVolumeController.updateShowSystemUI(false);
 
-      if(currentlyRingingAlarm.value.showMotivationalQuote) {
-        Quote quote = Utils.getRandomQuote();
-        showQuotePopup(quote);
+    vibrationTimer =
+        Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+          Vibration.vibrate(pattern: [500, 3000]);
+        });
+
+    _subscription = FGBGEvents.stream.listen((event) {
+      if (event == FGBGType.background) {
+        alarmChannel.invokeMethod('bringAppToForeground');
       }
+    });
 
-      // Setting snooze duration
-      minutes.value = currentlyRingingAlarm.value.snoozeDuration;
+    startTimer();
 
-      // Scheduling next alarm if it's not in preview mode
-      if (Get.arguments == null) {
-        // Finding the next alarm to ring
-        AlarmModel latestAlarm = await getNextAlarm();
-        TimeOfDay latestAlarmTimeOfDay =
-        Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+    AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
-        // This condition will never satisfy because this will only
-        // occur if fake model is returned as latest alarm
-        if (latestAlarm.isEnabled == false) {
-          debugPrint(
-            'STOPPED IF CONDITION with latest = '
-                '${latestAlarmTimeOfDay.toString()} and '
-                'current = ${currentTime.toString()}',
-          );
+    if(currentlyRingingAlarm.value.showMotivationalQuote) {
+      Quote quote = Utils.getRandomQuote();
+      showQuotePopup(quote);
+    }
 
-          await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
-        } else {
-          int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-            DateTime.now(),
-            Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-          );
+    minutes.value = currentlyRingingAlarm.value.snoozeDuration;
 
-          try {
-            await alarmChannel.invokeMethod('scheduleAlarm', {
-              'milliSeconds': intervaltoAlarm,
-              'activityMonitor': latestAlarm.activityMonitor
-            });
-            print("Scheduled...");
-          } on PlatformException catch (e) {
-            print("Failed to schedule alarm: ${e.message}");
-          }
-        }
+    if (Get.arguments == null) {
+      AlarmModel latestAlarm = await getNextAlarm();
+      TimeOfDay latestAlarmTimeOfDay =
+      Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+
+      if (latestAlarm.isEnabled == false) {
+        await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+      } else {
+        int intervaltoAlarm = Utils.getMillisecondsToAlarm(
+          DateTime.now(),
+          Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
+        );
+
+        await alarmChannel.invokeMethod('scheduleAlarm', {
+          'milliSeconds': intervaltoAlarm,
+          'activityMonitor': latestAlarm.activityMonitor
+        });
       }
-    } catch (e) {
-      print("Error in onInit: $e");
-      // Set a default alarm model if there's an error
-      currentlyRingingAlarm.value = Utils.alarmModelInit;
-      currentlyRingingAlarm.value.ringOn = true;
-      currentlyRingingAlarm.value.snoozeDuration = 5; // Default 5 minutes
-      
-      // Attempt to play the alarm anyway
-      AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
     }
   }
 
@@ -404,7 +350,6 @@ class AlarmControlController extends GetxController {
             currentlyRingingAlarm.value.firestoreId,
           );
         } else if (currentlyRingingAlarm.value.isarId > 0) {
-          
           await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
         }
       } 

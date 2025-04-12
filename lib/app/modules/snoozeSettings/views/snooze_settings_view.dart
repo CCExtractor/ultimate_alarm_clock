@@ -51,7 +51,6 @@ class SnoozeSettingsView extends GetView<SnoozeSettingsController> {
       ),
       body: Obx(() => ListView(
             children: [
-              // Combined screen with all settings
               _buildCombinedSnoozeSection(),
               _buildDivider(),
             ],
@@ -82,8 +81,6 @@ class SnoozeSettingsView extends GetView<SnoozeSettingsController> {
             ),
           ),
           const SizedBox(height: 16),
-          
-          // Snooze Duration
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -140,8 +137,6 @@ class SnoozeSettingsView extends GetView<SnoozeSettingsController> {
           ),
           
           const SizedBox(height: 24),
-          
-          // Max Snooze Count
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

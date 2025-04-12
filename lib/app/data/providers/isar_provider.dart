@@ -127,21 +127,8 @@ class IsarDb {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      // Add maxSnoozeCount column if upgrading from version 1 to 2
-      try {
-        await db.execute('ALTER TABLE alarms ADD COLUMN maxSnoozeCount INTEGER DEFAULT 3');
-        print('Successfully added maxSnoozeCount column to alarms table');
-        
-        // Set default value for ringOn column if it exists
-        try {
-          await db.execute('UPDATE alarms SET ringOn = 1 WHERE ringOn IS NULL');
-          print('Successfully set default value for ringOn column');
-        } catch (e) {
-          print('Error setting default for ringOn: $e');
-        }
-      } catch (e) {
-        print('Error adding maxSnoozeCount column: $e');
-      }
+      await db.execute('ALTER TABLE alarms ADD COLUMN maxSnoozeCount INTEGER DEFAULT 3');
+      await db.execute('UPDATE alarms SET ringOn = 1 WHERE ringOn IS NULL');
     }
   }
 

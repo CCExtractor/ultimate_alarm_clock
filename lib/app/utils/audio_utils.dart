@@ -73,15 +73,6 @@ class AudioUtils {
     required AlarmModel alarmRecord,
   }) async {
     try {
-      // Check if the alarm is supposed to ring
-      if (alarmRecord.ringOn != true) {
-        debugPrint("Alarm won't ring: ringOn property is ${alarmRecord.ringOn}");
-        // Force set ringOn to true to ensure the alarm rings
-        alarmRecord.ringOn = true;
-      }
-      
-      debugPrint("Playing alarm with ringtone: ${alarmRecord.ringtoneName}, ringOn: ${alarmRecord.ringOn}");
-      
       if (audioSession == null) {
         await initializeAudioSession();
       }
@@ -98,14 +89,12 @@ class AudioUtils {
 
       if (customRingtone != null) {
         String customRingtonePath = customRingtone.ringtonePath;
-        debugPrint("Playing custom ringtone: $ringtoneName, path: $customRingtonePath");
         if (defaultRingtones.contains(ringtoneName)) {
           await playAssetSound(customRingtonePath);
         } else {
           await playCustomSound(customRingtonePath);
         }
       } else {
-        debugPrint("Playing default alarm sound");
         await alarmChannel.invokeMethod('playDefaultAlarm');
         bool isSharedAlarmEnabled = alarmRecord.isSharedAlarmEnabled;
 
@@ -118,7 +107,6 @@ class AudioUtils {
         }
       }
     } catch (e) {
-      debugPrint("Error playing alarm: $e");
     }
   }
 

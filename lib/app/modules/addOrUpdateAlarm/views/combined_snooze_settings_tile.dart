@@ -21,11 +21,8 @@ class CombinedSnoozeSettingsTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         Utils.hapticFeedback();
-        // Store initial values
         final int duration = controller.snoozeDuration.value;
         final int count = controller.maxSnoozeCount.value;
-        
-        // Instead of using a dialog, navigate to a full screen
         Get.to(
           () => SnoozeSettingsScreen(
             controller: controller,
@@ -65,8 +62,6 @@ class CombinedSnoozeSettingsTile extends StatelessWidget {
     );
   }
 }
-
-// Full screen settings page for snooze settings
 class SnoozeSettingsScreen extends StatelessWidget {
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;

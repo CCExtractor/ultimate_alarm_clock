@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -15,7 +14,6 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         private const val COLUMN_LOG_ID = "LogID"
         private const val COLUMN_LOG_TIME = "LogTime"
         private const val COLUMN_STATUS = "Status"
-        private const val TAG = "LogDatabaseHelper"
     }
 
     enum class Status(val value: String) {
@@ -38,7 +36,6 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        // Create the LOG table
         val createTableQuery = """
             CREATE TABLE LOG (
                 LogID INTEGER PRIMARY KEY AUTOINCREMENT,  
@@ -54,18 +51,14 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        // Just log the upgrade and keep the existing data
-        Log.d(TAG, "Upgrading log database from version $oldVersion to $newVersion")
-        // No schema changes needed for the LOG table
     }
 
-    // Insert a log entry
     fun insertLog(msg: String, status: Status = Status.WARNING, type: LogType = LogType.DEV, hasRung: Int = 0, alarmID: String = ""): Long {
         val db = writableDatabase
         val status = status.toString()
         val type = type.toString()
         val values = ContentValues().apply {
-            put("LogTime", System.currentTimeMillis()) // Store current time as milliseconds
+            put("LogTime", System.currentTimeMillis())
             put("Status", status)
             put("LogType", type)
             put("Message", msg)
@@ -75,13 +68,11 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         return db.insert(TABLE_NAME, null, values)
     }
 
-    // Fetch all log entries
     fun getLogs(): Cursor {
         val db = readableDatabase
         return db.query(TABLE_NAME, null, null, null, null, null, null)
     }
 
-    // Update a log entry
     fun updateLog(logId: Int, newStatus: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -90,7 +81,6 @@ class LogDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         return db.update(TABLE_NAME, values, "$COLUMN_LOG_ID = ?", arrayOf(logId.toString()))
     }
 
-    // Delete a log entry
     fun deleteLog(logId: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_NAME, "$COLUMN_LOG_ID = ?", arrayOf(logId.toString()))

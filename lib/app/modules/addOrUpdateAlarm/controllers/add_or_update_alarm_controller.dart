@@ -731,14 +731,11 @@ class AddOrUpdateAlarmController extends GetxController {
           hours.value = 12;
           meridiemIndex.value = 0;
         } else if (selectedTime.value.hour == 12) {
-          // hours.value = 12; // Ensure hours is never less than 1 in 12-hour format
           meridiemIndex.value = 1;
         } else if (selectedTime.value.hour > 12) {
           hours.value = selectedTime.value.hour - 12;
           meridiemIndex.value = 1;
         } else {
-          // Ensure hours is never less than 1 in 12-hour format
-          // hours.value = selectedTime.value.hour < 1 ? 1 : selectedTime.value.hour;
           meridiemIndex.value = 0;
         }
       }
@@ -842,13 +839,12 @@ class AddOrUpdateAlarmController extends GetxController {
           hours.value = 12;
           meridiemIndex.value = 0;
         } else if (selectedTime.value.hour == 12) {
-          hours.value = 12; // Ensure hours is never less than 1 in 12-hour format
+          hours.value = 12; 
           meridiemIndex.value = 1;
         } else if (selectedTime.value.hour > 12) {
           hours.value = selectedTime.value.hour - 12;
           meridiemIndex.value = 1;
         } else {
-          // Ensure hours is never less than 1 in 12-hour format
           hours.value = selectedTime.value.hour < 1 ? 1 : selectedTime.value.hour;
           meridiemIndex.value = 0;
         }
@@ -1030,9 +1026,6 @@ class AddOrUpdateAlarmController extends GetxController {
       ownerId = alarmRecord.value.ownerId;
       ownerName = alarmRecord.value.ownerName;
     }
-    
-    // For future date alarms, ringOn should initially be false
-    // For all other alarms, ringOn should be true
     bool shouldRingOn = isFutureDate.value ? false : true;
     
     return AlarmModel(
@@ -1432,14 +1425,12 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void updateTime() {
-    // Ensure that minutes is within valid range
     if (minutes.value < 0) minutes.value = 0;
     if (minutes.value > 59) minutes.value = 59;
     
     TimeOfDay timeOfDay;
     
     if (!settingsController.is24HrsEnabled.value) {
-      // 12 hour mode
       timeOfDay = TimeOfDay(
         hour: (meridiemIndex.value == 1)
             ? (hours.value == 12)
@@ -1451,11 +1442,8 @@ class AddOrUpdateAlarmController extends GetxController {
         minute: minutes.value,
       );
     } else {
-      // 24 hour mode
       timeOfDay = TimeOfDay(hour: hours.value, minute: minutes.value);
     }
-    
-    // Convert TimeOfDay to DateTime
     final now = DateTime.now();
     selectedTime.value = DateTime(
       now.year,

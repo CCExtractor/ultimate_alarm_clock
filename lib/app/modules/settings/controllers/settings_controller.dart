@@ -8,7 +8,6 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
-import 'package:ultimate_alarm_clock/app/routes/app_pages.dart';
 import 'package:weather/weather.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fl_location/fl_location.dart';
@@ -27,7 +26,6 @@ class SettingsController extends GetxController {
   final _flipToSnooze = 'flip_to_snooze';
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
-  var undoDuration = 3.obs;
   var currentLanguage = 'en_US'.obs;
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
@@ -78,30 +76,6 @@ class SettingsController extends GetxController {
       userModel.value = await _secureStorageProvider.retrieveUserModel();
     }
     _loadPreference();
-    
-    // For default values, we should use secure storage instead of GetStorage
-    // which doesn't have a writeIfNull method
-    await _secureStorageProvider.writeHapticFeedbackValue(
-      key: _hapticFeedbackKey,
-      isHapticFeedbackEnabled: isHapticFeedbackEnabled.value,
-    );
-    
-    await _secureStorageProvider.write24HoursEnabled(
-      key: _f24HrsEnabledKey,
-      is24HoursEnabled: is24HrsEnabled.value,
-    );
-    
-    await _secureStorageProvider.writeSortedAlarmListValue(
-      key: _sortedAlarmListKey,
-      isSortedAlarmListEnabled: isSortedAlarmListEnabled.value,
-    );
-    
-    await _secureStorageProvider.writeHapticFeedbackValue(
-      key: _flipToSnooze,
-      isHapticFeedbackEnabled: isFlipToSnooze.value,
-    );
-    
-    // Load values from the storage provider if needed
   }
 
   // Logins user using GoogleSignIn
@@ -281,13 +255,5 @@ class SettingsController extends GetxController {
     local.value = Get.locale.toString();
     storage.writeCurrentLanguage(local.value);
     storage.writeLocale(languageCode, countryCode);
-  }
-
-  void goToSnoozeSettings() {
-    Get.toNamed(Routes.SNOOZE_SETTINGS);
-  }
-
-  void resetPreferences() {
-    // Implementation of resetPreferences method
   }
 }

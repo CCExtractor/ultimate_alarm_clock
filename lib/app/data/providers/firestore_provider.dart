@@ -27,7 +27,6 @@ class FirestoreDb {
 
     final dir = await getDatabasesPath();
     final dbPath = '$dir/firestore_alarms.db';
-    print(dir);
     db = await openDatabase(dbPath, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return db;
   }
@@ -98,13 +97,7 @@ class FirestoreDb {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      // Add maxSnoozeCount column if upgrading from version 1 to 2
-      try {
-        await db.execute('ALTER TABLE alarms ADD COLUMN maxSnoozeCount INTEGER DEFAULT 3');
-        print('Successfully added maxSnoozeCount column to alarms table in FirestoreDb');
-      } catch (e) {
-        print('Error adding maxSnoozeCount column to FirestoreDb: $e');
-      }
+      await db.execute('ALTER TABLE alarms ADD COLUMN maxSnoozeCount INTEGER DEFAULT 3');
     }
   }
 
@@ -132,9 +125,7 @@ class FirestoreDb {
     if (user == null) {
       return alarmRecord;
     }
-    await sql!
-        .insert('alarms', alarmRecord.toSQFliteMap())
-        .then((value) => print('insert success'));
+    await sql!.insert('alarms', alarmRecord.toSQFliteMap());
     await _alarmsCollection(user)
         .add(AlarmModel.toMap(alarmRecord))
         .then((value) => alarmRecord.firestoreId = value.id);
