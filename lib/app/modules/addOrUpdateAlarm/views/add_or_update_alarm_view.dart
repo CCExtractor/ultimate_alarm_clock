@@ -25,7 +25,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/setting_
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to_dismiss_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_alarm_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_settings_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -34,7 +34,6 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/max_snooze_count_tile.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key}) {
@@ -829,15 +828,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                               )
                                             : const SizedBox(),
                                       ),
-                                      SnoozeDurationTile(
-                                        controller: controller,
-                                        themeController: themeController,
-                                      ),
-                                      Divider(
-                                        color: themeController
-                                            .primaryDisabledTextColor.value,
-                                      ),
-                                      MaxSnoozeCountTile(
+                                      SnoozeSettingsTile(
                                         controller: controller,
                                         themeController: themeController,
                                       ),
@@ -1089,6 +1080,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 deleteAfterGoesOff:
                                     controller.deleteAfterGoesOff.value,
                                 snoozeDuration: controller.snoozeDuration.value,
+                                maxSnoozeCount: controller.maxSnoozeCount.value,
                                 volMax: controller.volMax.value,
                                 volMin: controller.volMin.value,
                                 gradient: controller.gradient.value,

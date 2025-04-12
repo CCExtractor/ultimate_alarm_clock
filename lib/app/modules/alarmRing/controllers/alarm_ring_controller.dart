@@ -74,9 +74,16 @@ class AlarmControlController extends GetxController {
   }
 
   void startSnooze() async {
-    // Check if maximum snooze count is reached
-    if (snoozeCount.value >= currentlyRingingAlarm.value.maxSnoozeCount) {
-      // Show a toast or some indication that max snooze limit is reached
+    int actualMaxSnoozeCount = currentlyRingingAlarm.value.maxSnoozeCount;
+  
+    if (currentlyRingingAlarm.value.isarId > 0) {
+      final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+      if (dbAlarm != null) {
+        actualMaxSnoozeCount = dbAlarm.maxSnoozeCount;
+      }
+    }
+    
+    if (snoozeCount.value >= actualMaxSnoozeCount) {
       Get.snackbar(
         "Max Snooze Limit",
         "You've reached the maximum snooze limit",
@@ -87,8 +94,6 @@ class AlarmControlController extends GetxController {
       );
       return;
     }
-    
-    // Increment snooze count
     snoozeCount.value++;
     
     Vibration.cancel();
@@ -254,7 +259,7 @@ class AlarmControlController extends GetxController {
   void onInit() async {
     super.onInit();
     startListeningToFlip();
-
+    
     // Extract alarm and preview flag from arguments
     final args = Get.arguments;
     if (args is Map) {
@@ -265,10 +270,15 @@ class AlarmControlController extends GetxController {
       isPreviewMode.value = false;
     }
 
-    print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
+    if (currentlyRingingAlarm.value.isarId > 0) {
+      final dbMaxSnoozeCount = await getMaxSnoozeCountFromDatabase(currentlyRingingAlarm.value.isarId);
+      if (dbMaxSnoozeCount != null && dbMaxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+        currentlyRingingAlarm.value.maxSnoozeCount = dbMaxSnoozeCount;
+      }
+    }
+    
     if (currentlyRingingAlarm.value.isGuardian) {
       guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        print(guardianCoundown.value);
         if (guardianCoundown.value == 0) {
           currentlyRingingAlarm.value.isCall
               ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
@@ -437,5 +447,23 @@ class AlarmControlController extends GetxController {
     _subscription.cancel();
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
+  }
+
+  
+  Future<int?> getMaxSnoozeCountFromDatabase(int alarmID) async {
+    final sql = await IsarDb().getAlarmSQLiteDatabase();
+    if (sql == null) return null;
+    
+    final results = await sql.query(
+      'alarms',
+      columns: ['maxSnoozeCount'],
+      where: 'alarmID = ?',
+      whereArgs: [alarmID],
+    );
+    
+    if (results.isNotEmpty) {
+      return results.first['maxSnoozeCount'] as int?;
+    }
+    return null;
   }
 }
