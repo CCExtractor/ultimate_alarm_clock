@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
-import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../../../data/providers/google_cloud_api_provider.dart';
@@ -54,18 +54,10 @@ class GoogleSignIn extends StatelessWidget {
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
                   ),
-                  TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                    ),
-                    child: Obx(
-                      () => Text(
-                        'Okay'.tr,
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                              color: themeController.secondaryTextColor.value,
-                            ),
-                      ),
-                    ),
+                  UACTextButton(
+                    isButtonPrimary: true,
+                    isTextPrimary: false,
+                    text: 'Okay'.tr,
                     onPressed: () {
                       Utils.hapticFeedback();
                       Get.back();
@@ -94,38 +86,20 @@ class GoogleSignIn extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Obx(
-                          () => Text(
-                            'Unlink'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color: themeController.secondaryTextColor.value,
-                                ),
-                          ),
-                        ),
+                      UACTextButton(
+                        isButtonPrimary: true,
+                        isTextPrimary: false,
+                        text: 'Unlink'.tr,
                         onPressed: () async {
                           Utils.hapticFeedback();
                           await controller.logoutGoogle();
                           Get.back();
                         },
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            kprimaryTextColor.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Text(
-                          'Cancel'.tr,
-                          style: Theme.of(context).textTheme.displaySmall!,
-                        ),
+                      UACTextButton(
+                        isButtonPrimary: false,
+                        isTextPrimary: true,
+                        text: 'Cancel'.tr,
                         onPressed: () {
                           Utils.hapticFeedback();
                           Get.back();
@@ -250,26 +224,14 @@ class GoogleSignIn extends StatelessWidget {
                               ),
                               SizedBox(
                                 width: width,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                      kprimaryColor,
-                                    ),
-                                  ),
+                                child: UACTextButton(
+                                  isButtonPrimary: true,
+                                  isTextPrimary: false,
+                                  text: 'Understood'.tr,
                                   onPressed: () {
                                     Utils.hapticFeedback();
                                     Get.back();
                                   },
-                                  child: Text(
-                                    'Understood'.tr,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                          color: themeController
-                                                      .secondaryTextColor.value,
-                                        ),
-                                  ),
                                 ),
                               ),
                             ],

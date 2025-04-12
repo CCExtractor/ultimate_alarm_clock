@@ -19,7 +19,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
-import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
@@ -211,21 +211,13 @@ class AlarmControlController extends GetxController {
           const SizedBox(
             height: 30,
           ),
-          TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                kprimaryColor,
-              ),
-            ),
+          UACTextButton(
+            isButtonPrimary: true,
+            isTextPrimary: false,
+            text: 'Dismiss'.tr,
             onPressed: () {
               Get.back();
             },
-            child: Text(
-              'Dismiss',
-              style: TextStyle(
-                color: themeController.secondaryTextColor.value,
-              ),
-            ),
           ),
         ],
       ),

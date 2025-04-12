@@ -4,6 +4,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class MathsChallenge extends StatelessWidget {
@@ -141,18 +142,10 @@ class MathsChallenge extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Save'.tr,
-                          style:
-                              Theme.of(context).textTheme.displaySmall!.copyWith(
-                                    color: themeController.secondaryTextColor.value,
-                                  ),
-                        ),
+                      UACTextButton(
+                        isButtonPrimary: true,
+                        isTextPrimary: false,
+                        text: 'Save'.tr,
                         onPressed: () async {
                           Utils.hapticFeedback();
                           if (controller.numMathsQuestions.value != 0) {
@@ -166,19 +159,10 @@ class MathsChallenge extends StatelessWidget {
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            themeController.primaryTextColor.value.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Text(
-                          'Cancel'.tr,
-                          style:
-                              Theme.of(context).textTheme.displaySmall!.copyWith(
-                                    color: themeController.primaryTextColor.value,
-                                  ),
-                        ),
+                      UACTextButton(
+                        isButtonPrimary: false,
+                        isTextPrimary: true,
+                        text: 'Cancel'.tr,
                         onPressed: () {
                           Utils.hapticFeedback();
                           controller.isMathsEnabled.value = false;

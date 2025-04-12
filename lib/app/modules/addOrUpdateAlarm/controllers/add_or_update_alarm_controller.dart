@@ -20,6 +20,7 @@ import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
@@ -195,11 +196,10 @@ class AddOrUpdateAlarmController extends GetxController {
           ' and Ignore batter optimization.',
         ),
         actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
-            ),
-            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+          UACTextButton(
+            isButtonPrimary: true,
+            isTextPrimary: false,
+            text: 'Cancel'.tr,
             onPressed: () {
               Get.back();
             },
@@ -207,14 +207,10 @@ class AddOrUpdateAlarmController extends GetxController {
           const SizedBox(
             width: 10,
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
-            ),
-            child: const Text(
-              'Grant Permission',
-              style: TextStyle(color: Colors.black),
-            ),
+          UACTextButton(
+            isButtonPrimary: true,
+            isTextPrimary: false,
+            text: 'Grant Permission'.tr,
             onPressed: () async {
               Get.back();
 
@@ -285,19 +281,13 @@ class AddOrUpdateAlarmController extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
+                  UACTextButton(
+                    isButtonPrimary: true,
+                    isTextPrimary: false,
+                    text: 'Cancel'.tr,
                     onPressed: () {
                       Get.back();
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                    ),
-                    child: Text(
-                      'Cancel'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: kprimaryBackgroundColor,
-                          ),
-                    ),
                   ),
                   OutlinedButton(
                     onPressed: () {
@@ -368,11 +358,10 @@ class AddOrUpdateAlarmController extends GetxController {
           'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.',
         ),
         actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
-            ),
-            child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+          UACTextButton(
+            isButtonPrimary: true,
+            isTextPrimary: false,
+            text: 'Cancel'.tr,
             onPressed: () {
               Get.back(result: false);
             },
@@ -380,11 +369,10 @@ class AddOrUpdateAlarmController extends GetxController {
           const SizedBox(
             width: 10,
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: kprimaryColor,
-            ),
-            child: const Text('Allow', style: TextStyle(color: Colors.black)),
+          UACTextButton(
+            isButtonPrimary: true,
+            isTextPrimary: false,
+            text: 'Allow'.tr,
             onPressed: () {
               Get.back(result: true);
             },
@@ -462,61 +450,32 @@ class AddOrUpdateAlarmController extends GetxController {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Save',
-                          style: Theme.of(Get.context!)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.secondaryTextColor.value,
-                              ),
-                        ),
+                      UACTextButton(
+                        isButtonPrimary: true,
+                        isTextPrimary: false,
+                        text: 'Save'.tr,
                         onPressed: () {
                           qrValue.value = detectedQrValue.value;
                           isQrEnabled.value = true;
                           Get.back();
                         },
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(kprimaryColor),
-                        ),
-                        child: Text(
-                          'Retake',
-                          style: Theme.of(Get.context!)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: themeController.secondaryTextColor.value,
-                              ),
-                        ),
+                      UACTextButton(
+                        isButtonPrimary: true,
+                        isTextPrimary: false,
+                        text: 
+                          'Retake'.tr,
                         onPressed: () async {
                           qrController.dispose();
                           restartQRCodeController(true);
                         },
                       ),
                       if (isQrEnabled.value)
-                        TextButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(kprimaryColor),
-                          ),
-                          child: Text(
-                            'Disable',
-                            style: Theme.of(Get.context!)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                  color:
-                                      themeController.secondaryTextColor.value,
-                                ),
-                          ),
+                        UACTextButton(
+                          isButtonPrimary: true,
+                          isTextPrimary: false,
+                          text:
+                            'Disable'.tr,
                           onPressed: () {
                             isQrEnabled.value = false;
                             qrValue.value = '';
@@ -570,18 +529,10 @@ class AddOrUpdateAlarmController extends GetxController {
             showQRDialog();
           }
         },
-        confirm: TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kprimaryColor),
-          ),
-          child: Obx(
-            () => Text(
-              'OK',
-              style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.secondaryTextColor.value,
-                  ),
-            ),
-          ),
+        confirm: UACTextButton(
+          isButtonPrimary: true,
+          isTextPrimary: false,
+          text: 'OK'.tr,
           onPressed: () async {
             Get.back(); // Close the alert box
             PermissionStatus permissionStatus =
@@ -592,24 +543,14 @@ class AddOrUpdateAlarmController extends GetxController {
             }
           },
         ),
-        cancel: Obx(
-          () => TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                themeController.primaryTextColor.value.withOpacity(0.5),
-              ),
-            ),
-            child: Text(
-              'Cancel',
-              style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.primaryTextColor.value,
-                  ),
-            ),
+        cancel: UACTextButton(
+            isButtonPrimary: false,
+            isTextPrimary: true,
+            text: 'Cancel'.tr,
             onPressed: () {
               Get.back(); // Close the alert box
             },
           ),
-        ),
       );
     } else {
       showQRDialog();
