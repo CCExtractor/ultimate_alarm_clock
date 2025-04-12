@@ -34,6 +34,7 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/max_snooze_count_tile.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key}) {
@@ -829,6 +830,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                             : const SizedBox(),
                                       ),
                                       SnoozeDurationTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
+                                      MaxSnoozeCountTile(
                                         controller: controller,
                                         themeController: themeController,
                                       ),

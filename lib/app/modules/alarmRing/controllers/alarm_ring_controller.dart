@@ -36,6 +36,7 @@ class AlarmControlController extends GetxController {
   late RxBool isSnoozing = false.obs;
   RxInt minutes = 1.obs;
   RxInt seconds = 0.obs;
+  RxInt snoozeCount = 0.obs;
   RxBool showButton = false.obs;
   StreamSubscription? _sensorSubscription;
   HomeController homeController = Get.find<HomeController>();
@@ -73,6 +74,23 @@ class AlarmControlController extends GetxController {
   }
 
   void startSnooze() async {
+    // Check if maximum snooze count is reached
+    if (snoozeCount.value >= currentlyRingingAlarm.value.maxSnoozeCount) {
+      // Show a toast or some indication that max snooze limit is reached
+      Get.snackbar(
+        "Max Snooze Limit",
+        "You've reached the maximum snooze limit",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        colorText: themeController.primaryTextColor.value,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+    
+    // Increment snooze count
+    snoozeCount.value++;
+    
     Vibration.cancel();
     vibrationTimer!.cancel();
     isSnoozing.value = true;
