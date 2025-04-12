@@ -99,6 +99,9 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    
+    await IsarDb.fixMaxSnoozeCountInAlarms();
+    
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
@@ -115,6 +118,25 @@ class SplashScreenController extends GetxController {
           } else {
             if (shouldAlarmRing) {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+              
+              
+              if (currentlyRingingAlarm.value.alarmID != null) {
+                final sql = await IsarDb().getAlarmSQLiteDatabase();
+                final results = await sql!.query(
+                  'alarms',
+                  columns: ['maxSnoozeCount'],
+                  where: 'alarmID = ?',
+                  whereArgs: [currentlyRingingAlarm.value.alarmID],
+                );
+                
+                if (results.isNotEmpty) {
+                  final sqlMaxSnoozeCount = results.first['maxSnoozeCount'] as int?;
+                  if (sqlMaxSnoozeCount != null && sqlMaxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+                    currentlyRingingAlarm.value.maxSnoozeCount = sqlMaxSnoozeCount;
+                  }
+                }
+              }
+              
               Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
