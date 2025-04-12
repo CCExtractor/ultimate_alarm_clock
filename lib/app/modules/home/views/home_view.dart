@@ -14,6 +14,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/home_controller.dart';
@@ -383,29 +384,17 @@ class HomeView extends GetView<HomeController> {
                                                                           child: Row(
                                                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                             children: [
-                                                                              TextButton(
+                                                                              UACTextButton(
                                                                                 onPressed: () => Get.back(result: false),
-                                                                                style: ButtonStyle(
-                                                                                  backgroundColor: MaterialStateProperty.all(
-                                                                                    kprimaryTextColor.withOpacity(0.5),
-                                                                                  ),
-                                                                                ),
-                                                                                child: Text(
-                                                                                  'Cancel'.tr,
-                                                                                  style: Theme.of(context).textTheme.displaySmall!,
-                                                                                ),
+                                                                                isButtonPrimary: false,
+                                                                                isTextPrimary: true,
+                                                                                text: 'Cancel'.tr,
                                                                               ),
-                                                                              TextButton(
+                                                                              UACTextButton(
                                                                                 onPressed: () => Get.back(result: true),
-                                                                                style: ButtonStyle(
-                                                                                  backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                                                                                ),
-                                                                                child: Text(
-                                                                                  'Delete'.tr,
-                                                                                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                                                                    color: kprimaryBackgroundColor,
-                                                                                  ),
-                                                                                ),
+                                                                                isButtonPrimary: true,
+                                                                                isTextPrimary: false,
+                                                                                text: 'Delete'.tr,
                                                                               ),
                                                                             ],
                                                                           ),
@@ -1120,33 +1109,21 @@ class HomeView extends GetView<HomeController> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
+                UACTextButton(
                   onPressed: () {
                     Get.back(result: false);
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      kprimaryTextColor.withOpacity(0.5),
-                    ),
-                  ),
-                  child: Text(
-                    'Cancel'.tr,
-                    style: Theme.of(context).textTheme.displaySmall!,
-                  ),
+                  isButtonPrimary: false,
+                  isTextPrimary: true,
+                  text: 'Cancel'.tr,
                 ),
-                TextButton(
+                UACTextButton(
                   onPressed: () {
                     Get.back(result: true); // User confirmed
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                  ),
-                  child: Text(
-                    'delete'.tr,
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: kprimaryBackgroundColor,
-                        ),
-                  ),
+                  isButtonPrimary: true,
+                  isTextPrimary: false,
+                  text: 'Delete'.tr,
                 ),
               ],
             ),

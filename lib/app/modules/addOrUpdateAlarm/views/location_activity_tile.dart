@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class LocationTile extends StatelessWidget {
@@ -129,16 +130,10 @@ class LocationTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                      ),
-                      child: Text(
-                        'Save',
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                              color: themeController.secondaryTextColor.value,
-                            ),
-                      ),
+                    UACTextButton(
+                      isButtonPrimary: true,
+                      isTextPrimary: false,
+                      text: 'Save'.tr,
                       onPressed: () {
                         Utils.hapticFeedback();
                         Get.back();

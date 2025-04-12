@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../../settings/controllers/theme_controller.dart';
@@ -62,26 +63,14 @@ class RepeatTile extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(
                               left: 25, right: 25, bottom: 25),
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                kprimaryColor,
-                              ),
-                            ),
+                          child: UACTextButton(
+                            isButtonPrimary: true,
+                            isTextPrimary: false,
                             onPressed: () {
                               Utils.hapticFeedback();
                               Get.back();
                             },
-                            child: Text(
-                              'Done',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: controller.themeController
-                                        .secondaryTextColor.value,
-                                  ),
-                            ),
+                            text: 'Done'.tr,
                           ),
                         ),
                       ),
