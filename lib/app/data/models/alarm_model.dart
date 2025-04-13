@@ -59,6 +59,8 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isTaskListEnabled;
+  late String serializedTaskList;
   @ignore
   Map? offsetDetails;
 
@@ -109,7 +111,9 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      this.isTaskListEnabled = false,
+      this.serializedTaskList = '[]'});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -179,6 +183,10 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    
+    // Task list fields with default values if they don't exist
+    isTaskListEnabled = documentSnapshot['isTaskListEnabled'] ?? false;
+    serializedTaskList = documentSnapshot['serializedTaskList'] ?? '[]';
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -231,6 +239,8 @@ class AlarmModel {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
+      isTaskListEnabled: map['isTaskListEnabled'] == 1,
+      serializedTaskList: map['serializedTaskList'] ?? '[]',
     );
   }
 
@@ -283,6 +293,8 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
+      'isTaskListEnabled': isTaskListEnabled ? 1 : 0,
+      'serializedTaskList': serializedTaskList,
     };
   }
 
@@ -338,6 +350,10 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
+    
+    // Task list fields with defaults if they don't exist
+    isTaskListEnabled = alarmData['isTaskListEnabled'] ?? false;
+    serializedTaskList = alarmData['serializedTaskList'] ?? '[]';
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -395,7 +411,9 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'isTaskListEnabled': alarmRecord.isTaskListEnabled,
+      'serializedTaskList': alarmRecord.serializedTaskList
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
