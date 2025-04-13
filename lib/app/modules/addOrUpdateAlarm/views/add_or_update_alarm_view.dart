@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/ascending_volume.dart';
@@ -26,12 +28,12 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_alarm_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/task_list_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
-import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
 
@@ -880,6 +882,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                         color: themeController
                                             .primaryDisabledTextColor.value,
                                       ),
+                                      TaskListTile(
+                                        controller: controller,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
                                       QuoteTile(
                                         controller: controller,
                                         themeController: themeController,
@@ -1108,6 +1118,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     controller.selectedTime.value,
                                   ),
                                 ),
+                                isEnabled: true,
                                 intervalToAlarm: Utils.getMillisecondsToAlarm(
                                   DateTime.now(),
                                   controller.selectedTime.value,
@@ -1121,9 +1132,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                                 isLocationEnabled:
                                     controller.isLocationEnabled.value,
-                                weatherTypes: Utils.getIntFromWeatherTypes(
-                                  controller.selectedWeather.toList(),
-                                ),
+                                weatherTypes:
+                                    Utils.getIntFromWeatherTypes(
+                                    controller.selectedWeather.toList()),
                                 isWeatherEnabled:
                                     controller.isWeatherEnabled.value,
                                 location: Utils.geoPointToString(
@@ -1133,13 +1144,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 ),
                                 isSharedAlarmEnabled:
                                     controller.isSharedAlarmEnabled.value,
-                                isQrEnabled: controller.isQrEnabled.value,
-                                qrValue: controller.qrValue.value,
                                 isMathsEnabled: controller.isMathsEnabled.value,
                                 numMathsQuestions:
                                     controller.numMathsQuestions.value,
                                 mathsDifficulty:
                                     controller.mathsDifficulty.value.index,
+                                isQrEnabled: controller.isQrEnabled.value,
+                                qrValue: controller.qrValue.value,
                                 isShakeEnabled: controller.isShakeEnabled.value,
                                 shakeTimes: controller.shakeTimes.value,
                                 isPedometerEnabled:
@@ -1160,6 +1171,8 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     .contactTextEditingController.text,
                                 isCall: controller.isCall.value,
                                 ringOn: controller.isFutureDate.value,
+                                isTaskListEnabled: controller.isTaskListEnabled.value,
+                                serializedTaskList: controller.serializedTaskList.value,
                               );
 
                               // Adding offset details to the database if

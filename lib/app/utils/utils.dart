@@ -76,6 +76,8 @@ class Utils {
     guardian: '',
     isCall: false,
     ringOn: false,
+    isTaskListEnabled: false,
+    serializedTaskList: '[]',
   );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {

@@ -10,6 +10,7 @@ import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/task_model.dart';
 
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 
@@ -53,6 +54,23 @@ class AlarmControlController extends GetxController {
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
   RxBool isPreviewMode = false.obs;
+  
+  RxList<TaskModel> taskList = <TaskModel>[].obs;
+  RxBool hasTaskList = false.obs;
+  
+  void toggleTaskCompletion(int index) {
+    if (index >= 0 && index < taskList.length) {
+      final updatedTask = TaskModel(
+        id: taskList[index].id,
+        text: taskList[index].text,
+        completed: !taskList[index].completed
+      );
+      
+      taskList[index] = updatedTask;
+      
+      taskList.refresh();
+    }
+  }
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
@@ -237,6 +255,8 @@ class AlarmControlController extends GetxController {
     super.onInit();
     startListeningToFlip();
 
+    isSnoozing.value = false;
+    
     // Extract alarm and preview flag from arguments
     final args = Get.arguments;
     if (args is Map) {
@@ -245,6 +265,18 @@ class AlarmControlController extends GetxController {
     } else {
       currentlyRingingAlarm.value = args;
       isPreviewMode.value = false;
+    }
+    
+    if (currentlyRingingAlarm.value.isTaskListEnabled && 
+        currentlyRingingAlarm.value.serializedTaskList.isNotEmpty && 
+        currentlyRingingAlarm.value.serializedTaskList != '[]') {
+      try {
+        taskList.value = TaskModel.decodeTaskList(currentlyRingingAlarm.value.serializedTaskList);
+        hasTaskList.value = taskList.isNotEmpty;
+      } catch (e) {
+        debugPrint('Error loading task list: $e');
+        hasTaskList.value = false;
+      }
     }
 
     print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
