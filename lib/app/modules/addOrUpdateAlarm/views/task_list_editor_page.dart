@@ -65,7 +65,6 @@ class _TaskListEditorPageState extends State<TaskListEditorPage> {
       ),
       body: Column(
         children: [
-          // Task input field
           Container(
             padding: const EdgeInsets.all(16),
             color: widget.themeController.secondaryBackgroundColor.value,
@@ -97,8 +96,7 @@ class _TaskListEditorPageState extends State<TaskListEditorPage> {
               ],
             ),
           ),
-          
-          // Information banner
+        
           Container(
             width: width,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -113,7 +111,7 @@ class _TaskListEditorPageState extends State<TaskListEditorPage> {
             ),
           ),
           
-          // Task list
+        
           Expanded(
             child: Obx(() => widget.controller.taskList.isEmpty
                 ? _buildEmptyState()

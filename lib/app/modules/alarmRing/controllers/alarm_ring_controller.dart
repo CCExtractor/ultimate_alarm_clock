@@ -55,24 +55,19 @@ class AlarmControlController extends GetxController {
   RxInt guardianCoundown = 120.obs;
   RxBool isPreviewMode = false.obs;
   
-  // Task list properties
   RxList<TaskModel> taskList = <TaskModel>[].obs;
   RxBool hasTaskList = false.obs;
   
-  // Toggle task completion status
   void toggleTaskCompletion(int index) {
     if (index >= 0 && index < taskList.length) {
-      // Create a new copy of the task with the updated completion status
       final updatedTask = TaskModel(
         id: taskList[index].id,
         text: taskList[index].text,
         completed: !taskList[index].completed
       );
       
-      // Replace the task at the specified index
       taskList[index] = updatedTask;
       
-      // Notify observers of the change
       taskList.refresh();
     }
   }
@@ -260,7 +255,6 @@ class AlarmControlController extends GetxController {
     super.onInit();
     startListeningToFlip();
 
-    // Initialize snoozing state
     isSnoozing.value = false;
     
     // Extract alarm and preview flag from arguments
@@ -273,7 +267,6 @@ class AlarmControlController extends GetxController {
       isPreviewMode.value = false;
     }
     
-    // Load task list if enabled
     if (currentlyRingingAlarm.value.isTaskListEnabled && 
         currentlyRingingAlarm.value.serializedTaskList.isNotEmpty && 
         currentlyRingingAlarm.value.serializedTaskList != '[]') {

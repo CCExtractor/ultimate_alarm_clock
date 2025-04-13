@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
-import 'package:get/get_utils/get_utils.dart';
 
 class InputTimeController extends GetxController {
   SettingsController settingsController = Get.find<SettingsController>();
@@ -42,26 +41,18 @@ class InputTimeController extends GetxController {
   }
 
   void initTimeTextField() {
-    try {
-      // Safely check controllers before using them - if exception occurs during access, they're likely disposed
-      if (!GetUtils.isNull(inputHrsController) && !GetUtils.isNull(inputMinutesController)) {
-        AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
-        selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
+    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
 
-        isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
-        inputHrsController.text = settingsController.is24HrsEnabled.value
-            ? selectedDateTime.value.hour.toString()
-            : (selectedDateTime.value.hour == 0
-                ? '12'
-                : (selectedDateTime.value.hour > 12
-                    ? (selectedDateTime.value.hour - 12).toString()
-                    : selectedDateTime.value.hour.toString()));
-        inputMinutesController.text = selectedDateTime.value.minute.toString().padLeft(2, '0');
-      }
-    } catch (e) {
-      debugPrint('Error in initTimeTextField: $e');
-      // Controller was likely disposed
-    }
+    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+    inputHrsController.text = settingsController.is24HrsEnabled.value
+        ? selectedDateTime.value.hour.toString()
+        : (selectedDateTime.value.hour == 0
+            ? '12'
+            : (selectedDateTime.value.hour > 12
+                ? (selectedDateTime.value.hour - 12).toString()
+                : selectedDateTime.value.hour.toString()));
+    inputMinutesController.text = selectedDateTime.value.minute.toString().padLeft(2, '0');
   }
 
 

@@ -172,7 +172,6 @@ class ProfileModel {
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
     
-    // Task list fields with defaults if they don't exist
     isTaskListEnabled = documentSnapshot['isTaskListEnabled'] ?? false;
     serializedTaskList = documentSnapshot['serializedTaskList'] ?? '[]';
   }
@@ -228,7 +227,6 @@ class ProfileModel {
     isCall = profileData['isCall'];
     ringOn = profileData['ringOn'];
     
-    // Task list fields with defaults if they don't exist
     isTaskListEnabled = profileData['isTaskListEnabled'] ?? false;
     serializedTaskList = profileData['serializedTaskList'] ?? '[]';
   }

@@ -67,7 +67,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Top section with date and time - moved further down
                     Padding(
                       padding: EdgeInsets.only(top: height * 0.04),
                       child: Obx(
@@ -115,7 +114,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                       ),
                     ),
                     
-                    // Middle section with task list
                     Expanded(
                       child: Center(
                         child: Column(
@@ -147,7 +145,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                               },
                             ),
                             
-                            // Task list display
                             Obx(
                               () => Visibility(
                                 visible: controller.hasTaskList.value,
@@ -225,7 +222,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                       const SizedBox(height: 10),
                                       ConstrainedBox(
                                         constraints: BoxConstraints(
-                                          maxHeight: height * 0.2, // Slightly reduced max height 
+                                          maxHeight: height * 0.2, 
                                         ),
                                         child: ListView.builder(
                                           padding: EdgeInsets.zero,
@@ -286,12 +283,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         ),
                       ),
                     ),
-                    
-                    // Bottom section with action buttons - moved higher up
+                  
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Snooze button
                         Obx(
                           () => Visibility(
                             visible: !controller.isSnoozing.value,
@@ -326,7 +321,6 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           ),
                         ),
                         
-                        // Dismiss button
                         Obx(
                           () => Visibility(
                             visible: controller.showButton.value,

@@ -184,7 +184,6 @@ class AlarmModel {
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
     
-    // Task list fields with default values if they don't exist
     isTaskListEnabled = documentSnapshot['isTaskListEnabled'] ?? false;
     serializedTaskList = documentSnapshot['serializedTaskList'] ?? '[]';
   }
@@ -351,7 +350,6 @@ class AlarmModel {
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
     
-    // Task list fields with defaults if they don't exist
     isTaskListEnabled = alarmData['isTaskListEnabled'] ?? false;
     serializedTaskList = alarmData['serializedTaskList'] ?? '[]';
   }

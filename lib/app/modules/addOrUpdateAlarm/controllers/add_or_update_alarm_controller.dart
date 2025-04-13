@@ -119,7 +119,6 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxString guardian = ''.obs;
   final RxBool isCall = false.obs;
 
-  // Task list properties
   final RxBool isTaskListEnabled = false.obs;
   final RxList<TaskModel> taskList = <TaskModel>[].obs;
   final RxString serializedTaskList = '[]'.obs;
@@ -835,7 +834,6 @@ class AddOrUpdateAlarmController extends GetxController {
         mutexLock.value = false;
       }
 
-      // Load task list data
       isTaskListEnabled.value = alarmRecord.value.isTaskListEnabled;
       if (alarmRecord.value.serializedTaskList.isNotEmpty && 
           alarmRecord.value.serializedTaskList != '[]') {
@@ -1435,7 +1433,6 @@ class AddOrUpdateAlarmController extends GetxController {
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
 
-  // Task list methods
   void addTask(TaskModel task) {
     taskList.add(task);
     updateSerializedTaskList();
