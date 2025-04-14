@@ -90,10 +90,6 @@
             android:name=".TimerReceiver"
             android:enabled="true"
             android:exported="false"></receiver>
-        <receiver
-            android:name=".ultimate_alarm_clock.TimerBroadcasts.TimerDismiss"
-            android:enabled="true"
-            android:exported="false"></receiver>
 
         <activity
             android:name=".MainActivity"
