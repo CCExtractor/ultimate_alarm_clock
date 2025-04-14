@@ -12,7 +12,6 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.WindowManager
@@ -32,6 +31,8 @@ class MainActivity : FlutterActivity() {
         private var isAlarm: String? = "true"
         val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
         private var ringtone: Ringtone? = null
+        lateinit var methodChannel1: MethodChannel
+        lateinit var methodChannel2: MethodChannel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +47,8 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
-        var methodChannel1 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL1)
-        var methodChannel2 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL2)
+        methodChannel1 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL1)
+        methodChannel2 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL2)
 
         val intent = intent
 
@@ -89,6 +90,14 @@ class MainActivity : FlutterActivity() {
                 var notificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(1)
+                notificationManager.cancel(2)
+            } else if (call.method == "dismissTimer"){
+                val arguments = call.arguments as? Map<*, *>
+                val timerId = arguments?.get("timerId") as? Int ?: 0
+                val timerName = arguments?.get("timerName") as? String ?: "Unnamed"
+                val timerValue = arguments?.get("timerValue") as? Int ?: 0
+
+                TimerNotification().showDismissNotification(timerValue, timerId, context)
             } else {
                 result.notImplemented()
             }

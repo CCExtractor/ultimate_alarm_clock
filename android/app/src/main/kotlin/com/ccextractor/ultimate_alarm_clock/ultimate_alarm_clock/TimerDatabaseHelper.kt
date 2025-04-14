@@ -11,7 +11,19 @@ class TimerDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+        val createTableQuery = """
+            CREATE TABLE timers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                startedOn TEXT NOT NULL,
+                timerValue INTEGER NOT NULL,
+                timeElapsed INTEGER NOT NULL,
+                ringtoneName TEXT NOT NULL,
+                timerName TEXT NOT NULL,
+                isPaused INTEGER NOT NULL
+            );
+        """.trimIndent()
 
+        db.execSQL(createTableQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
