@@ -297,11 +297,6 @@ class MainActivity : FlutterActivity() {
         ringtone?.stop()
     }
 
-    fun dismissTimer(timerID: Int) {
-        val args = hashMapOf("timerID" to timerID)
-        methodChannel2.invokeMethod("dismissTimer", args)
-    }
-
     private fun openAndroidPermissionsMenu() {
         val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
         intent.data = Uri.parse("package:${packageName}")
