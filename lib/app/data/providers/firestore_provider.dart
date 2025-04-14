@@ -101,15 +101,18 @@ class FirestoreDb {
       // Hacky fix to prevent stream from not emitting
       return _firebaseFirestore.collection('alarms');
     } else {
+      // return _firebaseFirestore
+      //     .collection('users')
+      //     .doc(user.id)
+      //     .collection('alarms');
+
       return _firebaseFirestore
-          .collection('users')
-          .doc(user.id)
-          .collection('alarms');
+            .collection('sharedAlarms');
     }
   }
 
   static Future<void> addUser(UserModel userModel) async {
-    final DocumentReference docRef = _usersCollection.doc(userModel.email);
+    final DocumentReference docRef = _usersCollection.doc(userModel.id);
     final user = await docRef.get();
     if (!user.exists) await docRef.set(userModel.toJson());
   }
@@ -123,6 +126,7 @@ class FirestoreDb {
     await sql!
         .insert('alarms', alarmRecord.toSQFliteMap())
         .then((value) => print('insert success'));
+
     await _alarmsCollection(user)
         .add(AlarmModel.toMap(alarmRecord))
         .then((value) => alarmRecord.firestoreId = value.id);
@@ -202,16 +206,20 @@ class FirestoreDb {
     late List<AlarmModel> alarms;
 
     // Get all enabled alarms
-    QuerySnapshot snapshot =
-        await _alarmsCollection(user).where('isEnabled', isEqualTo: true).get();
+    // QuerySnapshot snapshot =
+    //     await _alarmsCollection(user).where('isEnabled', isEqualTo: true).get();
 
     QuerySnapshot snapshotSharedAlarms = await _firebaseFirestore
-        .collectionGroup('alarms')
+        .collection('sharedAlarms')
         .where('isEnabled', isEqualTo: true)
-        .where('sharedUserIds', arrayContains: user.id)
+        .where(      
+        Filter.or(
+        Filter('sharedUserIds', arrayContains:  user.id),
+        Filter('ownerId', isEqualTo: user.id),
+      ),)
         .get();
 
-    snapshot.docs.addAll(snapshotSharedAlarms.docs);
+    // snapshot.docs.addAll(snapshotSharedAlarms.docs);
 
     var z = snapshotSharedAlarms.docs.map((DocumentSnapshot document) {
       AlarmModel x = AlarmModel.fromDocumentSnapshot(
@@ -221,7 +229,7 @@ class FirestoreDb {
       return x;
     }).toList();
 
-    alarms = snapshot.docs.map((DocumentSnapshot document) {
+    alarms = snapshotSharedAlarms.docs.map((DocumentSnapshot document) {
       AlarmModel x = AlarmModel.fromDocumentSnapshot(
         documentSnapshot: document,
         user: user,
@@ -291,19 +299,24 @@ class FirestoreDb {
       whereArgs: [alarmRecord.alarmID],
     );
     await _firebaseFirestore
-        .collection('users')
-        .doc(userId)
-        .collection('alarms')
+        .collection('sharedAlarms')
         .doc(alarmRecord.firestoreId)
         .update(AlarmModel.toMap(alarmRecord));
   }
 
-  static Future<String> userExists(String email) async {
-    final receiver =
-        await _firebaseFirestore.collection('users').doc(email).get();
-    if (receiver.exists) return receiver.data()!['fullName'];
-    return 'error';
+static Future<String> userExists(String email) async {
+  final querySnapshot = await _firebaseFirestore
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .limit(1)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    return querySnapshot.docs.first.data()['fullName'];
   }
+
+  return 'error';
+}
 
   static shareProfile(List emails) async {
     final profileSet = await IsarDb.getProfileAlarms();
@@ -334,29 +347,49 @@ class FirestoreDb {
   }
 
   static shareAlarm(List emails, AlarmModel alarm) async {
-    final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
+    final currentUserId = _firebaseAuthInstance.currentUser!.providerData[0].uid;
     alarm.profile = 'Default';
     Map sharedItem = {
       'type': 'alarm',
-      'AlarmName': alarm.alarmID,
-      'owner': currentUserEmail,
+      'AlarmName': alarm.firestoreId,
+      'owner': currentUserId,
       'alarmTime': alarm.alarmTime
     };
-    await _firebaseFirestore
-        .collection('users')
-        .doc(currentUserEmail)
-        .collection('sharedAlarms')
-        .doc(alarm.alarmID)
-        .set(AlarmModel.toMap(alarm))
-        .then((v) {
-      Get.snackbar('Notification', 'Item Shared!');
-    });
+
+    // final newDocRef = FirebaseFirestore.instance
+    // .collection('users')
+    // .doc(currentUserId)
+    // .collection('alarms')
+    // .doc();
+
+    // await newDocRef.set(AlarmModel.toMap(alarm))
+    //     .then((v) {
+    //   Get.snackbar('Notification', 'Item Shared!');
+    // });
+
     for (final email in emails) {
-      await _firebaseFirestore.collection('users').doc(email).update({
-        'receivedItems': FieldValue.arrayUnion([sharedItem])
-      });
+      await addItemToUserByEmail(email, sharedItem);
     }
+
+    Get.snackbar('Notification', 'Item Shared!');
+
   }
+
+static Future<void> addItemToUserByEmail(String email, dynamic sharedItem) async {
+  final querySnapshot = await _firebaseFirestore
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .limit(1)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    final docId = querySnapshot.docs.first.id;
+    await _firebaseFirestore.collection('users').doc(docId).update({
+      'receivedItems': FieldValue.arrayUnion([sharedItem])
+    });
+  }
+}
+
 
   static Future receiveProfile(String email, String profileName) async {
     final profile = await _firebaseFirestore
@@ -368,12 +401,10 @@ class FirestoreDb {
     return profile.data();
   }
 
-  static Future receiveAlarm(String email, String AlarmName) async {
+  static Future receiveAlarm(String ownerId, String alarmId) async {
     final alarm = await _firebaseFirestore
-        .collection('users')
-        .doc(email)
         .collection('sharedAlarms')
-        .doc(AlarmName)
+        .doc(alarmId)
         .get();
     return alarm.data();
   }
@@ -387,9 +418,7 @@ class FirestoreDb {
     try {
       // Delete alarm remotely (from Firestore)
       await FirebaseFirestore.instance
-          .collection('users')
-          .doc(ownerId)
-          .collection('alarms')
+          .collection('sharedAlarms')
           .doc(firestoreId)
           .delete();
       sql!.delete('alarms', where: 'firestoreId = ?', whereArgs: [firestoreId]);
@@ -414,9 +443,12 @@ class FirestoreDb {
   static Stream<QuerySnapshot<Object?>> getSharedAlarms(UserModel? user) {
     if (user != null) {
       Stream<QuerySnapshot<Object?>> sharedAlarmsStream = _firebaseFirestore
-          .collectionGroup('alarms')
-          .where('sharedUserIds', arrayContains: user.id)
-          .snapshots();
+          .collection('sharedAlarms')
+        .where(      
+        Filter.or(
+        Filter('sharedUserIds', arrayContains:  user.id),
+        Filter('ownerId', isEqualTo: user.id),
+      ),)          .snapshots();
 
       return sharedAlarmsStream;
     } else {
@@ -429,7 +461,11 @@ class FirestoreDb {
   static Stream<QuerySnapshot<Object?>> getAlarms(UserModel? user) {
     if (user != null) {
       Stream<QuerySnapshot<Object?>> userAlarmsStream = _alarmsCollection(user)
-          .orderBy('minutesSinceMidnight', descending: false)
+                .where(      
+        Filter.or(
+        Filter('sharedUserIds', arrayContains:  user.id),
+        Filter('ownerId', isEqualTo: user.id),
+      ),)
           .snapshots(includeMetadataChanges: true);
 
       return userAlarmsStream;
@@ -490,7 +526,7 @@ class FirestoreDb {
     String userModelId = userModel!.id;
 
     final alarmQuerySnapshot = await _firebaseFirestore
-        .collectionGroup('alarms')
+        .collection('alarms')
         .where('alarmID', isEqualTo: alarmID)
         .get();
 
@@ -515,7 +551,7 @@ class FirestoreDb {
     Stream<DocumentSnapshot<Map<String, dynamic>>> userNotifications =
         _firebaseFirestore
             .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.email)
+            .doc(FirebaseAuth.instance.currentUser!.providerData[0].uid)
             .snapshots();
 
     yield* userNotifications;
@@ -526,9 +562,27 @@ class FirestoreDb {
 
     await _firebaseFirestore
         .collection('users')
-        .doc(_firebaseAuthInstance.currentUser!.email)
+        .doc(_firebaseAuthInstance.currentUser!.providerData[0].uid)
         .update({
       'receivedItems': FieldValue.arrayRemove([item])
     });
+  }
+
+  static acceptSharedAlarm(String alarmOwnerId, AlarmModel alarm)
+  async {
+
+    String? currentUserId = _firebaseAuthInstance.currentUser!.providerData[0].uid;
+await _firebaseFirestore
+    .collection('sharedAlarms')
+    .doc(alarm.firestoreId)
+    .update({
+  'offsetDetails': FieldValue.arrayUnion([{
+    'userId': currentUserId,
+    'isOffsetBefore': true,
+    'offsetDuration': 0,
+    'offsettedTime': alarm.alarmTime,
+  }]),
+  'sharedUserIds': FieldValue.arrayUnion([currentUserId]), 
+});
   }
 }

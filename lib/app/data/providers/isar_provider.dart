@@ -56,6 +56,7 @@ class IsarDb {
 
     final dir = await getDatabasesPath();
     final dbPath = '$dir/alarms.db';
+    // await deleteDatabase(dbPath);
     db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
     return db;
   }
@@ -63,6 +64,7 @@ class IsarDb {
   Future<Database?> getTimerSQLiteDatabase() async {
     Database? db;
     final dir = await getDatabasesPath();
+    // await deleteDatabase(dir);
     db = await openDatabase(
       '$dir/timer.db',
       version: 1,
@@ -337,7 +339,7 @@ class IsarDb {
     final db = await isarProvider.db;
     final alarms =
         await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
-    print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
+    // print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
 
     return alarms.isNotEmpty;
   }

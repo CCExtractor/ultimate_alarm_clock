@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:collection/collection.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
@@ -56,7 +57,8 @@ class AddOrUpdateAlarmController extends GetxController {
   var lastEditedUserId = ''.obs;
   final sharedUserIds = <String>[].obs;
   var alarmRecord = Utils.alarmModelInit.obs;
-  final RxMap offsetDetails = {}.obs;
+  final RxMap userOffsetDetails = {}.obs;
+  final RxList<Map> offsetDetails = [{}].obs;
   final offsetDuration = 0.obs;
   final isOffsetBefore = true.obs;
   var qrController = MobileScannerController(
@@ -808,12 +810,18 @@ class AddOrUpdateAlarmController extends GetxController {
 
         mainAlarmTime.value = Utils.timeOfDayToDateTime(
           Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
-        );
+          );
+
         offsetDetails.value = alarmRecord.value.offsetDetails!;
-        offsetDuration.value = alarmRecord
-            .value.offsetDetails![userModel.value!.id]['offsetDuration'];
-        isOffsetBefore.value = alarmRecord
-            .value.offsetDetails![userModel.value!.id]['isOffsetBefore'];
+      
+          final userOffset = alarmRecord.value.offsetDetails!
+      .firstWhereOrNull((entry) => entry['userId'] == userId);
+
+      if (userOffset != null) {
+        userOffsetDetails.value = userOffset;
+        offsetDuration.value = userOffset['offsetDuration'];
+        isOffsetBefore.value = userOffset['isOffsetBefore'];
+      }
       }
 
       // Set lock only if its not locked
@@ -822,7 +830,7 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord.value.mutexLock = true;
         alarmRecord.value.lastEditedUserId = userModel.value!.id;
         await FirestoreDb.updateAlarm(
-          alarmRecord.value.ownerId,
+          userModel.value!.id,
           alarmRecord.value,
         );
         alarmRecord.value.mutexLock = false;
@@ -998,14 +1006,15 @@ class AddOrUpdateAlarmController extends GetxController {
       // on firestore
       // We also make sure the doc was not already locked
       // If it was suddenly enabled, it will be created newly anyway
-      if (isSharedAlarmEnabled.value == true &&
-          alarmRecord.value.isSharedAlarmEnabled == true &&
-          alarmRecord.value.mutexLock == false) {
-        AlarmModel updatedModel = updatedAlarmModel();
-        updatedModel.firestoreId = alarmRecord.value.firestoreId;
-        await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
-      }
-    }
+    //   if (isSharedAlarmEnabled.value == true &&
+    //       alarmRecord.value.isSharedAlarmEnabled == true &&
+    //       alarmRecord.value.mutexLock == false) {
+    //     AlarmModel updatedModel = updatedAlarmModel();
+    //     updatedModel.firestoreId = alarmRecord.value.firestoreId;
+    //     await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
+    //   }
+    // }
+  }
   }
 
   AlarmModel updatedAlarmModel() {
@@ -1022,6 +1031,8 @@ class AddOrUpdateAlarmController extends GetxController {
       ownerId = alarmRecord.value.ownerId;
       ownerName = alarmRecord.value.ownerName;
     }
+
+    
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
       volMax: volMax.value,

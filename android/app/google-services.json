@@ -1,49 +1,41 @@
 {
   "project_info": {
-    "project_number": "127901953489",
-    "project_id": "uac2-7d0f9",
-    "storage_bucket": "uac2-7d0f9.appspot.com"
+    "project_number": "925414725523",
+    "project_id": "ultimate-alarm-clock-devtest",
+    "storage_bucket": "ultimate-alarm-clock-devtest.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:127901953489:android:1c0dea09b93c2b573fc4f0",
+        "mobilesdk_app_id": "1:925414725523:android:37688caae6c2907d46ba66",
         "android_client_info": {
           "package_name": "com.ccextractor.ultimate_alarm_clock"
         }
       },
       "oauth_client": [
         {
-          "client_id": "127901953489-132kstrs7vl5j5jnubjktu0qodgcn9ml.apps.googleusercontent.com",
+          "client_id": "925414725523-4decg13kgfm2eagfu20h14ctbjs6orqs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ccextractor.ultimate_alarm_clock",
-            "certificate_hash": "30bf4033c248d9a3ecccbe3615c8baec5f4ed31a"
+            "certificate_hash": "8568d6d074fa0efc8ef3b54fbd3440265a0dba42"
           }
         },
         {
-          "client_id": "127901953489-hgjdtpa0jo2gdrh5vl3s0km66g81v66o.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ccextractor.ultimate_alarm_clock",
-            "certificate_hash": "5463a1d268da62e33b869a41760d31cd5ffc1e5d"
-          }
-        },
-        {
-          "client_id": "127901953489-lnsmj324f5eutudkjvaidotj99bq1l47.apps.googleusercontent.com",
+          "client_id": "925414725523-i37idll449udbq88titj9e8b8no9oir8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCEaWUdYF_PnGFu0uJL8Zl_BlT8knDVeHg"
+          "current_key": "AIzaSyC-J7T-mkt65AYkbkMa2w7ToKyATagxzDw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "127901953489-lnsmj324f5eutudkjvaidotj99bq1l47.apps.googleusercontent.com",
+              "client_id": "925414725523-6r354n3el0u0ab01dg2kl3v77cm7m5n7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

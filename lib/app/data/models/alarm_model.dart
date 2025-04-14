@@ -60,7 +60,7 @@ class AlarmModel {
   late String guardian;
   late bool isCall;
   @ignore
-  Map? offsetDetails;
+  List<Map>? offsetDetails;
 
   AlarmModel(
       {required this.alarmTime,
@@ -90,7 +90,7 @@ class AlarmModel {
       required this.isPedometerEnabled,
       required this.numberOfSteps,
       required this.activityInterval,
-      this.offsetDetails = const {},
+      this.offsetDetails = const [{}],
       required this.mainAlarmTime,
       required this.label,
       required this.isOneTime,
@@ -117,18 +117,32 @@ class AlarmModel {
   }) {
     // Making sure the alarms work with the offsets
     isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
-    offsetDetails = documentSnapshot['offsetDetails'];
+    offsetDetails = 
+  (documentSnapshot['offsetDetails'] as List<dynamic>)
+    .map((item) => item as Map<String, dynamic>)
+    .toList();
 
     if (isSharedAlarmEnabled && user != null) {
       mainAlarmTime = documentSnapshot['alarmTime'];
       // Using offsetted time only if it is enabled
 
-      alarmTime = (offsetDetails![user.id]['offsetDuration'] != 0)
-          ? offsetDetails![user.id]['offsettedTime']
-          : documentSnapshot['alarmTime'];
-      minutesSinceMidnight = Utils.timeOfDayToInt(
-        Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']),
-      );
+if (offsetDetails != null) {
+  final userOffset = offsetDetails!
+      .where((entry) => entry['userId'] == user.id)
+      .toList();
+
+  if (userOffset.isNotEmpty) {
+    final data = userOffset.first;
+
+    alarmTime = (data['offsetDuration'] != 0)
+        ? data['offsettedTime']
+        : documentSnapshot['alarmTime'];
+
+    minutesSinceMidnight = Utils.timeOfDayToInt(
+      Utils.stringToTimeOfDay(data['offsettedTime']),
+    );
+  }
+}
     } else {
       alarmTime = documentSnapshot['alarmTime'];
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
@@ -179,6 +193,7 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    ringOn = documentSnapshot['ringOn'];
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -288,6 +303,7 @@ class AlarmModel {
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
+    mainAlarmTime = alarmData['alarmTime'];
     snoozeDuration = alarmData['snoozeDuration'];
     gradient = alarmData['gradient'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];

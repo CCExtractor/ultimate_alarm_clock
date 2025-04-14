@@ -8,7 +8,6 @@ import '../../../data/providers/firestore_provider.dart';
 import '../../home/controllers/home_controller.dart';
 
 class NotificationsController extends GetxController {
-  //TODO: Implement NotificationsController
 
   late List notifications = [].obs;
   HomeController homeController = Get.find<HomeController>();
@@ -52,6 +51,7 @@ class NotificationsController extends GetxController {
     }
   }
 
+  // Function to import alarm settings that's shared
   Future importAlarm(String email, String alarmName) async {
     final alarmMap = await FirestoreDb.receiveAlarm(email, alarmName);
     final alarm = await AlarmModel.fromMap(alarmMap);
@@ -59,4 +59,14 @@ class NotificationsController extends GetxController {
     alarm.profile = selectedProfile.value;
     await IsarDb.addAlarm(alarm);
   }
+
+
+    Future acceptSharedALarm(String alarmOwnerId, String alarmId) async {
+    final alarmMap = await FirestoreDb.receiveAlarm(alarmOwnerId, alarmId);
+    final alarm =  AlarmModel.fromMap(alarmMap);
+    alarm.alarmID = Uuid().v4();
+    alarm.profile = selectedProfile.value;
+    await FirestoreDb.acceptSharedAlarm(alarmOwnerId, alarm);
+  }
 }
+

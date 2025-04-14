@@ -131,9 +131,9 @@ class HomeController extends GetxController {
   }
 
   initStream(UserModel? user) async {
-    firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
+    // firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
     isarStreamAlarms = IsarDb.getAlarms(selectedProfile.value);
-    sharedAlarmsStream = FirestoreDb.getSharedAlarms(userModel.value);
+    firestoreStreamAlarms = FirestoreDb.getSharedAlarms(userModel.value);
     Stream<List<AlarmModel>> streamAlarms = rx.Rx.combineLatest2(
       firestoreStreamAlarms!,
       isarStreamAlarms!,

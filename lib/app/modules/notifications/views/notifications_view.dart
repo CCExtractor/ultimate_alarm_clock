@@ -167,7 +167,7 @@ class NotificationsView extends GetView<NotificationsController> {
                                                     controller.notifications[
                                                         index]['profileName'],
                                                   )
-                                                : await controller.importAlarm(
+                                                : await controller.acceptSharedALarm(
                                                     controller.notifications[
                                                         index]['owner'],
                                                     controller.notifications[
@@ -176,9 +176,7 @@ class NotificationsView extends GetView<NotificationsController> {
                                             await FirestoreDb.removeItem(
                                                 controller
                                                     .notifications[index]);
-
-
-                                            Navigator.of(context).pop();
+                                           Get.back();
                                             Get.snackbar("Notification",
                                                 "Shared Item Added");
                                           },
