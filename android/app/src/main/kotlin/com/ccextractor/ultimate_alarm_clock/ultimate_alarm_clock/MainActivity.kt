@@ -5,6 +5,8 @@ import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,7 +14,6 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.WindowManager
@@ -20,7 +21,9 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-
+import android.os.Handler
+import android.os.Looper
+import android.widget.RemoteViews
 
 class MainActivity : FlutterActivity() {
     companion object {
@@ -40,6 +43,8 @@ class MainActivity : FlutterActivity() {
         intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.START_TIMERNOTIF")
         intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF")
         context.registerReceiver(TimerNotification(), intentFilter, Context.RECEIVER_EXPORTED)
+        // Start periodic updates of rings_in
+        handler.post(updateWidgetRunnable)
     }
 
 
@@ -294,4 +299,90 @@ class MainActivity : FlutterActivity() {
         startActivity(intent)
     }
 
+    // Update the rings_in home_widget in a loop of 1 minute
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateInterval: Long = 60000
+
+    private val updateWidgetRunnable = object : Runnable {
+        override fun run() {
+            val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
+            val componentName = ComponentName(applicationContext, NextAlarmHomeWidget::class.java)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+
+            for (appWidgetId in appWidgetIds) {
+                val views = RemoteViews(packageName, R.layout.next_alarm_home_widget)
+                val alarmTime = getAlarmTimeText()
+                if (alarmTime != "No upcoming alarms!") {
+                    views.setTextViewText(R.id.rings_in, alarmTime)
+                } else {
+                    views.setTextViewText(R.id.alarm_date_n_time, "No upcoming alarms!")
+                    views.setTextViewText(R.id.rings_in, "")
+                }
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+
+            handler.postDelayed(this, updateInterval)
+        }
+    }
+
+    private fun getAlarmTimeText(): String {
+        val dbHelper = DatabaseHelper(applicationContext)
+        val db = dbHelper.readableDatabase
+        val sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        val profile = sharedPreferences.getString("flutter.profile", "Default") ?: "Default"
+        val ringTime = getLatestAlarm(db, true, profile, applicationContext)
+
+        return if (ringTime != null) {
+            val interval = ringTime["interval"] as? Long
+            if (interval != null) {
+                "Rings in " + formatInterval(interval)
+            } else {
+                "No upcoming alarms!"
+            }
+        } else {
+            "No upcoming alarms!"
+        }
+    }
+
+    private fun formatInterval(interval: Long): String {
+        val totalMinutes = interval / 60000
+        val hours = totalMinutes / 60
+        val remainingMinutes = totalMinutes % 60
+        val days = hours / 24
+
+        if (hours == (0).toLong() && remainingMinutes < 1) {
+            return "less than 1 minute"
+        } else if (hours < 24) {
+            if (hours == (0).toLong()) {
+                return if (remainingMinutes == (1).toLong()) {
+                    "$remainingMinutes minute"
+                } else {
+                    "$remainingMinutes minutes"
+                }
+            } else if (remainingMinutes == (0).toLong()) {
+                return if (hours == (1).toLong()) {
+                    "$hours hour"
+                } else {
+                    "$hours hours"
+                }
+            } else if (hours == (1).toLong()) {
+                return if (remainingMinutes == (1).toLong()) {
+                    "$hours hour $remainingMinutes minute"
+                } else {
+                    "$hours hour $remainingMinutes minutes"
+                }
+            } else {
+                return "$hours hour $remainingMinutes minutes";
+            }
+        } else if (days == (1).toLong()) {
+            return "1 day"
+        } else {
+            return "$days days"
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(updateWidgetRunnable)
+    }
 }

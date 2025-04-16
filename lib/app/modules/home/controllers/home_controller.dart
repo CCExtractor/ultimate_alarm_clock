@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
+import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart'
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
@@ -384,6 +386,19 @@ class HomeController extends GetxController {
       } else {
         alarmTime.value = 'No upcoming alarms!';
       }
+
+      SettingsController settingsController = Get.find<SettingsController>();
+      DateTime alarmDateTime = DateTime.parse('${latestAlarm.alarmDate}${latestAlarm.alarmTime}');
+      String formattedDateTime = '';
+      if (settingsController.is24HrsEnabled.value == true) {
+        formattedDateTime = DateFormat('HH:mm, dd MMM yyyy').format(alarmDateTime);
+      } else {
+        formattedDateTime = DateFormat('hh:mm a, dd MMM yyyy').format(alarmDateTime);
+      }
+      // Updating Home Widget with latest alarms.
+      HomeWidget.saveWidgetData('rings_in', alarmTime.value);
+      HomeWidget.saveWidgetData('alarm_time', formattedDateTime);
+      HomeWidget.updateWidget(androidName: 'NextAlarmHomeWidget');
     });
   }
 
@@ -696,7 +711,7 @@ class HomeController extends GetxController {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.red,
                         width: 1,
                       ),
