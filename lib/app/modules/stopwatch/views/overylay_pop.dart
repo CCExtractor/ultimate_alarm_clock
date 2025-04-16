@@ -12,6 +12,7 @@ class StopwatchOverlayPop extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return Material(
       color: Colors.transparent,
+      type: MaterialType.transparency,
       child: Center(
         child: Container(
           width: width * 0.95,

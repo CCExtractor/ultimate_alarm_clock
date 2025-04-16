@@ -51,7 +51,7 @@ class StopwatchView extends GetView<StopwatchController> {
                           enableDrag: true,
                           overlayTitle: '',
                           overlayContent: '',
-                          flag: OverlayFlag.focusPointer,
+                          flag: OverlayFlag.defaultFlag,
                           visibility: NotificationVisibility.visibilityPublic,
                           positionGravity: PositionGravity.auto,
                           height: (height * 0.5).toInt(),
