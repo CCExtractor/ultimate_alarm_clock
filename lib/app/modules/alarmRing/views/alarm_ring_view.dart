@@ -44,6 +44,35 @@ class AlarmControlView extends GetView<AlarmControlController> {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
+    if (Utils.isChallengeEnabled(controller.currentlyRingingAlarm.value) && 
+        !controller.isPreviewMode.value &&
+        !controller.challengeStarted.value) {
+      controller.challengeStarted.value = true;
+      // Use a small delay to allow the view to be built first
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (controller.currentlyRingingAlarm.value.isGuardian) {
+          controller.guardianTimer.cancel();
+        }
+        
+        if (controller.currentlyRingingAlarm.value.days.every((element) => element == false)) {
+          controller.currentlyRingingAlarm.value.isEnabled = false;
+          if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
+            IsarDb.updateAlarm(controller.currentlyRingingAlarm.value);
+          } else {
+            FirestoreDb.updateAlarm(
+              controller.currentlyRingingAlarm.value.ownerId,
+              controller.currentlyRingingAlarm.value,
+            );
+          }
+        }
+        
+        Get.toNamed(
+          '/alarm-challenge',
+          arguments: controller.currentlyRingingAlarm.value,
+        );
+      });
+    }
+
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -175,7 +204,9 @@ class AlarmControlView extends GetView<AlarmControlController> {
                 right: width * 0.1,
                 child: Obx(
                   () => Visibility(
-                    visible: controller.showButton.value,
+                    visible: controller.showButton.value && 
+                            (!Utils.isChallengeEnabled(controller.currentlyRingingAlarm.value) || 
+                             controller.isPreviewMode.value),
                     child: SizedBox(
                       height: height * 0.07,
                       width: width * 0.8,
@@ -206,6 +237,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           if (Utils.isChallengeEnabled(
                             controller.currentlyRingingAlarm.value,
                           )) {
+                            controller.challengeStarted.value = true;
                             Get.toNamed(
                               '/alarm-challenge',
                               arguments: controller.currentlyRingingAlarm.value,
