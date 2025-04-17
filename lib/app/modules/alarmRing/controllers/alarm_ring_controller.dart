@@ -255,7 +255,7 @@ class AlarmControlController extends GetxController {
           currentlyRingingAlarm.value.isCall
               ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
               : Utils.sendSMS(currentlyRingingAlarm.value.guardian,
-              "Your Friend is not waking up \n - Ultimate Alarm Clock");
+              'Your Friend is not waking up \n - Ultimate Alarm Clock');
           timer.cancel();
         } else {
           guardianCoundown.value = guardianCoundown.value - 1;
@@ -368,9 +368,9 @@ class AlarmControlController extends GetxController {
             'milliSeconds': intervaltoAlarm,
             'activityMonitor': latestAlarm.activityMonitor
           });
-          print("Scheduled...");
+          print('Scheduled...');
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          print('Failed to schedule alarm: ${e.message}');
         }
       }
     }

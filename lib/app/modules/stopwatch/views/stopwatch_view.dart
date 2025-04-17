@@ -116,7 +116,7 @@ class StopwatchView extends GetView<StopwatchController> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
-                  heroTag: "flag",
+                  heroTag: 'flag',
                   onPressed: controller.addFlag,
                   child: Icon(
                     Icons.flag,
@@ -125,7 +125,7 @@ class StopwatchView extends GetView<StopwatchController> {
                   ),
                 ),
                 FloatingActionButton(
-                  heroTag: "start",
+                  heroTag: 'start',
                   onPressed: controller.toggleTimer,
                   child: Obx(
                     () => Icon(
@@ -138,7 +138,7 @@ class StopwatchView extends GetView<StopwatchController> {
                 ),
                 // Reset button
                 FloatingActionButton(
-                  heroTag: "stop",
+                  heroTag: 'stop',
                   onPressed: controller.resetTime,
                   child: Icon(
                     Icons.stop_rounded,

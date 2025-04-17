@@ -88,7 +88,7 @@ class NotificationsView extends GetView<NotificationsController> {
                                                   20,
                                             ),
                                             child: Text(
-                                                "Select profile to add to"),
+                                                'Select profile to add to'),
                                           ),
                                     controller.notifications[index]['type'] ==
                                             'profile'
@@ -179,8 +179,8 @@ class NotificationsView extends GetView<NotificationsController> {
 
 
                                             Navigator.of(context).pop();
-                                            Get.snackbar("Notification",
-                                                "Shared Item Added");
+                                            Get.snackbar('Notification',
+                                                'Shared Item Added');
                                           },
                                           child: const Text('Add'),
                                         ),
@@ -197,13 +197,13 @@ class NotificationsView extends GetView<NotificationsController> {
                     },
                   )
                 : const Text(
-                    "No Notifications to see",
+                    'No Notifications to see',
                     style: TextStyle(color: kprimaryDisabledTextColor),
                   );
             ;
           }
           return const Text(
-            "No Notifications to see",
+            'No Notifications to see',
             style: TextStyle(color: kprimaryDisabledTextColor),
           );
         },

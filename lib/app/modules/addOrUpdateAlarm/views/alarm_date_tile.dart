@@ -30,7 +30,7 @@ class AlarmDateTile extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    "Ring On",
+                    'Ring On',
                     style: TextStyle(
                       color: themeController.primaryTextColor.value,
                     ),
@@ -43,8 +43,8 @@ class AlarmDateTile extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: Text(
                         controller.isFutureDate.value
-                            ? "${controller.selectedDate.value.toString().substring(0, 11)}"
-                            : "Off",
+                            ? '${controller.selectedDate.value.toString().substring(0, 11)}'
+                            : 'Off',
                         style: TextStyle(
                           color: !controller.isFutureDate.value ?
                           themeController.primaryDisabledTextColor.value

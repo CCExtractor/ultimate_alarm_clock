@@ -27,8 +27,8 @@ enum Status {
 }
 
 enum LogType {
-  dev("DEV"),
-  normal("NORMAL");
+  dev('DEV'),
+  normal('NORMAL');
 
   final String value;
   const LogType(this.value);

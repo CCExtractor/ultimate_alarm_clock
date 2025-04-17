@@ -229,7 +229,7 @@ class SpanishTranslations extends Translations {
           'Shake your phone!': '¡Agita tu teléfono!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "No puedes retroceder mientras suena la alarma",
+              'No puedes retroceder mientras suena la alarma',
           'Start Challenge': 'Comenzar el desafío',
           'Dismiss': 'Descartar',
           'Exit Preview': 'Salir de la vista previa',

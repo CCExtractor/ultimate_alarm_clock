@@ -72,7 +72,7 @@ class DebugController extends GetxController {
       bool matchesLevel = selectedLogLevel.value == null;
       if (selectedLogLevel.value != null) {
         final status = log['Status'].toString().toLowerCase();
-        debugPrint('Checking log: "$status" for level: ${selectedLogLevel.value}');
+        debugPrint("Checking log: \"$status\" for level: ${selectedLogLevel.value}");
         
         switch (selectedLogLevel.value!) {
           case LogLevel.error:
@@ -104,7 +104,7 @@ class DebugController extends GetxController {
     if (filteredLogs.isEmpty) {
       debugPrint('First few log statuses:');
       for (var i = 0; i < logs.length && i < 5; i++) {
-        debugPrint('Log ${i + 1}: "${logs[i]['Status']}"');
+        debugPrint("Log ${i + 1}: \"${logs[i]['Status']}\"");
       }
     }
   }
