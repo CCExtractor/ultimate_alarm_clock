@@ -37,6 +37,7 @@ class AlarmControlController extends GetxController {
   RxInt minutes = 1.obs;
   RxInt seconds = 0.obs;
   RxBool showButton = false.obs;
+  RxBool challengeStarted = false.obs;
   StreamSubscription? _sensorSubscription;
   HomeController homeController = Get.find<HomeController>();
   ThemeController themeController = Get.find<ThemeController>();
