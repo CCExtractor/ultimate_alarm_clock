@@ -149,7 +149,9 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
                 "location" to setAlarm.location,
                 "isWeather" to setAlarm.isWeatherEnabled,
                 "weatherTypes" to setAlarm.weatherTypes,
-                "alarmID" to setAlarm.alarmId
+                "alarmID" to setAlarm.alarmId,
+                "isWifiEnabled" to setAlarm.isWifiEnabled,
+                "wifiBSSID" to setAlarm.wifiBSSID
             )
             Log.d("s", "sdsd ${a}")
             return a
@@ -298,7 +300,9 @@ data class AlarmModel(
     val location: String,
     val alarmDate: String,
     val alarmId: String,
-    val ringOn: Int
+    val ringOn: Int,
+    val isWifiEnabled: Int,
+    val wifiBSSID: String
 ) {
     companion object {
         @SuppressLint("Range")
@@ -316,6 +320,8 @@ data class AlarmModel(
             val alarmDate = cursor.getString(cursor.getColumnIndex("alarmDate"))
             val alarmId = cursor.getString(cursor.getColumnIndex("alarmID"))
             val ringOn = cursor.getInt(cursor.getColumnIndex("ringOn"))
+            val isWifiEnabled = cursor.getInt(cursor.getColumnIndex("isWifiEnabled"))
+            val wifiBSSID = cursor.getString(cursor.getColumnIndex("wifiBSSID"))
             return AlarmModel(
                 id,
                 minutesSinceMidnight,
@@ -329,7 +335,9 @@ data class AlarmModel(
                 location,
                 alarmDate,
                 alarmId,
-                ringOn
+                ringOn,
+                isWifiEnabled,
+                wifiBSSID
             )
         }
     }

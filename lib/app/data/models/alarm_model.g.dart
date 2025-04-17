@@ -7,7 +7,8 @@ part of 'alarm_model.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_n
+//ames, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetAlarmModelCollection on Isar {
   IsarCollection<AlarmModel> get alarmModels => this.collection();
@@ -137,120 +138,135 @@ const AlarmModelSchema = CollectionSchema(
       name: r'isWeatherEnabled',
       type: IsarType.bool,
     ),
-    r'label': PropertySchema(
+    r'isWifiEnabled': PropertySchema(
       id: 24,
+      name: r'isWifiEnabled',
+      type: IsarType.bool,
+    ),
+    r'label': PropertySchema(
+      id: 25,
       name: r'label',
       type: IsarType.string,
     ),
     r'lastEditedUserId': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'lastEditedUserId',
       type: IsarType.string,
     ),
     r'location': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'location',
       type: IsarType.string,
     ),
     r'mainAlarmTime': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'mainAlarmTime',
       type: IsarType.string,
     ),
     r'mathsDifficulty': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'mathsDifficulty',
       type: IsarType.long,
     ),
     r'minutesSinceMidnight': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'minutesSinceMidnight',
       type: IsarType.long,
     ),
     r'mutexLock': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'mutexLock',
       type: IsarType.bool,
     ),
     r'note': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'note',
       type: IsarType.string,
     ),
     r'numMathsQuestions': PropertySchema(
-      id: 32,
+      id: 33,
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
     r'numberOfSteps': PropertySchema(
-      id: 33,
+      id: 34,
       name: r'numberOfSteps',
       type: IsarType.long,
     ),
     r'ownerId': PropertySchema(
-      id: 34,
+      id: 35,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 35,
+      id: 36,
       name: r'ownerName',
       type: IsarType.string,
     ),
     r'profile': PropertySchema(
-      id: 36,
+      id: 37,
       name: r'profile',
       type: IsarType.string,
     ),
     r'qrValue': PropertySchema(
-      id: 37,
+      id: 38,
       name: r'qrValue',
       type: IsarType.string,
     ),
     r'ringOn': PropertySchema(
-      id: 38,
+      id: 39,
       name: r'ringOn',
       type: IsarType.bool,
     ),
     r'ringtoneName': PropertySchema(
-      id: 39,
+      id: 40,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 40,
+      id: 41,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 41,
+      id: 42,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 42,
+      id: 43,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 43,
+      id: 44,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'volMax': PropertySchema(
-      id: 44,
+      id: 45,
       name: r'volMax',
       type: IsarType.double,
     ),
     r'volMin': PropertySchema(
-      id: 45,
+      id: 46,
       name: r'volMin',
       type: IsarType.double,
     ),
     r'weatherTypes': PropertySchema(
-      id: 46,
+      id: 47,
       name: r'weatherTypes',
       type: IsarType.longList,
+    ),
+    r'wifiBSSID': PropertySchema(
+      id: 48,
+      name: r'wifiBSSID',
+      type: IsarType.string,
+    ),
+    r'wifiName': PropertySchema(
+      id: 49,
+      name: r'wifiName',
+      type: IsarType.string,
     )
   },
   estimateSize: _alarmModelEstimateSize,
@@ -312,6 +328,8 @@ int _alarmModelEstimateSize(
     }
   }
   bytesCount += 3 + object.weatherTypes.length * 8;
+  bytesCount += 3 + object.wifiBSSID.length * 3;
+  bytesCount += 3 + object.wifiName.length * 3;
   return bytesCount;
 }
 
@@ -345,29 +363,32 @@ void _alarmModelSerialize(
   writer.writeBool(offsets[21], object.isShakeEnabled);
   writer.writeBool(offsets[22], object.isSharedAlarmEnabled);
   writer.writeBool(offsets[23], object.isWeatherEnabled);
-  writer.writeString(offsets[24], object.label);
-  writer.writeString(offsets[25], object.lastEditedUserId);
-  writer.writeString(offsets[26], object.location);
-  writer.writeString(offsets[27], object.mainAlarmTime);
-  writer.writeLong(offsets[28], object.mathsDifficulty);
-  writer.writeLong(offsets[29], object.minutesSinceMidnight);
-  writer.writeBool(offsets[30], object.mutexLock);
-  writer.writeString(offsets[31], object.note);
-  writer.writeLong(offsets[32], object.numMathsQuestions);
-  writer.writeLong(offsets[33], object.numberOfSteps);
-  writer.writeString(offsets[34], object.ownerId);
-  writer.writeString(offsets[35], object.ownerName);
-  writer.writeString(offsets[36], object.profile);
-  writer.writeString(offsets[37], object.qrValue);
-  writer.writeBool(offsets[38], object.ringOn);
-  writer.writeString(offsets[39], object.ringtoneName);
-  writer.writeLong(offsets[40], object.shakeTimes);
-  writer.writeStringList(offsets[41], object.sharedUserIds);
-  writer.writeBool(offsets[42], object.showMotivationalQuote);
-  writer.writeLong(offsets[43], object.snoozeDuration);
-  writer.writeDouble(offsets[44], object.volMax);
-  writer.writeDouble(offsets[45], object.volMin);
-  writer.writeLongList(offsets[46], object.weatherTypes);
+  writer.writeBool(offsets[24], object.isWifiEnabled);
+  writer.writeString(offsets[25], object.label);
+  writer.writeString(offsets[26], object.lastEditedUserId);
+  writer.writeString(offsets[27], object.location);
+  writer.writeString(offsets[28], object.mainAlarmTime);
+  writer.writeLong(offsets[29], object.mathsDifficulty);
+  writer.writeLong(offsets[30], object.minutesSinceMidnight);
+  writer.writeBool(offsets[31], object.mutexLock);
+  writer.writeString(offsets[32], object.note);
+  writer.writeLong(offsets[33], object.numMathsQuestions);
+  writer.writeLong(offsets[34], object.numberOfSteps);
+  writer.writeString(offsets[35], object.ownerId);
+  writer.writeString(offsets[36], object.ownerName);
+  writer.writeString(offsets[37], object.profile);
+  writer.writeString(offsets[38], object.qrValue);
+  writer.writeBool(offsets[39], object.ringOn);
+  writer.writeString(offsets[40], object.ringtoneName);
+  writer.writeLong(offsets[41], object.shakeTimes);
+  writer.writeStringList(offsets[42], object.sharedUserIds);
+  writer.writeBool(offsets[43], object.showMotivationalQuote);
+  writer.writeLong(offsets[44], object.snoozeDuration);
+  writer.writeDouble(offsets[45], object.volMax);
+  writer.writeDouble(offsets[46], object.volMin);
+  writer.writeLongList(offsets[47], object.weatherTypes);
+  writer.writeString(offsets[48], object.wifiBSSID);
+  writer.writeString(offsets[49], object.wifiName);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -400,29 +421,32 @@ AlarmModel _alarmModelDeserialize(
     isShakeEnabled: reader.readBool(offsets[21]),
     isSharedAlarmEnabled: reader.readBool(offsets[22]),
     isWeatherEnabled: reader.readBool(offsets[23]),
-    label: reader.readString(offsets[24]),
-    lastEditedUserId: reader.readString(offsets[25]),
-    location: reader.readString(offsets[26]),
-    mainAlarmTime: reader.readStringOrNull(offsets[27]),
-    mathsDifficulty: reader.readLong(offsets[28]),
-    minutesSinceMidnight: reader.readLong(offsets[29]),
-    mutexLock: reader.readBool(offsets[30]),
-    note: reader.readString(offsets[31]),
-    numMathsQuestions: reader.readLong(offsets[32]),
-    numberOfSteps: reader.readLong(offsets[33]),
-    ownerId: reader.readString(offsets[34]),
-    ownerName: reader.readString(offsets[35]),
-    profile: reader.readString(offsets[36]),
-    qrValue: reader.readString(offsets[37]),
-    ringOn: reader.readBool(offsets[38]),
-    ringtoneName: reader.readString(offsets[39]),
-    shakeTimes: reader.readLong(offsets[40]),
-    sharedUserIds: reader.readStringList(offsets[41]),
-    showMotivationalQuote: reader.readBool(offsets[42]),
-    snoozeDuration: reader.readLong(offsets[43]),
-    volMax: reader.readDouble(offsets[44]),
-    volMin: reader.readDouble(offsets[45]),
-    weatherTypes: reader.readLongList(offsets[46]) ?? [],
+    isWifiEnabled: reader.readBool(offsets[24]),
+    label: reader.readString(offsets[25]),
+    lastEditedUserId: reader.readString(offsets[26]),
+    location: reader.readString(offsets[27]),
+    mainAlarmTime: reader.readStringOrNull(offsets[28]),
+    mathsDifficulty: reader.readLong(offsets[29]),
+    minutesSinceMidnight: reader.readLong(offsets[30]),
+    mutexLock: reader.readBool(offsets[31]),
+    note: reader.readString(offsets[32]),
+    numMathsQuestions: reader.readLong(offsets[33]),
+    numberOfSteps: reader.readLong(offsets[34]),
+    ownerId: reader.readString(offsets[35]),
+    ownerName: reader.readString(offsets[36]),
+    profile: reader.readString(offsets[37]),
+    qrValue: reader.readString(offsets[38]),
+    ringOn: reader.readBool(offsets[39]),
+    ringtoneName: reader.readString(offsets[40]),
+    shakeTimes: reader.readLong(offsets[41]),
+    sharedUserIds: reader.readStringList(offsets[42]),
+    showMotivationalQuote: reader.readBool(offsets[43]),
+    snoozeDuration: reader.readLong(offsets[44]),
+    volMax: reader.readDouble(offsets[45]),
+    volMin: reader.readDouble(offsets[46]),
+    weatherTypes: reader.readLongList(offsets[47]) ?? [],
+    wifiBSSID: reader.readString(offsets[48]),
+    wifiName: reader.readString(offsets[49]),
   );
   object.firestoreId = reader.readStringOrNull(offsets[7]);
   object.isarId = id;
@@ -485,27 +509,27 @@ P _alarmModelDeserializeProp<P>(
     case 23:
       return (reader.readBool(offset)) as P;
     case 24:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 25:
       return (reader.readString(offset)) as P;
     case 26:
       return (reader.readString(offset)) as P;
     case 27:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 28:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 29:
       return (reader.readLong(offset)) as P;
     case 30:
-      return (reader.readBool(offset)) as P;
-    case 31:
-      return (reader.readString(offset)) as P;
-    case 32:
       return (reader.readLong(offset)) as P;
+    case 31:
+      return (reader.readBool(offset)) as P;
+    case 32:
+      return (reader.readString(offset)) as P;
     case 33:
       return (reader.readLong(offset)) as P;
     case 34:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 35:
       return (reader.readString(offset)) as P;
     case 36:
@@ -513,23 +537,29 @@ P _alarmModelDeserializeProp<P>(
     case 37:
       return (reader.readString(offset)) as P;
     case 38:
-      return (reader.readBool(offset)) as P;
-    case 39:
       return (reader.readString(offset)) as P;
-    case 40:
-      return (reader.readLong(offset)) as P;
-    case 41:
-      return (reader.readStringList(offset)) as P;
-    case 42:
+    case 39:
       return (reader.readBool(offset)) as P;
-    case 43:
+    case 40:
+      return (reader.readString(offset)) as P;
+    case 41:
       return (reader.readLong(offset)) as P;
+    case 42:
+      return (reader.readStringList(offset)) as P;
+    case 43:
+      return (reader.readBool(offset)) as P;
     case 44:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 45:
       return (reader.readDouble(offset)) as P;
     case 46:
+      return (reader.readDouble(offset)) as P;
+    case 47:
       return (reader.readLongList(offset) ?? []) as P;
+    case 48:
+      return (reader.readString(offset)) as P;
+    case 49:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1817,6 +1847,16 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isWeatherEnabled',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      isWifiEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isWifiEnabled',
         value: value,
       ));
     });
@@ -4102,6 +4142,274 @@ extension AlarmModelQueryFilter
       );
     });
   }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiBSSIDEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'wifiBSSID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiBSSIDGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'wifiBSSID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiBSSIDLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'wifiBSSID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiBSSIDBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'wifiBSSID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiBSSIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'wifiBSSID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiBSSIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'wifiBSSID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiBSSIDContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'wifiBSSID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiBSSIDMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'wifiBSSID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiBSSIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'wifiBSSID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiBSSIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'wifiBSSID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'wifiName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'wifiName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'wifiName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'wifiName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'wifiName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'wifiName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'wifiName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition> wifiNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'wifiName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'wifiName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      wifiNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'wifiName',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension AlarmModelQueryObject
@@ -4402,6 +4710,18 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsWifiEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWifiEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByIsWifiEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWifiEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByLabel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'label', Sort.asc);
@@ -4659,6 +4979,30 @@ extension AlarmModelQuerySortBy
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByVolMinDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'volMin', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByWifiBSSID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiBSSID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByWifiBSSIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiBSSID', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByWifiName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByWifiNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiName', Sort.desc);
     });
   }
 }
@@ -4955,6 +5299,18 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsWifiEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWifiEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsWifiEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWifiEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -5226,6 +5582,30 @@ extension AlarmModelQuerySortThenBy
       return query.addSortBy(r'volMin', Sort.desc);
     });
   }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByWifiBSSID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiBSSID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByWifiBSSIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiBSSID', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByWifiName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByWifiNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'wifiName', Sort.desc);
+    });
+  }
 }
 
 extension AlarmModelQueryWhereDistinct
@@ -5384,6 +5764,12 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByIsWifiEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isWifiEnabled');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByLabel(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -5534,6 +5920,20 @@ extension AlarmModelQueryWhereDistinct
   QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByWeatherTypes() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'weatherTypes');
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByWifiBSSID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'wifiBSSID', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByWifiName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'wifiName', caseSensitive: caseSensitive);
     });
   }
 }
@@ -5693,6 +6093,12 @@ extension AlarmModelQueryProperty
     });
   }
 
+  QueryBuilder<AlarmModel, bool, QQueryOperations> isWifiEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isWifiEnabled');
+    });
+  }
+
   QueryBuilder<AlarmModel, String, QQueryOperations> labelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'label');
@@ -5832,6 +6238,18 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, List<int>, QQueryOperations> weatherTypesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'weatherTypes');
+    });
+  }
+
+  QueryBuilder<AlarmModel, String, QQueryOperations> wifiBSSIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'wifiBSSID');
+    });
+  }
+
+  QueryBuilder<AlarmModel, String, QQueryOperations> wifiNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'wifiName');
     });
   }
 }

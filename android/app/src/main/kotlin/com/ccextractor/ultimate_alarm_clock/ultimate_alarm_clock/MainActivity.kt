@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.WindowManager
 import androidx.annotation.NonNull
+import com.ccextractor.ultimate_alarm_clock.ultimate_alarm_clock.Utilities.WifiManagerService
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -112,7 +113,9 @@ class MainActivity : FlutterActivity() {
                         ringTime["isLocation"]!! as Int,
                         ringTime["location"]!! as String,
                         ringTime["isWeather"]!! as Int,
-                        ringTime["weatherTypes"]!! as String
+                        ringTime["weatherTypes"]!! as String,
+                        ringTime["isWifiEnabled"]!! as Int,
+                        ringTime["wifiBSSID"]!! as String
                     )
                 } else {
                     println("FLUTTER CALLED CANCEL ALARMS")
@@ -166,7 +169,9 @@ class MainActivity : FlutterActivity() {
         locationMonitor: Int,
         setLocation: String,
         isWeather: Int,
-        weatherTypes: String
+        weatherTypes: String,
+        isWifiEnabled: Int,
+        wifiBSSID: String
     ) {
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -204,7 +209,26 @@ class MainActivity : FlutterActivity() {
             editor.putLong("flutter.is_screen_on", 0L)
             editor.apply()
         }
-        if (locationMonitor == 1) {
+        if (isWifiEnabled == 1) {
+            val sharedPreferences =
+                getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("flutter.wifi_BSSID", wifiBSSID)
+            Log.d("Wifi BSSID", wifiBSSID)
+            editor.apply()
+            val wifiAlarmIntent = Intent(this, WifiManagerService::class.java)
+            val pendingWifiAlarmIntent = PendingIntent.getService(
+                this,
+                10,
+                wifiAlarmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
+            val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerTime, pendingIntent)
+            alarmManager.setAlarmClock(
+                alarmClockInfo,
+                pendingWifiAlarmIntent
+            )
+        } else if (locationMonitor == 1) {
             val sharedPreferences =
                 getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()

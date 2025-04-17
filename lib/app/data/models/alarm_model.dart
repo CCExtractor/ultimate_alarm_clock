@@ -59,6 +59,9 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isWifiEnabled;
+  late String wifiName;
+  late String wifiBSSID;
   @ignore
   Map? offsetDetails;
 
@@ -109,7 +112,11 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      required this.isWifiEnabled,
+      required this.wifiName,
+      required this.wifiBSSID,
+      });
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -231,6 +238,9 @@ class AlarmModel {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
+      isWifiEnabled: map['isWifiEnabled'] == 1,
+      wifiName: map['wifiName'],
+      wifiBSSID: map['wifiBSSID'],
     );
   }
 
@@ -283,6 +293,9 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
+      'isWifiEnabled': isWifiEnabled ? 1 : 0,
+      'wifiName': wifiName,
+      'wifiBSSID': wifiBSSID,
     };
   }
 
@@ -338,6 +351,9 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
+    isWifiEnabled = alarmData['isWifiEnabled'];
+    wifiName = alarmData['wifiName'];
+    wifiBSSID = alarmData['wifiBSSID'];
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -395,7 +411,10 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'isWifiEnabled': alarmRecord.isWifiEnabled,
+      'wifiName': alarmRecord.wifiName,
+      'wifiBSSID': alarmRecord.wifiBSSID
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
