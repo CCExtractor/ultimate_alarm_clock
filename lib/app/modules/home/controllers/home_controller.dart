@@ -255,7 +255,7 @@ class HomeController extends GetxController {
     final checkDefault = await IsarDb.getProfile('Default');
     if (checkDefault == null) {
       IsarDb.addProfile(Utils.genDefaultProfileModel());
-      await storage.writeProfile("Default");
+      await storage.writeProfile('Default');
       profileModel.value = Utils.genDefaultProfileModel();
     }
     readProfileName();

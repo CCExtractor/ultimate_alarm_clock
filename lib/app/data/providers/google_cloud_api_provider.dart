@@ -124,6 +124,6 @@ class GoogleCloudProvider {
     homeController.isUserSignedIn.value = false;
     homeController.userModel.value = null;
     homeController.Calendars.value = [];
-    homeController.calendarFetchStatus.value = "Loading";
+    homeController.calendarFetchStatus.value = 'Loading';
   }
 }

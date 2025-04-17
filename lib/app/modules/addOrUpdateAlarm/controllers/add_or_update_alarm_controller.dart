@@ -669,7 +669,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     profileTextEditingController.text = homeController.isProfileUpdate.value
         ? homeController.selectedProfile.value
-        : "";
+        : '';
     emailTextEditingController.text = '';
 
     if (Get.arguments != null) {
@@ -736,7 +736,7 @@ class AddOrUpdateAlarmController extends GetxController {
           meridiemIndex.value = 0;
         }
       }
-      // Shows the "Rings in" time
+      // Shows the 'Rings in' time
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
         repeatDays,

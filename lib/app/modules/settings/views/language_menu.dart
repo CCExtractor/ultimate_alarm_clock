@@ -58,7 +58,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                 dropdownMenuEntries:
                     widget.controller.optionslocales.entries.map((e) {
                   return DropdownMenuEntry(
-                    value: "${e.key}",
+                    value: '${e.key}',
                     label: "${e.value['description']}",
                     style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(

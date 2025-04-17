@@ -226,7 +226,7 @@ class GermanTranslations extends Translations {
           'Shake your phone!': 'Schütteln Sie Ihr Telefon!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Sie können nicht zurückgehen, während der Alarm klingelt",
+              'Sie können nicht zurückgehen, während der Alarm klingelt',
           'Start Challenge': 'Herausforderung starten',
           'Dismiss': 'Abbrechen',
           'Exit Preview': 'Vorschau beenden',

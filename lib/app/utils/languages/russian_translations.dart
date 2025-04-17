@@ -221,7 +221,7 @@ class RussianTranslations extends Translations {
           'Shake your phone!': 'Встряхните свой телефон!',
 //alarm_ring_view.dart
           "You can't go back while the alarm is ringing":
-              "Вы не можете вернуться, пока звонит будильник",
+              'Вы не можете вернуться, пока звонит будильник',
           'Start Challenge': 'Начать задание',
           'Dismiss': 'Отклонить',
           'Exit Preview': 'Выйти из предпросмотра',
