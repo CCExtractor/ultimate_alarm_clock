@@ -47,13 +47,7 @@ class StopwatchView extends GetView<StopwatchController> {
         ),
         body: Column(
           children: [
-            Obx(
-              () => AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                height: controller.hasFlags.value ? height * 0.1 : height * 0.3,
-              ),
-            ),
+            SizedBox(height: height * 0.03),
             Obx(
               () => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -152,56 +146,63 @@ class StopwatchView extends GetView<StopwatchController> {
             ),
             Expanded(
               child: Obx(
-                () => AnimatedList(
-                  key: controller.listKey, // Add this key to controller
-                  initialItemCount: controller.flags.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemBuilder: (context, index, animation) {
-                    final reversedIndex = controller.flags.length - 1 - index;
-                    return SlideTransition(
-                      position: animation.drive(
-                        Tween<Offset>(
-                          begin: const Offset(0, -0.3),
-                          end: Offset.zero,
-                        ).chain(CurveTween(curve: Curves.easeInOut)),
-                      ),
-                      child: ListTile(
-                        minVerticalPadding: 0,
-                        title: Text(
-                          '${controller.flags[reversedIndex].number}',
-                          style: const TextStyle(
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.bold,
-                            height: 1,
+                () => ClipRect(
+                  child: AnimatedList(
+                    key: controller.listKey,
+                    initialItemCount: controller.flags.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index, animation) {
+                      final reversedIndex = controller.flags.length - 1 - index;
+                      return SlideTransition(
+                        position: animation.drive(
+                          Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).chain(CurveTween(curve: Curves.easeOutQuint)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2.0),
+                          child: ListTile(
+                            minVerticalPadding: 0,
+                            title: Text(
+                              '${controller.flags[reversedIndex].number}',
+                              style: const TextStyle(
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.bold,
+                                height: 1,
+                              ),
+                            ),
+                            trailing: Text(
+                              "+${DateFormat('mm:ss:SS').format(
+                                DateTime(0)
+                                    .add(controller.flags[reversedIndex].lapTime),
+                              )}",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                height: -0.5,
+                                color:
+                                    themeController.primaryDisabledTextColor.value,
+                              ),
+                            ),
+                            subtitle: Text(
+                              DateFormat('mm:ss:SS').format(
+                                DateTime(0)
+                                    .add(controller.flags[reversedIndex].totalTime),
+                              ),
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color:
+                                    themeController.primaryDisabledTextColor.value,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                        trailing: Text(
-                          "+${DateFormat('mm:ss:SS').format(
-                            DateTime(0)
-                                .add(controller.flags[reversedIndex].lapTime),
-                          )}",
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            height: -0.5,
-                            color:
-                                themeController.primaryDisabledTextColor.value,
-                          ),
-                        ),
-                        subtitle: Text(
-                          DateFormat('mm:ss:SS').format(
-                            DateTime(0)
-                                .add(controller.flags[reversedIndex].totalTime),
-                          ),
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            color:
-                                themeController.primaryDisabledTextColor.value,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

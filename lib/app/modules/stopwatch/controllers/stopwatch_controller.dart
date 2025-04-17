@@ -19,11 +19,14 @@ class StopwatchController extends GetxController {
     if (_stopwatch.isRunning) {
       final currentTime = _stopwatch.elapsed;
       final lapTime = currentTime - _lastFlagTime;
-      hasFlags.value = true;
       flags.add(Flag(
           number: flags.length + 1, lapTime: lapTime, totalTime: currentTime));
-      listKey.currentState
-          ?.insertItem(0, duration: const Duration(milliseconds: 300));
+      hasFlags.value = true;
+      listKey.currentState?.insertItem(
+        0, 
+        duration: const Duration(milliseconds: 150),
+      );
+      
       _lastFlagTime = currentTime;
     }
   }
