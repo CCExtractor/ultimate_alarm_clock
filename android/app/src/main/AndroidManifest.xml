@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
@@ -68,6 +70,12 @@
             android:name=".SpotifyPlayerService"
             android:enabled="true"
             android:exported="true"></service>
+
+        <service
+            android:name=".ultimate_alarm_clock.Utilities.WifiManagerService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />
 
         <receiver

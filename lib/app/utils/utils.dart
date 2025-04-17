@@ -76,6 +76,9 @@ class Utils {
     guardian: '',
     isCall: false,
     ringOn: false,
+    isWifiEnabled: false,
+    wifiName: '',
+    wifiBSSID: '',
   );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {
@@ -495,6 +498,9 @@ class Utils {
       guardian: '',
       isCall: false,
       ringOn: false,
+      isWifiEnabled: false,
+      wifiName: '',
+      wifiBSSID: '',
     );
   }
 
