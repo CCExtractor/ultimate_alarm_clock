@@ -387,7 +387,6 @@ class MainActivity : FlutterActivity() {
                     if (mediaPlayer == this) {
                         start()
                     } else {
-                        // This media player was replaced, release it
                         release()
                     }
                 }
