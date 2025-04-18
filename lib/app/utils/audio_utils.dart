@@ -241,23 +241,19 @@ class AudioUtils {
 
   static Future<void> stopPreviewCustomSound() async {
     try {
-      debugPrint('Stopping all preview sounds');
       if (audioSession == null) {
         await initializeAudioSession();
       }
       
       try {
         await audioPlayer.stop();
-        debugPrint('Stopped audioPlayer');
       } catch (e) {
         debugPrint('Error stopping audioPlayer: $e');
       }
     
       for (int i = 0; i < 3; i++) {
         try {
-          debugPrint('Stopping native sound (attempt ${i+1})');
           await alarmChannel.invokeMethod('stopDefaultAlarm');
-          debugPrint('Successfully stopped native sound');
           break;
         } catch (e) {
           debugPrint('Failed to stop native sound (attempt ${i+1}): $e');
@@ -268,14 +264,12 @@ class AudioUtils {
       if (audioSession != null) {
         try {
           await audioSession!.setActive(false);
-          debugPrint('Deactivated audio session');
         } catch (e) {
           debugPrint('Error deactivating audio session: $e');
         }
       }
       
       isPreviewing = false;
-      debugPrint('Successfully stopped all preview sounds');
     } catch (e) {
       debugPrint('Error stopping preview sound: $e');
       isPreviewing = false; 
@@ -403,47 +397,46 @@ class AudioUtils {
 
   static Future<void> playSystemRingtone(String uri) async {
     try {
-      debugPrint('PLAYING SYSTEM RINGTONE: $uri');
-      
       if (audioSession == null) {
-        debugPrint('Initializing audio session');
         await initializeAudioSession();
       }
+      
+      // First, stop any currently playing sound - try multiple times if needed
       if (isPreviewing) {
-        debugPrint('Stopping previously playing sound');
         for (int i = 0; i < 2; i++) {
           try {
             await stopPreviewCustomSound();
-            break;
+            break; // Exit the retry loop if successful
           } catch (e) {
-            debugPrint('Attempt ${i+1} to stop sound failed: $e');
+            // Small delay before retry
             await Future.delayed(const Duration(milliseconds: 100));
           }
         }
       }
       
+      // Ensure audio session is active
       if (!await audioSession!.setActive(true)) {
-        debugPrint('Failed to activate audio session, retrying...');
         await Future.delayed(const Duration(milliseconds: 100));
         await audioSession!.setActive(true);
       }
+      
+      // Handle retries with a loop
       bool success = false;
       int retryCount = 0;
       Exception? lastError;
       
       while (!success && retryCount < 3) {
         try {
-          debugPrint('ATTEMPT ${retryCount + 1}: Invoking native method to play system ringtone');
+          // Use the native method channel to play the system ringtone
           await alarmChannel.invokeMethod('playSystemRingtone', {'uri': uri});
           success = true;
           isPreviewing = true;
-          debugPrint('Successfully started system ringtone playback');
         } catch (e) {
           lastError = e as Exception;
-          debugPrint('Attempt ${retryCount + 1} failed: $e');
           retryCount++;
           
           if (retryCount < 3) {
+            // Short delay before retry
             await Future.delayed(const Duration(milliseconds: 200));
           }
         }
@@ -453,13 +446,12 @@ class AudioUtils {
         throw lastError ?? Exception('Failed to play system ringtone after multiple attempts');
       }
     } catch (e) {
-      debugPrint('ERROR PLAYING SYSTEM RINGTONE: $e');
+      // Try to fall back to the default alarm sound
       try {
-        debugPrint('Attempting to fall back to default alarm');
         await alarmChannel.invokeMethod('playDefaultAlarm');
         isPreviewing = true;
       } catch (fallbackError) {
-        debugPrint('Failed to play fallback alarm: $fallbackError');
+        // Ignore fallback errors
       }
     }
   }

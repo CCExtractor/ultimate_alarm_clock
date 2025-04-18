@@ -63,9 +63,6 @@ class MainActivity : FlutterActivity() {
             val cleanIntent = Intent(intent)
             cleanIntent.removeExtra(EXTRA_KEY)
             setIntent(cleanIntent)
-            println("NATIVE SAID OK")
-        } else {
-            println("NATIVE SAID NO")
         }
 
         if (isAlarm == "true") {
@@ -105,7 +102,6 @@ class MainActivity : FlutterActivity() {
                     context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
                 val profile = sharedPreferences.getString("flutter.profile", "Default")
                 val ringTime = getLatestAlarm(db, true, profile ?: "Default", context)
-                Log.d("yay yay", "yay ${ringTime ?: "null"}")
                 if (ringTime != null) {
                     android.util.Log.d("yay", "yay ${ringTime["interval"]}")
                     Log.d("yay", "yay ${ringTime["isLocation"]}")
@@ -292,266 +288,141 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun playDefaultAlarm(context: Context) {
-        try {
-            // Stop any existing sounds first
-            stopDefaultAlarm()
-            
-            val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            println("Playing default alarm with URI: $alarmUri")
-            
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(applicationContext, alarmUri)
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .build()
-                )
-                isLooping = true
-                prepare()
-                start()
-            }
-            println("Successfully started default alarm")
-        } catch (e: Exception) {
-            println("Error playing default alarm: ${e.message}")
-            e.printStackTrace()
+        stopDefaultAlarm()
+        
+        val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(applicationContext, alarmUri)
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+            start()
         }
     }
 
     private fun stopDefaultAlarm() {
-        try {
-            println("Stopping all sounds...")
-            val playerToStop: MediaPlayer?
-            val ringtoneToStop: Ringtone?
-            
-            synchronized(this) {
-                playerToStop = mediaPlayer
-                ringtoneToStop = ringtone
-                
-                // Nullify references first to prevent other operations from using them
-                mediaPlayer = null
-                ringtone = null
+        val playerToStop: MediaPlayer?
+        val ringtoneToStop: Ringtone?
+        
+        synchronized(this) {
+            playerToStop = mediaPlayer
+            ringtoneToStop = ringtone
+            mediaPlayer = null
+            ringtone = null
+        }
+        
+        
+        playerToStop?.let {
+            if (it.isPlaying) {
+                it.stop()
             }
-            
-            // Stop MediaPlayer if it exists
-            playerToStop?.let {
-                try {
-                    if (it.isPlaying) {
-                        try {
-                            it.stop()
-                        } catch (e: Exception) {
-                            println("Error stopping media player: ${e.message}")
-                        }
-                    }
-                    try {
-                        it.reset()
-                        it.release()
-                    } catch (e: Exception) {
-                        println("Error releasing media player: ${e.message}")
-                    }
-                } catch (e: Exception) {
-                    println("General error with media player: ${e.message}")
-                    try {
-                        it.release()
-                    } catch (e2: Exception) {
-                        // Ignore secondary errors
-                    }
-                }
-            }
-            
-            // Also stop Ringtone if it exists
-            ringtoneToStop?.let {
-                try {
-                    it.stop()
-                } catch (e: Exception) {
-                    println("Error stopping ringtone: ${e.message}")
-                }
-            }
-            
-            println("Successfully stopped all sounds")
-        } catch (e: Exception) {
-            println("Error stopping sounds: ${e.message}")
-            // In case of error, ensure references are nullified
-            synchronized(this) {
-                mediaPlayer = null
-                ringtone = null
-            }
+            it.reset()
+            it.release()
+        }
+        
+        ringtoneToStop?.let {
+            it.stop()
         }
     }
 
     private fun getSystemRingtones(): List<Map<String, String>> {
         val ringtones = mutableListOf<Map<String, String>>()
         
-        try {
-            println("Getting system ringtones...")
-            
-            // Get alarm tones
-            println("Fetching alarm tones...")
-            addRingtonesToList(ringtones, RingtoneManager.TYPE_ALARM, "alarm")
-            
-            // Get notification tones
-            println("Fetching notification tones...")
-            addRingtonesToList(ringtones, RingtoneManager.TYPE_NOTIFICATION, "notification")
-            
-            // Get ringtones
-            println("Fetching ringtones...")
-            addRingtonesToList(ringtones, RingtoneManager.TYPE_RINGTONE, "ringtone")
-            
-            println("Total ringtones found: ${ringtones.size}")
-            ringtones.forEach { 
-                println("Found ringtone: ${it["title"]}, URI: ${it["uri"]}")
-            }
-            
-            return ringtones
-        } catch (e: Exception) {
-            println("Error getting system ringtones: ${e.message}")
-            e.printStackTrace()
-            return emptyList()
-        }
+        
+        addRingtonesToList(ringtones, RingtoneManager.TYPE_ALARM, "alarm")
+        
+        
+        addRingtonesToList(ringtones, RingtoneManager.TYPE_NOTIFICATION, "notification")
+        
+        
+        addRingtonesToList(ringtones, RingtoneManager.TYPE_RINGTONE, "ringtone")
+        
+        return ringtones
     }
     
     private fun addRingtonesToList(ringtones: MutableList<Map<String, String>>, type: Int, category: String) {
-        try {
-            val manager = RingtoneManager(this)
-            manager.setType(type)
-            val cursor = manager.cursor
+        val manager = RingtoneManager(this)
+        manager.setType(type)
+        val cursor = manager.cursor
+        
+        while (cursor != null && cursor.moveToNext()) {
+            val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+            val uri = manager.getRingtoneUri(cursor.position).toString()
             
-            println("Found ${cursor?.count ?: 0} ${category} tones")
-            
-            while (cursor != null && cursor.moveToNext()) {
-                try {
-                    val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
-                    val uri = manager.getRingtoneUri(cursor.position).toString()
-                    
-                    println("Adding $category ringtone: $title with URI: $uri")
-                    
-                    ringtones.add(mapOf(
-                        "title" to title,
-                        "uri" to uri,
-                        "category" to category
-                    ))
-                } catch (e: Exception) {
-                    println("Error processing ringtone at cursor position ${cursor.position}: ${e.message}")
-                }
-            }
-        } catch (e: Exception) {
-            println("Error getting $category tones: ${e.message}")
-            e.printStackTrace()
+            ringtones.add(mapOf(
+                "title" to title,
+                "uri" to uri,
+                "category" to category
+            ))
         }
     }
     
     private fun playSystemRingtone(uriString: String) {
-        try {
-            println("Stopping any existing sounds first")
-            // Stop any currently playing sound first and wait for it to complete
-            stopDefaultAlarm()
-            
-            // Give more time for resources to be released, especially important between consecutive plays
-            Thread.sleep(150)
-            
-            println("Attempting to play system ringtone: $uriString")
-            
-            // Create and prepare a MediaPlayer with a unique ID to track
-            val uri = Uri.parse(uriString)
-            val newMediaPlayer = MediaPlayer()
-            
-            // Set the new media player as the current one
-            synchronized(this) {
-                // Release any existing player that might be in-between states
-                mediaPlayer?.release()
-                mediaPlayer = newMediaPlayer
+        stopDefaultAlarm()
+        Thread.sleep(150)
+        val uri = Uri.parse(uriString)
+        val newMediaPlayer = MediaPlayer()
+        synchronized(this) {
+            mediaPlayer?.release()
+            mediaPlayer = newMediaPlayer
+        }
+        
+        newMediaPlayer.apply {
+            setDataSource(applicationContext, uri)
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            isLooping = true
+            setOnPreparedListener {
+                synchronized(this@MainActivity) {
+                    if (mediaPlayer == this) {
+                        start()
+                    } else {
+                        // This media player was replaced, release it
+                        release()
+                    }
+                }
             }
             
-            try {
-                newMediaPlayer.apply {
-                    setDataSource(applicationContext, uri)
-                    setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build()
-                    )
-                    isLooping = true
-                    
-                    // Use async prepare to avoid blocking the main thread
-                    setOnPreparedListener {
-                        try {
-                            synchronized(this@MainActivity) {
-                                // Check if this media player is still the current one
-                                if (mediaPlayer == this) {
-                                    start()
-                                    println("Successfully started system ringtone playback")
-                                } else {
-                                    // This media player was replaced, release it
-                                    println("Media player was replaced before playback could start")
-                                    release()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            println("Error starting playback after prepare: ${e.message}")
-                            release()
-                            playDefaultAlarmAsFallback()
-                        }
-                    }
-                    
-                    setOnErrorListener { mp, what, extra ->
-                        println("Media player error: what=$what, extra=$extra")
-                        mp.release()
-                        synchronized(this@MainActivity) {
-                            if (mediaPlayer == mp) {
-                                mediaPlayer = null
-                                playDefaultAlarmAsFallback()
-                            }
-                        }
-                        true
-                    }
-                    
-                    prepareAsync()
-                }
-            } catch (e: Exception) {
-                println("Error setting up media player: ${e.message}")
-                newMediaPlayer.release()
-                synchronized(this) {
-                    if (mediaPlayer == newMediaPlayer) {
+            setOnErrorListener { mp, what, extra ->
+                mp.release()
+                synchronized(this@MainActivity) {
+                    if (mediaPlayer == mp) {
                         mediaPlayer = null
+                        playDefaultAlarmAsFallback()
                     }
                 }
-                playDefaultAlarmAsFallback()
+                true
             }
-        } catch (e: Exception) {
-            println("Error playing system ringtone: ${e.message}")
-            e.printStackTrace()
-            synchronized(this) {
-                mediaPlayer?.release()
-                mediaPlayer = null
-            }
-            playDefaultAlarmAsFallback()
+            
+            prepareAsync()
         }
     }
 
     private fun playDefaultAlarmAsFallback() {
-        // Try to play default alarm sound as fallback
-        try {
-            println("Playing default alarm as fallback")
-            val defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            
-            // Stop any existing media player first
-            mediaPlayer?.release()
-            
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(applicationContext, defaultUri)
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .build()
-                )
-                isLooping = true
-                prepare()
-                start()
-            }
-        } catch (e2: Exception) {
-            println("Failed to play default alarm: ${e2.message}")
+        val defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        mediaPlayer?.release()
+        
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(applicationContext, defaultUri)
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+            start()
         }
     }
 
