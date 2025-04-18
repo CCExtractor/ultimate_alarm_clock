@@ -11,10 +11,9 @@ import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:flutter/foundation.dart';
 
-// Fix the utility function
 String formatCategory(String category) {
   if (category.isEmpty) return category;
-  return category.tr.capitalizeFirst ?? category; // Handle potential null return from capitalizeFirst
+  return category.tr.capitalizeFirst ?? category;
 }
 
 class ChooseRingtoneTile extends StatelessWidget {
@@ -112,8 +111,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
   // Add variables to track audio playback state
   bool _isProcessingAudio = false;
   DateTime _lastAudioRequest = DateTime.now();
-
-  // Move the future to a separate variable and cache it
   Future<List<SystemRingtone>>? _systemRingtonesFuture;
 
   @override
@@ -147,41 +144,27 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
 
   // Improved audio control with await and debouncing
   Future<void> _stopAllAudio() async {
-    // If we're currently processing an audio request, wait a bit
     if (_isProcessingAudio) {
       await Future.delayed(const Duration(milliseconds: 100));
     }
     
     setState(() => _isProcessingAudio = true);
     
-    try {
-      // Try multiple times to ensure the sound is stopped
-      for (int i = 0; i < 3; i++) {
-        try {
-          // Stop through AudioUtils
-          await AudioUtils.stopPreviewCustomSound();
-          
-          // Also try stopping directly through the method channel
-          const platform = MethodChannel('ulticlock');
-          await platform.invokeMethod('stopDefaultAlarm');
-          break;
-        } catch (e) {
-          debugPrint('Error stopping audio (attempt ${i+1}): $e');
-          if (i < 2) await Future.delayed(const Duration(milliseconds: 100));
-        }
-      }
-      
-      widget.controller.isPlaying.value = false;
-      setState(() {
-        _isPlaying = false;
-        _currentlyPlayingSystemRingtone = null;
-        _currentlyPlayingCustomRingtone = null;
-      });
-    } catch (e) {
-      debugPrint('Error stopping audio: $e');
-    } finally {
-      setState(() => _isProcessingAudio = false);
+    for (int i = 0; i < 3; i++) {
+      await AudioUtils.stopPreviewCustomSound();
+      const platform = MethodChannel('ulticlock');
+      await platform.invokeMethod('stopDefaultAlarm');
+      break;
     }
+    
+    widget.controller.isPlaying.value = false;
+    setState(() {
+      _isPlaying = false;
+      _currentlyPlayingSystemRingtone = null;
+      _currentlyPlayingCustomRingtone = null;
+    });
+    
+    setState(() => _isProcessingAudio = false);
   }
 
   // Improved custom ringtone playback with debounce and async handling
@@ -202,32 +185,22 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     
     setState(() => _isProcessingAudio = true);
     
-    try {
-      // If already playing this ringtone, stop it
-      if (_isPlaying && _currentlyPlayingCustomRingtone == ringtoneName) {
-        await _stopAllAudio();
-      } else {
-        // If playing something else, stop it first
-        if (_isPlaying) {
-          await AudioUtils.stopPreviewCustomSound();
-        }
-        
-        // Play the selected ringtone
-        await AudioUtils.previewCustomSound(ringtoneName);
-        
-        // Update state after successful playback
-        setState(() {
-          _isPlaying = true;
-          _currentlyPlayingCustomRingtone = ringtoneName;
-          _currentlyPlayingSystemRingtone = null;
-          widget.controller.isPlaying.value = true;
-        });
+    if (_isPlaying && _currentlyPlayingCustomRingtone == ringtoneName) {
+      await _stopAllAudio();
+    } else {
+      if (_isPlaying) {
+        await AudioUtils.stopPreviewCustomSound();
       }
-    } catch (e) {
-      debugPrint('Error playing custom ringtone: $e');
-    } finally {
-      setState(() => _isProcessingAudio = false);
+      await AudioUtils.previewCustomSound(ringtoneName);
+      setState(() {
+        _isPlaying = true;
+        _currentlyPlayingCustomRingtone = ringtoneName;
+        _currentlyPlayingSystemRingtone = null;
+        widget.controller.isPlaying.value = true;
+      });
     }
+    
+    setState(() => _isProcessingAudio = false);
   }
 
   // Improved system ringtone playback with debounce and async handling
@@ -272,61 +245,27 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
       _currentlyPlayingSystemRingtone = ringtone;
     });
     
-    try {
-      // Play the selected ringtone
-      await _playSystemRingtone(ringtone);
-      
-      // Update state after successful playback
-      setState(() {
-        _isPlaying = true;
-        _currentlyPlayingCustomRingtone = null;
-      });
-    } catch (e) {
-      debugPrint('Error playing system ringtone: $e');
-      setState(() {
-        _isPlaying = false;
-        _currentlyPlayingSystemRingtone = null;
-      });
-    } finally {
-      setState(() => _isProcessingAudio = false);
-    }
+    await _playSystemRingtone(ringtone);
+    
+    setState(() {
+      _isPlaying = true;
+      _currentlyPlayingCustomRingtone = null;
+      _isProcessingAudio = false;
+    });
   }
 
   Future<void> _playSystemRingtone(SystemRingtone ringtone) async {
-    try {
-      // Make sure nothing is playing
-      await _ensureAudioStopped();
-      
-      // Use a more efficient approach - try method channel first,
-      // and only fallback if needed
-      try {
-        const platform = MethodChannel('ulticlock');
-        await platform.invokeMethod('playSystemRingtone', {'uri': ringtone.uri});
-      } catch (e) {
-        // Fallback to AudioUtils if method channel fails
-        await AudioUtils.playSystemRingtone(ringtone.uri);
-      }
-    } catch (e) {
-      debugPrint('Error playing system ringtone: $e');
-      rethrow; // Propagate the error to the caller
-    }
+    await _ensureAudioStopped();
+    const platform = MethodChannel('ulticlock');
+    await platform.invokeMethod('playSystemRingtone', {'uri': ringtone.uri});
   }
   
   // New method to ensure audio is fully stopped before playing
   Future<void> _ensureAudioStopped() async {
-    try {
-      // First, try AudioUtils method
-      await AudioUtils.stopPreviewCustomSound();
-      
-      // Then also try direct method channel
-      const platform = MethodChannel('ulticlock');
-      await platform.invokeMethod('stopDefaultAlarm');
-      
-      // Small delay to ensure resources are released
-      await Future.delayed(const Duration(milliseconds: 100));
-    } catch (e) {
-      debugPrint('Error ensuring audio stopped: $e');
-    }
+    await AudioUtils.stopPreviewCustomSound();
+    const platform = MethodChannel('ulticlock');
+    await platform.invokeMethod('stopDefaultAlarm');
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 
   void _onSearch(String query) {

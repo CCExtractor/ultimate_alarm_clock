@@ -1,7 +1,7 @@
 class SystemRingtone {
   final String title;
   final String uri;
-  final String category; // 'alarm', 'notification', or 'ringtone'
+  final String category; 
 
   SystemRingtone({
     required this.title,

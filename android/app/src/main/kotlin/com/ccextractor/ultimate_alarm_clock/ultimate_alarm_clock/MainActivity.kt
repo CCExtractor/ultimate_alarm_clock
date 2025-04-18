@@ -321,8 +321,6 @@ class MainActivity : FlutterActivity() {
     private fun stopDefaultAlarm() {
         try {
             println("Stopping all sounds...")
-            
-            // Create local reference to prevent race conditions
             val playerToStop: MediaPlayer?
             val ringtoneToStop: Ringtone?
             

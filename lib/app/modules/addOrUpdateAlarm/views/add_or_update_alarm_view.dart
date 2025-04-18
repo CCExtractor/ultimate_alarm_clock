@@ -37,17 +37,14 @@ import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key}) {
-    // Remove initTimeTextField call from constructor
   }
 
   final ThemeController themeController = Get.find<ThemeController>();
-  // Use lazyPut to register the controller if not already registered
   final InputTimeController inputTimeController = Get.put(InputTimeController(), permanent: true);
   final SettingsController settingsController = Get.find<SettingsController>();
 
   @override
   Widget build(BuildContext context) {
-    // Initialize time text field here after ensuring controller is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       inputTimeController.initTimeTextField();
     });

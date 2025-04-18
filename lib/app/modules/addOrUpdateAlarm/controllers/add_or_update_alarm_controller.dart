@@ -1191,21 +1191,18 @@ class AddOrUpdateAlarmController extends GetxController {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
         bool isSystemRingtone = customRingtone.ringtonePath.startsWith("system_ringtone:");
         
-        // Always allow deletion if forceDelete is true or counter is 0
+
         if (currentCounterOfUsage <= 0 || forceDelete) {
-          // If it has usage > 0 and we're forcing deletion, reset the counter first
           if (currentCounterOfUsage > 0 && forceDelete) {
             customRingtone.currentCounterOfUsage = 0;
             await IsarDb.addCustomRingtone(customRingtone);
           }
           
-          // Delete from the list and database
           if (ringtoneIndex < customRingtoneNames.length) {
             customRingtoneNames.removeAt(ringtoneIndex);
           }
           await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
           
-          // Different messages for system vs custom ringtones
           if (isSystemRingtone) {
             Get.snackbar(
               'Sound Removed',
@@ -1217,7 +1214,6 @@ class AddOrUpdateAlarmController extends GetxController {
               colorText: kprimaryTextColor,
             );
           } else {
-            // For custom ringtones, try to delete the file
             try {
               final documentsDirectory = await getApplicationDocumentsDirectory();
               final ringtoneFilePath =
@@ -1259,7 +1255,6 @@ class AddOrUpdateAlarmController extends GetxController {
             }
           }
         } else {
-          // If the ringtone is in use but we haven't been told to force delete
           Get.snackbar(
             'Ringtone in Use',
             'This ringtone is currently assigned to one or more alarms.',
