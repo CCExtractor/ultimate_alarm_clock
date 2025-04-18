@@ -37,16 +37,18 @@ import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key}) {
-    inputTimeController.initTimeTextField();
   }
 
   final ThemeController themeController = Get.find<ThemeController>();
-  final InputTimeController inputTimeController =
-      Get.put(InputTimeController());
+  final InputTimeController inputTimeController = Get.put(InputTimeController(), permanent: true);
   final SettingsController settingsController = Get.find<SettingsController>();
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      inputTimeController.initTimeTextField();
+    });
+    
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     // var width = Get.width;
