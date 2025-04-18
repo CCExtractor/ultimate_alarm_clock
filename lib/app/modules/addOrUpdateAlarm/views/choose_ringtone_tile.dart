@@ -108,7 +108,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
   String? _currentlyPlayingCustomRingtone;
   int _selectedTabIndex = 0;
   
-  // Add variables to track audio playback state
   bool _isProcessingAudio = false;
   DateTime _lastAudioRequest = DateTime.now();
   Future<List<SystemRingtone>>? _systemRingtonesFuture;
@@ -130,7 +129,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
       _stopAllAudio();
     });
     
-    // Set initial values
     _isPlaying = widget.controller.isPlaying.value;
   }
 
@@ -142,7 +140,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     super.dispose();
   }
 
-  // Improved audio control with await and debouncing
   Future<void> _stopAllAudio() async {
     if (_isProcessingAudio) {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -167,7 +164,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     setState(() => _isProcessingAudio = false);
   }
 
-  // Improved custom ringtone playback with debounce and async handling
   Future<void> _onTapPreviewCustom(String ringtoneName) async {
     Utils.hapticFeedback();
     
@@ -178,7 +174,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     }
     _lastAudioRequest = now;
     
-    // If we're currently processing an audio request, ignore
     if (_isProcessingAudio) {
       return;
     }
@@ -203,11 +198,9 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     setState(() => _isProcessingAudio = false);
   }
 
-  // Improved system ringtone playback with debounce and async handling
   Future<void> _onTapPreviewSystem(SystemRingtone ringtone) async {
     Utils.hapticFeedback();
     
-    // If already playing this ringtone, stop it and exit early
     if (_isPlaying && _currentlyPlayingSystemRingtone == ringtone) {
       setState(() => _isProcessingAudio = true);
       await _stopAllAudio();
@@ -219,29 +212,23 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
       return;
     }
     
-    // If another ringtone is playing, stop it first
-    // This is critical - we need to fully stop any playing audio before starting a new one
     if (_isPlaying) {
       await _stopAllAudio();
-      // Small but important delay to ensure audio resources are freed
       await Future.delayed(const Duration(milliseconds: 200));
     }
     
-    // Ignore rapid taps
     final now = DateTime.now();
     if (now.difference(_lastAudioRequest).inMilliseconds < 500) {
       return;
     }
     _lastAudioRequest = now;
     
-    // If we're currently processing an audio request, ignore
     if (_isProcessingAudio) {
       return;
     }
     
     setState(() {
       _isProcessingAudio = true;
-      // Show loading state immediately
       _currentlyPlayingSystemRingtone = ringtone;
     });
     
@@ -260,7 +247,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     await platform.invokeMethod('playSystemRingtone', {'uri': ringtone.uri});
   }
   
-  // New method to ensure audio is fully stopped before playing
   Future<void> _ensureAudioStopped() async {
     await AudioUtils.stopPreviewCustomSound();
     const platform = MethodChannel('ulticlock');
@@ -308,7 +294,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                 _stopAllAudio();
                 widget.controller.previousRingtone = widget.controller.customRingtoneName.value;
                 await widget.controller.saveCustomRingtone();
-                // Refresh the list after upload
                 widget.controller.customRingtoneNames.value = 
                     await widget.controller.getAllCustomRingtoneNames();
                 setState(() {});
@@ -320,7 +305,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
           preferredSize: const Size.fromHeight(108),
           child: Column(
             children: [
-              // Search bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Container(
@@ -350,7 +334,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                 ),
               ),
               
-              // Tab bar with improved contrast
               TabBar(
                 controller: _tabController,
                 indicatorColor: kprimaryColor,
@@ -399,10 +382,7 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Custom ringtones tab
           _buildCustomRingtonesTab(),
-          
-          // System ringtones tab
           _buildSystemRingtonesTab(),
         ],
       ),
@@ -410,7 +390,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
   }
 
   Widget _buildCustomRingtonesTab() {
-    // Filter ringtones based on search query
     final filteredRingtones = _searchQuery.isEmpty
         ? widget.controller.customRingtoneNames
         : widget.controller.customRingtoneNames
@@ -450,10 +429,8 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                 final isPlaying = _isPlaying && _currentlyPlayingCustomRingtone == ringtoneName;
                 final isDefault = defaultRingtones.contains(ringtoneName);
                 
-                // Check if it's a system ringtone (non-default)
                 final isSystemRingtone = _isSystemRingtone(ringtoneName);
                 
-                // Only show delete for custom ringtones or non-default system ringtones
                 final showDelete = !isDefault && (!isSystemRingtone || !isDefault);
                 
                 return Card(
@@ -472,11 +449,9 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                       Utils.hapticFeedback();
                       await _stopAllAudio();
                       
-                      // Update controller
                       widget.controller.previousRingtone = widget.controller.customRingtoneName.value;
                       widget.controller.customRingtoneName.value = ringtoneName;
 
-                      // Update usage counters if changed
                       if (widget.controller.customRingtoneName.value != widget.controller.previousRingtone) {
                         await AudioUtils.updateRingtoneCounterOfUsage(
                           customRingtoneName: widget.controller.customRingtoneName.value,
@@ -495,7 +470,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                       padding: const EdgeInsets.all(12.0),
                       child: Row(
                         children: [
-                          // Play/pause button with improved contrast
                           Container(
                             width: 48,
                             height: 48,
@@ -526,7 +500,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                           ),
                           const SizedBox(width: 16),
                           
-                          // Ringtone name with improved contrast
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -573,7 +546,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                             ),
                           ),
                           
-                          // Delete button for custom ringtones
                           if (showDelete)
                             IconButton(
                               icon: const Icon(
@@ -621,7 +593,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                                 ) ?? false;
                                 
                                 if (confirm) {
-                                  // Directly use forceDelete=true for system ringtones to avoid the second dialog
                                   await widget.controller.deleteCustomRingtone(
                                     ringtoneName: ringtoneName,
                                     ringtoneIndex: index,
@@ -642,17 +613,13 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
     );
   }
 
-  // Helper function to check if a ringtone is a system ringtone
   bool _isSystemRingtone(String ringtoneName) {
-    // We're only checking if it's not in default ringtones
-    // No need to compute the hash if we're not using it
     return !(defaultRingtones.contains(ringtoneName));
   }
 
   Widget _buildSystemRingtonesTab() {
     return Column(
       children: [
-        // Category tabs with improved contrast
         Container(
           color: widget.themeController.secondaryBackgroundColor.value,
           child: TabBar(
@@ -694,7 +661,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
           ),
         ),
         
-        // System sounds by category
         Expanded(
           child: FutureBuilder<List<SystemRingtone>>(
             future: _systemRingtonesFuture ??= AudioUtils.getSystemRingtones(),
@@ -742,14 +708,12 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                 );
               }
               
-              // Group ringtones by category
               final Map<String, List<SystemRingtone>> categorizedRingtones = {
                 'alarm': snapshot.data!.where((r) => r.category == 'alarm').toList(),
                 'notification': snapshot.data!.where((r) => r.category == 'notification').toList(),
                 'ringtone': snapshot.data!.where((r) => r.category == 'ringtone').toList(),
               };
               
-              // Apply search filter to all categories
               if (_searchQuery.isNotEmpty) {
                 categorizedRingtones.forEach((category, ringtones) {
                   categorizedRingtones[category] = ringtones
@@ -827,18 +791,15 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
               Utils.hapticFeedback();
               await _stopAllAudio();
               
-              // Save the selected ringtone
               await AudioUtils.saveSystemRingtone(
                 title: ringtone.title,
                 uri: ringtone.uri,
                 category: ringtone.category,
               );
               
-              // Update the controller
               widget.controller.previousRingtone = widget.controller.customRingtoneName.value;
               widget.controller.customRingtoneName.value = ringtone.title;
               
-              // Update usage counters
               await AudioUtils.updateRingtoneCounterOfUsage(
                 customRingtoneName: widget.controller.customRingtoneName.value,
                 counterUpdate: CounterUpdate.increment,
@@ -849,18 +810,15 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                 counterUpdate: CounterUpdate.decrement,
               );
               
-              // Refresh the ringtone list
               widget.controller.customRingtoneNames.value = 
                   await widget.controller.getAllCustomRingtoneNames();
               
-              // Go back to the alarm screen
               Get.back();
             },
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Row(
                 children: [
-                  // Improved play button with better contrast
                   Container(
                     width: 48,
                     height: 48,
@@ -891,7 +849,6 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                   ),
                   const SizedBox(width: 16),
                   
-                  // Ringtone name
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -917,23 +874,17 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                     ),
                   ),
                   
-                  // Select button with improved contrast
                   ElevatedButton(
                     onPressed: () async {
                       _stopAllAudio();
-                      
-                      // Save the selected ringtone
                       await AudioUtils.saveSystemRingtone(
                         title: ringtone.title,
                         uri: ringtone.uri,
                         category: ringtone.category,
                       );
-                      
-                      // Update the controller
                       widget.controller.previousRingtone = widget.controller.customRingtoneName.value;
                       widget.controller.customRingtoneName.value = ringtone.title;
                       
-                      // Update usage counters
                       await AudioUtils.updateRingtoneCounterOfUsage(
                         customRingtoneName: widget.controller.customRingtoneName.value,
                         counterUpdate: CounterUpdate.increment,
@@ -944,11 +895,9 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                         counterUpdate: CounterUpdate.decrement,
                       );
                       
-                      // Refresh the ringtone list
                       widget.controller.customRingtoneNames.value = 
                           await widget.controller.getAllCustomRingtoneNames();
                       
-                      // Go back to the alarm screen
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(
