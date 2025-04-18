@@ -1180,6 +1180,7 @@ class AddOrUpdateAlarmController extends GetxController {
   Future<void> deleteCustomRingtone({
     required String ringtoneName,
     required int ringtoneIndex,
+    bool forceDelete = false,
   }) async {
     try {
       int customRingtoneId = AudioUtils.fastHash(ringtoneName);
@@ -1188,20 +1189,27 @@ class AddOrUpdateAlarmController extends GetxController {
 
       if (customRingtone != null) {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
-
-        if (currentCounterOfUsage == 0) {
-          customRingtoneNames.removeAt(ringtoneIndex);
+        bool isSystemRingtone = customRingtone.ringtonePath.startsWith("system_ringtone:");
+        
+        // Always allow deletion if forceDelete is true or counter is 0
+        if (currentCounterOfUsage <= 0 || forceDelete) {
+          // If it has usage > 0 and we're forcing deletion, reset the counter first
+          if (currentCounterOfUsage > 0 && forceDelete) {
+            customRingtone.currentCounterOfUsage = 0;
+            await IsarDb.addCustomRingtone(customRingtone);
+          }
+          
+          // Delete from the list and database
+          if (ringtoneIndex < customRingtoneNames.length) {
+            customRingtoneNames.removeAt(ringtoneIndex);
+          }
           await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
-
-          final documentsDirectory = await getApplicationDocumentsDirectory();
-          final ringtoneFilePath =
-              '${documentsDirectory.path}/ringtones/$ringtoneName';
-
-          if (await File(ringtoneFilePath).exists()) {
-            await File(ringtoneFilePath).delete();
+          
+          // Different messages for system vs custom ringtones
+          if (isSystemRingtone) {
             Get.snackbar(
-              'Ringtone Deleted',
-              'The selected ringtone has been successfully deleted.',
+              'Sound Removed',
+              'The system sound has been removed from your list.',
               margin: const EdgeInsets.all(15),
               animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
@@ -1209,21 +1217,52 @@ class AddOrUpdateAlarmController extends GetxController {
               colorText: kprimaryTextColor,
             );
           } else {
-            Get.snackbar(
-              'Ringtone Not Found',
-              'The selected ringtone does not exist and cannot be deleted.',
-              margin: const EdgeInsets.all(15),
-              animationDuration: const Duration(seconds: 1),
-              snackPosition: SnackPosition.BOTTOM,
-              barBlur: 15,
-              colorText: kprimaryTextColor,
-            );
+            // For custom ringtones, try to delete the file
+            try {
+              final documentsDirectory = await getApplicationDocumentsDirectory();
+              final ringtoneFilePath =
+                  '${documentsDirectory.path}/ringtones/$ringtoneName';
+
+              if (await File(ringtoneFilePath).exists()) {
+                await File(ringtoneFilePath).delete();
+                Get.snackbar(
+                  'Ringtone Deleted',
+                  'The custom ringtone has been successfully deleted.',
+                  margin: const EdgeInsets.all(15),
+                  animationDuration: const Duration(seconds: 1),
+                  snackPosition: SnackPosition.BOTTOM,
+                  barBlur: 15,
+                  colorText: kprimaryTextColor,
+                );
+              } else {
+                Get.snackbar(
+                  'Ringtone Deleted',
+                  'The ringtone has been removed from your list.',
+                  margin: const EdgeInsets.all(15),
+                  animationDuration: const Duration(seconds: 1),
+                  snackPosition: SnackPosition.BOTTOM,
+                  barBlur: 15,
+                  colorText: kprimaryTextColor,
+                );
+              }
+            } catch (e) {
+              debugPrint('Error deleting ringtone file: $e');
+              Get.snackbar(
+                'Ringtone Deleted',
+                'The ringtone was removed from your list, but the file could not be deleted.',
+                margin: const EdgeInsets.all(15),
+                animationDuration: const Duration(seconds: 1),
+                snackPosition: SnackPosition.BOTTOM,
+                barBlur: 15,
+                colorText: kprimaryTextColor,
+              );
+            }
           }
         } else {
+          // If the ringtone is in use but we haven't been told to force delete
           Get.snackbar(
             'Ringtone in Use',
-            'This ringtone cannot be deleted as it is currently assigned'
-                ' to one or more alarms.',
+            'This ringtone is currently assigned to one or more alarms.',
             margin: const EdgeInsets.all(15),
             animationDuration: const Duration(seconds: 1),
             snackPosition: SnackPosition.BOTTOM,
@@ -1231,9 +1270,28 @@ class AddOrUpdateAlarmController extends GetxController {
             colorText: kprimaryTextColor,
           );
         }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Ringtone not found in the database.',
+          margin: const EdgeInsets.all(15),
+          animationDuration: const Duration(seconds: 1),
+          snackPosition: SnackPosition.BOTTOM,
+          barBlur: 15,
+          colorText: kprimaryTextColor,
+        );
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error deleting ringtone: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to delete ringtone: $e',
+        margin: const EdgeInsets.all(15),
+        animationDuration: const Duration(seconds: 1),
+        snackPosition: SnackPosition.BOTTOM,
+        barBlur: 15,
+        colorText: kprimaryTextColor,
+      );
     }
   }
 
@@ -1408,7 +1466,6 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1417,3 +1474,4 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+}

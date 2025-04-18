@@ -11,19 +11,18 @@ class InputTimeController extends GetxController {
   final isTimePicker = false.obs;
   final isTimePickerTimer = false.obs;
 
-  TextEditingController inputHrsController = TextEditingController();
-  TextEditingController inputMinutesController = TextEditingController();
+  late TextEditingController inputHrsController;
+  late TextEditingController inputMinutesController;
 
-  TextEditingController inputHoursControllerTimer = TextEditingController();
-  TextEditingController inputMinutesControllerTimer = TextEditingController();
-  TextEditingController inputSecondsControllerTimer = TextEditingController();
+  late TextEditingController inputHoursControllerTimer;
+  late TextEditingController inputMinutesControllerTimer;
+  late TextEditingController inputSecondsControllerTimer;
 
   final selectedDateTime = DateTime.now().obs;
   bool isInputtingTime = false;
-
+  final RxBool controllersInitialized = false.obs;
 
   int? _previousDisplayHour;
-
 
   void confirmTimeInput() {
     setTime();
@@ -32,37 +31,56 @@ class InputTimeController extends GetxController {
 
   @override
   void onInit() {
+    inputHrsController = TextEditingController();
+    inputMinutesController = TextEditingController();
+    inputHoursControllerTimer = TextEditingController(text: '0');
+    inputMinutesControllerTimer = TextEditingController(text: '1');
+    inputSecondsControllerTimer = TextEditingController(text: '0');
+    
     isTimePicker.value = true;
     isTimePickerTimer.value = true;
-    inputHoursControllerTimer.text = '0';
-    inputMinutesControllerTimer.text = '1';
-    inputSecondsControllerTimer.text = '0';
+    controllersInitialized.value = true;
     super.onInit();
   }
 
   void initTimeTextField() {
-    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
-    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+    if (!controllersInitialized.value) return;
+    
+    try {
+      AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
+      selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
 
-    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
-    inputHrsController.text = settingsController.is24HrsEnabled.value
-        ? selectedDateTime.value.hour.toString()
-        : (selectedDateTime.value.hour == 0
-            ? '12'
-            : (selectedDateTime.value.hour > 12
-                ? (selectedDateTime.value.hour - 12).toString()
-                : selectedDateTime.value.hour.toString()));
-    inputMinutesController.text = selectedDateTime.value.minute.toString().padLeft(2, '0');
+      isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+      
+      _safeSetText(inputHrsController, settingsController.is24HrsEnabled.value
+          ? selectedDateTime.value.hour.toString()
+          : (selectedDateTime.value.hour == 0
+              ? '12'
+              : (selectedDateTime.value.hour > 12
+                  ? (selectedDateTime.value.hour - 12).toString()
+                  : selectedDateTime.value.hour.toString())));
+                  
+      _safeSetText(inputMinutesController, selectedDateTime.value.minute.toString().padLeft(2, '0'));
+    } catch (e) {
+      debugPrint('Error in initTimeTextField: $e');
+    }
   }
 
+  void _safeSetText(TextEditingController? controller, String text) {
+    if (controller != null && controller.text != text) {
+      try {
+        controller.text = text;
+      } catch (e) {
+        debugPrint('Error setting text: $e');
+      }
+    }
+  }
 
   final isAM = true.obs;
-
 
   void changePeriod(String period) {
     isAM.value = period == 'AM';
   }
-
 
   void changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
@@ -72,11 +90,9 @@ class InputTimeController extends GetxController {
     }
   }
 
-
   void changeTimePickerTimer() {
     isTimePickerTimer.value = !isTimePickerTimer.value;
   }
-
 
   int convert24(int value, int meridiemIndex) {
     if (!settingsController.is24HrsEnabled.value) {
@@ -92,9 +108,6 @@ class InputTimeController extends GetxController {
     }
     return value;
   }
-
-
-
 
   void toggleIfAtBoundary() {
     if (!settingsController.is24HrsEnabled.value) {
@@ -122,18 +135,19 @@ class InputTimeController extends GetxController {
     }
   }
 
-
   void setTime() {
-    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
-    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
-
-    toggleIfAtBoundary();
-
+    if (!controllersInitialized.value) return;
+    
     try {
+      AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
+      selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
+
+      toggleIfAtBoundary();
+
       int hour = int.parse(inputHrsController.text);
       if (!settingsController.is24HrsEnabled.value) {
         if (isAM.value) {
-          if (hour == 12) hour = 0; 
+          if (hour == 12) hour = 0;
         } else {
           if (hour != 12) hour = hour + 12;
         }
@@ -172,14 +186,15 @@ class InputTimeController extends GetxController {
         addOrUpdateAlarmController.meridiemIndex.value = 0;
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error in setTime: $e');
     }
   }
 
-
   void setTimerTime() {
-    TimerController timerController = Get.find<TimerController>();
+    if (!controllersInitialized.value) return;
+    
     try {
+      TimerController timerController = Get.find<TimerController>();
       int hours = int.parse(inputHoursControllerTimer.text);
       int minutes = int.parse(inputMinutesControllerTimer.text);
       int seconds = int.parse(inputSecondsControllerTimer.text);
@@ -187,24 +202,37 @@ class InputTimeController extends GetxController {
       timerController.minutes.value = minutes;
       timerController.seconds.value = seconds;
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error in setTimerTime: $e');
     }
   }
 
   void setTextFieldTimerTime() {
-    TimerController timerController = Get.find<TimerController>();
-    inputHoursControllerTimer.text = timerController.hours.value.toString();
-    inputMinutesControllerTimer.text = timerController.minutes.value.toString();
-    inputSecondsControllerTimer.text = timerController.seconds.value.toString();
+    if (!controllersInitialized.value) return;
+    
+    try {
+      TimerController timerController = Get.find<TimerController>();
+      _safeSetText(inputHoursControllerTimer, timerController.hours.value.toString());
+      _safeSetText(inputMinutesControllerTimer, timerController.minutes.value.toString());
+      _safeSetText(inputSecondsControllerTimer, timerController.seconds.value.toString());
+    } catch (e) {
+      debugPrint('Error in setTextFieldTimerTime: $e');
+    }
   }
 
   @override
   void onClose() {
-    inputHrsController.dispose();
-    inputMinutesController.dispose();
-    inputHoursControllerTimer.dispose();
-    inputMinutesControllerTimer.dispose();
-    inputSecondsControllerTimer.dispose();
+    controllersInitialized.value = false;
+    
+    try {
+      inputHrsController.dispose();
+      inputMinutesController.dispose();
+      inputHoursControllerTimer.dispose();
+      inputMinutesControllerTimer.dispose();
+      inputSecondsControllerTimer.dispose();
+    } catch (e) {
+      debugPrint('Error disposing controllers: $e');
+    }
+    
     super.onClose();
   }
 }

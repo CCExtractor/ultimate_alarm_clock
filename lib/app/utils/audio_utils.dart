@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/system_ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -19,6 +20,8 @@ class AudioUtils {
   static AudioSession? audioSession;
 
   static bool isPreviewing = false;
+  
+  static List<SystemRingtone>? _cachedRingtones;
 
   static Future<void> initializeAudioSession() async {
     audioSession = await AudioSession.instance;
@@ -89,8 +92,18 @@ class AudioUtils {
 
       if (customRingtone != null) {
         String customRingtonePath = customRingtone.ringtonePath;
+        
         if (defaultRingtones.contains(ringtoneName)) {
           await playAssetSound(customRingtonePath);
+        } else if (customRingtonePath.startsWith("system_ringtone:")) {
+          // Handle system ringtones with our special prefix
+          String systemUri = customRingtonePath.substring("system_ringtone:".length);
+          debugPrint("Playing system ringtone with URI: $systemUri");
+          await alarmChannel.invokeMethod('playSystemRingtone', {'uri': systemUri});
+        } else if (customRingtonePath.startsWith('content://') || 
+                  customRingtonePath.startsWith('android.resource://')) {
+          // Legacy handling of direct URIs
+          await alarmChannel.invokeMethod('playSystemRingtone', {'uri': customRingtonePath});
         } else {
           await playCustomSound(customRingtonePath);
         }
@@ -203,8 +216,22 @@ class AudioUtils {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
           await audioSession!.setActive(false);
           await audioSession!.setActive(true);
-          await playCustomSound(customRingtonePath);
-          isPreviewing = true;
+          
+          if (customRingtonePath.startsWith("system_ringtone:")) {
+            // Handle system ringtones with our special prefix
+            String systemUri = customRingtonePath.substring("system_ringtone:".length);
+            debugPrint("Previewing system ringtone with URI: $systemUri");
+            await alarmChannel.invokeMethod('playSystemRingtone', {'uri': systemUri});
+            isPreviewing = true;
+          } else if (customRingtonePath.startsWith('content://') || 
+                    customRingtonePath.startsWith('android.resource://')) {
+            // Legacy handling of direct URIs
+            await alarmChannel.invokeMethod('playSystemRingtone', {'uri': customRingtonePath});
+            isPreviewing = true;
+          } else {
+            await playCustomSound(customRingtonePath);
+            isPreviewing = true;
+          }
         }
       }
     } catch (e) {
@@ -214,14 +241,49 @@ class AudioUtils {
 
   static Future<void> stopPreviewCustomSound() async {
     try {
-      if (audioSession != null && isPreviewing) {
-        await audioPlayer.stop();
-        await alarmChannel.invokeMethod('stopDefaultAlarm');
-        await audioSession!.setActive(false);
-        isPreviewing = false;
+      debugPrint('Stopping all preview sounds');
+      
+      // Make sure audio session exists
+      if (audioSession == null) {
+        await initializeAudioSession();
       }
+      
+      // Stop audioPlayer first
+      try {
+        await audioPlayer.stop();
+        debugPrint('Stopped audioPlayer');
+      } catch (e) {
+        debugPrint('Error stopping audioPlayer: $e');
+      }
+      
+      // Then stop native sounds through the method channel with retry
+      for (int i = 0; i < 3; i++) {
+        try {
+          debugPrint('Stopping native sound (attempt ${i+1})');
+          await alarmChannel.invokeMethod('stopDefaultAlarm');
+          debugPrint('Successfully stopped native sound');
+          break;
+        } catch (e) {
+          debugPrint('Failed to stop native sound (attempt ${i+1}): $e');
+          if (i < 2) await Future.delayed(const Duration(milliseconds: 100));
+        }
+      }
+      
+      // Try to deactivate audio session
+      if (audioSession != null) {
+        try {
+          await audioSession!.setActive(false);
+          debugPrint('Deactivated audio session');
+        } catch (e) {
+          debugPrint('Error deactivating audio session: $e');
+        }
+      }
+      
+      isPreviewing = false;
+      debugPrint('Successfully stopped all preview sounds');
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error stopping preview sound: $e');
+      isPreviewing = false; // Set this to false regardless of success
     }
   }
 
@@ -233,7 +295,20 @@ class AudioUtils {
         if (ringtoneName == 'Default') {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
         } else {
-          await audioPlayer.stop();
+          int customRingtoneId = fastHash(ringtoneName);
+          RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+            customRingtoneId: customRingtoneId,
+          );
+          
+          if (customRingtone != null && 
+              (customRingtone.ringtonePath.startsWith('content://') || 
+               customRingtone.ringtonePath.startsWith('android.resource://') ||
+               customRingtone.ringtonePath.startsWith('system_ringtone:'))) {
+            // This is a system ringtone
+            await alarmChannel.invokeMethod('stopDefaultAlarm');
+          } else {
+            await audioPlayer.stop();
+          }
         }
 
         await audioSession!.setActive(false);
@@ -297,5 +372,152 @@ class AudioUtils {
     }
 
     return hash;
+  }
+
+  static Future<List<SystemRingtone>> getSystemRingtones() async {
+    try {
+      debugPrint('Fetching system ringtones...');
+      
+      // Cache the result to avoid repeated expensive calls
+      // Return cached result if available
+      if (_cachedRingtones != null) {
+        debugPrint('Returning ${_cachedRingtones!.length} cached system ringtones');
+        return _cachedRingtones!;
+      }
+      
+      final List<dynamic> result = await alarmChannel.invokeMethod('getSystemRingtones');
+      debugPrint('Received ${result.length} system ringtones from native side');
+      
+      final List<SystemRingtone> ringtones = result.map((dynamic item) {
+        if (item is Map) {
+          final ringtone = SystemRingtone.fromJson(item as Map<dynamic, dynamic>);
+          return ringtone;
+        } else {
+          debugPrint('Invalid ringtone data format: $item');
+          return SystemRingtone(
+            title: 'Unknown',
+            uri: '',
+            category: 'alarm',
+          );
+        }
+      }).toList();
+      
+      // Filter out any ringtones with empty URIs
+      _cachedRingtones = ringtones.where((ringtone) => ringtone.uri.isNotEmpty).toList();
+      return _cachedRingtones!;
+    } catch (e) {
+      debugPrint('Error getting system ringtones: $e');
+      return [];
+    }
+  }
+
+  static Future<void> playSystemRingtone(String uri) async {
+    try {
+      debugPrint('PLAYING SYSTEM RINGTONE: $uri');
+      
+      if (audioSession == null) {
+        debugPrint('Initializing audio session');
+        await initializeAudioSession();
+      }
+      
+      // First, stop any currently playing sound - try multiple times if needed
+      if (isPreviewing) {
+        debugPrint('Stopping previously playing sound');
+        for (int i = 0; i < 2; i++) {
+          try {
+            await stopPreviewCustomSound();
+            break; // Exit the retry loop if successful
+          } catch (e) {
+            debugPrint('Attempt ${i+1} to stop sound failed: $e');
+            // Small delay before retry
+            await Future.delayed(const Duration(milliseconds: 100));
+          }
+        }
+      }
+      
+      // Ensure audio session is active
+      if (!await audioSession!.setActive(true)) {
+        debugPrint('Failed to activate audio session, retrying...');
+        await Future.delayed(const Duration(milliseconds: 100));
+        await audioSession!.setActive(true);
+      }
+      
+      // Handle retries with a loop
+      bool success = false;
+      int retryCount = 0;
+      Exception? lastError;
+      
+      while (!success && retryCount < 3) {
+        try {
+          // Use the native method channel to play the system ringtone
+          debugPrint('ATTEMPT ${retryCount + 1}: Invoking native method to play system ringtone');
+          await alarmChannel.invokeMethod('playSystemRingtone', {'uri': uri});
+          success = true;
+          isPreviewing = true;
+          debugPrint('Successfully started system ringtone playback');
+        } catch (e) {
+          lastError = e as Exception;
+          debugPrint('Attempt ${retryCount + 1} failed: $e');
+          retryCount++;
+          
+          if (retryCount < 3) {
+            // Short delay before retry
+            await Future.delayed(const Duration(milliseconds: 200));
+          }
+        }
+      }
+      
+      if (!success) {
+        throw lastError ?? Exception('Failed to play system ringtone after multiple attempts');
+      }
+    } catch (e) {
+      debugPrint('ERROR PLAYING SYSTEM RINGTONE: $e');
+      // Try to fall back to the default alarm sound
+      try {
+        debugPrint('Attempting to fall back to default alarm');
+        await alarmChannel.invokeMethod('playDefaultAlarm');
+        isPreviewing = true;
+      } catch (fallbackError) {
+        debugPrint('Failed to play fallback alarm: $fallbackError');
+      }
+    }
+  }
+
+  static Future<void> saveSystemRingtone({
+    required String title,
+    required String uri,
+    required String category,
+  }) async {
+    try {
+      debugPrint('Saving system ringtone: $title, URI: $uri');
+      
+      // First check if this ringtone already exists to avoid duplicates
+      int ringtoneId = fastHash(title);
+      RingtoneModel? existingRingtone = await IsarDb.getCustomRingtone(
+        customRingtoneId: ringtoneId,
+      );
+      
+      if (existingRingtone != null) {
+        debugPrint('Ringtone with name $title already exists, updating instead of creating new');
+        existingRingtone.ringtonePath = "system_ringtone:$uri";
+        existingRingtone.currentCounterOfUsage += 1;
+        await IsarDb.addCustomRingtone(existingRingtone);
+        return;
+      }
+      
+      // Create a RingtoneModel object for the system ringtone
+      // Set the ringtonePath as the URI string with a special prefix to identify it as a system ringtone
+      final RingtoneModel systemRingtone = RingtoneModel(
+        ringtoneName: title,
+        ringtonePath: "system_ringtone:$uri", // Adding prefix to distinguish system ringtones
+        currentCounterOfUsage: 1,
+      );
+      
+      // Add the ringtone to the database
+      await IsarDb.addCustomRingtone(systemRingtone);
+      debugPrint('Successfully saved system ringtone: $title');
+    } catch (e) {
+      debugPrint('Error saving system ringtone: $e');
+    }
   }
 }
