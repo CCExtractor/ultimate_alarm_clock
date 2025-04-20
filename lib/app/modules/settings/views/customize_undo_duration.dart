@@ -109,8 +109,9 @@ class CustomizeUndoDuration extends StatelessWidget{
                       ),
                     ),
                     Icon(
-                      Icons.chevron_right,
-                      color: themeController.primaryDisabledTextColor.value,
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: themeController.primaryTextColor.value.withOpacity(0.8),
                     ),
                   ],
                 ),
