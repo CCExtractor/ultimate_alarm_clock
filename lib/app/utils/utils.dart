@@ -15,6 +15,7 @@ import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/quote_list.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 
 import '../data/models/profile_model.dart';
 import '../data/providers/get_storage_provider.dart';
@@ -694,24 +695,14 @@ class Utils {
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        kprimaryColor,
-                      ),
-                    ),
+                  child: UACTextButton(
+                    isButtonPrimary: true,
+                    isTextPrimary: false,
+                    text: 'Understood'.tr,
                     onPressed: () {
                       Utils.hapticFeedback();
                       Get.back();
                     },
-                    child: Text(
-                      'Understood'.tr,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            color: isLightMode
-                                ? kLightPrimaryTextColor
-                                : ksecondaryTextColor,
-                          ),
-                    ),
                   ),
                 ),
               ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timerRing/controllers/timer_ring_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 
 class TimerRingView extends GetView<TimerRingController> {
   ThemeController themeController = Get.find<ThemeController>();
@@ -35,23 +36,13 @@ class TimerRingView extends GetView<TimerRingController> {
             child: SizedBox(
               height: height * 0.06,
               width: width * 0.8,
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    kprimaryColor,
-                  ),
-                ),
+              child: UACTextButton(
+                isButtonPrimary: true,
+                isTextPrimary: false,
+                text: 'Stop'.tr,
                 onPressed: () async {
                   Get.offNamed('/bottom-navigation-bar');
                 },
-                child: Obx(
-                  () => Text(
-                    'Stop',
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          color: themeController.secondaryTextColor.value,
-                        ),
-                  ),
-                ),
               ),
             ),
           ),

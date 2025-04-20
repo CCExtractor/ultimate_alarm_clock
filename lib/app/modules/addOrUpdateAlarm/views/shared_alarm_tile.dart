@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class SharedAlarm extends StatelessWidget {
@@ -85,27 +86,14 @@ class SharedAlarm extends StatelessWidget {
                                       ),
                                       SizedBox(
                                         width: width,
-                                        child: TextButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                              kprimaryColor,
-                                            ),
-                                          ),
+                                        child: UACTextButton(
+                                          isButtonPrimary: true,
+                                          isTextPrimary: false,
+                                          text: 'Understood'.tr,
                                           onPressed: () {
                                             Utils.hapticFeedback();
                                             Get.back();
                                           },
-                                          child: Text(
-                                            'Understood'.tr,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall!
-                                                .copyWith(
-                                                  color: themeController
-                                                          .secondaryTextColor.value,
-                                                ),
-                                          ),
                                         ),
                                       ),
                                     ],

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/uac_text_button.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../controllers/alarm_challenge_controller.dart';
@@ -140,25 +141,10 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                                   ),
                                                           ),
                                                     ),
-                                                    TextButton(
-                                                      style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(
-                                                          kprimaryColor,
-                                                        ),
-                                                      ),
-                                                      child: Text(
-                                                        'Retake'.tr,
-                                                        style: Theme.of(
-                                                          context,
-                                                        )
-                                                            .textTheme
-                                                            .displaySmall!
-                                                            .copyWith(
-                                                              color: themeController.secondaryTextColor.value,
-                                                            ),
-                                                      ),
+                                                    UACTextButton(
+                                                      isButtonPrimary: true,
+                                                      isTextPrimary: false,
+                                                      text: 'Retake'.tr,
                                                       onPressed: () async {
                                                         Utils.hapticFeedback();
                                                         controller.qrController!
