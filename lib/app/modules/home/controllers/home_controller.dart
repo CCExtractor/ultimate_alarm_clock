@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
@@ -407,8 +408,13 @@ class HomeController extends GetxController {
       );
       try {
         await alarmChannel.invokeMethod('scheduleAlarm', {
-          'milliSeconds': intervaltoAlarm,
-          'activityMonitor': latestAlarm.activityMonitor,
+        'isSharedAlarm': latestAlarm.isSharedAlarmEnabled,
+        'isActivityEnabled': latestAlarm.isActivityEnabled,
+        'isLocationEnabled': latestAlarm.isLocationEnabled,
+        'isWeatherEnabled': latestAlarm.isWeatherEnabled,
+        'intervalToAlarm': intervaltoAlarm,
+        'location': latestAlarm.location,
+        'weatherTypes': jsonEncode(latestAlarm.weatherTypes),
         });
         print('Scheduled...');
       } on PlatformException catch (e) {

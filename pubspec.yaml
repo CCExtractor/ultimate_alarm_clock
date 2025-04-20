@@ -60,6 +60,7 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_local_notifications: ^16.3.2
   collection: ^1.18.0
+  cloud_functions: ^4.7.6
 
 dev_dependencies:
   flutter_lints: ^4.0.0

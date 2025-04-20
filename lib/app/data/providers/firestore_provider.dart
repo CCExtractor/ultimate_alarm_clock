@@ -346,6 +346,26 @@ static Future<String> userExists(String email) async {
     }
   }
 
+static Future<List<String>> getUserIdsByEmails(List emails) async {
+  List<String> userIds = [];
+
+  const batchSize = 10;
+  for (int i = 0; i < emails.length; i += batchSize) {
+    final batch = emails.sublist(i, i + batchSize > emails.length ? emails.length : i + batchSize);
+    final querySnapshot = await _firebaseFirestore
+        .collection('users')
+        .where('email', whereIn: batch)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      userIds.add(doc.id);
+    }
+  }
+
+  return userIds;
+}
+
+
   static shareAlarm(List emails, AlarmModel alarm) async {
     final currentUserId = _firebaseAuthInstance.currentUser!.providerData[0].uid;
     alarm.profile = 'Default';
@@ -565,6 +585,16 @@ static Future<void> addItemToUserByEmail(String email, dynamic sharedItem) async
         .doc(_firebaseAuthInstance.currentUser!.providerData[0].uid)
         .update({
       'receivedItems': FieldValue.arrayRemove([item])
+    });
+  }
+
+
+  static updateToken(String token) async {
+    await _firebaseFirestore
+        .collection('users')
+        .doc(_firebaseAuthInstance.currentUser!.providerData[0].uid)
+        .update({
+      'fcmToken': token
     });
   }
 

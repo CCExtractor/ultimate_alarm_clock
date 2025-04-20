@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -235,7 +236,7 @@ class AlarmControlController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    startListeningToFlip();
+    // startListeningToFlip();
 
     // Extract alarm and preview flag from arguments
     final args = Get.arguments;
@@ -365,8 +366,13 @@ class AlarmControlController extends GetxController {
 
         try {
           await alarmChannel.invokeMethod('scheduleAlarm', {
-            'milliSeconds': intervaltoAlarm,
-            'activityMonitor': latestAlarm.activityMonitor
+          'isSharedAlarm': latestAlarm.isSharedAlarmEnabled,
+          'isActivityEnabled': latestAlarm.isActivityEnabled,
+          'isLocationEnabled': latestAlarm.isLocationEnabled,
+          'isWeatherEnabled': latestAlarm.isWeatherEnabled,
+          'intervalToAlarm': intervaltoAlarm,
+          'location': latestAlarm.location,
+          'weatherTypes': jsonEncode(latestAlarm.weatherTypes),
           });
           print("Scheduled...");
         } on PlatformException catch (e) {

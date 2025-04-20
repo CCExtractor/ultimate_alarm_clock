@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -152,9 +154,16 @@ class SplashScreenController extends GetxController {
 
                 try {
                   await alarmChannel.invokeMethod('scheduleAlarm', {
-                    'milliSeconds': intervaltoAlarm,
-                    'activityMonitor': latestAlarm.activityMonitor
+                    'isSharedAlarm': latestAlarm.isSharedAlarmEnabled,
+                    'isActivityEnabled': latestAlarm.isActivityEnabled,
+                    'isLocationEnabled': latestAlarm.isLocationEnabled,
+                    'isWeatherEnabled': latestAlarm.isWeatherEnabled,
+                    'intervalToAlarm': intervaltoAlarm,
+                    'location': latestAlarm.location,
+                    'weatherTypes': jsonEncode(latestAlarm.weatherTypes),
                   });
+
+
                   print("Scheduled...");
                 } on PlatformException catch (e) {
                   print("Failed to schedule alarm: ${e.message}");

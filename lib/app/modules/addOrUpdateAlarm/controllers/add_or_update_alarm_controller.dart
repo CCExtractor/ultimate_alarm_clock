@@ -16,6 +16,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
@@ -637,6 +638,7 @@ class AddOrUpdateAlarmController extends GetxController {
       if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == false) {
         alarmData.firestoreId = alarmRecord.value.firestoreId;
         await FirestoreDb.updateAlarm(alarmRecord.value.ownerId, alarmData);
+        PushNotifications().triggerRescheduleAlarmNotification(alarmData.firestoreId!);
       } else {
         // Deleting alarm on IsarDB to ensure no duplicate entry
         await IsarDb.deleteAlarm(alarmRecord.value.isarId);

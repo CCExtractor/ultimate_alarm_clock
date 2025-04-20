@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/saved_emails.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -60,6 +61,12 @@ class ShareDialog extends StatelessWidget {
                                 controller.selectedEmails,
                                 controller.alarmRecord.value,
                               );
+                              
+                            List<String> sharedUserIds = await FirestoreDb.getUserIdsByEmails(
+                                controller.selectedEmails,
+                              );
+
+                              await PushNotifications().triggerSharedItemNotification(sharedUserIds);
                             }
                           } else {
                             Get.snackbar('Error', 'Select an User');

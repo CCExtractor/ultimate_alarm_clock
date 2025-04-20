@@ -55,6 +55,14 @@
             android:exported="true"></service>
 
         <service
+            android:name=".FirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".WeatherFetcherService"
             android:foregroundServiceType="location"
             android:enabled="true"
