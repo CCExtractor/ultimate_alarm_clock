@@ -54,6 +54,8 @@ class ProfileModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isTaskListEnabled;
+  late String serializedTaskList;
   @ignore
   Map? offsetDetails;
 
@@ -101,7 +103,9 @@ class ProfileModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      this.isTaskListEnabled = false,
+      this.serializedTaskList = '[]'});
 
   ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -167,6 +171,9 @@ class ProfileModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    
+    isTaskListEnabled = documentSnapshot['isTaskListEnabled'] ?? false;
+    serializedTaskList = documentSnapshot['serializedTaskList'] ?? '[]';
   }
 
   ProfileModel.fromMap(Map<String, dynamic> profileData) {
@@ -219,6 +226,9 @@ class ProfileModel {
     guardian = profileData['guardian'];
     isCall = profileData['isCall'];
     ringOn = profileData['ringOn'];
+    
+    isTaskListEnabled = profileData['isTaskListEnabled'] ?? false;
+    serializedTaskList = profileData['serializedTaskList'] ?? '[]';
   }
 
   ProfileModel.fromJson(String profileData, UserModel? user) {
@@ -249,8 +259,9 @@ class ProfileModel {
       'activityInterval': profileRecord.activityInterval,
       'minutesSinceMidnight': profileRecord.minutesSinceMidnight,
       'isLocationEnabled': profileRecord.isLocationEnabled,
-      'location': profileRecord.location,
       'isSharedAlarmEnabled': profileRecord.isSharedAlarmEnabled,
+      'offsetDetails': profileRecord.offsetDetails,
+      'location': profileRecord.location,
       'isMathsEnabled': profileRecord.isMathsEnabled,
       'mathsDifficulty': profileRecord.mathsDifficulty,
       'numMathsQuestions': profileRecord.numMathsQuestions,
@@ -274,7 +285,9 @@ class ProfileModel {
       'guardianTimer': profileRecord.guardianTimer,
       'guardian': profileRecord.guardian,
       'isCall': profileRecord.isCall,
-      'ringOn': profileRecord.ringOn
+      'ringOn': profileRecord.ringOn,
+      'isTaskListEnabled': profileRecord.isTaskListEnabled,
+      'serializedTaskList': profileRecord.serializedTaskList
     };
 
     if (profileRecord.isSharedAlarmEnabled) {

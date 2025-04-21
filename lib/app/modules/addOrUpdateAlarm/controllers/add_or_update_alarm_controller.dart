@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/task_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
@@ -113,6 +114,15 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
+  final RxBool isGuardian = false.obs;
+  final RxInt guardianTimer = 0.obs;
+  final RxString guardian = ''.obs;
+  final RxBool isCall = false.obs;
+
+  final RxBool isTaskListEnabled = false.obs;
+  final RxList<TaskModel> taskList = <TaskModel>[].obs;
+  final RxString serializedTaskList = '[]'.obs;
+
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
 
@@ -136,11 +146,6 @@ class AddOrUpdateAlarmController extends GetxController {
 
   late ProfileModel profileModel;
   final storage = Get.find<GetStorageProvider>();
-
-  final RxBool isGuardian = false.obs;
-  final RxInt guardianTimer = 0.obs;
-  final RxString guardian = ''.obs;
-  final RxBool isCall = false.obs;
 
   void toggleIsPlaying() {
     isPlaying.toggle();
@@ -828,6 +833,13 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord.value.mutexLock = false;
         mutexLock.value = false;
       }
+
+      isTaskListEnabled.value = alarmRecord.value.isTaskListEnabled;
+      if (alarmRecord.value.serializedTaskList.isNotEmpty && 
+          alarmRecord.value.serializedTaskList != '[]') {
+        taskList.value = TaskModel.decodeTaskList(alarmRecord.value.serializedTaskList);
+        serializedTaskList.value = alarmRecord.value.serializedTaskList;
+      }
     } else {
       hours.value = selectedTime.value.hour;
       minutes.value = selectedTime.value.minute;
@@ -1075,6 +1087,8 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isTaskListEnabled: isTaskListEnabled.value,
+      serializedTaskList: serializedTaskList.value,
     );
   }
 
@@ -1370,6 +1384,8 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isTaskListEnabled: isTaskListEnabled.value,
+      serializedTaskList: serializedTaskList.value,
       );
 
       if (homeController.isProfileUpdate.value) {
@@ -1408,7 +1424,6 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1417,3 +1432,20 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+
+  void addTask(TaskModel task) {
+    taskList.add(task);
+    updateSerializedTaskList();
+  }
+
+  void removeTask(int index) {
+    if (index >= 0 && index < taskList.length) {
+      taskList.removeAt(index);
+      updateSerializedTaskList();
+    }
+  }
+
+  void updateSerializedTaskList() {
+    serializedTaskList.value = TaskModel.encodeTaskList(taskList);
+  }
+}
