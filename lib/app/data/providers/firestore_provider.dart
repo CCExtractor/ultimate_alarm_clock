@@ -82,8 +82,10 @@ class FirestoreDb {
         guardianTimer INTEGER,
         guardian TEXT,
         isCall INTEGER,
-        ringOn INTEGER
-
+        ringOn INTEGER,
+        isWifiEnabled INTEGER NOT NULL DEFAULT 0,
+        wifiName TEXT,
+        wifiBSSID TEXT
       )
     ''');
     await db.execute('''

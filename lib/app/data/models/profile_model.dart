@@ -54,6 +54,9 @@ class ProfileModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isWifiEnabled;
+  late String wifiName;
+  late String wifiBSSID;
   @ignore
   Map? offsetDetails;
 
@@ -101,7 +104,11 @@ class ProfileModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      required this.isWifiEnabled,
+      required this.wifiName,
+      required this.wifiBSSID,
+      });
 
   ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -167,6 +174,9 @@ class ProfileModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    isWifiEnabled = documentSnapshot['isWifiEnabled'];
+    wifiName = documentSnapshot['wifiName'];
+    wifiBSSID = documentSnapshot['wifiBSSID'];
   }
 
   ProfileModel.fromMap(Map<String, dynamic> profileData) {
@@ -219,6 +229,9 @@ class ProfileModel {
     guardian = profileData['guardian'];
     isCall = profileData['isCall'];
     ringOn = profileData['ringOn'];
+    isWifiEnabled = profileData['isWifiEnabled'];
+    wifiName = profileData['wifiName'];
+    wifiBSSID = profileData['wifiBSSID'];
   }
 
   ProfileModel.fromJson(String profileData, UserModel? user) {
@@ -274,7 +287,10 @@ class ProfileModel {
       'guardianTimer': profileRecord.guardianTimer,
       'guardian': profileRecord.guardian,
       'isCall': profileRecord.isCall,
-      'ringOn': profileRecord.ringOn
+      'ringOn': profileRecord.ringOn,
+      'isWifiEnabled': profileRecord.isWifiEnabled,
+      'wifiName': profileRecord.wifiName,
+      'wifiBSSID': profileRecord.wifiBSSID,
     };
 
     if (profileRecord.isSharedAlarmEnabled) {

@@ -27,6 +27,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_a
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_duration_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/wifi_based_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
@@ -918,6 +919,16 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                         color: themeController
                                             .primaryDisabledTextColor.value,
                                       ),
+                                      WifiBasedTile(
+                                        controller: controller,
+                                        height: height,
+                                        width: width,
+                                        themeController: themeController,
+                                      ),
+                                      Divider(
+                                        color: themeController
+                                            .primaryDisabledTextColor.value,
+                                      ),
                                       GuardianAngel(
                                         controller: controller,
                                         themeController: themeController,
@@ -1160,6 +1171,9 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                     .contactTextEditingController.text,
                                 isCall: controller.isCall.value,
                                 ringOn: controller.isFutureDate.value,
+                                isWifiEnabled: controller.isWifiEnabled.value,
+                                wifiName: controller.wifiName.value,
+                                wifiBSSID: controller.wifiBSSID.value,
                               );
 
                               // Adding offset details to the database if

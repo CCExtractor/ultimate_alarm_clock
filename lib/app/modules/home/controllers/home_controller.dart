@@ -768,6 +768,10 @@ class HomeController extends GetxController {
         guardianTimer: profileModel.value.guardianTimer,
         guardian: profileModel.value.guardian,
         isCall: profileModel.value.isCall,
-        ringOn: false);
+        ringOn: false,
+        isWifiEnabled: profileModel.value.isWifiEnabled,
+        wifiName: profileModel.value.wifiName,
+        wifiBSSID: profileModel.value.wifiBSSID,
+        );
   }
 }

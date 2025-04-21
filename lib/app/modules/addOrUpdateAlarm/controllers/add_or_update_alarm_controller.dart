@@ -40,6 +40,9 @@ class AddOrUpdateAlarmController extends GetxController {
   final isActivityMonitorenabled = 0.obs;
   final activityInterval = 0.obs;
   final isLocationEnabled = false.obs;
+  final isWifiEnabled = false.obs;
+  final wifiName = ''.obs;
+  final wifiBSSID = ''.obs;
   final isSharedAlarmEnabled = false.obs;
   late final isWeatherEnabled = false.obs;
   final weatherApiKeyExists = false.obs;
@@ -768,6 +771,10 @@ class AddOrUpdateAlarmController extends GetxController {
       isWeatherEnabled.value = alarmRecord.value.isWeatherEnabled;
       weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
 
+      isWifiEnabled.value = alarmRecord.value.isWifiEnabled;
+      wifiName.value = alarmRecord.value.wifiName;
+      wifiBSSID.value = alarmRecord.value.wifiBSSID;
+
       isMathsEnabled.value = alarmRecord.value.isMathsEnabled;
       numMathsQuestions.value = alarmRecord.value.numMathsQuestions;
       mathsDifficulty.value =
@@ -1075,6 +1082,9 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isWifiEnabled: isWifiEnabled.value,
+      wifiName: wifiName.value,
+      wifiBSSID: wifiBSSID.value,
     );
   }
 
@@ -1370,6 +1380,9 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isWifiEnabled: isWifiEnabled.value,
+      wifiName: wifiName.value,
+      wifiBSSID: wifiBSSID.value,
       );
 
       if (homeController.isProfileUpdate.value) {
