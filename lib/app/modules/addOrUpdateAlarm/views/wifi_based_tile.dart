@@ -44,10 +44,18 @@ class WifiBasedTile extends StatelessWidget {
                     controller: controller,
                     themeController: themeController,),
                 
-                
                 );
                 
-          } else {}
+          } else {
+            Get.defaultDialog(
+              titlePadding: const EdgeInsets.symmetric(vertical: 20),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              backgroundColor: themeController.secondaryBackgroundColor.value,
+              titleStyle: Theme.of(context).textTheme.displaySmall,
+              title: 'Location Permission Denied!!!',
+              content: const Text('Please allow Location Access to use this feature.', textAlign: TextAlign.center,)
+            );
+          }
         },
         title: Row(
           children: [
