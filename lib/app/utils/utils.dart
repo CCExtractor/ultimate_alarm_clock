@@ -270,7 +270,7 @@ class Utils {
     return deg * (pi / 180);
   }
 
-  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, DateTime alarmDate) {
     final now = DateTime.now();
     final todayAlarm = DateTime(
       now.year,
@@ -282,7 +282,20 @@ class Utils {
 
     Duration duration;
 
-    // Check if the alarm is a one-time alarm
+    // If alarm is set for a specific date (future date)
+    if (alarmDate.isAfter(now)) {
+      final specificDateAlarm = DateTime(
+        alarmDate.year,
+        alarmDate.month,
+        alarmDate.day,
+        alarmTime.hour,
+        alarmTime.minute,
+      );
+      duration = specificDateAlarm.difference(now);
+      return _formatTimeToRingDuration(duration);
+    }
+
+    // Check if the alarm is a one-time alarm (no days selected)
     if (days.every((day) => !day)) {
       if (now.isBefore(todayAlarm)) {
         duration = todayAlarm.difference(now);
@@ -292,14 +305,15 @@ class Utils {
         duration = nextAlarm.difference(now);
       }
     } else if (now.isBefore(todayAlarm) && days[now.weekday - 1]) {
+      // If alarm is set for today and time hasn't passed
       duration = todayAlarm.difference(now);
     } else {
+      // Finding the next day when alarm will ring
       int daysUntilNextAlarm = 7;
       DateTime? nextAlarm;
 
       for (int i = 1; i <= 7; i++) {
         int nextDayIndex = (now.weekday + i - 1) % 7;
-
         if (days[nextDayIndex]) {
           if (i < daysUntilNextAlarm) {
             daysUntilNextAlarm = i;
@@ -321,6 +335,10 @@ class Utils {
       }
     }
 
+    return _formatTimeToRingDuration(duration);
+  }
+
+  static String _formatTimeToRingDuration(Duration duration) {
     if (duration.inMinutes < 1) {
       return 'less than 1 minute';
     } else if (duration.inHours < 24) {
@@ -330,12 +348,10 @@ class Utils {
         return minutes == 1 ? '$minutes minute' : '$minutes minutes';
       } else if (minutes == 0) {
         return hours == 1 ? '$hours hour' : '$hours hours';
-      } else if (hours == 1) {
-        return minutes == 1
-            ? '$hours hour $minutes minute'
-            : '$hours hour $minutes minutes';
       } else {
-        return '$hours hour $minutes minutes';
+        return hours == 1
+            ? '$hours hour ${minutes == 1 ? "$minutes minute" : "$minutes minutes"}'
+            : '$hours hours ${minutes == 1 ? "$minutes minute" : "$minutes minutes"}';
       }
     } else if (duration.inDays == 1) {
       return '1 day';
