@@ -353,7 +353,8 @@ class AddOrUpdateAlarmController extends GetxController {
       // Cannot request runtime permission because location permission
       // is denied forever.
       return false;
-    } else if (locationPermission == LocationPermission.denied) {
+    } else if (locationPermission == LocationPermission.denied ||
+                locationPermission == LocationPermission.whileInUse) {
       bool? shouldAskPermission = await Get.defaultDialog<bool>(
         backgroundColor: themeController.secondaryBackgroundColor.value,
         barrierDismissible: false,
@@ -365,7 +366,7 @@ class AddOrUpdateAlarmController extends GetxController {
           color: themeController.primaryTextColor.value,
         ),
         content: const Text(
-          'To ensure timely alarm dismissal, this app requires access to your location. Your location will be accessed in the background at the scheduled alarm time.',
+          'To ensure timely alarm dismissal, this app requires access to your location. Please select Allow all the time. Your location will only be accessed in the background at the scheduled alarm time.',
         ),
         actions: [
           TextButton(
@@ -398,16 +399,12 @@ class AddOrUpdateAlarmController extends GetxController {
         // User declined the permission request.
         return false;
       }
-      // Ask the user for location permission.
+      // Ask the user for location permission (must be LocationPermission.always).
       locationPermission = await FlLocation.requestLocationPermission();
       if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) return false;
+          locationPermission == LocationPermission.deniedForever ||
+          locationPermission == LocationPermission.whileInUse) return false;
     }
-
-    // Location permission must always be allowed (LocationPermission.always)
-    // to collect location data in the background.
-    if (background == true &&
-        locationPermission == LocationPermission.whileInUse) return false;
 
     // Location services has been enabled and permission have been granted.
     return true;
