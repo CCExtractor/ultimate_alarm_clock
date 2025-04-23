@@ -642,10 +642,13 @@ class _RingtoneSelectorPageState extends State<RingtoneSelectorPage> with Ticker
                 ),
               ),
               Tab(
-                child: Text(
-                  'Notifications'.tr,
-                  style: TextStyle(
-                    fontWeight: _systemSoundsTabController.index == 1 ? FontWeight.bold : FontWeight.normal,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Notifications'.tr,
+                    style: TextStyle(
+                      fontWeight: _systemSoundsTabController.index == 1 ? FontWeight.bold : FontWeight.normal,
+                    ),
                   ),
                 ),
               ),
