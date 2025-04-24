@@ -19,7 +19,10 @@ class AlarmDateTile extends StatelessWidget {
     
     return Obx(() => InkWell(
           onTap: () async {
-            controller.datePicker(context);
+            await controller.datePicker(context);
+            if (controller.selectedDate.value != DateTime.now()) {
+              controller.repeatDays.value = [false, false, false, false, false, false, false];
+            }
           },
           child: ListTile(
 
