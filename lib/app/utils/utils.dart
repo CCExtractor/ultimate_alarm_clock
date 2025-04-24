@@ -270,8 +270,30 @@ class Utils {
     return deg * (pi / 180);
   }
 
-  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, {bool? ringOn, String? alarmDate}) {
     final now = DateTime.now();
+    
+    if (ringOn == true && alarmDate != null) {
+      final targetDate = stringToDate(alarmDate);
+      final targetAlarm = DateTime(
+        targetDate.year,
+        targetDate.month,
+        targetDate.day,
+        alarmTime.hour,
+        alarmTime.minute,
+      );
+      
+      Duration duration = targetAlarm.difference(now);
+  
+      if (duration.isNegative) {
+        return 'No upcoming alarms';
+      }
+      
+  
+      return _formatAlarmDuration(duration);
+    }
+    
+  
     final todayAlarm = DateTime(
       now.year,
       now.month,
@@ -321,6 +343,11 @@ class Utils {
       }
     }
 
+    return _formatAlarmDuration(duration);
+  }
+
+  // Helper method to format duration consistently
+  static String _formatAlarmDuration(Duration duration) {
     if (duration.inMinutes < 1) {
       return 'less than 1 minute';
     } else if (duration.inHours < 24) {

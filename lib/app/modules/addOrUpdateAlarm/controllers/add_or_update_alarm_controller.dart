@@ -740,6 +740,8 @@ class AddOrUpdateAlarmController extends GetxController {
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
         repeatDays,
+        ringOn: isFutureDate.value,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
       );
 
       repeatDays.value = alarmRecord.value.days;
@@ -850,6 +852,8 @@ class AddOrUpdateAlarmController extends GetxController {
     timeToAlarm.value = Utils.timeUntilAlarm(
       TimeOfDay.fromDateTime(selectedTime.value),
       repeatDays,
+      ringOn: isFutureDate.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
     );
 
     // store initial values of the variables
@@ -891,12 +895,26 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void addListeners() {
-    // Updating UI to show time to alarm
-    selectedTime.listen((time) {
-      debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
-      _compareAndSetChange('selectedTime', time);
+    ever(selectedTime, (DateTime time) {
+      if (time != initialValues['selectedTime']) {
+        debugPrint('CHANGED CHANGED CHANGED CHANGED');
+        timeToAlarm.value = Utils.timeUntilAlarm(
+          TimeOfDay.fromDateTime(time), 
+          repeatDays, 
+          ringOn: isFutureDate.value, 
+          alarmDate: selectedDate.value.toString().substring(0, 11)
+        );
+        _compareAndSetChange('selectedTime', time);
+      }
+    });
+
+    ever(isFutureDate, (bool enabled) {
+      timeToAlarm.value = Utils.timeUntilAlarm(
+        TimeOfDay.fromDateTime(selectedTime.value),
+        repeatDays,
+        ringOn: enabled,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
+      );
     });
 
     //Updating UI to show repeated days
@@ -1263,6 +1281,21 @@ class AddOrUpdateAlarmController extends GetxController {
         DateTime.now();
     isFutureDate.value =
         selectedDate.value.difference(DateTime.now()).inHours > 0;
+    
+    // Update the "Rings in" time whenever the date changes
+    if (isFutureDate.value) {
+      timeToAlarm.value = Utils.timeUntilAlarm(
+        TimeOfDay.fromDateTime(selectedTime.value),
+        repeatDays,
+        ringOn: isFutureDate.value,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
+      );
+    } else {
+      timeToAlarm.value = Utils.timeUntilAlarm(
+        TimeOfDay.fromDateTime(selectedTime.value),
+        repeatDays,
+      );
+    }
   }
 
   void showToast({
@@ -1408,7 +1441,6 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1417,3 +1449,4 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+}
