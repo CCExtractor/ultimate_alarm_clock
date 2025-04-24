@@ -127,6 +127,19 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
   RxBool isPlaying = false.obs; // Observable boolean to track playing state
+  
+  // Storage for previous settings to enable undo functionality
+  final Map<String, dynamic> previousSettings = <String, dynamic>{}.obs;
+
+  // Store a previous setting for undo functionality
+  void storePreviousSetting(String key, dynamic value) {
+    previousSettings[key] = value;
+  }
+
+  // Recover a previously stored setting
+  dynamic getPreviousSetting(String key) {
+    return previousSettings[key];
+  }
 
   // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
