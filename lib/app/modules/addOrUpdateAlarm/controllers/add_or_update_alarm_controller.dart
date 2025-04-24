@@ -127,6 +127,18 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
   RxBool isPlaying = false.obs; // Observable boolean to track playing state
+  
+  final Map<String, dynamic> previousSettings = <String, dynamic>{}.obs;
+
+  
+  void storePreviousSetting(String key, dynamic value) {
+    previousSettings[key] = value;
+  }
+
+  
+  dynamic getPreviousSetting(String key) {
+    return previousSettings[key];
+  }
 
   // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
@@ -155,6 +167,18 @@ class AddOrUpdateAlarmController extends GetxController {
     if (value == true) {
       isCustomSelected.value = false;
       isWeekdaysSelected.value = false;
+      
+      if (isFutureDate.value) {
+        isFutureDate.value = false;
+        Get.snackbar(
+          'Specific Date Disabled',
+          'Ring On specific date has been disabled since repeat pattern is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
   }
 
@@ -167,6 +191,18 @@ class AddOrUpdateAlarmController extends GetxController {
     if (value == true) {
       isCustomSelected.value = false;
       isDailySelected.value = false;
+      
+      if (isFutureDate.value) {
+        isFutureDate.value = false;
+        Get.snackbar(
+          'Specific Date Disabled',
+          'Ring On specific date has been disabled since repeat pattern is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
   }
 
@@ -175,6 +211,18 @@ class AddOrUpdateAlarmController extends GetxController {
     if (value == true) {
       isWeekdaysSelected.value = false;
       isDailySelected.value = false;
+      
+      if (isFutureDate.value) {
+        isFutureDate.value = false;
+        Get.snackbar(
+          'Specific Date Disabled',
+          'Ring On specific date has been disabled since repeat pattern is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
   }
 
@@ -740,6 +788,8 @@ class AddOrUpdateAlarmController extends GetxController {
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
         repeatDays,
+        ringOn: isFutureDate.value,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
       );
 
       repeatDays.value = alarmRecord.value.days;
@@ -850,6 +900,8 @@ class AddOrUpdateAlarmController extends GetxController {
     timeToAlarm.value = Utils.timeUntilAlarm(
       TimeOfDay.fromDateTime(selectedTime.value),
       repeatDays,
+      ringOn: isFutureDate.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
     );
 
     // store initial values of the variables
@@ -891,12 +943,26 @@ class AddOrUpdateAlarmController extends GetxController {
   }
 
   void addListeners() {
-    // Updating UI to show time to alarm
-    selectedTime.listen((time) {
-      debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
-      _compareAndSetChange('selectedTime', time);
+    ever(selectedTime, (DateTime time) {
+      if (time != initialValues['selectedTime']) {
+        debugPrint('CHANGED CHANGED CHANGED CHANGED');
+        timeToAlarm.value = Utils.timeUntilAlarm(
+          TimeOfDay.fromDateTime(time), 
+          repeatDays, 
+          ringOn: isFutureDate.value, 
+          alarmDate: selectedDate.value.toString().substring(0, 11)
+        );
+        _compareAndSetChange('selectedTime', time);
+      }
+    });
+
+    ever(isFutureDate, (bool enabled) {
+      timeToAlarm.value = Utils.timeUntilAlarm(
+        TimeOfDay.fromDateTime(selectedTime.value),
+        repeatDays,
+        ringOn: enabled,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
+      );
     });
 
     //Updating UI to show repeated days
@@ -1261,8 +1327,47 @@ class AddOrUpdateAlarmController extends GetxController {
           lastDate: DateTime.now().add(const Duration(days: 355)),
         )) ??
         DateTime.now();
-    isFutureDate.value =
-        selectedDate.value.difference(DateTime.now()).inHours > 0;
+        
+    bool newFutureDate = selectedDate.value.difference(DateTime.now()).inHours > 0;
+    
+    
+    if (newFutureDate && !isFutureDate.value) {
+    
+      List<bool> oldRepeatDays = List<bool>.from(repeatDays);
+      
+    
+      for (int i = 0; i < repeatDays.length; i++) {
+        repeatDays[i] = false;
+      }
+      
+    
+      isDailySelected.value = false;
+      isWeekdaysSelected.value = false;
+      isCustomSelected.value = false;
+      
+    
+      if (oldRepeatDays.any((enabled) => enabled)) {
+        Get.snackbar(
+          'Repeat Pattern Disabled',
+          'Repeat pattern has been disabled since specific date is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+    
+    
+    isFutureDate.value = newFutureDate;
+    
+    
+    timeToAlarm.value = Utils.timeUntilAlarm(
+      TimeOfDay.fromDateTime(selectedTime.value),
+      repeatDays,
+      ringOn: isFutureDate.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
+    );
   }
 
   void showToast({
@@ -1408,7 +1513,6 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1417,3 +1521,4 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+}
