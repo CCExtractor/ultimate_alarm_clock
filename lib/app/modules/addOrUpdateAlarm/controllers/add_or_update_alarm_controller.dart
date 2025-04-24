@@ -155,6 +155,19 @@ class AddOrUpdateAlarmController extends GetxController {
     if (value == true) {
       isCustomSelected.value = false;
       isWeekdaysSelected.value = false;
+      
+      // If enabling daily pattern, disable ring on specific date
+      if (isFutureDate.value) {
+        isFutureDate.value = false;
+        Get.snackbar(
+          'Specific Date Disabled',
+          'Ring On specific date has been disabled since repeat pattern is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
   }
 
@@ -167,6 +180,19 @@ class AddOrUpdateAlarmController extends GetxController {
     if (value == true) {
       isCustomSelected.value = false;
       isDailySelected.value = false;
+      
+      // If enabling weekdays pattern, disable ring on specific date
+      if (isFutureDate.value) {
+        isFutureDate.value = false;
+        Get.snackbar(
+          'Specific Date Disabled',
+          'Ring On specific date has been disabled since repeat pattern is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
   }
 
@@ -175,6 +201,19 @@ class AddOrUpdateAlarmController extends GetxController {
     if (value == true) {
       isWeekdaysSelected.value = false;
       isDailySelected.value = false;
+      
+      // If enabling custom pattern, disable ring on specific date
+      if (isFutureDate.value) {
+        isFutureDate.value = false;
+        Get.snackbar(
+          'Specific Date Disabled',
+          'Ring On specific date has been disabled since repeat pattern is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
   }
 
@@ -1279,23 +1318,48 @@ class AddOrUpdateAlarmController extends GetxController {
           lastDate: DateTime.now().add(const Duration(days: 355)),
         )) ??
         DateTime.now();
-    isFutureDate.value =
-        selectedDate.value.difference(DateTime.now()).inHours > 0;
+        
+    // Check if the date is in the future (more than current hour)  
+    bool newFutureDate = selectedDate.value.difference(DateTime.now()).inHours > 0;
     
-    // Update the "Rings in" time whenever the date changes
-    if (isFutureDate.value) {
-      timeToAlarm.value = Utils.timeUntilAlarm(
-        TimeOfDay.fromDateTime(selectedTime.value),
-        repeatDays,
-        ringOn: isFutureDate.value,
-        alarmDate: selectedDate.value.toString().substring(0, 11),
-      );
-    } else {
-      timeToAlarm.value = Utils.timeUntilAlarm(
-        TimeOfDay.fromDateTime(selectedTime.value),
-        repeatDays,
-      );
+    // Only if the user is turning ON the Ring On feature
+    if (newFutureDate && !isFutureDate.value) {
+      // Store current repeat pattern before clearing
+      List<bool> oldRepeatDays = List<bool>.from(repeatDays);
+      
+      // Clear all repeat days
+      for (int i = 0; i < repeatDays.length; i++) {
+        repeatDays[i] = false;
+      }
+      
+      // Reset the checkbox states
+      isDailySelected.value = false;
+      isWeekdaysSelected.value = false;
+      isCustomSelected.value = false;
+      
+      // Show notification to user if repeat was previously enabled
+      if (oldRepeatDays.any((enabled) => enabled)) {
+        Get.snackbar(
+          'Repeat Pattern Disabled',
+          'Repeat pattern has been disabled since specific date is selected.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
     }
+    
+    // Update the isFutureDate value after all actions
+    isFutureDate.value = newFutureDate;
+    
+    // Update the "Rings in" time
+    timeToAlarm.value = Utils.timeUntilAlarm(
+      TimeOfDay.fromDateTime(selectedTime.value),
+      repeatDays,
+      ringOn: isFutureDate.value,
+      alarmDate: selectedDate.value.toString().substring(0, 11),
+    );
   }
 
   void showToast({

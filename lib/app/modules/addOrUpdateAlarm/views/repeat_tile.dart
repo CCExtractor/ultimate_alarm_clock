@@ -200,6 +200,19 @@ class RepeatTile extends StatelessWidget {
         onTap: () {
           Utils.hapticFeedback();
           controller.repeatDays[dayIndex] = !controller.repeatDays[dayIndex];
+          
+          // If enabling any day, disable ring on specific date
+          if (controller.repeatDays[dayIndex] && controller.isFutureDate.value) {
+            controller.isFutureDate.value = false;
+            Get.snackbar(
+              'Specific Date Disabled',
+              'Ring On specific date has been disabled since repeat pattern is selected.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+              duration: const Duration(seconds: 3),
+            );
+          }
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0),
@@ -218,6 +231,19 @@ class RepeatTile extends StatelessWidget {
                 onChanged: (value) {
                   Utils.hapticFeedback();
                   controller.repeatDays[dayIndex] = value!;
+                  
+                  // If enabling any day, disable ring on specific date
+                  if (value && controller.isFutureDate.value) {
+                    controller.isFutureDate.value = false;
+                    Get.snackbar(
+                      'Specific Date Disabled',
+                      'Ring On specific date has been disabled since repeat pattern is selected.',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.orange,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 3),
+                    );
+                  }
                 },
               ),
               Text(
