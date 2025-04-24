@@ -128,15 +128,14 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isCustomSelected = false.obs;
   RxBool isPlaying = false.obs; // Observable boolean to track playing state
   
-  // Storage for previous settings to enable undo functionality
   final Map<String, dynamic> previousSettings = <String, dynamic>{}.obs;
 
-  // Store a previous setting for undo functionality
+  
   void storePreviousSetting(String key, dynamic value) {
     previousSettings[key] = value;
   }
 
-  // Recover a previously stored setting
+  
   dynamic getPreviousSetting(String key) {
     return previousSettings[key];
   }
@@ -169,7 +168,6 @@ class AddOrUpdateAlarmController extends GetxController {
       isCustomSelected.value = false;
       isWeekdaysSelected.value = false;
       
-      // If enabling daily pattern, disable ring on specific date
       if (isFutureDate.value) {
         isFutureDate.value = false;
         Get.snackbar(
@@ -194,7 +192,6 @@ class AddOrUpdateAlarmController extends GetxController {
       isCustomSelected.value = false;
       isDailySelected.value = false;
       
-      // If enabling weekdays pattern, disable ring on specific date
       if (isFutureDate.value) {
         isFutureDate.value = false;
         Get.snackbar(
@@ -215,7 +212,6 @@ class AddOrUpdateAlarmController extends GetxController {
       isWeekdaysSelected.value = false;
       isDailySelected.value = false;
       
-      // If enabling custom pattern, disable ring on specific date
       if (isFutureDate.value) {
         isFutureDate.value = false;
         Get.snackbar(
@@ -1332,25 +1328,24 @@ class AddOrUpdateAlarmController extends GetxController {
         )) ??
         DateTime.now();
         
-    // Check if the date is in the future (more than current hour)  
     bool newFutureDate = selectedDate.value.difference(DateTime.now()).inHours > 0;
     
-    // Only if the user is turning ON the Ring On feature
+    
     if (newFutureDate && !isFutureDate.value) {
-      // Store current repeat pattern before clearing
+    
       List<bool> oldRepeatDays = List<bool>.from(repeatDays);
       
-      // Clear all repeat days
+    
       for (int i = 0; i < repeatDays.length; i++) {
         repeatDays[i] = false;
       }
       
-      // Reset the checkbox states
+    
       isDailySelected.value = false;
       isWeekdaysSelected.value = false;
       isCustomSelected.value = false;
       
-      // Show notification to user if repeat was previously enabled
+    
       if (oldRepeatDays.any((enabled) => enabled)) {
         Get.snackbar(
           'Repeat Pattern Disabled',
@@ -1363,10 +1358,10 @@ class AddOrUpdateAlarmController extends GetxController {
       }
     }
     
-    // Update the isFutureDate value after all actions
+    
     isFutureDate.value = newFutureDate;
     
-    // Update the "Rings in" time
+    
     timeToAlarm.value = Utils.timeUntilAlarm(
       TimeOfDay.fromDateTime(selectedTime.value),
       repeatDays,

@@ -346,7 +346,6 @@ class Utils {
     return _formatAlarmDuration(duration);
   }
 
-  // Helper method to format duration consistently
   static String _formatAlarmDuration(Duration duration) {
     if (duration.inMinutes < 1) {
       return 'less than 1 minute';

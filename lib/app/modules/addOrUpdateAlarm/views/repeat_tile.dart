@@ -201,7 +201,6 @@ class RepeatTile extends StatelessWidget {
           Utils.hapticFeedback();
           controller.repeatDays[dayIndex] = !controller.repeatDays[dayIndex];
           
-          // If enabling any day, disable ring on specific date
           if (controller.repeatDays[dayIndex] && controller.isFutureDate.value) {
             controller.isFutureDate.value = false;
             Get.snackbar(
@@ -232,7 +231,6 @@ class RepeatTile extends StatelessWidget {
                   Utils.hapticFeedback();
                   controller.repeatDays[dayIndex] = value!;
                   
-                  // If enabling any day, disable ring on specific date
                   if (value && controller.isFutureDate.value) {
                     controller.isFutureDate.value = false;
                     Get.snackbar(

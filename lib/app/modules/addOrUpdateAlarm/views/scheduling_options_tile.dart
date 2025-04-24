@@ -33,7 +33,6 @@ class SchedulingOptionsTile extends StatelessWidget {
           ),
         ),
         
-        // Tabbed interface
         Container(
           decoration: BoxDecoration(
             color: themeController.secondaryBackgroundColor.value,
@@ -42,28 +41,24 @@ class SchedulingOptionsTile extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              // One-time tab
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    // If switching to one-time, clear any repeat pattern
                     if (controller.repeatDays.any((day) => day)) {
                       final List<bool> oldRepeatDays = List<bool>.from(controller.repeatDays);
                       final bool oldIsDailySelected = controller.isDailySelected.value;
                       final bool oldIsWeekdaysSelected = controller.isWeekdaysSelected.value;
                       final bool oldIsCustomSelected = controller.isCustomSelected.value;
                       
-                      // Clear repeat days
                       for (int i = 0; i < controller.repeatDays.length; i++) {
                         controller.repeatDays[i] = false;
                       }
                       
-                      // Reset selection states
+                      
                       controller.isDailySelected.value = false;
                       controller.isWeekdaysSelected.value = false;
                       controller.isCustomSelected.value = false;
                       
-                      // Show snackbar with undo option
                       Get.snackbar(
                         'Repeat Pattern Disabled',
                         'Switching to one-time scheduling',
@@ -74,7 +69,6 @@ class SchedulingOptionsTile extends StatelessWidget {
                         mainButton: TextButton(
                           child: const Text('UNDO', style: TextStyle(color: Colors.white)),
                           onPressed: () {
-                            // Restore previous repeat pattern
                             for (int i = 0; i < controller.repeatDays.length; i++) {
                               controller.repeatDays[i] = oldRepeatDays[i];
                             }
@@ -112,19 +106,17 @@ class SchedulingOptionsTile extends StatelessWidget {
                 ),
               ),
               
-              // Recurring tab
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    // If switching to recurring and one-time is enabled
                     if (controller.isFutureDate.value) {
                       final bool oldIsFutureDate = controller.isFutureDate.value;
                       final DateTime oldSelectedDate = controller.selectedDate.value;
                       
-                      // Disable one-time
+                      
                       controller.isFutureDate.value = false;
                       
-                      // Show snackbar with undo option
+                      
                       Get.snackbar(
                         'One-time Schedule Disabled',
                         'Switching to recurring scheduling',
@@ -135,11 +127,11 @@ class SchedulingOptionsTile extends StatelessWidget {
                         mainButton: TextButton(
                           child: const Text('UNDO', style: TextStyle(color: Colors.white)),
                           onPressed: () {
-                            // Restore one-time settings
+                            
                             controller.isFutureDate.value = oldIsFutureDate;
                             controller.selectedDate.value = oldSelectedDate;
                             
-                            // Clear repeat days
+                            
                             for (int i = 0; i < controller.repeatDays.length; i++) {
                               controller.repeatDays[i] = false;
                             }
@@ -151,12 +143,12 @@ class SchedulingOptionsTile extends StatelessWidget {
                       );
                     }
                     
-                    // Default to weekdays if no days selected
+                    
                     if (!controller.repeatDays.any((day) => day)) {
                       controller.setIsWeekdaysSelected(true);
                     }
                     
-                    // Show repeat options
+                    
                     _showRepeatOptions(context);
                   },
                   child: Container(
@@ -186,14 +178,12 @@ class SchedulingOptionsTile extends StatelessWidget {
         
         const SizedBox(height: 16),
         
-        // Show appropriate content based on selection
         controller.isFutureDate.value
             ? _buildOneTimeContent(context)
             : _buildRecurringContent(context),
             
         const SizedBox(height: 8),
         
-        // Show alarm ring time estimation
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Row(
