@@ -37,12 +37,14 @@ import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key}) {
-    inputTimeController.initTimeTextField();
+   Get.delete<InputTimeController>();
+    _inputTimeController = Get.put(InputTimeController(), tag: 'alarm_input_${DateTime.now().millisecondsSinceEpoch}');
+    _inputTimeController.initTimeTextField();
   }
 
   final ThemeController themeController = Get.find<ThemeController>();
-  final InputTimeController inputTimeController =
-      Get.put(InputTimeController());
+  late final InputTimeController _inputTimeController;
+  InputTimeController get inputTimeController => _inputTimeController;
   final SettingsController settingsController = Get.find<SettingsController>();
 
   @override
