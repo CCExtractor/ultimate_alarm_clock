@@ -305,8 +305,7 @@ class Utils {
         duration = nextAlarm.difference(now);
       }
     } else if (now.isBefore(todayAlarm) && days[now.weekday - 1]) {
-      // If alarm is set for today and time hasn't passed
-      duration = todayAlarm.difference(now);
+        duration = todayAlarm.difference(now);
     } else {
       // Finding the next day when alarm will ring
       int daysUntilNextAlarm = 7;
@@ -315,16 +314,15 @@ class Utils {
       for (int i = 1; i <= 7; i++) {
         int nextDayIndex = (now.weekday + i - 1) % 7;
         if (days[nextDayIndex]) {
-          if (i < daysUntilNextAlarm) {
-            daysUntilNextAlarm = i;
-            nextAlarm = DateTime(
-              now.year,
-              now.month,
-              now.day + i,
-              alarmTime.hour,
-              alarmTime.minute,
-            );
-          }
+          daysUntilNextAlarm = i;
+          nextAlarm = DateTime(
+            now.year,
+            now.month,
+            now.day + i,
+            alarmTime.hour,
+            alarmTime.minute,
+          );
+          break;
         }
       }
 
