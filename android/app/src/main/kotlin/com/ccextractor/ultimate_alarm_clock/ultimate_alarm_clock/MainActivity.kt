@@ -23,7 +23,12 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.RemoteViews
+import java.sql.Time
+import java.util.Calendar
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 class MainActivity : FlutterActivity() {
     companion object {
@@ -301,7 +306,7 @@ class MainActivity : FlutterActivity() {
 
     // Update the rings_in home_widget in a loop of 1 minute
     private val handler = Handler(Looper.getMainLooper())
-    private val updateInterval: Long = 60000
+    private val updateInterval: Long = 10000
 
     private val updateWidgetRunnable = object : Runnable {
         override fun run() {
@@ -313,8 +318,10 @@ class MainActivity : FlutterActivity() {
                 val views = RemoteViews(packageName, R.layout.next_alarm_home_widget)
                 val alarmTime = getAlarmTimeText()
                 if (alarmTime != "No upcoming alarms!") {
+                    views.setViewVisibility(R.id.repeat_days, View.VISIBLE)
                     views.setTextViewText(R.id.rings_in, alarmTime)
                 } else {
+                    views.setViewVisibility(R.id.repeat_days, View.GONE)
                     views.setTextViewText(R.id.alarm_date_n_time, "No upcoming alarms!")
                     views.setTextViewText(R.id.rings_in, "")
                 }
@@ -330,55 +337,121 @@ class MainActivity : FlutterActivity() {
         val db = dbHelper.readableDatabase
         val sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         val profile = sharedPreferences.getString("flutter.profile", "Default") ?: "Default"
-        val ringTime = getLatestAlarm(db, true, profile, applicationContext)
+        val latestAlarm = getLatestAlarm(db, true, profile, applicationContext)
 
-        return if (ringTime != null) {
-            val interval = ringTime["interval"] as? Long
-            if (interval != null) {
-                "Rings in " + formatInterval(interval)
-            } else {
-                "No upcoming alarms!"
+        return if (latestAlarm != null) {
+            val alarmTime = latestAlarm["alarmTime"] as? String ?: ""
+            val days = latestAlarm["days"] as? String ?: ""
+            val alarmDate = latestAlarm["alarmDate"] as? String ?: ""
+
+            if (alarmTime.isEmpty() || days.isEmpty() || alarmDate.isEmpty()) {
+                return "No upcoming alarms!"
             }
+            return "Rings in " + timeUntilAlarm(stringToTime(alarmTime), days.map { it == '1' }, stringToDate(alarmDate))
         } else {
             "No upcoming alarms!"
         }
     }
 
-    private fun formatInterval(interval: Long): String {
-        val totalMinutes = interval / 60000
-        val hours = totalMinutes / 60
-        val remainingMinutes = totalMinutes % 60
-        val days = hours / 24
+    private fun timeUntilAlarm(alarmTime: Time, days: List<Boolean>, alarmDate: Date): String {
+        val now = Calendar.getInstance()
 
-        if (hours == (0).toLong() && remainingMinutes < 1) {
-            return "less than 1 minute"
-        } else if (hours < 24) {
-            if (hours == (0).toLong()) {
-                return if (remainingMinutes == (1).toLong()) {
-                    "$remainingMinutes minute"
-                } else {
-                    "$remainingMinutes minutes"
-                }
-            } else if (remainingMinutes == (0).toLong()) {
-                return if (hours == (1).toLong()) {
-                    "$hours hour"
-                } else {
-                    "$hours hours"
-                }
-            } else if (hours == (1).toLong()) {
-                return if (remainingMinutes == (1).toLong()) {
-                    "$hours hour $remainingMinutes minute"
-                } else {
-                    "$hours hour $remainingMinutes minutes"
-                }
-            } else {
-                return "$hours hour $remainingMinutes minutes";
-            }
-        } else if (days == (1).toLong()) {
-            return "1 day"
-        } else {
-            return "$days days"
+        val todayAlarm = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, alarmTime.hours)
+            set(Calendar.MINUTE, alarmTime.minutes)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
+
+        var durationMillis: Long
+
+        // If the alarm is for a specific future date
+        if (alarmDate.after(now.time)) {
+            val specificDateAlarm = Calendar.getInstance().apply {
+                set(Calendar.YEAR, alarmDate.year)
+                set(Calendar.MONTH, alarmDate.month)
+                set(Calendar.DATE, alarmDate.date)
+                set(Calendar.HOUR_OF_DAY, alarmTime.hours)
+                set(Calendar.MINUTE, alarmTime.minutes)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            durationMillis = specificDateAlarm.timeInMillis - now.timeInMillis
+            return formatInterval(durationMillis)
+        }
+
+        // One-time alarm (no repeat days)
+        if (days.all { !it }) {
+            durationMillis = if (now.before(todayAlarm)) {
+                todayAlarm.timeInMillis - now.timeInMillis
+            } else {
+                val nextAlarm = todayAlarm
+                nextAlarm.add(Calendar.DAY_OF_YEAR, 1)
+                nextAlarm.timeInMillis - now.timeInMillis
+            }
+        } else if (now.before(todayAlarm) && days[now.get(Calendar.DAY_OF_WEEK) - 1]) {
+            durationMillis = todayAlarm.timeInMillis - now.timeInMillis
+        } else {
+            // var daysUntilNextAlarm = 7
+            var nextAlarm: Calendar? = null
+
+            for (i in 1..7) {
+                val nextDayIndex = (now.get(Calendar.DAY_OF_WEEK) + i - 1) % 7;
+                if (days[nextDayIndex]) {
+                    // daysUntilNextAlarm = i;
+                    nextAlarm = Calendar.getInstance().apply {
+                        add(Calendar.DAY_OF_YEAR, i)
+                        set(Calendar.HOUR_OF_DAY, alarmTime.hours)
+                        set(Calendar.MINUTE, alarmTime.minutes)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                    break
+                }
+            }
+
+            if (nextAlarm != null) {
+                durationMillis = nextAlarm.timeInMillis - now.timeInMillis;
+            } else {
+                return "No upcoming alarms"
+            }
+        }
+        return formatInterval(durationMillis)
+    }
+
+    private fun formatInterval(durationMillis: Long): String {
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+        val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+        val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
+
+        return when {
+            minutes < 1 -> "less than 1 minute"
+            hours < 24 -> {
+                val remainingMinutes = minutes % 60
+                when {
+                    hours == 0L -> "$remainingMinutes minute${if (remainingMinutes == 1L) "" else "s"}"
+                    remainingMinutes == 0L -> "$hours hour${if (hours == 1L) "" else "s"}"
+                    else -> "$hours hour${if (hours == 1L) "" else "s"} $remainingMinutes minute${if (remainingMinutes == 1L) "" else "s"}"
+                }
+            }
+            days == 1L -> "1 day"
+            else -> "$days days"
+        }
+    }
+
+    private fun stringToDate(date: String): Date {
+        val parts = date.split("-")
+        val year = parts[0].trim().toInt() - 1900
+        val month = parts[1].trim().toInt() - 1
+        val day = parts[2].trim().toInt()
+        return Date(year, month, day)
+    }
+
+    private fun stringToTime(time: String): Time {
+        val parts = time.split(':')
+        val hour = parts[0].toInt()
+        val minute = parts[1].toInt()
+        return Time(hour, minute, 0);
     }
 
     override fun onDestroy() {
