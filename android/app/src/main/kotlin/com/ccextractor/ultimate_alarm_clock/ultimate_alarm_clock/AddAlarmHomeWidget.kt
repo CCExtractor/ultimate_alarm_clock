@@ -48,8 +48,10 @@ class AddAlarmHomeWidget : AppWidgetProvider() {
     ) {
         val views = RemoteViews(context.packageName, R.layout.add_alarm_home_widget)
 
+        // Intent to open the Add or Update Alarm screen
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("initialRoute", "/add-update-alarm")
         }
 
         val pendingIntent = PendingIntent.getActivity(

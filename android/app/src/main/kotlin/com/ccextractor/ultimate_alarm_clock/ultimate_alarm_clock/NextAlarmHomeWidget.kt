@@ -25,15 +25,17 @@ class NextAlarmHomeWidget : AppWidgetProvider() {
             val alarmTime = data.getString("alarm_time", "")
             val repeatDays = data.getString("alarm_repeat_days", "One Time")
             if (ringsIn == "No upcoming alarms!") {
-                views.setViewVisibility(R.id.repeat_days, View.GONE);
+                views.setViewVisibility(R.id.repeat_days, View.GONE)
+                views.setViewVisibility(R.id.rings_in, View.GONE)
                 views.setTextViewText(R.id.repeat_days, "")
                 views.setTextViewText(R.id.alarm_date_n_time, "No upcoming alarms!")
                 views.setTextViewText(R.id.rings_in, "")
             } else {
                 views.setViewVisibility(R.id.repeat_days, View.VISIBLE)
-                views.setTextViewText(R.id.rings_in, ringsIn)
+                views.setViewVisibility(R.id.rings_in, View.VISIBLE)
                 views.setTextViewText(R.id.repeat_days, repeatDays)
                 views.setTextViewText(R.id.alarm_date_n_time, alarmTime)
+                views.setTextViewText(R.id.rings_in, ringsIn)
             }
 
             // Handle feature icons visibility
@@ -54,17 +56,17 @@ class NextAlarmHomeWidget : AppWidgetProvider() {
             views.setViewVisibility(R.id.pedometer_icon, 
                 if (data.getBoolean("isPedometerEnabled", false)) View.VISIBLE else View.GONE)
 
-            // handling on tap of add-alarm button
-//            val intent = Intent(context, MainActivity::class.java).apply {
-//                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            }
-//            val pendingIntent = PendingIntent.getActivity(
-//                context,
-//                0,
-//                intent,
-//                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-//            )
-//            views.setOnClickPendingIntent(R.id.add_alarm_button_next_alarm_widget, pendingIntent)
+        //     // handling on tap of add-alarm button
+        //    val intent = Intent(context, MainActivity::class.java).apply {
+        //        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        //    }
+        //    val pendingIntent = PendingIntent.getActivity(
+        //        context,
+        //        0,
+        //        intent,
+        //        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        //    )
+        //    views.setOnClickPendingIntent(R.id.add_alarm_button_next_alarm_widget, pendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -99,6 +101,23 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    // Check for initialRoute from the intent when coming from home widgets
+    String? initialRoute;
+    if (Platform.isAndroid) {
+      final intent = await MethodChannel('flutter/platform').invokeMethod<Map>('getInitialRoute');
+      initialRoute = intent?['initialRoute'] as String?;
+    }
+    // For add alarm home screen widget
+    if (initialRoute != null && initialRoute == '/add-update-alarm') {
+      Get.offNamed('/bottom-navigation-bar');
+      Utils.hapticFeedback();
+      homeController.isProfile.value = false;
+      Get.toNamed(
+        '/add-update-alarm',
+        arguments: homeController.genFakeAlarmModel(),
+      );
+    }
+
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
@@ -170,10 +189,12 @@ class SplashScreenController extends GetxController {
       }
     });
     // Necessary when hot restarting
-    Future.delayed(const Duration(seconds: 0), () {
-      if (shouldNavigate == true) {
-        Get.offNamed('/bottom-navigation-bar');
-      }
-    });
+    if (initialRoute == null) {
+      Future.delayed(const Duration(seconds: 0), () {
+        if (shouldNavigate) {
+          Get.offNamed('/bottom-navigation-bar');
+        }
+      });
+    } 
   }
 }

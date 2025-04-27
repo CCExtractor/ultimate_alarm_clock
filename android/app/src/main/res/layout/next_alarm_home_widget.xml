@@ -40,6 +40,7 @@
             android:text="@string/next_alarm_repeat_days_and_label"
             android:textColor="#AFFC41"
             android:layout_marginBottom="5dp"
+            android:visibility="gone"
             android:textSize="14sp" />
 
         <TextView
@@ -64,6 +65,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/rings_in"
+            android:visibility="gone"
             android:textSize="14sp" />
 
         <LinearLayout

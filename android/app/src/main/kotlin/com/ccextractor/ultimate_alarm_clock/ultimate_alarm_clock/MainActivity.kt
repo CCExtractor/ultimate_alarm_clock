@@ -149,6 +149,15 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "flutter/platform").setMethodCallHandler { call, result ->
+            if (call.method == "getInitialRoute") {
+                val initialRoute = intent.getStringExtra("initialRoute")
+                result.success(mapOf("initialRoute" to initialRoute))
+            } else {
+                result.notImplemented()
+            }
+        }
     }
 
 
@@ -306,7 +315,7 @@ class MainActivity : FlutterActivity() {
 
     // Update the rings_in home_widget in a loop of 1 minute
     private val handler = Handler(Looper.getMainLooper())
-    private val updateInterval: Long = 10000
+    private val updateInterval: Long = 60000
 
     private val updateWidgetRunnable = object : Runnable {
         override fun run() {
@@ -368,9 +377,7 @@ class MainActivity : FlutterActivity() {
         // If the alarm is for a specific future date
         if (alarmDate.after(now.time)) {
             val specificDateAlarm = Calendar.getInstance().apply {
-                set(Calendar.YEAR, alarmDate.year)
-                set(Calendar.MONTH, alarmDate.month)
-                set(Calendar.DATE, alarmDate.date)
+                time = alarmDate
                 set(Calendar.HOUR_OF_DAY, alarmTime.hours)
                 set(Calendar.MINUTE, alarmTime.minutes)
                 set(Calendar.SECOND, 0)
