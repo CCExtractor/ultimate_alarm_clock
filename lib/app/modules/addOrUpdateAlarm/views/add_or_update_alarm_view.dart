@@ -9,7 +9,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/in
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/ascending_volume.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/delete_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/label_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/location_activity_tile.dart';
