@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/controllers/bottom_navigation_bar_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../../home/controllers/home_controller.dart';
@@ -109,13 +111,18 @@ class SplashScreenController extends GetxController {
     }
     // For add alarm home screen widget
     if (initialRoute != null && initialRoute == '/add-update-alarm') {
-      Get.offNamed('/bottom-navigation-bar');
-      Utils.hapticFeedback();
-      homeController.isProfile.value = false;
-      Get.toNamed(
-        '/add-update-alarm',
-        arguments: homeController.genFakeAlarmModel(),
-      );
+      Get.offAllNamed('/bottom-navigation-bar');
+
+      Timer(const Duration(milliseconds: 500), () {
+        HomeController homeController = Get.find<HomeController>();
+        Get.toNamed('/add-update-alarm', arguments: homeController.genFakeAlarmModel());
+        Utils.hapticFeedback();
+        homeController.isProfile.value = false;
+      });
+    } else {
+      if (shouldNavigate) {
+        Get.offNamed('/bottom-navigation-bar');
+      }
     }
 
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
