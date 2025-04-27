@@ -386,20 +386,58 @@ class HomeController extends GetxController {
       } else {
         alarmTime.value = 'No upcoming alarms!';
       }
+      updateHomeWidgetData(latestAlarm);
+    });
+  }
 
-      SettingsController settingsController = Get.find<SettingsController>();
-      DateTime alarmDateTime = DateTime.parse('${latestAlarm.alarmDate}${latestAlarm.alarmTime}');
-      String formattedDateTime = '';
-      if (settingsController.is24HrsEnabled.value == true) {
+  // Helper method to update home widget data
+  Future<void> updateHomeWidgetData(AlarmModel latestAlarm) async {
+    SettingsController settingsController = Get.find<SettingsController>();
+    DateTime alarmDateTime = DateTime.parse('${latestAlarm.alarmDate}${latestAlarm.alarmTime}');
+    String formattedDateTime = '';
+    String repeatDays = Utils.getRepeatDays(latestAlarm.days).replaceAll('Never', 'One Time');
+    
+    // Format the date and time based on user preferences
+    if (settingsController.is24HrsEnabled.value == true) {
+      if (repeatDays == 'One Time') {
         formattedDateTime = DateFormat('HH:mm, dd MMM yyyy').format(alarmDateTime);
       } else {
-        formattedDateTime = DateFormat('hh:mm a, dd MMM yyyy').format(alarmDateTime);
+        formattedDateTime = DateFormat('HH:mm').format(alarmDateTime);
       }
-      // Updating Home Widget with latest alarms.
-      HomeWidget.saveWidgetData('rings_in', alarmTime.value);
-      HomeWidget.saveWidgetData('alarm_time', formattedDateTime);
-      HomeWidget.updateWidget(androidName: 'NextAlarmHomeWidget');
-    });
+    } else {
+      if (repeatDays == 'One Time') {
+        formattedDateTime = DateFormat('hh:mm a, dd MMM yyyy').format(alarmDateTime);
+      } else {
+        formattedDateTime = DateFormat('hh:mm a').format(alarmDateTime);
+      }
+    }
+    
+    // Add label to repeat days if present
+    if (latestAlarm.label.isNotEmpty) {
+      repeatDays += ' | ${latestAlarm.label}';
+    }
+
+    // Save basic alarm data
+    await HomeWidget.saveWidgetData('alarm_repeat_days', repeatDays);
+    await HomeWidget.saveWidgetData('alarm_time', formattedDateTime);
+    await HomeWidget.saveWidgetData('rings_in', alarmTime.value);
+    
+    // Save feature states
+    await _updateFeatureStates(latestAlarm);
+    
+    // Update widget UI
+    await HomeWidget.updateWidget(androidName: 'NextAlarmHomeWidget');
+  }
+
+  Future<void> _updateFeatureStates(AlarmModel alarm) async {
+    await HomeWidget.saveWidgetData('isSharedAlarmEnabled', alarm.isSharedAlarmEnabled);
+    await HomeWidget.saveWidgetData('isLocationEnabled', alarm.isLocationEnabled);
+    await HomeWidget.saveWidgetData('isActivityEnabled', alarm.isActivityEnabled);
+    await HomeWidget.saveWidgetData('isWeatherEnabled', alarm.isWeatherEnabled);
+    await HomeWidget.saveWidgetData('isQrEnabled', alarm.isQrEnabled);
+    await HomeWidget.saveWidgetData('isShakeEnabled', alarm.isShakeEnabled);
+    await HomeWidget.saveWidgetData('isMathsEnabled', alarm.isMathsEnabled);
+    await HomeWidget.saveWidgetData('isPedometerEnabled', alarm.isPedometerEnabled);
   }
 
   scheduleNextAlarm(
