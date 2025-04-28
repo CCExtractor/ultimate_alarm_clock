@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/stopwatch/controllers/stopwatch_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/stopwatch/views/overylay_pop.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import '../../../utils/utils.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 // ignore: must_be_immutable
 class StopwatchView extends GetView<StopwatchController> {
-  StopwatchView({Key? key}) : super(key: key);
+  StopwatchView({super.key});
   ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,52 @@ class StopwatchView extends GetView<StopwatchController> {
             toolbarHeight: height / 7.9,
             elevation: 0.0,
             centerTitle: true,
+            leading: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Obx(
+                  () => IconButton(
+                    onPressed: () async {
+                      Utils.hapticFeedback();
+                      bool isGranted = await requestPermission();
+                      if (!isGranted) {
+                        Get.snackbar(
+                          'Permission Denied'.tr,
+                          'Please enable overlay permission'.tr,
+                          duration: const Duration(seconds: 2),
+                          snackPosition: SnackPosition.BOTTOM,
+                          barBlur: 15,
+                          colorText: themeController.primaryTextColor.value,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 15,
+                          ),
+                        );
+                      } else if (await FlutterOverlayWindow.isActive()) {
+                        await FlutterOverlayWindow.closeOverlay();
+                      } else {
+                        await FlutterOverlayWindow.showOverlay(
+                          enableDrag: true,
+                          overlayTitle: '',
+                          overlayContent: '',
+                          flag: OverlayFlag.defaultFlag,
+                          visibility: NotificationVisibility.visibilityPublic,
+                          positionGravity: PositionGravity.auto,
+                          height: (height * 0.5).toInt(),
+                          width: WindowSize.matchParent,
+                          startPosition: const OverlayPosition(0, -259),
+                        );
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.widgets_rounded,
+                    ),
+                    color: themeController.primaryTextColor.value
+                        .withOpacity(0.75),
+                    iconSize: 27,
+                  ),
+                );
+              },
+            ),
             actions: [
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
