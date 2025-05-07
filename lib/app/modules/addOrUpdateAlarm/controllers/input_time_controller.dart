@@ -103,19 +103,19 @@ class InputTimeController extends GetxController {
       try {
         newHour = int.parse(rawHourText);
       } catch (e) {
-        debugPrint("toggleIfAtBoundary error parsing hour: $e");
+        debugPrint('toggleIfAtBoundary error parsing hour: $e');
         return;
       }
 
       if (newHour == 0) {
         newHour = 12;
       }
-      debugPrint("toggleIfAtBoundary: previousDisplayHour = $_previousDisplayHour, newHour = $newHour");
+      debugPrint('toggleIfAtBoundary: previousDisplayHour = $_previousDisplayHour, newHour = $newHour');
       if (_previousDisplayHour != null) {
         if ((_previousDisplayHour == 11 && newHour == 12) ||
             (_previousDisplayHour == 12 && newHour == 11)) {
           isAM.value = !isAM.value;
-          debugPrint("toggleIfAtBoundary: Toggled isAM to ${isAM.value}");
+          debugPrint('toggleIfAtBoundary: Toggled isAM to ${isAM.value}');
         }
       }
       _previousDisplayHour = newHour;

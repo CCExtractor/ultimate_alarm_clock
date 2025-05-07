@@ -103,7 +103,7 @@ class SplashScreenController extends GetxController {
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
-        print("shouldring: $shouldAlarmRing");
+        print('shouldring: $shouldAlarmRing');
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
           shouldNavigate = false;
@@ -155,9 +155,9 @@ class SplashScreenController extends GetxController {
                     'milliSeconds': intervaltoAlarm,
                     'activityMonitor': latestAlarm.activityMonitor
                   });
-                  print("Scheduled...");
+                  print('Scheduled...');
                 } on PlatformException catch (e) {
-                  print("Failed to schedule alarm: ${e.message}");
+                  print('Failed to schedule alarm: ${e.message}');
                 }
               }
               SystemNavigator.pop();

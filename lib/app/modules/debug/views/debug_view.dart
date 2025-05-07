@@ -80,7 +80,7 @@ class DebugView extends GetView<DebugController> {
                     hintStyle: TextStyle(
                       color: controller.themeController.primaryTextColor.value.withOpacity(0.5),
                     ),
-                    helperText: 'Search by ID, message, or date (e.g., "1" for LogID 1)'.tr,
+                    helperText: "Search by ID, message, or date (e.g., '1' for LogID 1)".tr,
                     helperStyle: TextStyle(
                       color: controller.themeController.primaryTextColor.value.withOpacity(0.5),
                       fontSize: 12,
