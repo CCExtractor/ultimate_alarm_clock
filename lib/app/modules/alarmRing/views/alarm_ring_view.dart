@@ -135,32 +135,48 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         child: Obx(
                           () => Padding(
                             padding: const EdgeInsets.symmetric(vertical: 90.0),
-                            child: SizedBox(
-                              height: height * 0.07,
-                              width: width * 0.5,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    themeController
-                                        .secondaryBackgroundColor.value,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: height * 0.07,
+                                  width: width * 0.5,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(
+                                        themeController
+                                            .secondaryBackgroundColor.value,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Snooze'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: themeController
+                                                .primaryTextColor.value,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                    onPressed: () {
+                                      Utils.hapticFeedback();
+                                      controller.startSnooze();
+                                    },
                                   ),
                                 ),
-                                child: Text(
-                                  'Snooze'.tr,
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Snooze ${controller.snoozeCount.value}/${controller.currentlyRingingAlarm.value.maxSnoozeCount}',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .bodyMedium!
+                                      .bodySmall!
                                       .copyWith(
                                         color: themeController
                                             .primaryTextColor.value,
-                                        fontWeight: FontWeight.w600,
                                       ),
                                 ),
-                                onPressed: () {
-                                  Utils.hapticFeedback();
-                                  controller.startSnooze();
-                                },
-                              ),
+                              ],
                             ),
                           ),
                         ),

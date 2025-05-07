@@ -44,6 +44,7 @@ class AlarmModel {
   late String label;
   late bool isOneTime;
   late int snoozeDuration;
+  late int maxSnoozeCount;
   late int gradient;
   late String ringtoneName;
   late String note;
@@ -95,6 +96,7 @@ class AlarmModel {
       required this.label,
       required this.isOneTime,
       required this.snoozeDuration,
+      this.maxSnoozeCount = 3,
       required this.gradient,
       required this.ringtoneName,
       required this.note,
@@ -134,6 +136,7 @@ class AlarmModel {
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }
     snoozeDuration = documentSnapshot['snoozeDuration'];
+    maxSnoozeCount = documentSnapshot['maxSnoozeCount'] ?? 3;
     gradient = documentSnapshot['gradient'];
     label = documentSnapshot['label'];
     isOneTime = documentSnapshot['isOneTime'];
@@ -216,6 +219,7 @@ class AlarmModel {
       label: map['label'],
       isOneTime: map['isOneTime'] == 1,
       snoozeDuration: map['snoozeDuration'],
+      maxSnoozeCount: map['maxSnoozeCount'] ?? 3,
       gradient: map['gradient'],
       ringtoneName: map['ringtoneName'],
       note: map['note'],
@@ -268,6 +272,7 @@ class AlarmModel {
       'label': label,
       'isOneTime': isOneTime ? 1 : 0,
       'snoozeDuration': snoozeDuration,
+      'maxSnoozeCount': maxSnoozeCount,
       'gradient': gradient,
       'ringtoneName': ringtoneName,
       'note': note,
@@ -289,6 +294,7 @@ class AlarmModel {
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
     snoozeDuration = alarmData['snoozeDuration'];
+    maxSnoozeCount = alarmData['maxSnoozeCount'] ?? 3;
     gradient = alarmData['gradient'];
     isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
@@ -304,12 +310,11 @@ class AlarmModel {
     isEnabled = alarmData['isEnabled'];
     intervalToAlarm = alarmData['intervalToAlarm'];
     isActivityEnabled = alarmData['isActivityEnabled'];
+    activityInterval = alarmData['activityInterval'];
+
+    isLocationEnabled = alarmData['isLocationEnabled'];
     isWeatherEnabled = alarmData['isWeatherEnabled'];
     weatherTypes = List<int>.from(alarmData['weatherTypes']);
-
-    activityInterval = alarmData['activityInterval'];
-    isLocationEnabled = alarmData['isLocationEnabled'];
-    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
     location = alarmData['location'];
 
     isMathsEnabled = alarmData['isMathsEnabled'];
@@ -330,9 +335,11 @@ class AlarmModel {
 
     volMin = alarmData['volMin'];
     volMax = alarmData['volMax'];
+
     activityMonitor = alarmData['activityMonitor'];
     alarmDate = alarmData['alarmDate'];
     profile = alarmData['profile'];
+
     isGuardian = alarmData['isGuardian'];
     guardianTimer = alarmData['guardianTimer'];
     guardian = alarmData['guardian'];
@@ -381,6 +388,7 @@ class AlarmModel {
       'isPedometerEnabled': alarmRecord.isPedometerEnabled,
       'numberOfSteps': alarmRecord.numberOfSteps,
       'snoozeDuration': alarmRecord.snoozeDuration,
+      'maxSnoozeCount': alarmRecord.maxSnoozeCount,
       'gradient': alarmRecord.gradient,
       'ringtoneName': alarmRecord.ringtoneName,
       'note': alarmRecord.note,
