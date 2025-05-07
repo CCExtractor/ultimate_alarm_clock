@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -26,6 +27,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TimerController controller = Get.find<TimerController>();
   ThemeController themeController = Get.find<ThemeController>();
+  MethodChannel timerChannel = const MethodChannel('timer');
   var width = Get.width;
   var height = Get.height;
 
@@ -40,6 +42,11 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
         });
       } else {
         stopTimer();
+        timerChannel.invokeMethod('dismissTimer', {
+          'timerId': widget.timer.timerId,
+          'timerName': widget.timer.timerName,
+          'timerValue': widget.timer.timerValue,
+        });
         controller.startRinger(widget.timer.timerId);
       }
     });
@@ -49,9 +56,46 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
     _timerCounter!.cancel();
   }
 
+  void dismissTimer(int id) {
+    print('timer id: $id');
+
+    if(id != widget.timer.timerId){
+      return;
+    }
+    setState(() {
+      if (widget.timer.isPaused == 0) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+      widget.timer.isPaused =
+          widget.timer.isPaused == 0 ? 1 : 0;
+      IsarDb.updateTimerPauseStatus(widget.timer);
+    });
+    if (widget.timer.timeElapsed >=
+        widget.timer.timerValue) {
+      controller.stopRinger(widget.timer.timerId);
+      setState(() {
+        widget.timer.timeElapsed = 0;
+        IsarDb.updateTimerTick(widget.timer)
+            .then((value) =>
+                IsarDb.updateTimerPauseStatus(
+                    widget.timer));
+        widget.timer.isPaused = 1;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    timerChannel.setMethodCallHandler((call) async {
+      if (call.method == 'dismissTimer') {
+        int timerID = call.arguments['timerID'];
+        print(timerID);
+        dismissTimer(timerID);
+      }
+    }); 
     if (Utils.getDifferenceMillisFromNow(
                 widget.timer.startedOn, widget.timer.timerValue) <=
             0 &&
@@ -202,28 +246,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          if (widget.timer.isPaused == 0) {
-                                            stopTimer();
-                                          } else {
-                                            startTimer();
-                                          }
-                                          widget.timer.isPaused =
-                                              widget.timer.isPaused == 0 ? 1 : 0;
-                                          IsarDb.updateTimerPauseStatus(widget.timer);
-                                        });
-                                        if (widget.timer.timeElapsed >=
-                                            widget.timer.timerValue) {
-                                          controller.stopRinger(widget.timer.timerId);
-                                          setState(() {
-                                            widget.timer.timeElapsed = 0;
-                                            IsarDb.updateTimerTick(widget.timer)
-                                                .then((value) =>
-                                                    IsarDb.updateTimerPauseStatus(
-                                                        widget.timer));
-                                            widget.timer.isPaused = 1;
-                                          });
-                                        }
+                                        dismissTimer(widget.timer.timerId);
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
