@@ -67,188 +67,190 @@ class SnoozeSettingsTile extends StatelessWidget {
                 ),
                 body: Container(
                   color: themeController.primaryBackgroundColor.value,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Snooze Duration'.tr,
-                              style: TextStyle(
-                                color: themeController.primaryTextColor.value,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'Set how long the snooze lasts'.tr,
-                              style: TextStyle(
-                                color: themeController.primaryDisabledTextColor.value,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Obx(
-                                  () => NumberPicker(
-                                    value: controller.snoozeDuration.value <= 0
-                                        ? 0
-                                        : controller.snoozeDuration.value,
-                                    minValue: 0,
-                                    maxValue: 60,
-                                    onChanged: (value) {
-                                      Utils.hapticFeedback();
-                                      controller.snoozeDuration.value = value;
-                                    },
-                                    textStyle: TextStyle(
-                                      color: themeController.primaryDisabledTextColor.value,
-                                      fontSize: 20,
-                                    ),
-                                    selectedTextStyle: TextStyle(
-                                      color: kprimaryColor,
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Snooze Duration'.tr,
+                                style: TextStyle(
+                                  color: themeController.primaryTextColor.value,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const SizedBox(width: 10),
-                                Obx(
-                                  () => Text(
-                                    controller.snoozeDuration.value > 0
-                                        ? controller.snoozeDuration.value > 1
-                                            ? 'minutes'.tr
-                                            : 'minute'.tr
-                                        : 'Off'.tr,
-                                    style: TextStyle(
-                                      color: themeController.primaryTextColor.value,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      Divider(
-                        color: themeController.secondaryBackgroundColor.value,
-                        thickness: 8,
-                      ),
-                    
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Maximum Snooze Count'.tr,
-                              style: TextStyle(
-                                color: themeController.primaryTextColor.value,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            Text(
-                              'Set the number of times you can snooze'.tr,
-                              style: TextStyle(
-                                color: themeController.primaryDisabledTextColor.value,
-                                fontSize: 14,
+                              Text(
+                                'Set how long the snooze lasts'.tr,
+                                style: TextStyle(
+                                  color: themeController.primaryDisabledTextColor.value,
+                                  fontSize: 14,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Obx(
-                                  () => NumberPicker(
-                                    value: controller.maxSnoozeCount.value <= 0
-                                        ? 1
-                                        : controller.maxSnoozeCount.value,
-                                    minValue: 1,
-                                    maxValue: 10,
-                                    onChanged: (value) {
-                                      Utils.hapticFeedback();
-                                      controller.maxSnoozeCount.value = value;
-                                    },
-                                    textStyle: TextStyle(
-                                      color: themeController.primaryDisabledTextColor.value,
-                                      fontSize: 20,
-                                    ),
-                                    selectedTextStyle: TextStyle(
-                                      color: kprimaryColor,
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Obx(
-                                  () => Text(
-                                    controller.maxSnoozeCount.value > 1
-                                        ? 'times'.tr
-                                        : 'time'.tr,
-                                    style: TextStyle(
-                                      color: themeController.primaryTextColor.value,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Card(
-                          color: themeController.secondaryBackgroundColor.value,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.info_outline, 
-                                      color: themeController.primaryTextColor.value,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'How Snooze Works'.tr,
-                                      style: TextStyle(
-                                        color: themeController.primaryTextColor.value,
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Obx(
+                                    () => NumberPicker(
+                                      value: controller.snoozeDuration.value <= 0
+                                          ? 0
+                                          : controller.snoozeDuration.value,
+                                      minValue: 0,
+                                      maxValue: 60,
+                                      onChanged: (value) {
+                                        Utils.hapticFeedback();
+                                        controller.snoozeDuration.value = value;
+                                      },
+                                      textStyle: TextStyle(
+                                        color: themeController.primaryDisabledTextColor.value,
+                                        fontSize: 20,
+                                      ),
+                                      selectedTextStyle: TextStyle(
+                                        color: kprimaryColor,
+                                        fontSize: 32,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'When the alarm rings, you can press the snooze button to temporarily silence it. '
-                                  'The alarm will ring again after the snooze duration. '
-                                  'You can snooze the alarm up to the maximum snooze count.'.tr,
-                                  style: TextStyle(
-                                    color: themeController.primaryTextColor.value,
-                                    fontSize: 14,
                                   ),
+                                  const SizedBox(width: 10),
+                                  Obx(
+                                    () => Text(
+                                      controller.snoozeDuration.value > 0
+                                          ? controller.snoozeDuration.value > 1
+                                              ? 'minutes'.tr
+                                              : 'minute'.tr
+                                          : 'Off'.tr,
+                                      style: TextStyle(
+                                        color: themeController.primaryTextColor.value,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        Divider(
+                          color: themeController.secondaryBackgroundColor.value,
+                          thickness: 8,
+                        ),
+                      
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Maximum Snooze Count'.tr,
+                                style: TextStyle(
+                                  color: themeController.primaryTextColor.value,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
+                              ),
+                              Text(
+                                'Set the number of times you can snooze'.tr,
+                                style: TextStyle(
+                                  color: themeController.primaryDisabledTextColor.value,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Obx(
+                                    () => NumberPicker(
+                                      value: controller.maxSnoozeCount.value <= 0
+                                          ? 1
+                                          : controller.maxSnoozeCount.value,
+                                      minValue: 1,
+                                      maxValue: 10,
+                                      onChanged: (value) {
+                                        Utils.hapticFeedback();
+                                        controller.maxSnoozeCount.value = value;
+                                      },
+                                      textStyle: TextStyle(
+                                        color: themeController.primaryDisabledTextColor.value,
+                                        fontSize: 20,
+                                      ),
+                                      selectedTextStyle: TextStyle(
+                                        color: kprimaryColor,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Obx(
+                                    () => Text(
+                                      controller.maxSnoozeCount.value > 1
+                                          ? 'times'.tr
+                                          : 'time'.tr,
+                                      style: TextStyle(
+                                        color: themeController.primaryTextColor.value,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Card(
+                            color: themeController.secondaryBackgroundColor.value,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.info_outline, 
+                                        color: themeController.primaryTextColor.value,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'How Snooze Works'.tr,
+                                        style: TextStyle(
+                                          color: themeController.primaryTextColor.value,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'When the alarm rings, you can press the snooze button to temporarily silence it. '
+                                    'The alarm will ring again after the snooze duration. '
+                                    'You can snooze the alarm up to the maximum snooze count.'.tr,
+                                    style: TextStyle(
+                                      color: themeController.primaryTextColor.value,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
