@@ -36,13 +36,11 @@ import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
-  AddOrUpdateAlarmView({super.key}) {
-    inputTimeController.initTimeTextField();
-  }
+  AddOrUpdateAlarmView({super.key});
 
   final ThemeController themeController = Get.find<ThemeController>();
-  final InputTimeController inputTimeController =
-      Get.put(InputTimeController());
+  // Get InputTimeController from the binding
+  final InputTimeController inputTimeController = Get.find<InputTimeController>();
   final SettingsController settingsController = Get.find<SettingsController>();
 
   @override

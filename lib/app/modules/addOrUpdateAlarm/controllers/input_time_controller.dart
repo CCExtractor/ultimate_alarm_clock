@@ -38,21 +38,35 @@ class InputTimeController extends GetxController {
     inputMinutesControllerTimer.text = '1';
     inputSecondsControllerTimer.text = '0';
     super.onInit();
+    
+    // Set up a reactive connection to the main controller
+    if (Get.isRegistered<AddOrUpdateAlarmController>()) {
+      final alarmController = Get.find<AddOrUpdateAlarmController>();
+      ever(alarmController.selectedTime, (_) {
+        // Update text fields whenever time changes
+        _updateTextFields();
+      });
+    }
   }
-
-  void initTimeTextField() {
-    AddOrUpdateAlarmController addOrUpdateAlarmController = Get.find<AddOrUpdateAlarmController>();
-    selectedDateTime.value = addOrUpdateAlarmController.selectedTime.value;
-
-    isAM.value = addOrUpdateAlarmController.selectedTime.value.hour < 12;
+  
+  // Private method to update text fields based on the current selected time
+  void _updateTextFields() {
+    final alarmController = Get.find<AddOrUpdateAlarmController>();
+    final selectedTime = alarmController.selectedTime.value;
+    
+    isAM.value = selectedTime.hour < 12;
+    
     inputHrsController.text = settingsController.is24HrsEnabled.value
-        ? selectedDateTime.value.hour.toString()
-        : (selectedDateTime.value.hour == 0
+        ? selectedTime.hour.toString()
+        : (selectedTime.hour == 0
             ? '12'
-            : (selectedDateTime.value.hour > 12
-                ? (selectedDateTime.value.hour - 12).toString()
-                : selectedDateTime.value.hour.toString()));
-    inputMinutesController.text = selectedDateTime.value.minute.toString().padLeft(2, '0');
+            : (selectedTime.hour > 12
+                ? (selectedTime.hour - 12).toString()
+                : selectedTime.hour.toString()));
+    inputMinutesController.text = selectedTime.minute.toString().padLeft(2, '0');
+    
+    // Update the observable DateTime
+    selectedDateTime.value = selectedTime;
   }
 
 
@@ -206,6 +220,11 @@ class InputTimeController extends GetxController {
     inputMinutesControllerTimer.dispose();
     inputSecondsControllerTimer.dispose();
     super.onClose();
+  }
+
+  // Public method for compatibility with existing code
+  void initTimeTextField() {
+    _updateTextFields();
   }
 }
 

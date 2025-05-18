@@ -5,6 +5,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_c
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 
 import '../controllers/add_or_update_alarm_controller.dart';
+import '../controllers/input_time_controller.dart';
 
 class AddOrUpdateAlarmBinding extends Bindings {
   @override
@@ -23,6 +24,12 @@ class AddOrUpdateAlarmBinding extends Bindings {
     );
     Get.lazyPut<BottomNavigationBarController>(
       () => BottomNavigationBarController(),
+    );
+    
+    // InputTimeController - create fresh instance when screen is opened and dispose properly
+    Get.lazyPut<InputTimeController>(
+      () => InputTimeController(),
+      fenix: false, // Will be created new each time
     );
   }
 }
