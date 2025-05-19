@@ -119,21 +119,10 @@ class SplashScreenController extends GetxController {
             if (shouldAlarmRing) {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               
-              
               if (currentlyRingingAlarm.value.alarmID != null) {
-                final sql = await IsarDb().getAlarmSQLiteDatabase();
-                final results = await sql!.query(
-                  'alarms',
-                  columns: ['maxSnoozeCount'],
-                  where: 'alarmID = ?',
-                  whereArgs: [currentlyRingingAlarm.value.alarmID],
-                );
-                
-                if (results.isNotEmpty) {
-                  final sqlMaxSnoozeCount = results.first['maxSnoozeCount'] as int?;
-                  if (sqlMaxSnoozeCount != null && sqlMaxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
-                    currentlyRingingAlarm.value.maxSnoozeCount = sqlMaxSnoozeCount;
-                  }
+                final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+                if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+                  currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
                 }
               }
               

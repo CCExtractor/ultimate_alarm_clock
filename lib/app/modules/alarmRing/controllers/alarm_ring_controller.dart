@@ -271,9 +271,9 @@ class AlarmControlController extends GetxController {
     }
 
     if (currentlyRingingAlarm.value.isarId > 0) {
-      final dbMaxSnoozeCount = await getMaxSnoozeCountFromDatabase(currentlyRingingAlarm.value.isarId);
-      if (dbMaxSnoozeCount != null && dbMaxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
-        currentlyRingingAlarm.value.maxSnoozeCount = dbMaxSnoozeCount;
+      final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+      if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+        currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
       }
     }
     
@@ -447,23 +447,5 @@ class AlarmControlController extends GetxController {
     _subscription.cancel();
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
-  }
-
-  
-  Future<int?> getMaxSnoozeCountFromDatabase(int alarmID) async {
-    final sql = await IsarDb().getAlarmSQLiteDatabase();
-    if (sql == null) return null;
-    
-    final results = await sql.query(
-      'alarms',
-      columns: ['maxSnoozeCount'],
-      where: 'alarmID = ?',
-      whereArgs: [alarmID],
-    );
-    
-    if (results.isNotEmpty) {
-      return results.first['maxSnoozeCount'] as int?;
-    }
-    return null;
   }
 }

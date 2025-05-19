@@ -7,7 +7,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class MaxSnoozeCountTile extends StatelessWidget {
-  const MaxSnoozeCountTile({
+  MaxSnoozeCountTile({
     super.key,
     required this.controller,
     required this.themeController,
@@ -15,19 +15,19 @@ class MaxSnoozeCountTile extends StatelessWidget {
 
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;
+  int initialCount = 0;
 
   @override
   Widget build(BuildContext context) {
-    int count;
     return Obx(
       () => ListTile(
         onTap: () {
           Utils.hapticFeedback();
-          count = controller.maxSnoozeCount.value;
+          initialCount = controller.maxSnoozeCount.value;
           Get.defaultDialog(
             onWillPop: () async {
               Get.back();
-              controller.maxSnoozeCount.value = count;
+              controller.maxSnoozeCount.value = initialCount;
               return true;
             },
             titlePadding: const EdgeInsets.only(top: 20),
