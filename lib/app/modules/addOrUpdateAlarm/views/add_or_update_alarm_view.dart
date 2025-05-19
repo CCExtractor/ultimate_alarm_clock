@@ -39,7 +39,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key});
 
   final ThemeController themeController = Get.find<ThemeController>();
-  // Get InputTimeController from the binding
+  
   final InputTimeController inputTimeController = Get.find<InputTimeController>();
   final SettingsController settingsController = Get.find<SettingsController>();
 
