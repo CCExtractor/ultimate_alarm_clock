@@ -288,14 +288,18 @@ class AudioUtils {
   static void stopTimer({
     required String ringtoneName,
   }) async {
-    if (audioSession != null) {
-      if (ringtoneName == 'Default') {
-        await timerChannel.invokeMethod('stopDefaultAlarm');
-      } else {
-        await audioPlayer.stop();
-      }
+    try {
+      if (audioSession != null) {
+        if (ringtoneName == 'Default') {
+          await timerChannel.invokeMethod('stopDefaultAlarm');
+        } else {
+          await audioPlayer.stop();
+        }
 
-      await audioSession!.setActive(false);
+        await audioSession!.setActive(false);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -303,17 +307,21 @@ class AudioUtils {
     required String customRingtoneName,
     required CounterUpdate counterUpdate,
   }) async {
-    int customRingtoneId = fastHash(customRingtoneName);
-    RingtoneModel? customRingtone =
-        await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+    try {
+       int customRingtoneId = fastHash(customRingtoneName);
+      RingtoneModel? customRingtone =
+          await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
-    if (customRingtone != null) {
-      if (counterUpdate == CounterUpdate.increment) {
-        customRingtone.currentCounterOfUsage++;
-      } else if (counterUpdate == CounterUpdate.decrement) {
-        customRingtone.currentCounterOfUsage--;
+      if (customRingtone != null) {
+        if (counterUpdate == CounterUpdate.increment) {
+          customRingtone.currentCounterOfUsage++;
+        } else if (counterUpdate == CounterUpdate.decrement) {
+          customRingtone.currentCounterOfUsage--;
+        }
+        await IsarDb.addCustomRingtone(customRingtone);
       }
-      await IsarDb.addCustomRingtone(customRingtone);
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
