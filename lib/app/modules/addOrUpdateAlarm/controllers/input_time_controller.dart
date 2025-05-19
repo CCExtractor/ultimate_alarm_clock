@@ -39,7 +39,7 @@ class InputTimeController extends GetxController {
     inputSecondsControllerTimer.text = '0';
     super.onInit();
     
-    // Set up a reactive connection to the main controller
+    
     if (Get.isRegistered<AddOrUpdateAlarmController>()) {
       final alarmController = Get.find<AddOrUpdateAlarmController>();
       ever(alarmController.selectedTime, (_) {
@@ -49,7 +49,7 @@ class InputTimeController extends GetxController {
     }
   }
   
-  // Private method to update text fields based on the current selected time
+  
   void _updateTextFields() {
     final alarmController = Get.find<AddOrUpdateAlarmController>();
     final selectedTime = alarmController.selectedTime.value;
@@ -65,7 +65,7 @@ class InputTimeController extends GetxController {
                 : selectedTime.hour.toString()));
     inputMinutesController.text = selectedTime.minute.toString().padLeft(2, '0');
     
-    // Update the observable DateTime
+    
     selectedDateTime.value = selectedTime;
   }
 
@@ -222,7 +222,7 @@ class InputTimeController extends GetxController {
     super.onClose();
   }
 
-  // Public method for compatibility with existing code
+  
   void initTimeTextField() {
     _updateTextFields();
   }
