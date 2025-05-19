@@ -26,10 +26,9 @@ class AddOrUpdateAlarmBinding extends Bindings {
       () => BottomNavigationBarController(),
     );
     
-    // InputTimeController - create fresh instance when screen is opened and dispose properly
     Get.lazyPut<InputTimeController>(
       () => InputTimeController(),
-      fenix: false, // Will be created new each time
+      fenix: false,
     );
   }
 }
