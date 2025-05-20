@@ -33,6 +33,7 @@ class Utils {
     volMax: 1.0,
     volMin: 0.0,
     snoozeDuration: 0,
+    maxSnoozeCount: 3,
     gradient: 1,
     label: '',
     isOneTime: true,

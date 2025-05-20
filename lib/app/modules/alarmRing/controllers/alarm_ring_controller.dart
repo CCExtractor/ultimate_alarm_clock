@@ -36,6 +36,7 @@ class AlarmControlController extends GetxController {
   late RxBool isSnoozing = false.obs;
   RxInt minutes = 1.obs;
   RxInt seconds = 0.obs;
+  RxInt snoozeCount = 0.obs;
   RxBool showButton = false.obs;
   StreamSubscription? _sensorSubscription;
   HomeController homeController = Get.find<HomeController>();
@@ -73,6 +74,28 @@ class AlarmControlController extends GetxController {
   }
 
   void startSnooze() async {
+    int actualMaxSnoozeCount = currentlyRingingAlarm.value.maxSnoozeCount;
+  
+    if (currentlyRingingAlarm.value.isarId > 0) {
+      final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+      if (dbAlarm != null) {
+        actualMaxSnoozeCount = dbAlarm.maxSnoozeCount;
+      }
+    }
+    
+    if (snoozeCount.value >= actualMaxSnoozeCount) {
+      Get.snackbar(
+        "Max Snooze Limit",
+        "You've reached the maximum snooze limit",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        colorText: themeController.primaryTextColor.value,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+    snoozeCount.value++;
+    
     Vibration.cancel();
     vibrationTimer!.cancel();
     isSnoozing.value = true;
@@ -236,7 +259,7 @@ class AlarmControlController extends GetxController {
   void onInit() async {
     super.onInit();
     startListeningToFlip();
-
+    
     // Extract alarm and preview flag from arguments
     final args = Get.arguments;
     if (args is Map) {
@@ -247,10 +270,15 @@ class AlarmControlController extends GetxController {
       isPreviewMode.value = false;
     }
 
-    print('hwyooo ${currentlyRingingAlarm.value.isGuardian}');
+    if (currentlyRingingAlarm.value.isarId > 0) {
+      final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+      if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+        currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+      }
+    }
+    
     if (currentlyRingingAlarm.value.isGuardian) {
       guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        print(guardianCoundown.value);
         if (guardianCoundown.value == 0) {
           currentlyRingingAlarm.value.isCall
               ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
