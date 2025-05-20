@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/bottomNavigationBar/controllers/bottom_navigation_bar_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../../home/controllers/home_controller.dart';
@@ -99,9 +103,28 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    
-    await IsarDb.fixMaxSnoozeCountInAlarms();
-    
+    // Check for initialRoute from the intent when coming from home widgets
+    String? initialRoute;
+    if (Platform.isAndroid) {
+      final intent = await MethodChannel('flutter/platform').invokeMethod<Map>('getInitialRoute');
+      initialRoute = intent?['initialRoute'] as String?;
+    }
+    // For add alarm home screen widget
+    if (initialRoute != null && initialRoute == '/add-update-alarm') {
+      Get.offAllNamed('/bottom-navigation-bar');
+
+      Timer(const Duration(milliseconds: 500), () {
+        HomeController homeController = Get.find<HomeController>();
+        Get.toNamed('/add-update-alarm', arguments: homeController.genFakeAlarmModel());
+        Utils.hapticFeedback();
+        homeController.isProfile.value = false;
+      });
+    } else {
+      if (shouldNavigate) {
+        Get.offNamed('/bottom-navigation-bar');
+      }
+    }
+    await IsarDb.fixMaxSnoozeCountInAlarms();    
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
@@ -181,10 +204,12 @@ class SplashScreenController extends GetxController {
       }
     });
     // Necessary when hot restarting
-    Future.delayed(const Duration(seconds: 0), () {
-      if (shouldNavigate == true) {
-        Get.offNamed('/bottom-navigation-bar');
-      }
-    });
+    if (initialRoute == null) {
+      Future.delayed(const Duration(seconds: 0), () {
+        if (shouldNavigate) {
+          Get.offNamed('/bottom-navigation-bar');
+        }
+      });
+    } 
   }
 }

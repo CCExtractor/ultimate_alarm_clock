@@ -444,6 +444,10 @@ class AlarmControlController extends GetxController {
         }
       }
     }
+
+    // Refresh the next alarm and update the HomeWidget
+    await homeController.refreshUpcomingAlarms();
+
     _subscription.cancel();
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
