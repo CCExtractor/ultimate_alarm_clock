@@ -45,12 +45,12 @@ class GuardianAngel extends StatelessWidget {
                       onInputChanged: (value) {},
                       onInputValidated: (value) {},
                       spaceBetweenSelectorAndTextField: 0,
-                      selectorConfig: const SelectorConfig(
+                      selectorConfig: SelectorConfig(
                         showFlags: true,
                         setSelectorButtonAsPrefixIcon: true,
                         leadingPadding: 0,
                         trailingSpace: false,
-                        countryComparator: orderedCountryCode,
+                        countryComparator: controller.orderedCountryCode,
                       ),
                     ),
                   ),
