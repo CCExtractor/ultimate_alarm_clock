@@ -124,7 +124,7 @@ class SplashScreenController extends GetxController {
         Get.offNamed('/bottom-navigation-bar');
       }
     }
-
+    await IsarDb.fixMaxSnoozeCountInAlarms();    
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
@@ -141,6 +141,14 @@ class SplashScreenController extends GetxController {
           } else {
             if (shouldAlarmRing) {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+              
+              if (currentlyRingingAlarm.value.alarmID != null) {
+                final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+                if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+                  currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+                }
+              }
+              
               Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
-import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/input_time_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_animation.dart';
@@ -21,12 +20,9 @@ class TimerView extends GetView<TimerController> {
   TimerView({Key? key}) : super(key: key);
   final GlobalKey dialogKey = GlobalKey();
   final ThemeController themeController = Get.find<ThemeController>();
-  final InputTimeController inputTimeController =
-      Get.put(InputTimeController());
   // var width = Get.width;
   // var height = Get.height;
-
-  @override
+  
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -264,7 +260,7 @@ class TimerView extends GetView<TimerController> {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            inputTimeController.changeTimePickerTimer();
+                            controller.changeTimePickerTimer();
                           },
                           child: Obx(
                             () => Icon(
@@ -286,7 +282,7 @@ class TimerView extends GetView<TimerController> {
                         () => Container(
                           color: themeController.primaryBackgroundColor.value,
                           width: width,
-                          child: inputTimeController.isTimePickerTimer.value
+                          child: controller.isTimePickerTimer.value
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -318,8 +314,7 @@ class TimerView extends GetView<TimerController> {
                                           onChanged: (value) {
                                             Utils.hapticFeedback();
                                             controller.hours.value = value;
-                                            inputTimeController
-                                                .setTextFieldTimerTime();
+                                            controller.setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
                                           itemWidth: width * 0.17,
@@ -403,8 +398,7 @@ class TimerView extends GetView<TimerController> {
                                           value: controller.minutes.value,
                                           onChanged: (value) {
                                             controller.minutes.value = value;
-                                            inputTimeController
-                                                .setTextFieldTimerTime();
+                                            controller.setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
                                           itemWidth: width * 0.17,
@@ -488,8 +482,7 @@ class TimerView extends GetView<TimerController> {
                                           value: controller.seconds.value,
                                           onChanged: (value) {
                                             controller.seconds.value = value;
-                                            inputTimeController
-                                                .setTextFieldTimerTime();
+                                            controller.setTextFieldTimerTime();
                                           },
                                           infiniteLoop: true,
                                           itemWidth: width * 0.17,
@@ -559,21 +552,19 @@ class TimerView extends GetView<TimerController> {
                                           width: width * 0.18,
                                           child: TextField(
                                             onChanged: (_) {
-                                              inputTimeController
-                                                  .setTimerTime();
+                                              controller.setTimerTime();
                                             },
                                             decoration: const InputDecoration(
                                               hintText: 'HH',
                                               border: InputBorder.none,
                                             ),
                                             textAlign: TextAlign.center,
-                                            controller: inputTimeController
-                                                .inputHoursControllerTimer,
+                                            controller: controller.inputHoursControllerTimer,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
                                                 RegExp(
-                                                  '[1,2,3,4,5,6,7,8,9,0]',
+                                                  r'[0-9]',
                                                 ),
                                               ),
                                               LengthLimitingTextInputFormatter(
@@ -630,21 +621,19 @@ class TimerView extends GetView<TimerController> {
                                           width: width * 0.18,
                                           child: TextField(
                                             onChanged: (_) {
-                                              inputTimeController
-                                                  .setTimerTime();
+                                              controller.setTimerTime();
                                             },
                                             decoration: const InputDecoration(
                                               hintText: 'MM',
                                               border: InputBorder.none,
                                             ),
                                             textAlign: TextAlign.center,
-                                            controller: inputTimeController
-                                                .inputMinutesControllerTimer,
+                                            controller: controller.inputMinutesControllerTimer,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
                                                 RegExp(
-                                                  '[1,2,3,4,5,6,7,8,9,0]',
+                                                  r'[0-9]',
                                                 ),
                                               ),
                                               LengthLimitingTextInputFormatter(
@@ -701,21 +690,19 @@ class TimerView extends GetView<TimerController> {
                                           width: width * 0.18,
                                           child: TextField(
                                             onChanged: (_) {
-                                              inputTimeController
-                                                  .setTimerTime();
+                                              controller.setTimerTime();
                                             },
                                             decoration: const InputDecoration(
                                               hintText: 'SS',
                                               border: InputBorder.none,
                                             ),
                                             textAlign: TextAlign.center,
-                                            controller: inputTimeController
-                                                .inputSecondsControllerTimer,
+                                            controller: controller.inputSecondsControllerTimer,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
                                                 RegExp(
-                                                  '[1,2,3,4,5,6,7,8,9,0]',
+                                                  r'[0-9]',
                                                 ),
                                               ),
                                               LengthLimitingTextInputFormatter(
@@ -784,7 +771,7 @@ class TimerView extends GetView<TimerController> {
                                 controller.hours.value = 0;
                                 controller.minutes.value = 1;
                                 controller.seconds.value = 0;
-                                inputTimeController.setTextFieldTimerTime(); 
+                                controller.setTextFieldTimerTime();
 
                                 Get.back();
                               },
