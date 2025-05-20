@@ -115,11 +115,11 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
-  // Add TextEditingControllers for time input
+  
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
   
-  // Add related functionality from InputTimeController
+  
   final isTimePicker = false.obs;
   final isAM = true.obs;
   int? _previousDisplayHour;
@@ -902,7 +902,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     // If there's an argument sent, we are in update mode
 
-    // Initialize TextEditingControllers
+
     isTimePicker.value = true;
     initTimeTextField();
   }
@@ -1023,8 +1023,6 @@ class AddOrUpdateAlarmController extends GetxController {
         await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
       }
     }
-
-    // Dispose TextEditingControllers
     inputHrsController.dispose();
     inputMinutesController.dispose();
   }
@@ -1557,7 +1555,6 @@ class AddOrUpdateAlarmController extends GetxController {
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
 
-// Add the LimitRange class needed for TextField input validation
 class LimitRange extends TextInputFormatter {
   LimitRange(this.minRange, this.maxRange) : assert(minRange < maxRange);
   final int minRange;
