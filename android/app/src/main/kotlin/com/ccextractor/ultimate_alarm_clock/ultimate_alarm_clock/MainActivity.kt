@@ -8,6 +8,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -32,6 +34,7 @@ class MainActivity : FlutterActivity() {
         private var isAlarm: String? = "true"
         val alarmConfig = hashMapOf("shouldAlarmRing" to false, "alarmIgnore" to false)
         private var ringtone: Ringtone? = null
+        private var mediaPlayer: MediaPlayer? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +63,6 @@ class MainActivity : FlutterActivity() {
             val cleanIntent = Intent(intent)
             cleanIntent.removeExtra(EXTRA_KEY)
             setIntent(cleanIntent)
-            println("NATIVE SAID OK")
-        } else {
-            println("NATIVE SAID NO")
         }
 
         if (isAlarm == "true") {
@@ -102,7 +102,6 @@ class MainActivity : FlutterActivity() {
                     context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
                 val profile = sharedPreferences.getString("flutter.profile", "Default")
                 val ringTime = getLatestAlarm(db, true, profile ?: "Default", context)
-                Log.d("yay yay", "yay ${ringTime ?: "null"}")
                 if (ringTime != null) {
                     android.util.Log.d("yay", "yay ${ringTime["interval"]}")
                     Log.d("yay", "yay ${ringTime["isLocation"]}")
@@ -135,6 +134,16 @@ class MainActivity : FlutterActivity() {
             } else if (call.method == "stopDefaultAlarm") {
                 stopDefaultAlarm()
                 result.success(null)
+            } else if (call.method == "getSystemRingtones") {
+                result.success(getSystemRingtones())
+            } else if (call.method == "playSystemRingtone") {
+                val ringtoneUri = call.argument<String>("uri")
+                if (ringtoneUri != null) {
+                    playSystemRingtone(ringtoneUri)
+                    result.success(true)
+                } else {
+                    result.error("INVALID_ARGUMENT", "Ringtone URI is required", null)
+                }
             } else {
                 result.notImplemented()
             }
@@ -279,13 +288,141 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun playDefaultAlarm(context: Context) {
-        val alarmUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        ringtone = RingtoneManager.getRingtone(context, alarmUri)
-        ringtone?.play()
+        stopDefaultAlarm()
+        
+        val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(applicationContext, alarmUri)
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+            start()
+        }
     }
 
     private fun stopDefaultAlarm() {
-        ringtone?.stop()
+        val playerToStop: MediaPlayer?
+        val ringtoneToStop: Ringtone?
+        
+        synchronized(this) {
+            playerToStop = mediaPlayer
+            ringtoneToStop = ringtone
+            mediaPlayer = null
+            ringtone = null
+        }
+        
+        
+        playerToStop?.let {
+            if (it.isPlaying) {
+                it.stop()
+            }
+            it.reset()
+            it.release()
+        }
+        
+        ringtoneToStop?.let {
+            it.stop()
+        }
+    }
+
+    private fun getSystemRingtones(): List<Map<String, String>> {
+        val ringtones = mutableListOf<Map<String, String>>()
+        
+        
+        addRingtonesToList(ringtones, RingtoneManager.TYPE_ALARM, "alarm")
+        
+        
+        addRingtonesToList(ringtones, RingtoneManager.TYPE_NOTIFICATION, "notification")
+        
+        
+        addRingtonesToList(ringtones, RingtoneManager.TYPE_RINGTONE, "ringtone")
+        
+        return ringtones
+    }
+    
+    private fun addRingtonesToList(ringtones: MutableList<Map<String, String>>, type: Int, category: String) {
+        val manager = RingtoneManager(this)
+        manager.setType(type)
+        val cursor = manager.cursor
+        
+        while (cursor != null && cursor.moveToNext()) {
+            val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+            val uri = manager.getRingtoneUri(cursor.position).toString()
+            
+            ringtones.add(mapOf(
+                "title" to title,
+                "uri" to uri,
+                "category" to category
+            ))
+        }
+    }
+    
+    private fun playSystemRingtone(uriString: String) {
+        stopDefaultAlarm()
+        Thread.sleep(150)
+        val uri = Uri.parse(uriString)
+        val newMediaPlayer = MediaPlayer()
+        synchronized(this) {
+            mediaPlayer?.release()
+            mediaPlayer = newMediaPlayer
+        }
+        
+        newMediaPlayer.apply {
+            setDataSource(applicationContext, uri)
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            isLooping = true
+            setOnPreparedListener {
+                synchronized(this@MainActivity) {
+                    if (mediaPlayer == this) {
+                        start()
+                    } else {
+                        release()
+                    }
+                }
+            }
+            
+            setOnErrorListener { mp, what, extra ->
+                mp.release()
+                synchronized(this@MainActivity) {
+                    if (mediaPlayer == mp) {
+                        mediaPlayer = null
+                        playDefaultAlarmAsFallback()
+                    }
+                }
+                true
+            }
+            
+            prepareAsync()
+        }
+    }
+
+    private fun playDefaultAlarmAsFallback() {
+        val defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        mediaPlayer?.release()
+        
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(applicationContext, defaultUri)
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+            start()
+        }
     }
 
     private fun openAndroidPermissionsMenu() {
@@ -293,5 +430,4 @@ class MainActivity : FlutterActivity() {
         intent.data = Uri.parse("package:${packageName}")
         startActivity(intent)
     }
-
 }

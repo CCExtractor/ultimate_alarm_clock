@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/system_ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
@@ -26,7 +28,12 @@ import 'package:uuid/uuid.dart';
 import 'package:intl_phone_number_input/src/models/country_model.dart';
 import '../../settings/controllers/settings_controller.dart';
 
-class AddOrUpdateAlarmController extends GetxController {
+String formatCategory(String category) {
+  if (category.isEmpty) return category;
+  return category.tr.capitalizeFirst ?? category;
+}
+
+class AddOrUpdateAlarmController extends GetxController with GetTickerProviderStateMixin {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
@@ -113,6 +120,19 @@ class AddOrUpdateAlarmController extends GetxController {
 
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
+
+  final searchQuery = ''.obs;
+  final isRingtonePlaying = false.obs;
+  final currentlyPlayingSystemRingtone = Rxn<SystemRingtone>();
+  final currentlyPlayingCustomRingtone = RxnString();
+  final selectedRingtoneTabIndex = 0.obs;
+  final selectedSystemSoundsTabIndex = 0.obs;
+  final isProcessingAudio = false.obs;
+  final lastAudioRequest = DateTime.now().obs;
+  final systemRingtones = Rxn<List<SystemRingtone>>();
+  
+  late TabController ringtoneTabController;
+  late TabController systemSoundsTabController;
 
   Future<List<UserModel?>> fetchUserDetailsForSharedUsers() async {
     List<UserModel?> userDetails = [];
@@ -890,6 +910,14 @@ class AddOrUpdateAlarmController extends GetxController {
       weatherApiKeyExists.value = true;
     }
 
+    ringtoneTabController = TabController(length: 2, vsync: this);
+    systemSoundsTabController = TabController(length: 3, vsync: this);
+    
+    ringtoneTabController.addListener(_handleRingtoneTabChange);
+    systemSoundsTabController.addListener(_handleSystemSoundsTabChange);
+    
+    _loadSystemRingtones();
+
     // If there's an argument sent, we are in update mode
   }
 
@@ -1009,6 +1037,10 @@ class AddOrUpdateAlarmController extends GetxController {
         await FirestoreDb.updateAlarm(updatedModel.ownerId, updatedModel);
       }
     }
+
+    ringtoneTabController.dispose();
+    systemSoundsTabController.dispose();
+    stopAllRingtoneAudio();
   }
 
   AlarmModel updatedAlarmModel() {
@@ -1184,6 +1216,7 @@ class AddOrUpdateAlarmController extends GetxController {
   Future<void> deleteCustomRingtone({
     required String ringtoneName,
     required int ringtoneIndex,
+    bool forceDelete = false,
   }) async {
     try {
       int customRingtoneId = AudioUtils.fastHash(ringtoneName);
@@ -1192,20 +1225,24 @@ class AddOrUpdateAlarmController extends GetxController {
 
       if (customRingtone != null) {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
+        bool isSystemRingtone = customRingtone.ringtonePath.startsWith("system_ringtone:");
+        
 
-        if (currentCounterOfUsage == 0) {
-          customRingtoneNames.removeAt(ringtoneIndex);
+        if (currentCounterOfUsage <= 0 || forceDelete) {
+          if (currentCounterOfUsage > 0 && forceDelete) {
+            customRingtone.currentCounterOfUsage = 0;
+            await IsarDb.addCustomRingtone(customRingtone);
+          }
+          
+          if (ringtoneIndex < customRingtoneNames.length) {
+            customRingtoneNames.removeAt(ringtoneIndex);
+          }
           await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
-
-          final documentsDirectory = await getApplicationDocumentsDirectory();
-          final ringtoneFilePath =
-              '${documentsDirectory.path}/ringtones/$ringtoneName';
-
-          if (await File(ringtoneFilePath).exists()) {
-            await File(ringtoneFilePath).delete();
+          
+          if (isSystemRingtone) {
             Get.snackbar(
-              'Ringtone Deleted',
-              'The selected ringtone has been successfully deleted.',
+              'Sound Removed',
+              'The system sound has been removed from your list.',
               margin: const EdgeInsets.all(15),
               animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
@@ -1213,21 +1250,50 @@ class AddOrUpdateAlarmController extends GetxController {
               colorText: kprimaryTextColor,
             );
           } else {
-            Get.snackbar(
-              'Ringtone Not Found',
-              'The selected ringtone does not exist and cannot be deleted.',
-              margin: const EdgeInsets.all(15),
-              animationDuration: const Duration(seconds: 1),
-              snackPosition: SnackPosition.BOTTOM,
-              barBlur: 15,
-              colorText: kprimaryTextColor,
-            );
+            try {
+              final documentsDirectory = await getApplicationDocumentsDirectory();
+              final ringtoneFilePath =
+                  '${documentsDirectory.path}/ringtones/$ringtoneName';
+
+              if (await File(ringtoneFilePath).exists()) {
+                await File(ringtoneFilePath).delete();
+                Get.snackbar(
+                  'Ringtone Deleted',
+                  'The custom ringtone has been successfully deleted.',
+                  margin: const EdgeInsets.all(15),
+                  animationDuration: const Duration(seconds: 1),
+                  snackPosition: SnackPosition.BOTTOM,
+                  barBlur: 15,
+                  colorText: kprimaryTextColor,
+                );
+              } else {
+                Get.snackbar(
+                  'Ringtone Deleted',
+                  'The ringtone has been removed from your list.',
+                  margin: const EdgeInsets.all(15),
+                  animationDuration: const Duration(seconds: 1),
+                  snackPosition: SnackPosition.BOTTOM,
+                  barBlur: 15,
+                  colorText: kprimaryTextColor,
+                );
+              }
+            } catch (e) {
+              debugPrint('Error deleting ringtone file: $e');
+              Get.snackbar(
+                'Ringtone Deleted',
+                'The ringtone was removed from your list, but the file could not be deleted.',
+                margin: const EdgeInsets.all(15),
+                animationDuration: const Duration(seconds: 1),
+                snackPosition: SnackPosition.BOTTOM,
+                barBlur: 15,
+                colorText: kprimaryTextColor,
+              );
+            }
           }
         } else {
           Get.snackbar(
             'Ringtone in Use',
-            'This ringtone cannot be deleted as it is currently assigned'
-                ' to one or more alarms.',
+            'This ringtone is currently assigned to one or more alarms.',
             margin: const EdgeInsets.all(15),
             animationDuration: const Duration(seconds: 1),
             snackPosition: SnackPosition.BOTTOM,
@@ -1235,9 +1301,28 @@ class AddOrUpdateAlarmController extends GetxController {
             colorText: kprimaryTextColor,
           );
         }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Ringtone not found in the database.',
+          margin: const EdgeInsets.all(15),
+          animationDuration: const Duration(seconds: 1),
+          snackPosition: SnackPosition.BOTTOM,
+          barBlur: 15,
+          colorText: kprimaryTextColor,
+        );
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error deleting ringtone: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to delete ringtone: $e',
+        margin: const EdgeInsets.all(15),
+        animationDuration: const Duration(seconds: 1),
+        snackPosition: SnackPosition.BOTTOM,
+        barBlur: 15,
+        colorText: kprimaryTextColor,
+      );
     }
   }
 
@@ -1412,7 +1497,6 @@ class AddOrUpdateAlarmController extends GetxController {
       );
     }
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1421,3 +1505,205 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+
+  Future<void> _loadSystemRingtones() async {
+    systemRingtones.value = await AudioUtils.getSystemRingtones();
+  }
+  
+  void _handleRingtoneTabChange() {
+    selectedRingtoneTabIndex.value = ringtoneTabController.index;
+    stopAllRingtoneAudio();
+  }
+  
+  void _handleSystemSoundsTabChange() {
+    selectedSystemSoundsTabIndex.value = systemSoundsTabController.index;
+    stopAllRingtoneAudio();
+  }
+  
+  void updateRingtoneSearchQuery(String query) {
+    searchQuery.value = query.toLowerCase();
+  }
+  
+  Future<void> stopAllRingtoneAudio() async {
+    if (isProcessingAudio.value) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    
+    isProcessingAudio.value = true;
+    
+    for (int i = 0; i < 3; i++) {
+      await AudioUtils.stopPreviewCustomSound();
+      const platform = MethodChannel('ulticlock');
+      await platform.invokeMethod('stopDefaultAlarm');
+      break;
+    }
+    
+    isPlaying.value = false;
+    isRingtonePlaying.value = false;
+    currentlyPlayingSystemRingtone.value = null;
+    currentlyPlayingCustomRingtone.value = null;
+    
+    isProcessingAudio.value = false;
+  }
+  
+  Future<void> previewCustomRingtone(String ringtoneName) async {
+    Utils.hapticFeedback();
+    
+    final now = DateTime.now();
+    if (now.difference(lastAudioRequest.value).inMilliseconds < 300) {
+      return;
+    }
+    lastAudioRequest.value = now;
+    
+    if (isProcessingAudio.value) {
+      return;
+    }
+    
+    isProcessingAudio.value = true;
+    
+    if (isRingtonePlaying.value && currentlyPlayingCustomRingtone.value == ringtoneName) {
+      await stopAllRingtoneAudio();
+    } else {
+      if (isRingtonePlaying.value) {
+        await AudioUtils.stopPreviewCustomSound();
+      }
+      await AudioUtils.previewCustomSound(ringtoneName);
+      isRingtonePlaying.value = true;
+      currentlyPlayingCustomRingtone.value = ringtoneName;
+      currentlyPlayingSystemRingtone.value = null;
+      isPlaying.value = true;
+    }
+    
+    isProcessingAudio.value = false;
+  }
+  
+  Future<void> previewSystemRingtone(SystemRingtone ringtone) async {
+    Utils.hapticFeedback();
+    
+    if (isRingtonePlaying.value && currentlyPlayingSystemRingtone.value == ringtone) {
+      isProcessingAudio.value = true;
+      await stopAllRingtoneAudio();
+      isRingtonePlaying.value = false;
+      currentlyPlayingSystemRingtone.value = null;
+      isProcessingAudio.value = false;
+      return;
+    }
+    
+    if (isRingtonePlaying.value) {
+      await stopAllRingtoneAudio();
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
+    
+    final now = DateTime.now();
+    if (now.difference(lastAudioRequest.value).inMilliseconds < 500) {
+      return;
+    }
+    lastAudioRequest.value = now;
+    
+    if (isProcessingAudio.value) {
+      return;
+    }
+    
+    isProcessingAudio.value = true;
+    currentlyPlayingSystemRingtone.value = ringtone;
+    
+    await _playSystemRingtone(ringtone);
+    
+    isRingtonePlaying.value = true;
+    currentlyPlayingCustomRingtone.value = null;
+    isProcessingAudio.value = false;
+  }
+  
+  Future<void> _playSystemRingtone(SystemRingtone ringtone) async {
+    await _ensureAudioStopped();
+    const platform = MethodChannel('ulticlock');
+    await platform.invokeMethod('playSystemRingtone', {'uri': ringtone.uri});
+  }
+  
+  Future<void> _ensureAudioStopped() async {
+    await AudioUtils.stopPreviewCustomSound();
+    const platform = MethodChannel('ulticlock');
+    await platform.invokeMethod('stopDefaultAlarm');
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
+  
+  List<String> getFilteredCustomRingtones() {
+    return searchQuery.isEmpty
+        ? List<String>.from(customRingtoneNames)
+        : List<String>.from(customRingtoneNames
+            .where((name) => name.toLowerCase().contains(searchQuery.value))
+            .toList());
+  }
+  
+  Map<String, List<SystemRingtone>> getCategorizedSystemRingtones() {
+    if (systemRingtones.value == null) return {'alarm': [], 'notification': [], 'ringtone': []};
+    
+    final Map<String, List<SystemRingtone>> categorized = {
+      'alarm': systemRingtones.value!.where((r) => r.category == 'alarm').toList(),
+      'notification': systemRingtones.value!.where((r) => r.category == 'notification').toList(),
+      'ringtone': systemRingtones.value!.where((r) => r.category == 'ringtone').toList(),
+    };
+    
+    if (searchQuery.isNotEmpty) {
+      categorized.forEach((category, ringtones) {
+        categorized[category] = ringtones
+            .where((r) => r.title.toLowerCase().contains(searchQuery.value))
+            .toList();
+      });
+    }
+    
+    return categorized;
+  }
+  
+  bool isSystemRingtone(String ringtoneName) {
+    return !(defaultRingtones.contains(ringtoneName));
+  }
+  
+  Future<void> selectCustomRingtone(String ringtoneName) async {
+    Utils.hapticFeedback();
+    await stopAllRingtoneAudio();
+    
+    previousRingtone = customRingtoneName.value;
+    customRingtoneName.value = ringtoneName;
+
+    if (customRingtoneName.value != previousRingtone) {
+      await AudioUtils.updateRingtoneCounterOfUsage(
+        customRingtoneName: customRingtoneName.value,
+        counterUpdate: CounterUpdate.increment,
+      );
+
+      await AudioUtils.updateRingtoneCounterOfUsage(
+        customRingtoneName: previousRingtone,
+        counterUpdate: CounterUpdate.decrement,
+      );
+    }
+  }
+  
+  Future<void> selectSystemRingtone(SystemRingtone ringtone) async {
+    Utils.hapticFeedback();
+    await stopAllRingtoneAudio();
+    
+    await AudioUtils.saveSystemRingtone(
+      title: ringtone.title,
+      uri: ringtone.uri,
+      category: ringtone.category,
+    );
+    
+    previousRingtone = customRingtoneName.value;
+    customRingtoneName.value = ringtone.title;
+    
+    await AudioUtils.updateRingtoneCounterOfUsage(
+      customRingtoneName: customRingtoneName.value,
+      counterUpdate: CounterUpdate.increment,
+    );
+    
+    await AudioUtils.updateRingtoneCounterOfUsage(
+      customRingtoneName: previousRingtone,
+      counterUpdate: CounterUpdate.decrement,
+    );
+    
+    customRingtoneNames.value = await getAllCustomRingtoneNames();
+    
+    Get.back();
+  }
+}

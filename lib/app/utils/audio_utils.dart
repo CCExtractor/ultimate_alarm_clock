@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/system_ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -19,6 +20,8 @@ class AudioUtils {
   static AudioSession? audioSession;
 
   static bool isPreviewing = false;
+  
+  static List<SystemRingtone>? _cachedRingtones;
 
   static Future<void> initializeAudioSession() async {
     audioSession = await AudioSession.instance;
@@ -89,8 +92,15 @@ class AudioUtils {
 
       if (customRingtone != null) {
         String customRingtonePath = customRingtone.ringtonePath;
+        
         if (defaultRingtones.contains(ringtoneName)) {
           await playAssetSound(customRingtonePath);
+        } else if (customRingtonePath.startsWith("system_ringtone:")) {
+          String systemUri = customRingtonePath.substring("system_ringtone:".length);
+          await alarmChannel.invokeMethod('playSystemRingtone', {'uri': systemUri});
+        } else if (customRingtonePath.startsWith('content://') || 
+                  customRingtonePath.startsWith('android.resource://')) {
+          await alarmChannel.invokeMethod('playSystemRingtone', {'uri': customRingtonePath});
         } else {
           await playCustomSound(customRingtonePath);
         }
@@ -136,7 +146,6 @@ class AudioUtils {
           await playCustomSound(customRingtonePath);
         } else {
           await timerChannel.invokeMethod('playDefaultAlarm');
-
           alarmRecord.ringtoneName = 'Default';
         }
       }
@@ -203,8 +212,19 @@ class AudioUtils {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
           await audioSession!.setActive(false);
           await audioSession!.setActive(true);
-          await playCustomSound(customRingtonePath);
-          isPreviewing = true;
+          
+          if (customRingtonePath.startsWith("system_ringtone:")) {
+            String systemUri = customRingtonePath.substring("system_ringtone:".length);
+            await alarmChannel.invokeMethod('playSystemRingtone', {'uri': systemUri});
+            isPreviewing = true;
+          } else if (customRingtonePath.startsWith('content://') || 
+                    customRingtonePath.startsWith('android.resource://')) {
+            await alarmChannel.invokeMethod('playSystemRingtone', {'uri': customRingtonePath});
+            isPreviewing = true;
+          } else {
+            await playCustomSound(customRingtonePath);
+            isPreviewing = true;
+          }
         }
       }
     } catch (e) {
@@ -214,12 +234,22 @@ class AudioUtils {
 
   static Future<void> stopPreviewCustomSound() async {
     try {
-      if (audioSession != null && isPreviewing) {
-        await audioPlayer.stop();
-        await alarmChannel.invokeMethod('stopDefaultAlarm');
-        await audioSession!.setActive(false);
-        isPreviewing = false;
+      if (audioSession == null) {
+        await initializeAudioSession();
       }
+      
+      await audioPlayer.stop();
+    
+      for (int i = 0; i < 3; i++) {
+        await alarmChannel.invokeMethod('stopDefaultAlarm');
+        break;
+      }
+      
+      if (audioSession != null) {
+        await audioSession!.setActive(false);
+      }
+      
+      isPreviewing = false;
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -233,7 +263,19 @@ class AudioUtils {
         if (ringtoneName == 'Default') {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
         } else {
-          await audioPlayer.stop();
+          int customRingtoneId = fastHash(ringtoneName);
+          RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+            customRingtoneId: customRingtoneId,
+          );
+          
+          if (customRingtone != null && 
+              (customRingtone.ringtonePath.startsWith('content://') || 
+               customRingtone.ringtonePath.startsWith('android.resource://') ||
+               customRingtone.ringtonePath.startsWith('system_ringtone:'))) {
+            await alarmChannel.invokeMethod('stopDefaultAlarm');
+          } else {
+            await audioPlayer.stop();
+          }
         }
 
         await audioSession!.setActive(false);
@@ -266,7 +308,7 @@ class AudioUtils {
     required CounterUpdate counterUpdate,
   }) async {
     try {
-      int customRingtoneId = fastHash(customRingtoneName);
+       int customRingtoneId = fastHash(customRingtoneName);
       RingtoneModel? customRingtone =
           await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
@@ -297,5 +339,74 @@ class AudioUtils {
     }
 
     return hash;
+  }
+
+  static Future<List<SystemRingtone>> getSystemRingtones() async {
+    if (_cachedRingtones != null) {
+      return _cachedRingtones!;
+    }
+    
+    final List<dynamic> result = await alarmChannel.invokeMethod('getSystemRingtones');
+    
+    final List<SystemRingtone> ringtones = result.map((dynamic item) {
+      if (item is Map) {
+        final ringtone = SystemRingtone.fromJson(item as Map<dynamic, dynamic>);
+        return ringtone;
+      } else {
+        return SystemRingtone(
+          title: 'Unknown',
+          uri: '',
+          category: 'alarm',
+        );
+      }
+    }).toList();
+    _cachedRingtones = ringtones.where((ringtone) => ringtone.uri.isNotEmpty).toList();
+    return _cachedRingtones!;
+  }
+
+  static Future<void> playSystemRingtone(String uri) async {
+    if (audioSession == null) {
+      await initializeAudioSession();
+    }
+    
+    if (isPreviewing) {
+      for (int i = 0; i < 2; i++) {
+        await stopPreviewCustomSound();
+        break;
+      }
+    }
+    
+    if (!await audioSession!.setActive(true)) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      await audioSession!.setActive(true);
+    }
+    
+    await alarmChannel.invokeMethod('playSystemRingtone', {'uri': uri});
+    isPreviewing = true;
+  }
+
+  static Future<void> saveSystemRingtone({
+    required String title,
+    required String uri,
+    required String category,
+  }) async {
+    int ringtoneId = fastHash(title);
+    RingtoneModel? existingRingtone = await IsarDb.getCustomRingtone(
+      customRingtoneId: ringtoneId,
+    );
+    
+    if (existingRingtone != null) {
+      existingRingtone.ringtonePath = "system_ringtone:$uri";
+      existingRingtone.currentCounterOfUsage += 1;
+      await IsarDb.addCustomRingtone(existingRingtone);
+      return;
+    }
+    
+    final RingtoneModel systemRingtone = RingtoneModel(
+      ringtoneName: title,
+      ringtonePath: "system_ringtone:$uri",
+      currentCounterOfUsage: 1,
+    );
+    await IsarDb.addCustomRingtone(systemRingtone);
   }
 }
