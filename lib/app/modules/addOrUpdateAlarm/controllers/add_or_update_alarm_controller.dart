@@ -1545,7 +1545,6 @@ class AddOrUpdateAlarmController extends GetxController {
                 : selectedTime.value.hour.toString()));
     inputMinutesController.text = selectedTime.value.minute.toString().padLeft(2, '0');
   }
-}
 
   int orderedCountryCode(Country countryA, Country countryB) {
     // `??` for null safety of 'dialCode'
@@ -1554,6 +1553,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
   }
+}
 
 class LimitRange extends TextInputFormatter {
   LimitRange(this.minRange, this.maxRange) : assert(minRange < maxRange);
