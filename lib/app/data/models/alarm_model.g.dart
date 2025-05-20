@@ -162,93 +162,98 @@ const AlarmModelSchema = CollectionSchema(
       name: r'mathsDifficulty',
       type: IsarType.long,
     ),
-    r'minutesSinceMidnight': PropertySchema(
+    r'maxSnoozeCount': PropertySchema(
       id: 29,
+      name: r'maxSnoozeCount',
+      type: IsarType.long,
+    ),
+    r'minutesSinceMidnight': PropertySchema(
+      id: 30,
       name: r'minutesSinceMidnight',
       type: IsarType.long,
     ),
     r'mutexLock': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'mutexLock',
       type: IsarType.bool,
     ),
     r'note': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'note',
       type: IsarType.string,
     ),
     r'numMathsQuestions': PropertySchema(
-      id: 32,
+      id: 33,
       name: r'numMathsQuestions',
       type: IsarType.long,
     ),
     r'numberOfSteps': PropertySchema(
-      id: 33,
+      id: 34,
       name: r'numberOfSteps',
       type: IsarType.long,
     ),
     r'ownerId': PropertySchema(
-      id: 34,
+      id: 35,
       name: r'ownerId',
       type: IsarType.string,
     ),
     r'ownerName': PropertySchema(
-      id: 35,
+      id: 36,
       name: r'ownerName',
       type: IsarType.string,
     ),
     r'profile': PropertySchema(
-      id: 36,
+      id: 37,
       name: r'profile',
       type: IsarType.string,
     ),
     r'qrValue': PropertySchema(
-      id: 37,
+      id: 38,
       name: r'qrValue',
       type: IsarType.string,
     ),
     r'ringOn': PropertySchema(
-      id: 38,
+      id: 39,
       name: r'ringOn',
       type: IsarType.bool,
     ),
     r'ringtoneName': PropertySchema(
-      id: 39,
+      id: 40,
       name: r'ringtoneName',
       type: IsarType.string,
     ),
     r'shakeTimes': PropertySchema(
-      id: 40,
+      id: 41,
       name: r'shakeTimes',
       type: IsarType.long,
     ),
     r'sharedUserIds': PropertySchema(
-      id: 41,
+      id: 42,
       name: r'sharedUserIds',
       type: IsarType.stringList,
     ),
     r'showMotivationalQuote': PropertySchema(
-      id: 42,
+      id: 43,
       name: r'showMotivationalQuote',
       type: IsarType.bool,
     ),
     r'snoozeDuration': PropertySchema(
-      id: 43,
+      id: 44,
       name: r'snoozeDuration',
       type: IsarType.long,
     ),
     r'volMax': PropertySchema(
-      id: 44,
+      id: 45,
       name: r'volMax',
       type: IsarType.double,
     ),
     r'volMin': PropertySchema(
-      id: 45,
+      id: 46,
       name: r'volMin',
       type: IsarType.double,
     ),
     r'weatherTypes': PropertySchema(
-      id: 46,
+      id: 47,
       name: r'weatherTypes',
       type: IsarType.longList,
     )
@@ -350,24 +355,25 @@ void _alarmModelSerialize(
   writer.writeString(offsets[26], object.location);
   writer.writeString(offsets[27], object.mainAlarmTime);
   writer.writeLong(offsets[28], object.mathsDifficulty);
-  writer.writeLong(offsets[29], object.minutesSinceMidnight);
-  writer.writeBool(offsets[30], object.mutexLock);
-  writer.writeString(offsets[31], object.note);
-  writer.writeLong(offsets[32], object.numMathsQuestions);
-  writer.writeLong(offsets[33], object.numberOfSteps);
-  writer.writeString(offsets[34], object.ownerId);
-  writer.writeString(offsets[35], object.ownerName);
-  writer.writeString(offsets[36], object.profile);
-  writer.writeString(offsets[37], object.qrValue);
-  writer.writeBool(offsets[38], object.ringOn);
-  writer.writeString(offsets[39], object.ringtoneName);
-  writer.writeLong(offsets[40], object.shakeTimes);
-  writer.writeStringList(offsets[41], object.sharedUserIds);
-  writer.writeBool(offsets[42], object.showMotivationalQuote);
-  writer.writeLong(offsets[43], object.snoozeDuration);
-  writer.writeDouble(offsets[44], object.volMax);
-  writer.writeDouble(offsets[45], object.volMin);
-  writer.writeLongList(offsets[46], object.weatherTypes);
+  writer.writeLong(offsets[29], object.maxSnoozeCount);
+  writer.writeLong(offsets[30], object.minutesSinceMidnight);
+  writer.writeBool(offsets[31], object.mutexLock);
+  writer.writeString(offsets[32], object.note);
+  writer.writeLong(offsets[33], object.numMathsQuestions);
+  writer.writeLong(offsets[34], object.numberOfSteps);
+  writer.writeString(offsets[35], object.ownerId);
+  writer.writeString(offsets[36], object.ownerName);
+  writer.writeString(offsets[37], object.profile);
+  writer.writeString(offsets[38], object.qrValue);
+  writer.writeBool(offsets[39], object.ringOn);
+  writer.writeString(offsets[40], object.ringtoneName);
+  writer.writeLong(offsets[41], object.shakeTimes);
+  writer.writeStringList(offsets[42], object.sharedUserIds);
+  writer.writeBool(offsets[43], object.showMotivationalQuote);
+  writer.writeLong(offsets[44], object.snoozeDuration);
+  writer.writeDouble(offsets[45], object.volMax);
+  writer.writeDouble(offsets[46], object.volMin);
+  writer.writeLongList(offsets[47], object.weatherTypes);
 }
 
 AlarmModel _alarmModelDeserialize(
@@ -405,24 +411,25 @@ AlarmModel _alarmModelDeserialize(
     location: reader.readString(offsets[26]),
     mainAlarmTime: reader.readStringOrNull(offsets[27]),
     mathsDifficulty: reader.readLong(offsets[28]),
-    minutesSinceMidnight: reader.readLong(offsets[29]),
-    mutexLock: reader.readBool(offsets[30]),
-    note: reader.readString(offsets[31]),
-    numMathsQuestions: reader.readLong(offsets[32]),
-    numberOfSteps: reader.readLong(offsets[33]),
-    ownerId: reader.readString(offsets[34]),
-    ownerName: reader.readString(offsets[35]),
-    profile: reader.readString(offsets[36]),
-    qrValue: reader.readString(offsets[37]),
-    ringOn: reader.readBool(offsets[38]),
-    ringtoneName: reader.readString(offsets[39]),
-    shakeTimes: reader.readLong(offsets[40]),
-    sharedUserIds: reader.readStringList(offsets[41]),
-    showMotivationalQuote: reader.readBool(offsets[42]),
-    snoozeDuration: reader.readLong(offsets[43]),
-    volMax: reader.readDouble(offsets[44]),
-    volMin: reader.readDouble(offsets[45]),
-    weatherTypes: reader.readLongList(offsets[46]) ?? [],
+    maxSnoozeCount: reader.readLongOrNull(offsets[29]) ?? 3,
+    minutesSinceMidnight: reader.readLong(offsets[30]),
+    mutexLock: reader.readBool(offsets[31]),
+    note: reader.readString(offsets[32]),
+    numMathsQuestions: reader.readLong(offsets[33]),
+    numberOfSteps: reader.readLong(offsets[34]),
+    ownerId: reader.readString(offsets[35]),
+    ownerName: reader.readString(offsets[36]),
+    profile: reader.readString(offsets[37]),
+    qrValue: reader.readString(offsets[38]),
+    ringOn: reader.readBool(offsets[39]),
+    ringtoneName: reader.readString(offsets[40]),
+    shakeTimes: reader.readLong(offsets[41]),
+    sharedUserIds: reader.readStringList(offsets[42]),
+    showMotivationalQuote: reader.readBool(offsets[43]),
+    snoozeDuration: reader.readLong(offsets[44]),
+    volMax: reader.readDouble(offsets[45]),
+    volMin: reader.readDouble(offsets[46]),
+    weatherTypes: reader.readLongList(offsets[47]) ?? [],
   );
   object.firestoreId = reader.readStringOrNull(offsets[7]);
   object.isarId = id;
@@ -495,17 +502,17 @@ P _alarmModelDeserializeProp<P>(
     case 28:
       return (reader.readLong(offset)) as P;
     case 29:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 3) as P;
     case 30:
-      return (reader.readBool(offset)) as P;
-    case 31:
-      return (reader.readString(offset)) as P;
-    case 32:
       return (reader.readLong(offset)) as P;
+    case 31:
+      return (reader.readBool(offset)) as P;
+    case 32:
+      return (reader.readString(offset)) as P;
     case 33:
       return (reader.readLong(offset)) as P;
     case 34:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 35:
       return (reader.readString(offset)) as P;
     case 36:
@@ -513,22 +520,24 @@ P _alarmModelDeserializeProp<P>(
     case 37:
       return (reader.readString(offset)) as P;
     case 38:
-      return (reader.readBool(offset)) as P;
-    case 39:
       return (reader.readString(offset)) as P;
-    case 40:
-      return (reader.readLong(offset)) as P;
-    case 41:
-      return (reader.readStringList(offset)) as P;
-    case 42:
+    case 39:
       return (reader.readBool(offset)) as P;
-    case 43:
+    case 40:
+      return (reader.readString(offset)) as P;
+    case 41:
       return (reader.readLong(offset)) as P;
+    case 42:
+      return (reader.readStringList(offset)) as P;
+    case 43:
+      return (reader.readBool(offset)) as P;
     case 44:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 45:
       return (reader.readDouble(offset)) as P;
     case 46:
+      return (reader.readDouble(offset)) as P;
+    case 47:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2478,6 +2487,62 @@ extension AlarmModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'mathsDifficulty',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      maxSnoozeCountEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'maxSnoozeCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      maxSnoozeCountGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'maxSnoozeCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      maxSnoozeCountLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'maxSnoozeCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterFilterCondition>
+      maxSnoozeCountBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'maxSnoozeCount',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -4464,6 +4529,19 @@ extension AlarmModelQuerySortBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> sortByMaxSnoozeCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxSnoozeCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      sortByMaxSnoozeCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxSnoozeCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
       sortByMinutesSinceMidnight() {
     return QueryBuilder.apply(this, (query) {
@@ -5029,6 +5107,19 @@ extension AlarmModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy> thenByMaxSnoozeCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxSnoozeCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
+      thenByMaxSnoozeCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxSnoozeCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QAfterSortBy>
       thenByMinutesSinceMidnight() {
     return QueryBuilder.apply(this, (query) {
@@ -5420,6 +5511,12 @@ extension AlarmModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AlarmModel, AlarmModel, QDistinct> distinctByMaxSnoozeCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'maxSnoozeCount');
+    });
+  }
+
   QueryBuilder<AlarmModel, AlarmModel, QDistinct>
       distinctByMinutesSinceMidnight() {
     return QueryBuilder.apply(this, (query) {
@@ -5721,6 +5818,12 @@ extension AlarmModelQueryProperty
   QueryBuilder<AlarmModel, int, QQueryOperations> mathsDifficultyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mathsDifficulty');
+    });
+  }
+
+  QueryBuilder<AlarmModel, int, QQueryOperations> maxSnoozeCountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'maxSnoozeCount');
     });
   }
 

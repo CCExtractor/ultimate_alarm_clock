@@ -84,6 +84,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxBool isOneTime = true.obs;
   final RxString label = ''.obs;
   final RxInt snoozeDuration = 1.obs;
+  final RxInt maxSnoozeCount = 3.obs;
   var customRingtoneName = 'Digital Alarm 1'.obs;
   var customRingtoneNames = [].obs;
   var previousRingtone = '';
@@ -705,6 +706,7 @@ class AddOrUpdateAlarmController extends GetxController {
       isActivityMonitorenabled.value =
           alarmRecord.value.isActivityEnabled ? 1 : 0;
       snoozeDuration.value = alarmRecord.value.snoozeDuration;
+      maxSnoozeCount.value = alarmRecord.value.maxSnoozeCount;
       gradient.value = alarmRecord.value.gradient;
       volMin.value = alarmRecord.value.volMin;
       volMax.value = alarmRecord.value.volMax;
@@ -857,6 +859,7 @@ class AddOrUpdateAlarmController extends GetxController {
       'selectedTime': selectedTime.value,
       'daysRepeating': daysRepeating.value,
       'snoozeDuration': snoozeDuration.value,
+      'maxSnoozeCount': maxSnoozeCount.value,
       'deleteAfterGoesOff': deleteAfterGoesOff.value,
       'label': label.value,
       'note': note.value,
@@ -1024,6 +1027,7 @@ class AddOrUpdateAlarmController extends GetxController {
     }
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
+      maxSnoozeCount: maxSnoozeCount.value,
       volMax: volMax.value,
       volMin: volMin.value,
       gradient: gradient.value,
