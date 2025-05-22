@@ -33,6 +33,10 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import '../controllers/add_or_update_alarm_controller.dart';
 import 'alarm_date_tile.dart';
 import 'guardian_angel.dart';
+import 'scheduling_options_tile.dart';
+import 'repeat_once_tile.dart';
+import 'repeat_tile.dart';
+import 'screen_activity_tile.dart';
 
 class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
   AddOrUpdateAlarmView({super.key});
@@ -786,15 +790,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                             () => controller.alarmSettingType.value == 0
                                 ? Column(
                                     children: [
-                                      AlarmDateTile(
-                                        controller: controller,
-                                        themeController: themeController,
-                                      ),
-                                      Divider(
-                                        color: themeController
-                                            .primaryDisabledTextColor.value,
-                                      ),
-                                      RepeatTile(
+                                      SchedulingOptionsTile(
                                         controller: controller,
                                         themeController: themeController,
                                       ),

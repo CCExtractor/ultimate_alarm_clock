@@ -327,6 +327,8 @@ class HomeController extends GetxController {
       String timeToAlarm = Utils.timeUntilAlarm(
         Utils.stringToTimeOfDay(latestAlarm.alarmTime),
         latestAlarm.days,
+        ringOn: latestAlarm.ringOn,
+        alarmDate: latestAlarm.alarmDate,
       );
       alarmTime.value = 'Rings in $timeToAlarm';
       // This function is necessary when alarms are deleted/enabled
@@ -362,6 +364,8 @@ class HomeController extends GetxController {
           timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(latestAlarm.alarmTime),
             latestAlarm.days,
+            ringOn: latestAlarm.ringOn,
+            alarmDate: latestAlarm.alarmDate,
           );
           alarmTime.value = 'Rings in $timeToAlarm';
 
@@ -377,6 +381,8 @@ class HomeController extends GetxController {
             timeToAlarm = Utils.timeUntilAlarm(
               Utils.stringToTimeOfDay(latestAlarm.alarmTime),
               latestAlarm.days,
+              ringOn: latestAlarm.ringOn,
+              alarmDate: latestAlarm.alarmDate,
             );
             alarmTime.value = 'Rings in $timeToAlarm';
           });

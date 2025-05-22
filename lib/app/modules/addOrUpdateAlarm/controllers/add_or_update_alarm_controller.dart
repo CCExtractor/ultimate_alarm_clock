@@ -752,6 +752,8 @@ class AddOrUpdateAlarmController extends GetxController {
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
         repeatDays,
+        ringOn: isFutureDate.value,
+        alarmDate: selectedDate.value.toString(),
       );
 
       repeatDays.value = alarmRecord.value.days;
@@ -862,6 +864,8 @@ class AddOrUpdateAlarmController extends GetxController {
     timeToAlarm.value = Utils.timeUntilAlarm(
       TimeOfDay.fromDateTime(selectedTime.value),
       repeatDays,
+      ringOn: isFutureDate.value,
+      alarmDate: selectedDate.value.toString(),
     );
 
     // store initial values of the variables
@@ -912,7 +916,12 @@ class AddOrUpdateAlarmController extends GetxController {
     selectedTime.listen((time) {
       debugPrint('CHANGED CHANGED CHANGED CHANGED');
       timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
+          Utils.timeUntilAlarm(
+            TimeOfDay.fromDateTime(time), 
+            repeatDays,
+            ringOn: isFutureDate.value,
+            alarmDate: selectedDate.value.toString(),
+          );
       _compareAndSetChange('selectedTime', time);
     });
 
@@ -1552,6 +1561,96 @@ class AddOrUpdateAlarmController extends GetxController {
     String dialCodeB = countryB.dialCode ?? '0';
 
     return int.parse(dialCodeA).compareTo(int.parse(dialCodeB));
+  }
+
+  void showCustomDaysDialog(BuildContext context) {
+    final List<String> daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final List<bool> tempDays = List.from(repeatDays);
+    
+    Get.dialog(
+      Dialog(
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Select Days',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: themeController.primaryTextColor.value,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: List.generate(
+                  7,
+                  (index) => StatefulBuilder(
+                    builder: (context, setState) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            tempDays[index] = !tempDays[index];
+                          });
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: tempDays[index]
+                              ? themeController.primaryColor.value
+                              : themeController.secondaryBackgroundColor.value,
+                          child: Text(
+                            daysOfWeek[index],
+                            style: TextStyle(
+                              color: tempDays[index]
+                                  ? Colors.white
+                                  : themeController.primaryTextColor.value,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: themeController.primaryTextColor.value,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: themeController.primaryColor.value,
+                    ),
+                    onPressed: () {
+                      repeatDays.value = tempDays;
+                      daysRepeating.value = Utils.getRepeatDays(repeatDays);
+                      Get.back();
+                    },
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

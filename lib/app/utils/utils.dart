@@ -271,7 +271,7 @@ class Utils {
     return deg * (pi / 180);
   }
 
-  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, {bool ringOn = false, String? alarmDate}) {
     final now = DateTime.now();
     final todayAlarm = DateTime(
       now.year,
@@ -283,8 +283,43 @@ class Utils {
 
     Duration duration;
 
+    // Handle future date alarms with ringOn flag
+    if (ringOn && alarmDate != null) {
+      try {
+        final DateTime targetDate = DateTime.parse(alarmDate.trim());
+        final futureAlarm = DateTime(
+          targetDate.year,
+          targetDate.month,
+          targetDate.day,
+          alarmTime.hour,
+          alarmTime.minute,
+        );
+        
+        if (now.isBefore(futureAlarm)) {
+          duration = futureAlarm.difference(now);
+        } else {
+          // If the alarm date is in the past, treat it as a regular one-time alarm
+          if (now.isBefore(todayAlarm)) {
+            duration = todayAlarm.difference(now);
+          } else {
+            // Schedule the alarm for the next day
+            final nextAlarm = todayAlarm.add(const Duration(days: 1));
+            duration = nextAlarm.difference(now);
+          }
+        }
+      } catch (e) {
+        // If there's an error parsing the date, fall back to regular behavior
+        if (now.isBefore(todayAlarm)) {
+          duration = todayAlarm.difference(now);
+        } else {
+          // Schedule the alarm for the next day
+          final nextAlarm = todayAlarm.add(const Duration(days: 1));
+          duration = nextAlarm.difference(now);
+        }
+      }
+    }
     // Check if the alarm is a one-time alarm
-    if (days.every((day) => !day)) {
+    else if (days.every((day) => !day)) {
       if (now.isBefore(todayAlarm)) {
         duration = todayAlarm.difference(now);
       } else {
@@ -336,7 +371,7 @@ class Utils {
             ? '$hours hour $minutes minute'
             : '$hours hour $minutes minutes';
       } else {
-        return '$hours hour $minutes minutes';
+        return '$hours hours $minutes minutes';
       }
     } else if (duration.inDays == 1) {
       return '1 day';
