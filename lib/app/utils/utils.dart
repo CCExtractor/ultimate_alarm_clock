@@ -283,7 +283,7 @@ class Utils {
 
     Duration duration;
 
-    // Handle future date alarms with ringOn flag
+    
     if (ringOn && alarmDate != null) {
       try {
         final DateTime targetDate = DateTime.parse(alarmDate.trim());
@@ -298,21 +298,21 @@ class Utils {
         if (now.isBefore(futureAlarm)) {
           duration = futureAlarm.difference(now);
         } else {
-          // If the alarm date is in the past, treat it as a regular one-time alarm
+    
           if (now.isBefore(todayAlarm)) {
             duration = todayAlarm.difference(now);
           } else {
-            // Schedule the alarm for the next day
+            
             final nextAlarm = todayAlarm.add(const Duration(days: 1));
             duration = nextAlarm.difference(now);
           }
         }
       } catch (e) {
-        // If there's an error parsing the date, fall back to regular behavior
+        
         if (now.isBefore(todayAlarm)) {
           duration = todayAlarm.difference(now);
         } else {
-          // Schedule the alarm for the next day
+          
           final nextAlarm = todayAlarm.add(const Duration(days: 1));
           duration = nextAlarm.difference(now);
         }

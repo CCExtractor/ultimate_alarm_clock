@@ -26,7 +26,7 @@ class SchedulingOptionsTile extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
             children: [
-              // Tabs for scheduling options
+              
               Container(
                 decoration: BoxDecoration(
                   color: themeController.secondaryBackgroundColor.value.withOpacity(0.8),
@@ -35,14 +35,13 @@ class SchedulingOptionsTile extends StatelessWidget {
                 margin: const EdgeInsets.all(8),
                 child: Row(
                   children: [
-                    // One-time tab
+              
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           if (!controller.isFutureDate.value) {
                             controller.isFutureDate.value = true;
                             
-                            // Show snackbar if we're disabling repeat
                             if (controller.repeatDays.any((day) => day)) {
                               controller.repeatDays.value = List.filled(7, false);
                               controller.daysRepeating.value = 'Never'.tr;
@@ -72,7 +71,7 @@ class SchedulingOptionsTile extends StatelessWidget {
                               );
                             }
                           } else {
-                            // If already in one-time mode, show date picker
+                            
                             controller.datePicker(context);
                           }
                         },
@@ -98,14 +97,14 @@ class SchedulingOptionsTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Recurring tab
+                    
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           if (controller.isFutureDate.value) {
                             controller.isFutureDate.value = false;
                             
-                            // Show dialog to select repeat days
+                    
                             Get.bottomSheet(
                               Container(
                                 padding: const EdgeInsets.all(16),
@@ -184,7 +183,7 @@ class SchedulingOptionsTile extends StatelessWidget {
                               ),
                             );
                           } else {
-                            // If already in recurring mode, show custom days dialog
+                    
                             controller.showCustomDaysDialog(context);
                           }
                         },
@@ -213,7 +212,7 @@ class SchedulingOptionsTile extends StatelessWidget {
                   ],
                 ),
               ),
-              // Content based on selected tab
+              
               Container(
                 padding: const EdgeInsets.all(16),
                 child: controller.isFutureDate.value
