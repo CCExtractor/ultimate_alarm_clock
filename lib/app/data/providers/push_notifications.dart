@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -51,7 +49,7 @@ class PushNotifications {
     await _initLocalNotifications();
   }
 
-  Future updateToken(String token) async {
+   Future updateToken(String token) async {
     try {
       if (FirebaseAuth.instance.currentUser != null) {
         await FirestoreDb.updateToken(token);
@@ -102,7 +100,7 @@ class PushNotifications {
   }
 
   void _handleMessageNavigation(RemoteMessage message) {
-    debugPrint("User tapped on notification: ${message.data}");
+    print("User tapped on notification: ${message.data}");
     // TODO: Navigate based on message.data or type
   }
 
@@ -122,55 +120,35 @@ Future<void> triggerRescheduleAlarmNotification(String firestoreAlarmId) async {
     });
 
     if (response.data['success'] == true) {
-      debugPrint('Silent alarm sent!');
+      print('Silent alarm sent!');
     } else {
-      debugPrint('Failed to send silent alarm: ${response.data['message']}');
+      print('Failed to send silent alarm: ${response.data['message']}');
     }
   } catch (e) {
-    debugPrint('Error calling function: $e');
+    print('Error calling function: $e');
   }
 }
 
-Future<bool> triggerSharedItemNotification(List receivingUserIds) async {
-  if (receivingUserIds.isEmpty) {
-    debugPrint('No receiving users provided');
-    return true; // No notifications needed
-  }
-  
+Future<void> triggerSharedItemNotification(List receivingUserIds) async {
   try {
-    var userModel = await SecureStorageProvider().retrieveUserModel()
-        .timeout(const Duration(seconds: 5), 
-        onTimeout: () {
-          throw TimeoutException('Failed to retrieve user model');
-        });
     
-    if (userModel == null) {
-      throw Exception('User model is null');
-    }
+    var userModel = await SecureStorageProvider().retrieveUserModel();
 
     final HttpsCallable callable =
         FirebaseFunctions.instance.httpsCallable('sendNotification');
 
     final response = await callable.call({
       'receivingUserIds': receivingUserIds,
-      'message': '${userModel.fullName} has shared an alarm with you!',
-    }).timeout(const Duration(seconds: 8), 
-    onTimeout: () {
-      throw TimeoutException('Cloud function call timed out');
+      'message': '${userModel!.fullName} has shared an alarm with you!',
     });
 
     if (response.data['success'] == true) {
-      debugPrint('Notification sent successfully!');
-      return true;
+      print('Silent alarm sent!');
     } else {
-      debugPrint('Failed to send notification: ${response.data['message']}');
-      // Don't throw an exception here - we still want the alarm to be shared even if notification fails
-      return true;
+      print('Failed to send silent alarm: ${response.data['message']}');
     }
   } catch (e) {
-    debugPrint('Error sending notification: $e');
-    // Don't throw an exception - we still want the alarm to be shared even if notification fails
-    return true;
+    print('Error calling function: $e');
   }
 }
 
