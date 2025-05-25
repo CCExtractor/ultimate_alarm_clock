@@ -49,8 +49,17 @@ class PushNotifications {
     await _initLocalNotifications();
   }
 
-  Future updateToken(String token) async {
-    await FirestoreDb.updateToken(token);
+   Future updateToken(String token) async {
+    try {
+      // Check if user is logged in before updating token
+      if (FirebaseAuth.instance.currentUser != null) {
+        await FirestoreDb.updateToken(token);
+      } else {
+        print('User not logged in. Token update skipped.');
+      }
+    } catch (e) {
+      print('Error updating token: $e');
+    }
   }
 
   Future<void> _initLocalNotifications() async {
