@@ -590,12 +590,21 @@ static Future<void> addItemToUserByEmail(String email, dynamic sharedItem) async
 
 
   static updateToken(String token) async {
-    await _firebaseFirestore
-        .collection('users')
-        .doc(_firebaseAuthInstance.currentUser!.providerData[0].uid)
-        .update({
-      'fcmToken': token
-    });
+    try {
+      if (_firebaseAuthInstance.currentUser != null && 
+          _firebaseAuthInstance.currentUser!.providerData.isNotEmpty) {
+        await _firebaseFirestore
+            .collection('users')
+            .doc(_firebaseAuthInstance.currentUser!.providerData[0].uid)
+            .update({
+          'fcmToken': token
+        });
+      } else {
+        debugPrint('No authenticated user found when updating FCM token');
+      }
+    } catch (e) {
+      debugPrint('Error updating FCM token: $e');
+    }
   }
 
   static acceptSharedAlarm(String alarmOwnerId, AlarmModel alarm)
