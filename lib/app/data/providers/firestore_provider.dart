@@ -28,7 +28,10 @@ class FirestoreDb {
     final dir = await getDatabasesPath();
     final dbPath = '$dir/alarms.db';
     print(dir);
-    db = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
+    db = await openDatabase(dbPath, version: 2, 
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
     return db;
   }
 
@@ -77,6 +80,7 @@ class FirestoreDb {
         volMin REAL,
         volMax REAL,
         activityMonitor INTEGER,
+        alarmDate TEXT NOT NULL DEFAULT "",
         profile TEXT NOT NULL,
         isGuardian INTEGER,
         guardianTimer INTEGER,
@@ -94,6 +98,18 @@ class FirestoreDb {
         currentCounterOfUsage INTEGER NOT NULL DEFAULT 0
       )
     ''');
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add missing alarmDate column
+      try {
+        await db.execute('ALTER TABLE alarms ADD COLUMN alarmDate TEXT NOT NULL DEFAULT ""');
+        print('Successfully added alarmDate column to alarms table');
+      } catch (e) {
+        print('Error adding alarmDate column: $e');
+      }
+    }
   }
 
   static CollectionReference _alarmsCollection(UserModel? user) {
