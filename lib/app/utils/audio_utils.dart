@@ -9,6 +9,7 @@ import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/system_ringtone_service.dart';
 
 class AudioUtils {
   static final audioPlayer = audioplayer.AudioPlayer();
@@ -88,11 +89,15 @@ class AudioUtils {
       );
 
       if (customRingtone != null) {
-        String customRingtonePath = customRingtone.ringtonePath;
-        if (defaultRingtones.contains(ringtoneName)) {
-          await playAssetSound(customRingtonePath);
+        if (customRingtone.isSystemRingtone && customRingtone.ringtoneUri.isNotEmpty) {
+          await SystemRingtoneService.playSystemRingtone(customRingtone.ringtoneUri);
         } else {
-          await playCustomSound(customRingtonePath);
+          String customRingtonePath = customRingtone.ringtonePath;
+          if (defaultRingtones.contains(ringtoneName)) {
+            await playAssetSound(customRingtonePath);
+          } else {
+            await playCustomSound(customRingtonePath);
+          }
         }
       } else {
         await alarmChannel.invokeMethod('playDefaultAlarm');
@@ -132,8 +137,12 @@ class AudioUtils {
         );
 
         if (customRingtone != null) {
-          String customRingtonePath = customRingtone.ringtonePath;
-          await playCustomSound(customRingtonePath);
+          if (customRingtone.isSystemRingtone && customRingtone.ringtoneUri.isNotEmpty) {
+            await SystemRingtoneService.playSystemRingtone(customRingtone.ringtoneUri);
+          } else {
+            String customRingtonePath = customRingtone.ringtonePath;
+            await playCustomSound(customRingtonePath);
+          }
         } else {
           await timerChannel.invokeMethod('playDefaultAlarm');
 
@@ -199,12 +208,21 @@ class AudioUtils {
         );
 
         if (customRingtone != null) {
-          String customRingtonePath = customRingtone.ringtonePath;
-          await alarmChannel.invokeMethod('stopDefaultAlarm');
-          await audioSession!.setActive(false);
-          await audioSession!.setActive(true);
-          await playCustomSound(customRingtonePath);
-          isPreviewing = true;
+          if (customRingtone.isSystemRingtone && customRingtone.ringtoneUri.isNotEmpty) {
+            await alarmChannel.invokeMethod('stopDefaultAlarm');
+            await SystemRingtoneService.stopSystemRingtone();
+            await audioSession!.setActive(false);
+            await audioSession!.setActive(true);
+            await SystemRingtoneService.playSystemRingtone(customRingtone.ringtoneUri);
+            isPreviewing = true;
+          } else {
+            String customRingtonePath = customRingtone.ringtonePath;
+            await alarmChannel.invokeMethod('stopDefaultAlarm');
+            await audioSession!.setActive(false);
+            await audioSession!.setActive(true);
+            await playCustomSound(customRingtonePath);
+            isPreviewing = true;
+          }
         }
       }
     } catch (e) {
@@ -217,6 +235,7 @@ class AudioUtils {
       if (audioSession != null && isPreviewing) {
         await audioPlayer.stop();
         await alarmChannel.invokeMethod('stopDefaultAlarm');
+        await SystemRingtoneService.stopSystemRingtone();
         await audioSession!.setActive(false);
         isPreviewing = false;
       }
@@ -233,7 +252,16 @@ class AudioUtils {
         if (ringtoneName == 'Default') {
           await alarmChannel.invokeMethod('stopDefaultAlarm');
         } else {
-          await audioPlayer.stop();
+          int customRingtoneId = fastHash(ringtoneName);
+          RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+            customRingtoneId: customRingtoneId,
+          );
+          
+          if (customRingtone != null && customRingtone.isSystemRingtone) {
+            await SystemRingtoneService.stopSystemRingtone();
+          } else {
+            await audioPlayer.stop();
+          }
         }
 
         await audioSession!.setActive(false);
@@ -251,7 +279,16 @@ class AudioUtils {
         if (ringtoneName == 'Default') {
           await timerChannel.invokeMethod('stopDefaultAlarm');
         } else {
-          await audioPlayer.stop();
+          int customRingtoneId = fastHash(ringtoneName);
+          RingtoneModel? customRingtone = await IsarDb.getCustomRingtone(
+            customRingtoneId: customRingtoneId,
+          );
+          
+          if (customRingtone != null && customRingtone.isSystemRingtone) {
+            await SystemRingtoneService.stopSystemRingtone();
+          } else {
+            await audioPlayer.stop();
+          }
         }
 
         await audioSession!.setActive(false);
