@@ -50,7 +50,6 @@ class MainActivity : FlutterActivity() {
         intentFilter.addAction("com.ccextractor.ultimate_alarm_clock.STOP_TIMERNOTIF")
         context.registerReceiver(TimerNotification(), intentFilter, Context.RECEIVER_EXPORTED)
         
-        // Initialize AudioManager
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
@@ -84,7 +83,6 @@ class MainActivity : FlutterActivity() {
             alarmConfig["shouldAlarmRing"] = false
         }
 
-        // System ringtones method channel
         methodChannel3.setMethodCallHandler { call, result ->
             when (call.method) {
                 "getSystemRingtones" -> {
@@ -406,9 +404,9 @@ class MainActivity : FlutterActivity() {
 
     private fun playSystemRingtone(ringtoneUri: String) {
         try {
-            stopSystemRingtone() // Stop any currently playing ringtone
+            stopSystemRingtone()
             
-            // Request audio focus
+            
             if (!requestAudioFocus()) {
                 Log.w("SystemRingtone", "Could not gain audio focus")
             }
@@ -422,7 +420,7 @@ class MainActivity : FlutterActivity() {
                 return
             }
             
-            // Set audio attributes for alarm
+            
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val audioAttributes = AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
@@ -432,7 +430,7 @@ class MainActivity : FlutterActivity() {
                 systemRingtone?.isLooping = true
             }
             
-            // Ensure alarm volume is not muted
+            
             val alarmVolume = audioManager?.getStreamVolume(AudioManager.STREAM_ALARM) ?: 0
             val maxAlarmVolume = audioManager?.getStreamMaxVolume(AudioManager.STREAM_ALARM) ?: 1
             
@@ -490,7 +488,7 @@ class MainActivity : FlutterActivity() {
     private fun testAudioSetup() {
         Log.i("SystemRingtone", "=== AUDIO DIAGNOSTICS ===")
         
-        // Check audio manager
+        
         val am = audioManager
         if (am == null) {
             Log.e("SystemRingtone", "AudioManager is null!")
@@ -509,7 +507,7 @@ class MainActivity : FlutterActivity() {
         Log.i("SystemRingtone", "Music Volume: $musicVolume/$maxMusicVolume")
         Log.i("SystemRingtone", "Ring Volume: $ringVolume/$maxRingVolume")
         
-        // Check ringer mode
+        
         val ringerMode = am.ringerMode
         val ringerModeText = when (ringerMode) {
             AudioManager.RINGER_MODE_SILENT -> "SILENT"
@@ -519,7 +517,7 @@ class MainActivity : FlutterActivity() {
         }
         Log.i("SystemRingtone", "Ringer Mode: $ringerModeText")
         
-        // Test default alarm
+        
         try {
             val defaultAlarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             Log.i("SystemRingtone", "Default alarm URI: $defaultAlarmUri")

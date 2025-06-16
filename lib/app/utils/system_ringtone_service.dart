@@ -31,8 +31,6 @@ class SystemRingtoneService {
 
     try {
       final List<SystemRingtoneModel> allRingtones = [];
-      
-      // Get ringtones from all categories
       final List<String> categories = ['alarm', 'notification', 'ringtone'];
       
       for (String category in categories) {

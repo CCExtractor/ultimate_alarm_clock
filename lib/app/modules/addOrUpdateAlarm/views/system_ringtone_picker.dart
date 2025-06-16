@@ -21,13 +21,11 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
 
   @override
   Widget build(BuildContext context) {
-    // Load system ringtones only once if not already loaded
     if (controller.categorizedSystemRingtones.isEmpty) {
       _loadSystemRingtones();
     }
 
     if (isFullScreen) {
-      // Full-screen layout without container constraints
       return Column(
         children: [
           Expanded(
@@ -68,7 +66,6 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
         ],
       );
     } else {
-      // Dialog layout with container constraints
       return Container(
         width: Get.width * 0.9,
         height: Get.height * 0.6,
@@ -105,7 +102,6 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    // Test Audio Button (for debugging)
                     OutlinedButton(
                       onPressed: () async {
                         await SystemRingtoneService.testAudio();
@@ -157,16 +153,13 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
     Utils.hapticFeedback();
     
     if (controller.playingSystemRingtoneUri.value == ringtone.uri) {
-      // Stop if already playing
       await SystemRingtoneService.stopSystemRingtone();
       controller.playingSystemRingtoneUri.value = '';
     } else {
-      // Stop any currently playing and start new one
       await SystemRingtoneService.stopSystemRingtone();
       await SystemRingtoneService.playSystemRingtone(ringtone.uri);
       controller.playingSystemRingtoneUri.value = ringtone.uri;
       
-      // Auto-stop after 10 seconds to prevent indefinite playing
       Future.delayed(const Duration(seconds: 10), () async {
         if (controller.playingSystemRingtoneUri.value == ringtone.uri) {
           await SystemRingtoneService.stopSystemRingtone();
@@ -260,13 +253,10 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
                 await SystemRingtoneService.stopSystemRingtone();
                 controller.playingSystemRingtoneUri.value = '';
                 
-                // Store the previous ringtone name for counter management
                 final previousRingtone = controller.customRingtoneName.value;
                 
-                // Update the controller with the selected system ringtone
                 controller.customRingtoneName.value = ringtone.title;
-                
-                // Save the system ringtone to the database and manage counters
+         
                 await _saveSystemRingtone(ringtone, previousRingtone);
               },
             ),
@@ -278,9 +268,7 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
 
   Future<void> _saveSystemRingtone(SystemRingtoneModel ringtone, String previousRingtone) async {
     try {
-      // Only update counters if the ringtone actually changed
       if (ringtone.title != previousRingtone) {
-        // Decrement usage counter for the previous ringtone
         if (previousRingtone.isNotEmpty && previousRingtone != 'Default') {
           await AudioUtils.updateRingtoneCounterOfUsage(
             customRingtoneName: previousRingtone,
@@ -288,21 +276,18 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
           );
         }
         
-        // Check if this system ringtone already exists in the database
         final ringtoneId = AudioUtils.fastHash(ringtone.title);
         final existingRingtone = await IsarDb.getCustomRingtone(customRingtoneId: ringtoneId);
         
         if (existingRingtone != null) {
-          // If it exists, just increment the usage counter
           await AudioUtils.updateRingtoneCounterOfUsage(
             customRingtoneName: ringtone.title,
             counterUpdate: CounterUpdate.increment,
           );
         } else {
-          // If it doesn't exist, create a new entry
           final ringtoneModel = RingtoneModel(
             ringtoneName: ringtone.title,
-            ringtonePath: '', // Not used for system ringtones
+            ringtonePath: '', 
             currentCounterOfUsage: 1,
             isSystemRingtone: true,
             ringtoneUri: ringtone.uri,

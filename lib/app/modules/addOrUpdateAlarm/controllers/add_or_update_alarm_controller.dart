@@ -139,7 +139,7 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isDailySelected = false.obs;
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
-  final RxBool isPlaying = false.obs; // Observable boolean to track playing state
+  final RxBool isPlaying = false.obs;
 
   // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
@@ -147,7 +147,6 @@ class AddOrUpdateAlarmController extends GetxController {
 
   RxInt alarmSettingType = 0.obs;
 
-  // System ringtones observables
   final RxBool isSystemRingtonesLoading = false.obs;
   final RxMap<String, List<SystemRingtoneModel>> categorizedSystemRingtones = <String, List<SystemRingtoneModel>>{}.obs;
   final RxString playingSystemRingtoneUri = ''.obs;
@@ -1017,7 +1016,6 @@ class AddOrUpdateAlarmController extends GetxController {
   void onClose() async {
     super.onClose();
 
-    // Cleanup system ringtones
     await SystemRingtoneService.stopSystemRingtone();
     playingSystemRingtoneUri.value = '';
 
@@ -1221,13 +1219,11 @@ class AddOrUpdateAlarmController extends GetxController {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
         bool isSystemRingtone = customRingtone.isSystemRingtone;
 
-        // Allow deletion if usage count is 0 OR if it's a system ringtone
         if (currentCounterOfUsage == 0 || isSystemRingtone) {
           customRingtoneNames.removeAt(ringtoneIndex);
           await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
 
           if (isSystemRingtone) {
-            // For system ringtones, just show success message
             Get.snackbar(
               'System Ringtone Removed',
               'The system ringtone has been removed from your list.',
@@ -1238,7 +1234,6 @@ class AddOrUpdateAlarmController extends GetxController {
               colorText: kprimaryTextColor,
             );
           } else {
-            // For custom ringtones, try to delete the file
             final documentsDirectory = await getApplicationDocumentsDirectory();
             final ringtoneFilePath =
                 '${documentsDirectory.path}/ringtones/$ringtoneName';
