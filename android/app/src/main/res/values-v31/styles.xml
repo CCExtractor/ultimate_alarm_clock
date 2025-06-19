@@ -16,4 +16,21 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <style name="Widget.Android.AppWidget.Container" parent="android:Widget">
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">#ffffff</item>
+    </style>
+
+    <style name="Widget.Android.AppWidget.InnerView" parent="android:Widget">
+        <item name="android:textColor">#ACACAB</item>
+        <item name="fontWeight">800</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <style name="Widget.Android.AppWidget.RingsIn" parent="android:Widget">
+        <item name="android:textColor">#444444</item>
+        <item name="fontWeight">800</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
 </resources>

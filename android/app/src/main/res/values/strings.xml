@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ultimate_alarm_clock">Ultimate Alarm Clock</string>
+    <string name="next_alarm">Next alarm</string>
+    <string name="rings_in">No upcoming alarms!</string>
+    <string name="next_alarm_date_n_time"> </string>
+    <string name="add_new_alarm">Add new alarm</string>
+    <string name="next_alarm_repeat_days_and_label"> </string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:initialKeyguardLayout="@layout/next_alarm_home_widget"
+    android:initialLayout="@layout/next_alarm_home_widget"
+    android:previewImage="@mipmap/ic_launcher"
+    android:previewLayout="@layout/next_alarm_home_widget"
+    android:resizeMode="none"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen"
+    tools:targetApi="31" />

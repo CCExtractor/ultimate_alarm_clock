@@ -149,7 +149,10 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
                 "location" to setAlarm.location,
                 "isWeather" to setAlarm.isWeatherEnabled,
                 "weatherTypes" to setAlarm.weatherTypes,
-                "alarmID" to setAlarm.alarmId
+                "alarmID" to setAlarm.alarmId,
+                "days" to setAlarm.days,
+                "alarmTime" to setAlarm.alarmTime,
+                "alarmDate" to setAlarm.alarmDate,
             )
             Log.d("s", "sdsd ${a}")
             return a
