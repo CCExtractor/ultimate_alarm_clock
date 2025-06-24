@@ -18,6 +18,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dar
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/data/models/system_ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
@@ -26,6 +27,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl_phone_number_input/src/models/country_model.dart';
 import '../../settings/controllers/settings_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/system_ringtone_service.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
@@ -137,13 +139,17 @@ class AddOrUpdateAlarmController extends GetxController {
   RxBool isDailySelected = false.obs;
   RxBool isWeekdaysSelected = false.obs;
   RxBool isCustomSelected = false.obs;
-  RxBool isPlaying = false.obs; // Observable boolean to track playing state
+  final RxBool isPlaying = false.obs;
 
   // to check whether alarm data is updated or not
   Map<String, dynamic> initialValues = {};
   Map<String, dynamic> changedFields = {};
 
   RxInt alarmSettingType = 0.obs;
+
+  final RxBool isSystemRingtonesLoading = false.obs;
+  final RxMap<String, List<SystemRingtoneModel>> categorizedSystemRingtones = <String, List<SystemRingtoneModel>>{}.obs;
+  final RxString playingSystemRingtoneUri = ''.obs;
 
   late ProfileModel profileModel;
   final storage = Get.find<GetStorageProvider>();
@@ -1010,6 +1016,9 @@ class AddOrUpdateAlarmController extends GetxController {
   void onClose() async {
     super.onClose();
 
+    await SystemRingtoneService.stopSystemRingtone();
+    playingSystemRingtoneUri.value = '';
+
     if (Get.arguments == null) {
       // Shared alarm was not suddenly enabled, so we can update doc
       // on firestore
@@ -1208,20 +1217,16 @@ class AddOrUpdateAlarmController extends GetxController {
 
       if (customRingtone != null) {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
+        bool isSystemRingtone = customRingtone.isSystemRingtone;
 
-        if (currentCounterOfUsage == 0) {
+        if (currentCounterOfUsage == 0 || isSystemRingtone) {
           customRingtoneNames.removeAt(ringtoneIndex);
           await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
 
-          final documentsDirectory = await getApplicationDocumentsDirectory();
-          final ringtoneFilePath =
-              '${documentsDirectory.path}/ringtones/$ringtoneName';
-
-          if (await File(ringtoneFilePath).exists()) {
-            await File(ringtoneFilePath).delete();
+          if (isSystemRingtone) {
             Get.snackbar(
-              'Ringtone Deleted',
-              'The selected ringtone has been successfully deleted.',
+              'System Ringtone Removed',
+              'The system ringtone has been removed from your list.',
               margin: const EdgeInsets.all(15),
               animationDuration: const Duration(seconds: 1),
               snackPosition: SnackPosition.BOTTOM,
@@ -1229,15 +1234,32 @@ class AddOrUpdateAlarmController extends GetxController {
               colorText: kprimaryTextColor,
             );
           } else {
-            Get.snackbar(
-              'Ringtone Not Found',
-              'The selected ringtone does not exist and cannot be deleted.',
-              margin: const EdgeInsets.all(15),
-              animationDuration: const Duration(seconds: 1),
-              snackPosition: SnackPosition.BOTTOM,
-              barBlur: 15,
-              colorText: kprimaryTextColor,
-            );
+            final documentsDirectory = await getApplicationDocumentsDirectory();
+            final ringtoneFilePath =
+                '${documentsDirectory.path}/ringtones/$ringtoneName';
+
+            if (await File(ringtoneFilePath).exists()) {
+              await File(ringtoneFilePath).delete();
+              Get.snackbar(
+                'Ringtone Deleted',
+                'The selected ringtone has been successfully deleted.',
+                margin: const EdgeInsets.all(15),
+                animationDuration: const Duration(seconds: 1),
+                snackPosition: SnackPosition.BOTTOM,
+                barBlur: 15,
+                colorText: kprimaryTextColor,
+              );
+            } else {
+              Get.snackbar(
+                'Ringtone Not Found',
+                'The selected ringtone does not exist and cannot be deleted.',
+                margin: const EdgeInsets.all(15),
+                animationDuration: const Duration(seconds: 1),
+                snackPosition: SnackPosition.BOTTOM,
+                barBlur: 15,
+                colorText: kprimaryTextColor,
+              );
+            }
           }
         } else {
           Get.snackbar(
