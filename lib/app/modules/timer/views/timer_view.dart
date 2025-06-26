@@ -7,6 +7,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
+import 'package:ultimate_alarm_clock/app/modules/timer/views/pomodoro_timer_view.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_animation.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
@@ -46,6 +47,26 @@ class TimerView extends GetView<TimerController> {
             ),
           ),
           actions: [
+             LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Obx(
+                  () => IconButton(
+                    onPressed: () {
+                      Utils.hapticFeedback();
+                      Get.to(PomodoroPage());
+                    },
+                    icon: const Icon(
+                      Icons.hourglass_top,
+                      color: kprimaryColor,
+                    ),
+                    tooltip: 'Pomodoro Timer',
+                    color: themeController.primaryTextColor.value
+                        .withOpacity(0.75),
+                    iconSize: 27,
+                  ),
+                );
+              },
+            ),
             LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return Obx(
@@ -64,6 +85,7 @@ class TimerView extends GetView<TimerController> {
                 );
               },
             ),
+           
           ],
         ),
       ),
