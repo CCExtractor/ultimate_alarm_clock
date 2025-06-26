@@ -70,6 +70,10 @@ class RepeatTile extends StatelessWidget {
                             ),
                             onPressed: () {
                               Utils.hapticFeedback();
+                              if (controller.repeatDays != [false, false, false, false, false, false, false]) {
+                                controller.selectedDate.value = DateTime.now();
+                                controller.isFutureDate.value = false;
+                              }
                               Get.back();
                             },
                             child: Text(
