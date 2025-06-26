@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/flag_model.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 class StopwatchController extends GetxController {
   final RxBool isTimerPaused = true.obs;
@@ -53,15 +54,21 @@ class StopwatchController extends GetxController {
   void startTimer() {
     timer = Timer.periodic(const Duration(milliseconds: 30), (Timer t) {
       _updateResult();
+      _shareDataToOverlay();
     });
     _stopwatch.start();
     isTimerPaused.value = false;
+  }
+
+  void _shareDataToOverlay() {
+    FlutterOverlayWindow.shareData(_result.value);
   }
 
   void stopTimer() {
     timer.cancel();
     _stopwatch.stop();
     isTimerPaused.value = true;
+    FlutterOverlayWindow.shareData(_result.value);
   }
 
   void resetTime() {
@@ -69,6 +76,7 @@ class StopwatchController extends GetxController {
     _stopwatch.reset();
     _updateResult();
     clearFlags();
+    FlutterOverlayWindow.shareData(_result.value);
   }
 
   void _updateResult() {
