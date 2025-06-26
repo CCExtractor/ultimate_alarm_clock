@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
@@ -5,22 +7,16 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 class ThemeController extends GetxController {
   final _secureStorageProvider = SecureStorageProvider();
+  Brightness platformBrightness = Brightness.dark;
+  bool isSystemTheme = false;
 
   @override
   void onInit() {
     _loadThemeValue();
-    updateThemeColors();
     super.onInit();
   }
 
   Rx<ThemeMode> currentTheme = ThemeMode.system.obs;
-
-  void switchTheme() {
-    currentTheme.value = currentTheme.value == ThemeMode.light
-        ? ThemeMode.dark
-        : ThemeMode.light;
-    updateThemeColors();
-  }
 
   Rx<Color> primaryColor = kprimaryColor.obs;
   Rx<Color> secondaryColor = kLightSecondaryColor.obs;
@@ -51,25 +47,41 @@ class ThemeController extends GetxController {
   }
 
   void _loadThemeValue() async {
-    currentTheme.value =
-        await _secureStorageProvider.readThemeValue() == AppTheme.light
-            ? ThemeMode.light
-            : ThemeMode.dark;
+    AppTheme theme = await _secureStorageProvider.readThemeValue();
+    currentTheme.value = getCurrentTheme(theme == AppTheme.light ? ThemeMode.light
+        : theme == AppTheme.dark ? ThemeMode.dark
+        : ThemeMode.system,
+    );
     updateThemeColors();
     Get.changeThemeMode(currentTheme.value);
   }
 
   void _saveThemeValuePreference() async {
     await _secureStorageProvider.writeThemeValue(
-      theme: currentTheme.value == ThemeMode.light
-          ? AppTheme.light
+      theme: isSystemTheme ? AppTheme.system
+          : currentTheme.value == ThemeMode.light ? AppTheme.light
           : AppTheme.dark,
     );
   }
 
-  void toggleThemeValue(bool enabled) {
-    currentTheme.value = enabled ? ThemeMode.light : ThemeMode.dark;
+  void toggleThemeValue(ThemeMode mode) {
+    currentTheme.value = getCurrentTheme(mode);
     updateThemeColors();
     _saveThemeValuePreference();
+    Get.changeThemeMode(currentTheme.value);
+  }
+
+  getCurrentTheme(ThemeMode mode){
+    ThemeMode theme;
+    if (mode == ThemeMode.system){
+      isSystemTheme = true;
+      platformBrightness = Get.mediaQuery.platformBrightness;
+      theme = platformBrightness == Brightness.light ? ThemeMode.light
+          : ThemeMode.dark;
+    }else{
+      isSystemTheme = false;
+      theme = mode;
+    }
+    return theme;
   }
 }
