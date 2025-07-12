@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+import 'package:ultimate_alarm_clock/app/modules/alarmRing/views/sunrise_effect_widget.dart';
 
 import '../controllers/alarm_ring_controller.dart';
 
@@ -62,6 +66,18 @@ class AlarmControlView extends GetView<AlarmControlController> {
         child: Scaffold(
           body: Stack(
             children: [
+              // Sunrise Effect Background
+              Obx(() => SunriseEffectWidget(
+                isEnabled: controller.currentlyRingingAlarm.value.isSunriseEnabled,
+                durationMinutes: controller.currentlyRingingAlarm.value.sunriseDuration,
+                maxIntensity: controller.currentlyRingingAlarm.value.sunriseIntensity,
+                colorScheme: SunriseColorScheme.values[controller.currentlyRingingAlarm.value.sunriseColorScheme.clamp(0, 2)],
+                onComplete: () {
+                  debugPrint('Sunrise effect completed');
+                },
+              )),
+              
+              // Original UI Content
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -203,30 +219,45 @@ class AlarmControlView extends GetView<AlarmControlController> {
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
-                          if (controller
-                              .currentlyRingingAlarm.value.isGuardian) {
-                            controller.guardianTimer.cancel();
+                          debugPrint('🔔 Dismiss button pressed');
+                          
+                          // Handle preview mode differently
+                          if (controller.isPreviewMode.value) {
+                            debugPrint('🔔 Preview mode - simple navigation back');
+                            Get.offAllNamed('/bottom-navigation-bar');
+                            return;
                           }
                           
-                          if (controller.currentlyRingingAlarm.value.days.every((element) => element == false)) {
-                            controller.currentlyRingingAlarm.value.isEnabled = false;
-                            if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-                              await IsarDb.updateAlarm(controller.currentlyRingingAlarm.value);
-                            } else {
-                              await FirestoreDb.updateAlarm(
-                                controller.currentlyRingingAlarm.value.ownerId,
-                                controller.currentlyRingingAlarm.value,
-                              );
-                            }
+                          if (controller.currentlyRingingAlarm.value.isGuardian) {
+                            controller.guardianTimer.cancel();
+                            debugPrint('🔔 Guardian timer canceled');
                           }
+                          
+                          
+                          if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled) {
+                            controller.rememberDismissedAlarm();
+                            debugPrint('🔔 Blocked shared alarm: ${controller.currentlyRingingAlarm.value.alarmTime}, ID: ${controller.currentlyRingingAlarm.value.firestoreId}');
+                          }
+                          
+                          
+                          await controller.homeController.clearLastScheduledAlarm();
+                          debugPrint('🔔 Cleared all scheduled alarms');
+                          
+                          
+                          controller.homeController.refreshTimer = true;
+                          debugPrint('🔔 Set refresh flag for alarm scheduling');
+                          
+                          
                           if (Utils.isChallengeEnabled(
                             controller.currentlyRingingAlarm.value,
                           )) {
+                            debugPrint('🔔 Navigating to challenge screen');
                             Get.toNamed(
                               '/alarm-challenge',
                               arguments: controller.currentlyRingingAlarm.value,
                             );
                           } else {
+                            debugPrint('🔔 Navigating to home screen');
                             Get.offAllNamed(
                               '/bottom-navigation-bar',
                               arguments: controller.currentlyRingingAlarm.value,

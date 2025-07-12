@@ -43,7 +43,8 @@
 
     <application
         android:name="${applicationName}"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
         android:icon="@mipmap/launcher_icon"
         android:label="Ultimate Alarm Clock"
         tools:replace="android:label">
@@ -52,6 +53,14 @@
             android:enabled="true"
             android:foregroundServiceType="systemExempted"
             android:exported="true"></service>
+
+        <service
+            android:name=".FirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
         <service
             android:name=".WeatherFetcherService"
@@ -68,7 +77,6 @@
             android:name=".SpotifyPlayerService"
             android:enabled="true"
             android:exported="true"></service>
-        <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />
 
         <receiver
             android:name=".BootReceiver"

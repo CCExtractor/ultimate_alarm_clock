@@ -1,4 +1,4 @@
-package com.ultimate_alarm_clock.Utilities
+package com.ccextractor.ultimate_alarm_clock
 
 import android.content.Context
 import android.location.Location
