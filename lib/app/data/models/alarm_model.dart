@@ -199,6 +199,7 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    ringOn = documentSnapshot['ringOn'] ?? true;
     isSunriseEnabled = documentSnapshot['isSunriseEnabled'] ?? false;
     sunriseDuration = documentSnapshot['sunriseDuration'] ?? 30;
     sunriseIntensity = documentSnapshot['sunriseIntensity'] ?? 1.0;
@@ -273,8 +274,11 @@ class AlarmModel {
       'alarmID': alarmID,
       'isEnabled': isEnabled ? 1 : 0,
       'isLocationEnabled': isLocationEnabled ? 1 : 0,
+      'locationConditionType': locationConditionType,
       'isSharedAlarmEnabled': isSharedAlarmEnabled ? 1 : 0,
       'isWeatherEnabled': isWeatherEnabled ? 1 : 0,
+      'weatherConditionType': weatherConditionType,
+      'activityConditionType': activityConditionType,
       'location': location,
       'activityInterval': activityInterval,
       'minutesSinceMidnight': minutesSinceMidnight,
@@ -316,11 +320,16 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
+      'isSunriseEnabled': isSunriseEnabled ? 1 : 0,
+      'sunriseDuration': sunriseDuration,
+      'sunriseIntensity': sunriseIntensity,
+      'sunriseColorScheme': sunriseColorScheme,
     };
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
+    mainAlarmTime = alarmData['mainAlarmTime'];
     snoozeDuration = alarmData['snoozeDuration'];
     maxSnoozeCount = alarmData['maxSnoozeCount'] ?? 3;
     gradient = alarmData['gradient'];
@@ -341,7 +350,10 @@ class AlarmModel {
     activityInterval = alarmData['activityInterval'];
 
     isLocationEnabled = alarmData['isLocationEnabled'];
+    locationConditionType = alarmData['locationConditionType'] ?? 2;
     isWeatherEnabled = alarmData['isWeatherEnabled'];
+    weatherConditionType = alarmData['weatherConditionType'] ?? 2;
+    activityConditionType = alarmData['activityConditionType'] ?? 2;
     weatherTypes = List<int>.from(alarmData['weatherTypes']);
     location = alarmData['location'];
 
@@ -373,6 +385,10 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
+    isSunriseEnabled = alarmData['isSunriseEnabled'] ?? false;
+    sunriseDuration = alarmData['sunriseDuration'] ?? 30;
+    sunriseIntensity = alarmData['sunriseIntensity'] ?? 1.0;
+    sunriseColorScheme = alarmData['sunriseColorScheme'] ?? 0;
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -401,9 +417,12 @@ class AlarmModel {
       'isActivityEnabled': alarmRecord.isActivityEnabled,
       'weatherTypes': alarmRecord.weatherTypes,
       'isWeatherEnabled': alarmRecord.isWeatherEnabled,
+      'weatherConditionType': alarmRecord.weatherConditionType,
+      'activityConditionType': alarmRecord.activityConditionType,
       'activityInterval': alarmRecord.activityInterval,
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,
+      'locationConditionType': alarmRecord.locationConditionType,
       'location': alarmRecord.location,
       'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled,
       'isMathsEnabled': alarmRecord.isMathsEnabled,
@@ -431,7 +450,11 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'isSunriseEnabled': alarmRecord.isSunriseEnabled,
+      'sunriseDuration': alarmRecord.sunriseDuration,
+      'sunriseIntensity': alarmRecord.sunriseIntensity,
+      'sunriseColorScheme': alarmRecord.sunriseColorScheme
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {
