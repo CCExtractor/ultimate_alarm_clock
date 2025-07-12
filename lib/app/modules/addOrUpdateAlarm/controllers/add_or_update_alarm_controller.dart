@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:collection/collection.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
@@ -15,7 +16,8 @@ import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart' as isar;
+import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/system_ringtone_model.dart';
@@ -27,6 +29,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl_phone_number_input/src/models/country_model.dart';
 import '../../settings/controllers/settings_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ultimate_alarm_clock/app/utils/system_ringtone_service.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
@@ -42,6 +45,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final isActivityenabled = false.obs;
   final isActivityMonitorenabled = 0.obs;
   final activityInterval = 0.obs;
+  final activityConditionType = ActivityConditionType.off.obs;
   final isLocationEnabled = false.obs;
   final isSharedAlarmEnabled = false.obs;
   late final isWeatherEnabled = false.obs;
@@ -51,6 +55,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final shakeTimes = 0.obs;
   final isPedometerEnabled = false.obs;
   final numberOfSteps = 0.obs;
+  final locationConditionType = LocationConditionType.off.obs;
+  final weatherConditionType = WeatherConditionType.off.obs;
   var ownerId = ''.obs; // id -> owner of the alarm
   var ownerName = ''.obs; // name -> owner of the alarm
   var userId = ''.obs; // id -> loggedin user
@@ -59,9 +65,14 @@ class AddOrUpdateAlarmController extends GetxController {
   var lastEditedUserId = ''.obs;
   final sharedUserIds = <String>[].obs;
   var alarmRecord = Utils.alarmModelInit.obs;
-  final RxMap offsetDetails = {}.obs;
+  final RxMap userOffsetDetails = {}.obs;
+  final RxList<Map> offsetDetails = [{}].obs;
   final offsetDuration = 0.obs;
   final isOffsetBefore = true.obs;
+  
+  // NEW: Selected location radius for customizable detection radius
+  final selectedLocationRadius = 500.obs; // Default 500m radius
+  
   var qrController = MobileScannerController(
     autoStart: false,
     detectionSpeed: DetectionSpeed.noDuplicates,
@@ -158,6 +169,12 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt guardianTimer = 0.obs;
   final RxString guardian = ''.obs;
   final RxBool isCall = false.obs;
+  
+  // Sunrise Alarm Variables
+  final RxBool isSunriseEnabled = false.obs;
+  final RxInt sunriseDuration = 30.obs;
+  final RxDouble sunriseIntensity = 1.0.obs;
+  final RxInt sunriseColorScheme = 0.obs;
 
   void toggleIsPlaying() {
     isPlaying.toggle();
@@ -435,7 +452,7 @@ class AddOrUpdateAlarmController extends GetxController {
       alarmRecord.value =
           await FirestoreDb.addAlarm(userModel.value, alarmData);
     } else {
-      alarmRecord.value = await IsarDb.addAlarm(alarmData);
+      alarmRecord.value = await isar.IsarDb.addAlarm(alarmData);
     }
 
     Future.delayed(const Duration(seconds: 1), () {
@@ -647,29 +664,129 @@ class AddOrUpdateAlarmController extends GetxController {
   updateAlarm(AlarmModel alarmData) async {
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
-      // Making sure the alarm wasn't suddenly updated to be an
-      // online (shared) alarm
-      if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == false) {
+      
+      bool isConversion = await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) && 
+                         (alarmRecord.value.firestoreId == null || alarmRecord.value.firestoreId!.isEmpty);
+      
+      if (isConversion) {
+        debugPrint('🔄 Converting normal alarm to shared alarm');
+        
+      
+        try {
+          await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
+            'alarmID': alarmRecord.value.alarmID,
+            'isSharedAlarm': false,
+          });
+          debugPrint('🗑️ Canceled existing local alarm: ${alarmRecord.value.alarmID}');
+        } catch (e) {
+          debugPrint('⚠️ Error canceling local alarm: $e');
+        }
+        
+      
+        await isar.IsarDb.deleteAlarm(alarmRecord.value.isarId);
+        debugPrint('🗑️ Deleted alarm from local database using isarId: ${alarmRecord.value.isarId}');
+        
+      
+        alarmRecord.value = await FirestoreDb.addAlarm(userModel.value, alarmData);
+        debugPrint('✅ Created new shared alarm in Firestore: ${alarmRecord.value.firestoreId}');
+        
+      } else if (alarmRecord.value.firestoreId != null && alarmRecord.value.firestoreId!.isNotEmpty) {
+      
+        debugPrint('📝 Updating existing shared alarm: ${alarmRecord.value.firestoreId}');
+        
         alarmData.firestoreId = alarmRecord.value.firestoreId;
+        
+      
+        try {
+          await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
+            'alarmID': alarmData.firestoreId,
+            'isSharedAlarm': true,
+          });
+          debugPrint('🗑️ Canceled existing shared alarm before update: ${alarmData.firestoreId}');
+        } catch (e) {
+          debugPrint('⚠️ Error canceling existing alarm (continuing anyway): $e');
+        }
+        
+      
         await FirestoreDb.updateAlarm(alarmRecord.value.ownerId, alarmData);
+        
+      
+        try {
+          PushNotifications().triggerRescheduleAlarmNotification(alarmData.firestoreId!);
+        } catch (e) {
+          debugPrint('Push notification failed (this is ok): $e');
+        }
+        
+      
+        await FirestoreDb.triggerRescheduleUpdate(alarmData);
+        
+      
+        try {
+          await sendDirectNotificationToSharedUsers(alarmData);
+        } catch (e) {
+          debugPrint('Direct notification failed (this is ok): $e');
+        }
+        
+      
+        homeController.forceRefreshAfterAlarmUpdate(alarmData.firestoreId, true);
       } else {
-        // Deleting alarm on IsarDB to ensure no duplicate entry
-        await IsarDb.deleteAlarm(alarmRecord.value.isarId);
-        createAlarm(alarmData);
+      
+        debugPrint('⚠️ Unexpected state: shared alarm enabled but no valid ID found');
+        alarmRecord.value = await FirestoreDb.addAlarm(userModel.value, alarmData);
       }
     } else {
-      // Making sure the alarm wasn't suddenly updated to be an offline alarm
-      print('aid = ${alarmRecord.value.alarmID}');
-      if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
+      
+      bool isConversion = (alarmRecord.value.firestoreId != null && alarmRecord.value.firestoreId!.isNotEmpty) &&
+                         !await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID);
+      
+      if (isConversion) {
+        debugPrint('🔄 Converting shared alarm to normal alarm');
+        
+      
+        try {
+          await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
+            'alarmID': alarmRecord.value.firestoreId,
+            'isSharedAlarm': true,
+          });
+          debugPrint('🗑️ Canceled existing shared alarm: ${alarmRecord.value.firestoreId}');
+        } catch (e) {
+          debugPrint('⚠️ Error canceling shared alarm: $e');
+        }
+        
+      
+        await FirestoreDb.deleteAlarm(userModel.value, alarmRecord.value.firestoreId!);
+        debugPrint('🗑️ Deleted alarm from Firestore');
+        
+      
+        alarmRecord.value = await isar.IsarDb.addAlarm(alarmData);
+        debugPrint('✅ Created new normal alarm in local database: ${alarmRecord.value.alarmID}');
+        
+      } else if (await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
+      
+        debugPrint('📝 Updating existing normal alarm: ${alarmRecord.value.alarmID}');
+        
         alarmData.isarId = alarmRecord.value.isarId;
-        await IsarDb.updateAlarm(alarmData);
+        
+      
+        try {
+          await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
+            'alarmID': alarmRecord.value.alarmID,
+            'isSharedAlarm': false,
+          });
+          debugPrint('🗑️ Canceled existing local alarm before update: ${alarmRecord.value.alarmID}');
+        } catch (e) {
+          debugPrint('⚠️ Error canceling existing alarm (continuing anyway): $e');
+        }
+        
+      
+        await isar.IsarDb.updateAlarm(alarmData);
+        
+      
+        homeController.forceRefreshAfterAlarmUpdate(alarmData.alarmID, false);
       } else {
-        // Deleting alarm on firestore to ensure no duplicate entry
-        await FirestoreDb.deleteAlarm(
-          userModel.value,
-          alarmRecord.value.firestoreId!,
-        );
-        createAlarm(alarmData);
+      
+        debugPrint('⚠️ Unexpected state: normal alarm but no valid local ID found');
+        alarmRecord.value = await isar.IsarDb.addAlarm(alarmData);
       }
     }
 
@@ -700,7 +817,7 @@ class AddOrUpdateAlarmController extends GetxController {
       userName.value = userModel.value!.fullName;
       lastEditedUserId.value = userModel.value!.id;
     }
-    IsarDb.loadDefaultRingtones();
+    isar.IsarDb.loadDefaultRingtones();
 
     // listens to the userModel declared in homeController and updates on signup event
     homeController.userModel.stream.listen((UserModel? user) {
@@ -719,6 +836,10 @@ class AddOrUpdateAlarmController extends GetxController {
       isGuardian.value = alarmRecord.value.isGuardian;
       guardian.value = alarmRecord.value.guardian;
       guardianTimer.value = alarmRecord.value.guardianTimer;
+      isSunriseEnabled.value = alarmRecord.value.isSunriseEnabled;
+      sunriseDuration.value = alarmRecord.value.sunriseDuration;
+      sunriseIntensity.value = alarmRecord.value.sunriseIntensity;
+      sunriseColorScheme.value = alarmRecord.value.sunriseColorScheme;
       isActivityMonitorenabled.value =
           alarmRecord.value.isActivityEnabled ? 1 : 0;
       snoozeDuration.value = alarmRecord.value.snoozeDuration;
@@ -768,8 +889,21 @@ class AddOrUpdateAlarmController extends GetxController {
       isActivityenabled.value = alarmRecord.value.isActivityEnabled;
       useScreenActivity.value = alarmRecord.value.isActivityEnabled;
       activityInterval.value = alarmRecord.value.activityInterval ~/ 60000;
+      
+      // Set activity condition type based on existing data
+      if (alarmRecord.value.isActivityEnabled) {
+        activityConditionType.value = ActivityConditionType.values[alarmRecord.value.activityConditionType];
+      } else {
+        activityConditionType.value = ActivityConditionType.off;
+      }
 
       isLocationEnabled.value = alarmRecord.value.isLocationEnabled;
+      // Set location condition type based on existing data
+      if (alarmRecord.value.isLocationEnabled) {
+        locationConditionType.value = LocationConditionType.values[alarmRecord.value.locationConditionType];
+      } else {
+        locationConditionType.value = LocationConditionType.off;
+      }
       selectedPoint.value = Utils.stringToLatLng(alarmRecord.value.location);
       // Shows the marker in UI
       markersList.add(
@@ -784,6 +918,12 @@ class AddOrUpdateAlarmController extends GetxController {
       );
 
       isWeatherEnabled.value = alarmRecord.value.isWeatherEnabled;
+      
+      if (alarmRecord.value.isWeatherEnabled) {
+        weatherConditionType.value = WeatherConditionType.values[alarmRecord.value.weatherConditionType];
+      } else {
+        weatherConditionType.value = WeatherConditionType.off;
+      }
       weatherTypes.value = Utils.getFormattedWeatherTypes(selectedWeather);
 
       isMathsEnabled.value = alarmRecord.value.isMathsEnabled;
@@ -826,12 +966,18 @@ class AddOrUpdateAlarmController extends GetxController {
 
         mainAlarmTime.value = Utils.timeOfDayToDateTime(
           Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
-        );
+          );
+
         offsetDetails.value = alarmRecord.value.offsetDetails!;
-        offsetDuration.value = alarmRecord
-            .value.offsetDetails![userModel.value!.id]['offsetDuration'];
-        isOffsetBefore.value = alarmRecord
-            .value.offsetDetails![userModel.value!.id]['isOffsetBefore'];
+      
+          final userOffset = alarmRecord.value.offsetDetails!
+      .firstWhereOrNull((entry) => entry['userId'] == userId);
+
+      if (userOffset != null) {
+        userOffsetDetails.value = userOffset;
+        offsetDuration.value = userOffset['offsetDuration'];
+        isOffsetBefore.value = userOffset['isOffsetBefore'];
+      }
       }
 
       // Set lock only if its not locked
@@ -840,7 +986,7 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord.value.mutexLock = true;
         alarmRecord.value.lastEditedUserId = userModel.value!.id;
         await FirestoreDb.updateAlarm(
-          alarmRecord.value.ownerId,
+          userModel.value!.id,
           alarmRecord.value,
         );
         alarmRecord.value.mutexLock = false;
@@ -977,10 +1123,15 @@ class AddOrUpdateAlarmController extends GetxController {
       },
     );
 
-    // reset selectedPoint to default value if isLocationEnabled is false and weather based is off
-    isLocationEnabled.listen((value) {
-      if (!value && weatherTypes.value == 'Off') {
-        selectedPoint.value = LatLng(0, 0);
+    
+    locationConditionType.listen((value) {
+      if (value == LocationConditionType.off) {
+        isLocationEnabled.value = false;
+        if (weatherTypes.value == 'Off') {
+          selectedPoint.value = LatLng(0, 0);
+        }
+      } else {
+        isLocationEnabled.value = true;
       }
     });
 
@@ -992,6 +1143,8 @@ class AddOrUpdateAlarmController extends GetxController {
     setupListener<int>(numberOfSteps, 'numberOfSteps');
 
     setupListener<bool>(isSharedAlarmEnabled, 'isSharedAlarmEnabled');
+    setupListener<LocationConditionType>(locationConditionType, 'locationConditionType');
+    setupListener<WeatherConditionType>(weatherConditionType, 'weatherConditionType');
     setupListener<int>(offsetDuration, 'offsetDuration');
     setupListener<bool>(isOffsetBefore, 'isOffsetBefore');
   }
@@ -1050,6 +1203,8 @@ class AddOrUpdateAlarmController extends GetxController {
       ownerId = alarmRecord.value.ownerId;
       ownerName = alarmRecord.value.ownerName;
     }
+
+    
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
       maxSnoozeCount: maxSnoozeCount.value,
@@ -1078,8 +1233,11 @@ class AddOrUpdateAlarmController extends GetxController {
       minutesSinceMidnight:
           Utils.timeOfDayToInt(TimeOfDay.fromDateTime(selectedTime.value)),
       isLocationEnabled: isLocationEnabled.value,
+      locationConditionType: locationConditionType.value.index,
       weatherTypes: Utils.getIntFromWeatherTypes(selectedWeather.toList()),
       isWeatherEnabled: isWeatherEnabled.value,
+      weatherConditionType: weatherConditionType.value.index,
+      activityConditionType: activityConditionType.value.index,
       location: Utils.geoPointToString(
         Utils.latLngToGeoPoint(selectedPoint.value),
       ),
@@ -1104,6 +1262,10 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isSunriseEnabled: isSunriseEnabled.value,
+      sunriseDuration: sunriseDuration.value,
+      sunriseIntensity: sunriseIntensity.value,
+      sunriseColorScheme: sunriseColorScheme.value,
     );
   }
 
@@ -1184,7 +1346,7 @@ class AddOrUpdateAlarmController extends GetxController {
             customRingtoneName: previousRingtone,
             counterUpdate: CounterUpdate.decrement,
           );
-          await IsarDb.addCustomRingtone(customRingtone);
+          await isar.IsarDb.addCustomRingtone(customRingtone);
         }
       }
     } catch (e) {
@@ -1195,7 +1357,7 @@ class AddOrUpdateAlarmController extends GetxController {
   Future<List<String>> getAllCustomRingtoneNames() async {
     try {
       List<RingtoneModel> customRingtones =
-          await IsarDb.getAllCustomRingtones();
+          await isar.IsarDb.getAllCustomRingtones();
 
       return customRingtones
           .map((customRingtone) => customRingtone.ringtoneName)
@@ -1213,7 +1375,7 @@ class AddOrUpdateAlarmController extends GetxController {
     try {
       int customRingtoneId = AudioUtils.fastHash(ringtoneName);
       RingtoneModel? customRingtone =
-          await IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+          await isar.IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
 
       if (customRingtone != null) {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
@@ -1221,7 +1383,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
         if (currentCounterOfUsage == 0 || isSystemRingtone) {
           customRingtoneNames.removeAt(ringtoneIndex);
-          await IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
+          await isar.IsarDb.deleteCustomRingtone(ringtoneId: customRingtoneId);
 
           if (isSystemRingtone) {
             Get.snackbar(
@@ -1342,7 +1504,7 @@ class AddOrUpdateAlarmController extends GetxController {
         return;
       }
 
-      bool exists = await IsarDb.profileExists(profileTextEditingController.text.trim());
+      bool exists = await isar.IsarDb.profileExists(profileTextEditingController.text.trim());
       if (exists) {
         Get.snackbar(
           'Error',
@@ -1412,18 +1574,22 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isSunriseEnabled: isSunriseEnabled.value,
+      sunriseDuration: sunriseDuration.value,
+      sunriseIntensity: sunriseIntensity.value,
+      sunriseColorScheme: sunriseColorScheme.value,
       );
 
       if (homeController.isProfileUpdate.value) {
         var profileId =
-            await IsarDb.profileId(homeController.selectedProfile.value);
+            await isar.IsarDb.profileId(homeController.selectedProfile.value);
         print(profileId);
         if (profileId != 'null') profileModel.isarId = profileId;
         print(profileModel.isarId);
-        await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+        await isar.IsarDb.updateAlarmProfiles(profileTextEditingController.text);
       }
 
-      await IsarDb.addProfile(profileModel);
+      await isar.IsarDb.addProfile(profileModel);
       homeController.selectedProfile.value = profileModel.profileName;
       storage.writeProfile(profileModel.profileName);
       homeController.writeProfileName(profileModel.profileName);
@@ -1448,6 +1614,148 @@ class AddOrUpdateAlarmController extends GetxController {
         duration: const Duration(seconds: 3),
         margin: const EdgeInsets.all(10),
       );
+    }
+  }
+
+  Future<void> initializeSharedAlarmSettings() async {
+    try {
+      debugPrint('Initializing shared alarm settings...');
+      
+  
+      if (userModel.value == null) {
+        debugPrint('Cannot initialize shared alarm: User not logged in');
+        throw Exception('User must be logged in to enable shared alarms');
+      }
+      
+  
+      if (ownerId.value.isEmpty) {
+        ownerId.value = userModel.value!.id;
+        ownerName.value = userModel.value!.fullName;
+        debugPrint('Set owner: ${ownerName.value} (${ownerId.value})');
+      }
+      
+  
+      if (sharedUserIds.isEmpty) {
+        sharedUserIds.value = [];
+        debugPrint('Initialized empty shared users list');
+      }
+      
+  
+      if (offsetDetails.isEmpty || offsetDetails.first.isEmpty) {
+        offsetDetails.value = [{
+          'userId': userModel.value!.id,
+          'offsetDuration': 0,
+          'isOffsetBefore': true,
+        }];
+        debugPrint('Initialized offset details for user');
+      }
+      
+  
+      if (mainAlarmTime.value.difference(DateTime.now()).inMinutes <= 0) {
+        mainAlarmTime.value = selectedTime.value;
+        debugPrint('Set main alarm time: ${mainAlarmTime.value}');
+      }
+      
+  
+      final userOffset = offsetDetails.value
+          .firstWhereOrNull((entry) => entry['userId'] == userModel.value!.id);
+      
+      if (userOffset != null) {
+        userOffsetDetails.value = userOffset;
+        offsetDuration.value = userOffset['offsetDuration'] ?? 0;
+        isOffsetBefore.value = userOffset['isOffsetBefore'] ?? true;
+      } else {
+  
+        Map<String, dynamic> newUserOffset = {
+          'userId': userModel.value!.id,
+          'offsetDuration': 0,
+          'isOffsetBefore': true,
+        };
+        offsetDetails.value = [...offsetDetails.value, newUserOffset];
+        userOffsetDetails.value = newUserOffset;
+        offsetDuration.value = 0;
+        isOffsetBefore.value = true;
+      }
+      
+      debugPrint('✅ Shared alarm settings initialized successfully');
+    } catch (e) {
+      debugPrint('❌ Error initializing shared alarm settings: $e');
+  
+      isSharedAlarmEnabled.value = false;
+      rethrow;
+    }
+  }
+
+  
+  Future<void> sendDirectNotificationToSharedUsers(AlarmModel alarmData) async {
+    if (alarmData.sharedUserIds == null || alarmData.sharedUserIds!.isEmpty) {
+      debugPrint('No shared users to notify');
+      return;
+    }
+    
+    try {
+      debugPrint('🔔 Sending direct notifications to ${alarmData.sharedUserIds!.length} shared users');
+      debugPrint('   - Alarm time: ${alarmData.alarmTime}');
+      debugPrint('   - Owner: ${alarmData.ownerName}');
+      
+  
+      try {
+        // Create shared item data for the notification
+        final sharedItem = {
+          'type': 'alarm',
+          'AlarmName': alarmData.firestoreId,
+          'owner': alarmData.ownerName ?? 'Someone',
+          'alarmTime': alarmData.alarmTime
+        };
+        
+        await PushNotifications().triggerSharedItemNotification(alarmData.sharedUserIds!, sharedItem: sharedItem);
+        debugPrint('✅ Cloud function notification sent');
+      } catch (e) {
+        debugPrint('⚠️ Cloud function notification failed: $e');
+      }
+      
+  
+      for (String userId in alarmData.sharedUserIds!) {
+        try {
+          await FirebaseFirestore.instance
+            .collection('userNotifications')
+            .doc(userId)
+            .collection('notifications')
+            .add({
+            'type': 'alarm_update',
+            'title': 'Shared Alarm Updated! 🔔',
+            'message': '${alarmData.ownerName ?? 'Someone'} updated the alarm time to ${alarmData.alarmTime}',
+            'alarmId': alarmData.firestoreId,
+            'newAlarmTime': alarmData.alarmTime,
+            'ownerName': alarmData.ownerName,
+            'timestamp': FieldValue.serverTimestamp(),
+            'read': false,
+          });
+          debugPrint('✅ Firestore notification created for user: $userId');
+        } catch (e) {
+          debugPrint('⚠️ Failed to create Firestore notification for $userId: $e');
+        }
+      }
+      
+  
+
+      try {
+        await FirebaseFirestore.instance
+          .collection('sharedAlarms')
+          .doc(alarmData.firestoreId)
+          .update({
+          'lastNotificationSent': FieldValue.serverTimestamp(),
+          'notificationMessage': '${alarmData.ownerName ?? 'Someone'} updated the alarm time to ${alarmData.alarmTime}',
+        });
+        debugPrint('✅ Updated shared alarm document with notification trigger');
+      } catch (e) {
+        debugPrint('⚠️ Failed to update alarm document: $e');
+      }
+      
+      debugPrint('🎯 Direct notification process completed');
+    } catch (e) {
+      debugPrint('❌ Error in sendDirectNotificationToSharedUsers: $e');
+
     }
   }
 

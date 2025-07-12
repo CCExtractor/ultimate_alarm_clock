@@ -71,6 +71,21 @@ class StopwatchController extends GetxController {
     clearFlags();
   }
 
+  @override
+  void onClose() {
+    // Cancel timer if it's running
+    if (!isTimerPaused.value) {
+      timer.cancel();
+    }
+    
+    // Stop the stopwatch
+    _stopwatch.stop();
+    
+    super.onClose();
+    
+    debugPrint('🧹 StopwatchController disposed - all resources cleaned up');
+  }
+
   void _updateResult() {
     _result.value =
         '${_stopwatch.elapsed.inMinutes.toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inMilliseconds % 1000 ~/ 10).toString().padLeft(2, '0')}';

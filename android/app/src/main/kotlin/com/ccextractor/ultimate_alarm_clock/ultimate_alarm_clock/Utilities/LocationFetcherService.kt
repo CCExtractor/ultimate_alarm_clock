@@ -11,10 +11,9 @@ import android.content.pm.ServiceInfo
 import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
 import android.os.IBinder
-import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.ultimate_alarm_clock.Utilities.LocationHelper
+import com.ccextractor.ultimate_alarm_clock.LocationHelper
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.util.Timer
@@ -24,6 +23,8 @@ import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 
 class LocationFetcherService : Service() {
 
@@ -32,96 +33,267 @@ class LocationFetcherService : Service() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var displayManager: DisplayManager
+    private var locationConditionType: Int = 2 // Default value
+    private var alarmID: String = ""
+    private var targetLocation: String = ""
+    private var isSharedAlarm: Boolean = false
 
-    override fun onCreate() = runBlocking {
+    override fun onCreate() {
         super.onCreate()
-
         sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-
         createNotificationChannel()
-        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
-        var fetchLocationDeffered = async {
-            fetchLocation()
-        }
+    }
 
-        val logdbHelper = LogDatabaseHelper(this@LocationFetcherService)
-        var destinationLongitude = 0.0
-        var currentLongitude = 0.0
-        var destinationLatitude = 0.0
-        var currentLatitude = 0.0
-        var location = fetchLocationDeffered.await()
-        Log.d("Location", location)
-        val setLocationString = sharedPreferences.getString("flutter.set_location", "")
-        val current = location.split(",")
-        if (current.size == 2) {
-            try {
-                currentLatitude = current[0].toDouble()
-                currentLongitude = current[1].toDouble()
-            } catch (e: NumberFormatException) {
-            }
-        } else {
-            println("Invalid location string format. Expected: \"lat,long\"")
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("LocationFetcherService", "onStartCommand called")
+        
+        // Extract data from intent
+        alarmID = intent?.getStringExtra("alarmID") ?: ""
+        targetLocation = intent?.getStringExtra("location") ?: ""
+        isSharedAlarm = intent?.getBooleanExtra("isSharedAlarm", false) ?: false
+        locationConditionType = intent?.getIntExtra("locationConditionType", 2) ?: 2
+        
+        Log.d("LocationFetcherService", "Processing alarm - ID: $alarmID, isShared: $isSharedAlarm")
+        Log.d("LocationFetcherService", "LocationConditionType from intent: $locationConditionType")
+        Log.d("LocationFetcherService", "Target location: $targetLocation")
+        
+        // Validate location data
+        if (targetLocation.isEmpty() || targetLocation == "0.0,0.0") {
+            Log.e("LocationFetcherService", "Invalid target location: $targetLocation")
+            // Still ring the alarm if location data is invalid
+            ringAlarmWithError("Invalid target location data")
+            return START_NOT_STICKY
         }
-        val destination = setLocationString!!.split(",")
-        if (destination.size == 2) {
-            try {
-                destinationLatitude = destination[0].toDouble()
-                destinationLongitude = destination[1].toDouble()
-
-            } catch (e: NumberFormatException) {
-                println("Invalid latitude or longitude format.")
-            }
-        } else {
-            println("Invalid location string format. Expected: \"lat,long\"")
+        
+        startForeground(notificationId, getNotification())
+        
+        try {
+            processLocationAlarm()
+        } catch (e: Exception) {
+            Log.e("LocationFetcherService", "Error processing location alarm: ${e.message}")
+            ringAlarmWithError("Error processing location: ${e.message}")
         }
-        val distance = calculateDistance(
-            Location(currentLatitude, currentLongitude),
-            Location(destinationLatitude, destinationLongitude)
+        
+        return START_NOT_STICKY
+    }
+    
+    private fun ringAlarmWithError(errorMessage: String) {
+        Log.e("LocationFetcherService", "Ringing alarm due to error: $errorMessage")
+        val logdbHelper = LogDatabaseHelper(this)
+        logdbHelper.insertLog(
+            "Alarm ringing due to location error: $errorMessage",
+            status = LogDatabaseHelper.Status.ERROR,
+            type = LogDatabaseHelper.LogType.NORMAL,
+            hasRung = 1
         )
-        Log.d("Distance", "distance ${distance}")
-        if (distance >= 500.0) {
-
-            val flutterIntent =
-                Intent(this@LocationFetcherService, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    putExtra("initialRoute", "/")
-                    putExtra("alarmRing", "true")
-                    putExtra("isAlarm", "true")
-
-                }
-
-            Timer().schedule(9000){
-            println("ANDROID STARTING APP")
+        
+        val flutterIntent = Intent(this, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            putExtra("initialRoute", "/")
+            putExtra("alarmRing", "true")
+            putExtra("isAlarm", "true")
+            if (isSharedAlarm) {
+                putExtra("isSharedAlarm", true)
+            }
+        }
+        
+        Timer().schedule(3000) {
+            println("ANDROID STARTING APP DUE TO ERROR")
             this@LocationFetcherService.startActivity(flutterIntent)
-                logdbHelper.insertLog(
-                    "Alarm is ringing. Alarm rings because you are ${distance}m away from chosen location",
-                    status = LogDatabaseHelper.Status.SUCCESS,
-                    type = LogDatabaseHelper.LogType.NORMAL,
-                    hasRung = 1
-                )
-                Timer().schedule(3000){
-                    stopSelf()
+            Timer().schedule(3000) {
+                stopSelf()
+            }
+        }
+    }
+
+    private fun processLocationAlarm() {
+        runBlocking {
+            Log.d("LocationFetcherService", "Starting location fetch...")
+            
+            val logdbHelper = LogDatabaseHelper(this@LocationFetcherService)
+            var destinationLongitude = 0.0
+            var currentLongitude = 0.0
+            var destinationLatitude = 0.0
+            var currentLatitude = 0.0
+            
+            // Add timeout for location fetching
+            val fetchLocationDeffered = async {
+                try {
+                    withTimeout(30000) { // 30 second timeout
+                        fetchLocation()
+                    }
+                } catch (e: TimeoutCancellationException) {
+                    Log.e("LocationFetcherService", "Location fetch timeout after 30 seconds")
+                    "timeout"
+                } catch (e: Exception) {
+                    Log.e("LocationFetcherService", "Location fetch error: ${e.message}")
+                    "error"
                 }
             }
-
-
-        }
-        if(distance < 500.0){
-            logdbHelper.insertLog(
-                "Alarm didn't ring. Because you are only ${distance}m away from chosen location",
-                status = LogDatabaseHelper.Status.WARNING,
-                type = LogDatabaseHelper.LogType.NORMAL,
-                hasRung = 0
+            
+            val location = fetchLocationDeffered.await()
+            Log.d("Location", location)
+            
+            // Handle location fetch failures
+            if (location == "timeout" || location == "error" || location.isEmpty()) {
+                Log.e("LocationFetcherService", "Failed to get location: $location")
+                ringAlarmWithError("Failed to get current location: $location")
+                return@runBlocking
+            }
+            
+            // Use targetLocation from intent instead of SharedPreferences
+            val setLocationString = targetLocation
+            
+            val current = location.split(",")
+            if (current.size == 2) {
+                try {
+                    currentLatitude = current[0].toDouble()
+                    currentLongitude = current[1].toDouble()
+                } catch (e: NumberFormatException) {
+                    Log.e("LocationFetcherService", "Invalid current location format: $location")
+                    ringAlarmWithError("Invalid current location format")
+                    return@runBlocking
+                }
+            } else {
+                Log.e("LocationFetcherService", "Invalid current location format. Expected: \"lat,long\"")
+                ringAlarmWithError("Invalid current location format")
+                return@runBlocking
+            }
+            
+            val destination = setLocationString.split(",")
+            if (destination.size == 2) {
+                try {
+                    destinationLatitude = destination[0].toDouble()
+                    destinationLongitude = destination[1].toDouble()
+                } catch (e: NumberFormatException) {
+                    Log.e("LocationFetcherService", "Invalid destination location format: $setLocationString")
+                    ringAlarmWithError("Invalid destination location format")
+                    return@runBlocking
+                }
+            } else {
+                Log.e("LocationFetcherService", "Invalid destination location format. Expected: \"lat,long\"")
+                ringAlarmWithError("Invalid destination location format")
+                return@runBlocking
+            }
+            val distance = calculateDistance(
+                Location(currentLatitude, currentLongitude),
+                Location(destinationLatitude, destinationLongitude)
             )
-            Timer().schedule(9000){
-                Timer().schedule(3000){
-                    stopSelf()
+            
+            val isWithin500m = distance < 500.0
+            
+            Log.d("Distance", "distance ${distance}")
+            Log.d("LocationCondition", "type ${locationConditionType}")
+            
+            // Add detailed condition type logging
+            val conditionTypeName = when (locationConditionType) {
+                0 -> "OFF"
+                1 -> "RING_WHEN_AT"
+                2 -> "CANCEL_WHEN_AT" 
+                3 -> "RING_WHEN_AWAY"
+                4 -> "CANCEL_WHEN_AWAY"
+                else -> "UNKNOWN"
+            }
+            
+            Log.d("LocationCondition", "=== LOCATION CONDITION TEST ===")
+            Log.d("LocationCondition", "Condition Type: $conditionTypeName (index: $locationConditionType)")
+            Log.d("LocationCondition", "Current Location: $currentLatitude, $currentLongitude")
+            Log.d("LocationCondition", "Target Location: $destinationLatitude, $destinationLongitude") 
+            Log.d("LocationCondition", "Distance: ${String.format("%.2f", distance)}m")
+            Log.d("LocationCondition", "Within 500m radius: $isWithin500m")
+            
+            var shouldRingAlarm = false
+            var logMessage = ""
+            
+            when (locationConditionType) {
+                0 -> { // Off - should not reach here, but handle gracefully
+                    shouldRingAlarm = true
+                    logMessage = "Location condition is off, alarm rings normally"
+                }
+                1 -> { // Ring when AT location (within 500m)
+                    shouldRingAlarm = isWithin500m
+                    logMessage = if (isWithin500m) {
+                        "Alarm is ringing. You are ${distance}m from chosen location (within 500m)"
+                    } else {
+                        "Alarm didn't ring. You are ${distance}m away from chosen location (beyond 500m)"
+                    }
+                }
+                2 -> { // Cancel when AT location (within 500m) - original behavior
+                    shouldRingAlarm = !isWithin500m
+                    logMessage = if (isWithin500m) {
+                        "Alarm didn't ring. You are only ${distance}m away from chosen location"
+                    } else {
+                        "Alarm is ringing. You are ${distance}m away from chosen location"
+                    }
+                }
+                3 -> { // Ring when AWAY from location (beyond 500m)
+                    shouldRingAlarm = !isWithin500m
+                    logMessage = if (!isWithin500m) {
+                        "Alarm is ringing. You are ${distance}m away from chosen location (beyond 500m)"
+                    } else {
+                        "Alarm didn't ring. You are only ${distance}m from chosen location (within 500m)"
+                    }
+                }
+                4 -> { // Cancel when AWAY from location (beyond 500m)
+                    shouldRingAlarm = isWithin500m
+                    logMessage = if (!isWithin500m) {
+                        "Alarm didn't ring. You are ${distance}m away from chosen location (beyond 500m)"
+                    } else {
+                        "Alarm is ringing. You are ${distance}m from chosen location (within 500m)"
+                    }
+                }
+                else -> { // Default fallback
+                    shouldRingAlarm = true
+                    logMessage = "Unknown location condition type, alarm rings normally"
+                }
+            }
 
+            // Log final decision
+            Log.d("LocationCondition", "=== FINAL DECISION ===")
+            Log.d("LocationCondition", "Should Ring Alarm: $shouldRingAlarm")
+            Log.d("LocationCondition", "Reason: $logMessage")
+            Log.d("LocationCondition", "=== END TEST ===")
+
+            if (shouldRingAlarm) {
+                val flutterIntent =
+                    Intent(this@LocationFetcherService, MainActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        putExtra("initialRoute", "/")
+                        putExtra("alarmRing", "true")
+                        putExtra("isAlarm", "true")
+                        if (isSharedAlarm) {
+                            putExtra("isSharedAlarm", true)
+                        }
+                    }
+
+                Timer().schedule(9000){
+                    println("ANDROID STARTING APP")
+                    this@LocationFetcherService.startActivity(flutterIntent)
+                    logdbHelper.insertLog(
+                        logMessage,
+                        status = LogDatabaseHelper.Status.SUCCESS,
+                        type = LogDatabaseHelper.LogType.NORMAL,
+                        hasRung = 1
+                    )
+                    Timer().schedule(3000){
+                        stopSelf()
+                    }
+                }
+            } else {
+                logdbHelper.insertLog(
+                    logMessage,
+                    status = LogDatabaseHelper.Status.WARNING,
+                    type = LogDatabaseHelper.LogType.NORMAL,
+                    hasRung = 0
+                )
+                Timer().schedule(9000){
+                    Timer().schedule(3000){
+                        stopSelf()
+                    }
                 }
             }
         }
-
     }
 
     suspend fun fetchLocation(): String {
@@ -145,11 +317,6 @@ class LocationFetcherService : Service() {
         }
     }
 
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_STICKY
-    }
-
     private fun getNotification(): Notification {
         val intent = Intent(this, MainActivity::class.java) // Replace with your main activity
         val pendingIntent =
@@ -161,8 +328,8 @@ class LocationFetcherService : Service() {
             )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Fetching Location for alarm")
-            .setContentText("Waiting...")
+            .setContentTitle("Checking Location for alarm")
+            .setContentText("Evaluating location condition...")
             .setSmallIcon(R.mipmap.launcher_icon) // Replace with your icon drawable
             .setContentIntent(pendingIntent)
             .setOngoing(true)
@@ -199,4 +366,3 @@ class LocationFetcherService : Service() {
         return distance
     }
 }
-

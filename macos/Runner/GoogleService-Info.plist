@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>363477463731-ff0hehinlg6r3r6qh7re2ucj4pk35lg2.apps.googleusercontent.com</string>
+	<string>856004961904-30cinmt6cgv2l1he6pnb1r5omvc8h5l0.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.363477463731-ff0hehinlg6r3r6qh7re2ucj4pk35lg2</string>
+	<string>com.googleusercontent.apps.856004961904-30cinmt6cgv2l1he6pnb1r5omvc8h5l0</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>363477463731-kmcn9c9r74p8qqlgdde6jngu1301vih9.apps.googleusercontent.com</string>
+	<string>856004961904-g268it13qfadsuvfgh9busk9e3kv97n1.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDocikssLl0ZCxp6WT0Ybm76PvmT5gziDM</string>
+	<string>AIzaSyDRxcZUeIssuOE4vUu6aft3P2iMdTQd0e8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>363477463731</string>
+	<string>856004961904</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
@@ -31,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:363477463731:ios:a5bdb9667f0006d54eb6c6</string>
+	<string>1:856004961904:ios:cf486a5b6d91d4c8ff76b5</string>
+	<key>DATABASE_URL</key>
+	<string>https://shared-alarms-43481-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

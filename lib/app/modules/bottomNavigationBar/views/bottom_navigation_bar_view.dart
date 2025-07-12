@@ -13,13 +13,12 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() {
-        return FutureBuilder(
-          future: controller.loadSavedState(),
-          builder: (context, snapshot) {
-            if (controller.hasloaded.value != false) {
-              pageController =
-                  PageController(initialPage: controller.activeTabIndex.value);
+      body: FutureBuilder(
+        future: controller.loadSavedState(),
+        builder: (context, snapshot) {
+          return Obx(() {
+            if (controller.hasloaded.value) {
+              pageController = PageController(initialPage: controller.activeTabIndex.value);
               return PageView(
                 controller: pageController,
                 children: controller.pages,
@@ -37,9 +36,9 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
                 ),
               );
             }
-          },
-        );
-      }),
+          });
+        },
+      ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
           useLegacyColorScheme: false,
@@ -68,8 +67,7 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
           selectedLabelStyle: TextStyle(
             color: kprimaryColor,
             fontSize: 14,
-            decorationColor:
-                themeController.primaryBackgroundColor.value,
+            decorationColor: themeController.primaryBackgroundColor.value,
             decorationThickness: 0.8,
           ),
         ),

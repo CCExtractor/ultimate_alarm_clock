@@ -1,0 +1,43 @@
+rules_version = "2";
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read and write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow users to read and write shared alarms they own or are shared with
+    match /sharedAlarms/{alarmId} {
+      allow read, write: if request.auth != null && (
+        resource.data.ownerId == request.auth.uid ||
+        request.auth.uid in resource.data.sharedUserIds ||
+        // Allow creation if user is the owner
+        (request.method == "create" && request.auth.uid == request.resource.data.ownerId) ||
+        // Allow users to accept shared alarms (add themselves to sharedUserIds)
+        (request.method == "update" && 
+         request.auth.uid in request.resource.data.sharedUserIds &&
+         !(request.auth.uid in resource.data.sharedUserIds))
+      );
+    }
+    
+    // Allow reading all shared alarms for authenticated users (for querying)
+    match /sharedAlarms/{alarmId} {
+      allow read: if request.auth != null;
+    }
+    
+    // Allow users to read and write their own notifications
+    match /userNotifications/{userId}/notifications/{notificationId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow users to read and write their own shared profiles
+    match /users/{userId}/sharedProfile/{profileId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow reading all users for email lookup (needed for sharing)
+    match /users/{userId} {
+      allow read: if request.auth != null;
+    }
+  }
+}

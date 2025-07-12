@@ -16,6 +16,30 @@ enum WeatherKeyState { add, update, saveAdded, saveUpdated }
 
 enum CounterUpdate { increment, decrement }
 
+enum LocationConditionType {
+  off,           
+  ringWhenAt,    
+  cancelWhenAt,  
+  ringWhenAway,  
+  cancelWhenAway 
+}
+
+enum WeatherConditionType {
+  off,              
+  ringWhenMatch,    
+  cancelWhenMatch,  
+  ringWhenDifferent,
+  cancelWhenDifferent 
+}
+
+enum ActivityConditionType {
+  off,             
+  ringWhenActive,   
+  cancelWhenActive, 
+  ringWhenInactive, 
+  cancelWhenInactive 
+}
+
 const Color kprimaryColor = Color(0xffAFFC41);
 
 // Dark Theme Color Palette
