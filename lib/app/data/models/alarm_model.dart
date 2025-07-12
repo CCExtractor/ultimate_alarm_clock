@@ -17,8 +17,11 @@ class AlarmModel {
   late String alarmID;
   late bool isEnabled;
   late bool isLocationEnabled;
+  late int locationConditionType; 
   late bool isSharedAlarmEnabled;
   late bool isWeatherEnabled;
+  late int weatherConditionType; 
+  late int activityConditionType;
   late bool isMathsEnabled;
   late bool isShakeEnabled;
   late bool isQrEnabled;
@@ -60,6 +63,10 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isSunriseEnabled;
+  late int sunriseDuration;
+  late double sunriseIntensity;
+  late int sunriseColorScheme;
   @ignore
   Map? offsetDetails;
 
@@ -77,8 +84,11 @@ class AlarmModel {
       required this.isActivityEnabled,
       required this.minutesSinceMidnight,
       required this.isLocationEnabled,
+      required this.locationConditionType,
       required this.isSharedAlarmEnabled,
       required this.isWeatherEnabled,
+      required this.weatherConditionType,
+      required this.activityConditionType,
       required this.location,
       required this.weatherTypes,
       required this.isMathsEnabled,
@@ -111,7 +121,11 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      required this.isSunriseEnabled,
+      required this.sunriseDuration,
+      required this.sunriseIntensity,
+      required this.sunriseColorScheme});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -154,7 +168,10 @@ class AlarmModel {
     activityInterval = documentSnapshot['activityInterval'];
 
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
+    locationConditionType = documentSnapshot['locationConditionType'] ?? 2;
     isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
+    weatherConditionType = documentSnapshot['weatherConditionType'] ?? 2;
+    activityConditionType = documentSnapshot['activityConditionType'] ?? 2;
     weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
     location = documentSnapshot['location'];
     isMathsEnabled = documentSnapshot['isMathsEnabled'];
@@ -182,6 +199,10 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    isSunriseEnabled = documentSnapshot['isSunriseEnabled'] ?? false;
+    sunriseDuration = documentSnapshot['sunriseDuration'] ?? 30;
+    sunriseIntensity = documentSnapshot['sunriseIntensity'] ?? 1.0;
+    sunriseColorScheme = documentSnapshot['sunriseColorScheme'] ?? 0;
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -190,8 +211,11 @@ class AlarmModel {
       alarmID: map['alarmID'],
       isEnabled: map['isEnabled'] == 1,
       isLocationEnabled: map['isLocationEnabled'] == 1,
+      locationConditionType: map['locationConditionType'] ?? 2,
       isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
       isWeatherEnabled: map['isWeatherEnabled'] == 1,
+      weatherConditionType: map['weatherConditionType'] ?? 2,
+      activityConditionType: map['activityConditionType'] ?? 2,
       location: map['location'],
       activityInterval: map['activityInterval'],
       minutesSinceMidnight: map['minutesSinceMidnight'],
@@ -234,6 +258,10 @@ class AlarmModel {
       guardianTimer: map['guardianTimer'],
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
+      isSunriseEnabled: map['isSunriseEnabled'] == 1,
+      sunriseDuration: map['sunriseDuration'] ?? 30,
+      sunriseIntensity: map['sunriseIntensity'] ?? 1.0,
+      sunriseColorScheme: map['sunriseColorScheme'] ?? 0,
       ringOn: map['ringOn'] == 1,
     );
   }
