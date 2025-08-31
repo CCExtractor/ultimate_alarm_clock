@@ -148,7 +148,7 @@ class SharedAlarm extends StatelessWidget {
                   onTap: () async {
                     try {
                     Utils.hapticFeedback();
-                      // Add validation before toggling
+                      
                       if (controller.userModel.value == null) {
                         debugPrint('Cannot toggle shared alarm: User not logged in');
                         return;
@@ -177,7 +177,7 @@ class SharedAlarm extends StatelessWidget {
                         Utils.hapticFeedback();
                           debugPrint('Switch toggled to: $value');
                           
-                          // Add validation before changing
+                          
                           if (controller.userModel.value == null && value) {
                             debugPrint('Cannot enable shared alarm: User not logged in');
                             return;
@@ -300,7 +300,7 @@ class SharedAlarm extends StatelessWidget {
         );
       } catch (e) {
         debugPrint('Error in SharedAlarm widget build: $e');
-        // Return a safe fallback widget
+        
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           child: ListTile(

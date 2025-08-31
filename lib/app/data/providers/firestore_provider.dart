@@ -137,7 +137,7 @@ class FirestoreDb {
   }
 
   static CollectionReference _alarmsCollection(UserModel? user) {
-    // Always use sharedAlarms collection since we're using shared alarm functionality
+    
     return _firebaseFirestore.collection('sharedAlarms');
   }
 
@@ -152,7 +152,7 @@ class FirestoreDb {
       final user = await docRef.get();
       
       if (!user.exists) {
-        // Ensure receivedItems is initialized as an empty array
+        
         Map<String, dynamic> userData = userModel.toJson();
         userData['receivedItems'] = userData['receivedItems'] ?? [];
         
@@ -160,7 +160,7 @@ class FirestoreDb {
         await docRef.set(userData);
         debugPrint('✅ Created new user document with receivedItems: ${userModel.id}');
       } else {
-        // Check if existing user has receivedItems field, add it if missing
+        
         final data = user.data() as Map<String, dynamic>?;
         if (data != null && !data.containsKey('receivedItems')) {
           debugPrint('🔥 Adding receivedItems field to existing user...');
@@ -182,14 +182,14 @@ class FirestoreDb {
     }
     
     if (alarmRecord.isSharedAlarmEnabled) {
-      // Create shared alarm in Firestore
+
       await _firebaseFirestore
           .collection('sharedAlarms')
           .add(AlarmModel.toMap(alarmRecord))
           .then((value) => alarmRecord.firestoreId = value.id);
       debugPrint('✅ Created shared alarm in Firestore: ${alarmRecord.firestoreId}');
       
-      // Detailed shared alarm creation log (NORMAL - always visible) 
+
       String detailedMessage = IsarDb.buildDetailedAlarmCreationMessage(alarmRecord, 'SHARED');
       await IsarDb().insertLog(
         detailedMessage,
@@ -197,10 +197,10 @@ class FirestoreDb {
         type: LogType.normal,
       );
     } else {
-      // Create local alarm in SQLite
+      
       final sql = await FirestoreDb().getSQLiteDatabase();
       try {
-        // Try to insert with all fields including new columns
+      
         await sql!
             .insert('alarms', alarmRecord.toSQFliteMap())
             .then((value) => print('insert success'));
@@ -216,7 +216,7 @@ class FirestoreDb {
             e.toString().contains('timezoneId') ||
             e.toString().contains('isTimezoneEnabled') ||
             e.toString().contains('targetTimezoneOffset')) {
-          // If new columns don't exist, insert without them for backward compatibility
+      
           Map<String, dynamic> fallbackMap = Map.from(alarmRecord.toSQFliteMap());
           fallbackMap.remove('locationConditionType');
           fallbackMap.remove('weatherConditionType');
@@ -233,7 +233,7 @@ class FirestoreDb {
               .insert('alarms', fallbackMap)
               .then((value) => print('insert success (backward compatibility)'));
         } else {
-          rethrow; // Re-throw other errors
+          rethrow; 
         }
       }
       debugPrint('✅ Created normal alarm in SQLite');
@@ -379,7 +379,7 @@ class FirestoreDb {
     final sql = await FirestoreDb().getSQLiteDatabase();
     
     try {
-      // Try to update with all fields including new columns
+      
       await sql!.update(
         'alarms',
         alarmRecord.toSQFliteMap(),
@@ -492,19 +492,19 @@ static Future<List<String>> getUserIdsByEmails(List emails) async {
 
 
   static Future<void> shareAlarm(List emails, AlarmModel alarm) async {
-    debugPrint('🚀 shareAlarm called with ${emails.length} emails');
+    debugPrint(' shareAlarm called with ${emails.length} emails');
     
     if (emails.isEmpty) {
-      debugPrint('❌ No emails provided for sharing');
+      debugPrint(' No emails provided for sharing');
       return;
     }
 
     final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
     final currentUserId = _firebaseAuthInstance.currentUser!.uid;
     
-    debugPrint('👤 Current user: $currentUserEmail (ID: $currentUserId)');
+    debugPrint(' Current user: $currentUserEmail (ID: $currentUserId)');
     
-    // Get current user's name for the notification
+    
     String ownerName = currentUserEmail ?? 'Someone';
     try {
       final currentUserDoc = await _firebaseFirestore
@@ -747,8 +747,7 @@ static Future<bool> addItemToUserByEmail(String email, dynamic sharedItem) async
 
       return sharedAlarmsStream;
     } else {
-      // Return a stream that emits from an empty collection to provide a proper QuerySnapshot
-      // This prevents the StreamBuilder from hanging on loading
+
       return _firebaseFirestore
           .collection('_empty_shared_alarms_placeholder')
           .limit(0)
@@ -858,9 +857,9 @@ static Future<bool> addItemToUserByEmail(String email, dynamic sharedItem) async
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>>
       getNotifications() async* {
-    // Check if user is authenticated
+    
     if (_firebaseAuthInstance.currentUser == null) {
-      // Return empty stream that never emits anything for unauthenticated users
+    
       return;
     }
     

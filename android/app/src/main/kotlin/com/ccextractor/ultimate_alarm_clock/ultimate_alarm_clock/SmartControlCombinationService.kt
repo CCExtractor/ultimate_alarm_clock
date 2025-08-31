@@ -23,12 +23,12 @@ class SmartControlCombinationService : Service() {
     
     private lateinit var logdbHelper: LogDatabaseHelper
     
-    // Smart control results
+    
     private var locationResult: Boolean? = null
     private var weatherResult: Boolean? = null
     private var activityResult: Boolean? = null
     
-    // Configuration
+    
     private var smartControlCombinationType = 0 // 0=AND, 1=OR
     private var isSharedAlarm = false
     private var alarmID = ""
@@ -70,7 +70,7 @@ class SmartControlCombinationService : Service() {
         serviceScope.launch {
             val jobs = mutableListOf<Job>()
             
-            // Start location check if enabled
+    
             if (isLocationEnabledFromIntent) {
                 jobs.add(launch {
                     locationResult = checkLocationCondition(intent)
@@ -79,7 +79,7 @@ class SmartControlCombinationService : Service() {
                 })
             }
             
-            // Start weather check if enabled
+    
             if (isWeatherEnabledFromIntent) {
                 jobs.add(launch {
                     weatherResult = checkWeatherCondition(intent)
@@ -88,7 +88,7 @@ class SmartControlCombinationService : Service() {
                 })
             }
             
-            // Start activity check if enabled
+    
             if (isActivityEnabledFromIntent) {
                 jobs.add(launch {
                     activityResult = checkActivityCondition(intent)
@@ -97,26 +97,25 @@ class SmartControlCombinationService : Service() {
                 })
             }
             
-            // Wait for all checks to complete (with timeout)
+    
             withTimeoutOrNull(30000) { // 30 second timeout
                 jobs.joinAll()
             }
             
-            // Final check if not already processed
+    
             checkCombinationResult()
         }
     }
     
     private suspend fun checkLocationCondition(intent: Intent): Boolean {
-        // For now, delegate to the existing LocationFetcherService
-        // This is a simplified version - in practice, we'd need to extract the actual logic
+    
         val locationConditionType = intent.getIntExtra("locationConditionType", 2)
         val location = intent.getStringExtra("location") ?: ""
         
         Log.d("SmartControlCombination", "Location check: type=$locationConditionType, location=$location")
         
-        // For testing purposes, simulate the location check based on condition type
-        // In a real implementation, this would check actual location
+    
+    
         return when (locationConditionType) {
             1 -> true  // Ring when at location - assume we're at location
             2 -> false // Cancel when at location - assume we're at location, so cancel
@@ -127,14 +126,14 @@ class SmartControlCombinationService : Service() {
     }
     
     private suspend fun checkWeatherCondition(intent: Intent): Boolean {
-        // For now, delegate to the existing WeatherFetcherService logic
+        
         val weatherConditionType = intent.getIntExtra("weatherConditionType", 2)
         val weatherTypes = intent.getStringExtra("weatherTypes") ?: "[]"
         
         Log.d("SmartControlCombination", "Weather check: type=$weatherConditionType, weather=$weatherTypes")
         
-        // For testing purposes, simulate weather matching
-        // In a real implementation, this would check actual weather
+        
+        
         val weatherMatches = true // Assume current weather matches selected types
         
         return when (weatherConditionType) {
@@ -173,8 +172,6 @@ class SmartControlCombinationService : Service() {
         val results = mutableListOf<Boolean>()
         var expectedResultCount = 0
         
-        // Use the stored enabled states from initialization
-        
         if (isLocationEnabledFromIntent) {
             expectedResultCount++
             locationResult?.let { results.add(it) }
@@ -191,7 +188,7 @@ class SmartControlCombinationService : Service() {
         Log.d("SmartControlCombination", "Results so far: ${results.size}/$expectedResultCount")
         Log.d("SmartControlCombination", "Results: location=$locationResult, weather=$weatherResult, activity=$activityResult")
         
-        // Only make decision if we have all expected results
+  
         if (results.size >= expectedResultCount && expectedResultCount > 0) {
             val shouldRing = when (smartControlCombinationType) {
                 0 -> { // AND logic - ALL must pass (return true)

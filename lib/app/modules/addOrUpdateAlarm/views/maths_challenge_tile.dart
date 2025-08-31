@@ -91,7 +91,7 @@ class MathsChallenge extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  // Handle bar
+                  
                   Container(
                     margin: const EdgeInsets.only(top: 12),
                     width: 40,
@@ -126,14 +126,14 @@ class MathsChallenge extends StatelessWidget {
                     ),
                   ),
                   
-                  // Content
+                  
                   Expanded(
                     child: SingleChildScrollView(
                       controller: scrollController,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         children: [
-                          // Enable/Disable Switch
+                          
                           _buildSection(
                             title: 'Enable Math Challenge'.tr,
                             subtitle: 'Require solving math problems'.tr,
@@ -154,17 +154,17 @@ class MathsChallenge extends StatelessWidget {
                           
                           const SizedBox(height: 20),
                           
-                          // Settings (when enabled)
+                          
                           Obx(() => controller.isMathsEnabled.value
                               ? Column(
                                   children: [
-                                    // Difficulty Section
+                                    
                                     _buildSection(
                                       title: 'Difficulty Level'.tr,
                                       subtitle: 'Choose problem complexity'.tr,
                                       child: Column(
                                         children: [
-                                          // Preview problem
+                                          
                                           Obx(() => Container(
                                             padding: const EdgeInsets.all(16),
                                             margin: const EdgeInsets.only(bottom: 16),
@@ -196,7 +196,7 @@ class MathsChallenge extends StatelessWidget {
                                             ),
                                           )),
                                           
-                                          // Difficulty slider
+                                          
                                           Obx(() => Slider.adaptive(
                                             min: 0.0,
                                             max: 2.0,
@@ -211,7 +211,7 @@ class MathsChallenge extends StatelessWidget {
                                             inactiveColor: kprimaryColor.withOpacity(0.3),
                                           )),
                                           
-                                          // Difficulty labels
+                                          
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
@@ -241,7 +241,7 @@ class MathsChallenge extends StatelessWidget {
                                     
                                     const SizedBox(height: 20),
                                     
-                                    // Number of Questions
+                                    
                                     _buildSection(
                                       title: 'Number of Questions'.tr,
                                       subtitle: 'How many problems to solve'.tr,
@@ -296,7 +296,7 @@ class MathsChallenge extends StatelessWidget {
                     ),
                   ),
                   
-                  // Action buttons
+                  
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -313,7 +313,7 @@ class MathsChallenge extends StatelessWidget {
                           child: OutlinedButton(
                             onPressed: () {
                               Utils.hapticFeedback();
-                              // Reset to initial values
+                              
                               controller.isMathsEnabled.value = initialIsMathsEnabled;
                               controller.mathsSliderValue.value = initialSliderValue;
                               controller.numMathsQuestions.value = initialNoOfMathQues;

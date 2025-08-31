@@ -83,50 +83,57 @@ class HomeView extends GetView<HomeController> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                          left: 25 *
-                                              controller.scalingFactor.value,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Next alarm'.tr,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displaySmall!
-                                                  .copyWith(
-                                                    color: themeController.primaryDisabledTextColor.value,
-                                                    fontSize: 16 *
-                                                        controller.scalingFactor
-                                                            .value,
-                                                  ),
-                                            ),
-                                            Obx(
-                                              () => Text(
-                                                controller.alarmTime.value.tr,
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                            left: 25 *
+                                                controller.scalingFactor.value,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Next alarm'.tr,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .displaySmall!
                                                     .copyWith(
-                                                      color: themeController.primaryTextColor.value
-                                                              .withOpacity(
-                                                              0.75,
-                                                            ),
-                                                      fontSize: 14 *
-                                                          controller
-                                                              .scalingFactor
+                                                      color: themeController.primaryDisabledTextColor.value,
+                                                      fontSize: 16 *
+                                                          controller.scalingFactor
                                                               .value,
                                                     ),
                                               ),
-                                            ),
-                                          ],
+                                              Obx(
+                                                () => Text(
+                                                  controller.alarmTime.value.tr,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .copyWith(
+                                                        color: themeController.primaryTextColor.value
+                                                                .withOpacity(
+                                                                0.75,
+                                                              ),
+                                                        fontSize: 14 *
+                                                            controller
+                                                                .scalingFactor
+                                                                .value,
+                                                      ),
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      Row(
-                                        children: [
+                                      Flexible(
+                                        flex: 1,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
                                           notificationIcon(controller),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -232,7 +239,8 @@ class HomeView extends GetView<HomeController> {
                                               //   ),
                                             ),
                                           ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),

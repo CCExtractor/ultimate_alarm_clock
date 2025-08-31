@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -517,17 +518,31 @@ class TimerView extends GetView<TimerController> {
                             padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(18),
-                              onTap: () {
+                              onTap: () async {
+                                debugPrint('🔥 OK button pressed');
+                                
+                                // Ensure timer values are synced from text fields first
+                                controller.setTimerTime();
+                                
+                                debugPrint('🔥 Current values - Hours: ${controller.hours.value}, Minutes: ${controller.minutes.value}, Seconds: ${controller.seconds.value}');
+                                
                                 controller.remainingTime.value = Duration(
                                   hours: controller.hours.value,
                                   minutes: controller.minutes.value,
                                   seconds: controller.seconds.value,
                                 );
+                                
+                                debugPrint('🔥 RemainingTime set to: ${controller.remainingTime.value}');
+                                
                                 if (controller.hours.value != 0 ||
                                     controller.minutes.value != 0 ||
                                     controller.seconds.value != 0) {
-                                  controller.createTimer();
+                                  debugPrint('🔥 Validation passed, creating timer...');
+                                  await controller.createTimer();
+                                } else {
+                                  debugPrint('🚨 Validation failed - all values are 0');
                                 }
+                                
                                 controller.hours.value = 0;
                                 controller.minutes.value = 1;
                                 controller.seconds.value = 0;

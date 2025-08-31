@@ -23,6 +23,9 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 import androidx.annotation.NonNull
 import com.ccextractor.ultimate_alarm_clock.getLatestTimer
 import com.ccextractor.ultimate_alarm_clock.ultimate_alarm_clock.AlarmUtils
@@ -192,7 +195,29 @@ class MainActivity : FlutterActivity() {
             }
         }
         methodChannel1.setMethodCallHandler { call, result ->
-            if (call.method == "scheduleAlarm") {
+            if (call.method == "checkOverlayPermission") {
+                // Check if overlay permission is granted
+                val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Settings.canDrawOverlays(this)
+                } else {
+                    true // Always granted on older versions
+                }
+                result.success(hasPermission)
+            } else if (call.method == "requestOverlayPermission") {
+                // Request overlay permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.canDrawOverlays(this)) {
+                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, 
+                                           Uri.parse("package:$packageName"))
+                        startActivity(intent)
+                        result.success(false) // Permission not yet granted
+                    } else {
+                        result.success(true) // Already granted
+                    }
+                } else {
+                    result.success(true) // Always granted on older versions
+                }
+            } else if (call.method == "scheduleAlarm") {
                 println("FLUTTER CALLED SCHEDULE")
 
                 val isSharedAlarm = call.argument<Boolean>("isSharedAlarm") ?: false

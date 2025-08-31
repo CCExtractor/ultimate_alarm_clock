@@ -84,7 +84,7 @@ class IsarDb {
           debugPrint('✅ Timers table created successfully');
         },
         onOpen: (Database db) async {
-          // Check if table exists and create if it doesn't
+          
           var result = await db.rawQuery(
             "SELECT name FROM sqlite_master WHERE type='table' AND name='timers'"
           );
@@ -139,7 +139,7 @@ class IsarDb {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      // Add weatherConditionType column if it doesn't exist
+      
       try {
         await db.execute('ALTER TABLE alarms ADD COLUMN weatherConditionType INTEGER NOT NULL DEFAULT 2');
       } catch (e) {
@@ -355,7 +355,7 @@ class IsarDb {
     if (!alarmRecord.isSharedAlarmEnabled) {
       final sql = await IsarDb().getAlarmSQLiteDatabase();
       try {
-        // Try to insert with all fields including new columns
+        
         await sql!.insert('alarms', sqlmap);
       } catch (e) {
         if (e.toString().contains('locationConditionType') || 
@@ -365,7 +365,7 @@ class IsarDb {
             e.toString().contains('sunriseDuration') ||
             e.toString().contains('sunriseIntensity') ||
             e.toString().contains('sunriseColorScheme')) {
-          // If new columns don't exist, insert without them for backward compatibility
+          
           Map<String, dynamic> fallbackMap = Map.from(sqlmap);
           fallbackMap.remove('locationConditionType');
           fallbackMap.remove('weatherConditionType');
@@ -382,7 +382,7 @@ class IsarDb {
       }
     }
     
-    // Detailed alarm creation log (NORMAL - always visible)
+    
     String alarmType = alarmRecord.isSharedAlarmEnabled ? 'SHARED' : 'LOCAL';
     String detailedMessage = buildDetailedAlarmCreationMessage(alarmRecord, alarmType);
     await IsarDb().insertLog(
@@ -573,7 +573,7 @@ class IsarDb {
       await db.alarmModels.put(alarmRecord);
     });
     
-    // Detailed alarm update log (NORMAL - always visible)
+    
     String alarmType = alarmRecord.isSharedAlarmEnabled ? 'SHARED' : 'LOCAL';
     String detailedMessage = buildDetailedAlarmUpdateMessage(alarmRecord, alarmType);
     await IsarDb().insertLog(detailedMessage, status: Status.success, type: LogType.normal);
@@ -680,7 +680,7 @@ class IsarDb {
       await db.alarmModels.delete(id);
     });
     
-    // Detailed alarm deletion log (NORMAL - always visible)
+    
     String alarmType = tobedeleted.isSharedAlarmEnabled ? 'SHARED' : 'LOCAL';
     String detailedMessage = "DELETED $alarmType ALARM - Time: ${tobedeleted.alarmTime}, ID: ${tobedeleted.alarmID}, Type: $alarmType";
     if (tobedeleted.note.isNotEmpty) {
@@ -706,7 +706,7 @@ class IsarDb {
     final sql = await IsarDb().getTimerSQLiteDatabase();
     final db = await isarProvider.db;
     
-    // Ensure table exists before inserting
+    
     await _ensureTimersTableExists(sql!);
     
     await db.writeTxn(() async {
@@ -777,7 +777,7 @@ class IsarDb {
     try {
       final sql = await IsarDb().getTimerSQLiteDatabase();
       
-      // Ensure table exists before querying
+      
       await _ensureTimersTableExists(sql!);
       
       List<Map<String, dynamic>> maps = await sql.query(
@@ -996,12 +996,12 @@ class IsarDb {
   static String buildDetailedAlarmCreationMessage(AlarmModel alarm, String alarmType) {
     List<String> details = [];
     
-    // Basic info
+    
     details.add("Time: ${alarm.alarmTime}");
     details.add("ID: ${alarm.alarmID}");
     details.add("Type: $alarmType");
     
-    // Days/Repetition
+    
     List<String> dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     List<String> enabledDays = [];
     for (int i = 0; i < alarm.days.length; i++) {
@@ -1013,7 +1013,7 @@ class IsarDb {
       details.add("Days: One-time");
     }
     
-    // Conditions
+    
     List<String> conditions = [];
     
     if (alarm.isActivityEnabled) {
@@ -1050,7 +1050,7 @@ class IsarDb {
       details.add("Conditions: None");
     }
     
-    // Challenges
+    
     List<String> challenges = [];
     if (alarm.isMathsEnabled) challenges.add("Math");
     if (alarm.isShakeEnabled) challenges.add("Shake");
@@ -1060,8 +1060,8 @@ class IsarDb {
     if (challenges.isNotEmpty) {
       details.add("Challenges: [${challenges.join(', ')}]");
     }
+
     
-    // Note
     if (alarm.note.isNotEmpty) {
       details.add("Note: \"${alarm.note}\"");
     }
@@ -1072,12 +1072,12 @@ class IsarDb {
   static String buildDetailedAlarmUpdateMessage(AlarmModel alarm, String alarmType) {
     List<String> details = [];
     
-    // Basic info
+    
     details.add("Time: ${alarm.alarmTime}");
     details.add("ID: ${alarm.alarmID}");
     details.add("Type: $alarmType");
     
-    // Days/Repetition
+    
     List<String> dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     List<String> enabledDays = [];
     for (int i = 0; i < alarm.days.length; i++) {
@@ -1089,7 +1089,7 @@ class IsarDb {
       details.add("Days: One-time");
     }
     
-    // Conditions
+    
     List<String> conditions = [];
     
     if (alarm.isActivityEnabled) {
@@ -1126,7 +1126,7 @@ class IsarDb {
       details.add("Conditions: None");
     }
     
-    // Challenges
+      
     List<String> challenges = [];
     if (alarm.isMathsEnabled) challenges.add("Math");
     if (alarm.isShakeEnabled) challenges.add("Shake");
@@ -1137,7 +1137,7 @@ class IsarDb {
       details.add("Challenges: [${challenges.join(', ')}]");
     }
     
-    // Note
+      
     if (alarm.note.isNotEmpty) {
       details.add("Note: \"${alarm.note}\"");
     }
@@ -1148,28 +1148,28 @@ class IsarDb {
   static String buildDetailedAlarmRingMessage(AlarmModel alarm, String alarmType) {
     List<String> details = [];
     
-    // Primary identification - what user sees first
+      
     String primaryInfo = "🔔 RINGING $alarmType ALARM";
     
-    // Alarm identification details
+      
     details.add("⏰ Time: ${alarm.alarmTime}");
     
-    // Label/Name (most important for user identification)
+      
     if (alarm.label != null && alarm.label!.isNotEmpty) {
       details.add("📝 Label: \"${alarm.label}\"");
     }
     
-    // Note (secondary identification)
+      
     if (alarm.note.isNotEmpty) {
       details.add("💬 Note: \"${alarm.note}\"");
     }
     
-    // Ringtone (helps user identify which alarm is ringing)
+      
     if (alarm.ringtoneName.isNotEmpty) {
       details.add("🎵 Ringtone: ${alarm.ringtoneName}");
     }
     
-    // Days/Repetition (important for identification)
+      
     List<String> dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     List<String> enabledDays = [];
     for (int i = 0; i < alarm.days.length; i++) {
@@ -1181,17 +1181,17 @@ class IsarDb {
       details.add("📅 Days: One-time alarm");
     }
     
-    // Owner info for shared alarms
+      
     if (alarm.isSharedAlarmEnabled && alarm.ownerName.isNotEmpty) {
       details.add("👥 Owner: ${alarm.ownerName}");
     }
     
-    // Profile info
+      
     if (alarm.profile.isNotEmpty && alarm.profile != 'Default') {
       details.add("👤 Profile: ${alarm.profile}");
     }
     
-    // Active conditions (important for understanding why it rang)
+      
     List<String> activeConditions = [];
     
     if (alarm.isActivityEnabled) {
@@ -1226,7 +1226,7 @@ class IsarDb {
       details.add("⚙️ Active Conditions: [${activeConditions.join(', ')}]");
     }
     
-    // Challenges (what user needs to do to dismiss)
+      
     List<String> challenges = [];
     if (alarm.isMathsEnabled) challenges.add("Math Questions");
     if (alarm.isShakeEnabled) challenges.add("Shake Device");
@@ -1237,12 +1237,12 @@ class IsarDb {
       details.add("🎯 Challenges: [${challenges.join(', ')}]");
     }
     
-    // Guardian info (important safety feature)
+      
     if (alarm.isGuardian) {
       details.add("🆘 Guardian: ${alarm.guardian} (${alarm.guardianTimer}s timer)");
     }
     
-    // Technical details
+      
     details.add("🆔 ID: ${alarm.alarmID}");
     details.add("🏷️ Type: $alarmType");
     

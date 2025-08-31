@@ -133,7 +133,7 @@ class ShakeToDismiss extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         children: [
-                          // Enable/Disable Switch
+                          
                           _buildSection(
                             title: 'Enable Shake Dismissal'.tr,
                             subtitle: 'Require shaking to dismiss alarm'.tr,

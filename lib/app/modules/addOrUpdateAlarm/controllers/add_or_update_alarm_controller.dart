@@ -59,10 +59,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final numberOfSteps = 0.obs;
   final locationConditionType = LocationConditionType.off.obs;
   final weatherConditionType = WeatherConditionType.off.obs;
-  var ownerId = ''.obs; // id -> owner of the alarm
-  var ownerName = ''.obs; // name -> owner of the alarm
-  var userId = ''.obs; // id -> loggedin user
-  var userName = ''.obs; // name -> loggedin user
+  var ownerId = ''.obs; 
+  var ownerName = ''.obs; 
+  var userId = ''.obs;
+  var userName = ''.obs; 
   final mutexLock = false.obs;
   var lastEditedUserId = ''.obs;
   final sharedUserIds = <String>[].obs;
@@ -72,8 +72,8 @@ class AddOrUpdateAlarmController extends GetxController {
   final offsetDuration = 0.obs;
   final isOffsetBefore = true.obs;
   
-  // NEW: Selected location radius for customizable detection radius
-  final selectedLocationRadius = 500.obs; // Default 500m radius
+  
+  final selectedLocationRadius = 500.obs;
   
   var qrController = MobileScannerController(
     autoStart: false,
@@ -168,17 +168,17 @@ class AddOrUpdateAlarmController extends GetxController {
   final storage = Get.find<GetStorageProvider>();
 
   final RxBool isGuardian = false.obs;
-  final RxInt guardianTimer = 120.obs; // Default to 2 minutes (120 seconds)
+  final RxInt guardianTimer = 120.obs; 
   final RxString guardian = ''.obs;
   final RxBool isCall = false.obs;
   
-  // Sunrise Alarm Variables
+ 
   final RxBool isSunriseEnabled = false.obs;
   final RxInt sunriseDuration = 30.obs;
   final RxDouble sunriseIntensity = 1.0.obs;
   final RxInt sunriseColorScheme = 0.obs;
   
-  // Timezone Variables
+  
   final RxString selectedTimezoneId = ''.obs;
   final RxBool isTimezoneEnabled = false.obs;
   final RxInt targetTimezoneOffset = 0.obs;
@@ -187,7 +187,7 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxString timezoneSearchQuery = ''.obs;
   final RxString deviceTimezoneId = ''.obs;
   
-  // Smart Control Combination Variables
+  
   final RxInt smartControlCombinationType = SmartControlCombinationType.and.index.obs;
 
   void setSmartControlCombinationType(SmartControlCombinationType type) {
@@ -230,20 +230,20 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
-  // Timezone methods
+  
   Future<void> initializeTimezone() async {
     await TimezoneUtils.init();
     deviceTimezoneId.value = TimezoneUtils.getDeviceTimezoneId();
-    // For testing - if device timezone is not India, set it manually
+    
     if (deviceTimezoneId.value != 'Asia/Kolkata') {
-      deviceTimezoneId.value = 'Asia/Kolkata'; // India Standard Time
+      deviceTimezoneId.value = 'Asia/Kolkata'; 
     }
     print('🌍 Device timezone set to: ${deviceTimezoneId.value}');
     loadTimezones();
     
-    // Check if this is a new alarm (no arguments) and apply default settings
+    
     if (Get.arguments == null) {
-      // Apply default timezone settings for new alarms
+      
       isTimezoneEnabled.value = settingsController.isTimezoneEnabledByDefault.value;
       if (settingsController.defaultTimezoneId.value.isNotEmpty) {
         selectedTimezoneId.value = settingsController.defaultTimezoneId.value;
@@ -251,7 +251,7 @@ class AddOrUpdateAlarmController extends GetxController {
         selectedTimezoneId.value = deviceTimezoneId.value;
       }
     } else {
-      // For existing alarms, set device timezone as default if no timezone is selected
+      
       if (selectedTimezoneId.value.isEmpty && !isTimezoneEnabled.value) {
         selectedTimezoneId.value = deviceTimezoneId.value;
       }
@@ -305,40 +305,40 @@ class AddOrUpdateAlarmController extends GetxController {
     if (!isTimezoneEnabled.value || selectedTimezoneId.value.isEmpty) return;
     
     try {
-      // Get current selected time as local time
+      
       final localTime = TimeOfDay.fromDateTime(selectedTime.value);
       final currentDate = selectedDate.value;
       
-      // Get timezone locations
+      
       final localLocation = tz.getLocation(deviceTimezoneId.value);
       final targetLocation = tz.getLocation(selectedTimezoneId.value);
       
-      // Calculate the offset difference
+      
       final now = DateTime.now();
       final localNow = tz.TZDateTime.now(localLocation);
       final targetNow = tz.TZDateTime.now(targetLocation);
       final offsetDifference = targetNow.timeZoneOffset.inMinutes - localNow.timeZoneOffset.inMinutes;
       
-      // Convert the local time to target timezone by adding the offset
+      
       final localMinutes = localTime.hour * 60 + localTime.minute;
       final targetMinutes = localMinutes + offsetDifference;
       
-      // Handle day overflow/underflow
+      
       var targetHour = (targetMinutes ~/ 60) % 24;
       var targetMinute = targetMinutes % 60;
       
-      // Handle negative minutes
+      
       if (targetMinute < 0) {
         targetMinute += 60;
         targetHour -= 1;
       }
       
-      // Handle negative hours
+      
       if (targetHour < 0) {
         targetHour += 24;
       }
       
-      // Debug output
+
       print('🔧 TIMEZONE CONVERSION DEBUG:');
       print('   Local Time Input: ${localTime.hour}:${localTime.minute}');
       print('   Local TZ: ${deviceTimezoneId.value} (${localNow.timeZoneOffset})');
@@ -346,7 +346,7 @@ class AddOrUpdateAlarmController extends GetxController {
       print('   Offset Difference: $offsetDifference minutes');
       print('   Target Time: $targetHour:$targetMinute');
       
-      // Update selectedTime to show the converted time 
+      
       selectedTime.value = DateTime(
         currentDate.year,
         currentDate.month,
@@ -355,11 +355,11 @@ class AddOrUpdateAlarmController extends GetxController {
         targetMinute,
       );
       
-      // Update the time picker display
+      
       hours.value = targetHour;
       minutes.value = targetMinute;
       
-      // Update meridiem for 12-hour format
+      
       if (settingsController.is24HrsEnabled.value == false) {
         if (targetHour == 0) {
           hours.value = 12;
@@ -375,21 +375,21 @@ class AddOrUpdateAlarmController extends GetxController {
       }
       
     } catch (e) {
-      // If conversion fails, keep the original time
+      
       print('Error converting timezone: $e');
     }
   }
 
   void updateAlarmTimeForTimezone() {
     if (isTimezoneEnabled.value && selectedTimezoneId.value.isNotEmpty) {
-      // Update the alarm time display using timezone-aware time
+      
       final timezoneAwareTime = getTimezoneAwareAlarmTime();
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(timezoneAwareTime), 
         repeatDays,
       );
     } else {
-      // Use regular time calculation
+      
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value), 
         repeatDays,
@@ -429,12 +429,12 @@ class AddOrUpdateAlarmController extends GetxController {
     }
 
     try {
-      // selectedTime now contains the TARGET timezone time (after conversion)
-      // We need to convert it back to LOCAL time for scheduling
+      
+      
       final targetTime = TimeOfDay.fromDateTime(selectedTime.value);
       final currentDate = selectedDate.value;
       
-      // Create target timezone DateTime
+      
       final targetDateTime = DateTime(
         currentDate.year,
         currentDate.month,
@@ -443,11 +443,11 @@ class AddOrUpdateAlarmController extends GetxController {
         targetTime.minute,
       );
       
-      // Convert from target timezone to local timezone for scheduling
+      
       final targetLocation = tz.getLocation(selectedTimezoneId.value);
       final localLocation = tz.getLocation(deviceTimezoneId.value);
       
-      // Create proper TZDateTime in target timezone
+      
       final targetTZDateTime = tz.TZDateTime(
         targetLocation,
         currentDate.year,
@@ -457,7 +457,7 @@ class AddOrUpdateAlarmController extends GetxController {
         targetTime.minute,
       );
       
-      // Convert to local timezone for scheduling  
+      
       final localTZDateTime = tz.TZDateTime.from(targetTZDateTime, localLocation);
       
       return DateTime(
@@ -468,7 +468,7 @@ class AddOrUpdateAlarmController extends GetxController {
         localTZDateTime.minute,
       );
     } catch (e) {
-      // Fallback to selected time if timezone conversion fails
+    
       print('Error in timezone conversion for scheduling: $e');
       return selectedTime.value;
     }
@@ -1108,12 +1108,12 @@ class AddOrUpdateAlarmController extends GetxController {
       sunriseIntensity.value = alarmRecord.value.sunriseIntensity;
       sunriseColorScheme.value = alarmRecord.value.sunriseColorScheme;
       
-      // Initialize timezone values
+      
       selectedTimezoneId.value = alarmRecord.value.timezoneId;
       isTimezoneEnabled.value = alarmRecord.value.isTimezoneEnabled;
       targetTimezoneOffset.value = alarmRecord.value.targetTimezoneOffset;
       
-      // Initialize smart control combination type
+      
       smartControlCombinationType.value = alarmRecord.value.smartControlCombinationType;
       isActivityMonitorenabled.value =
           alarmRecord.value.isActivityEnabled ? 1 : 0;
@@ -1334,7 +1334,7 @@ class AddOrUpdateAlarmController extends GetxController {
     isTimePicker.value = true;
     initTimeTextField();
     
-    // Initialize timezone functionality
+    
     initializeTimezone();
   }
 

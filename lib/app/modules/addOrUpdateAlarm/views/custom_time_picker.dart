@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-/// Custom time picker designed for better font scaling and accessibility
-/// Alternative to NumberPicker when standard implementation has issues
+
 class CustomTimePicker extends StatelessWidget {
   final int hours;
   final int minutes;
@@ -37,7 +36,7 @@ class CustomTimePicker extends StatelessWidget {
     final systemScale = MediaQuery.textScalerOf(context).scale(1.0);
     final effectiveScale = scalingFactor * systemScale;
 
-    // Calculate responsive widths
+
     final timeUnitWidth = (width * 0.18).clamp(80.0, 120.0);
     final meridiemWidth = (width * 0.2).clamp(80.0, 100.0);
 
@@ -64,7 +63,7 @@ class CustomTimePicker extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Hours picker
+
             Expanded(
               flex: 3,
               child: _buildTimeUnitPicker(
@@ -78,7 +77,7 @@ class CustomTimePicker extends StatelessWidget {
               ),
             ),
             
-            // Colon separator
+
             Container(
               width: 24,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -94,7 +93,7 @@ class CustomTimePicker extends StatelessWidget {
               ),
             ),
             
-            // Minutes picker
+            
             Expanded(
               flex: 3,
               child: _buildTimeUnitPicker(
@@ -108,7 +107,7 @@ class CustomTimePicker extends StatelessWidget {
               ),
             ),
             
-            // AM/PM picker (for 12-hour format)
+            
             if (!is24Hour) ...[
               Container(
                 width: 16,
@@ -147,7 +146,7 @@ class CustomTimePicker extends StatelessWidget {
     );
   }
 
-  /// Common decoration for all time pickers to ensure consistent styling
+  
   BoxDecoration _getPickerDecoration() {
     return BoxDecoration(
       gradient: LinearGradient(
@@ -179,7 +178,7 @@ class CustomTimePicker extends StatelessWidget {
     );
   }
 
-  /// Common selection highlight decoration for all pickers
+  
   BoxDecoration _getSelectionDecoration() {
     return BoxDecoration(
       gradient: LinearGradient(
@@ -205,14 +204,14 @@ class CustomTimePicker extends StatelessWidget {
     );
   }
 
-  /// Common text style for all pickers to ensure consistency
+  
   TextStyle _getPickerTextStyle({
     required double effectiveScale,
     required bool isSelected,
     double? letterSpacing,
     bool isAmPm = false,
   }) {
-    // AM/PM picker uses slightly smaller text
+    
     final selectedSize = isAmPm ? 24.0 : 28.0;
     final unselectedSize = isAmPm ? 18.0 : 20.0;
     final selectedClampMax = isAmPm ? 42.0 : 48.0;
@@ -251,18 +250,18 @@ class CustomTimePicker extends StatelessWidget {
     final itemHeight = (50 * effectiveScale).clamp(40.0, 80.0);
     final totalHeight = (screenHeight * 0.22).clamp(140.0, 280.0);
     
-    // Create list of values
+    
     List<int> values = [];
     for (int i = minValue; i <= maxValue; i++) {
       values.add(i);
     }
     
-    // For infinite scrolling, we create a large virtual list
+    
     final valuesCount = values.length;
     final virtualListSize = valuesCount * 1000; // Large enough for smooth infinite scrolling
     final centerOffset = virtualListSize ~/ 2;
     
-    // Calculate initial scroll position in the virtual list
+    
     final initialVirtualIndex = centerOffset + (value - minValue);
     final scrollController = FixedExtentScrollController(
       initialItem: initialVirtualIndex,
@@ -274,7 +273,7 @@ class CustomTimePicker extends StatelessWidget {
       decoration: _getPickerDecoration(),
       child: Stack(
         children: [
-          // Selection highlight
+          
           Positioned(
             top: (totalHeight - itemHeight) / 2,
             left: 4,
@@ -285,7 +284,7 @@ class CustomTimePicker extends StatelessWidget {
             ),
           ),
           
-          // Scrollable list with infinite scrolling
+          
           ListWheelScrollView.useDelegate(
             controller: scrollController,
             itemExtent: itemHeight,
@@ -293,7 +292,7 @@ class CustomTimePicker extends StatelessWidget {
             diameterRatio: 1.5,
             physics: const FixedExtentScrollPhysics(),
             onSelectedItemChanged: (virtualIndex) {
-              // Convert virtual index to actual value index
+
               final actualIndex = virtualIndex % valuesCount;
               final actualValue = values[actualIndex];
               Utils.hapticFeedback();
@@ -301,7 +300,7 @@ class CustomTimePicker extends StatelessWidget {
             },
             childDelegate: ListWheelChildBuilderDelegate(
               builder: (context, virtualIndex) {
-                // Convert virtual index to actual value index
+                
                 final actualIndex = virtualIndex % valuesCount;
                 final itemValue = values[actualIndex];
                 final isSelected = itemValue == value;
@@ -341,11 +340,11 @@ class CustomTimePicker extends StatelessWidget {
     
     final meridiemOptions = ['AM', 'PM'];
     
-    // For infinite scrolling with AM/PM
-    final virtualListSize = 1000; // Large enough for smooth infinite scrolling
+    
+    final virtualListSize = 1000; 
     final centerOffset = virtualListSize ~/ 2;
     
-    // Calculate initial scroll position in the virtual list
+    
     final initialVirtualIndex = centerOffset + meridiemIndex;
     final scrollController = FixedExtentScrollController(
       initialItem: initialVirtualIndex,
@@ -357,7 +356,7 @@ class CustomTimePicker extends StatelessWidget {
       decoration: _getPickerDecoration(),
       child: Stack(
         children: [
-          // Selection highlight
+          
           Positioned(
             top: (totalHeight - itemHeight) / 2,
             left: 4,
@@ -368,7 +367,7 @@ class CustomTimePicker extends StatelessWidget {
             ),
           ),
           
-          // Scrollable list with infinite scrolling
+          
           ListWheelScrollView.useDelegate(
             controller: scrollController,
             itemExtent: itemHeight,
@@ -376,14 +375,14 @@ class CustomTimePicker extends StatelessWidget {
             diameterRatio: 1.5,
             physics: const FixedExtentScrollPhysics(),
             onSelectedItemChanged: (virtualIndex) {
-              // Convert virtual index to actual meridiem index (0 or 1)
+              
               final actualIndex = virtualIndex % meridiemOptions.length;
               Utils.hapticFeedback();
               onMeridiemChanged(actualIndex);
             },
             childDelegate: ListWheelChildBuilderDelegate(
               builder: (context, virtualIndex) {
-                // Convert virtual index to actual meridiem index
+                
                 final actualIndex = virtualIndex % meridiemOptions.length;
                 final isSelected = actualIndex == meridiemIndex;
                 

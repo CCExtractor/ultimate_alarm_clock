@@ -42,7 +42,7 @@ android {
 
         applicationId "com.ccextractor.ultimate_alarm_clock"
         minSdkVersion 24
-        targetSdkVersion 34 // Updated to latest targetSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -51,12 +51,12 @@ android {
     
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17 // Updated to Java 17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '17' // Updated to Java 17
+        jvmTarget = '11'
     }
 
     sourceSets {
@@ -86,10 +86,17 @@ android {
             shrinkResources true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // Ensure debugging info is preserved for crash reports
+            debuggable false
+            
+            // Preserve permission classes
+            consumerProguardFiles 'consumer-rules.pro'
         }
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
+            debuggable true
         }
     }
 }
@@ -100,14 +107,12 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10"
     implementation platform('com.google.firebase:firebase-bom:32.0.0') // Updated Firebase BOM to latest
     implementation 'com.google.firebase:protolite-well-known-types:18.0.0'
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.9.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.multidex:multidex:2.0.1")

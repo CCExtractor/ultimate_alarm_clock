@@ -88,7 +88,7 @@ object AlarmUtils {
             
             Log.d("AlarmUtils", "$alarmType alarm successfully scheduled for ${Date(triggerAtMillis)}")
             
-            // Main detailed alarm scheduling log (NORMAL - always visible)
+        
             val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val alarmTime = timeFormat.format(Date(triggerAtMillis))
             val detailedMessage = buildDetailedAlarmScheduleMessage(
@@ -104,7 +104,7 @@ object AlarmUtils {
                 alarmID = alarmID
             )
             
-            // Developer log (DEV - only in developer mode)
+            
             val devMessage = "System scheduled $alarmType alarm with request code $requestCode"
             logdbHelper.insertLog(
                 devMessage,
@@ -120,7 +120,7 @@ object AlarmUtils {
         } catch (e: Exception) {
             Log.e("AlarmUtils", "Error scheduling $alarmType alarm: ${e.message}")
             
-            // Main error log (NORMAL - always visible)
+            
             logdbHelper.insertLog(
                 "Failed to schedule ${alarmType.uppercase()} ALARM - Error: ${e.message}",
                 status = LogDatabaseHelper.Status.ERROR,
@@ -129,7 +129,7 @@ object AlarmUtils {
                 alarmID = alarmID
             )
             
-            // Developer error log (DEV - only in developer mode)
+            
             logdbHelper.insertLog(
                 "System error during $alarmType alarm scheduling: ${e.message}",
                 status = LogDatabaseHelper.Status.ERROR,
@@ -164,7 +164,7 @@ object AlarmUtils {
             
             Log.d("AlarmUtils", "Canceled $alarmType alarm with ID: $alarmID")
             
-            // Main detailed cancellation log (NORMAL - always visible)
+            
             val detailedMessage = "CANCELLED ${alarmType.uppercase()} ALARM - ID: $alarmID, Type: ${alarmType.uppercase()}, Status: System cancelled"
             logdbHelper.insertLog(
                 detailedMessage,
@@ -174,7 +174,7 @@ object AlarmUtils {
                 alarmID = alarmID
             )
             
-            // Developer log (DEV - only in developer mode)
+            
             logdbHelper.insertLog(
                 "System cancelled $alarmType alarm using request code $requestCode",
                 status = LogDatabaseHelper.Status.WARNING,
@@ -185,7 +185,7 @@ object AlarmUtils {
         } catch (e: Exception) {
             Log.e("AlarmUtils", "Error canceling alarm with ID $alarmID: ${e.message}")
             
-            // Main error log (NORMAL - always visible)
+            
             logdbHelper.insertLog(
                 "Failed to cancel ${alarmType.uppercase()} ALARM - ID: $alarmID, Error: ${e.message}",
                 status = LogDatabaseHelper.Status.ERROR,
@@ -194,7 +194,6 @@ object AlarmUtils {
                 alarmID = alarmID
             )
             
-            // Developer error log (DEV - only in developer mode)
             logdbHelper.insertLog(
                 "System error during $alarmType alarm cancellation: ${e.message}",
                 status = LogDatabaseHelper.Status.ERROR,
@@ -250,7 +249,7 @@ object AlarmUtils {
             val alarmType = if (isShared) "shared" else "local"
             Log.d("AlarmUtils", "Activity monitoring for $alarmType alarm scheduled for ${Date(activityCheckTime)}")
             
-            // Log activity monitoring scheduling (DEV only)
+            
             logdbHelper.insertLog(
                 "Activity monitoring scheduled for $alarmType alarm (15 min before trigger)",
                 status = LogDatabaseHelper.Status.SUCCESS,
@@ -282,14 +281,14 @@ object AlarmUtils {
     ): String {
         val conditions = mutableListOf<String>()
         
-        // Activity condition
+        
         if (isActivity == 1) {
             conditions.add("Activity Monitoring: ENABLED")
         } else {
             conditions.add("Activity Monitoring: OFF")
         }
         
-        // Location condition
+        
         if (isLocation == 1) {
             val locCondition = when (locationConditionType) {
                 1 -> "Ring when AT location"
@@ -303,7 +302,7 @@ object AlarmUtils {
             conditions.add("Location: OFF")
         }
         
-        // Weather condition
+        
         if (isWeather == 1) {
             val weatherCondition = when (weatherConditionType) {
                 1 -> "Ring when weather matches"

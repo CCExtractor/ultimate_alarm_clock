@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
@@ -12,9 +13,11 @@ Widget presetButton(BuildContext context, String label, Duration duration) {
   final double height = MediaQuery.of(context).size.height;
 
   return ElevatedButton(
-    onPressed: () {
+    onPressed: () async {
+      debugPrint('🔥 Preset button pressed: $label, Duration: $duration');
       timerController.remainingTime.value = duration;
-      timerController.createTimer();
+      debugPrint('🔥 RemainingTime set to: ${timerController.remainingTime.value}');
+      await timerController.createTimer();
       Get.back();
     },
     style: ElevatedButton.styleFrom(

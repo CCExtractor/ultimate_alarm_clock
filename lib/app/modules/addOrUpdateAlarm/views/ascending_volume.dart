@@ -56,16 +56,16 @@ class AscendingVolumeTile extends StatelessWidget {
   }
 
   void _showAscendingVolumeBottomSheet(BuildContext context) {
-    // Store original values for cancellation
+    
     int originalGradient = controller.gradient.value;
     double originalGradientDouble = controller.selectedGradientDouble.value;
     double originalVolMin = controller.volMin.value;
     double originalVolMax = controller.volMax.value;
 
-    // Fix: Ensure gradient values are always within valid range
+    
     double _getValidGradientValue() {
       final currentValue = controller.selectedGradientDouble.value;
-      if (currentValue < 5.0) return 30.0; // Default to 30 when invalid
+      if (currentValue < 5.0) return 30.0; 
       if (currentValue > 300.0) return 300.0;
       return currentValue;
     }
@@ -98,7 +98,7 @@ class AscendingVolumeTile extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  // Drag Handle
+                 
                   Container(
                     width: 36,
                     height: 4,
@@ -109,7 +109,7 @@ class AscendingVolumeTile extends StatelessWidget {
                     ),
                   ),
                   
-                  // Header
+                  
                   Container(
                     padding: const EdgeInsets.fromLTRB(24, 8, 16, 16),
                     child: Row(
@@ -168,13 +168,13 @@ class AscendingVolumeTile extends StatelessWidget {
                     ),
                   ),
                   
-                  // Divider
+                  
                   Divider(
                     height: 1,
                     color: themeController.primaryDisabledTextColor.value.withOpacity(0.1),
                   ),
                   
-                  // Content
+                  
                   Expanded(
                     child: SingleChildScrollView(
                       controller: scrollController,
@@ -183,7 +183,7 @@ class AscendingVolumeTile extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Feature Toggle Section
+                          
                           _buildSection(
                             context,
                             title: 'Settings'.tr,
@@ -218,13 +218,13 @@ class AscendingVolumeTile extends StatelessWidget {
                                 onChanged: (value) {
                                   Utils.hapticFeedback();
                                   if (value) {
-                                    // Enable with valid default value
+                                    
                                     controller.gradient.value = 30;
                                     controller.selectedGradientDouble.value = 30.0;
                                   } else {
-                                    // Disable - keep gradient at 0 but don't update selectedGradientDouble
+                                    
                                     controller.gradient.value = 0;
-                                    // Keep selectedGradientDouble at its last valid value for when re-enabled
+                                    
                                   }
                                 },
                                 activeColor: kprimaryColor,
@@ -237,7 +237,7 @@ class AscendingVolumeTile extends StatelessWidget {
                           
                           const SizedBox(height: 24),
                           
-                          // Settings (only visible when enabled)
+                          
                           Obx(() => AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
                             switchInCurve: Curves.easeInOut,
@@ -247,7 +247,7 @@ class AscendingVolumeTile extends StatelessWidget {
                                     key: const ValueKey('settings_visible'),
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      // Duration Setting
+                                      
                                       _buildSection(
                                         context,
                                         title: 'Duration'.tr,
@@ -261,7 +261,7 @@ class AscendingVolumeTile extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.only(top: 8),
                                             child: Obx(() {
-                                              // Fix: Always use valid value for slider
+                                              
                                               final validValue = _getValidGradientValue();
                                               return Slider(
                                                 value: validValue,
@@ -287,7 +287,7 @@ class AscendingVolumeTile extends StatelessWidget {
                                       
                                       const SizedBox(height: 20),
                                       
-                                      // Volume Range Setting
+                                      
                                       _buildSection(
                                         context,
                                         title: 'Volume Levels'.tr,
@@ -324,7 +324,7 @@ class AscendingVolumeTile extends StatelessWidget {
                                               
                                               const SizedBox(height: 8),
                                               
-                                              // Volume indicators
+                                              
                                               Padding(
                                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                                 child: Row(
@@ -352,7 +352,7 @@ class AscendingVolumeTile extends StatelessWidget {
                                       
                                       const SizedBox(height: 24),
                                       
-                                      // Preview Section
+                                      
                                       _buildPreviewSection(context),
                                     ],
                                   )
@@ -387,14 +387,14 @@ class AscendingVolumeTile extends StatelessWidget {
                                   ),
                           )),
                           
-                          // Bottom spacing for scroll
+                          
                           const SizedBox(height: 24),
                         ],
                       ),
                     ),
                   ),
                   
-                  // Action Buttons
+                  
                   Container(
                     padding: EdgeInsets.fromLTRB(
                       24,
@@ -413,12 +413,12 @@ class AscendingVolumeTile extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        // Cancel Button
+                        
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
                               Utils.hapticFeedback();
-                              // Reset to original values
+                              
                               controller.gradient.value = originalGradient;
                               controller.selectedGradientDouble.value = originalGradientDouble;
                               controller.volMin.value = originalVolMin;
@@ -447,7 +447,7 @@ class AscendingVolumeTile extends StatelessWidget {
                         
                         const SizedBox(width: 16),
                         
-                        // Apply Button
+                        
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {

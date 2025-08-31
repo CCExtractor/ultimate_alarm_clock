@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flutter_fgbg/flutter_fgbg.dart';
+// import 'package:flutter_fgbg/flutter_fgbg.dart'; // Temporarily disabled
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 
 import 'package:get/get.dart';
@@ -34,7 +34,7 @@ class AlarmRingController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
   RxString note = ''.obs;
   Timer? vibrationTimer;
-  StreamSubscription<FGBGType>? _subscription;
+  // StreamSubscription<FGBGType>? _subscription; // Temporarily disabled flutter_fgbg
   TimeOfDay currentTime = TimeOfDay.now();
   late RxBool isSnoozing = false.obs;
   RxInt minutes = 1.obs;
@@ -402,11 +402,11 @@ class AlarmRingController extends GetxController {
           });
 
       // Preventing app from being minimized!
-      _subscription = FGBGEvents.stream.listen((event) {
-        if (event == FGBGType.background) {
-          alarmChannel.invokeMethod('bringAppToForeground');
-        }
-      });
+      // _subscription = FGBGEvents.stream.listen((event) {
+      //   if (event == FGBGType.background) {
+      //     alarmChannel.invokeMethod('bringAppToForeground');
+      //   }
+      // }); // Temporarily disabled flutter_fgbg
 
       AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
       
@@ -537,7 +537,7 @@ class AlarmRingController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 500));
     }
     
-    _subscription?.cancel();
+    // _subscription?.cancel(); // Temporarily disabled flutter_fgbg
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
     debugPrint('🔔 Alarm ring cleanup complete');

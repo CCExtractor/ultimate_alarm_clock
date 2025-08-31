@@ -49,18 +49,18 @@ class LocationFetcherService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("LocationFetcherService", "onStartCommand called")
         
-        // CRITICAL: Start foreground service IMMEDIATELY to prevent timeout on strict devices
+       
         try {
             startForeground(notificationId, getNotification())
             Log.d("LocationFetcherService", "✅ Started foreground service successfully")
         } catch (e: Exception) {
             Log.e("LocationFetcherService", "❌ Failed to start foreground service: ${e.message}")
-            // If we can't start foreground service, ring alarm immediately and stop
+        
             ringAlarmWithError("Failed to start location service: ${e.message}")
             return START_NOT_STICKY
         }
         
-        // Extract data from intent
+        
         alarmID = intent?.getStringExtra("alarmID") ?: ""
         targetLocation = intent?.getStringExtra("location") ?: ""
         isSharedAlarm = intent?.getBooleanExtra("isSharedAlarm", false) ?: false
@@ -70,15 +70,15 @@ class LocationFetcherService : Service() {
         Log.d("LocationFetcherService", "LocationConditionType from intent: $locationConditionType")
         Log.d("LocationFetcherService", "Target location: $targetLocation")
         
-        // Validate location data
+        
         if (targetLocation.isEmpty() || targetLocation == "0.0,0.0") {
             Log.e("LocationFetcherService", "Invalid target location: $targetLocation")
-            // Still ring the alarm if location data is invalid
+
             ringAlarmWithError("Invalid target location data")
             return START_NOT_STICKY
         }
         
-        // Process location alarm in background thread to avoid blocking
+
         Thread {
             try {
                 processLocationAlarm()
@@ -111,11 +111,11 @@ class LocationFetcherService : Service() {
             }
         }
         
-        // Start alarm immediately when there's an error
+        
         println("ANDROID STARTING APP DUE TO ERROR")
         this@LocationFetcherService.startActivity(flutterIntent)
         
-        // Stop service after a short delay to ensure app launch
+        
         Timer().schedule(2000) {
             stopSelf()
         }
@@ -131,10 +131,9 @@ class LocationFetcherService : Service() {
             var destinationLatitude = 0.0
             var currentLatitude = 0.0
             
-            // Add timeout for location fetching
             val fetchLocationDeffered = async {
                 try {
-                    withTimeout(30000) { // 30 second timeout
+                    withTimeout(30000) { 
                         fetchLocation()
                     }
                 } catch (e: TimeoutCancellationException) {
@@ -149,14 +148,14 @@ class LocationFetcherService : Service() {
             val location = fetchLocationDeffered.await()
             Log.d("Location", location)
             
-            // Handle location fetch failures
+            
             if (location == "timeout" || location == "error" || location.isEmpty()) {
                 Log.e("LocationFetcherService", "Failed to get location: $location")
                 ringAlarmWithError("Failed to get current location: $location")
                 return@runBlocking
             }
             
-            // Use targetLocation from intent instead of SharedPreferences
+            
             val setLocationString = targetLocation
             
             val current = location.split(",")
@@ -200,7 +199,6 @@ class LocationFetcherService : Service() {
             Log.d("Distance", "distance ${distance}")
             Log.d("LocationCondition", "type ${locationConditionType}")
             
-            // Add detailed condition type logging
             val conditionTypeName = when (locationConditionType) {
                 0 -> "OFF"
                 1 -> "RING_WHEN_AT"
@@ -221,11 +219,11 @@ class LocationFetcherService : Service() {
             var logMessage = ""
             
             when (locationConditionType) {
-                0 -> { // Off - should not reach here, but handle gracefully
+                0 -> {
                     shouldRingAlarm = true
                     logMessage = "Location condition is off, alarm rings normally"
                 }
-                1 -> { // Ring when AT location (within 500m)
+                1 -> { 
                     shouldRingAlarm = isWithin500m
                     logMessage = if (isWithin500m) {
                         "Alarm is ringing. You are ${distance}m from chosen location (within 500m)"
@@ -233,7 +231,7 @@ class LocationFetcherService : Service() {
                         "Alarm didn't ring. You are ${distance}m away from chosen location (beyond 500m)"
                     }
                 }
-                2 -> { // Cancel when AT location (within 500m) - original behavior
+                2 -> { 
                     shouldRingAlarm = !isWithin500m
                     logMessage = if (isWithin500m) {
                         "Alarm didn't ring. You are only ${distance}m away from chosen location"
@@ -241,7 +239,7 @@ class LocationFetcherService : Service() {
                         "Alarm is ringing. You are ${distance}m away from chosen location"
                     }
                 }
-                3 -> { // Ring when AWAY from location (beyond 500m)
+                3 -> { 
                     shouldRingAlarm = !isWithin500m
                     logMessage = if (!isWithin500m) {
                         "Alarm is ringing. You are ${distance}m away from chosen location (beyond 500m)"
@@ -249,7 +247,7 @@ class LocationFetcherService : Service() {
                         "Alarm didn't ring. You are only ${distance}m from chosen location (within 500m)"
                     }
                 }
-                4 -> { // Cancel when AWAY from location (beyond 500m)
+                4 -> {
                     shouldRingAlarm = isWithin500m
                     logMessage = if (isWithin500m) {
                         "Alarm is ringing. You are ${distance}m from chosen location (within 500m)"
@@ -257,13 +255,13 @@ class LocationFetcherService : Service() {
                         "Alarm didn't ring. You are ${distance}m away from chosen location (beyond 500m)"
                     }
                 }
-                else -> { // Default fallback
+                else -> { 
                     shouldRingAlarm = true
                     logMessage = "Unknown location condition type, alarm rings normally"
                 }
             }
 
-            // Log final decision
+           
             Log.d("LocationCondition", "=== FINAL DECISION ===")
             Log.d("LocationCondition", "Should Ring Alarm: $shouldRingAlarm")
             Log.d("LocationCondition", "Reason: $logMessage")
@@ -281,7 +279,7 @@ class LocationFetcherService : Service() {
                         }
                     }
 
-                // Start alarm immediately after location evaluation
+                
                 println("ANDROID STARTING APP")
                 this@LocationFetcherService.startActivity(flutterIntent)
                 logdbHelper.insertLog(
@@ -291,7 +289,7 @@ class LocationFetcherService : Service() {
                     hasRung = 1
                 )
                 
-                // Stop service after a short delay to ensure app launch
+               
                 Timer().schedule(2000){
                     stopSelf()
                 }
@@ -302,7 +300,7 @@ class LocationFetcherService : Service() {
                     type = LogDatabaseHelper.LogType.NORMAL,
                     hasRung = 0
                 )
-                // Stop service immediately if alarm is canceled
+                
                 Timer().schedule(1000){
                     stopSelf()
                 }
@@ -348,13 +346,13 @@ class LocationFetcherService : Service() {
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setCategory(Notification.CATEGORY_SERVICE)
-                .setPriority(NotificationCompat.PRIORITY_LOW) // Low priority to avoid interruption
-                .setSound(null) // No sound for service notification
-                .setVibrate(null) // No vibration for service notification
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setSound(null) 
+                .setVibrate(null)
                 .build()
         } catch (e: Exception) {
             Log.e("LocationFetcherService", "Error creating notification: ${e.message}")
-            // Fallback: create minimal notification
+            
             Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle("Location Service")
                 .setContentText("Checking location...")

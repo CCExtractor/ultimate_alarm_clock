@@ -90,9 +90,9 @@ class AlarmReceiver : BroadcastReceiver() {
         
         Log.d("AlarmReceiver", "Enabled smart controls: ${enabledSmartControls.joinToString(", ")}")
         
-        // If only one or no smart controls are enabled, handle directly
+        
         if (enabledSmartControls.size <= 1) {
-            // Use original priority logic for single/no smart controls
+            
             if (isLocationEnabled) {
                 Log.d("AlarmReceiver", "Single smart control: Location enabled, starting LocationFetcherService")
                 val locationConditionType = intent.getIntExtra("locationConditionType", 2)
@@ -118,7 +118,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 return
             }
         } else {
-            // Multiple smart controls enabled - use combination logic
+            
             Log.d("AlarmReceiver", "Multiple smart controls enabled, using combination logic")
             val smartControlIntent = Intent(context, SmartControlCombinationService::class.java).apply {
                 putExtra("alarmID", intent.getStringExtra("alarmID"))
@@ -132,14 +132,14 @@ class AlarmReceiver : BroadcastReceiver() {
                     putExtra("locationConditionType", intent.getIntExtra("locationConditionType", 2))
                 }
                 
-                // Weather data
+                
                 putExtra("isWeatherEnabled", isWeatherEnabled)
                 if (isWeatherEnabled) {
                     putExtra("weatherTypes", intent.getStringExtra("weatherTypes"))
                     putExtra("weatherConditionType", intent.getIntExtra("weatherConditionType", 2))
                 }
                 
-                // Activity data
+                
                 putExtra("isActivityEnabled", isActivityEnabled)
                 if (isActivityEnabled) {
                     putExtra("activityConditionType", activityConditionType)
@@ -152,7 +152,7 @@ class AlarmReceiver : BroadcastReceiver() {
             return
         }
         
-        // If no screen activity monitoring (off or no data), ring the alarm
+        
         if (!isActivityEnabled || activityConditionType == 0 || (screenOnTimeInMillis == 0L && screenOffTimeInMillis == 0L)) {
             println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)
@@ -168,7 +168,7 @@ class AlarmReceiver : BroadcastReceiver() {
             }
             
             if(screenOnTimeInMillis == 0L && screenOffTimeInMillis == 0L) {
-                // if alarm rings (no screen activity data)
+                
                 logdbHelper.insertLog(
                     "Alarm is ringing (no screen activity data available)",
                     status = LogDatabaseHelper.Status.SUCCESS,
@@ -188,7 +188,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         val currentTimeMillis = System.currentTimeMillis()
-        val intervalInMillis = activityInterval * 60 * 1000L // Convert minutes to milliseconds
+        val intervalInMillis = activityInterval * 60 * 1000L 
         
         val lastActivityTime = maxOf(screenOnTimeInMillis, screenOffTimeInMillis)
         val timeSinceLastActivity = currentTimeMillis - lastActivityTime

@@ -14,7 +14,7 @@ class LocationHelper(private val context: Context) {
 
     fun getCurrentLocation(): String {
         try {
-            // Try multiple location providers in order of preference
+           
             val providers = listOf(
                 LocationManager.GPS_PROVIDER,
                 LocationManager.NETWORK_PROVIDER,
@@ -37,7 +37,7 @@ class LocationHelper(private val context: Context) {
                 }
             }
             
-            // If no last known location is available, try to get the best available location from all providers
+            
             val allProviders = locationManager.getProviders(true)
             android.util.Log.d("LocationHelper", "Available providers: $allProviders")
             

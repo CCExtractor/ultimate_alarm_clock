@@ -187,14 +187,14 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                     .isTimePicker.value
                                                 ? Obx(
                                                     () {
-                                                      // Check if font scaling is too high for NumberPicker
+                                                      
                                                       final systemScale = MediaQuery.textScalerOf(context).scale(1.0);
                                                       final appScale = controller.homeController.scalingFactor.value;
                                                       final combinedScale = systemScale * appScale;
                                                       final useCustomPicker = combinedScale > 1.2;
 
                                                       if (useCustomPicker) {
-                                                        // Use custom time picker for better scaling
+                                                        
                                                         return CustomTimePicker(
                                                           hours: controller.hours.value,
                                                           minutes: controller.minutes.value,
@@ -281,7 +281,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                           scalingFactor: controller.homeController.scalingFactor.value,
                                                         );
                                                       } else {
-                                                        // Use standard NumberPicker for normal scaling
+                                                        
                                                         return Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -294,13 +294,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 Utils.hapticFeedback();
                                                                 controller.hours.value = value;
 
-                                                                // Update the selected time with proper format handling
+                                                                
                                                                 int hourValue;
                                                                 if (settingsController.is24HrsEnabled.value) {
-                                                                  // In 24-hour mode, use the value directly
+                                                                
                                                                   hourValue = value;
                                                                 } else {
-                                                                  // In 12-hour mode, convert based on AM/PM
+                                                                
                                                                   hourValue = controller.convert24(
                                                                     value,
                                                                     controller.meridiemIndex.value,
@@ -315,11 +315,11 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                   controller.selectedTime.value.minute,
                                                                 );
 
-                                                                // Update text controllers to reflect current format
+                                                                
                                                                 controller.inputHrsController.text = controller.hours.value.toString();
                                                                 controller.inputMinutesController.text = controller.minutes.value.toString();
 
-                                                                // Only update period for 12-hour format
+                                                                
                                                                 if (!settingsController.is24HrsEnabled.value) {
                                                                   controller.changePeriod(
                                                                     controller.meridiemIndex.value == 0 ? 'AM' : 'PM',

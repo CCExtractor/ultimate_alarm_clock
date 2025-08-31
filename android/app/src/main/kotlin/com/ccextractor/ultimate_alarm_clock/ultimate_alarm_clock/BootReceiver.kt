@@ -68,10 +68,10 @@ class BootReceiver : BroadcastReceiver() {
                 )
             }
             
-            // Reschedule shared alarms
+            
             rescheduleSharedAlarmAfterBoot(context, sharedPreferences)
             
-            // Reschedule timers
+            
             rescheduleTimerAfterBoot(context)
         }
     }
@@ -87,7 +87,7 @@ class BootReceiver : BroadcastReceiver() {
     
     private fun rescheduleSharedAlarmAfterBoot(context: Context, sharedPreferences: android.content.SharedPreferences) {
         try {
-            // Check if we have an active shared alarm stored
+            
             val hasActiveSharedAlarm = sharedPreferences.getBoolean("flutter.has_active_shared_alarm", false)
            
             if (!hasActiveSharedAlarm) {
@@ -139,7 +139,7 @@ class BootReceiver : BroadcastReceiver() {
             
             Log.d("BootReceiver", "✅ Successfully rescheduled shared alarm: $sharedAlarmTime")
             
-            // Log the rescheduling
+            
             val logdbHelper = LogDatabaseHelper(context)
             logdbHelper.insertLog(
                 "Rescheduled shared alarm after device boot (ID: $sharedAlarmId)",
@@ -152,7 +152,6 @@ class BootReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             Log.e("BootReceiver", "❌ Error rescheduling shared alarm after boot: ${e.message}")
             
-            // Log the error
             val logdbHelper = LogDatabaseHelper(context)
             logdbHelper.insertLog(
                 "Failed to reschedule shared alarm after boot: ${e.message}",

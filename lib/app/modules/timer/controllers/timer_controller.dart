@@ -41,6 +41,9 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   RxList timers = [].obs;
   RxList isRinging = [].obs;
   
+  // Add debounce mechanism to prevent multiple timer creation
+  bool _isCreatingTimer = false;
+  
   
   final TextEditingController inputHoursControllerTimer = TextEditingController(text: '0');
   final TextEditingController inputMinutesControllerTimer = TextEditingController(text: '1');
@@ -57,14 +60,20 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   
   void setTimerTime() {
     try {
+      debugPrint('🔥 setTimerTime called');
+      debugPrint('🔥 Input controllers: H=${inputHoursControllerTimer.text}, M=${inputMinutesControllerTimer.text}, S=${inputSecondsControllerTimer.text}');
+      
       int hours = int.parse(inputHoursControllerTimer.text);
       int minutes = int.parse(inputMinutesControllerTimer.text);
       int seconds = int.parse(inputSecondsControllerTimer.text);
+      
       this.hours.value = hours;
       this.minutes.value = minutes;
       this.seconds.value = seconds;
+      
+      debugPrint('🔥 Values set: H=${this.hours.value}, M=${this.minutes.value}, S=${this.seconds.value}');
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('🚨 Error in setTimerTime: $e');
     }
   }
 
@@ -151,20 +160,93 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   }
 
   Future<void> createTimer() async {
-    TimerModel timerRecord = await getFakeTimerModel();
+    // Prevent multiple timer creation at the same time
+    if (_isCreatingTimer) {
+      debugPrint('🚫 Timer creation already in progress, ignoring...');
+      return;
+    }
+    
+    _isCreatingTimer = true;
+    
+    try {
+      debugPrint('🔥 Creating timer with remainingTime: ${remainingTime.value}');
+      debugPrint('🔥 Hours: ${hours.value}, Minutes: ${minutes.value}, Seconds: ${seconds.value}');
+      
+      TimerModel timerRecord = await getFakeTimerModel();
 
-    timerRecord.startedOn = DateTime.now().toString();
+      timerRecord.startedOn = DateTime.now().toString();
 
-    timerRecord.timerValue = Utils.getMillisecondsToAlarm(
-      DateTime.now(),
-      DateTime.now().add(remainingTime.value),
-    );
-    timerRecord.ringtoneName = 'Default';
-    timerRecord.timerName =
-        '${Utils.formatMilliseconds(timerRecord.timerValue)} Timer';
+      timerRecord.timerValue = Utils.getMillisecondsToAlarm(
+        DateTime.now(),
+        DateTime.now().add(remainingTime.value),
+      );
+      
+      debugPrint('🔥 Timer value in milliseconds: ${timerRecord.timerValue}');
+      
+      timerRecord.ringtoneName = 'Default';
+      timerRecord.timerName =
+          '${Utils.formatMilliseconds(timerRecord.timerValue)} Timer';
 
-    await IsarDb.insertTimer(timerRecord);
-    await updateTimerInfo();
+      debugPrint('🔥 Timer name: ${timerRecord.timerName}');
+      debugPrint('🔥 About to insert timer to database...');
+      
+      await IsarDb.insertTimer(timerRecord);
+      debugPrint('🔥 Timer inserted successfully!');
+      
+      await updateTimerInfo();
+      debugPrint('🔥 Timer info updated!');
+      debugPrint('🔥 Timer list length: ${timerList.length}');
+    } catch (e) {
+      debugPrint('🚨 Error creating timer: $e');
+      // If the error is about table not existing, try to recreate it
+      if (e.toString().contains('no such table: timers')) {
+        debugPrint('🔧 Attempting to fix timer database...');
+        await _fixTimerDatabase();
+        // Try again after fixing - recreate timer record
+        try {
+          TimerModel retryTimerRecord = await getFakeTimerModel();
+          retryTimerRecord.startedOn = DateTime.now().toString();
+          retryTimerRecord.timerValue = Utils.getMillisecondsToAlarm(
+            DateTime.now(),
+            DateTime.now().add(remainingTime.value),
+          );
+          retryTimerRecord.ringtoneName = 'Default';
+          retryTimerRecord.timerName =
+              '${Utils.formatMilliseconds(retryTimerRecord.timerValue)} Timer';
+          
+          await IsarDb.insertTimer(retryTimerRecord);
+          debugPrint('🔥 Timer inserted successfully after database fix!');
+          await updateTimerInfo();
+        } catch (e2) {
+          debugPrint('🚨 Still failed after database fix: $e2');
+        }
+      }
+    } finally {
+      // Always reset the flag, even if there was an error
+      _isCreatingTimer = false;
+    }
+  }
+
+  // Helper method to fix timer database issues
+  Future<void> _fixTimerDatabase() async {
+    try {
+      final sql = await IsarDb().getTimerSQLiteDatabase();
+      if (sql != null) {
+        await sql.execute('''
+          CREATE TABLE IF NOT EXISTS timers ( 
+            id integer primary key autoincrement, 
+            startedOn text not null,
+            timerValue integer not null,
+            timeElapsed integer not null,
+            ringtoneName text not null,
+            timerName text not null,
+            isPaused integer not null)
+        ''');
+        debugPrint('✅ Timer database fixed successfully');
+      }
+    } catch (e) {
+      debugPrint('🚨 Error fixing timer database: $e');
+    }
   }
 
   deleteTimer(int id) async {

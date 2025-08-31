@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_fgbg/flutter_fgbg.dart';
+// import 'package:flutter_fgbg/flutter_fgbg.dart'; // Temporarily disabled
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
@@ -12,7 +12,7 @@ import 'package:vibration/vibration.dart';
 class TimerRingController extends GetxController {
   MethodChannel timerChannel = const MethodChannel('timer');
   Timer? vibrationTimer;
-  late StreamSubscription<FGBGType> _subscription;
+  // late StreamSubscription<FGBGType> _subscription; // Temporarily disabled flutter_fgbg
    getFakeTimerModel()async {
    TimerModel fakeTimer = await Utils.genFakeTimerModel();
    return fakeTimer;
@@ -22,11 +22,11 @@ class TimerRingController extends GetxController {
     super.onInit();
 
     // Preventing app from being minimized!
-    _subscription = FGBGEvents.stream.listen((event) {
-      if (event == FGBGType.background) {
-        timerChannel.invokeMethod('bringAppToForeground');
-      }
-    });
+    // _subscription = FGBGEvents.stream.listen((event) {
+    //   if (event == FGBGType.background) {
+    //     timerChannel.invokeMethod('bringAppToForeground');
+    //   }
+    // }); // Temporarily disabled flutter_fgbg
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);
@@ -50,7 +50,7 @@ class TimerRingController extends GetxController {
     );
     
     // Cancel background/foreground subscription
-    _subscription.cancel();
+    // _subscription.cancel(); // Temporarily disabled flutter_fgbg
     
     super.onClose();
     

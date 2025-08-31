@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "1049389808442-02vdf2s73mjqq850mf0dlu3dedkeo97j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ccextractor.ultimate_alarm_clock",
+            "certificate_hash": "39632905897874aaf40316ef1109815ef9dd8887"
+          }
+        },
+        {
           "client_id": "1049389808442-5i7vheuqq8mr30u13g2mokvlc4uh0bme.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ccextractor.ultimate_alarm_clock",
             "certificate_hash": "af2e8099a2450348d8d0071c6dd64cd84c63d846"
+          }
+        },
+        {
+          "client_id": "1049389808442-p4dbv28qrgt6aphagb36a4ar924c8a8b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ccextractor.ultimate_alarm_clock",
+            "certificate_hash": "982150e36a8ec6a383f59a2b66b42530565073e3"
           }
         },
         {
