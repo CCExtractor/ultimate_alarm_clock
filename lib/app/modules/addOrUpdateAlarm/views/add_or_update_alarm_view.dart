@@ -6,7 +6,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
+<<<<<<< HEAD
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/share_alarm_tile.dart';
+=======
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_id_tile.dart';
+>>>>>>> upstream/gsoc-final-project-2025
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/alarm_offset_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/ascending_volume.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/choose_ringtone_tile.dart';
@@ -27,8 +31,11 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shake_to
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_alarm_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/shared_users_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/snooze_settings_tile.dart';
+<<<<<<< HEAD
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/sunrise_alarm_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/timezone_tile.dart';
+=======
+>>>>>>> upstream/gsoc-final-project-2025
 import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/views/weather_tile.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
@@ -211,7 +218,13 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                               hourValue = value;
                                                             } else {
                                                               // In 12-hour mode, convert based on AM/PM
+<<<<<<< HEAD
                                                               hourValue = controller.convert24(
+=======
+                                                              hourValue =
+                                                                  controller
+                                                                      .convert24(
+>>>>>>> upstream/gsoc-final-project-2025
                                                                 value,
                                                                 controller.meridiemIndex.value,
                                                               );
@@ -226,6 +239,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                             );
 
                                                             // Update text controllers to reflect current format
+<<<<<<< HEAD
                                                             controller.inputHrsController.text = controller.hours.value.toString();
                                                             controller.inputMinutesController.text = controller.minutes.value.toString();
 
@@ -237,6 +251,38 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                             }
 
                                                             controller.setTime();
+=======
+                                                            controller
+                                                                    .inputHrsController
+                                                                    .text =
+                                                                controller
+                                                                    .hours.value
+                                                                    .toString();
+                                                            controller
+                                                                    .inputMinutesController
+                                                                    .text =
+                                                                controller
+                                                                    .minutes
+                                                                    .value
+                                                                    .toString();
+
+                                                            // Only update period for 12-hour format
+                                                            if (!settingsController
+                                                                .is24HrsEnabled
+                                                                .value) {
+                                                              controller
+                                                                  .changePeriod(
+                                                                controller.meridiemIndex
+                                                                            .value ==
+                                                                        0
+                                                                    ? 'AM'
+                                                                    : 'PM',
+                                                              );
+                                                            }
+
+                                                            controller
+                                                                .setTime();
+>>>>>>> upstream/gsoc-final-project-2025
                                                           },
                                                           onMinutesChanged: (value) {
                                                             Utils.hapticFeedback();
@@ -248,10 +294,33 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                               controller.selectedTime.value.hour,
                                                               controller.minutes.value,
                                                             );
+<<<<<<< HEAD
                                                             controller.inputHrsController.text = controller.hours.value.toString();
                                                             controller.inputMinutesController.text = controller.minutes.value.toString();
                                                             controller.changePeriod(
                                                               controller.meridiemIndex.value == 0 ? 'AM' : 'PM',
+=======
+                                                            controller
+                                                                    .inputHrsController
+                                                                    .text =
+                                                                controller
+                                                                    .hours.value
+                                                                    .toString();
+                                                            controller
+                                                                    .inputMinutesController
+                                                                    .text =
+                                                                controller
+                                                                    .minutes
+                                                                    .value
+                                                                    .toString();
+                                                            controller
+                                                                .changePeriod(
+                                                              controller.meridiemIndex
+                                                                          .value ==
+                                                                      0
+                                                                  ? 'AM'
+                                                                  : 'PM',
+>>>>>>> upstream/gsoc-final-project-2025
                                                             );
                                                             controller.setTime();
                                                           },
@@ -354,6 +423,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                 appScalingFactor: controller.homeController.scalingFactor.value,
                                                               ),
                                                             ),
+<<<<<<< HEAD
                                                             Padding(
                                                               padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                                                               child: Text(
@@ -441,6 +511,125 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                                                     controller.convert24(
                                                                       controller.hours.value,
                                                                       controller.meridiemIndex.value,
+=======
+                                                            child: Text(
+                                                              ':',
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .displayLarge!
+                                                                  .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: themeController
+                                                                        .primaryDisabledTextColor
+                                                                        .value,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              settingsController
+                                                                      .is24HrsEnabled
+                                                                      .value
+                                                                  ? false
+                                                                  : true,
+                                                          child: NumberPicker(
+                                                            minValue: 0,
+                                                            maxValue: 1,
+                                                            value: controller
+                                                                .meridiemIndex
+                                                                .value,
+                                                            onChanged: (value) {
+                                                              Utils
+                                                                  .hapticFeedback();
+                                                              value == 0
+                                                                  ? controller
+                                                                      .meridiemIndex
+                                                                      .value = 0
+                                                                  : controller
+                                                                      .meridiemIndex
+                                                                      .value = 1;
+                                                              controller
+                                                                      .selectedTime
+                                                                      .value =
+                                                                  DateTime(
+                                                                controller
+                                                                    .selectedTime
+                                                                    .value
+                                                                    .year,
+                                                                controller
+                                                                    .selectedTime
+                                                                    .value
+                                                                    .month,
+                                                                controller
+                                                                    .selectedTime
+                                                                    .value
+                                                                    .day,
+                                                                controller
+                                                                    .convert24(
+                                                                  controller
+                                                                      .hours
+                                                                      .value,
+                                                                  controller
+                                                                      .meridiemIndex
+                                                                      .value,
+                                                                ),
+                                                                controller
+                                                                    .minutes
+                                                                    .value,
+                                                              );
+                                                              controller
+                                                                      .inputHrsController
+                                                                      .text =
+                                                                  controller
+                                                                      .hours
+                                                                      .value
+                                                                      .toString();
+                                                              controller
+                                                                      .inputMinutesController
+                                                                      .text =
+                                                                  controller
+                                                                      .minutes
+                                                                      .value
+                                                                      .toString();
+                                                              controller
+                                                                  .changePeriod(
+                                                                controller.meridiemIndex
+                                                                            .value ==
+                                                                        0
+                                                                    ? 'AM'
+                                                                    : 'PM',
+                                                              );
+                                                            },
+                                                            textMapper:
+                                                                (numberText) {
+                                                              return controller
+                                                                  .meridiem[
+                                                                      int.parse(
+                                                                numberText,
+                                                              )]
+                                                                  .value;
+                                                            },
+                                                            itemWidth:
+                                                                width * 0.2,
+                                                            selectedTextStyle:
+                                                                Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .displayLarge!
+                                                                    .copyWith(
+                                                                      fontSize:
+                                                                          Utils.getFontSize(
+                                                                              context),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          kprimaryColor,
+>>>>>>> upstream/gsoc-final-project-2025
                                                                     ),
                                                                     controller.minutes.value,
                                                                   );

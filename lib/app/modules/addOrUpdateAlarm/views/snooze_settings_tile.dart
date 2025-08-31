@@ -96,6 +96,7 @@ class SnoozeSettingsTile extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Obx(
+<<<<<<< HEAD
                                     () => Container(
                                       constraints: BoxConstraints(
                                         maxHeight: MediaQuery.of(context).size.height * 0.25,
@@ -134,6 +135,26 @@ class SnoozeSettingsTile extends StatelessWidget {
                                           color: kprimaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
+=======
+                                    () => NumberPicker(
+                                      value: controller.snoozeDuration.value <= 0
+                                          ? 0
+                                          : controller.snoozeDuration.value,
+                                      minValue: 0,
+                                      maxValue: 60,
+                                      onChanged: (value) {
+                                        Utils.hapticFeedback();
+                                        controller.snoozeDuration.value = value;
+                                      },
+                                      textStyle: TextStyle(
+                                        color: themeController.primaryDisabledTextColor.value,
+                                        fontSize: 20,
+                                      ),
+                                      selectedTextStyle: TextStyle(
+                                        color: kprimaryColor,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+>>>>>>> upstream/gsoc-final-project-2025
                                       ),
                                     ),
                                   ),
@@ -188,6 +209,7 @@ class SnoozeSettingsTile extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Obx(
+<<<<<<< HEAD
                                     () => Container(
                                       constraints: BoxConstraints(
                                         maxHeight: MediaQuery.of(context).size.height * 0.25,
@@ -226,6 +248,26 @@ class SnoozeSettingsTile extends StatelessWidget {
                                           color: kprimaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
+=======
+                                    () => NumberPicker(
+                                      value: controller.maxSnoozeCount.value <= 0
+                                          ? 1
+                                          : controller.maxSnoozeCount.value,
+                                      minValue: 1,
+                                      maxValue: 10,
+                                      onChanged: (value) {
+                                        Utils.hapticFeedback();
+                                        controller.maxSnoozeCount.value = value;
+                                      },
+                                      textStyle: TextStyle(
+                                        color: themeController.primaryDisabledTextColor.value,
+                                        fontSize: 20,
+                                      ),
+                                      selectedTextStyle: TextStyle(
+                                        color: kprimaryColor,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+>>>>>>> upstream/gsoc-final-project-2025
                                       ),
                                     ),
                                   ),

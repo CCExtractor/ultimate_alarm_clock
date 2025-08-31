@@ -31,7 +31,10 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:uuid/uuid.dart';
 import 'package:intl_phone_number_input/src/models/country_model.dart';
 import '../../settings/controllers/settings_controller.dart';
+<<<<<<< HEAD
 import 'package:cloud_firestore/cloud_firestore.dart';
+=======
+>>>>>>> upstream/gsoc-final-project-2025
 import 'package:ultimate_alarm_clock/app/utils/system_ringtone_service.dart';
 
 class AddOrUpdateAlarmController extends GetxController {
@@ -1333,9 +1336,12 @@ class AddOrUpdateAlarmController extends GetxController {
 
     isTimePicker.value = true;
     initTimeTextField();
+<<<<<<< HEAD
     
     
     initializeTimezone();
+=======
+>>>>>>> upstream/gsoc-final-project-2025
   }
 
   void addListeners() {
@@ -1901,6 +1907,7 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
+<<<<<<< HEAD
   Future<void> initializeSharedAlarmSettings() async {
     try {
       debugPrint('Initializing shared alarm settings...');
@@ -2043,6 +2050,8 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
+=======
+>>>>>>> upstream/gsoc-final-project-2025
   void changeDatePicker() {
     isTimePicker.value = !isTimePicker.value;
     if (isTimePicker.value) {
@@ -2189,4 +2198,8 @@ class LimitRange extends TextInputFormatter {
       return newValue;
     }
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> upstream/gsoc-final-project-2025

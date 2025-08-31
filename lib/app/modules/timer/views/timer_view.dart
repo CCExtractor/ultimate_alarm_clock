@@ -285,7 +285,252 @@ class TimerView extends GetView<TimerController> {
                           color: themeController.primaryBackgroundColor.value,
                           width: width,
                           child: controller.isTimePickerTimer.value
+<<<<<<< HEAD
                               ? _buildAdaptiveTimerPicker(context, width, height, themeController)
+=======
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Hours Picker
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Hours',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                        ),
+                                        SizedBox(
+                                          height: height * 0.008,
+                                        ),
+                                        NumberPicker(
+                                          minValue: 0,
+                                          maxValue: 99,
+                                          value: controller.hours.value,
+                                          onChanged: (value) {
+                                            Utils.hapticFeedback();
+                                            controller.hours.value = value;
+                                            controller.setTextFieldTimerTime();
+                                          },
+                                          infiniteLoop: true,
+                                          itemWidth: width * 0.17,
+                                          zeroPad: true,
+                                          selectedTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                                color: kprimaryColor,
+                                              ),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                fontSize: 18,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                              bottom: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Minutes Picker
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.02,
+                                      ),
+                                      child: Text(
+                                        ':',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: themeController
+                                                  .primaryDisabledTextColor
+                                                  .value,
+                                            ),
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Minutes',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                        ),
+                                        SizedBox(
+                                          height: height * 0.008,
+                                        ),
+                                        NumberPicker(
+                                          minValue: 0,
+                                          maxValue: 59,
+                                          value: controller.minutes.value,
+                                          onChanged: (value) {
+                                            controller.minutes.value = value;
+                                            controller.setTextFieldTimerTime();
+                                          },
+                                          infiniteLoop: true,
+                                          itemWidth: width * 0.17,
+                                          zeroPad: true,
+                                          selectedTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                                color: kprimaryColor,
+                                              ),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                fontSize: 18,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                              bottom: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Seconds Picker
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.02,
+                                      ),
+                                      child: Text(
+                                        ':',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: themeController
+                                                  .primaryDisabledTextColor
+                                                  .value,
+                                            ),
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Seconds',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                        ),
+                                        SizedBox(
+                                          height: height * 0.008,
+                                        ),
+                                        NumberPicker(
+                                          minValue: 0,
+                                          maxValue: 59,
+                                          value: controller.seconds.value,
+                                          onChanged: (value) {
+                                            controller.seconds.value = value;
+                                            controller.setTextFieldTimerTime();
+                                          },
+                                          infiniteLoop: true,
+                                          itemWidth: width * 0.17,
+                                          zeroPad: true,
+                                          selectedTextStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                                color: kprimaryColor,
+                                              ),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                fontSize: 18,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                              bottom: BorderSide(
+                                                width: width * 0.005,
+                                                color: themeController
+                                                    .primaryDisabledTextColor
+                                                    .value,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+>>>>>>> upstream/gsoc-final-project-2025
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,

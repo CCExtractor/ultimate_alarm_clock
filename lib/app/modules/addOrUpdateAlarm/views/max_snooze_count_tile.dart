@@ -49,6 +49,7 @@ class MaxSnoozeCountTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Obx(
+<<<<<<< HEAD
                             () => Container(
                               constraints: BoxConstraints(
                                 maxHeight: MediaQuery.of(context).size.height * 0.25,
@@ -89,6 +90,18 @@ class MaxSnoozeCountTile extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
+=======
+                            () => NumberPicker(
+                              value: controller.maxSnoozeCount.value <= 0
+                                  ? 1
+                                  : controller.maxSnoozeCount.value,
+                              minValue: 1,
+                              maxValue: 10,
+                              onChanged: (value) {
+                                Utils.hapticFeedback();
+                                controller.maxSnoozeCount.value = value;
+                              },
+>>>>>>> upstream/gsoc-final-project-2025
                             ),
                           ),
                           Obx(

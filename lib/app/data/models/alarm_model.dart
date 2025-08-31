@@ -402,10 +402,14 @@ if (offsetDetails != null) {
     activityInterval = alarmData['activityInterval'];
 
     isLocationEnabled = alarmData['isLocationEnabled'];
+<<<<<<< HEAD
     locationConditionType = alarmData['locationConditionType'] ?? 2; 
     isWeatherEnabled = alarmData['isWeatherEnabled'];
     weatherConditionType = alarmData['weatherConditionType'] ?? 2; 
     activityConditionType = alarmData['activityConditionType'] ?? 2; 
+=======
+    isWeatherEnabled = alarmData['isWeatherEnabled'];
+>>>>>>> upstream/gsoc-final-project-2025
     weatherTypes = List<int>.from(alarmData['weatherTypes']);
     location = alarmData['location'];
 

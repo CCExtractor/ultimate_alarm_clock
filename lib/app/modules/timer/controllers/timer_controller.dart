@@ -41,9 +41,12 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   RxList timers = [].obs;
   RxList isRinging = [].obs;
   
+<<<<<<< HEAD
   // Add debounce mechanism to prevent multiple timer creation
   bool _isCreatingTimer = false;
   
+=======
+>>>>>>> upstream/gsoc-final-project-2025
   
   final TextEditingController inputHoursControllerTimer = TextEditingController(text: '0');
   final TextEditingController inputMinutesControllerTimer = TextEditingController(text: '1');
@@ -60,6 +63,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   
   void setTimerTime() {
     try {
+<<<<<<< HEAD
       debugPrint('🔥 setTimerTime called');
       debugPrint('🔥 Input controllers: H=${inputHoursControllerTimer.text}, M=${inputMinutesControllerTimer.text}, S=${inputSecondsControllerTimer.text}');
       
@@ -74,6 +78,16 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       debugPrint('🔥 Values set: H=${this.hours.value}, M=${this.minutes.value}, S=${this.seconds.value}');
     } catch (e) {
       debugPrint('🚨 Error in setTimerTime: $e');
+=======
+      int hours = int.parse(inputHoursControllerTimer.text);
+      int minutes = int.parse(inputMinutesControllerTimer.text);
+      int seconds = int.parse(inputSecondsControllerTimer.text);
+      this.hours.value = hours;
+      this.minutes.value = minutes;
+      this.seconds.value = seconds;
+    } catch (e) {
+      debugPrint(e.toString());
+>>>>>>> upstream/gsoc-final-project-2025
     }
   }
 
@@ -131,8 +145,14 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     inputSecondsControllerTimer.dispose();
     
     super.onClose();
+<<<<<<< HEAD
     
     debugPrint('🧹 TimerController disposed - all resources cleaned up');
+=======
+    inputHoursControllerTimer.dispose();
+    inputMinutesControllerTimer.dispose();
+    inputSecondsControllerTimer.dispose();
+>>>>>>> upstream/gsoc-final-project-2025
   }
 
   void startRinger(int id) async {

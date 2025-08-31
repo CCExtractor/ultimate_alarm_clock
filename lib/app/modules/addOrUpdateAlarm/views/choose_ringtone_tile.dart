@@ -35,13 +35,21 @@ class ChooseRingtoneTile extends StatelessWidget {
         onTap: () async {
           Utils.hapticFeedback();
           
+<<<<<<< HEAD
           
+=======
+          // Stop any currently playing audio including system ringtones
+>>>>>>> upstream/gsoc-final-project-2025
           await AudioUtils.stopPreviewCustomSound();
           await SystemRingtoneService.stopSystemRingtone();
           controller.isPlaying.value = false;
           controller.playingSystemRingtoneUri.value = '';
 
+<<<<<<< HEAD
           
+=======
+          // Navigate to full-screen ringtone selection page
+>>>>>>> upstream/gsoc-final-project-2025
           Get.to(
             () => RingtoneSelectionPage(),
             transition: Transition.rightToLeft,

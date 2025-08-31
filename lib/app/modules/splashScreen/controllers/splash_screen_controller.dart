@@ -144,6 +144,7 @@ class SplashScreenController extends GetxController {
               } else {
                 // Get local alarm from Isar
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+<<<<<<< HEAD
                 debugPrint('Using LOCAL alarm for ring screen: ${currentlyRingingAlarm.value.alarmTime}');
               }
               
@@ -154,6 +155,9 @@ class SplashScreenController extends GetxController {
               homeController.lastScheduledAlarmIsShared = isSharedAlarm;
               
               // Update max snooze count from database if needed
+=======
+              
+>>>>>>> upstream/gsoc-final-project-2025
               if (currentlyRingingAlarm.value.alarmID != null) {
                 final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
                 if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
@@ -161,8 +165,12 @@ class SplashScreenController extends GetxController {
                 }
               }
               
+<<<<<<< HEAD
               // Navigate to the alarm ring screen
               Get.offNamed('/alarm-ring', arguments: currentlyRingingAlarm.value);
+=======
+              Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
+>>>>>>> upstream/gsoc-final-project-2025
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               // If the alarm is set to NEVER repeat, then it will be chosen as

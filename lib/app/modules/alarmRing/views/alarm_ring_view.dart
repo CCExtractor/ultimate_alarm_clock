@@ -182,6 +182,7 @@ class AlarmRingView extends GetView<AlarmRingController> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
+<<<<<<< HEAD
                                 Obx(
                                   () => Text(
                                     'Snooze ${controller.snoozeCount.value}/${controller.maxSnoozeCount.value}',
@@ -193,6 +194,17 @@ class AlarmRingView extends GetView<AlarmRingController> {
                                               .primaryTextColor.value,
                                         ),
                                   ),
+=======
+                                Text(
+                                  'Snooze ${controller.snoozeCount.value}/${controller.currentlyRingingAlarm.value.maxSnoozeCount}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        color: themeController
+                                            .primaryTextColor.value,
+                                      ),
+>>>>>>> upstream/gsoc-final-project-2025
                                 ),
                               ],
                             ),

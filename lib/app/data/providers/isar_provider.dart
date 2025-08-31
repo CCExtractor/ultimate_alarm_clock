@@ -610,6 +610,27 @@ class IsarDb {
     }
   }
 
+  
+  static Future<void> fixMaxSnoozeCountInAlarms() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    final sql = await IsarDb().getAlarmSQLiteDatabase();
+    
+  
+    final alarms = await db.alarmModels.where().findAll();
+    
+  
+    for (final alarm in alarms) {
+  
+      await sql!.update(
+        'alarms',
+        {'maxSnoozeCount': alarm.maxSnoozeCount},
+        where: 'alarmID = ?',
+        whereArgs: [alarm.alarmID],
+      );
+    }
+  }
+
   static Future<AlarmModel?> getAlarm(int id) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
