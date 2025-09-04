@@ -18,6 +18,7 @@ class AlarmControlView extends GetView<AlarmControlController> {
   AlarmControlView({Key? key}) : super(key: key);
 
   ThemeController themeController = Get.find<ThemeController>();
+  static const MethodChannel watchSyncChannel = MethodChannel('watch_action_channel');
 
   Obx getAddSnoozeButtons(
       BuildContext context, int snoozeMinutes, String title) {
@@ -175,9 +176,10 @@ class AlarmControlView extends GetView<AlarmControlController> {
                                             fontWeight: FontWeight.w600,
                                           ),
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       Utils.hapticFeedback();
                                       controller.startSnooze();
+                                      await controller.sendToWatch('snooze');
                                     },
                                   ),
                                 ),
@@ -218,51 +220,8 @@ class AlarmControlView extends GetView<AlarmControlController> {
                           ),
                         ),
                         onPressed: () async {
-                          Utils.hapticFeedback();
-                          debugPrint('🔔 Dismiss button pressed');
-                          
-                          // Handle preview mode differently
-                          if (controller.isPreviewMode.value) {
-                            debugPrint('🔔 Preview mode - simple navigation back');
-                            Get.offAllNamed('/bottom-navigation-bar');
-                            return;
-                          }
-                          
-                          if (controller.currentlyRingingAlarm.value.isGuardian) {
-                            controller.guardianTimer.cancel();
-                            debugPrint('🔔 Guardian timer canceled');
-                          }
-                          
-                          
-                          if (controller.currentlyRingingAlarm.value.isSharedAlarmEnabled) {
-                            controller.rememberDismissedAlarm();
-                            debugPrint('🔔 Blocked shared alarm: ${controller.currentlyRingingAlarm.value.alarmTime}, ID: ${controller.currentlyRingingAlarm.value.firestoreId}');
-                          }
-                          
-                          
-                          await controller.homeController.clearLastScheduledAlarm();
-                          debugPrint('🔔 Cleared all scheduled alarms');
-                          
-                          
-                          controller.homeController.refreshTimer = true;
-                          debugPrint('🔔 Set refresh flag for alarm scheduling');
-                          
-                          
-                          if (Utils.isChallengeEnabled(
-                            controller.currentlyRingingAlarm.value,
-                          )) {
-                            debugPrint('🔔 Navigating to challenge screen');
-                            Get.toNamed(
-                              '/alarm-challenge',
-                              arguments: controller.currentlyRingingAlarm.value,
-                            );
-                          } else {
-                            debugPrint('🔔 Navigating to home screen');
-                            Get.offAllNamed(
-                              '/bottom-navigation-bar',
-                              arguments: controller.currentlyRingingAlarm.value,
-                            );
-                          }
+                          await controller.dismissAlarm();
+                          // removed the controller logic from view :)
                         },
                         child: Text(
                           Utils.isChallengeEnabled(

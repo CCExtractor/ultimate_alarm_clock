@@ -8,12 +8,39 @@ import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.google.android.gms.wearable.PutDataMapRequest
+import com.google.android.gms.wearable.Wearable
 
 class AlarmReceiver : BroadcastReceiver() {
     companion object {
         private var lastTriggeredTime = 0L
         private var lastTriggeredType = ""
         private const val DUPLICATE_PREVENTION_WINDOW = 10000 // 10 seconds
+    }
+
+ private fun sendVerdictToWatch(context: Context, alarmId: String, willRing: Boolean, reason: String) {
+        Log.d("ActivityCheck", "Attempting to send verdict to watch for alarm: $alarmId")
+        val path = "/uac/pre_check_verdict"
+
+        val putDataMapRequest = PutDataMapRequest.create(path)
+        putDataMapRequest.dataMap.apply {
+            putString("alarmID", alarmId)
+            putBoolean("willRing", willRing)
+            putString("reason", reason)
+            putLong("timestamp", System.currentTimeMillis())
+        }
+
+        val putDataRequest = putDataMapRequest.asPutDataRequest().setUrgent()
+
+        val dataClient = Wearable.getDataClient(context)
+        dataClient.putDataItem(putDataRequest).apply {
+            addOnSuccessListener {
+                Log.d("ActivityCheck", "Successfully sent verdict to watch: ${it.uri}")
+            }
+            addOnFailureListener {
+                Log.e("ActivityCheck", "Failed to send verdict to watch", it)
+            }
+        }
     }
     
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -197,7 +224,10 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         Log.d("AlarmReceiver", "Decision: shouldRing = $shouldRing")
-
+        val alarmId = intent.getStringExtra("alarmID")
+        if (alarmId != null) {
+            sendVerdictToWatch(context, alarmId, shouldRing, logMessage)
+        }
         if (shouldRing) {
             println("ANDROID STARTING APP")
             context.startActivity(flutterIntent)

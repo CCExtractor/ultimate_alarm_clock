@@ -14,6 +14,12 @@ import com.ccextractor.ultimate_alarm_clock.LogDatabaseHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Locale
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import com.ccextractor.ultimate_alarm_clock.LocationCheckWorker
+import com.ccextractor.ultimate_alarm_clock.WeatherCheckWorker
+import java.util.concurrent.TimeUnit
 
 object AlarmUtils {
     @SuppressLint("ScheduleExactAlarm")
@@ -136,6 +142,84 @@ object AlarmUtils {
                 alarmID = alarmID
             )
         }
+
+        //* This checks the code for the smart-control features to send beforehand to watch
+        //! locaiton checker
+        if (isLocation == 1) {
+            val workManager = WorkManager.getInstance(context)
+            
+            val precheckMinutes = 1L 
+            val triggerAtMillis = System.currentTimeMillis() + intervalToAlarm
+            val precheckMillis = TimeUnit.MINUTES.toMillis(precheckMinutes)
+            
+            val delay = triggerAtMillis - System.currentTimeMillis() - precheckMillis
+
+            var actualDelay = 0L
+            if (delay > 0) {
+                actualDelay = delay
+                Log.d("AlarmUtils", "Scheduling pre-check with a delay of ${actualDelay}ms.")
+            } else {
+                actualDelay = 0L 
+                Log.d("AlarmUtils", "Pre-check window has passed. Scheduling worker to run immediately.")
+            }
+
+            if (intervalToAlarm > 0) {
+                val requestCode = if (isShared) MainActivity.REQUEST_CODE_SHARED_ALARM else MainActivity.REQUEST_CODE_LOCAL_ALARM
+
+                val data = Data.Builder()
+                    .putString("ALARM_ID", alarmID)
+                    .putString("LOCATION", location)
+                    .putInt("LOCATION_CONDITION_TYPE", locationConditionType)
+                    .putBoolean("IS_SHARED_ALARM", isShared)
+                    .putInt("ALARM_REQUEST_CODE", requestCode)
+                    .build()
+
+                val locationCheckRequest = OneTimeWorkRequest.Builder(LocationCheckWorker::class.java)
+                    .setInitialDelay(actualDelay, TimeUnit.MILLISECONDS)
+                    .setInputData(data)
+                    .addTag(alarmID)
+                    .build()
+
+                workManager.enqueue(locationCheckRequest)
+                Log.d("AlarmUtils", "✅ WORKER ENQUEUED for alarm ID: $alarmID")
+            }
+        }
+        //! weather checker
+        if (isWeather == 1) {
+            val workManager = WorkManager.getInstance(context)
+            
+            val precheckMinutes = 1L
+            val triggerAtMillis = System.currentTimeMillis() + intervalToAlarm
+            val precheckMillis = TimeUnit.MINUTES.toMillis(precheckMinutes)
+            val delay = triggerAtMillis - System.currentTimeMillis() - precheckMillis
+
+            var actualDelay = 0L
+            if (delay > 0) {
+                actualDelay = delay
+                Log.d("AlarmUtils", "Scheduling pre-check with a delay of ${actualDelay}ms.")
+            } else {
+                actualDelay = 0L 
+                Log.d("AlarmUtils", "Pre-check window has passed. Scheduling worker to run immediately.")
+            }
+
+            if (intervalToAlarm > 0) {
+                val requestCode = if (isShared) MainActivity.REQUEST_CODE_SHARED_ALARM else MainActivity.REQUEST_CODE_LOCAL_ALARM
+
+                val data = Data.Builder()
+                .putString("ALARM_ID", alarmID)
+                .putInt("ALARM_REQUEST_CODE", requestCode)
+                .putString("WEATHER_TYPES", weatherTypes)
+                .putInt("WEATHER_CONDITION_TYPE", weatherConditionType)
+                .build()
+            val weatherCheckRequest = OneTimeWorkRequest.Builder(WeatherCheckWorker::class.java)
+                .setInitialDelay(actualDelay, TimeUnit.MILLISECONDS)
+                .setInputData(data)
+                .addTag(alarmID)
+                .build()
+            workManager.enqueue(weatherCheckRequest)
+            Log.d("AlarmUtils", "✅ WeatherCheckWorker ENQUEUED for alarm ID: $alarmID")
+        }
+        }
     }
 
     fun cancelAlarmById(context: Context, alarmID: String, isShared: Boolean) {
@@ -229,6 +313,7 @@ object AlarmUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
             
+            // val activityCheckTime = 1000.toLong()
             val activityCheckTime = triggerAtMillis - (15 * 60 * 1000)
             
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

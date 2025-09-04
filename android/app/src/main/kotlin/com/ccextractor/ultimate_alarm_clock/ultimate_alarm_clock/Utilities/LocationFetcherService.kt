@@ -57,6 +57,7 @@ class LocationFetcherService : Service() {
         Log.d("LocationFetcherService", "Processing alarm - ID: $alarmID, isShared: $isSharedAlarm")
         Log.d("LocationFetcherService", "LocationConditionType from intent: $locationConditionType")
         Log.d("LocationFetcherService", "Target location: $targetLocation")
+        startForeground(notificationId, getNotification())
         
         // Validate location data
         if (targetLocation.isEmpty() || targetLocation == "0.0,0.0") {
@@ -65,8 +66,6 @@ class LocationFetcherService : Service() {
             ringAlarmWithError("Invalid target location data")
             return START_NOT_STICKY
         }
-        
-        startForeground(notificationId, getNotification())
         
         try {
             processLocationAlarm()

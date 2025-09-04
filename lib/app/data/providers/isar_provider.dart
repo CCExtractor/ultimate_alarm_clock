@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,6 +12,7 @@ import 'package:ultimate_alarm_clock/app/data/models/saved_emails.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/add_or_update_alarm_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -519,6 +521,12 @@ class IsarDb {
         where: 'alarmID = ?',
         whereArgs: [alarmRecord.alarmID],
       );
+       try {
+        await AddOrUpdateAlarmController().syncAlarmToWatch(alarmRecord);
+        debugPrint("Successfully sent toggled alarm state to the watch: $alarmRecord");
+      } catch (e) {
+        debugPrint("Failed to send toggled alarm state to the watch: $e");
+      }
     }
   }
 
@@ -629,6 +637,27 @@ class IsarDb {
         where: 'alarmID = ?',
         whereArgs: [tobedeleted.alarmID],
       );
+    }
+  }
+  
+  // need this for companion app // UniqueId = alarmID on phone.
+  static Future<void> deleteAlarmByUniqueId(String alarmID) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+
+    // Find the alarm in the database using the unique alarmID
+    final alarmToDelete = await db.alarmModels
+        .where()
+        .filter()
+        .alarmIDEqualTo(alarmID)
+        .findFirst();
+
+    // If an alarm is found, use its isarId to delete it
+    if (alarmToDelete != null) {
+      print("Found alarm with alarmID $alarmID. Deleting it now.");
+      await IsarDb.deleteAlarm(alarmToDelete.isarId);
+    } else {
+      print("Could not find alarm with alarmID $alarmID to delete.");
     }
   }
 

@@ -34,6 +34,7 @@ class Pair<T, U> {
 
 class HomeController extends GetxController {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
+  static const MethodChannel watchSyncChannel = MethodChannel('watch_action_channel');
 
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
@@ -418,6 +419,7 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    refreshUpcomingAlarms();
     
     // Clear all alarm tracking on init to ensure clean startup
     recentlyDismissedAlarmIds.clear();
@@ -1330,6 +1332,13 @@ class HomeController extends GetxController {
       }
       
       await FirestoreDb.deleteAlarm(user, alarm.firestoreId!);
+
+      if (alarmToDelete != null) {
+      await watchSyncChannel.invokeMethod('sendActionToWatch', {
+        'action': 'delete alarm',
+        'id': alarmToDelete.alarmID,
+      });
+    }
     } else {
       alarmToDelete = await IsarDb.getAlarm(alarm.isarId);
       
@@ -1345,6 +1354,12 @@ class HomeController extends GetxController {
       }
       
       await IsarDb.deleteAlarm(alarm.isarId);
+      if (alarmToDelete != null) {
+      await watchSyncChannel.invokeMethod('sendActionToWatch', {
+        'action': 'delete alarm',
+        'id': alarmToDelete.alarmID,
+      });
+    }
     }
 
     if (Get.isSnackbarOpen) {
