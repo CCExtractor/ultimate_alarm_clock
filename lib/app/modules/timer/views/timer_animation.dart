@@ -82,14 +82,15 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 10.0,
+        horizontal: 16.0,
+        vertical: 8.0,
       ),
       child: Container(
         height: context.height / 3.0, 
         width: context.width,
         child: Obx(
           () => Card(
-            margin: const EdgeInsets.all(5),
+            margin: const EdgeInsets.all(0),
             color: widget.timer.timeElapsed < widget.timer.timerValue
                 ? themeController.secondaryBackgroundColor.value
                 : themeController.secondaryColor.value,
@@ -114,7 +115,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                   ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +180,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                           ),
                           Spacer(),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

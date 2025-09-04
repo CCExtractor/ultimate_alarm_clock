@@ -71,21 +71,16 @@ class TimerView extends GetView<TimerController> {
         () => Visibility(
           visible:
               controller.isbottom.value && controller.timerList.length >= 3,
-          child: Container(
-            height: 85,
-            child: FittedBox(
-              child: FloatingActionButton(
-                onPressed: () {
-                  Utils.hapticFeedback();
-                  timerSelector(context, width, height);
-                },
-                backgroundColor: kprimaryColor,
-                child: const Icon(
-                  Icons.add_alarm,
-                  color: ksecondaryBackgroundColor,
-                  size: 26,
-                ),
-              ),
+          child: FloatingActionButton(
+            onPressed: () {
+              Utils.hapticFeedback();
+              timerSelector(context, width, height);
+            },
+            backgroundColor: kprimaryColor,
+            child: const Icon(
+              Icons.add_alarm,
+              color: ksecondaryBackgroundColor,
+              size: 28,
             ),
           ),
         ),
@@ -158,15 +153,18 @@ class TimerView extends GetView<TimerController> {
         addATimerSpace(context, width, height),
         Visibility(
           visible: controller.timerList.length <= 2,
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              presetButton(context, '+1:00', const Duration(minutes: 1)),
-              presetButton(context, '+5:00', const Duration(minutes: 5)),
-              presetButton(context, '+10:00', const Duration(minutes: 10)),
-              presetButton(context, '+15:00', const Duration(minutes: 15)),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                presetButton(context, '+1:00', const Duration(minutes: 1)),
+                presetButton(context, '+5:00', const Duration(minutes: 5)),
+                presetButton(context, '+10:00', const Duration(minutes: 10)),
+                presetButton(context, '+15:00', const Duration(minutes: 15)),
+              ],
+            ),
           ),
         ),
       ],
@@ -186,22 +184,25 @@ class TimerView extends GetView<TimerController> {
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Icon(
                   Icons.add_alarm_outlined,
                   color: themeController.primaryTextColor.value.withOpacity(
                     0.75,
                   ),
-                  size: 30,
+                  size: 32,
                 ),
               ),
             ),
-            Text(
-              'Tap here to add a timer',
-              style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: themeController.primaryDisabledTextColor.value,
-                  ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                'Tap here to add a timer',
+                style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: themeController.primaryDisabledTextColor.value,
+                    ),
+              ),
             ),
           ],
         ),
@@ -229,12 +230,7 @@ class TimerView extends GetView<TimerController> {
                 margin: const EdgeInsets.only(
                   top: 5,
                 ),
-                padding: const EdgeInsets.fromLTRB(
-                  10,
-                  10,
-                  10,
-                  5,
-                ),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +269,7 @@ class TimerView extends GetView<TimerController> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
                     InkWell(
                       onTap: () {
                         Utils.hapticFeedback();
@@ -358,7 +354,7 @@ class TimerView extends GetView<TimerController> {
                                     // Minutes Picker
                                     Padding(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.02,
+                                        horizontal: width * 0.03,
                                       ),
                                       child: Text(
                                         ':',
@@ -442,7 +438,7 @@ class TimerView extends GetView<TimerController> {
                                     // Seconds Picker
                                     Padding(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.02,
+                                        horizontal: width * 0.03,
                                       ),
                                       child: Text(
                                         ':',
@@ -580,10 +576,8 @@ class TimerView extends GetView<TimerController> {
                                       ],
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                        left: width * 0.02,
-                                        right: width * 0.02,
-                                        top: height * 0.035,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.03,
                                       ),
                                       child: Text(
                                         ':',
@@ -649,10 +643,8 @@ class TimerView extends GetView<TimerController> {
                                       ],
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                        left: width * 0.02,
-                                        right: width * 0.02,
-                                        top: height * 0.035,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.03,
                                       ),
                                       child: Text(
                                         ':',
@@ -723,73 +715,74 @@ class TimerView extends GetView<TimerController> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20.00, 20.00, 0),
+                      padding: const EdgeInsets.only(top: 24.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(18),
-                              onTap: () {
-                                Get.back();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Obx(
-                                  () => Text(
-                                    'Cancel',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          color: themeController
-                                              .primaryTextColor.value
-                                              .withOpacity(0.5),
-                                          fontSize: 15,
-                                        ),
-                                  ),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Obx(
+                                () => Text(
+                                  'Cancel',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .copyWith(
+                                        color: themeController
+                                            .primaryTextColor.value
+                                            .withOpacity(0.5),
+                                        fontSize: 15,
+                                      ),
                                 ),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(18),
-                              onTap: () {
-                                controller.remainingTime.value = Duration(
-                                  hours: controller.hours.value,
-                                  minutes: controller.minutes.value,
-                                  seconds: controller.seconds.value,
-                                );
-                                if (controller.hours.value != 0 ||
-                                    controller.minutes.value != 0 ||
-                                    controller.seconds.value != 0) {
-                                  controller.createTimer();
-                                }
-                                controller.hours.value = 0;
-                                controller.minutes.value = 1;
-                                controller.seconds.value = 0;
-                                controller.setTextFieldTimerTime();
+                          const SizedBox(width: 16),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () {
+                              controller.remainingTime.value = Duration(
+                                hours: controller.hours.value,
+                                minutes: controller.minutes.value,
+                                seconds: controller.seconds.value,
+                              );
+                              if (controller.hours.value != 0 ||
+                                  controller.minutes.value != 0 ||
+                                  controller.seconds.value != 0) {
+                                controller.createTimer();
+                              }
+                              controller.hours.value = 0;
+                              controller.minutes.value = 1;
+                              controller.seconds.value = 0;
+                              controller.setTextFieldTimerTime();
 
-                                Get.back();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Obx(
-                                  () => Text(
-                                    'OK',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          color: themeController
-                                              .primaryTextColor.value
-                                              .withOpacity(0.5),
-                                          fontSize: 15,
-                                        ),
-                                  ),
+                              Get.back();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Obx(
+                                () => Text(
+                                  'OK',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .copyWith(
+                                        color: themeController
+                                            .primaryTextColor.value
+                                            .withOpacity(0.5),
+                                        fontSize: 15,
+                                      ),
                                 ),
                               ),
                             ),
@@ -817,8 +810,8 @@ class TimerView extends GetView<TimerController> {
                       vertical: 10.0,
                     ),
                     child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
+                      spacing: 12,
+                      runSpacing: 12,
                       children: [
                         hoverPresetButton(
                           context,
