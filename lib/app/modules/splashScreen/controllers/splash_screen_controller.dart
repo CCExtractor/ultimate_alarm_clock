@@ -15,6 +15,7 @@ import '../../home/controllers/home_controller.dart';
 class SplashScreenController extends GetxController {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
   MethodChannel timerChannel = const MethodChannel('timer');
+  static const MethodChannel watchChannel = MethodChannel('com.ccextractor.uac/alarm_actions');
 
   bool shouldAlarmRing = true;
   bool shouldNavigate = true;
@@ -29,6 +30,19 @@ class SplashScreenController extends GetxController {
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
     return latestAlarm;
   }
+
+  // void initWatchActionListener() {
+  //   watchChannel.setMethodCallHandler((call) async {
+  //     if (call.method == "handleReceivedAction") {
+  //       final Map args = call.arguments as Map;
+  //       final String action = args["action"];
+  //       final int alarmId = args["id"];
+  //       if (action == "delete") {
+  //         debugPrint("Alarm deleted from watch: $alarmId");
+  //       }
+  //     }
+  //   });
+  // }
 
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();

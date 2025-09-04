@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:collection/collection.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:fl_location/fl_location.dart';
+import 'package:isar/isar.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,6 +19,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart' as isar;
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
@@ -36,6 +39,16 @@ class AddOrUpdateAlarmController extends GetxController {
   final labelController = TextEditingController();
   ThemeController themeController = Get.find<ThemeController>();
   SettingsController settingsController = Get.find<SettingsController>();
+  
+  static const MethodChannel watchSyncChannel = MethodChannel('watch_action_channel');
+  Future<void> syncAlarmToWatch(AlarmModel alarm) async {
+    try {
+      await watchSyncChannel.invokeMethod('sendAlarmToWatch', {...alarm.toSQFliteMap(), 'isarId': alarm.isarId});
+      debugPrint('Successfully requested sync for alarm: ${alarm.toSQFliteMap()}');
+    } on PlatformException catch (e) {
+      debugPrint("Failed to sync alarm to watch: ${e.message}");
+    }
+  }
 
   final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   var alarmID = const Uuid().v4();
@@ -447,7 +460,7 @@ class AddOrUpdateAlarmController extends GetxController {
     return true;
   }
 
-  createAlarm(AlarmModel alarmData) async {
+  Future<void> createAlarm(AlarmModel alarmData) async {
     if (isSharedAlarmEnabled.value == true) {
       alarmRecord.value =
           await FirestoreDb.addAlarm(userModel.value, alarmData);
@@ -460,6 +473,9 @@ class AddOrUpdateAlarmController extends GetxController {
         alarmRecord: alarmData,
       );
     });
+    debugPrint("Created alarm with ID: ${alarmData.isarId}");
+
+    await syncAlarmToWatch(alarmData);
   }
 
   showQRDialog() {
@@ -661,6 +677,63 @@ class AddOrUpdateAlarmController extends GetxController {
     detectedQrValue.value = retake ? '' : qrValue.value;
   }
 
+   static Future<void> handleWatchCreate(AlarmModel alarm) async {
+    await isar.IsarDb.addAlarm(alarm);
+    print("AddOrUpdateAlarmController: Static handler created new alarm.");
+  }
+
+  static Future<void> handleWatchUpdate(AlarmModel alarmFromWatch) async {
+      final db = await isar.IsarDb().db;
+      final homeController = Get.find<HomeController>();
+
+      final existingAlarm = await db.alarmModels
+          .where()
+          .filter()
+          .alarmIDEqualTo(alarmFromWatch.alarmID)
+          .findFirst();
+
+      if (existingAlarm != null) {
+        print("AddOrUpdateAlarmController: Found existing alarm. Proceeding with update.");
+        alarmFromWatch.isarId = existingAlarm.isarId;
+
+        try {
+          await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
+            'alarmID': existingAlarm.alarmID,
+            'isSharedAlarm': false,
+          });
+          print('Canceled existing local alarm before update: ${existingAlarm.alarmID}');
+        } catch (e) {
+          print('Error canceling existing alarm during watch sync: $e');
+        }
+
+        await isar.IsarDb.updateAlarm(alarmFromWatch);
+        print("AddOrUpdateAlarmController: Static handler updated existing alarm in DB.");
+        await homeController.refreshUpcomingAlarms();
+      } else {
+        print("AddOrUpdateAlarmController: Could not find alarm to update. Creating it instead.");
+        await isar.IsarDb.addAlarm(alarmFromWatch);
+        await homeController.refreshUpcomingAlarms();
+      }
+    }
+
+  static Future<void> handleWatchDelete(String uniqueSyncId) async {
+    final homeController = Get.find<HomeController>();
+
+    // CANCEL the scheduled native alarm first
+    try {
+      debugPrint('handleWatchDelete called');
+      await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
+        'alarmID': uniqueSyncId,
+        'isSharedAlarm': false,
+      });
+      print('Canceled native alarm via watch sync: $uniqueSyncId');
+    } catch (e) {
+      print('Error canceling native alarm during watch delete sync: $e');
+    }
+    await isar.IsarDb.deleteAlarmByUniqueId(uniqueSyncId);
+    print("AddOrUpdateAlarmController: Static handler deleted alarm.");
+  }
+
   updateAlarm(AlarmModel alarmData) async {
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
@@ -759,10 +832,11 @@ class AddOrUpdateAlarmController extends GetxController {
         
       
         alarmRecord.value = await isar.IsarDb.addAlarm(alarmData);
+        await syncAlarmToWatch(alarmRecord.value);
+
         debugPrint('✅ Created new normal alarm in local database: ${alarmRecord.value.alarmID}');
-        
-      } else if (await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
-      
+      } else if (await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) ==
+          true) {
         debugPrint('📝 Updating existing normal alarm: ${alarmRecord.value.alarmID}');
         
         alarmData.isarId = alarmRecord.value.isarId;
@@ -780,8 +854,7 @@ class AddOrUpdateAlarmController extends GetxController {
         
       
         await isar.IsarDb.updateAlarm(alarmData);
-        
-      
+        await syncAlarmToWatch(alarmData);
         homeController.forceRefreshAfterAlarmUpdate(alarmData.alarmID, false);
       } else {
       

@@ -37,6 +37,13 @@ import java.util.Locale
 import android.app.NotificationChannel
 import android.graphics.Color
 import androidx.core.app.NotificationCompat
+import com.google.gson.Gson
+import com.ccextractor.ultimate_alarm_clock.communication.UACDataLayerListenerService
+import com.google.android.gms.wearable.Wearable
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.DataEventBuffer
+import com.google.android.gms.wearable.DataEvent
+import com.ccextractor.ultimate_alarm_clock.communication.PhoneSender
 
 
 class MainActivity : FlutterActivity() {
@@ -44,6 +51,7 @@ class MainActivity : FlutterActivity() {
         const val CHANNEL1 = "ulticlock"
         const val CHANNEL2 = "timer"
         const val CHANNEL3 = "system_ringtones"
+        const val CHANNEL4 = "watch_action_channel"
         const val ACTION_START_FLUTTER_APP = "com.ccextractor.ultimate_alarm_clock"
         const val EXTRA_KEY = "alarmRing"
         const val ALARM_TYPE = "isAlarm"
@@ -94,10 +102,14 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        UACDataLayerListenerService.flutterEngine = flutterEngine
+        
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         var methodChannel1 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL1)
         var methodChannel2 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL2)
         var methodChannel3 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL3)
+        val methodChannel4 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL4)
 
         val intent = intent
 
@@ -140,6 +152,34 @@ class MainActivity : FlutterActivity() {
             alarmConfig["shouldAlarmRing"] = false
             alarmConfig["isSharedAlarm"] = false
         }
+
+        methodChannel4.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "sendActionToWatch" -> {
+                    val action = call.argument<String>("action")
+                    val id = call.argument<String>("id") ?: ""
+                    if (action != null) {
+                        PhoneSender.sendActionToWatch(this, action, id)
+                        result.success("Action '$action' sent to watch.")
+                    } else {
+                        result.error("INVALID_ARGUMENTS", "Missing 'action' or 'id'", null)
+                    }
+                }
+                "sendAlarmToWatch" -> {
+                    val alarmMap = call.arguments as? Map<String, Any>
+                    val isarId = call.argument<Int>("isarId")
+                    if (alarmMap != null && isarId != null) {
+                        val alarmMapMutable = alarmMap.toMutableMap()
+                        alarmMapMutable["isarid"] = isarId
+                        PhoneSender.sendAlarmToWatch(context, alarmMapMutable)
+                        result.success("Alarm sent to watch.")
+                    } else {
+                        result.error("INVALID_ARGUMENT", "Alarm data or alarmId missing.", null)
+                    }                    
+                }
+                else -> result.notImplemented()
+            }
+        }        
 
         methodChannel3.setMethodCallHandler { call, result ->
             when (call.method) {

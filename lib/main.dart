@@ -6,11 +6,14 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
+import 'package:ultimate_alarm_clock/app/modules/debug/controllers/debug_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:ultimate_alarm_clock/app/utils/language.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/custom_error_screen.dart';
+import 'package:ultimate_alarm_clock/app/communication/communication.dart';
+import 'package:ultimate_alarm_clock/app/communication/native_action_handler.dart';
 import 'firebase_options.dart';
 import 'app/routes/app_pages.dart';
 
@@ -18,6 +21,7 @@ Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AlarmSyncHandler.initListener();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -30,11 +34,13 @@ void main() async {
 
 
   await Get.putAsync(() => GetStorageProvider().init());
+  await Get.putAsync(() => NativeActionHandler().init());
 
   final storage = Get.find<GetStorageProvider>();
   loc = await storage.readLocale();
 
   final ThemeController themeController = Get.put(ThemeController());
+  Get.put(ThemeController());
 
   AudioPlayer.global.setAudioContext(
     const AudioContext(

@@ -115,7 +115,7 @@ class HomeView extends GetView<HomeController> {
                                                               .withOpacity(
                                                               0.75,
                                                             ),
-                                                      fontSize: 14 *
+                                                      fontSize: 13 *
                                                           controller
                                                               .scalingFactor
                                                               .value,
