@@ -20,18 +20,23 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+
 import '../../../data/models/profile_model.dart';
 import '../../../data/providers/google_cloud_api_provider.dart';
+
 
 class Pair<T, U> {
   final T first;
   final U second;
 
+
   Pair(this.first, this.second);
 }
 
+
 class HomeController extends GetxController {
   MethodChannel alarmChannel = const MethodChannel('ulticlock');
+
 
   Stream<QuerySnapshot>? firestoreStreamAlarms;
   Stream<QuerySnapshot>? sharedAlarmsStream;
@@ -48,22 +53,22 @@ class HomeController extends GetxController {
   List alarms = [].obs;
   List notifications = [].obs;
 
+
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      CalendarApi.CalendarApi.calendarScope,
-    ],
-  );
-  final Rx<UserModel?> userModel = Rx<UserModel?>(null);
+  
   final RxBool isUserSignedIn = false.obs;
+  final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   final floatingButtonKey = GlobalKey<ExpandableFabState>();
   final floatingButtonKeyLoggedOut = GlobalKey<ExpandableFabState>();
 
+
   final alarmIdController = TextEditingController();
+
 
   ScrollController scrollController = ScrollController();
   RxDouble scalingFactor = 1.0.obs;
+
 
   RxBool isSortedAlarmListEnabled = true.obs;
   RxBool inMultipleSelectMode = false.obs;
@@ -72,10 +77,13 @@ class HomeController extends GetxController {
   RxInt numberOfAlarmsSelected = 0.obs;
   Pair<List<AlarmModel>, List<RxBool>> alarmListPairs = Pair([], []);
 
+
   Set<Pair<dynamic, bool>> selectedAlarmSet = {};
+
 
   final RxInt duration = 3.obs;
   final RxDouble selecteddurationDouble = 0.0.obs;
+
 
   ThemeController themeController = Get.find<ThemeController>();
   RxList Calendars = [].obs;
@@ -85,50 +93,75 @@ class HomeController extends GetxController {
   RxBool isCalender = true.obs;
   RxBool expandProfile = false.obs;
 
+
   RxBool isProfile = false.obs;
   RxString selectedProfile = ''.obs;
   Rx<ProfileModel> profileModel = Utils.genDefaultProfileModel().obs;
 
+
   final storage = Get.find<GetStorageProvider>();
+
 
   RxBool isProfileUpdate = false.obs;
 
-  loginWithGoogle() async {
-    // Logging in again to ensure right details if User has linked account
-    if (await SecureStorageProvider().retrieveUserModel() != null) {
-      if (await _googleSignIn.isSignedIn()) {
-        GoogleSignInAccount? googleSignInAccount =
-            await _googleSignIn.signInSilently();
-        String fullName = googleSignInAccount!.displayName.toString();
-        List<String> parts = fullName.split(' ');
-        String lastName = ' ';
-        if (parts.length == 3) {
-          if (parts[parts.length - 1].length == 1) {
-            lastName = parts[1].toLowerCase().capitalizeFirst.toString();
-          } else {
-            lastName = parts[parts.length - 1]
-                .toLowerCase()
-                .capitalizeFirst
-                .toString();
-          }
-        } else {
-          lastName =
-              parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
-        }
-        String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
-        userModel.value = UserModel(
-          id: googleSignInAccount.id,
-          fullName: fullName,
-          firstName: firstName,
-          lastName: lastName,
-          email: googleSignInAccount.email,
-        );
-        await SecureStorageProvider().storeUserModel(userModel.value!);
-        isUserSignedIn.value = true;
+  loginWithGoogle() async {
+    try {
+      // Initialize GoogleSignIn first (without scopes parameter)
+      await GoogleSignIn.instance.initialize();
+
+      // Check if user model exists in secure storage
+      if (await SecureStorageProvider().retrieveUserModel() != null) {
+        // Listen to authentication events
+        GoogleSignIn.instance.authenticationEvents.listen((event) {
+          if (event is GoogleSignInAuthenticationEventSignIn) {
+            GoogleSignInAccount googleSignInAccount = event.user;
+            String fullName = googleSignInAccount.displayName ?? '';
+            List<String> parts = fullName.split(' ');
+            String lastName = ' ';
+            
+            if (parts.length == 3) {
+              if (parts[parts.length - 1].length == 1) {
+                lastName = parts[1].toLowerCase().capitalizeFirst.toString();
+              } else {
+                lastName = parts[parts.length - 1]
+                    .toLowerCase()
+                    .capitalizeFirst
+                    .toString();
+              }
+            } else if (parts.length > 1) {
+              lastName = parts[parts.length - 1]
+                  .toLowerCase()
+                  .capitalizeFirst
+                  .toString();
+            }
+            
+            String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
+
+            userModel.value = UserModel(
+              id: googleSignInAccount.id,
+              fullName: fullName,
+              firstName: firstName,
+              lastName: lastName,
+              email: googleSignInAccount.email,
+            );
+            
+            SecureStorageProvider().storeUserModel(userModel.value!);
+            isUserSignedIn.value = true;
+          } else if (event is GoogleSignInAuthenticationEventSignOut) {
+            isUserSignedIn.value = false;
+          }
+        });
+
+        // Attempt lightweight authentication (silent sign-in)
+        await GoogleSignIn.instance.attemptLightweightAuthentication();
       }
+    } catch (e) {
+      debugPrint('Error during Google Sign-In: $e');
+      isUserSignedIn.value = false;
     }
   }
+
 
   initStream(UserModel? user) async {
     firestoreStreamAlarms = FirestoreDb.getAlarms(userModel.value);
@@ -146,21 +179,26 @@ class HomeController extends GetxController {
           );
         }).toList();
 
+
         latestIsarAlarms = isarData as List<AlarmModel>;
+
 
         List<AlarmModel> alarms = [
           ...latestFirestoreAlarms,
           ...latestIsarAlarms,
         ];
 
+
         if (isSortedAlarmListEnabled.value) {
           alarms.sort((a, b) {
             final String timeA = a.alarmTime;
             final String timeB = b.alarmTime;
 
+
             // Convert the alarm time strings to DateTime objects for comparison
             DateTime dateTimeA = DateFormat('HH:mm').parse(timeA);
             DateTime dateTimeB = DateFormat('HH:mm').parse(timeB);
+
 
             // Compare the DateTime objects to sort in ascending order
             return dateTimeA.compareTo(dateTimeB);
@@ -172,15 +210,18 @@ class HomeController extends GetxController {
               return a.isEnabled ? -1 : 1;
             }
 
+
             // Then sort by upcoming time
             int aUpcomingTime = a.minutesSinceMidnight;
             int bUpcomingTime = b.minutesSinceMidnight;
+
 
             // Check if alarm repeats on any day
             bool aRepeats = a.days.any((day) => day);
             bool bRepeats = b.days.any((day) => day);
 
-            // If alarm repeats on any day, find the next up+coming day
+
+            // If alarm repeats on any day, find the next upcoming day
             if (aRepeats) {
               int currentDay = DateTime.now().weekday - 1;
               for (int i = 0; i < a.days.length; i++) {
@@ -198,6 +239,7 @@ class HomeController extends GetxController {
                 aUpcomingTime += Duration.minutesPerDay;
               }
             }
+
 
             if (bRepeats) {
               int currentDay = DateTime.now().weekday - 1;
@@ -217,16 +259,20 @@ class HomeController extends GetxController {
               }
             }
 
+
             return aUpcomingTime.compareTo(bUpcomingTime);
           });
         }
+
 
         return alarms;
       },
     );
 
+
     return streamAlarms;
   }
+
 
   void readProfileName() async {
     String profileName = await storage.readProfile();
@@ -239,6 +285,7 @@ class HomeController extends GetxController {
     
   }
 
+
   void writeProfileName(String name) async {
     await storage.writeProfile(name);
     selectedProfile.value = name;
@@ -248,6 +295,7 @@ class HomeController extends GetxController {
       profileModel.value = p!;
     }
   }
+
 
   @override
   void onInit() async {
@@ -259,6 +307,9 @@ class HomeController extends GetxController {
       profileModel.value = Utils.genDefaultProfileModel();
     }
     readProfileName();
+
+    // Initialize Google Sign-In (without scopes - they're requested during authorization)
+    await GoogleSignIn.instance.initialize();
 
     userModel.value = await SecureStorageProvider().retrieveUserModel();
     if (userModel.value == null){
@@ -272,11 +323,15 @@ class HomeController extends GetxController {
     }
     else {
         isUserSignedIn.value = true;
+        // Attempt silent sign-in if user model exists
+        await loginWithGoogle();
     }
+
 
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
         .readSortedAlarmListValue(key: 'sorted_alarm_list');
+
 
     scrollController.addListener(() {
       final offset = scrollController.offset;
@@ -284,23 +339,29 @@ class HomeController extends GetxController {
       const minFactor = 0.8;
       const maxFactor = 1.0;
 
+
       final newFactor = 1.0 - (offset / maxOffset).clamp(0.0, 1.0);
       scalingFactor.value = (minFactor + (maxFactor - minFactor) * newFactor);
     });
 
+
   }
+
 
   refreshUpcomingAlarms() async {
     // Check if 2 seconds have passed since the last call
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
+
     if (currentTime - lastRefreshTime < 2000) {
       delayToSchedule?.cancel();
     }
 
+
     if (delayToSchedule != null && delayToSchedule!.isActive) {
       return;
     }
+
 
     delayToSchedule = Timer(const Duration(seconds: 1), () async {
       lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
@@ -311,18 +372,22 @@ class HomeController extends GetxController {
         refreshTimer = false;
       }
 
+
       // Fake object to get latest alarm
       AlarmModel alarmRecord = genFakeAlarmModel();
       AlarmModel isarLatestAlarm =
           await IsarDb.getLatestAlarm(alarmRecord, true);
+
 
       AlarmModel firestoreLatestAlarm =
           await FirestoreDb.getLatestAlarm(userModel.value, alarmRecord, true);
       AlarmModel latestAlarm =
           Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
 
+
       debugPrint('ISAR: ${isarLatestAlarm.alarmTime}');
       debugPrint('Fire: ${firestoreLatestAlarm.alarmTime}');
+
 
       String timeToAlarm = Utils.timeUntilAlarm(
         Utils.stringToTimeOfDay(latestAlarm.alarmTime),
@@ -337,6 +402,7 @@ class HomeController extends GetxController {
         latestAlarm,
       );
 
+
       if (latestAlarm.minutesSinceMidnight > -1) {
         // To account for difference between seconds upto the next minute
         DateTime now = DateTime.now();
@@ -345,6 +411,7 @@ class HomeController extends GetxController {
         Duration delay = nextMinute.difference(now).inMilliseconds > 0
             ? nextMinute.difference(now)
             : Duration.zero;
+
 
         // Adding a delay till that difference between seconds up to the next
         // minute
@@ -364,6 +431,7 @@ class HomeController extends GetxController {
             latestAlarm.days,
           );
           alarmTime.value = 'Rings in $timeToAlarm';
+
 
           // Running a timer of periodic one minute as it is now in sync with
           // the current time
@@ -386,6 +454,7 @@ class HomeController extends GetxController {
       }
     });
   }
+
 
   scheduleNextAlarm(
     AlarmModel alarmRecord,
@@ -417,14 +486,17 @@ class HomeController extends GetxController {
     }
   }
 
+
   @override
   void onClose() {
     super.onClose();
+
 
     if (delayToSchedule != null) {
       delayToSchedule!.cancel();
     }
   }
+
 
   Future<void> fetchGoogleCalendars() async {
     Calendars.value = (await GoogleCloudProvider.getCalenders()) ?? [];
@@ -434,6 +506,7 @@ class HomeController extends GetxController {
       calendarFetchStatus.value = 'Loaded';
     }
   }
+
 
   Future<void> fetchEvents(String calenderId) async {
     Events.value = await GoogleCloudProvider.getEvents(calenderId) ?? [];
@@ -447,6 +520,7 @@ class HomeController extends GetxController {
     print(Events.value);
   }
 
+
   Future<void> setAlarmFromEvent(CalendarApi.Event event, String date) async {
     AlarmModel alarmModel = genFakeAlarmModel();
     alarmModel.alarmTime = Utils.formatDateTimeToHHMMSS(
@@ -458,6 +532,7 @@ class HomeController extends GetxController {
     );
     alarmModel.ringOn = true;
 
+
     alarmModel.label = event.summary!;
     alarmModel.isOneTime = true;
     isProfile.value = false;
@@ -467,7 +542,8 @@ class HomeController extends GetxController {
     );
   }
 
-  // Add all alarms to seleted alarm set
+
+  // Add all alarms to selected alarm set
   void addAllAlarmsToSelectedAlarmSet() {
     for (int index = 0; index < alarmListPairs.first.length; index++) {
       AlarmModel alarm = alarmListPairs.first[index];
@@ -486,6 +562,7 @@ class HomeController extends GetxController {
     }
   }
 
+
   // Remove all alarms from the selected alarm set
   void removeAllAlarmsFromSelectedAlarmSet() {
     for (int index = 0; index < alarmListPairs.first.length; index++) {
@@ -493,6 +570,7 @@ class HomeController extends GetxController {
       selectedAlarmSet.clear();
     }
   }
+
 
   // Delete alarms mentioned in the selected alarm set
   Future<void> deleteAlarms() async {
@@ -508,12 +586,15 @@ class HomeController extends GetxController {
         return;
       }
 
+
       int successCount = 0;
       List<AlarmModel> deletedAlarms = [];
+
 
       for (var alarm in selectedAlarmSet) {
         var alarmId = alarm.first;
         var isSharedAlarmEnabled = alarm.second;
+
 
         try {
           if (isSharedAlarmEnabled) {
@@ -539,10 +620,12 @@ class HomeController extends GetxController {
         }
       }
 
+
       if (successCount > 0) {
         if (Get.isSnackbarOpen) {
           Get.closeAllSnackbars();
         }
+
 
         Get.snackbar(
           'Success',
@@ -576,6 +659,7 @@ class HomeController extends GetxController {
           ),
         );
 
+
         
         selectedAlarmSet.clear();
         numberOfAlarmsSelected.value = 0;
@@ -600,8 +684,10 @@ class HomeController extends GetxController {
     }
   }
 
+
   Future<void> swipeToDeleteAlarm(UserModel? user, AlarmModel alarm) async {
     AlarmModel? alarmToDelete;
+
 
     if (alarm.isSharedAlarmEnabled == true) {
       alarmToDelete = await FirestoreDb.getAlarm(user, alarm.firestoreId!);
@@ -611,9 +697,11 @@ class HomeController extends GetxController {
       await IsarDb.deleteAlarm(alarm.isarId);
     }
 
+
     if (Get.isSnackbarOpen) {
       Get.closeAllSnackbars();
     }
+
 
     Get.snackbar(
       'Alarm deleted',
@@ -636,6 +724,7 @@ class HomeController extends GetxController {
       ),
     );
   }
+
 
   void showDeleteConfirmationDialog(BuildContext context) async {
     Get.defaultDialog(
@@ -679,16 +768,19 @@ class HomeController extends GetxController {
                     onPressed: () async {
                       await deleteAlarms();
 
+
                       // Closing the multiple select mode
                       inMultipleSelectMode.value = false;
                       isAnyAlarmHolded.value = false;
                       isAllAlarmsSelected.value = false;
+
 
                       numberOfAlarmsSelected.value = 0;
                       selectedAlarmSet.clear();
                       // After deleting alarms, refreshing to schedule latest one
                       refreshTimer = true;
                       refreshUpcomingAlarms();
+
 
                       Get.offNamedUntil(
                         '/bottom-navigation-bar',
@@ -717,9 +809,11 @@ class HomeController extends GetxController {
     );
   }
 
+
   getCurrentProfileModel() async {
     profileModel.value = (await IsarDb.getProfile(selectedProfile.value))!;
   }
+
 
   AlarmModel genFakeAlarmModel() {
     return AlarmModel(

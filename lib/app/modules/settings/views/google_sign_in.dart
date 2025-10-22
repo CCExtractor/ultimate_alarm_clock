@@ -31,7 +31,25 @@ class GoogleSignIn extends StatelessWidget {
       onTap: () async {
         Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
+          // Show loading dialog - THIS IS THE ONLY ADDITION
+          Get.dialog(
+            WillPopScope(
+              onWillPop: () async => false,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: kprimaryColor,
+                ),
+              ),
+            ),
+            barrierDismissible: false,
+          );
+
           var isSuccessfulLogin = await GoogleCloudProvider.getInstance();
+
+          // Close loading dialog - THIS IS THE ONLY ADDITION
+          if (Get.isDialogOpen ?? false) {
+            Get.back();
+          }
 
           if (isSuccessfulLogin != null) {
             Get.defaultDialog(
