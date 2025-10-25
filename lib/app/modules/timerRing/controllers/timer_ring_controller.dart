@@ -1,5 +1,6 @@
 import 'dart:async';
 
+
 import 'package:flutter/services.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
+
 
 class TimerRingController extends GetxController {
   MethodChannel timerChannel = const MethodChannel('timer');
@@ -20,8 +22,9 @@ class TimerRingController extends GetxController {
   void onInit() async {
     super.onInit();
 
+
     // Preventing app from being minimized!
-    _subscription = FGBGEvents.stream.listen((event) {
+    _subscription = FGBGEvents.instance.stream.listen((event) {
       if (event == FGBGType.background) {
         timerChannel.invokeMethod('bringAppToForeground');
       }
@@ -32,8 +35,10 @@ class TimerRingController extends GetxController {
     });
     AudioUtils.playTimer(alarmRecord: await getFakeTimerModel().value);
 
+
     await timerChannel.invokeMethod('cancelTimer');
   }
+
 
   @override
   onClose() async {

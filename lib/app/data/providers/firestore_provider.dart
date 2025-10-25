@@ -108,11 +108,25 @@ class FirestoreDb {
     }
   }
 
-  static Future<void> addUser(UserModel userModel) async {
+static Future<void> addUser(UserModel userModel) async {
+  try {
+    // Use email as document ID instead of Google ID
     final DocumentReference docRef = _usersCollection.doc(userModel.email);
     final user = await docRef.get();
-    if (!user.exists) await docRef.set(userModel.toJson());
+    
+    if (!user.exists) {
+      await docRef.set(userModel.toJson());
+      print('User added to Firestore: ${userModel.email}');
+    } else {
+      // Update existing user data
+      await docRef.update(userModel.toJson());
+      print('User updated in Firestore: ${userModel.email}');
+    }
+  } catch (e) {
+    print('Error adding user to Firestore: $e');
+    rethrow;  // Important: let the caller handle the error
   }
+}
 
   static addAlarm(UserModel? user, AlarmModel alarmRecord) async {
     final sql = await FirestoreDb().getSQLiteDatabase();

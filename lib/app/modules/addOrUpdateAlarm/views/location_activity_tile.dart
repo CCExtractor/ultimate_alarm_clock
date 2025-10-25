@@ -6,6 +6,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
+
 class LocationTile extends StatelessWidget {
   const LocationTile({
     super.key,
@@ -15,10 +16,12 @@ class LocationTile extends StatelessWidget {
     required this.themeController,
   });
 
+
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;
   final double height;
   final double width;
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class LocationTile extends StatelessWidget {
           final RenderBox overlay =
               Overlay.of(context).context.findRenderObject() as RenderBox;
 
+
           final RelativeRect position = RelativeRect.fromRect(
             Rect.fromPoints(
               details.globalPosition,
@@ -36,6 +40,7 @@ class LocationTile extends StatelessWidget {
             ),
             Offset.zero & overlay.size,
           );
+
 
           await showMenu(
             color: themeController.secondaryBackgroundColor.value,
@@ -114,13 +119,13 @@ class LocationTile extends StatelessWidget {
                             controller.selectedPoint.value = point;
                           },
                           // screenSize: Size(width * 0.3, height * 0.8),
-                          center: controller.selectedPoint.value,
-                          zoom: 15,
+                          initialCenter: controller.selectedPoint.value,
+                          initialZoom: 15,
                         ),
                         children: [
                           TileLayer(
                             urlTemplate:
-                                'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                           ),
                           Obx(() => MarkerLayer(
                               markers:
@@ -148,6 +153,7 @@ class LocationTile extends StatelessWidget {
                   ],
                 ),
               );
+
 
               if (controller.isLocationEnabled.value == false) {
                 await controller.getLocation();

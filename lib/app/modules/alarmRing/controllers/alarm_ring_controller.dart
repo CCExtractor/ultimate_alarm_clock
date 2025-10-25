@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'dart:math';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
+
 
 import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/quote_model.dart';
 
+
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
+
 
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -21,11 +26,14 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
+
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
+
 import '../../home/controllers/home_controller.dart';
+
 
 class AlarmControlController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
@@ -55,6 +63,7 @@ class AlarmControlController extends GetxController {
   RxInt guardianCoundown = 120.obs;
   RxBool isPreviewMode = false.obs;
 
+
   getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
@@ -66,12 +75,15 @@ class AlarmControlController extends GetxController {
     Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
+
     return latestAlarm;
   }
+
 
   void addMinutes(int incrementMinutes) {
     minutes.value += incrementMinutes;
   }
+
 
   void startSnooze() async {
     int actualMaxSnoozeCount = currentlyRingingAlarm.value.maxSnoozeCount;
@@ -102,9 +114,11 @@ class AlarmControlController extends GetxController {
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
 
+
     if (_currentTimeTimer!.isActive) {
       _currentTimeTimer?.cancel();
     }
+
 
     _currentTimeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (minutes.value == 0 && seconds.value == 0) {
@@ -114,7 +128,9 @@ class AlarmControlController extends GetxController {
               Vibration.vibrate(pattern: [500, 3000]);
             });
 
+
         AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+
 
         startTimer();
       } else if (seconds.value == 0) {
@@ -125,6 +141,7 @@ class AlarmControlController extends GetxController {
       }
     });
   }
+
 
   void startTimer() {
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
@@ -142,12 +159,14 @@ class AlarmControlController extends GetxController {
     });
   }
 
+
   Future<void> _fadeInAlarmVolume() async {
     await FlutterVolumeController.setVolume(
       currentlyRingingAlarm.value.volMin / 10.0,
       stream: AudioStream.alarm,
     );
     await Future.delayed(const Duration(milliseconds: 2000));
+
 
     double vol = currentlyRingingAlarm.value.volMin / 10.0;
     double diff = (currentlyRingingAlarm.value.volMax -
@@ -158,25 +177,30 @@ class AlarmControlController extends GetxController {
     int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
     int lastTick = DateTime.now().millisecondsSinceEpoch;
 
+
     Timer.periodic(Duration(milliseconds: stepLen), (Timer t) {
       if (!isAlarmActive) {
         t.cancel();
         return;
       }
 
+
       var now = DateTime.now().millisecondsSinceEpoch;
       var tick = (now - lastTick) / len;
       lastTick = now;
       vol += diff * tick;
 
+
       vol = max(currentlyRingingAlarm.value.volMin / 10.0, vol);
       vol = min(currentlyRingingAlarm.value.volMax / 10.0, vol);
       vol = (vol * 100).round() / 100;
+
 
       FlutterVolumeController.setVolume(
         vol,
         stream: AudioStream.alarm,
       );
+
 
       if (vol >= currentlyRingingAlarm.value.volMax / 10.0) {
         t.cancel();
@@ -192,6 +216,7 @@ class AlarmControlController extends GetxController {
       }
     });
   }
+
 
   void showQuotePopup(Quote quote) {
     Get.defaultDialog(
@@ -255,6 +280,7 @@ class AlarmControlController extends GetxController {
     );
   }
 
+
   @override
   void onInit() async {
     super.onInit();
@@ -269,6 +295,7 @@ class AlarmControlController extends GetxController {
       currentlyRingingAlarm.value = args;
       isPreviewMode.value = false;
     }
+
 
     if (currentlyRingingAlarm.value.isarId > 0) {
       final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
@@ -291,26 +318,32 @@ class AlarmControlController extends GetxController {
       });
     }
 
+
     showButton.value = true;
     initialVolume = await FlutterVolumeController.getVolume(
       stream: AudioStream.alarm,
     ) as double;
 
+
     FlutterVolumeController.updateShowSystemUI(false);
 
+
     // _fadeInAlarmVolume();     TODO fix volume fade-in
+
 
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
           Vibration.vibrate(pattern: [500, 3000]);
         });
 
+
     // Preventing app from being minimized!
-    _subscription = FGBGEvents.stream.listen((event) {
+    _subscription = FGBGEvents.instance.stream.listen((event) {
       if (event == FGBGType.background) {
         alarmChannel.invokeMethod('bringAppToForeground');
       }
     });
+
 
     startTimer();
     // if (Get.arguments == null) {
@@ -356,7 +389,9 @@ class AlarmControlController extends GetxController {
     //   showButton.value = true;
     // }
 
+
     AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+
 
 
     if(currentlyRingingAlarm.value.showMotivationalQuote) {
@@ -364,8 +399,10 @@ class AlarmControlController extends GetxController {
       showQuotePopup(quote);
     }
 
+
     // Setting snooze duration
     minutes.value = currentlyRingingAlarm.value.snoozeDuration;
+
 
     // Scheduling next alarm if it's not in preview mode
     if (Get.arguments == null) {
@@ -373,6 +410,7 @@ class AlarmControlController extends GetxController {
       AlarmModel latestAlarm = await getNextAlarm();
       TimeOfDay latestAlarmTimeOfDay =
       Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+
 
       // }
       // This condition will never satisfy because this will only
@@ -384,12 +422,14 @@ class AlarmControlController extends GetxController {
               'current = ${currentTime.toString()}',
         );
 
+
         await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
       } else {
         int intervaltoAlarm = Utils.getMillisecondsToAlarm(
           DateTime.now(),
           Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
         );
+
 
         try {
           await alarmChannel.invokeMethod('scheduleAlarm', {
@@ -403,6 +443,7 @@ class AlarmControlController extends GetxController {
       }
     }
   }
+
 
   @override
   void onClose() async {
