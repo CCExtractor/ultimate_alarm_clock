@@ -384,7 +384,11 @@ class AlarmControlController extends GetxController {
               'current = ${currentTime.toString()}',
         );
 
-        await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+        try {
+          await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+        } catch (e) {
+          print("Failed to cancel alarms: $e");
+        }
       } else {
         int intervaltoAlarm = Utils.getMillisecondsToAlarm(
           DateTime.now(),
@@ -397,8 +401,8 @@ class AlarmControlController extends GetxController {
             'activityMonitor': latestAlarm.activityMonitor
           });
           print("Scheduled...");
-        } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+        } catch (e) {
+          print("Failed to schedule alarm: $e");
         }
       }
     }

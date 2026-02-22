@@ -154,7 +154,11 @@ class SplashScreenController extends GetxController {
               if (latestAlarm.isEnabled == false) {
                 debugPrint('STOPPED IF CONDITION with latest = '
                     '${latestAlarmTimeOfDay.toString()} and ');
-                await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+                try {
+                  await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+                } catch (e) {
+                  print("Failed to cancel alarms: $e");
+                }
               } else {
                 int intervaltoAlarm = Utils.getMillisecondsToAlarm(
                   DateTime.now(),
@@ -167,8 +171,8 @@ class SplashScreenController extends GetxController {
                     'activityMonitor': latestAlarm.activityMonitor
                   });
                   print("Scheduled...");
-                } on PlatformException catch (e) {
-                  print("Failed to schedule alarm: ${e.message}");
+                } catch (e) {
+                  print("Failed to schedule alarm: $e");
                 }
               }
               SystemNavigator.pop();

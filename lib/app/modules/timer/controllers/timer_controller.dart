@@ -122,8 +122,8 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       if (isRinging.value.length == 1) {
         await timerChannel.invokeMethod('playDefaultAlarm');
       }
-    } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+    } catch (e) {
+      print('Failed to play alarm: $e');
     }
   }
 
@@ -134,8 +134,8 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       if (isRinging.value.length == 0) {
         await timerChannel.invokeMethod('stopDefaultAlarm');
       }
-    } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+    } catch (e) {
+      print('Failed to stop alarm: $e');
     }
   }
 
@@ -173,8 +173,8 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     try {
       await timerChannel.invokeMethod('runtimerNotif');
       Get.back();
-    } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+    } catch (e) {
+      print('Failed to run timer notification: $e');
       Get.back();
     }
   }
@@ -190,8 +190,8 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     try {
       await timerChannel.invokeMethod('clearTimerNotif');
       Get.back();
-    } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+    } catch (e) {
+      print('Failed to clear timer notification: $e');
       Get.back();
     }
   }
