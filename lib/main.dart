@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,11 +18,15 @@ Locale? loc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Permission.notification.isDenied.then((value) {
-    if (value) {
-      Permission.notification.request();
-    }
-  });
+
+  // permission_handler only supports Android and iOS
+  if (Platform.isAndroid || Platform.isIOS) {
+    await Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    });
+  }
 
   await Firebase.initializeApp();
 
@@ -31,24 +37,30 @@ void main() async {
 
   final ThemeController themeController = Get.put(ThemeController());
 
-  AudioPlayer.global.setAudioContext(
-    const AudioContext(
-      android: AudioContextAndroid(
-        audioMode: AndroidAudioMode.ringtone,
-        contentType: AndroidContentType.music,
-        usageType: AndroidUsageType.alarm,
-        audioFocus: AndroidAudioFocus.gainTransient,
+  // AudioContext with Android-specific config only applies on Android
+  if (Platform.isAndroid) {
+    AudioPlayer.global.setAudioContext(
+      const AudioContext(
+        android: AudioContextAndroid(
+          audioMode: AndroidAudioMode.ringtone,
+          contentType: AndroidContentType.music,
+          usageType: AndroidUsageType.alarm,
+          audioFocus: AndroidAudioFocus.gainTransient,
+        ),
       ),
-    ),
-  );
+    );
+  }
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-  );
+  // Orientation lock and status bar styling are mobile-only
+  if (Platform.isAndroid || Platform.isIOS) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
+  }
   runApp(
     const UltimateAlarmClockApp(),
   );
