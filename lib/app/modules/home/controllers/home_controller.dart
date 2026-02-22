@@ -50,11 +50,6 @@ class HomeController extends GetxController {
 
   int lastRefreshTime = DateTime.now().millisecondsSinceEpoch;
   Timer? delayToSchedule;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      CalendarApi.CalendarApi.calendarScope,
-    ],
-  );
   final Rx<UserModel?> userModel = Rx<UserModel?>(null);
   final RxBool isUserSignedIn = false.obs;
   final floatingButtonKey = GlobalKey<ExpandableFabState>();
@@ -96,9 +91,11 @@ class HomeController extends GetxController {
   loginWithGoogle() async {
     // Logging in again to ensure right details if User has linked account
     if (await SecureStorageProvider().retrieveUserModel() != null) {
-      if (await _googleSignIn.isSignedIn()) {
-        GoogleSignInAccount? googleSignInAccount =
-            await _googleSignIn.signInSilently();
+      final Future<GoogleSignInAccount?>? authFuture =
+          GoogleSignIn.instance.attemptLightweightAuthentication();
+      final GoogleSignInAccount? googleSignInAccount =
+          authFuture != null ? await authFuture : null;
+      if (googleSignInAccount != null) {
         String fullName = googleSignInAccount!.displayName.toString();
         List<String> parts = fullName.split(' ');
         String lastName = ' ';
@@ -399,7 +396,11 @@ class HomeController extends GetxController {
       debugPrint(
         'STOPPED IF CONDITION with latest = ${latestAlarmTimeOfDay.toString()}',
       );
-      await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+      try {
+        await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
+      } catch (e) {
+        print('Failed to cancel alarms: $e');
+      }
     } else {
       int intervaltoAlarm = Utils.getMillisecondsToAlarm(
         DateTime.now(),
@@ -411,8 +412,8 @@ class HomeController extends GetxController {
           'activityMonitor': latestAlarm.activityMonitor,
         });
         print('Scheduled...');
-      } on PlatformException catch (e) {
-        print('Failed to schedule alarm: ${e.message}');
+      } catch (e) {
+        print('Failed to schedule alarm: $e');
       }
     }
   }

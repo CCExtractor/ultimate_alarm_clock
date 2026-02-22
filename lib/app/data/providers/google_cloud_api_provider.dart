@@ -11,12 +11,8 @@ import '../models/user_model.dart';
 import 'firestore_provider.dart';
 
 class GoogleCloudProvider {
-  static final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      CalendarApi.calendarScope,
-    ],
-  );
   static final _firebaseAuthInstance = FirebaseAuth.instance;
+  static GoogleSignInAccount? _currentAccount;
 
   static getInstance() async {
     HomeController homeController = Get.find<HomeController>();
@@ -24,72 +20,68 @@ class GoogleCloudProvider {
     SettingsController settingsController = Get.find<SettingsController>();
 
     if (await _firebaseAuthInstance.currentUser == null) {
-      var googleSignInAccount = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleSignInAccount?.authentication;
-      if (googleAuth != null)
-      {
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
+      final googleSignInAccount =
+          await GoogleSignIn.instance.authenticate();
+      final idToken = googleSignInAccount.authentication.idToken;
+      if (idToken != null) {
+        final credential = GoogleAuthProvider.credential(idToken: idToken);
         await _firebaseAuthInstance.signInWithCredential(credential);
       }
 
+      _currentAccount = googleSignInAccount;
 
-      if (googleSignInAccount != null) {
-        // Process successful sign-in
-        String fullName = googleSignInAccount.displayName.toString();
-        List<String> parts = fullName.split(' ');
-        String lastName = ' ';
-        if (parts.length == 3) {
-          if (parts[parts.length - 1].length == 1) {
-            lastName = parts[1].toLowerCase().capitalizeFirst.toString();
-          } else {
-            lastName = parts[parts.length - 1]
-                .toLowerCase()
-                .capitalizeFirst
-                .toString();
-          }
+      String fullName = googleSignInAccount.displayName.toString();
+      List<String> parts = fullName.split(' ');
+      String lastName = ' ';
+      if (parts.length == 3) {
+        if (parts[parts.length - 1].length == 1) {
+          lastName = parts[1].toLowerCase().capitalizeFirst.toString();
         } else {
-          lastName =
-              parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
+          lastName = parts[parts.length - 1]
+              .toLowerCase()
+              .capitalizeFirst
+              .toString();
         }
-        String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
-
-        var userModel = UserModel(
-          id: googleSignInAccount.id,
-          fullName: fullName,
-          firstName: firstName,
-          lastName: lastName,
-          email: googleSignInAccount.email,
-        );
-        await FirestoreDb.addUser(userModel);
-        await SecureStorageProvider().storeUserModel(userModel);
-
-        settingsController.isUserLoggedIn.value = true;
-        homeController.isUserSignedIn.value = true;
-        homeController.userModel.value = userModel;
-        settingsController.userModel.value = userModel;
-        return googleSignInAccount;
       } else {
-        return null;
+        lastName =
+            parts[parts.length - 1].toLowerCase().capitalizeFirst.toString();
       }
+      String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
+
+      var userModel = UserModel(
+        id: googleSignInAccount.id,
+        fullName: fullName,
+        firstName: firstName,
+        lastName: lastName,
+        email: googleSignInAccount.email,
+      );
+      await FirestoreDb.addUser(userModel);
+      await SecureStorageProvider().storeUserModel(userModel);
+
+      settingsController.isUserLoggedIn.value = true;
+      homeController.isUserSignedIn.value = true;
+      homeController.userModel.value = userModel;
+      settingsController.userModel.value = userModel;
+      return googleSignInAccount;
     } else {
       print(_firebaseAuthInstance.currentUser!.email);
+      return null;
     }
   }
 
-  static isUserLoggedin()  {
-    return  _firebaseAuthInstance.currentUser != null;
+  static isUserLoggedin() {
+    return _firebaseAuthInstance.currentUser != null;
   }
 
   static Future<List<CalendarListEntry>?> getCalenders() async {
-    if (_googleSignIn.currentUser == null) {
+    if (_currentAccount == null) {
       await _firebaseAuthInstance.signOut();
       await getInstance();
     }
-    final authHeaders = await _googleSignIn.currentUser!.authHeaders;
+    if (_currentAccount == null) return null;
+    final authHeaders = await _currentAccount!.authorizationClient
+        .authorizationHeaders([CalendarApi.calendarScope]);
+    if (authHeaders == null) return null;
     final httpClient = GoogleHttpClient(authHeaders);
     var dataList = await CalendarApi(httpClient).calendarList.list();
 
@@ -102,7 +94,10 @@ class GoogleCloudProvider {
 
   static Future<List<Event>?> getEvents(String calenderId) async {
     await getInstance();
-    final authHeaders = await _googleSignIn.currentUser!.authHeaders;
+    if (_currentAccount == null) return null;
+    final authHeaders = await _currentAccount!.authorizationClient
+        .authorizationHeaders([CalendarApi.calendarScope]);
+    if (authHeaders == null) return null;
     final httpClient = GoogleHttpClient(authHeaders);
     var dataList = await CalendarApi(httpClient).events.list(calenderId);
     if (dataList.items != null) {
@@ -117,8 +112,9 @@ class GoogleCloudProvider {
     Get.put(SettingsController());
     SettingsController settingsController = Get.find<SettingsController>();
 
-    await _googleSignIn.signOut();
+    await GoogleSignIn.instance.signOut();
     _firebaseAuthInstance.signOut();
+    _currentAccount = null;
     await SecureStorageProvider().deleteUserModel();
     settingsController.isUserLoggedIn.value = false;
     homeController.isUserSignedIn.value = false;
