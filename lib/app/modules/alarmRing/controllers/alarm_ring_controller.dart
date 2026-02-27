@@ -274,6 +274,9 @@ class AlarmControlController extends GetxController {
       final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
       if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
         currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+        // added the below line in code
+        currentlyRingingAlarm.refresh();
+        //here above
       }
     }
     

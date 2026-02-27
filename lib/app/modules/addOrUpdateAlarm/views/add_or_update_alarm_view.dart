@@ -1074,6 +1074,7 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                 deleteAfterGoesOff:
                                     controller.deleteAfterGoesOff.value,
                                 snoozeDuration: controller.snoozeDuration.value,
+                                maxSnoozeCount: controller.maxSnoozeCount.value,
                                 volMax: controller.volMax.value,
                                 volMin: controller.volMin.value,
                                 gradient: controller.gradient.value,
