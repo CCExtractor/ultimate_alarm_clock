@@ -169,8 +169,19 @@ class AlarmRingController extends GetxController {
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
     });
   }
+  void cancelForegroundLock() {
+    _subscription?.cancel();
+    _subscription = null;
+    debugPrint('🔔 Foreground lock released (FGBG subscription cancelled)');
+  }
 
   Future<void> _fadeInAlarmVolume() async {
+    if (currentlyRingingAlarm.value.volMin == 0 &&
+        currentlyRingingAlarm.value.volMax == 0) {
+      debugPrint('🔊 Volume gradient skipped — volMin and volMax are both 0 (not configured)');
+      return;
+    }
+
     debugPrint('🔊 Starting ascending volume: ${currentlyRingingAlarm.value.volMin}% → ${currentlyRingingAlarm.value.volMax}% over ${currentlyRingingAlarm.value.gradient}s');
     
     // Set initial volume
@@ -383,13 +394,21 @@ class AlarmRingController extends GetxController {
     }
 
     showButton.value = true;
-    initialVolume = await FlutterVolumeController.getVolume(
+    initialVolume = (await FlutterVolumeController.getVolume(
       stream: AudioStream.alarm,
-    ) as double;
+    )) ?? 1.0;
 
     // Don't update system UI or start alarm functionality in preview mode
     if (!isPreviewMode.value) {
       FlutterVolumeController.updateShowSystemUI(false);
+
+      // Set window flags to keep screen on and show when locked
+      try {
+        await alarmChannel.invokeMethod('setAlarmWindowFlags');
+        debugPrint('🔔 Set alarm window flags');
+      } catch (e) {
+        debugPrint('🔔 Error setting alarm window flags: $e');
+      }
 
       // Start ascending volume if enabled
       if (currentlyRingingAlarm.value.gradient > 0) {
@@ -440,7 +459,10 @@ class AlarmRingController extends GetxController {
   void onClose() async {
     super.onClose();
     debugPrint('🔔 Alarm ring view is closing...');
-    
+    _subscription?.cancel();
+    _subscription = null;
+    debugPrint('🔔 FGBG subscription cancelled immediately');
+
     // Stop vibration and sound only if not in preview mode (or if they were started)
     if (!isPreviewMode.value) {
       Vibration.cancel();
@@ -460,7 +482,17 @@ class AlarmRingController extends GetxController {
     
     // Always restore original screen brightness
     await _restoreOriginalBrightness();
-    
+
+    // Clear window flags to allow normal app behavior
+    if (!isPreviewMode.value) {
+      try {
+        await alarmChannel.invokeMethod('clearAlarmWindowFlags');
+        debugPrint('🔔 Cleared alarm window flags');
+      } catch (e) {
+        debugPrint('🔔 Error clearing alarm window flags: $e');
+      }
+    }
+
     if (!isPreviewMode.value) {
       debugPrint('🔔 Processing alarm dismissal...');
       

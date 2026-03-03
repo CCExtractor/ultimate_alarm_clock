@@ -94,7 +94,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+        // Don't add window flags globally - they will be set only when alarm rings
         var methodChannel1 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL1)
         var methodChannel2 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL2)
         var methodChannel3 = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL3)
@@ -303,6 +303,28 @@ class MainActivity : FlutterActivity() {
                 lastScheduledAlarmType = if (isSharedAlarm) "shared" else "local"
 
                 result.success("Alarm scheduled")
+            } else if (call.method == "setAlarmWindowFlags") {
+                // Set window flags when alarm is ringing
+                runOnUiThread {
+                    window.addFlags(
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    )
+                }
+                Log.d("MainActivity", "Alarm window flags set")
+                result.success(null)
+            } else if (call.method == "clearAlarmWindowFlags") {
+                // Clear window flags when alarm is dismissed
+                runOnUiThread {
+                    window.clearFlags(
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    )
+                }
+                Log.d("MainActivity", "Alarm window flags cleared")
+                result.success(null)
             } else if (call.method == "cancelAllAlarms") {
                 println("FLUTTER CALLED CANCEL ALARMS")
                 cancelAllAlarms()

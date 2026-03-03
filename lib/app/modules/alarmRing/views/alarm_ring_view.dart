@@ -226,10 +226,12 @@ class AlarmRingView extends GetView<AlarmRingController> {
                           // Handle preview mode differently
                           if (controller.isPreviewMode.value) {
                             debugPrint('🔔 Preview mode - simple navigation back');
+                            controller.cancelForegroundLock();
                             Get.offAllNamed('/bottom-navigation-bar');
                             return;
-                          }
-                          
+                          } 
+                          controller.cancelForegroundLock();
+
                           if (controller.currentlyRingingAlarm.value.isGuardian) {
                             controller.guardianTimer.cancel();
                             debugPrint('🔔 Guardian timer canceled');
@@ -298,6 +300,7 @@ class AlarmRingView extends GetView<AlarmRingController> {
                     child: TextButton(
                       onPressed: () {
                         Utils.hapticFeedback();
+                        controller.cancelForegroundLock();
                         Get.offAllNamed('/bottom-navigation-bar');
                       },
                       child: Text(
