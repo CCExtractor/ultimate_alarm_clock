@@ -24,6 +24,9 @@ class AppTranslations extends Translations {
           'Unlink': 'Unlink',
           'Sign-In with Google': 'Sign-In with Google',
           'Unlink @usermail': 'Unlink @usermail',
+          'Sign-In attempt failed! Please try again.': 'Sign-In attempt failed! Please try again.',
+          'Sign-In failed: @error': 'Sign-In failed: @error',
+          'Error': 'Error',
           'Why do I have to sign in with Google?':
               'Why do I have to sign in with Google?',
           'Sign-inDescription':

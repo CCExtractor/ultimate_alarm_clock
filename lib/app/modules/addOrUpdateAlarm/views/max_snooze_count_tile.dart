@@ -58,7 +58,27 @@ class MaxSnoozeCountTile extends StatelessWidget {
                               onChanged: (value) {
                                 Utils.hapticFeedback();
                                 controller.maxSnoozeCount.value = value;
+                                debugPrint('🔔 Max snooze count updated to: $value');
                               },
+                              itemWidth: Utils
+                                  .getResponsiveNumberPickerItemWidth(
+                                context,
+                                screenWidth: MediaQuery.of(context).size.width,
+                                baseWidthFactor: 0.2,
+                              ),
+                              textStyle: Utils
+                                  .getResponsiveNumberPickerTextStyle(
+                                context,
+                                baseFontSize: 16,
+                                color: themeController.primaryDisabledTextColor.value,
+                              ),
+                              selectedTextStyle: Utils
+                                  .getResponsiveNumberPickerSelectedTextStyle(
+                                context,
+                                baseFontSize: 20,
+                                color: kprimaryColor,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                           Obx(

@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>951082036741-848r8klqpnic9gtff698h53kapmfijmn.apps.googleusercontent.com</string>
+	<string>363477463731-ff0hehinlg6r3r6qh7re2ucj4pk35lg2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.951082036741-848r8klqpnic9gtff698h53kapmfijmn</string>
+	<string>com.googleusercontent.apps.363477463731-ff0hehinlg6r3r6qh7re2ucj4pk35lg2</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>951082036741-jbagaqneqngh0rk5bha59ibq880oc0tr.apps.googleusercontent.com</string>
+	<string>363477463731-kmcn9c9r74p8qqlgdde6jngu1301vih9.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA0vgaJxydzBKZylgjw4ht8l40m_hyc3dM</string>
+	<string>AIzaSyDocikssLl0ZCxp6WT0Ybm76PvmT5gziDM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>951082036741</string>
+	<string>363477463731</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.ultimateAlarmClock</string>
 	<key>PROJECT_ID</key>
-	<string>ulticock-c13a2</string>
+	<string>shared-alarms-43481</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ulticock-c13a2.appspot.com</string>
+	<string>shared-alarms-43481.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:951082036741:ios:ced0089265af04c071766c</string>
+	<string>1:363477463731:ios:a5bdb9667f0006d54eb6c6</string>
 </dict>
 </plist>

@@ -1,4 +1,6 @@
+
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -19,24 +21,26 @@ import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
-import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/constants.dart' hide Status;
 
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 import '../../home/controllers/home_controller.dart';
 
-class AlarmControlController extends GetxController {
+class AlarmRingController extends GetxController {
   MethodChannel alarmChannel = MethodChannel('ulticlock');
   RxString note = ''.obs;
   Timer? vibrationTimer;
-  late StreamSubscription<FGBGType> _subscription;
+  StreamSubscription<FGBGType>? _subscription;
   TimeOfDay currentTime = TimeOfDay.now();
   late RxBool isSnoozing = false.obs;
   RxInt minutes = 1.obs;
   RxInt seconds = 0.obs;
   RxInt snoozeCount = 0.obs;
+  RxInt maxSnoozeCount = 3.obs; // Will be initialized from alarm model
   RxBool showButton = false.obs;
   StreamSubscription? _sensorSubscription;
   HomeController homeController = Get.find<HomeController>();
@@ -54,17 +58,33 @@ class AlarmControlController extends GetxController {
   late Timer guardianTimer;
   RxInt guardianCoundown = 120.obs;
   RxBool isPreviewMode = false.obs;
+  
+  // Sunrise effect variables
+  RxBool isSunriseActive = false.obs;
+  double _originalScreenBrightness = 0.5;
 
-  getNextAlarm() async {
+  Future<AlarmModel> getNextAlarm() async {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
+    
+  
     AlarmModel isarLatestAlarm =
-    await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
+    
+  
     AlarmModel firestoreLatestAlarm =
-    await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+    
+  
     AlarmModel latestAlarm =
-    Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
-    debugPrint('LATEST : ${latestAlarm.alarmTime}');
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+    
+  
+    if (latestAlarm.isSharedAlarmEnabled) {
+      debugPrint('Next alarm is a SHARED alarm from Firestore: ${latestAlarm.alarmTime}');
+    } else {
+      debugPrint('Next alarm is a LOCAL alarm from Isar: ${latestAlarm.alarmTime}');
+    }
 
     return latestAlarm;
   }
@@ -74,16 +94,9 @@ class AlarmControlController extends GetxController {
   }
 
   void startSnooze() async {
-    int actualMaxSnoozeCount = currentlyRingingAlarm.value.maxSnoozeCount;
-  
-    if (currentlyRingingAlarm.value.isarId > 0) {
-      final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
-      if (dbAlarm != null) {
-        actualMaxSnoozeCount = dbAlarm.maxSnoozeCount;
-      }
-    }
-    
-    if (snoozeCount.value >= actualMaxSnoozeCount) {
+    debugPrint('🔔 Snooze attempt: ${snoozeCount.value + 1}/${maxSnoozeCount.value}');
+    if (snoozeCount.value >= maxSnoozeCount.value) {
+      debugPrint('🔔 Max snooze limit reached: ${snoozeCount.value}/${maxSnoozeCount.value}');
       Get.snackbar(
         "Max Snooze Limit",
         "You've reached the maximum snooze limit",
@@ -95,6 +108,7 @@ class AlarmControlController extends GetxController {
       return;
     }
     snoozeCount.value++;
+    debugPrint('🔔 Snoozed successfully: ${snoozeCount.value}/${maxSnoozeCount.value}');
     
     Vibration.cancel();
     vibrationTimer!.cancel();
@@ -105,6 +119,14 @@ class AlarmControlController extends GetxController {
     if (_currentTimeTimer!.isActive) {
       _currentTimeTimer?.cancel();
     }
+
+    // Set snooze duration - default to 5 minutes if it's 0
+    int snoozeDurationMinutes = currentlyRingingAlarm.value.snoozeDuration;
+    if (snoozeDurationMinutes <= 0) {
+      snoozeDurationMinutes = 5; // Default to 5 minutes when snooze duration is 0
+      debugPrint('🔔 Snooze duration was 0, defaulting to 5 minutes');
+    }
+    minutes.value = snoozeDurationMinutes;
 
     _currentTimeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (minutes.value == 0 && seconds.value == 0) {
@@ -127,7 +149,13 @@ class AlarmControlController extends GetxController {
   }
 
   void startTimer() {
-    minutes.value = currentlyRingingAlarm.value.snoozeDuration;
+    // Set snooze duration - default to 5 minutes if it's 0
+    int snoozeDurationMinutes = currentlyRingingAlarm.value.snoozeDuration;
+    if (snoozeDurationMinutes <= 0) {
+      snoozeDurationMinutes = 5; // Default to 5 minutes when snooze duration is 0
+      debugPrint('🔔 Snooze duration was 0, defaulting to 5 minutes in startTimer()');
+    }
+    minutes.value = snoozeDurationMinutes;
     isSnoozing.value = false;
     _currentTimeTimer = Timer.periodic(
         Duration(
@@ -141,45 +169,67 @@ class AlarmControlController extends GetxController {
           Utils.convertTo12HourFormat(Utils.timeOfDayToString(TimeOfDay.now()));
     });
   }
+  void cancelForegroundLock() {
+    _subscription?.cancel();
+    _subscription = null;
+    debugPrint('🔔 Foreground lock released (FGBG subscription cancelled)');
+  }
 
   Future<void> _fadeInAlarmVolume() async {
-    await FlutterVolumeController.setVolume(
-      currentlyRingingAlarm.value.volMin / 10.0,
-      stream: AudioStream.alarm,
-    );
-    await Future.delayed(const Duration(milliseconds: 2000));
+    if (currentlyRingingAlarm.value.volMin == 0 &&
+        currentlyRingingAlarm.value.volMax == 0) {
+      debugPrint('🔊 Volume gradient skipped — volMin and volMax are both 0 (not configured)');
+      return;
+    }
 
-    double vol = currentlyRingingAlarm.value.volMin / 10.0;
-    double diff = (currentlyRingingAlarm.value.volMax -
-        currentlyRingingAlarm.value.volMin) /
-        10.0;
-    int len = currentlyRingingAlarm.value.gradient * 1000;
-    double steps = (diff / 0.01).abs();
-    int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
-    int lastTick = DateTime.now().millisecondsSinceEpoch;
+    debugPrint('🔊 Starting ascending volume: ${currentlyRingingAlarm.value.volMin}% → ${currentlyRingingAlarm.value.volMax}% over ${currentlyRingingAlarm.value.gradient}s');
+    
+    // Set initial volume
+    double startVolume = currentlyRingingAlarm.value.volMin / 10.0;
+    double endVolume = currentlyRingingAlarm.value.volMax / 10.0;
+    int durationMs = currentlyRingingAlarm.value.gradient * 1000;
+    
+    await FlutterVolumeController.setVolume(startVolume, stream: AudioStream.alarm);
+    debugPrint('🔊 Initial volume set to: ${(startVolume * 100).toInt()}%');
+    
+    // Wait a moment for the alarm to start playing
+    await Future.delayed(const Duration(milliseconds: 500));
 
-    Timer.periodic(Duration(milliseconds: stepLen), (Timer t) {
+    // Calculate step parameters
+    double volumeDifference = endVolume - startVolume;
+    int updateIntervalMs = 100; // Update every 100ms for smooth transition
+    int totalSteps = durationMs ~/ updateIntervalMs;
+    double volumeStepSize = volumeDifference / totalSteps;
+    
+    double currentVolume = startVolume;
+    int stepCount = 0;
+    
+    debugPrint('🔊 Volume gradient params: steps=$totalSteps, stepSize=${(volumeStepSize * 100).toStringAsFixed(1)}%, interval=${updateIntervalMs}ms');
+
+    Timer.periodic(Duration(milliseconds: updateIntervalMs), (Timer timer) {
       if (!isAlarmActive) {
-        t.cancel();
+        debugPrint('🔊 Alarm no longer active, stopping volume gradient');
+        timer.cancel();
         return;
       }
 
-      var now = DateTime.now().millisecondsSinceEpoch;
-      var tick = (now - lastTick) / len;
-      lastTick = now;
-      vol += diff * tick;
+      stepCount++;
+      currentVolume = startVolume + (volumeStepSize * stepCount);
+      
+      // Clamp volume within bounds
+      currentVolume = currentVolume.clamp(startVolume, endVolume);
+      
+      // Round to 2 decimal places for cleaner volume values
+      currentVolume = (currentVolume * 100).round() / 100;
 
-      vol = max(currentlyRingingAlarm.value.volMin / 10.0, vol);
-      vol = min(currentlyRingingAlarm.value.volMax / 10.0, vol);
-      vol = (vol * 100).round() / 100;
+      FlutterVolumeController.setVolume(currentVolume, stream: AudioStream.alarm);
+      
+      debugPrint('🔊 Step $stepCount/$totalSteps: Volume = ${(currentVolume * 100).toInt()}%');
 
-      FlutterVolumeController.setVolume(
-        vol,
-        stream: AudioStream.alarm,
-      );
-
-      if (vol >= currentlyRingingAlarm.value.volMax / 10.0) {
-        t.cancel();
+      // Stop when we reach the end volume or complete all steps
+      if (currentVolume >= endVolume || stepCount >= totalSteps) {
+        debugPrint('🔊 Volume gradient completed at ${(currentVolume * 100).toInt()}%');
+        timer.cancel();
       }
     });
   }
@@ -191,6 +241,31 @@ class AlarmControlController extends GetxController {
         }
       }
     });
+  }
+  
+  Future<void> _initializeSunriseEffect() async {
+    if (currentlyRingingAlarm.value.isSunriseEnabled) {
+      try {
+        // Store original brightness for restoration later
+        _originalScreenBrightness = await ScreenBrightness().current;
+        isSunriseActive.value = true;
+        debugPrint('🌅 Sunrise effect initialized - original brightness: $_originalScreenBrightness');
+      } catch (e) {
+        debugPrint('🌅 Error initializing sunrise effect: $e');
+      }
+    }
+  }
+  
+  Future<void> _restoreOriginalBrightness() async {
+    if (isSunriseActive.value) {
+      try {
+        await ScreenBrightness().setScreenBrightness(_originalScreenBrightness);
+        isSunriseActive.value = false;
+        debugPrint('🌅 Original screen brightness restored: $_originalScreenBrightness');
+      } catch (e) {
+        debugPrint('🌅 Error restoring brightness: $e');
+      }
+    }
   }
 
   void showQuotePopup(Quote quote) {
@@ -270,14 +345,41 @@ class AlarmControlController extends GetxController {
       isPreviewMode.value = false;
     }
 
-    if (currentlyRingingAlarm.value.isarId > 0) {
+    // Initialize maxSnoozeCount with the correct value from alarm model
+    // For local alarms, try to get fresh data from database
+    // For shared alarms, use the value from the alarm model
+    if (currentlyRingingAlarm.value.isarId > 0 && 
+        !currentlyRingingAlarm.value.isSharedAlarmEnabled) {
       final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
-      if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+      if (dbAlarm != null) {
+        maxSnoozeCount.value = dbAlarm.maxSnoozeCount;
         currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+        debugPrint('🔔 Set maxSnoozeCount to ${dbAlarm.maxSnoozeCount} '
+            'from local database');
+      } else {
+        maxSnoozeCount.value = currentlyRingingAlarm.value.maxSnoozeCount;
+        debugPrint('🔔 Set maxSnoozeCount to '
+            '${currentlyRingingAlarm.value.maxSnoozeCount} '
+            'from alarm model (db not found)');
       }
+    } else {
+      maxSnoozeCount.value = currentlyRingingAlarm.value.maxSnoozeCount;
+      debugPrint('🔔 Set maxSnoozeCount to '
+          '${currentlyRingingAlarm.value.maxSnoozeCount} '
+          'from alarm model (shared or no isar ID)');
     }
     
-    if (currentlyRingingAlarm.value.isGuardian) {
+    // Initialize sunrise effect if enabled
+    await _initializeSunriseEffect();
+    
+    // Don't start guardian functionality in preview mode
+    if (currentlyRingingAlarm.value.isGuardian && !isPreviewMode.value) {
+      // Use the actual guardianTimer value from the alarm, default to 120 if not set
+      int timerDuration = currentlyRingingAlarm.value.guardianTimer > 0 
+          ? currentlyRingingAlarm.value.guardianTimer 
+          : 120;
+      guardianCoundown.value = timerDuration;
+      
       guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (guardianCoundown.value == 0) {
           currentlyRingingAlarm.value.isCall
@@ -292,160 +394,205 @@ class AlarmControlController extends GetxController {
     }
 
     showButton.value = true;
-    initialVolume = await FlutterVolumeController.getVolume(
+    initialVolume = (await FlutterVolumeController.getVolume(
       stream: AudioStream.alarm,
-    ) as double;
+    )) ?? 1.0;
 
-    FlutterVolumeController.updateShowSystemUI(false);
+    // Don't update system UI or start alarm functionality in preview mode
+    if (!isPreviewMode.value) {
+      FlutterVolumeController.updateShowSystemUI(false);
 
-    // _fadeInAlarmVolume();     TODO fix volume fade-in
-
-    vibrationTimer =
-        Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
-          Vibration.vibrate(pattern: [500, 3000]);
-        });
-
-    // Preventing app from being minimized!
-    _subscription = FGBGEvents.stream.listen((event) {
-      if (event == FGBGType.background) {
-        alarmChannel.invokeMethod('bringAppToForeground');
+      // Set window flags to keep screen on and show when locked
+      try {
+        await alarmChannel.invokeMethod('setAlarmWindowFlags');
+        debugPrint('🔔 Set alarm window flags');
+      } catch (e) {
+        debugPrint('🔔 Error setting alarm window flags: $e');
       }
-    });
+
+      // Start ascending volume if enabled
+      if (currentlyRingingAlarm.value.gradient > 0) {
+        _fadeInAlarmVolume();
+      }
+
+      vibrationTimer =
+          Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
+            Vibration.vibrate(pattern: [500, 3000]);
+          });
+
+      // Preventing app from being minimized!
+      _subscription = FGBGEvents.stream.listen((event) {
+        if (event == FGBGType.background) {
+          alarmChannel.invokeMethod('bringAppToForeground');
+        }
+      });
+
+      AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
+      
+      // Log detailed alarm ringing (NORMAL - always visible)
+      String alarmType = currentlyRingingAlarm.value.isSharedAlarmEnabled ? 'SHARED' : 'LOCAL';
+      String ringMessage = IsarDb.buildDetailedAlarmRingMessage(currentlyRingingAlarm.value, alarmType);
+      await IsarDb().insertLog(ringMessage, status: Status.success, type: LogType.normal, hasRung: 1);
+    }
 
     startTimer();
-    // if (Get.arguments == null) {
-    //   currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
-    //   showButton.value = true;
-    //   // If the alarm is set to NEVER repeat, then it will
-    //   // be chosen as the next alarm to ring by default as
-    //   // it would ring the next day
-    //   if (currentlyRingingAlarm.value.days
-    //       .every((element) => element == false)) {
-    //     currentlyRingingAlarm.value.isEnabled = false;
-    //
-    //     if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-    //       IsarDb.updateAlarm(currentlyRingingAlarm.value);
-    //     } else {
-    //       FirestoreDb.updateAlarm(
-    //         currentlyRingingAlarm.value.ownerId,
-    //         currentlyRingingAlarm.value,
-    //       );
-    //     }
-    //   } else if (currentlyRingingAlarm.value.isOneTime == true) {
-    //     // If the alarm has to repeat on one day, but ring just once, we will
-    //     // keep seting its days to false until it will never ring
-    //     int currentDay = DateTime.now().weekday - 1;
-    //     currentlyRingingAlarm.value.days[currentDay] = false;
-    //
-    //     if (currentlyRingingAlarm.value.days
-    //         .every((element) => element == false)) {
-    //       currentlyRingingAlarm.value.isEnabled = false;
-    //     }
-    //
-    //     if (currentlyRingingAlarm.value.isSharedAlarmEnabled == false) {
-    //       IsarDb.updateAlarm(currentlyRingingAlarm.value);
-    //     } else {
-    //       FirestoreDb.updateAlarm(
-    //         currentlyRingingAlarm.value.ownerId,
-    //         currentlyRingingAlarm.value,
-    //       );
-    //     }
-    //   }
-    // } else {
-    //   currentlyRingingAlarm.value = Get.arguments;
-    //   showButton.value = true;
-    // }
-
-    AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
-
 
     if(currentlyRingingAlarm.value.showMotivationalQuote) {
       Quote quote = Utils.getRandomQuote();
       showQuotePopup(quote);
     }
 
-    // Setting snooze duration
-    minutes.value = currentlyRingingAlarm.value.snoozeDuration;
-
-    // Scheduling next alarm if it's not in preview mode
-    if (Get.arguments == null) {
-      // Finding the next alarm to ring
-      AlarmModel latestAlarm = await getNextAlarm();
-      TimeOfDay latestAlarmTimeOfDay =
-      Utils.stringToTimeOfDay(latestAlarm.alarmTime);
-
-      // }
-      // This condition will never satisfy because this will only
-      // occur if fake model is returned as latest alarm
-      if (latestAlarm.isEnabled == false) {
-        debugPrint(
-          'STOPPED IF CONDITION with latest = '
-              '${latestAlarmTimeOfDay.toString()} and '
-              'current = ${currentTime.toString()}',
-        );
-
-        await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
-      } else {
-        int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-          DateTime.now(),
-          Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-        );
-
-        try {
-          await alarmChannel.invokeMethod('scheduleAlarm', {
-            'milliSeconds': intervaltoAlarm,
-            'activityMonitor': latestAlarm.activityMonitor
-          });
-          print("Scheduled...");
-        } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
-        }
-      }
+    // Setting snooze duration - default to 5 minutes if it's 0
+    int snoozeDurationMinutes = currentlyRingingAlarm.value.snoozeDuration;
+    if (snoozeDurationMinutes <= 0) {
+      snoozeDurationMinutes = 5; // Default to 5 minutes when snooze duration is 0
+      debugPrint('🔔 Snooze duration was 0, defaulting to 5 minutes in onInit()');
     }
+    minutes.value = snoozeDurationMinutes;
+    
+    // Note: We've removed the alarm scheduling code from here
+    // since it's already handled in the dismiss button handler
+    // This prevents duplicate alarms from being created
   }
 
   @override
   void onClose() async {
     super.onClose();
-    Vibration.cancel();
-    vibrationTimer!.cancel();
-    isAlarmActive = false;
-    String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
-    AudioUtils.stopAlarm(ringtoneName: ringtoneName);
-    await FlutterVolumeController.setVolume(
-      initialVolume,
-      stream: AudioStream.alarm,
-    );
-    
+    debugPrint('🔔 Alarm ring view is closing...');
+    _subscription?.cancel();
+    _subscription = null;
+    debugPrint('🔔 FGBG subscription cancelled immediately');
+
+    // Stop vibration and sound only if not in preview mode (or if they were started)
     if (!isPreviewMode.value) {
-      if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
-        if (currentlyRingingAlarm.value.isSharedAlarmEnabled && 
-            currentlyRingingAlarm.value.ownerId != null && 
-            currentlyRingingAlarm.value.firestoreId != null) {  
-          await FirestoreDb.deleteOneTimeAlarm(
-            currentlyRingingAlarm.value.ownerId,
-            currentlyRingingAlarm.value.firestoreId,
-          );
-        } else if (currentlyRingingAlarm.value.isarId > 0) {
-          
-          await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
-        }
-      } 
-      else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
-        currentlyRingingAlarm.value.isEnabled = false;
-        if (!currentlyRingingAlarm.value.isSharedAlarmEnabled && 
-            currentlyRingingAlarm.value.isarId > 0) {
-          await IsarDb.updateAlarm(currentlyRingingAlarm.value);
-        } else if (currentlyRingingAlarm.value.ownerId != null) {
-          await FirestoreDb.updateAlarm(
-            currentlyRingingAlarm.value.ownerId,
-            currentlyRingingAlarm.value,
-          );
-        }
+      Vibration.cancel();
+      if (vibrationTimer != null) {
+        vibrationTimer!.cancel();
+      }
+      isAlarmActive = false;
+      String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
+      AudioUtils.stopAlarm(ringtoneName: ringtoneName);
+      
+      // Reset volume to initial level
+      await FlutterVolumeController.setVolume(
+        initialVolume,
+        stream: AudioStream.alarm,
+      );
+    }
+    
+    // Always restore original screen brightness
+    await _restoreOriginalBrightness();
+
+    // Clear window flags to allow normal app behavior
+    if (!isPreviewMode.value) {
+      try {
+        await alarmChannel.invokeMethod('clearAlarmWindowFlags');
+        debugPrint('🔔 Cleared alarm window flags');
+      } catch (e) {
+        debugPrint('🔔 Error clearing alarm window flags: $e');
       }
     }
-    _subscription.cancel();
+
+    if (!isPreviewMode.value) {
+      debugPrint('🔔 Processing alarm dismissal...');
+      
+      // Track the alarm type (shared or local) in the home controller
+      // so we only cancel the specific type when clearing
+      bool isShared = currentlyRingingAlarm.value.isSharedAlarmEnabled;
+      homeController.lastScheduledAlarmIsShared = isShared;
+      debugPrint('🔔 Setting HomeController.lastScheduledAlarmIsShared to $isShared');
+      
+      // If this is a shared alarm, block just this specific alarm from being rescheduled
+      if (isShared) {
+        // Remember and block this specific alarm to prevent immediate rescheduling
+        rememberDismissedAlarm();
+        debugPrint('🔔 Blocked shared alarm from immediate rescheduling');
+      }
+      
+      // Handle one-time alarm deletion if needed
+      if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
+        debugPrint('🔔 Handling one-time alarm deletion');
+        if (isShared && 
+            currentlyRingingAlarm.value.ownerId != null && 
+            currentlyRingingAlarm.value.firestoreId != null) {  
+          // For shared alarms, don't delete immediately - mark as dismissed by this user
+          // This allows other users with offsets to still receive their alarms
+          await FirestoreDb.markSharedAlarmDismissedByUser(
+            currentlyRingingAlarm.value.firestoreId!,
+            homeController.userModel.value?.id ?? '',
+          );
+          debugPrint('🔔 Marked one-time shared alarm as dismissed by current user');
+        } else if (currentlyRingingAlarm.value.isarId > 0) {
+          await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
+          debugPrint('🔔 Deleted one-time local alarm from Isar');
+        }
+      } 
+      // Update one-time alarm state if needed
+      else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+        debugPrint('🔔 Handling one-time alarm after ring');
+        if (isShared && currentlyRingingAlarm.value.firestoreId != null) {
+          // For shared one-time alarms, mark as dismissed by this user instead of disabling globally
+          await FirestoreDb.markSharedAlarmDismissedByUser(
+            currentlyRingingAlarm.value.firestoreId!,
+            homeController.userModel.value?.id ?? '',
+          );
+          debugPrint('🔔 Marked one-time shared alarm as dismissed by current user');
+        } else if (!isShared && currentlyRingingAlarm.value.isarId > 0) {
+          // For local one-time alarms, disable normally
+        currentlyRingingAlarm.value.isEnabled = false;
+          await IsarDb.updateAlarm(currentlyRingingAlarm.value);
+          debugPrint('🔔 Updated one-time local alarm in Isar');
+        }
+      }
+      
+      // Cancel only the specific alarm that just rang (shared or local)
+      // This will preserve any other scheduled alarms
+      await homeController.clearLastScheduledAlarm();
+      debugPrint('🔔 Cleared last scheduled alarm');
+      
+      // Make sure we're also clearing all alarms if needed
+      // This is a safeguard to ensure we don't have lingering alarms
+      if (isShared) {
+        // For shared alarms, don't cancel everything as it might cancel scheduled local alarms
+        debugPrint('🔔 Cleared last scheduled shared alarm');
+      } else {
+        // For local alarms, just clear the local tracking
+        debugPrint('🔔 Cleared last scheduled local alarm');
+      }
+      
+      // Set flag for HomeController to handle scheduling on its own cycle
+      // This prevents duplicate alarms from being scheduled
+      homeController.refreshTimer = true;
+      debugPrint('🔔 Set refresh flag for next alarm scheduling cycle');
+      
+      // Add a small delay to ensure all processes are complete
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+    
+    _subscription?.cancel();
     _currentTimeTimer?.cancel();
     _sensorSubscription?.cancel();
+    debugPrint('🔔 Alarm ring cleanup complete');
+  }
+
+  // Save dismissed alarm details to prevent immediate rescheduling of the same alarm
+  void rememberDismissedAlarm() {
+    debugPrint('🔔 Remembering dismissed alarm (isShared=${currentlyRingingAlarm.value.isSharedAlarmEnabled})');
+    
+    if (currentlyRingingAlarm.value.isSharedAlarmEnabled) {
+      // Block this specific alarm from being rescheduled
+      homeController.blockSharedAlarmRescheduling(
+        currentlyRingingAlarm.value.firestoreId,
+        currentlyRingingAlarm.value.alarmTime
+      );
+      
+      // Also store the ID for backward compatibility
+      homeController.lastDismissedSharedAlarmId = currentlyRingingAlarm.value.firestoreId;
+      homeController.lastDismissedSharedAlarmTime = Utils.stringToTimeOfDay(currentlyRingingAlarm.value.alarmTime);
+      
+      debugPrint('🔔 Remembered and blocked dismissed shared alarm: ${currentlyRingingAlarm.value.alarmTime}, ID: ${currentlyRingingAlarm.value.firestoreId}');
+    } else {
+      debugPrint('🔔 Dismissed a local alarm - no need to block: ${currentlyRingingAlarm.value.alarmTime}');
+    }
   }
 }

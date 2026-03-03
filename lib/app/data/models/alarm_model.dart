@@ -17,8 +17,11 @@ class AlarmModel {
   late String alarmID;
   late bool isEnabled;
   late bool isLocationEnabled;
+  late int locationConditionType; 
   late bool isSharedAlarmEnabled;
   late bool isWeatherEnabled;
+  late int weatherConditionType; 
+  late int activityConditionType;
   late bool isMathsEnabled;
   late bool isShakeEnabled;
   late bool isQrEnabled;
@@ -60,8 +63,16 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isSunriseEnabled;
+  late int sunriseDuration;
+  late double sunriseIntensity;
+  late int sunriseColorScheme;
+  late String timezoneId;
+  late bool isTimezoneEnabled;
+  late int targetTimezoneOffset;
+  late int smartControlCombinationType;
   @ignore
-  Map? offsetDetails;
+  List<Map>? offsetDetails;
 
   AlarmModel(
       {required this.alarmTime,
@@ -77,8 +88,11 @@ class AlarmModel {
       required this.isActivityEnabled,
       required this.minutesSinceMidnight,
       required this.isLocationEnabled,
+      required this.locationConditionType,
       required this.isSharedAlarmEnabled,
       required this.isWeatherEnabled,
+      required this.weatherConditionType,
+      required this.activityConditionType,
       required this.location,
       required this.weatherTypes,
       required this.isMathsEnabled,
@@ -91,7 +105,7 @@ class AlarmModel {
       required this.isPedometerEnabled,
       required this.numberOfSteps,
       required this.activityInterval,
-      this.offsetDetails = const {},
+      this.offsetDetails = const [{}],
       required this.mainAlarmTime,
       required this.label,
       required this.isOneTime,
@@ -111,7 +125,15 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      required this.isSunriseEnabled,
+      required this.sunriseDuration,
+      required this.sunriseIntensity,
+      required this.sunriseColorScheme,
+      this.timezoneId = '',
+      this.isTimezoneEnabled = false,
+      this.targetTimezoneOffset = 0,
+      this.smartControlCombinationType = 0});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -119,18 +141,48 @@ class AlarmModel {
   }) {
     // Making sure the alarms work with the offsets
     isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
-    offsetDetails = documentSnapshot['offsetDetails'];
+    
+    
+    final offsetDetailsRaw = documentSnapshot['offsetDetails'];
+    if (offsetDetailsRaw is Map) {
+    
+      final offsetDetailsMap = Map<String, dynamic>.from(offsetDetailsRaw);
+    
+      offsetDetails = offsetDetailsMap.entries.map((entry) {
+        final data = Map<String, dynamic>.from(entry.value);
+        data['userId'] = entry.key;
+        return data;
+      }).toList();
+    } else if (offsetDetailsRaw is List) {
+      
+      offsetDetails = (offsetDetailsRaw as List<dynamic>)
+    .map((item) => item as Map<String, dynamic>)
+    .toList();
+    } else {
+      offsetDetails = null;
+    }
 
     if (isSharedAlarmEnabled && user != null) {
       mainAlarmTime = documentSnapshot['alarmTime'];
       // Using offsetted time only if it is enabled
 
-      alarmTime = (offsetDetails![user.id]['offsetDuration'] != 0)
-          ? offsetDetails![user.id]['offsettedTime']
-          : documentSnapshot['alarmTime'];
-      minutesSinceMidnight = Utils.timeOfDayToInt(
-        Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']),
-      );
+if (offsetDetails != null) {
+  final userOffset = offsetDetails!
+      .where((entry) => entry['userId'] == user.id)
+      .toList();
+
+  if (userOffset.isNotEmpty) {
+    final data = userOffset.first;
+
+    alarmTime = (data['offsetDuration'] != 0)
+        ? data['offsettedTime']
+        : documentSnapshot['alarmTime'];
+
+    minutesSinceMidnight = Utils.timeOfDayToInt(
+      Utils.stringToTimeOfDay(data['offsettedTime']),
+    );
+  }
+}
     } else {
       alarmTime = documentSnapshot['alarmTime'];
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
@@ -154,7 +206,10 @@ class AlarmModel {
     activityInterval = documentSnapshot['activityInterval'];
 
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
+    locationConditionType = documentSnapshot['locationConditionType'] ?? 2; 
     isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
+    weatherConditionType = documentSnapshot['weatherConditionType'] ?? 2; 
+    activityConditionType = documentSnapshot['activityConditionType'] ?? 2; 
     weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
     location = documentSnapshot['location'];
     isMathsEnabled = documentSnapshot['isMathsEnabled'];
@@ -182,6 +237,17 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    ringOn = documentSnapshot['ringOn'];
+    isSunriseEnabled = documentSnapshot['isSunriseEnabled'] ?? false;
+    sunriseDuration = documentSnapshot['sunriseDuration'] ?? 30;
+    sunriseIntensity = documentSnapshot['sunriseIntensity'] ?? 1.0;
+    sunriseColorScheme = documentSnapshot['sunriseColorScheme'] ?? 0;
+    timezoneId = documentSnapshot['timezoneId'] ?? '';
+    isTimezoneEnabled = documentSnapshot['isTimezoneEnabled'] ?? false;
+    targetTimezoneOffset = documentSnapshot['targetTimezoneOffset'] ?? 0;
+    // Handle smartControlCombinationType field safely
+    final data = documentSnapshot.data() as Map<String, dynamic>?;
+    smartControlCombinationType = data?['smartControlCombinationType'] ?? 0;
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -190,8 +256,11 @@ class AlarmModel {
       alarmID: map['alarmID'],
       isEnabled: map['isEnabled'] == 1,
       isLocationEnabled: map['isLocationEnabled'] == 1,
+      locationConditionType: map['locationConditionType'] ?? 2, 
       isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
       isWeatherEnabled: map['isWeatherEnabled'] == 1,
+      weatherConditionType: map['weatherConditionType'] ?? 2, 
+      activityConditionType: map['activityConditionType'] ?? 2, 
       location: map['location'],
       activityInterval: map['activityInterval'],
       minutesSinceMidnight: map['minutesSinceMidnight'],
@@ -235,6 +304,14 @@ class AlarmModel {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
+      isSunriseEnabled: map['isSunriseEnabled'] == 1,
+      sunriseDuration: map['sunriseDuration'] ?? 30,
+      sunriseIntensity: map['sunriseIntensity'] ?? 1.0,
+      sunriseColorScheme: map['sunriseColorScheme'] ?? 0,
+      timezoneId: map['timezoneId'] ?? '',
+      isTimezoneEnabled: map['isTimezoneEnabled'] == 1,
+      targetTimezoneOffset: map['targetTimezoneOffset'] ?? 0,
+      smartControlCombinationType: map['smartControlCombinationType'] ?? 0,
     );
   }
 
@@ -245,8 +322,11 @@ class AlarmModel {
       'alarmID': alarmID,
       'isEnabled': isEnabled ? 1 : 0,
       'isLocationEnabled': isLocationEnabled ? 1 : 0,
+      'locationConditionType': locationConditionType,
       'isSharedAlarmEnabled': isSharedAlarmEnabled ? 1 : 0,
       'isWeatherEnabled': isWeatherEnabled ? 1 : 0,
+      'weatherConditionType': weatherConditionType,
+      'activityConditionType': activityConditionType,
       'location': location,
       'activityInterval': activityInterval,
       'minutesSinceMidnight': minutesSinceMidnight,
@@ -288,11 +368,20 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
+      'isSunriseEnabled': isSunriseEnabled ? 1 : 0,
+      'sunriseDuration': sunriseDuration,
+      'sunriseIntensity': sunriseIntensity,
+      'sunriseColorScheme': sunriseColorScheme,
+      'timezoneId': timezoneId,
+      'isTimezoneEnabled': isTimezoneEnabled ? 1 : 0,
+      'targetTimezoneOffset': targetTimezoneOffset,
+      'smartControlCombinationType': smartControlCombinationType,
     };
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
+    mainAlarmTime = alarmData['alarmTime'];
     snoozeDuration = alarmData['snoozeDuration'];
     maxSnoozeCount = alarmData['maxSnoozeCount'] ?? 3;
     gradient = alarmData['gradient'];
@@ -313,7 +402,10 @@ class AlarmModel {
     activityInterval = alarmData['activityInterval'];
 
     isLocationEnabled = alarmData['isLocationEnabled'];
+    locationConditionType = alarmData['locationConditionType'] ?? 2; 
     isWeatherEnabled = alarmData['isWeatherEnabled'];
+    weatherConditionType = alarmData['weatherConditionType'] ?? 2; 
+    activityConditionType = alarmData['activityConditionType'] ?? 2; 
     weatherTypes = List<int>.from(alarmData['weatherTypes']);
     location = alarmData['location'];
 
@@ -345,6 +437,14 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
+    isSunriseEnabled = alarmData['isSunriseEnabled'] ?? false;
+    sunriseDuration = alarmData['sunriseDuration'] ?? 30;
+    sunriseIntensity = alarmData['sunriseIntensity'] ?? 1.0;
+    sunriseColorScheme = alarmData['sunriseColorScheme'] ?? 0;
+    timezoneId = alarmData['timezoneId'] ?? '';
+    isTimezoneEnabled = alarmData['isTimezoneEnabled'] ?? false;
+    targetTimezoneOffset = alarmData['targetTimezoneOffset'] ?? 0;
+    smartControlCombinationType = alarmData['smartControlCombinationType'] ?? 0;
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -373,9 +473,12 @@ class AlarmModel {
       'isActivityEnabled': alarmRecord.isActivityEnabled,
       'weatherTypes': alarmRecord.weatherTypes,
       'isWeatherEnabled': alarmRecord.isWeatherEnabled,
+      'weatherConditionType': alarmRecord.weatherConditionType,
+      'activityConditionType': alarmRecord.activityConditionType,
       'activityInterval': alarmRecord.activityInterval,
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,
+      'locationConditionType': alarmRecord.locationConditionType,
       'location': alarmRecord.location,
       'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled,
       'isMathsEnabled': alarmRecord.isMathsEnabled,
@@ -403,7 +506,15 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'isSunriseEnabled': alarmRecord.isSunriseEnabled,
+      'sunriseDuration': alarmRecord.sunriseDuration,
+      'sunriseIntensity': alarmRecord.sunriseIntensity,
+      'sunriseColorScheme': alarmRecord.sunriseColorScheme,
+      'timezoneId': alarmRecord.timezoneId,
+      'isTimezoneEnabled': alarmRecord.isTimezoneEnabled,
+      'targetTimezoneOffset': alarmRecord.targetTimezoneOffset,
+      'smartControlCombinationType': alarmRecord.smartControlCombinationType,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

@@ -35,7 +35,7 @@ Issue: [#562](https://github.com/CCExtractor/ultimate_alarm_clock/issues/562), P
 
 ### 3) Profile Switcher and Alarm/Profile Sharing
 
-Effortlessly manage and share custom alarm profiles for different days and occasions, ensuring only the active profile’s alarms are prioritized. Alarms and profiles can now be shared with other users using their emails. In-app notifications for received alarms and profiles with the option to either accept or reject them.
+Effortlessly manage and share custom alarm profiles for different days and occasions, ensuring only the active profile's alarms are prioritized. Alarms and profiles can now be shared with other users using their emails. In-app notifications for received alarms and profiles with the option to either accept or reject them.
 Issue: [#591](https://github.com/CCExtractor/ultimate_alarm_clock/issues/591), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
 
 ### 4) Google Calendar Integration and Date-based Scheduling
@@ -50,7 +50,7 @@ Issue: [#592](https://github.com/CCExtractor/ultimate_alarm_clock/issues/592), P
 
 ### 6) Anti-disturbance
 
-Automatically dismiss alarms if the user’s screen is on for more than X minutes, indicating they are busy and don’t need the alarm.”
+Automatically dismiss alarms if the user's screen is on for more than X minutes, indicating they are busy and don't need the alarm.
 Issue: [#572](https://github.com/CCExtractor/ultimate_alarm_clock/issues/572), Pull-Request: [#574](https://github.com/CCExtractor/ultimate_alarm_clock/pull/574)
 
 ### 7) Open-meteo integration and weather fetch logic shift to Kotlin, Location access notification
@@ -65,7 +65,7 @@ Issue: [#564](https://github.com/CCExtractor/ultimate_alarm_clock/issues/564), P
 
 ### 9) Ringtones
 
-“Added 5 new royalty-free ringtones and fixed related bugs, including erratic ringtone preview behaviour.”
+"Added 5 new royalty-free ringtones and fixed related bugs, including erratic ringtone preview behaviour."
 Issue: [#595](https://github.com/CCExtractor/ultimate_alarm_clock/issues/595), Pull-Request: [#596](https://github.com/CCExtractor/ultimate_alarm_clock/pull/596)
 
 ### 10) UI and bug fixes
@@ -440,6 +440,81 @@ The `removeUserFromAlarmSharedUsers` function allows the owner of a shared alarm
 4. **Returned Stream**: After these processes, the function returns a stream (`streamAlarms`) that represents the list of alarms. This stream reflects the real-time status of alarms and is used to update the user interface whenever alarms are added, modified, or removed.
 
 The "Ultimate Alarm Clock" offers an intuitive and feature-rich user interface, making it easy to set, manage, and customize your alarms while providing a seamless experience.
+
+## 🔔 Shared Alarm Persistence Fix
+
+### Problem
+When a user accepts a shared alarm on device B and then kills the app, the alarm would not ring on device B because the app wasn't running to maintain the alarm schedule.
+
+### Solution
+We've implemented a comprehensive solution that ensures shared alarms persist even when the app is killed:
+
+#### 1. **Enhanced BootReceiver** 
+- Automatically reschedules shared alarms after device boot
+- Checks `SharedPreferences` for persisted shared alarm data
+- Calculates correct time intervals for future alarms
+
+#### 2. **Immediate Scheduling on Acceptance**
+- When a user accepts a shared alarm, it's immediately scheduled on the device
+- Alarm data is stored in `SharedPreferences` for persistence
+- No longer relies solely on the app being active
+
+#### 3. **App Startup Recovery**
+- When the app starts, it checks for persisted shared alarms
+- Automatically reschedules any valid shared alarms
+- Ensures continuity even after app kills
+
+### Testing Instructions
+
+#### Test Scenario: Shared Alarm with Killed App
+1. **Setup**: 
+   - Device A: Create and share an alarm (e.g., for 2 minutes from now)
+   - Device B: Accept the shared alarm
+
+2. **Kill App Test**:
+   - Device B: Force close the Ultimate Alarm Clock app
+   - Wait for the alarm time
+   - **Expected**: Alarm should ring on Device B even though app was killed
+
+3. **Reboot Test**:
+   - Device B: Accept a shared alarm
+   - Device B: Restart the device
+   - **Expected**: Alarm should be rescheduled after boot and ring at the correct time
+
+4. **Verification Commands**:
+   ```bash
+   # Check if shared alarm is scheduled (Android)
+   adb -s DEVICE_ID logcat | grep -E "(BootReceiver|SharedAlarm|Scheduled shared alarm)"
+   
+   # Check SharedPreferences data
+   adb -s DEVICE_ID logcat | grep -E "(has_active_shared_alarm|shared_alarm_time)"
+   ```
+
+### Architecture Changes
+
+#### Android Native Layer
+- **`BootReceiver.kt`**: Enhanced to handle shared alarm rescheduling
+- **`MainActivity.kt`**: Added `checkPersistedSharedAlarm` method channel
+- **`AlarmUtils.kt`**: Robust alarm scheduling with proper request codes
+
+#### Flutter Layer  
+- **`NotificationsController.dart`**: Immediate scheduling on alarm acceptance
+- **`HomeController.dart`**: App startup shared alarm recovery
+- **`FirestoreProvider.dart`**: Persistent shared alarm data management
+
+### Key Benefits
+✅ **Persistent Alarms**: Shared alarms work even when app is killed  
+✅ **Boot Recovery**: Alarms reschedule after device restart  
+✅ **Real-time Updates**: FCM handles updates when app is closed  
+✅ **Dual System**: Both local and shared alarms work independently  
+✅ **Error Handling**: Graceful handling of edge cases and failures
+
+### Debug Logs
+The system provides comprehensive logging for troubleshooting:
+- `BootReceiver`: Boot-time shared alarm rescheduling
+- `MainActivity`: Method channel operations
+- `HomeController`: Flutter-side alarm management
+- `AlarmReceiver`: Alarm trigger events
 
 ## Contribution Guidelines
 
