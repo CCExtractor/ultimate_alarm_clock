@@ -159,6 +159,11 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxString guardian = ''.obs;
   final RxBool isCall = false.obs;
 
+  final RxBool isSunriseEnabled = false.obs;
+  final RxInt sunriseDuration = 30.obs;
+  final RxDouble sunriseIntensity = 1.0.obs;
+  final RxInt sunriseColorScheme = 0.obs;
+
   void toggleIsPlaying() {
     isPlaying.toggle();
   }
@@ -802,6 +807,11 @@ class AddOrUpdateAlarmController extends GetxController {
       qrValue.value = alarmRecord.value.qrValue;
       detectedQrValue.value = alarmRecord.value.qrValue;
 
+      isSunriseEnabled.value = alarmRecord.value.isSunriseEnabled;
+      sunriseDuration.value = alarmRecord.value.sunriseDuration;
+      sunriseIntensity.value = alarmRecord.value.sunriseIntensity;
+      sunriseColorScheme.value = alarmRecord.value.sunriseColorScheme;
+
       alarmID = alarmRecord.value.alarmID == ''
           ? const Uuid().v4()
           : alarmRecord.value.alarmID;
@@ -1104,6 +1114,10 @@ class AddOrUpdateAlarmController extends GetxController {
       guardian: guardian.value,
       isCall: isCall.value,
       ringOn: isFutureDate.value,
+      isSunriseEnabled: isSunriseEnabled.value,
+      sunriseDuration: sunriseDuration.value,
+      sunriseIntensity: sunriseIntensity.value,
+      sunriseColorScheme: sunriseColorScheme.value,
     );
   }
 

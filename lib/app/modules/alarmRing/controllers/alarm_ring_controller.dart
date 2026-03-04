@@ -24,6 +24,7 @@ import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 import '../../home/controllers/home_controller.dart';
 
@@ -412,6 +413,9 @@ class AlarmControlController extends GetxController {
     isAlarmActive = false;
     String ringtoneName = currentlyRingingAlarm.value.ringtoneName;
     AudioUtils.stopAlarm(ringtoneName: ringtoneName);
+    try {
+      await ScreenBrightness().resetScreenBrightness();
+    } catch (_) {}
     await FlutterVolumeController.setVolume(
       initialVolume,
       stream: AudioStream.alarm,

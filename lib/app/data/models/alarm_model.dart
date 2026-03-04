@@ -60,6 +60,10 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
+  late bool isSunriseEnabled;
+  late int sunriseDuration;
+  late double sunriseIntensity;
+  late int sunriseColorScheme;
   @ignore
   Map? offsetDetails;
 
@@ -111,7 +115,11 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall});
+      required this.isCall,
+      required this.isSunriseEnabled,
+      required this.sunriseDuration,
+      required this.sunriseIntensity,
+      required this.sunriseColorScheme});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -182,6 +190,10 @@ class AlarmModel {
     guardianTimer = documentSnapshot['guardianTimer'];
     guardian = documentSnapshot['guardian'];
     isCall = documentSnapshot['isCall'];
+    isSunriseEnabled = documentSnapshot['isSunriseEnabled'] ?? false;
+    sunriseDuration = documentSnapshot['sunriseDuration'] ?? 30;
+    sunriseIntensity = (documentSnapshot['sunriseIntensity'] ?? 1.0).toDouble();
+    sunriseColorScheme = documentSnapshot['sunriseColorScheme'] ?? 0;
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -235,6 +247,10 @@ class AlarmModel {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
+      isSunriseEnabled: (map['isSunriseEnabled'] ?? 0) == 1,
+      sunriseDuration: map['sunriseDuration'] ?? 30,
+      sunriseIntensity: (map['sunriseIntensity'] ?? 1.0).toDouble(),
+      sunriseColorScheme: map['sunriseColorScheme'] ?? 0,
     );
   }
 
@@ -288,6 +304,10 @@ class AlarmModel {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
+      'isSunriseEnabled': isSunriseEnabled ? 1 : 0,
+      'sunriseDuration': sunriseDuration,
+      'sunriseIntensity': sunriseIntensity,
+      'sunriseColorScheme': sunriseColorScheme,
     };
   }
 
@@ -345,6 +365,10 @@ class AlarmModel {
     guardian = alarmData['guardian'];
     isCall = alarmData['isCall'];
     ringOn = alarmData['ringOn'];
+    isSunriseEnabled = alarmData['isSunriseEnabled'] ?? false;
+    sunriseDuration = alarmData['sunriseDuration'] ?? 30;
+    sunriseIntensity = (alarmData['sunriseIntensity'] ?? 1.0).toDouble();
+    sunriseColorScheme = alarmData['sunriseColorScheme'] ?? 0;
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user) {
@@ -403,7 +427,11 @@ class AlarmModel {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn
+      'ringOn': alarmRecord.ringOn,
+      'isSunriseEnabled': alarmRecord.isSunriseEnabled,
+      'sunriseDuration': alarmRecord.sunriseDuration,
+      'sunriseIntensity': alarmRecord.sunriseIntensity,
+      'sunriseColorScheme': alarmRecord.sunriseColorScheme,
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

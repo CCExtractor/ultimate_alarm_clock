@@ -244,6 +244,15 @@ class AppTranslations extends Translations {
           'Adjust the volume range:': 'Adjust the volume range:',
           'Apply Gradient': 'Apply Gradient',
           'Ascending Volume': 'Ascending Volume',
+          //sunrise_alarm_tile.dart
+          'Sunrise Alarm': 'Sunrise Alarm',
+          'Sunrise Alarm Settings': 'Sunrise Alarm Settings',
+          'Enable Sunrise Alarm': 'Enable Sunrise Alarm',
+          'Gradually brighten screen before alarm':
+              'Gradually brighten screen before alarm',
+          'Sunrise Duration': 'Sunrise Duration',
+          'Light Intensity': 'Light Intensity',
+          'Color Scheme': 'Color Scheme',
         },
         'de_DE': GermanTranslations().keys['de_DE']!,
         'ru_RU': RussianTranslations().keys['ru_RU']!,

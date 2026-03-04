@@ -157,8 +157,11 @@ class IsarDb {
         guardianTimer INTEGER,
         guardian TEXT,
         isCall INTEGER,
-        ringOn INTEGER
-        
+        ringOn INTEGER,
+        isSunriseEnabled INTEGER NOT NULL DEFAULT 0,
+        sunriseDuration INTEGER NOT NULL DEFAULT 30,
+        sunriseIntensity REAL NOT NULL DEFAULT 1.0,
+        sunriseColorScheme INTEGER NOT NULL DEFAULT 0
       )
     ''');
     await db.execute('''

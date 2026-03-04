@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 
 import '../controllers/alarm_ring_controller.dart';
+import 'sunrise_effect_widget.dart';
 
 // ignore: must_be_immutable
 class AlarmControlView extends GetView<AlarmControlController> {
@@ -62,6 +63,22 @@ class AlarmControlView extends GetView<AlarmControlController> {
         child: Scaffold(
           body: Stack(
             children: [
+              Obx(
+                () => SunriseEffectWidget(
+                  isEnabled: controller
+                      .currentlyRingingAlarm.value.isSunriseEnabled,
+                  durationMinutes: controller
+                      .currentlyRingingAlarm.value.sunriseDuration,
+                  maxIntensity: controller
+                      .currentlyRingingAlarm.value.sunriseIntensity,
+                  colorScheme: SunriseColorScheme.values[
+                    controller.currentlyRingingAlarm.value.sunriseColorScheme
+                        .clamp(0, 2)
+                  ],
+                  onComplete: () =>
+                      debugPrint('Sunrise effect completed'),
+                ),
+              ),
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
