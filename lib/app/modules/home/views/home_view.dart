@@ -29,6 +29,10 @@ class HomeView extends GetView<HomeController> {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     var width = Get.width;
     var height = Get.height;
+
+    // Homeview resetted to expanded state whenever HomeView is rebuilt.
+    controller.scalingFactor.value = 1.0;
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
@@ -68,7 +72,8 @@ class HomeView extends GetView<HomeController> {
                         actions: [Container()],
                         automaticallyImplyLeading: false,
                         expandedHeight: height / 7.9,
-                        floating: true,
+                        collapsedHeight: height / 7.9,
+                        floating: false,
                         pinned: true,
                         snap: false,
                         centerTitle: true,
