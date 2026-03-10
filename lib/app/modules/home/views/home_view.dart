@@ -636,13 +636,6 @@ class HomeView extends GetView<HomeController> {
                                                   milliseconds: 600,
                                                 ),
                                                 curve: Curves.easeInOut,
-                                                margin: EdgeInsets.all(
-                                                  controller
-                                                      .isAnyAlarmHolded
-                                                          .value
-                                                      ? 10
-                                                      : 0,
-                                                ),
                                                 child: Center(
                                                   child: Padding(
                                                     padding:
