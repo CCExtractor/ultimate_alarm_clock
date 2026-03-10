@@ -67,7 +67,6 @@ class HomeController extends GetxController {
 
   RxBool isSortedAlarmListEnabled = true.obs;
   RxBool inMultipleSelectMode = false.obs;
-  RxBool isAnyAlarmHolded = false.obs;
   RxBool isAllAlarmsSelected = false.obs;
   RxInt numberOfAlarmsSelected = 0.obs;
   Pair<List<AlarmModel>, List<RxBool>> alarmListPairs = Pair([], []);
@@ -681,7 +680,6 @@ class HomeController extends GetxController {
 
                       // Closing the multiple select mode
                       inMultipleSelectMode.value = false;
-                      isAnyAlarmHolded.value = false;
                       isAllAlarmsSelected.value = false;
 
                       numberOfAlarmsSelected.value = 0;

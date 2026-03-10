@@ -271,8 +271,6 @@ class HomeView extends GetView<HomeController> {
                                               // On pressing the close button, we're closing the multiple select mode, and clearing the select alarm set
                                               controller.inMultipleSelectMode
                                                   .value = false;
-                                              controller.isAnyAlarmHolded
-                                                  .value = false;
                                               controller.isAllAlarmsSelected
                                                   .value = false;
                                               controller.numberOfAlarmsSelected
@@ -420,7 +418,6 @@ class HomeView extends GetView<HomeController> {
 
                                                                     // Closing the multiple select mode
                                                                     controller.inMultipleSelectMode.value = false;
-                                                                    controller.isAnyAlarmHolded.value = false;
                                                                     controller.isAllAlarmsSelected.value = false;
                                                                     controller.numberOfAlarmsSelected.value = 0;
                                                                     controller.selectedAlarmSet.clear();
@@ -609,9 +606,6 @@ class HomeView extends GetView<HomeController> {
                                                       controller
                                                           .inMultipleSelectMode
                                                           .value = true;
-                                                      controller
-                                                          .isAnyAlarmHolded
-                                                          .value = true;
 
                                                       // Assigning the alarm list pairs to list of alarms and list of isSelected all equal to false initially
                                                       controller
@@ -626,17 +620,7 @@ class HomeView extends GetView<HomeController> {
 
                                                 Utils.hapticFeedback();
                                               },
-                                              onLongPressEnd: (details) {
-                                                controller
-                                                    .isAnyAlarmHolded
-                                                    .value = false;
-                                              },
-                                              child: AnimatedContainer(
-                                                duration: const Duration(
-                                                  milliseconds: 600,
-                                                ),
-                                                curve: Curves.easeInOut,
-                                                child: Center(
+                                              child:  Center(
                                                   child: Padding(
                                                     padding:
                                                     const EdgeInsets
@@ -1057,7 +1041,6 @@ class HomeView extends GetView<HomeController> {
                                                 ),
                                               ),
                                             ),
-                                          ),
                                         )
                                       : SizedBox();
                                       },
