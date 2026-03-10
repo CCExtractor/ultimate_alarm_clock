@@ -559,8 +559,8 @@ class HomeView extends GetView<HomeController> {
                                         return alarm.profile ==
                                                 controller.selectedProfile.value
                                             ? Dismissible(
-                                                onDismissed: (direction) async {
-                                                  // pop up confirmation to delete on swipe
+                                                confirmDismiss: (direction) async {
+                                                  // Show confirmation dialog BEFORE removing the item
                                                   bool userConfirmed =
                                                       await showDeleteAlarmConfirmationPopupOnSwipe(
                                                     context,
@@ -571,13 +571,8 @@ class HomeView extends GetView<HomeController> {
                                                       alarm,
                                                     );
                                                   }
-                                                  
-                                                  Get.offNamedUntil(
-                                                    '/bottom-navigation-bar',
-                                                    (route) =>
-                                                        route.settings.name ==
-                                                        '/splash-screen',
-                                                  );
+                                                  // Returning true if delete is confirmed, false otherwise
+                                                  return userConfirmed;
                                                 },
                                                 key: ValueKey(alarms[index]),
                                                 background: Container(
