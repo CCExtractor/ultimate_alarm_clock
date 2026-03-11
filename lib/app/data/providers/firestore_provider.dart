@@ -194,7 +194,7 @@ class FirestoreDb {
       nowInMinutes = Utils.timeOfDayToInt(
         TimeOfDay(
           hour: TimeOfDay.now().hour,
-          minute: TimeOfDay.now().minute + 1,
+          minute: TimeOfDay.now().minute,
         ),
       );
     }
