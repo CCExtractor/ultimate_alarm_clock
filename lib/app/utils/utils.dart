@@ -212,18 +212,20 @@ class Utils {
     if (day >= 11 && day <= 13) {
       daySuffix = 'th';
     }
-    switch (day % 10) {
-      case 1:
-        daySuffix = 'st';
-        break;
-      case 2:
-        daySuffix = 'nd';
-        break;
-      case 3:
-        daySuffix = 'rd';
-        break;
-      default:
-        daySuffix = 'th';
+    else{
+      switch (day % 10) {
+        case 1:
+          daySuffix = 'st';
+          break;
+        case 2:
+          daySuffix = 'nd';
+          break;
+        case 3:
+          daySuffix = 'rd';
+          break;
+        default:
+          daySuffix = 'th';
+      }
     }
 
     return '$formattedDate$daySuffix';
