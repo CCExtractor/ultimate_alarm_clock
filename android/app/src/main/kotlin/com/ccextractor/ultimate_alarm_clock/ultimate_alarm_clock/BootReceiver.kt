@@ -1,115 +1,137 @@
 package com.ccextractor.ultimate_alarm_clock
 
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.SystemClock
+import android.app.PendingIntent
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import android.os.CountDownTimer
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.ccextractor.ultimate_alarm_clock.getLatestTimer
 
 
 class BootReceiver : BroadcastReceiver() {
+    companion object {
+        private const val TAG = "BootReceiver"
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
+        val action = intent.action ?: return
+        if (
+            action != Intent.ACTION_BOOT_COMPLETED &&
+            action != Intent.ACTION_USER_UNLOCKED &&
+            action != Intent.ACTION_LOCKED_BOOT_COMPLETED
+        ) {
+            return
+        }
 
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-           val sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-            val profile = sharedPreferences.getString("flutter.profile", "Default")
-
-            val dbHelper = DatabaseHelper(context)
-            val logdbHelper = LogDatabaseHelper(context)
-            val db = dbHelper.readableDatabase
-            val ringTime = getLatestAlarm(db, true, profile?:"Default", context)
-            db.close()
-            if (ringTime != null) {
-                scheduleAlarm(ringTime["interval"]!! as Long, context, ringTime["isActivity"]!!)
-            }
-
-            val timerdbhelper = TimerDatabaseHelper(context)
-            val timerdb = timerdbhelper.readableDatabase
-            val time = getLatestTimer(timerdb)
-            timerdb.close()
-            var notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
-                override fun onTick(millisUntilFinished: Long) {
-                    println(millisUntilFinished)
-                    showTimerNotification(millisUntilFinished, "Timer", context)
-
-                }
-
-                override fun onFinish() {
-                    notificationManager.cancel(1)
-                }
-            })
-            createNotificationChannel(context)
-
-
-
-            if (time != null) {
-
-                // Start or stop the timer based on your requirements
-                commonTimer.startTimer(time.second)
-
-            }
-
-
+        Log.i(TAG, "Handling action=$action")
+        val allowLocalFallback = action != Intent.ACTION_LOCKED_BOOT_COMPLETED
+        restoreAlarms(context, allowLocalFallback)
+        if (action != Intent.ACTION_LOCKED_BOOT_COMPLETED) {
+            restoreTimers(context)
         }
     }
 
-    @SuppressLint("ScheduleExactAlarm")
-    fun scheduleAlarm(milliSeconds: Long, context: Context, activityMonitor: Any) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
-        val activityCheckIntent = Intent(context, ScreenMonitorService::class.java)
-        val pendingActivityCheckIntent = PendingIntent.getService(
-            context,
-            4,
-            activityCheckIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
-        // Schedule the alarm
-        val tenMinutesInMilliseconds = 600000L
-        val preTriggerTime =
-            System.currentTimeMillis() + (milliSeconds - tenMinutesInMilliseconds)
+    private fun restoreAlarms(context: Context, allowLocalFallback: Boolean) {
+        val now = System.currentTimeMillis()
+        val persistedAlarm = AlarmScheduleStore.load(context)
+        val localAlarm = if (allowLocalFallback) restoreAlarmFromLocalState(context) else null
 
-        // Schedule the alarm
-        val triggerTime = System.currentTimeMillis() + milliSeconds
-
-        if (activityMonitor == 1) {
-            val alarmClockInfo = AlarmManager.AlarmClockInfo(preTriggerTime, pendingIntent)
-            alarmManager.setAlarmClock(
-                alarmClockInfo,
-                pendingActivityCheckIntent
+        val reconciledAlarm = BootRestorePlanner.chooseAlarmToRestore(
+            persistedAlarm = persistedAlarm,
+            localAlarm = localAlarm,
+            nowMs = now,
+            allowLocalFallback = allowLocalFallback
+        )
+        Log.i(
+            TAG,
+            "restoreAlarms allowLocalFallback=$allowLocalFallback persisted=${persistedAlarm?.triggerAtMs} local=${localAlarm?.triggerAtMs} reconciled=${reconciledAlarm?.triggerAtMs}"
+        )
+        if (reconciledAlarm != null) {
+            AlarmScheduleStore.save(context, reconciledAlarm)
+            AlarmScheduler.schedule(
+                context,
+                reconciledAlarm,
+                allowCredentialEncryptedAccess = AlarmScheduleStore.canAccessCredentialEncryptedStorage(context)
             )
+            Log.i(TAG, "Scheduled restored alarm at ${reconciledAlarm.triggerAtMs}")
         } else {
-            val sharedPreferences =
-                context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putLong("flutter.is_screen_off", 0L)
-            editor.apply()
-            editor.putLong("flutter.is_screen_on", 0L)
-            editor.apply()
+            AlarmScheduleStore.clear(context)
+            Log.i(TAG, "No valid alarm found to restore")
         }
-        val clockInfo = AlarmManager.AlarmClockInfo(triggerTime, pendingIntent)
-        alarmManager.setAlarmClock(clockInfo, pendingIntent)
-
     }
 
+    private fun restoreTimers(context: Context) {
+        val timerdbhelper = TimerDatabaseHelper(context)
+        val timerdb = timerdbhelper.readableDatabase
+        val time = getLatestTimer(timerdb)
+        timerdb.close()
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val commonTimer = CommonTimerManager.getCommonTimer(object : TimerListener {
+            override fun onTick(millisUntilFinished: Long) {
+                println(millisUntilFinished)
+                showTimerNotification(millisUntilFinished, "Timer", context)
 
+            }
+
+            override fun onFinish() {
+                notificationManager.cancel(1)
+            }
+        })
+        createNotificationChannel(context)
+
+        if (time != null) {
+            commonTimer.startTimer(time.second)
+            Log.i(TAG, "Restored timer for ${time.second} seconds")
+        }
+        else {
+            Log.i(TAG, "No timer found to restore")
+        }
+    }
+
+    private fun restoreAlarmFromLocalState(context: Context): ScheduledAlarmPayload? {
+        val sharedPreferences =
+            context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        val profile = sharedPreferences.getString("flutter.profile", "Default")
+        val dbHelper = DatabaseHelper(context)
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM alarms
+            WHERE isEnabled = 1
+            AND (profile = ? OR ringOn = 1)
+            """.trimIndent(),
+            arrayOf(profile ?: "Default")
+        )
+
+        return try {
+            var bestPayload: ScheduledAlarmPayload? = null
+            val now = System.currentTimeMillis()
+            while (cursor.moveToNext()) {
+                val alarm = AlarmModel.fromCursor(cursor)
+                val triggerAtMs = LocalAlarmScheduleResolver.nextTriggerAtMs(alarm, now) ?: continue
+                val candidate = ScheduledAlarmPayload(
+                    triggerAtMs = triggerAtMs,
+                    activityMonitor = alarm.activityMonitor,
+                    locationMonitor = alarm.isLocationEnabled,
+                    location = alarm.location,
+                    isWeather = alarm.isWeatherEnabled,
+                    weatherTypes = alarm.weatherTypes
+                )
+                if (bestPayload == null || candidate.triggerAtMs < bestPayload.triggerAtMs) {
+                    bestPayload = candidate
+                }
+            }
+            bestPayload
+        } finally {
+            cursor.close()
+            db.close()
+        }
+    }
 
     private fun createNotificationChannel(context: Context) {
 

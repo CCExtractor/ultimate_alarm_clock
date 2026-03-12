@@ -1,0 +1,33 @@
+name: vibration
+description: A plugin for handling Vibration API on iOS, Android, web and OpenHarmony.
+version: 1.9.0
+homepage: https://github.com/benjamindean/flutter_vibration
+
+environment:
+  sdk: ">=2.12.1 <4.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # TODO: Change pub.dev's version when vibration_web is published
+  # vibration_web: ^1.6.6
+  vibration_platform_interface: ^0.0.1
+     
+# dependency_overrides:
+#   vibration_platform_interface:
+#     path: ../vibration_platform_interface      
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.benjaminabel.vibration
+        pluginClass: VibrationPlugin
+      ios:
+        pluginClass: VibrationPlugin
+      # web:
+      #   default_package: vibration_web

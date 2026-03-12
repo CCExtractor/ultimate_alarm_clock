@@ -58,3 +58,4 @@ app.*.map.json
 /.tmp
 /caches
 /.fvmrc
+/artifacts/

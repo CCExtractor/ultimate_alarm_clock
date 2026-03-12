@@ -6,6 +6,7 @@ import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
+import 'package:ultimate_alarm_clock/app/utils/alarm_schedule_payload.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 import '../../home/controllers/home_controller.dart';
@@ -22,8 +23,7 @@ class SplashScreenController extends GetxController {
 
   getCurrentlyRingingAlarm() async {
     AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
-    AlarmModel latestAlarm =
-        await IsarDb.getLatestAlarm(_alarmRecord, false);
+    AlarmModel latestAlarm = await IsarDb.getLatestAlarm(_alarmRecord, false);
     debugPrint('CURRENT RINGING : ${latestAlarm.alarmTime}');
     return latestAlarm;
   }
@@ -99,9 +99,9 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    
+
     await IsarDb.fixMaxSnoozeCountInAlarms();
-    
+
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
@@ -118,15 +118,20 @@ class SplashScreenController extends GetxController {
           } else {
             if (shouldAlarmRing) {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
-              
+
               if (currentlyRingingAlarm.value.alarmID != null) {
-                final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
-                if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
-                  currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+                final dbAlarm =
+                    await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+                if (dbAlarm != null &&
+                    dbAlarm.maxSnoozeCount !=
+                        currentlyRingingAlarm.value.maxSnoozeCount) {
+                  currentlyRingingAlarm.value.maxSnoozeCount =
+                      dbAlarm.maxSnoozeCount;
                 }
               }
-              
-              Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
+
+              Get.offNamed('/alarm-ring',
+                  arguments: currentlyRingingAlarm.value);
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               // If the alarm is set to NEVER repeat, then it will be chosen as
@@ -156,16 +161,11 @@ class SplashScreenController extends GetxController {
                     '${latestAlarmTimeOfDay.toString()} and ');
                 await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
               } else {
-                int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-                  DateTime.now(),
-                  Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-                );
-
                 try {
-                  await alarmChannel.invokeMethod('scheduleAlarm', {
-                    'milliSeconds': intervaltoAlarm,
-                    'activityMonitor': latestAlarm.activityMonitor
-                  });
+                  await alarmChannel.invokeMethod(
+                    'scheduleAlarm',
+                    AlarmSchedulePayload.fromAlarm(latestAlarm),
+                  );
                   print("Scheduled...");
                 } on PlatformException catch (e) {
                   print("Failed to schedule alarm: ${e.message}");
