@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
-import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/alarm_schedule_payload.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../modules/home/controllers/home_controller.dart';
@@ -182,22 +182,9 @@ class FirestoreDb {
       return alarmRecord;
     }
 
-    int nowInMinutes = 0;
-    if (wantNextAlarm == true) {
-      nowInMinutes = Utils.timeOfDayToInt(
-        TimeOfDay(
-          hour: TimeOfDay.now().hour,
-          minute: TimeOfDay.now().minute + 1,
-        ),
-      );
-    } else {
-      nowInMinutes = Utils.timeOfDayToInt(
-        TimeOfDay(
-          hour: TimeOfDay.now().hour,
-          minute: TimeOfDay.now().minute + 1,
-        ),
-      );
-    }
+    final referenceTime = AlarmSchedulePayload.selectionReferenceTime(
+      wantNextAlarm: wantNextAlarm,
+    );
 
     late List<AlarmModel> alarms;
 
@@ -235,50 +222,37 @@ class FirestoreDb {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
-      // Get the closest alarm to the current time
-      AlarmModel closestAlarm = alarms.reduce((a, b) {
-        int aTimeUntilNextAlarm = a.minutesSinceMidnight - nowInMinutes;
-        int bTimeUntilNextAlarm = b.minutesSinceMidnight - nowInMinutes;
+      final eligibleAlarms = alarms
+          .where(
+            (alarm) =>
+                AlarmSchedulePayload.nextTriggerAt(
+                  alarm,
+                  referenceTime: referenceTime,
+                  inclusive: true,
+                ) !=
+                null,
+          )
+          .toList();
 
-        // Check if alarm repeats on any day
-        bool aRepeats = a.days.any((day) => day);
-        bool bRepeats = b.days.any((day) => day);
+      if (eligibleAlarms.isEmpty) {
+        alarmRecord.minutesSinceMidnight = -1;
+        return alarmRecord;
+      }
 
-        // If alarm is one-time and has already passed, set time until
-        // next alarm to next day
-        if (!aRepeats && aTimeUntilNextAlarm < 0) {
-          aTimeUntilNextAlarm += Duration.minutesPerDay;
-        }
-        if (!bRepeats && bTimeUntilNextAlarm < 0) {
-          bTimeUntilNextAlarm += Duration.minutesPerDay;
-        }
+      return eligibleAlarms.reduce((a, b) {
+        final aTrigger = AlarmSchedulePayload.nextTriggerAt(
+          a,
+          referenceTime: referenceTime,
+          inclusive: true,
+        )!;
+        final bTrigger = AlarmSchedulePayload.nextTriggerAt(
+          b,
+          referenceTime: referenceTime,
+          inclusive: true,
+        )!;
 
-        // If alarm repeats on any day, find the next upcoming day
-        if (aRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < a.days.length; i++) {
-            int dayIndex = (currentDay + i) % a.days.length;
-            if (a.days[dayIndex]) {
-              aTimeUntilNextAlarm += i * Duration.minutesPerDay;
-              break;
-            }
-          }
-        }
-
-        if (bRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < b.days.length; i++) {
-            int dayIndex = (currentDay + i) % b.days.length;
-            if (b.days[dayIndex]) {
-              bTimeUntilNextAlarm += i * Duration.minutesPerDay;
-              break;
-            }
-          }
-        }
-
-        return aTimeUntilNextAlarm < bTimeUntilNextAlarm ? a : b;
+        return aTrigger.isBefore(bTrigger) ? a : b;
       });
-      return closestAlarm;
     }
   }
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.ccextractor.ultimate_alarm_clock">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -45,8 +44,7 @@
         android:name="${applicationName}"
         android:allowBackup="true"
         android:icon="@mipmap/launcher_icon"
-        android:label="Ultimate Alarm Clock"
-        tools:replace="android:label">
+        android:label="Ultimate Alarm Clock">
         <service
             android:name="com.ccextractor.ultimate_alarm_clock.ScreenMonitorService"
             android:enabled="true"
@@ -73,9 +71,12 @@
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"
+            android:directBootAware="true"
             android:exported="true">
             <intent-filter android:priority="999">
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_UNLOCKED" />
             </intent-filter>
         </receiver>
         <receiver

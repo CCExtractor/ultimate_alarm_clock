@@ -1,0 +1,38 @@
+group 'com.ajinasokan.flutter_fgbg'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 36
+
+    defaultConfig {
+        minSdkVersion 16
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    namespace "com.ajinasokan.flutter_fgbg"
+}
+
+dependencies {
+    implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
+}

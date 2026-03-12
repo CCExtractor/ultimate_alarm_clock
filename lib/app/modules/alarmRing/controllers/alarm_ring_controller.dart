@@ -18,6 +18,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/alarm_schedule_payload.dart';
 import 'package:ultimate_alarm_clock/app/utils/audio_utils.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
@@ -59,11 +60,11 @@ class AlarmControlController extends GetxController {
     UserModel? _userModel = await SecureStorageProvider().retrieveUserModel();
     AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
     AlarmModel isarLatestAlarm =
-    await IsarDb.getLatestAlarm(_alarmRecord, true);
+        await IsarDb.getLatestAlarm(_alarmRecord, true);
     AlarmModel firestoreLatestAlarm =
-    await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
+        await FirestoreDb.getLatestAlarm(_userModel, _alarmRecord, true);
     AlarmModel latestAlarm =
-    Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
+        Utils.getFirstScheduledAlarm(isarLatestAlarm, firestoreLatestAlarm);
     debugPrint('LATEST : ${latestAlarm.alarmTime}');
 
     return latestAlarm;
@@ -75,14 +76,14 @@ class AlarmControlController extends GetxController {
 
   void startSnooze() async {
     int actualMaxSnoozeCount = currentlyRingingAlarm.value.maxSnoozeCount;
-  
+
     if (currentlyRingingAlarm.value.isarId > 0) {
       final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
       if (dbAlarm != null) {
         actualMaxSnoozeCount = dbAlarm.maxSnoozeCount;
       }
     }
-    
+
     if (snoozeCount.value >= actualMaxSnoozeCount) {
       Get.snackbar(
         "Max Snooze Limit",
@@ -95,7 +96,7 @@ class AlarmControlController extends GetxController {
       return;
     }
     snoozeCount.value++;
-    
+
     Vibration.cancel();
     vibrationTimer!.cancel();
     isSnoozing.value = true;
@@ -111,8 +112,8 @@ class AlarmControlController extends GetxController {
         timer.cancel();
         vibrationTimer =
             Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
-              Vibration.vibrate(pattern: [500, 3000]);
-            });
+          Vibration.vibrate(pattern: [500, 3000]);
+        });
 
         AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
@@ -151,7 +152,7 @@ class AlarmControlController extends GetxController {
 
     double vol = currentlyRingingAlarm.value.volMin / 10.0;
     double diff = (currentlyRingingAlarm.value.volMax -
-        currentlyRingingAlarm.value.volMin) /
+            currentlyRingingAlarm.value.volMin) /
         10.0;
     int len = currentlyRingingAlarm.value.gradient * 1000;
     double steps = (diff / 0.01).abs();
@@ -183,10 +184,13 @@ class AlarmControlController extends GetxController {
       }
     });
   }
+
   void startListeningToFlip() {
     _sensorSubscription = accelerometerEvents.listen((event) {
-      if (event.z < -8) { // Device is flipped (screen down)
-        if (!isSnoozing.value && settingsController.isFlipToSnooze.value == true) {
+      if (event.z < -8) {
+        // Device is flipped (screen down)
+        if (!isSnoozing.value &&
+            settingsController.isFlipToSnooze.value == true) {
           startSnooze();
         }
       }
@@ -259,7 +263,7 @@ class AlarmControlController extends GetxController {
   void onInit() async {
     super.onInit();
     startListeningToFlip();
-    
+
     // Extract alarm and preview flag from arguments
     final args = Get.arguments;
     if (args is Map) {
@@ -272,18 +276,20 @@ class AlarmControlController extends GetxController {
 
     if (currentlyRingingAlarm.value.isarId > 0) {
       final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
-      if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+      if (dbAlarm != null &&
+          dbAlarm.maxSnoozeCount !=
+              currentlyRingingAlarm.value.maxSnoozeCount) {
         currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
       }
     }
-    
+
     if (currentlyRingingAlarm.value.isGuardian) {
       guardianTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (guardianCoundown.value == 0) {
           currentlyRingingAlarm.value.isCall
               ? Utils.dialNumber(currentlyRingingAlarm.value.guardian)
               : Utils.sendSMS(currentlyRingingAlarm.value.guardian,
-              "Your Friend is not waking up \n - Ultimate Alarm Clock");
+                  "Your Friend is not waking up \n - Ultimate Alarm Clock");
           timer.cancel();
         } else {
           guardianCoundown.value = guardianCoundown.value - 1;
@@ -302,8 +308,8 @@ class AlarmControlController extends GetxController {
 
     vibrationTimer =
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
-          Vibration.vibrate(pattern: [500, 3000]);
-        });
+      Vibration.vibrate(pattern: [500, 3000]);
+    });
 
     // Preventing app from being minimized!
     _subscription = FGBGEvents.stream.listen((event) {
@@ -358,8 +364,7 @@ class AlarmControlController extends GetxController {
 
     AudioUtils.playAlarm(alarmRecord: currentlyRingingAlarm.value);
 
-
-    if(currentlyRingingAlarm.value.showMotivationalQuote) {
+    if (currentlyRingingAlarm.value.showMotivationalQuote) {
       Quote quote = Utils.getRandomQuote();
       showQuotePopup(quote);
     }
@@ -372,7 +377,7 @@ class AlarmControlController extends GetxController {
       // Finding the next alarm to ring
       AlarmModel latestAlarm = await getNextAlarm();
       TimeOfDay latestAlarmTimeOfDay =
-      Utils.stringToTimeOfDay(latestAlarm.alarmTime);
+          Utils.stringToTimeOfDay(latestAlarm.alarmTime);
 
       // }
       // This condition will never satisfy because this will only
@@ -380,22 +385,17 @@ class AlarmControlController extends GetxController {
       if (latestAlarm.isEnabled == false) {
         debugPrint(
           'STOPPED IF CONDITION with latest = '
-              '${latestAlarmTimeOfDay.toString()} and '
-              'current = ${currentTime.toString()}',
+          '${latestAlarmTimeOfDay.toString()} and '
+          'current = ${currentTime.toString()}',
         );
 
         await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
       } else {
-        int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-          DateTime.now(),
-          Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-        );
-
         try {
-          await alarmChannel.invokeMethod('scheduleAlarm', {
-            'milliSeconds': intervaltoAlarm,
-            'activityMonitor': latestAlarm.activityMonitor
-          });
+          await alarmChannel.invokeMethod(
+            'scheduleAlarm',
+            AlarmSchedulePayload.fromAlarm(latestAlarm),
+          );
           print("Scheduled...");
         } on PlatformException catch (e) {
           print("Failed to schedule alarm: ${e.message}");
@@ -416,24 +416,23 @@ class AlarmControlController extends GetxController {
       initialVolume,
       stream: AudioStream.alarm,
     );
-    
+
     if (!isPreviewMode.value) {
       if (currentlyRingingAlarm.value.deleteAfterGoesOff == true) {
-        if (currentlyRingingAlarm.value.isSharedAlarmEnabled && 
-            currentlyRingingAlarm.value.ownerId != null && 
-            currentlyRingingAlarm.value.firestoreId != null) {  
+        if (currentlyRingingAlarm.value.isSharedAlarmEnabled &&
+            currentlyRingingAlarm.value.ownerId != null &&
+            currentlyRingingAlarm.value.firestoreId != null) {
           await FirestoreDb.deleteOneTimeAlarm(
             currentlyRingingAlarm.value.ownerId,
             currentlyRingingAlarm.value.firestoreId,
           );
         } else if (currentlyRingingAlarm.value.isarId > 0) {
-          
           await IsarDb.deleteAlarm(currentlyRingingAlarm.value.isarId);
         }
-      } 
-      else if (currentlyRingingAlarm.value.days.every((element) => element == false)) {
+      } else if (currentlyRingingAlarm.value.days
+          .every((element) => element == false)) {
         currentlyRingingAlarm.value.isEnabled = false;
-        if (!currentlyRingingAlarm.value.isSharedAlarmEnabled && 
+        if (!currentlyRingingAlarm.value.isSharedAlarmEnabled &&
             currentlyRingingAlarm.value.isarId > 0) {
           await IsarDb.updateAlarm(currentlyRingingAlarm.value);
         } else if (currentlyRingingAlarm.value.ownerId != null) {

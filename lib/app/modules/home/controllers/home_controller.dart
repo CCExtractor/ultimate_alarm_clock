@@ -17,6 +17,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dar
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/alarm_schedule_payload.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
@@ -232,19 +233,16 @@ class HomeController extends GetxController {
     String profileName = await storage.readProfile();
     selectedProfile.value = profileName;
     ProfileModel? p = await IsarDb.getProfile(profileName);
-    if (p != null)
-    {
+    if (p != null) {
       profileModel.value = p!;
     }
-    
   }
 
   void writeProfileName(String name) async {
     await storage.writeProfile(name);
     selectedProfile.value = name;
     ProfileModel? p = await IsarDb.getProfile(name);
-    if (p != null)
-    {
+    if (p != null) {
       profileModel.value = p!;
     }
   }
@@ -261,19 +259,17 @@ class HomeController extends GetxController {
     readProfileName();
 
     userModel.value = await SecureStorageProvider().retrieveUserModel();
-    if (userModel.value == null){
-    FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) {
-        isUserSignedIn.value = false;
-      } else {
-        isUserSignedIn.value = true;
-      }
-    });
+    if (userModel.value == null) {
+      FirebaseAuth.instance.authStateChanges().listen((user) {
+        if (user == null) {
+          isUserSignedIn.value = false;
+        } else {
+          isUserSignedIn.value = true;
+        }
+      });
+    } else {
+      isUserSignedIn.value = true;
     }
-    else {
-        isUserSignedIn.value = true;
-    }
-
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
         .readSortedAlarmListValue(key: 'sorted_alarm_list');
@@ -287,7 +283,6 @@ class HomeController extends GetxController {
       final newFactor = 1.0 - (offset / maxOffset).clamp(0.0, 1.0);
       scalingFactor.value = (minFactor + (maxFactor - minFactor) * newFactor);
     });
-
   }
 
   refreshUpcomingAlarms() async {
@@ -401,15 +396,11 @@ class HomeController extends GetxController {
       );
       await alarmChannel.invokeMethod('cancelAllScheduledAlarms');
     } else {
-      int intervaltoAlarm = Utils.getMillisecondsToAlarm(
-        DateTime.now(),
-        Utils.timeOfDayToDateTime(latestAlarmTimeOfDay),
-      );
       try {
-        await alarmChannel.invokeMethod('scheduleAlarm', {
-          'milliSeconds': intervaltoAlarm,
-          'activityMonitor': latestAlarm.activityMonitor,
-        });
+        await alarmChannel.invokeMethod(
+          'scheduleAlarm',
+          AlarmSchedulePayload.fromAlarm(latestAlarm),
+        );
         print('Scheduled...');
       } on PlatformException catch (e) {
         print('Failed to schedule alarm: ${e.message}');
@@ -517,15 +508,14 @@ class HomeController extends GetxController {
 
         try {
           if (isSharedAlarmEnabled) {
-            
-            AlarmModel? alarmToDelete = await FirestoreDb.getAlarm(userModel.value, alarmId);
+            AlarmModel? alarmToDelete =
+                await FirestoreDb.getAlarm(userModel.value, alarmId);
             if (alarmToDelete != null) {
               deletedAlarms.add(alarmToDelete);
               await FirestoreDb.deleteAlarm(userModel.value, alarmId);
               successCount++;
             }
           } else {
-            
             AlarmModel? alarmToDelete = await IsarDb.getAlarm(alarmId);
             if (alarmToDelete != null) {
               deletedAlarms.add(alarmToDelete);
@@ -557,7 +547,6 @@ class HomeController extends GetxController {
           ),
           mainButton: TextButton(
             onPressed: () async {
-              
               for (var alarm in deletedAlarms) {
                 if (alarm.isSharedAlarmEnabled) {
                   await FirestoreDb.addAlarm(userModel.value, alarm);
@@ -565,7 +554,7 @@ class HomeController extends GetxController {
                   await IsarDb.addAlarm(alarm);
                 }
               }
-              
+
               refreshTimer = true;
               refreshUpcomingAlarms();
             },
@@ -576,7 +565,6 @@ class HomeController extends GetxController {
           ),
         );
 
-        
         selectedAlarmSet.clear();
         numberOfAlarmsSelected.value = 0;
       } else {

@@ -11,7 +11,7 @@ import 'package:ultimate_alarm_clock/app/data/models/saved_emails.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/utils/utils.dart';
+import 'package:ultimate_alarm_clock/app/utils/alarm_schedule_payload.dart';
 import 'package:sqflite/sqflite.dart';
 
 enum Status {
@@ -36,7 +36,6 @@ enum LogType {
   @override
   String toString() => value;
 }
-
 
 class IsarDb {
   static final IsarDb _instance = IsarDb._internal();
@@ -171,7 +170,6 @@ class IsarDb {
     ''');
   }
 
-
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
@@ -189,7 +187,11 @@ class IsarDb {
     }
     return Future.value(Isar.getInstance());
   }
-  Future<int> insertLog(String msg, {Status status = Status.warning, LogType type = LogType.dev, int hasRung = 0}) async {
+
+  Future<int> insertLog(String msg,
+      {Status status = Status.warning,
+      LogType type = LogType.dev,
+      int hasRung = 0}) async {
     try {
       final db = await setAlarmLogs();
       if (db == null) {
@@ -252,7 +254,7 @@ class IsarDb {
     final isarProvider = IsarDb();
     final sql = await IsarDb().getAlarmSQLiteDatabase();
     final db = await isarProvider.db;
-    
+
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
@@ -287,7 +289,8 @@ class IsarDb {
   static Future<ProfileModel?> getProfile(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final a = await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
     print('$a appkle');
     return a;
   }
@@ -306,7 +309,7 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-     final a =
+    final a =
         await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
@@ -337,39 +340,25 @@ class IsarDb {
   static Future<bool> doesAlarmExist(String alarmID) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final alarms =
-        await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
-    print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
+    final alarm = await db.alarmModels
+        .where()
+        .filter()
+        .alarmIDEqualTo(alarmID)
+        .findFirst();
 
-    return alarms.isNotEmpty;
+    return alarm != null;
   }
 
   static Future<AlarmModel> getLatestAlarm(
     AlarmModel alarmRecord,
     bool wantNextAlarm,
   ) async {
-    int nowInMinutes = 0;
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final currentProfile = await storage.readProfile();
-
-// Increasing a day since we need alarms AFTER the current time
-// Logically, alarms at current time will ring in the future ;-;
-    if (wantNextAlarm == true) {
-      nowInMinutes = Utils.timeOfDayToInt(
-        TimeOfDay(
-          hour: TimeOfDay.now().hour,
-          minute: TimeOfDay.now().minute + 1,
-        ),
-      );
-    } else {
-      nowInMinutes = Utils.timeOfDayToInt(
-        TimeOfDay(
-          hour: TimeOfDay.now().hour,
-          minute: TimeOfDay.now().minute,
-        ),
-      );
-    }
+    final referenceTime = AlarmSchedulePayload.selectionReferenceTime(
+      wantNextAlarm: wantNextAlarm,
+    );
 
     // Get all enabled alarms
     List<AlarmModel> alarms = await db.alarmModels
@@ -383,51 +372,37 @@ class IsarDb {
       alarmRecord.minutesSinceMidnight = -1;
       return alarmRecord;
     } else {
-      // Get the closest alarm to the current time
-      AlarmModel closestAlarm = alarms.reduce((a, b) {
-        int aTimeUntilNextAlarm = a.minutesSinceMidnight - nowInMinutes;
-        int bTimeUntilNextAlarm = b.minutesSinceMidnight - nowInMinutes;
+      final eligibleAlarms = alarms
+          .where(
+            (alarm) =>
+                AlarmSchedulePayload.nextTriggerAt(
+                  alarm,
+                  referenceTime: referenceTime,
+                  inclusive: true,
+                ) !=
+                null,
+          )
+          .toList();
 
-        // Check if alarm repeats on any day
-        bool aRepeats = a.days.any((day) => day);
-        bool bRepeats = b.days.any((day) => day);
+      if (eligibleAlarms.isEmpty) {
+        alarmRecord.minutesSinceMidnight = -1;
+        return alarmRecord;
+      }
 
-        // If alarm is one-time and has already passed or is happening now,
-        // set time until next alarm to next day
-        if (!aRepeats && aTimeUntilNextAlarm < 0) {
-          aTimeUntilNextAlarm += Duration.minutesPerDay;
-        }
-        if (!bRepeats && bTimeUntilNextAlarm < 0) {
-          bTimeUntilNextAlarm += Duration.minutesPerDay;
-        }
+      return eligibleAlarms.reduce((a, b) {
+        final aTrigger = AlarmSchedulePayload.nextTriggerAt(
+          a,
+          referenceTime: referenceTime,
+          inclusive: true,
+        )!;
+        final bTrigger = AlarmSchedulePayload.nextTriggerAt(
+          b,
+          referenceTime: referenceTime,
+          inclusive: true,
+        )!;
 
-        // If alarm repeats on any day, find the next upcoming day
-        if (aRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < a.days.length; i++) {
-            int dayIndex = (currentDay + i) % a.days.length;
-            if (a.days[dayIndex]) {
-              aTimeUntilNextAlarm += i * Duration.minutesPerDay;
-              break;
-            }
-          }
-        }
-
-        if (bRepeats) {
-          int currentDay = DateTime.now().weekday - 1;
-          for (int i = 0; i < b.days.length; i++) {
-            int dayIndex = (currentDay + i) % b.days.length;
-            if (b.days[dayIndex]) {
-              bTimeUntilNextAlarm += i * Duration.minutesPerDay;
-              break;
-            }
-          }
-        }
-
-        return aTimeUntilNextAlarm < bTimeUntilNextAlarm ? a : b;
+        return aTrigger.isBefore(bTrigger) ? a : b;
       });
-      
-      return closestAlarm;
     }
   }
 
@@ -438,7 +413,8 @@ class IsarDb {
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
-    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}', status: Status.success, type: LogType.normal);
+    await IsarDb().insertLog('Alarm updated ${alarmRecord.alarmTime}',
+        status: Status.success, type: LogType.normal);
     await sql!.update(
       'alarms',
       alarmRecord.toSQFliteMap(),
@@ -447,18 +423,14 @@ class IsarDb {
     );
   }
 
-  
   static Future<void> fixMaxSnoozeCountInAlarms() async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final sql = await IsarDb().getAlarmSQLiteDatabase();
-    
-  
+
     final alarms = await db.alarmModels.where().findAll();
-    
-  
+
     for (final alarm in alarms) {
-  
       await sql!.update(
         'alarms',
         {'maxSnoozeCount': alarm.maxSnoozeCount},
@@ -768,27 +740,32 @@ class IsarDb {
     if (ringtoneCount.isEmpty) {
       await db.writeTxn(() async {
         await db.ringtoneModels.importJson([
-          {'isarId' : fastHash('Digital Alarm 1'),
+          {
+            'isarId': fastHash('Digital Alarm 1'),
             'ringtoneName': 'Digital Alarm 1',
             'ringtonePath': 'ringtones/digialarm.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('Digital Alarm 2'),
+          {
+            'isarId': fastHash('Digital Alarm 2'),
             'ringtoneName': 'Digital Alarm 2',
             'ringtonePath': 'ringtones/digialarm2.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('Digital Alarm 3'),
+          {
+            'isarId': fastHash('Digital Alarm 3'),
             'ringtoneName': 'Digital Alarm 3',
             'ringtonePath': 'ringtones/digialarm3.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('Mystery'),
+          {
+            'isarId': fastHash('Mystery'),
             'ringtoneName': 'Mystery',
             'ringtonePath': 'ringtones/mystery.mp3',
             'currentCounterOfUsage': 0
           },
-          {'isarId' : fastHash('New Day'),
+          {
+            'isarId': fastHash('New Day'),
             'ringtoneName': 'New Day',
             'ringtonePath': 'ringtones/newday.mp3',
             'currentCounterOfUsage': 0
