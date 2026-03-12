@@ -420,10 +420,12 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-
-    if (delayToSchedule != null) {
-      delayToSchedule!.cancel();
-    }
+    // Cancel the periodic UI update timer
+    _timer.cancel(); 
+    // Cancel the delay timer if it was currently waiting
+    _delayTimer?.cancel();
+    // Cancel the scheduling delay timer
+    delayToSchedule?.cancel();
   }
 
   Future<void> fetchGoogleCalendars() async {
