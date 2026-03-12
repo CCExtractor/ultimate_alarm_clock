@@ -408,13 +408,32 @@ class HomeController extends GetxController {
     }
   }
 
+  @visibleForTesting
+  void setTimersForTest({
+    required Timer periodicTimer,
+    Timer? delayTimer,
+    Timer? scheduleTimer,
+  }) {
+    _timer = periodicTimer;
+    _delayTimer = delayTimer;
+    delayToSchedule = scheduleTimer;
+  }
+
+  @visibleForTesting
+  bool get isPeriodicTimerActiveForTest => _timer.isActive;
+
+  @visibleForTesting
+  bool get isDelayTimerActiveForTest => _delayTimer?.isActive ?? false;
+
+  @visibleForTesting
+  bool get isScheduleTimerActiveForTest => delayToSchedule?.isActive ?? false;
+
   @override
   void onClose() {
+    _timer.cancel();
+    _delayTimer?.cancel();
+    delayToSchedule?.cancel();
     super.onClose();
-
-    if (delayToSchedule != null) {
-      delayToSchedule!.cancel();
-    }
   }
 
   Future<void> fetchGoogleCalendars() async {
