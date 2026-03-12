@@ -340,11 +340,13 @@ class IsarDb {
   static Future<bool> doesAlarmExist(String alarmID) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-    final alarms =
-        await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
-    print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
+    final alarm = await db.alarmModels
+        .where()
+        .filter()
+        .alarmIDEqualTo(alarmID)
+        .findFirst();
 
-    return alarms.isNotEmpty;
+    return alarm != null;
   }
 
   static Future<AlarmModel> getLatestAlarm(
