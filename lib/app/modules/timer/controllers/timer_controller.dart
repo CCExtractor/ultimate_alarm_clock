@@ -6,21 +6,23 @@ import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-
 class LimitRange extends TextInputFormatter {
   LimitRange(this.minRange, this.maxRange) : assert(minRange < maxRange);
   final int minRange;
   final int maxRange;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     try {
       if (newValue.text.isEmpty) {
         return newValue;
       }
       int value = int.parse(newValue.text);
-      if (value < minRange) return TextEditingValue(text: minRange.toString());
-      else if (value > maxRange) return TextEditingValue(text: maxRange.toString());
+      if (value < minRange)
+        return TextEditingValue(text: minRange.toString());
+      else if (value > maxRange)
+        return TextEditingValue(text: maxRange.toString());
       return newValue;
     } catch (e) {
       debugPrint(e.toString());
@@ -40,21 +42,20 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   ScrollController scrollController = ScrollController();
   RxList timers = [].obs;
   RxList isRinging = [].obs;
-  
-  
-  final TextEditingController inputHoursControllerTimer = TextEditingController(text: '0');
-  final TextEditingController inputMinutesControllerTimer = TextEditingController(text: '1');
-  final TextEditingController inputSecondsControllerTimer = TextEditingController(text: '0');
-  
-  
+
+  final TextEditingController inputHoursControllerTimer =
+      TextEditingController(text: '0');
+  final TextEditingController inputMinutesControllerTimer =
+      TextEditingController(text: '1');
+  final TextEditingController inputSecondsControllerTimer =
+      TextEditingController(text: '0');
+
   final isTimePickerTimer = false.obs;
-  
-  
+
   void changeTimePickerTimer() {
     isTimePickerTimer.value = !isTimePickerTimer.value;
   }
-  
-  
+
   void setTimerTime() {
     try {
       int hours = int.parse(inputHoursControllerTimer.text);
@@ -68,7 +69,6 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
     }
   }
 
-  
   void setTextFieldTimerTime() {
     inputHoursControllerTimer.text = hours.value.toString();
     inputMinutesControllerTimer.text = minutes.value.toString();
@@ -162,7 +162,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   }
 
   cancelTimer() async {
-    await timerChannel.invokeMethod('cancelTimer');
+    await timerChannel.invokeMethod('clearTimerNotif');
   }
 
   @override
@@ -195,8 +195,9 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       Get.back();
     }
   }
+
   Future<void> setPresetTimer(Duration presetDuration) async {
-  remainingTime.value = presetDuration;
-  await createTimer();
-}
+    remainingTime.value = presetDuration;
+    await createTimer();
+  }
 }
