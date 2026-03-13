@@ -2,7 +2,6 @@ package com.ccextractor.ultimate_alarm_clock
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -68,18 +67,16 @@ class BootReceiver : BroadcastReceiver() {
     fun scheduleAlarm(milliSeconds: Long, context: Context, activityMonitor: Any) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = AlarmPendingIntents.broadcast(
             context,
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.LEGACY_BOOT_ALARM,
+            intent
         )
         val activityCheckIntent = Intent(context, ScreenMonitorService::class.java)
-        val pendingActivityCheckIntent = PendingIntent.getService(
+        val pendingActivityCheckIntent = AlarmPendingIntents.service(
             context,
-            4,
-            activityCheckIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.ACTIVITY_CHECK,
+            activityCheckIntent
         )
         // Schedule the alarm
         val tenMinutesInMilliseconds = 600000L
