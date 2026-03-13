@@ -25,6 +25,49 @@ data class ScheduledAlarmPayload(
     val weatherTypes: String
 )
 
+internal enum class AlarmPendingIntentKind(
+    val requestCode: Int,
+    val isBroadcast: Boolean
+) {
+    MAIN_ALARM(0, true),
+    LEGACY_BOOT_ALARM(1, true),
+    ACTIVITY_CHECK(4, false),
+    LOCATION_CHECK(5, false),
+    WEATHER_CHECK(6, false),
+}
+
+internal object AlarmPendingIntentFactory {
+    private val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+
+    fun broadcast(
+        context: Context,
+        kind: AlarmPendingIntentKind,
+        intent: Intent
+    ): PendingIntent {
+        require(kind.isBroadcast) { "$kind must be created as a broadcast PendingIntent" }
+        return PendingIntent.getBroadcast(
+            context,
+            kind.requestCode,
+            intent,
+            flags
+        )
+    }
+
+    fun service(
+        context: Context,
+        kind: AlarmPendingIntentKind,
+        intent: Intent
+    ): PendingIntent {
+        require(!kind.isBroadcast) { "$kind must be created as a service PendingIntent" }
+        return PendingIntent.getService(
+            context,
+            kind.requestCode,
+            intent,
+            flags
+        )
+    }
+}
+
 object AlarmScheduleStore {
     private const val PREFS_NAME = "ultimate_alarm_clock_schedule"
     private const val KEY_TRIGGER_AT_MS = "trigger_at_ms"
@@ -214,12 +257,6 @@ object LocalAlarmScheduleResolver {
 }
 
 object AlarmScheduler {
-    private const val ALARM_REQUEST_CODE = 0
-    private const val LEGACY_BOOT_ALARM_REQUEST_CODE = 1
-    private const val ACTIVITY_REQUEST_CODE = 4
-    private const val LOCATION_REQUEST_CODE = 5
-    private const val WEATHER_REQUEST_CODE = 6
-
     @SuppressLint("ScheduleExactAlarm")
     fun schedule(
         context: Context,
@@ -237,18 +274,16 @@ object AlarmScheduler {
         }
 
         val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = AlarmPendingIntentFactory.broadcast(
             context,
-            ALARM_REQUEST_CODE,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.MAIN_ALARM,
+            intent
         )
         val activityCheckIntent = Intent(context, ScreenMonitorService::class.java)
-        val pendingActivityCheckIntent = PendingIntent.getService(
+        val pendingActivityCheckIntent = AlarmPendingIntentFactory.service(
             context,
-            ACTIVITY_REQUEST_CODE,
-            activityCheckIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.ACTIVITY_CHECK,
+            activityCheckIntent
         )
 
         val tenMinutesInMilliseconds = 600000L
@@ -282,11 +317,10 @@ object AlarmScheduler {
             Log.d("location", payload.location)
 
             val locationAlarmIntent = Intent(context, LocationFetcherService::class.java)
-            val pendingLocationAlarmIntent = PendingIntent.getService(
+            val pendingLocationAlarmIntent = AlarmPendingIntentFactory.service(
                 context,
-                LOCATION_REQUEST_CODE,
-                locationAlarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                AlarmPendingIntentKind.LOCATION_CHECK,
+                locationAlarmIntent
             )
             val alarmClockInfo = AlarmManager.AlarmClockInfo(maxOf(now, triggerAtMs - 10000), pendingIntent)
             alarmManager.setAlarmClock(alarmClockInfo, pendingLocationAlarmIntent)
@@ -300,11 +334,10 @@ object AlarmScheduler {
             Log.d("we", weatherConditions)
 
             val weatherAlarmIntent = Intent(context, WeatherFetcherService::class.java)
-            val pendingWeatherAlarmIntent = PendingIntent.getService(
+            val pendingWeatherAlarmIntent = AlarmPendingIntentFactory.service(
                 context,
-                WEATHER_REQUEST_CODE,
-                weatherAlarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                AlarmPendingIntentKind.WEATHER_CHECK,
+                weatherAlarmIntent
             )
             val alarmClockInfo = AlarmManager.AlarmClockInfo(maxOf(now, triggerAtMs - 10000), pendingIntent)
             alarmManager.setAlarmClock(alarmClockInfo, pendingWeatherAlarmIntent)
@@ -318,50 +351,45 @@ object AlarmScheduler {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = AlarmPendingIntentFactory.broadcast(
             context,
-            ALARM_REQUEST_CODE,
-            alarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.MAIN_ALARM,
+            alarmIntent
         )
         alarmManager.cancel(pendingIntent)
         pendingIntent.cancel()
 
-        val legacyBootPendingIntent = PendingIntent.getBroadcast(
+        val legacyBootPendingIntent = AlarmPendingIntentFactory.broadcast(
             context,
-            LEGACY_BOOT_ALARM_REQUEST_CODE,
-            alarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.LEGACY_BOOT_ALARM,
+            alarmIntent
         )
         alarmManager.cancel(legacyBootPendingIntent)
         legacyBootPendingIntent.cancel()
 
         val activityIntent = Intent(context, ScreenMonitorService::class.java)
-        val pendingActivityIntent = PendingIntent.getService(
+        val pendingActivityIntent = AlarmPendingIntentFactory.service(
             context,
-            ACTIVITY_REQUEST_CODE,
-            activityIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.ACTIVITY_CHECK,
+            activityIntent
         )
         alarmManager.cancel(pendingActivityIntent)
         pendingActivityIntent.cancel()
 
         val locationIntent = Intent(context, LocationFetcherService::class.java)
-        val pendingLocationIntent = PendingIntent.getService(
+        val pendingLocationIntent = AlarmPendingIntentFactory.service(
             context,
-            LOCATION_REQUEST_CODE,
-            locationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.LOCATION_CHECK,
+            locationIntent
         )
         alarmManager.cancel(pendingLocationIntent)
         pendingLocationIntent.cancel()
 
         val weatherIntent = Intent(context, WeatherFetcherService::class.java)
-        val pendingWeatherIntent = PendingIntent.getService(
+        val pendingWeatherIntent = AlarmPendingIntentFactory.service(
             context,
-            WEATHER_REQUEST_CODE,
-            weatherIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.WEATHER_CHECK,
+            weatherIntent
         )
         alarmManager.cancel(pendingWeatherIntent)
         pendingWeatherIntent.cancel()
