@@ -69,7 +69,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: profiles!
-                                  .map((e) => profileCapsule(e))
+                                  .map((e) => profileCapsule(e, context))
                                   .toList(),
                       ),
                     );
@@ -82,7 +82,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
     ));
   }
 
-  Widget profileCapsule(ProfileModel profile) {
+  Widget profileCapsule(ProfileModel profile, BuildContext context) {
     return Padding(
       key: profile.profileName == controller.selectedProfile.value
           ? scrollKey
@@ -93,6 +93,9 @@ class _ProfileSelectState extends State<ProfileSelect> {
         onTap: () {
           controller.writeProfileName(profile.profileName);
           controller.expandProfile.value = !controller.expandProfile.value;
+        },
+        onLongPress: () {
+          controller.deleteProfile(profile, context);
         },
         child: Obx(() => Container(
               padding: EdgeInsets.symmetric(

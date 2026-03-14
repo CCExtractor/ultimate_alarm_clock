@@ -232,21 +232,132 @@ class HomeController extends GetxController {
     String profileName = await storage.readProfile();
     selectedProfile.value = profileName;
     ProfileModel? p = await IsarDb.getProfile(profileName);
-    if (p != null)
-    {
-      profileModel.value = p!;
-    }
-    
+    profileModel.value = p!;
   }
 
   void writeProfileName(String name) async {
     await storage.writeProfile(name);
     selectedProfile.value = name;
     ProfileModel? p = await IsarDb.getProfile(name);
-    if (p != null)
-    {
-      profileModel.value = p!;
+    profileModel.value = p!;
+  }
+
+  void deleteProfile(ProfileModel profile, BuildContext context) async {
+    if (profile.profileName == 'Default') {
+      Get.snackbar(
+        'Error',
+        'Cannot delete the default profile',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
     }
+
+    if (profile.isSharedAlarmEnabled) {
+      Get.snackbar(
+        'Error',
+        'This profile contains shared alarms.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    Get.defaultDialog(
+      titlePadding: const EdgeInsets.symmetric(
+        vertical: 20,
+      ),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
+      title: 'Delete Profile',
+      titleStyle: Theme.of(context).textTheme.displaySmall,
+      content: Column(
+        children: [
+          Text(
+            'This action will permanently delete '
+            'this profile and all its alarms.',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      kprimaryTextColor.withOpacity(0.5),
+                    ),
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: Theme.of(context).textTheme.displaySmall!,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    ProfileModel deletedProfile = profile;
+                    try{
+                      IsarDb.deleteProfile(profile.profileName);
+                    } catch (e) {
+                      Get.snackbar(
+                        'Error',
+                        'Failed to delete profile',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                      return;
+                    }
+                    
+                    if (profile.profileName == selectedProfile.value) {
+                      writeProfileName('Default');
+                    }
+                    Get.back();
+                    Get.snackbar(
+                      'Success',
+                      'Profile deleted successfully',
+                      snackPosition: SnackPosition.BOTTOM,
+                      colorText: Colors.white,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 15,
+                      ),
+                      mainButton: TextButton(
+                        onPressed: () async {
+                          await IsarDb.addProfile(deletedProfile);
+                          writeProfileName(deletedProfile.profileName);
+                          // might want to add the alarms back to the profile
+                          // however, patch alarm addition is not implemented yet
+                        },
+                        child: Text(
+                          'Undo',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                  ),
+                  child: Text(
+                    'Delete',
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      color: kprimaryBackgroundColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -260,8 +371,6 @@ class HomeController extends GetxController {
     }
     readProfileName();
 
-    userModel.value = await SecureStorageProvider().retrieveUserModel();
-    if (userModel.value == null){
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         isUserSignedIn.value = false;
@@ -269,11 +378,6 @@ class HomeController extends GetxController {
         isUserSignedIn.value = true;
       }
     });
-    }
-    else {
-        isUserSignedIn.value = true;
-    }
-
 
     isSortedAlarmListEnabled.value = await SecureStorageProvider()
         .readSortedAlarmListValue(key: 'sorted_alarm_list');
@@ -288,6 +392,14 @@ class HomeController extends GetxController {
       scalingFactor.value = (minFactor + (maxFactor - minFactor) * newFactor);
     });
 
+    if (Get.arguments != null) {
+      bool showMotivationalQuote = Get.arguments.showMotivationalQuote;
+
+      if (showMotivationalQuote) {
+        Quote quote = Utils.getRandomQuote();
+        showQuotePopup(quote);
+      }
+    }
   }
 
   refreshUpcomingAlarms() async {
@@ -598,6 +710,68 @@ class HomeController extends GetxController {
         colorText: Colors.white,
       );
     }
+  }
+
+  void showQuotePopup(Quote quote) {
+    Get.defaultDialog(
+      title: 'Motivational Quote',
+      titlePadding: const EdgeInsets.only(
+        top: 20,
+        bottom: 10,
+      ),
+      backgroundColor: themeController.secondaryBackgroundColor.value,
+      titleStyle: TextStyle(
+        color: themeController.primaryTextColor.value,
+      ),
+      contentPadding: const EdgeInsets.all(20),
+      content: Column(
+        children: [
+          Obx(
+            () => Text(
+              quote.getQuote(),
+              style: TextStyle(
+                color: themeController.primaryTextColor.value,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Obx(
+              () => Text(
+                quote.getAuthor(),
+                style: TextStyle(
+                  color: themeController.primaryTextColor.value,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                kprimaryColor,
+              ),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                color: themeController.secondaryTextColor.value,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> swipeToDeleteAlarm(UserModel? user, AlarmModel alarm) async {
