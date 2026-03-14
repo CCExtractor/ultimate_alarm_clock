@@ -195,10 +195,11 @@ class AddOrUpdateAlarmController extends GetxController {
     }
   }
 
-  checkOverlayPermissionAndNavigate() async {
-    if (!(await Permission.systemAlertWindow.isGranted) &&
+  Future<bool> checkOverlayPermission() async {
+    if (!(await Permission.systemAlertWindow.isGranted) ||
         !(await Permission.ignoreBatteryOptimizations.isGranted)) {
-      Get.defaultDialog(
+      bool result = false;
+      await Get.defaultDialog(
         backgroundColor: themeController.secondaryBackgroundColor.value,
         title: 'Permission Required',
         titleStyle: TextStyle(
@@ -208,8 +209,8 @@ class AddOrUpdateAlarmController extends GetxController {
             const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         titlePadding: const EdgeInsets.only(top: 30, right: 40),
         content: const Text(
-          'This app requires permission to draw overlays,send notifications'
-          ' and Ignore batter optimization.',
+          'This app requires permission to draw overlays, send notifications'
+          ' and ignore battery optimization for the alarm to work reliably.',
         ),
         actions: [
           TextButton(
@@ -218,6 +219,7 @@ class AddOrUpdateAlarmController extends GetxController {
             ),
             child: const Text('Cancel', style: TextStyle(color: Colors.black)),
             onPressed: () {
+              result = false;
               Get.back();
             },
           ),
@@ -233,47 +235,30 @@ class AddOrUpdateAlarmController extends GetxController {
               style: TextStyle(color: Colors.black),
             ),
             onPressed: () async {
-              Get.back();
-
               if (Platform.isAndroid) {
                 // Request overlay permission
                 if (!(await Permission.systemAlertWindow.isGranted)) {
-                  final status = await Permission.systemAlertWindow.request();
-                  if (!status.isGranted) {
-                    debugPrint('SYSTEM_ALERT_WINDOW permission denied!');
-                    return;
-                  }
+                  await Permission.systemAlertWindow.request();
                 }
 
                 if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
-                  bool requested = await Permission.ignoreBatteryOptimizations
-                      .request()
-                      .isGranted;
-                  if (!requested) {
-                    debugPrint(
-                      'IGNORE_BATTERY_OPTIMIZATION permission denied!',
-                    );
-                    return;
-                  }
+                  await Permission.ignoreBatteryOptimizations.request();
+                }
+
+                // Request notification permission
+                if (!await Permission.notification.isGranted) {
+                  await Permission.notification.request();
                 }
               }
-
-              // Request notification permission
-              if (!await Permission.notification.isGranted) {
-                final status = await Permission.notification.request();
-                if (status != PermissionStatus.granted) {
-                  debugPrint('Notification permission denied!');
-                  return;
-                }
-              }
-
+              result = true;
               Get.back();
             },
           ),
         ],
       );
+      return result;
     } else {
-      Get.back();
+      return true;
     }
   }
 

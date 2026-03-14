@@ -1044,11 +1044,10 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                         ),
                         onPressed: () async {
                           Utils.hapticFeedback();
-                          await controller.checkOverlayPermissionAndNavigate();
+                          bool hasPermission =
+                              await controller.checkOverlayPermission();
 
-                          if ((await Permission.systemAlertWindow.isGranted) &&
-                              (await Permission
-                                  .ignoreBatteryOptimizations.isGranted)) {
+                          if (hasPermission) {
                             if (!controller.homeController.isProfile.value) {
                               if (controller.userModel.value != null) {
                                 controller.offsetDetails[
@@ -1178,18 +1177,19 @@ class AddOrUpdateAlarmView extends GetView<AddOrUpdateAlarmController> {
                                   await controller
                                       .updateAlarm(updatedAlarmModel);
                                 }
+                                Get.back();
                               } catch (e) {
                                 debugPrint(e.toString());
                               }
                             } else {
-                              controller.createProfile();
+                              await controller.createProfile();
+                              Get.back();
                             }
                           }
                         },
                       ),
                     ),
-                  ),
-          ],
+            )],
         ),
       ),
     );
