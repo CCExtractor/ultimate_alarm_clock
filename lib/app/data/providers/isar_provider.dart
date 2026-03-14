@@ -512,6 +512,20 @@ class IsarDb {
     return profileSet;
   }
 
+  static Future<void> fixMaxSnoozeCountInAlarms() async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+
+    // This method is intentionally implemented as a no-op migration to
+    // maintain backward compatibility with existing call sites.
+    // If a real migration is needed, implement it here.
+    await IsarDb().insertLog(
+      'fixMaxSnoozeCountInAlarms executed (no-op)',
+      status: Status.success,
+      type: LogType.normal,
+    );
+  }
+
   static Future updateAlarmProfiles(String newName) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
