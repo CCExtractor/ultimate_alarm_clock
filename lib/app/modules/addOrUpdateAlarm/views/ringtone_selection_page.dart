@@ -159,11 +159,6 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
     );
   }
 
-  // Widget _buildSystemRingtonesTab() {
-  //   return SystemRingtonePicker(
-  //     isFullScreen: true,
-  //   );
-  // }
   Widget _buildSystemRingtonesTab() {
     if (GetPlatform.isIOS) {
       return Center(
