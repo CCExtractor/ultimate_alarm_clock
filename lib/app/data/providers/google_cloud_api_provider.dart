@@ -89,7 +89,9 @@ class GoogleCloudProvider {
       await _firebaseAuthInstance.signOut();
       await getInstance();
     }
-    final authHeaders = await _googleSignIn.currentUser!.authHeaders;
+    final currentUser = _googleSignIn.currentUser;
+    if (currentUser == null) return null;
+    final authHeaders = await currentUser.authHeaders;
     final httpClient = GoogleHttpClient(authHeaders);
     var dataList = await CalendarApi(httpClient).calendarList.list();
 
@@ -101,8 +103,12 @@ class GoogleCloudProvider {
   }
 
   static Future<List<Event>?> getEvents(String calenderId) async {
-    await getInstance();
-    final authHeaders = await _googleSignIn.currentUser!.authHeaders;
+    if (_googleSignIn.currentUser == null) {
+      await getInstance();
+    }
+    final currentUser = _googleSignIn.currentUser;
+    if (currentUser == null) return null;
+    final authHeaders = await currentUser.authHeaders;
     final httpClient = GoogleHttpClient(authHeaders);
     var dataList = await CalendarApi(httpClient).events.list(calenderId);
     if (dataList.items != null) {
