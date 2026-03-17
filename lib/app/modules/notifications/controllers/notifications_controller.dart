@@ -8,8 +8,6 @@ import '../../../data/providers/firestore_provider.dart';
 import '../../home/controllers/home_controller.dart';
 
 class NotificationsController extends GetxController {
-  //TODO: Implement NotificationsController
-
   late List notifications = [].obs;
   HomeController homeController = Get.find<HomeController>();
   late List allProfiles = [].obs;
