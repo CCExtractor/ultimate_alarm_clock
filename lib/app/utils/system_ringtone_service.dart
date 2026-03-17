@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:ultimate_alarm_clock/app/data/models/system_ringtone_model.dart';
+import 'package:ultimate_alarm_clock/app/utils/app_logger.dart';
 
 class SystemRingtoneService {
   static const MethodChannel _channel = MethodChannel('system_ringtones');
@@ -19,7 +20,11 @@ class SystemRingtoneService {
         return SystemRingtoneModel.fromMap(Map<String, dynamic>.from(item));
       }).toList();
     } catch (e) {
-      print('Error getting system ringtones: $e');
+      AppLogger.e(
+        'Error getting system ringtones',
+        tag: 'SystemRingtoneService',
+        error: e,
+      );
       return [];
     }
   }
@@ -40,7 +45,11 @@ class SystemRingtoneService {
       
       return allRingtones;
     } catch (e) {
-      print('Error getting all system ringtones: $e');
+      AppLogger.e(
+        'Error getting all system ringtones',
+        tag: 'SystemRingtoneService',
+        error: e,
+      );
       return [];
     }
   }
@@ -61,7 +70,11 @@ class SystemRingtoneService {
       
       return categorizedRingtones;
     } catch (e) {
-      print('Error getting categorized system ringtones: $e');
+      AppLogger.e(
+        'Error getting categorized system ringtones',
+        tag: 'SystemRingtoneService',
+        error: e,
+      );
       return {};
     }
   }
@@ -72,13 +85,23 @@ class SystemRingtoneService {
     }
 
     try {
-      print('🔊 SystemRingtoneService: Attempting to play ringtone: $ringtoneUri');
+      AppLogger.i(
+        'Attempting to play ringtone',
+        tag: 'SystemRingtoneService',
+      );
       await _channel.invokeMethod('playSystemRingtone', {
         'ringtoneUri': ringtoneUri,
       });
-      print('✅ SystemRingtoneService: Successfully called platform method');
+      AppLogger.i(
+        'Successfully called platform play method',
+        tag: 'SystemRingtoneService',
+      );
     } catch (e) {
-      print('❌ SystemRingtoneService: Error playing system ringtone: $e');
+      AppLogger.e(
+        'Error playing system ringtone',
+        tag: 'SystemRingtoneService',
+        error: e,
+      );
     }
   }
 
@@ -88,11 +111,15 @@ class SystemRingtoneService {
     }
 
     try {
-      print('🛑 SystemRingtoneService: Stopping system ringtone');
+      AppLogger.i('Stopping system ringtone', tag: 'SystemRingtoneService');
       await _channel.invokeMethod('stopSystemRingtone');
-      print('✅ SystemRingtoneService: Successfully stopped ringtone');
+      AppLogger.i('Successfully stopped ringtone', tag: 'SystemRingtoneService');
     } catch (e) {
-      print('❌ SystemRingtoneService: Error stopping system ringtone: $e');
+      AppLogger.e(
+        'Error stopping system ringtone',
+        tag: 'SystemRingtoneService',
+        error: e,
+      );
     }
   }
 
@@ -102,11 +129,15 @@ class SystemRingtoneService {
     }
 
     try {
-      print('🔍 SystemRingtoneService: Running audio diagnostics...');
+      AppLogger.i('Running audio diagnostics', tag: 'SystemRingtoneService');
       await _channel.invokeMethod('testAudio');
-      print('✅ SystemRingtoneService: Audio test completed');
+      AppLogger.i('Audio test completed', tag: 'SystemRingtoneService');
     } catch (e) {
-      print('❌ SystemRingtoneService: Audio test failed: $e');
+      AppLogger.e(
+        'Audio test failed',
+        tag: 'SystemRingtoneService',
+        error: e,
+      );
     }
   }
 } 

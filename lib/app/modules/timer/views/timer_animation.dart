@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ultimate_alarm_clock/app/data/models/timer_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
+import 'package:ultimate_alarm_clock/app/utils/app_logger.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 
 import '../../../utils/utils.dart';
@@ -32,7 +33,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
   Timer? _timerCounter;
   void startTimer() {
     _timerCounter = Timer.periodic(Duration(seconds: 1), (timer) {
-      print('${widget.timer.timerName}');
+      AppLogger.d('Timer tick for ${widget.timer.timerName}', tag: 'TimerAnimatedCard');
       if (widget.timer.timeElapsed < widget.timer.timerValue) {
         setState(() {
           widget.timer.timeElapsed += 1000;
