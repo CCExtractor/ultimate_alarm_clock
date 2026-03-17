@@ -331,6 +331,9 @@ class IsarDb {
         .and()
         .alarmTimeEqualTo(time)
         .findAll();
+    if (alarms.isEmpty) {
+      throw StateError('No enabled alarm found for time: $time');
+    }
     return alarms.first;
   }
 
