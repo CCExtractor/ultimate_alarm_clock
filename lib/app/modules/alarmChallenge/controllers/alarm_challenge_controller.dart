@@ -20,6 +20,7 @@ class AlarmChallengeController extends GetxController {
   final isShakeOngoing = Status.initialized.obs;
   ShakeDetector? _shakeDetector;
   MobileScannerController? qrController;
+  Timer? _progressTimer;
 
   final qrValue = ''.obs;
   final isQrOngoing = Status.initialized.obs;
@@ -199,27 +200,39 @@ class AlarmChallengeController extends GetxController {
     }
   }
 
-  void _startTimer() async {
+  void _startTimer() {
     const duration = Duration(seconds: 15);
-    const totalIterations = 1500000;
-    const decrement = 0.000001;
+    final stopwatch = Stopwatch()..start();
 
-    for (var i = totalIterations; i > 0; i--) {
+    // Use Timer.periodic with 16ms tick (60fps) for smooth UI updates
+    // Calculate progress based on elapsed time instead of iteration count
+    _progressTimer = Timer.periodic(Duration(milliseconds: 16), (timer) {
       if (!isTimerEnabled) {
-        debugPrint('THIS IS THE BUG');
-        break;
+        timer.cancel();
+        _progressTimer = null;
+        return;
       }
-      if (progress.value <= 0.0) {
+
+      final elapsed = stopwatch.elapsed;
+      if (elapsed >= duration) {
+        // Timer complete
+        progress.value = 0.0;
         shouldProcessStepCount = false;
+        timer.cancel();
+        _progressTimer = null;
         Get.until((route) => route.settings.name == '/alarm-ring');
-        break;
+        return;
       }
-      await Future.delayed(duration ~/ i);
-      progress.value -= decrement;
-    }
+
+      // Calculate progress: 1.0 -> 0.0 over 15 seconds
+      progress.value = 1.0 - (elapsed.inMilliseconds / duration.inMilliseconds);
+    });
   }
 
   restartTimer() {
+    // Cancel the existing timer before starting a new one
+    _progressTimer?.cancel();
+    _progressTimer = null;
     progress.value = 1.0; // Reset the progress to its initial value
     _startTimer(); // Start a new timer
   }
@@ -234,6 +247,10 @@ class AlarmChallengeController extends GetxController {
 
   @override
   void onClose() async {
+    // Clean up timer to prevent memory leaks
+    _progressTimer?.cancel();
+    _progressTimer = null;
+
     super.onClose();
 
     shouldProcessStepCount = false;
