@@ -12,16 +12,16 @@ dependencies:
   screen_state: ^4.0.0
   cupertino_icons: ^1.0.2
   win32: ^5.2.0
-  get: 4.6.6
+  get: 4.7.3
   get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
   cloud_firestore: ^4.4.5
-  intl: ^0.18.0
-  latlong2: ^0.8.1
+  intl: ^0.20.2
+  latlong2: ^0.8.2
   flutter_map: ^4.0.0
   fl_location: ^2.0.0+1
   flutter_fgbg: ^0.3.0
-  flutter_svg: ^2.0.4
+  flutter_svg: ^2.0.9
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   async: ^2.10.0
@@ -38,11 +38,11 @@ dependencies:
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
   sensors_plus: ^1.4.1
-  rxdart: ^0.27.7
+  rxdart: ^0.28.0
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.3.8
-  fluttertoast: ^8.2.5
+  fluttertoast: ^8.2.8
   path_provider: ^2.1.1
   audio_session: ^0.1.18
   uuid: ^4.3.3
