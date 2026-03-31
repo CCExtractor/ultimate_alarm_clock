@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -659,7 +660,7 @@ class AddOrUpdateAlarmController extends GetxController {
       }
     } else {
       // Making sure the alarm wasn't suddenly updated to be an offline alarm
-      print('aid = ${alarmRecord.value.alarmID}');
+      debugPrint('aid = ${alarmRecord.value.alarmID}');
       if (await IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
         alarmData.isarId = alarmRecord.value.isarId;
         await IsarDb.updateAlarm(alarmData);
@@ -1417,9 +1418,9 @@ class AddOrUpdateAlarmController extends GetxController {
       if (homeController.isProfileUpdate.value) {
         var profileId =
             await IsarDb.profileId(homeController.selectedProfile.value);
-        print(profileId);
+        debugPrint(profileId.toString());
         if (profileId != 'null') profileModel.isarId = profileId;
-        print(profileModel.isarId);
+        debugPrint(profileModel.isarId.toString());
         await IsarDb.updateAlarmProfiles(profileTextEditingController.text);
       }
 

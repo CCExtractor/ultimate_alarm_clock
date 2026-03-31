@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -396,9 +397,9 @@ class AlarmControlController extends GetxController {
             'milliSeconds': intervaltoAlarm,
             'activityMonitor': latestAlarm.activityMonitor
           });
-          print("Scheduled...");
+          debugPrint("Scheduled...");
         } on PlatformException catch (e) {
-          print("Failed to schedule alarm: ${e.message}");
+          debugPrint("Failed to schedule alarm: ${e.message}");
         }
       }
     }

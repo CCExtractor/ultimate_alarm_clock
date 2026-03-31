@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis/calendar/v3.dart' as CalendarApi;
 import 'package:intl/intl.dart';
@@ -410,9 +411,9 @@ class HomeController extends GetxController {
           'milliSeconds': intervaltoAlarm,
           'activityMonitor': latestAlarm.activityMonitor,
         });
-        print('Scheduled...');
+        debugPrint('Scheduled...');
       } on PlatformException catch (e) {
-        print('Failed to schedule alarm: ${e.message}');
+        debugPrint('Failed to schedule alarm: ${e.message}');
       }
     }
   }
@@ -444,7 +445,7 @@ class HomeController extends GetxController {
       calendarFetchStatus.value = 'Loaded';
       isCalender.value = false;
     }
-    print(Events.value);
+    debugPrint(Events.value.toString());
   }
 
   Future<void> setAlarmFromEvent(CalendarApi.Event event, String date) async {

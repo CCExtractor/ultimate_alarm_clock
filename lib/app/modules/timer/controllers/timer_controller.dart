@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -118,24 +119,24 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
   void startRinger(int id) async {
     try {
       isRinging.value.add(id);
-      print(isRinging.value);
+      debugPrint(isRinging.value.toString());
       if (isRinging.value.length == 1) {
         await timerChannel.invokeMethod('playDefaultAlarm');
       }
     } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+      debugPrint('Failed to schedule alarm: ${e.message}');
     }
   }
 
   void stopRinger(int id) async {
     try {
       isRinging.value.remove(id);
-      print(isRinging.value);
+      debugPrint(isRinging.value.toString());
       if (isRinging.value.length == 0) {
         await timerChannel.invokeMethod('stopDefaultAlarm');
       }
     } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+      debugPrint('Failed to schedule alarm: ${e.message}');
     }
   }
 
@@ -174,7 +175,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       await timerChannel.invokeMethod('runtimerNotif');
       Get.back();
     } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+      debugPrint('Failed to schedule alarm: ${e.message}');
       Get.back();
     }
   }
@@ -191,7 +192,7 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
       await timerChannel.invokeMethod('clearTimerNotif');
       Get.back();
     } on PlatformException catch (e) {
-      print('Failed to schedule alarm: ${e.message}');
+      debugPrint('Failed to schedule alarm: ${e.message}');
       Get.back();
     }
   }
