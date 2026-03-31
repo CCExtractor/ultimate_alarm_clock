@@ -58,13 +58,13 @@ class DebugView extends GetView<DebugController> {
                     hintText: 'Search by ID (e.g., 1, 2, 3) or message...'.tr,
                     prefixIcon: Icon(
                       Icons.search,
-                      color: controller.themeController.primaryTextColor.value.withOpacity(0.75),
+                      color: controller.themeController.primaryTextColor.value.withValues(alpha: 0.75),
                     ),
                     suffixIcon: controller.searchController.text.isNotEmpty
                         ? IconButton(
                             icon: Icon(
                               Icons.clear,
-                              color: controller.themeController.primaryTextColor.value.withOpacity(0.75),
+                              color: controller.themeController.primaryTextColor.value.withValues(alpha: 0.75),
                             ),
                             onPressed: () {
                               controller.searchController.clear();
@@ -78,11 +78,11 @@ class DebugView extends GetView<DebugController> {
                     filled: true,
                     fillColor: controller.themeController.secondaryBackgroundColor.value,
                     hintStyle: TextStyle(
-                      color: controller.themeController.primaryTextColor.value.withOpacity(0.5),
+                      color: controller.themeController.primaryTextColor.value.withValues(alpha: 0.5),
                     ),
                     helperText: 'Search by ID, message, or date (e.g., "1" for LogID 1)'.tr,
                     helperStyle: TextStyle(
-                      color: controller.themeController.primaryTextColor.value.withOpacity(0.5),
+                      color: controller.themeController.primaryTextColor.value.withValues(alpha: 0.5),
                       fontSize: 12,
                     ),
                   ),
@@ -104,7 +104,7 @@ class DebugView extends GetView<DebugController> {
                               filled: true,
                               fillColor: controller.themeController.secondaryBackgroundColor.value,
                               hintStyle: TextStyle(
-                                color: controller.themeController.primaryTextColor.value.withOpacity(0.5),
+                                color: controller.themeController.primaryTextColor.value.withValues(alpha: 0.5),
                               ),
                             ),
                             dropdownColor: controller.themeController.secondaryBackgroundColor.value,
@@ -161,7 +161,7 @@ class DebugView extends GetView<DebugController> {
                       child: IconButton(
                         icon: Icon(
                           Icons.calendar_today,
-                          color: controller.themeController.primaryTextColor.value.withOpacity(0.75),
+                          color: controller.themeController.primaryTextColor.value.withValues(alpha: 0.75),
                         ),
                         onPressed: controller.selectDateRange,
                       ),

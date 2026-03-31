@@ -45,12 +45,12 @@ class LabelTile extends StatelessWidget {
               controller: controller.labelController,
               style: Theme.of(context).textTheme.bodyLarge,
               cursorColor:
-                  themeController.primaryTextColor.value.withOpacity(0.75),
+                  themeController.primaryTextColor.value.withValues(alpha: 0.75),
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: themeController.primaryTextColor.value
-                        .withOpacity(0.75),
+                        .withValues(alpha: 0.75),
                     width: 1,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -58,7 +58,7 @@ class LabelTile extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: themeController.primaryTextColor.value
-                        .withOpacity(0.75),
+                        .withValues(alpha: 0.75),
                     width: 1,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -66,7 +66,7 @@ class LabelTile extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: themeController.primaryTextColor.value
-                        .withOpacity(0.75),
+                        .withValues(alpha: 0.75),
                     width: 1,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(12)),

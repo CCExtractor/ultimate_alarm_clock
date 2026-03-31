@@ -59,7 +59,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
+                                  color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                                 ),
                             ),
                           ),
@@ -72,7 +72,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                               child: Icon(
                                 Icons.vibration,
                                 size: height * 0.2,
-                                color: themeController.primaryTextColor.value.withOpacity(0.7),
+                                color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                               ),
                             ),
                           ),

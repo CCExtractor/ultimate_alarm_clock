@@ -50,7 +50,7 @@ class _LanguageMenuState extends State<LanguageMenu> {
                   Icons.arrow_drop_down_outlined,
                   size: 40.0,
                   color: widget.themeController.primaryTextColor.value
-                      .withOpacity(0.8),
+                      .withValues(alpha: 0.8),
                 ),
                 width: widget.width * 0.78,
                 initialSelection: widget.controller.currentLanguage.value,

@@ -86,7 +86,7 @@ class WeatherTile extends StatelessWidget {
               icon: Icon(
                 Icons.info_sharp,
                 size: 21,
-                color: themeController.primaryTextColor.value.withOpacity(0.3),
+                color: themeController.primaryTextColor.value.withValues(alpha: 0.3),
               ),
               onPressed: () {
                 Utils.hapticFeedback();
@@ -222,10 +222,10 @@ class WeatherOption extends StatelessWidget {
                 side: BorderSide(
                   width: width * 0.0015,
                   color:
-                      themeController.primaryTextColor.value.withOpacity(0.5),
+                      themeController.primaryTextColor.value.withValues(alpha: 0.5),
                 ),
                 value: controller.selectedWeather.contains(type),
-                activeColor: kprimaryColor.withOpacity(0.8),
+                activeColor: kprimaryColor.withValues(alpha: 0.8),
                 onChanged: (value) {
                   Utils.hapticFeedback();
                   if (controller.selectedWeather.contains(type)) {

@@ -166,7 +166,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           controller.onButtonPressed(number);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.10),
+          backgroundColor: themeController.primaryTextColor.value.withValues(alpha: 0.10),
           foregroundColor: themeController.primaryTextColor.value,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),
@@ -184,7 +184,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           controller.removeDigit();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.primaryTextColor.value.withOpacity(0.45),
+          backgroundColor: themeController.primaryTextColor.value.withValues(alpha: 0.45),
           foregroundColor: Colors.black,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),
@@ -192,7 +192,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         child: Icon(
           Icons.backspace,
           size: 32,
-          color: themeController.primaryTextColor.value.withOpacity(0.7),
+          color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
         ),
       ),
     );
@@ -215,7 +215,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: kprimaryColor.withOpacity(0.8),
+          backgroundColor: kprimaryColor.withValues(alpha: 0.8),
           foregroundColor: themeController.secondaryTextColor.value,
           padding: const EdgeInsets.all(16),
           minimumSize: const Size(64, 64),

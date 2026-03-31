@@ -142,7 +142,7 @@ class SharedUsers extends StatelessWidget {
                                                         .textTheme
                                                         .bodyLarge!
                                                         .copyWith(
-                                                          color: themeController.primaryTextColor.value.withOpacity(
+                                                          color: themeController.primaryTextColor.value.withValues(alpha: 
                                                                   0.9,
                                                                 ),
                                                         ),
@@ -182,7 +182,7 @@ class SharedUsers extends StatelessWidget {
                       },
                       child: Icon(
                         Icons.chevron_right,
-                        color: themeController.primaryTextColor.value.withOpacity(0.7),
+                        color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                       ),
                     ),
                   )

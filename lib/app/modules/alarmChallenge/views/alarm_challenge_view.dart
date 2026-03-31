@@ -84,7 +84,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                     children: [
                                       Icon(
                                         Icons.vibration,
-                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
                                         size: 28,
                                       ),
                                       Text(
@@ -103,7 +103,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
                                           color: themeController.primaryTextColor.value
-                                                  .withOpacity(0.3),
+                                                  .withValues(alpha: 0.3),
                                         ),
                                       ),
                                     ],
@@ -143,7 +143,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                     children: [
                                       Icon(
                                         Icons.calculate_sharp,
-                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
                                         size: 28,
                                       ),
                                       Text(
@@ -162,7 +162,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
                                           color: themeController.primaryTextColor.value
-                                              .withOpacity(0.3),
+                                              .withValues(alpha: 0.3),
                                         ),
                                       ),
                                     ],
@@ -200,7 +200,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                     children: [
                                       Icon(
                                         Icons.qr_code_scanner,
-                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
                                         size: 28,
                                       ),
                                       Text(
@@ -219,7 +219,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
                                           color: themeController.primaryTextColor.value
-                                              .withOpacity(0.3),
+                                              .withValues(alpha: 0.3),
                                         ),
                                       ),
                                     ],
@@ -261,7 +261,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                     children: [
                                       Icon(
                                         Icons.directions_walk,
-                                        color: themeController.primaryTextColor.value.withOpacity(0.8),
+                                        color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
                                         size: 28,
                                       ),
                                       Text(
@@ -280,7 +280,7 @@ class AlarmChallengeView extends GetView<AlarmChallengeController> {
                                               ? Icons.done
                                               : Icons.arrow_forward_ios_sharp,
                                           color: themeController.primaryTextColor.value
-                                              .withOpacity(0.3),
+                                              .withValues(alpha: 0.3),
                                         ),
                                       ),
                                     ],

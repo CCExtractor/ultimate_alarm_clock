@@ -104,7 +104,7 @@ class _TimerAnimatedCardState extends State<TimerAnimatedCard>
                 children: [
                   AnimatedContainer(
                     decoration: BoxDecoration(
-                        color: kprimaryDisabledTextColor.withOpacity(0.1),
+                        color: kprimaryDisabledTextColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(18)),
                     duration: Duration(milliseconds: 1000),
                     height: context.height / 3.3,

@@ -112,8 +112,8 @@ class HomeView extends GetView<HomeController> {
                                                     .displaySmall!
                                                     .copyWith(
                                                       color: themeController.primaryTextColor.value
-                                                              .withOpacity(
-                                                              0.75,
+                                                              .withValues(
+                                                              alpha: 0.75,
                                                             ),
                                                       fontSize: 14 *
                                                           controller
@@ -174,7 +174,7 @@ class HomeView extends GetView<HomeController> {
                                                   Icons.menu,
                                                 ),
                                                 color: themeController.primaryTextColor.value
-                                                        .withOpacity(0.75),
+                                                        .withValues(alpha: 0.75),
                                                 iconSize: 27 *
                                                     controller.scalingFactor.value,
                                               ),
@@ -282,7 +282,7 @@ class HomeView extends GetView<HomeController> {
                                             },
                                             icon: const Icon(Icons.close),
                                             color: themeController.primaryTextColor.value
-                                                    .withOpacity(0.75),
+                                                    .withValues(alpha: 0.75),
                                             iconSize: 27 *
                                                 controller.scalingFactor.value,
                                           ),
@@ -337,8 +337,8 @@ class HomeView extends GetView<HomeController> {
                                                                   .displaySmall!
                                                                   .copyWith(
                                                                     color: themeController.primaryTextColor.value
-                                                                            .withOpacity(
-                                                                            0.75,
+                                                                            .withValues(
+                                                                            alpha: 0.75,
                                                                           ),
                                                                     fontSize: 14 *
                                                                         controller
@@ -387,7 +387,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 onPressed: () => Get.back(result: false),
                                                                                 style: ButtonStyle(
                                                                                   backgroundColor: MaterialStateProperty.all(
-                                                                                    kprimaryTextColor.withOpacity(0.5),
+                                                                                    kprimaryTextColor.withValues(alpha: 0.5),
                                                                                   ),
                                                                                 ),
                                                                                 child: Text(
@@ -435,7 +435,7 @@ class HomeView extends GetView<HomeController> {
                                                                 Icons.delete,
                                                                 color: controller.numberOfAlarmsSelected.value > 0
                                                                     ? Colors.red
-                                                                    : themeController.primaryTextColor.value.withOpacity(0.75),
+                                                                    : themeController.primaryTextColor.value.withValues(alpha: 0.75),
                                                                 size: 27 * controller.scalingFactor.value,
                                                               ),
                                                             ),
@@ -822,7 +822,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.share_arrival_time,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -835,7 +835,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.location_pin,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -848,7 +848,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.screen_lock_portrait,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -861,7 +861,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.cloudy_snowing,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -874,7 +874,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.qr_code_scanner,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -887,7 +887,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.vibration,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -900,7 +900,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.calculate,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -913,7 +913,7 @@ class HomeView extends GetView<HomeController> {
                                                                                 Icons.directions_walk,
                                                                                 size: 24,
                                                                                 color: alarm.isEnabled == true
-                                                                                    ? themeController.primaryTextColor.value.withOpacity(0.5)
+                                                                                    ? themeController.primaryTextColor.value.withValues(alpha: 0.5)
                                                                                     : themeController.primaryDisabledTextColor.value,
                                                                               ),
                                                                             ),
@@ -1126,7 +1126,7 @@ class HomeView extends GetView<HomeController> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                      kprimaryTextColor.withOpacity(0.5),
+                      kprimaryTextColor.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Text(

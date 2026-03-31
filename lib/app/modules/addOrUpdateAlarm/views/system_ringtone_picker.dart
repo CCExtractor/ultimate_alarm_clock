@@ -198,13 +198,13 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
                 : const EdgeInsets.only(bottom: 4),
             decoration: isFullScreen ? BoxDecoration(
               color: isSelected
-                  ? kprimaryColor.withOpacity(0.1)
+                  ? kprimaryColor.withValues(alpha: 0.1)
                   : themeController.primaryBackgroundColor.value,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
                     ? kprimaryColor
-                    : themeController.primaryTextColor.value.withOpacity(0.1),
+                    : themeController.primaryTextColor.value.withValues(alpha: 0.1),
                 width: isSelected ? 2 : 1,
               ),
             ) : null,
@@ -215,7 +215,7 @@ class SystemRingtonePicker extends GetView<AddOrUpdateAlarmController> {
               leading: isFullScreen ? Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: isSelected ? kprimaryColor : themeController.primaryTextColor.value.withOpacity(0.1),
+                  color: isSelected ? kprimaryColor : themeController.primaryTextColor.value.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

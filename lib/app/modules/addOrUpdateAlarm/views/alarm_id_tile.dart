@@ -51,7 +51,7 @@ class AlarmIDTile extends StatelessWidget {
                   trailing: InkWell(
                     child: Icon(
                       Icons.copy,
-                      color: themeController.primaryTextColor.value.withOpacity(0.7),
+                      color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                     ),
                   ),
                 ),
@@ -113,7 +113,7 @@ class AlarmIDTile extends StatelessWidget {
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: themeController.primaryTextColor.value.withOpacity(0.7),
+                      color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                     ),
                   ),
                 ),
