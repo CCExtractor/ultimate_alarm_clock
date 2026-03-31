@@ -56,7 +56,7 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                                   .displayMedium!
                                   .copyWith(
                                     fontWeight: FontWeight.w500,
-                                    color: themeController.primaryTextColor.value.withOpacity(0.7),
+                                    color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                                   ),
                             ),
                           ),
@@ -67,7 +67,7 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                             () => Icon(
                               Icons.directions_walk,
                               size: height * 0.2,
-                              color: themeController.primaryTextColor.value.withOpacity(0.7),
+                              color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                             ),
                           ),
                           SizedBox(

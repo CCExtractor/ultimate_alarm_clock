@@ -41,7 +41,7 @@ class SharedAlarm extends StatelessWidget {
                         icon: Icon(
                           Icons.info_sharp,
                           size: 21,
-                          color: themeController.primaryTextColor.value.withOpacity(0.3),
+                          color: themeController.primaryTextColor.value.withValues(alpha: 0.3),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
@@ -203,7 +203,7 @@ class SharedAlarm extends StatelessWidget {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                             themeController.primaryTextColor.value
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                       ),
                                     ),
                                     child: FittedBox(
@@ -245,7 +245,7 @@ class SharedAlarm extends StatelessWidget {
                   trailing: InkWell(
                     child: Icon(
                       Icons.lock,
-                      color: themeController.primaryTextColor.value.withOpacity(0.7),
+                      color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                     ),
                   ),
                 ),

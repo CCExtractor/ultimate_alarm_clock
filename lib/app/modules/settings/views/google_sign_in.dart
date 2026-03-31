@@ -119,7 +119,7 @@ class GoogleSignIn extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            kprimaryTextColor.withOpacity(0.5),
+                            kprimaryTextColor.withValues(alpha: 0.5),
                           ),
                         ),
                         child: Text(
@@ -281,7 +281,7 @@ class GoogleSignIn extends StatelessWidget {
                   icon: Icon(
                     Icons.info_sharp,
                     size: 21,
-                    color: themeController.primaryTextColor.value.withOpacity(0.3),
+                    color: themeController.primaryTextColor.value.withValues(alpha: 0.3),
                   ),
                 ),
               ),
@@ -291,7 +291,7 @@ class GoogleSignIn extends StatelessWidget {
                       ? Icons.close
                       : Icons.arrow_forward_ios_sharp,
                   color:
-                      themeController.primaryTextColor.value.withOpacity(0.2),
+                      themeController.primaryTextColor.value.withValues(alpha: 0.2),
                 ),
               ),
             ],

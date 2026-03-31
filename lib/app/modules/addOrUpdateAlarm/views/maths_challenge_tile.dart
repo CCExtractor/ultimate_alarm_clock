@@ -44,7 +44,7 @@ class MathsChallenge extends StatelessWidget {
               icon: Icon(
                 Icons.info_sharp,
                 size: 21,
-                color: themeController.primaryTextColor.value.withOpacity(0.3),
+                color: themeController.primaryTextColor.value.withValues(alpha: 0.3),
               ),
               onPressed: () {
                 Utils.showModal(
@@ -94,7 +94,7 @@ class MathsChallenge extends StatelessWidget {
                           controller.mathsDifficulty.value,
                         )[0],
                         style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                              color: themeController.primaryTextColor.value.withOpacity(0.78),
+                              color: themeController.primaryTextColor.value.withValues(alpha: 0.78),
                             ),
                       ),
                       Slider.adaptive(
@@ -169,7 +169,7 @@ class MathsChallenge extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            themeController.primaryTextColor.value.withOpacity(0.5),
+                            themeController.primaryTextColor.value.withValues(alpha: 0.5),
                           ),
                         ),
                         child: Text(

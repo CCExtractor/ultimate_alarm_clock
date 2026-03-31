@@ -88,7 +88,7 @@ ThemeData kThemeData = ThemeData(
     onPrimaryContainer: ksecondaryBackgroundColor,
   ),
   inputDecorationTheme: InputDecorationTheme(
-    hintStyle: TextStyle(color: kprimaryTextColor.withOpacity(0.5)),
+    hintStyle: TextStyle(color: kprimaryTextColor.withValues(alpha: 0.5)),
     labelStyle: const TextStyle(color: kprimaryTextColor),
     focusColor: kprimaryTextColor,
     enabledBorder: OutlineInputBorder(
@@ -108,7 +108,7 @@ ThemeData kThemeData = ThemeData(
   sliderTheme: SliderThemeData(
     thumbColor: kprimaryColor,
     activeTrackColor: kprimaryColor,
-    inactiveTrackColor: kprimaryTextColor.withOpacity(0.3),
+    inactiveTrackColor: kprimaryTextColor.withValues(alpha: 0.3),
   ),
   outlinedButtonTheme: const OutlinedButtonThemeData(
     style: ButtonStyle(
@@ -210,7 +210,7 @@ ThemeData kLightThemeData = ThemeData(
     onPrimaryContainer: kLightSecondaryBackgroundColor,
   ),
   inputDecorationTheme: InputDecorationTheme(
-    hintStyle: TextStyle(color: kLightPrimaryTextColor.withOpacity(0.5)),
+    hintStyle: TextStyle(color: kLightPrimaryTextColor.withValues(alpha: 0.5)),
     labelStyle: const TextStyle(color: kLightPrimaryTextColor),
     focusColor: kLightPrimaryTextColor,
     enabledBorder: OutlineInputBorder(
@@ -230,7 +230,7 @@ ThemeData kLightThemeData = ThemeData(
   sliderTheme: SliderThemeData(
     thumbColor: kprimaryColor,
     activeTrackColor: kprimaryColor,
-    inactiveTrackColor: kLightPrimaryTextColor.withOpacity(0.3),
+    inactiveTrackColor: kLightPrimaryTextColor.withValues(alpha: 0.3),
   ),
   outlinedButtonTheme: const OutlinedButtonThemeData(
     style: ButtonStyle(

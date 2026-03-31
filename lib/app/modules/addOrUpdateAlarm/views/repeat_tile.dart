@@ -166,9 +166,9 @@ class RepeatTile extends StatelessWidget {
                   side: BorderSide(
                     width: 1.5,
                     color:
-                        themeController.primaryTextColor.value.withOpacity(0.5),
+                        themeController.primaryTextColor.value.withValues(alpha: 0.5),
                   ),
-                  activeColor: kprimaryColor.withOpacity(0.8),
+                  activeColor: kprimaryColor.withValues(alpha: 0.8),
                   value: controller.isDailySelected.value,
                   onChanged: (value) {
                     Utils.hapticFeedback();
@@ -211,9 +211,9 @@ class RepeatTile extends StatelessWidget {
                 side: BorderSide(
                   width: 1.5,
                   color:
-                      themeController.primaryTextColor.value.withOpacity(0.5),
+                      themeController.primaryTextColor.value.withValues(alpha: 0.5),
                 ),
-                activeColor: kprimaryColor.withOpacity(0.8),
+                activeColor: kprimaryColor.withValues(alpha: 0.8),
                 value: controller.repeatDays[dayIndex],
                 onChanged: (value) {
                   Utils.hapticFeedback();
@@ -339,9 +339,9 @@ class RepeatTile extends StatelessWidget {
                   side: BorderSide(
                     width: 1.5,
                     color:
-                        themeController.primaryTextColor.value.withOpacity(0.5),
+                        themeController.primaryTextColor.value.withValues(alpha: 0.5),
                   ),
-                  activeColor: kprimaryColor.withOpacity(0.8),
+                  activeColor: kprimaryColor.withValues(alpha: 0.8),
                   value: controller.isCustomSelected.value,
                   onChanged: (value) {
                     Utils.hapticFeedback();
@@ -389,9 +389,9 @@ class RepeatTile extends StatelessWidget {
                   side: BorderSide(
                     width: 1.5,
                     color:
-                        themeController.primaryTextColor.value.withOpacity(0.5),
+                        themeController.primaryTextColor.value.withValues(alpha: 0.5),
                   ),
-                  activeColor: kprimaryColor.withOpacity(0.8),
+                  activeColor: kprimaryColor.withValues(alpha: 0.8),
                   value: controller.isWeekdaysSelected.value,
                   onChanged: (value) {
                     Utils.hapticFeedback();

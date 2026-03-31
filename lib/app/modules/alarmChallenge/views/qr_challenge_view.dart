@@ -60,7 +60,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                 .displayMedium!
                                 .copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
+                                  color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
                                 ),
                             ),
                           ),
@@ -109,7 +109,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                   Icons.done,
                                                   size: height * 0.2,
                                                   color: themeController.primaryTextColor.value
-                                                          .withOpacity(0.7),
+                                                          .withValues(alpha: 0.7),
                                                 )
                                               : Column(
                                                   mainAxisAlignment:
@@ -120,7 +120,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                       Icons.close,
                                                       size: height * 0.2,
                                                       color: themeController.primaryTextColor.value
-                                                              .withOpacity(
+                                                              .withValues(alpha: 
                                                               0.7,
                                                             ),
                                                     ),
@@ -135,7 +135,7 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             color: themeController.primaryTextColor.value
-                                                                    .withOpacity(
+                                                                    .withValues(alpha: 
                                                                     0.7,
                                                                   ),
                                                           ),

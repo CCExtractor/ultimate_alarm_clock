@@ -38,8 +38,8 @@ class TimerView extends GetView<TimerController> {
             () => Text(
               'Timer',
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.primaryTextColor.value.withOpacity(
-                      0.75,
+                    color: themeController.primaryTextColor.value.withValues(
+                      alpha: 0.75,
                     ),
                     fontSize: 26,
                   ),
@@ -58,7 +58,7 @@ class TimerView extends GetView<TimerController> {
                       Icons.menu,
                     ),
                     color: themeController.primaryTextColor.value
-                        .withOpacity(0.75),
+                        .withValues(alpha: 0.75),
                     iconSize: 27,
                   ),
                 );
@@ -189,8 +189,8 @@ class TimerView extends GetView<TimerController> {
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(
                   Icons.add_alarm_outlined,
-                  color: themeController.primaryTextColor.value.withOpacity(
-                    0.75,
+                  color: themeController.primaryTextColor.value.withValues(
+                    alpha: 0.75,
                   ),
                   size: 30,
                 ),
@@ -252,7 +252,7 @@ class TimerView extends GetView<TimerController> {
                                 .displayMedium!
                                 .copyWith(
                                   color: themeController.primaryTextColor.value
-                                      .withOpacity(0.7),
+                                      .withValues(alpha: 0.7),
                                   fontSize: 15,
                                 ),
                           ),
@@ -266,7 +266,7 @@ class TimerView extends GetView<TimerController> {
                             () => Icon(
                               Icons.keyboard,
                               color: themeController.primaryTextColor.value
-                                  .withOpacity(0.7),
+                                .withValues(alpha: 0.7),
                               size: 24,
                             ),
                           ),
@@ -745,7 +745,7 @@ class TimerView extends GetView<TimerController> {
                                         .copyWith(
                                           color: themeController
                                               .primaryTextColor.value
-                                              .withOpacity(0.5),
+                                              .withValues(alpha: 0.5),
                                           fontSize: 15,
                                         ),
                                   ),
@@ -786,7 +786,7 @@ class TimerView extends GetView<TimerController> {
                                         .copyWith(
                                           color: themeController
                                               .primaryTextColor.value
-                                              .withOpacity(0.5),
+                                              .withValues(alpha: 0.5),
                                           fontSize: 15,
                                         ),
                                   ),

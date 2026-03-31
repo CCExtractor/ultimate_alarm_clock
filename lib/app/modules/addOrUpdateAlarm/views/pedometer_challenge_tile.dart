@@ -34,7 +34,7 @@ class PedometerChallenge extends StatelessWidget {
               icon: Icon(
                 Icons.info_sharp,
                 size: 21,
-                color: themeController.primaryTextColor.value.withOpacity(0.3),
+                color: themeController.primaryTextColor.value.withValues(alpha: 0.3),
               ),
               onPressed: () {
                 Utils.showModal(

@@ -173,13 +173,13 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
           Icon(
             Icons.music_off,
             size: 64,
-            color: themeController.primaryTextColor.value.withOpacity(0.5),
+            color: themeController.primaryTextColor.value.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
             'No custom ringtones found',
             style: TextStyle(
-              color: themeController.primaryTextColor.value.withOpacity(0.7),
+              color: themeController.primaryTextColor.value.withValues(alpha: 0.7),
               fontSize: 16,
             ),
           ),
@@ -187,7 +187,7 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
           Text(
             'Upload your first ringtone to get started',
             style: TextStyle(
-              color: themeController.primaryTextColor.value.withOpacity(0.5),
+              color: themeController.primaryTextColor.value.withValues(alpha: 0.5),
               fontSize: 14,
             ),
           ),
@@ -206,13 +206,13 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: isSelected
-            ? kprimaryColor.withOpacity(0.1)
+            ? kprimaryColor.withValues(alpha: 0.1)
             : themeController.primaryBackgroundColor.value,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
               ? kprimaryColor
-              : themeController.primaryTextColor.value.withOpacity(0.1),
+              : themeController.primaryTextColor.value.withValues(alpha: 0.1),
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -240,7 +240,7 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isSelected ? kprimaryColor : themeController.primaryTextColor.value.withOpacity(0.1),
+            color: isSelected ? kprimaryColor : themeController.primaryTextColor.value.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -281,7 +281,7 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
                 },
                 icon: Icon(
                   Icons.delete_outline,
-                  color: Colors.red.withOpacity(0.8),
+                  color: Colors.red.withValues(alpha: 0.8),
                   size: 24,
                 ),
               ),

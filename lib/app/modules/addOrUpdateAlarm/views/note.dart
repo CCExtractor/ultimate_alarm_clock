@@ -47,25 +47,25 @@ class NoteTile extends StatelessWidget {
               autofocus: true,
               controller: controller.noteController,
               style: Theme.of(context).textTheme.bodyLarge,
-              cursorColor: themeController.primaryTextColor.value.withOpacity(0.75),
+              cursorColor: themeController.primaryTextColor.value.withValues(alpha: 0.75),
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: themeController.primaryTextColor.value.withOpacity(0.75),
+                    color: themeController.primaryTextColor.value.withValues(alpha: 0.75),
                     width: width*0.01,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
                 ),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: themeController.primaryTextColor.value.withOpacity(0.75),
+                    color: themeController.primaryTextColor.value.withValues(alpha: 0.75),
                     width: width*0.01,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: themeController.primaryTextColor.value.withOpacity(0.75),
+                    color: themeController.primaryTextColor.value.withValues(alpha: 0.75),
                     width: width*0.01,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(12)),

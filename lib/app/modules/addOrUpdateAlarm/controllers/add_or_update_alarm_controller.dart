@@ -613,7 +613,7 @@ class AddOrUpdateAlarmController extends GetxController {
           () => TextButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                themeController.primaryTextColor.value.withOpacity(0.5),
+                themeController.primaryTextColor.value.withValues(alpha: 0.5),
               ),
             ),
             child: Text(

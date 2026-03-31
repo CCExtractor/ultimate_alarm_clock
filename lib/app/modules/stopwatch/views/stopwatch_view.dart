@@ -35,7 +35,7 @@ class StopwatchView extends GetView<StopwatchController> {
                         Icons.menu,
                       ),
                       color: themeController.primaryTextColor.value
-                          .withOpacity(0.75),
+                          .withValues(alpha: 0.75),
                       iconSize: 27,
                       // splashRadius: 0.000001,
                     ),

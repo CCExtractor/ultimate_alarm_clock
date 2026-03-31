@@ -90,13 +90,13 @@ Widget buildEndDrawer(BuildContext context) {
               'Debug Logs'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
-                        themeController.primaryTextColor.value.withOpacity(0.8),
+                        themeController.primaryTextColor.value.withValues(alpha: 0.8),
                   ),
             ),
             leading: Icon(
               Icons.bug_report,
               size: 26,
-              color: themeController.primaryTextColor.value.withOpacity(0.8),
+              color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
             ),
           ),
           ListTile(
@@ -110,13 +110,13 @@ Widget buildEndDrawer(BuildContext context) {
               'Settings'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
-                        themeController.primaryTextColor.value.withOpacity(0.8),
+                        themeController.primaryTextColor.value.withValues(alpha: 0.8),
                   ),
             ),
             leading: Icon(
               Icons.settings,
               size: 26,
-              color: themeController.primaryTextColor.value.withOpacity(0.8),
+              color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
             ),
           ),
           ListTile(
@@ -130,13 +130,13 @@ Widget buildEndDrawer(BuildContext context) {
               'About'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
-                        themeController.primaryTextColor.value.withOpacity(0.8),
+                        themeController.primaryTextColor.value.withValues(alpha: 0.8),
                   ),
             ),
             leading: Icon(
               Icons.info_outline,
               size: 26,
-              color: themeController.primaryTextColor.value.withOpacity(0.8),
+              color: themeController.primaryTextColor.value.withValues(alpha: 0.8),
             ),
           ),
         ],
