@@ -151,25 +151,49 @@ class FirestoreDb {
     return snapshot.docs.isNotEmpty;
   }
 
-  static Future<AlarmModel> getTriggeredAlarm(
-    UserModel? user,
-    String time,
-  ) async {
-    HomeController homeController = Get.find<HomeController>();
-    if (user == null) return homeController.genFakeAlarmModel();
-    QuerySnapshot snapshot = await _alarmsCollection(user)
-        .where('isEnabled', isEqualTo: true)
-        .where('alarmTime', isEqualTo: time)
-        .get();
+  // static Future<AlarmModel> getTriggeredAlarm(
+  //   UserModel? user,
+  //   String time,
+  // ) async {
+  //   HomeController homeController = Get.find<HomeController>();
+  //   if (user == null) return homeController.genFakeAlarmModel();
+  //   QuerySnapshot snapshot = await _alarmsCollection(user)
+  //       .where('isEnabled', isEqualTo: true)
+  //       .where('alarmTime', isEqualTo: time)
+  //       .get();
 
-    List list = snapshot.docs.map((DocumentSnapshot document) {
+  //   List list = snapshot.docs.map((DocumentSnapshot document) {
+  //     return AlarmModel.fromDocumentSnapshot(
+  //       documentSnapshot: document,
+  //       user: user,
+  //     );
+  //   }).toList();
+
+  //   return list[0];
+  // }
+
+  static Future<AlarmModel?> getTriggeredAlarm(UserModel? user, String time) async {
+    try {
+      // Use their built-in _alarmsCollection function to get the correct path
+      QuerySnapshot querySnapshot = await _alarmsCollection(user)
+          .where('isEnabled', isEqualTo: true)
+          .where('alarmTime', isEqualTo: time)
+          .limit(1) // Limit the query for performance
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        debugPrint('No enabled alarm found in Firestore for time: $time');
+        return null;
+      }
+
+      // Pass the user parameter correctly here
       return AlarmModel.fromDocumentSnapshot(
-        documentSnapshot: document,
-        user: user,
-      );
-    }).toList();
-
-    return list[0];
+          documentSnapshot: querySnapshot.docs.first,
+          user: user);
+    } catch (e) {
+      debugPrint('Error fetching triggered alarm from Firestore: $e');
+      return null;
+    }
   }
 
   static Future<AlarmModel> getLatestAlarm(
