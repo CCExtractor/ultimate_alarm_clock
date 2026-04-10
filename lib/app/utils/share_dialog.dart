@@ -138,7 +138,6 @@ class ShareDialog extends StatelessWidget {
                           suffixIcon: IconButton(
                             onPressed: () async {
                               if (RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                                 r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+",
                               ).hasMatch(
                                 controller.emailTextEditingController.text,
