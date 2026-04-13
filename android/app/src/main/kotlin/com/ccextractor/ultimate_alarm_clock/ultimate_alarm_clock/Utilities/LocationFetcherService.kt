@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
+import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock.sleep
 import android.util.Log
@@ -40,7 +41,7 @@ class LocationFetcherService : Service() {
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
 
         createNotificationChannel()
-        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        startForegroundCompat()
         var fetchLocationDeffered = async {
             fetchLocation()
         }
@@ -148,6 +149,15 @@ class LocationFetcherService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
+    }
+
+    private fun startForegroundCompat() {
+        val notification = getNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        } else {
+            startForeground(notificationId, notification)
+        }
     }
 
     private fun getNotification(): Notification {
