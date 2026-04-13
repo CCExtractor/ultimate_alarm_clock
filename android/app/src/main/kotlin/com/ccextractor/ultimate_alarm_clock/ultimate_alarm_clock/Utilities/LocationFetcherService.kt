@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
+import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock.sleep
 import android.util.Log
@@ -29,7 +30,6 @@ class LocationFetcherService : Service() {
 
     private val CHANNEL_ID = "location_fetcher_channel"
     private val notificationId = 4
-    private val TAG = "LocationFetcherService"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var displayManager: DisplayManager
@@ -41,56 +41,44 @@ class LocationFetcherService : Service() {
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
 
         createNotificationChannel()
-        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        startForegroundCompat()
         var fetchLocationDeffered = async {
             fetchLocation()
         }
 
         val logdbHelper = LogDatabaseHelper(this@LocationFetcherService)
+        var destinationLongitude = 0.0
+        var currentLongitude = 0.0
+        var destinationLatitude = 0.0
+        var currentLatitude = 0.0
         var location = fetchLocationDeffered.await()
         Log.d("Location", location)
-        val setLocationString = sharedPreferences.getString("flutter.set_location", null)
-
-        val currentLocation = parseCoordinates(location)
-        if (currentLocation == null) {
-            Log.e(TAG, "Invalid current location format: $location")
-            logdbHelper.insertLog(
-                "Alarm didn't ring. Invalid current location format.",
-                status = LogDatabaseHelper.Status.WARNING,
-                type = LogDatabaseHelper.LogType.NORMAL,
-                hasRung = 0
-            )
-            stopSelf()
-            return@runBlocking
+        val setLocationString = sharedPreferences.getString("flutter.set_location", "")
+        val current = location.split(",")
+        if (current.size == 2) {
+            try {
+                currentLatitude = current[0].toDouble()
+                currentLongitude = current[1].toDouble()
+            } catch (e: NumberFormatException) {
+            }
+        } else {
+            println("Invalid location string format. Expected: \"lat,long\"")
         }
+        val destination = setLocationString!!.split(",")
+        if (destination.size == 2) {
+            try {
+                destinationLatitude = destination[0].toDouble()
+                destinationLongitude = destination[1].toDouble()
 
-        if (setLocationString.isNullOrBlank()) {
-            Log.e(TAG, "Missing destination location from shared preferences.")
-            logdbHelper.insertLog(
-                "Alarm didn't ring. Destination location is missing.",
-                status = LogDatabaseHelper.Status.WARNING,
-                type = LogDatabaseHelper.LogType.NORMAL,
-                hasRung = 0
-            )
-            stopSelf()
-            return@runBlocking
-        }
-
-        val destinationLocation = parseCoordinates(setLocationString)
-        if (destinationLocation == null) {
-            Log.e(TAG, "Invalid destination location format: $setLocationString")
-            logdbHelper.insertLog(
-                "Alarm didn't ring. Destination location format is invalid.",
-                status = LogDatabaseHelper.Status.WARNING,
-                type = LogDatabaseHelper.LogType.NORMAL,
-                hasRung = 0
-            )
-            stopSelf()
-            return@runBlocking
+            } catch (e: NumberFormatException) {
+                println("Invalid latitude or longitude format.")
+            }
+        } else {
+            println("Invalid location string format. Expected: \"lat,long\"")
         }
         val distance = calculateDistance(
-            currentLocation,
-            destinationLocation
+            Location(currentLatitude, currentLongitude),
+            Location(destinationLatitude, destinationLongitude)
         )
         Log.d("Distance", "distance ${distance}")
         if (distance >= 500.0) {
@@ -142,19 +130,6 @@ class LocationFetcherService : Service() {
         return location
     }
 
-    private fun parseCoordinates(value: String): Location? {
-        val coordinates = value.split(",")
-        if (coordinates.size != 2) {
-            return null
-        }
-        val latitude = coordinates[0].toDoubleOrNull()
-        val longitude = coordinates[1].toDoubleOrNull()
-        if (latitude == null || longitude == null) {
-            return null
-        }
-        return Location(latitude, longitude)
-    }
-
     private fun createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val name = "Location Fetcher"
@@ -174,6 +149,15 @@ class LocationFetcherService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
+    }
+
+    private fun startForegroundCompat() {
+        val notification = getNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        } else {
+            startForeground(notificationId, notification)
+        }
     }
 
     private fun getNotification(): Notification {
