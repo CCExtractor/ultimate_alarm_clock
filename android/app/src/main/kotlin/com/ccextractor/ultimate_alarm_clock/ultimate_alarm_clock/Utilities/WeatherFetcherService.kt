@@ -26,6 +26,7 @@ class WeatherFetcherService() : Service() {
 
     private val CHANNEL_ID = "location_fetcher_channel"
     private val notificationId = 4
+    private val TAG = "WeatherFetcherService"
     private var OPEN_METEO_URL=""
     var shouldRing = true
     private lateinit var sharedPreferences: SharedPreferences
@@ -46,7 +47,7 @@ class WeatherFetcherService() : Service() {
 
         var currentLongitude = 0.0
         var currentLatitude = 0.0
-        weatherTypes = sharedPreferences.getString("flutter.weatherTypes", "")!!
+        weatherTypes = sharedPreferences.getString("flutter.weatherTypes", "") ?: ""
         var location = fetchLocationDeffered.await()
         Log.d("Location", location)
         val current = location.split(",")
@@ -62,9 +63,12 @@ class WeatherFetcherService() : Service() {
                 fetchWeatherDeffered.await()
 
             } catch (e: NumberFormatException) {
+                Log.e(TAG, "Invalid current location format: $location", e)
+                stopSelf()
             }
         } else {
-            println("Invalid location string format. Expected: \"lat,long\"")
+            Log.e(TAG, "Invalid location string format. Expected: \"lat,long\". Actual: $location")
+            stopSelf()
         }
 
 
@@ -82,44 +86,60 @@ class WeatherFetcherService() : Service() {
         val logdbHelper = LogDatabaseHelper(this@WeatherFetcherService)
         val request = GsonRequest(OPEN_METEO_URL, WeatherModel::class.java,
             { response ->
-
-            if(response.current?.rain!! >0 && response.current?.windSpeed10m!! > 40.0){
-                currentWeather="stormy"
-            }
-                else if(response.current?.rain!! >0)
-            {
-                    currentWeather="rainy"
-            }
-                else if(response.current?.cloudCover!! >60){
-                    currentWeather="cloudy"
-                }
-                else if(response.current?.windSpeed10m!! > 20.0){
-                    currentWeather="windy"
-                }
-                else{
-                    currentWeather="sunny"
-                }
-                Log.d("Weather",currentWeather)
-                if(weatherTypes.contains(currentWeather)){
-                    shouldRing = false
-
-                    if(shouldRing==false)
-                    
-                    {
-                        logdbHelper.insertLog(
-                            "Alarm didn't ring. Because it is ${currentWeather} outside. And, your specified weather types were: ${weatherTypes}",
-                            status = LogDatabaseHelper.Status.WARNING,
-                            type = LogDatabaseHelper.LogType.NORMAL,
-                            hasRung = 0
-                        )
-                        Timer().schedule(3000) {
-                            stopSelf()
-                        }
+                val weather = response.current
+                if (weather == null) {
+                    Log.e(TAG, "Weather response missing current payload")
+                    logdbHelper.insertLog(
+                        "Alarm didn't ring. Weather data was incomplete.",
+                        status = LogDatabaseHelper.Status.WARNING,
+                        type = LogDatabaseHelper.LogType.NORMAL,
+                        hasRung = 0
+                    )
+                    Timer().schedule(3000) {
+                        stopSelf()
                     }
+                } else {
+                    val rain = weather.rain ?: 0.0
+                    val windSpeed = weather.windSpeed10m ?: 0.0
+                    val cloudCover = weather.cloudCover ?: 0
 
-                }
-                else{
-                    shouldRing = true
+                    if(rain >0 && windSpeed > 40.0){
+                        currentWeather="stormy"
+                    }
+                    else if(rain >0)
+                    {
+                        currentWeather="rainy"
+                    }
+                    else if(cloudCover >60){
+                        currentWeather="cloudy"
+                    }
+                    else if(windSpeed > 20.0){
+                        currentWeather="windy"
+                    }
+                    else{
+                        currentWeather="sunny"
+                    }
+                    Log.d("Weather",currentWeather)
+                    if(weatherTypes.contains(currentWeather)){
+                        shouldRing = false
+
+                        if(shouldRing==false)
+
+                        {
+                            logdbHelper.insertLog(
+                                "Alarm didn't ring. Because it is ${currentWeather} outside. And, your specified weather types were: ${weatherTypes}",
+                                status = LogDatabaseHelper.Status.WARNING,
+                                type = LogDatabaseHelper.LogType.NORMAL,
+                                hasRung = 0
+                            )
+                            Timer().schedule(3000) {
+                                stopSelf()
+                            }
+                        }
+
+                    }
+                    else{
+                        shouldRing = true
 
                         if (shouldRing) {
 
@@ -148,10 +168,21 @@ class WeatherFetcherService() : Service() {
 
 
 
+                        }
                     }
                 }
             },
             { error ->
+                Log.e(TAG, "Weather API request failed", error)
+                logdbHelper.insertLog(
+                    "Alarm didn't ring. Weather API request failed.",
+                    status = LogDatabaseHelper.Status.WARNING,
+                    type = LogDatabaseHelper.LogType.NORMAL,
+                    hasRung = 0
+                )
+                Timer().schedule(3000) {
+                    stopSelf()
+                }
             })
 
 // Add the request to the Volley request queue
