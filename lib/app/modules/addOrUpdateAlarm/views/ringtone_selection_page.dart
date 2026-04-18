@@ -258,7 +258,29 @@ class RingtoneSelectionPage extends GetView<AddOrUpdateAlarmController> {
     );
   }
 
+  // Widget _buildSystemRingtonesTab() {
+  //   return SystemRingtonePicker(
+  //     isFullScreen: true,
+  //   );
+  // }
   Widget _buildSystemRingtonesTab() {
+    if (GetPlatform.isIOS) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Text(
+            'System ringtones are currently only supported on Android.\n\nPlease upload a custom ringtone to use this feature.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: themeController.primaryTextColor.value.withOpacity(0.7),
+              fontSize: 16,
+              height: 1.5,
+            ),
+          ),
+        ),
+      );
+    }
+
     return SystemRingtonePicker(
       isFullScreen: true,
     );

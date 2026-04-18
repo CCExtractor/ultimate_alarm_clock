@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
 import android.net.ConnectivityManager
@@ -416,8 +417,6 @@ class WeatherFetcherService() : Service() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
-
     private fun getNotification(): Notification {
         return try {
             val intent = Intent(this, MainActivity::class.java)
