@@ -270,6 +270,11 @@ class SpanishTranslations extends Translations {
           'Adjust the volume range:': 'Ajustar el rango de volumen:',
           'Apply Gradient': 'Aplicar degradado',
           'Ascending Volume': 'Volumen ascendente',
+          'World Clock': 'Reloj mundial',
+          'Add a world clock': 'Añadir reloj mundial',
+          'Search timezones': 'Buscar zonas horarias',
+          'My Location': 'Mi ubicación',
+          'Remove Clock': 'Eliminar reloj',
           'Alarm deleted': 'Alarma eliminada',
           'Undo': 'Deshacer',
           'The alarm has been deleted': 'La alarma ha sido eliminada'

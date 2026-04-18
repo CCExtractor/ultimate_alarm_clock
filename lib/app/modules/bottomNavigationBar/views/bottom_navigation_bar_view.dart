@@ -56,6 +56,10 @@ class BottomNavigationBarView extends GetView<BottomNavigationBarController> {
               icon: const Icon(Icons.timelapse_outlined),
               label: 'Timer'.tr,
             ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.public_outlined),
+              label: 'World Clock'.tr,
+            ),
           ],
           onTap: (index) {
             Utils.hapticFeedback();

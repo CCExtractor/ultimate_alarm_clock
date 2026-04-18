@@ -269,6 +269,11 @@ class GermanTranslations extends Translations {
           'Adjust the volume range:': 'Passen Sie den Lautstärkebereich ans:',
           'Apply Gradient': 'Farbverlauf anwenden',
           'Ascending Volume': 'Aufsteigende Lautstärke',
+          'World Clock': 'Weltuhr',
+          'Add a world clock': 'Weltuhr hinzufügen',
+          'Search timezones': 'Zeitzonen suchen',
+          'My Location': 'Mein Standort',
+          'Remove Clock': 'Uhr entfernen',
           'Alarm deleted': 'Alarm gelöscht',
           'Undo': 'Rückgängig machen',
           'The alarm has been deleted': 'Der Alarm wurde gelöscht'
