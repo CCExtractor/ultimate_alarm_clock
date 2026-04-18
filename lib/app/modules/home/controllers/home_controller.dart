@@ -1088,7 +1088,6 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    
     // Cancel all timers
     _timer.cancel();
     _delayTimer?.cancel();
@@ -1096,22 +1095,22 @@ class HomeController extends GetxController {
     _periodicSharedAlarmTimer?.cancel();
     _preventReschedulingTimer?.cancel();
     _dismissedAlarmsCleanupTimer?.cancel();
-    
+
     // Cancel all stream subscriptions
     try {
       _sharedAlarmSubscription.cancel();
     } catch (e) {
       debugPrint('Error cancelling shared alarm subscription: $e');
     }
-    
+
     _userNotificationSubscription?.cancel();
-    
+
     // Clear data structures
     recentlyDismissedAlarmIds.clear();
-    
+
     // Dispose of text controllers
     alarmIdController.dispose();
-    
+
     debugPrint('🧹 HomeController disposed - all resources cleaned up');
   }
 
