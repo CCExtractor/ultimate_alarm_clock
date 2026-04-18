@@ -24,7 +24,6 @@ class ShareDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       backgroundColor: ksecondaryBackgroundColor,
-      child: SingleChildScrollView(scrollDirection: Axis.vertical,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -44,9 +43,7 @@ class ShareDialog extends StatelessWidget {
                       child: ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: controller.selectedEmails.isNotEmpty
-                              ? WidgetStateProperty.all(
-                                  ksecondaryColor,
-                                )
+                              ? WidgetStateProperty.all(ksecondaryColor)
                               : WidgetStateProperty.all(
                                   kprimaryDisabledTextColor,
                                 ),
@@ -96,16 +93,12 @@ class ShareDialog extends StatelessWidget {
               ),
             ),
             ListTile(
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18)),
+                borderRadius: BorderRadius.circular(18),
+              ),
               title: Row(
                 children: [
-                  const Icon(
-                    Icons.person,
-                    color: ksecondaryColor,
-                  ),
+                  const Icon(Icons.person, color: ksecondaryColor),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -168,7 +161,6 @@ class ShareDialog extends StatelessWidget {
                 if (snapshot.hasData) {
                   final userList = snapshot.data;
                   return SizedBox(
-
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: userList!.length,
@@ -199,9 +191,9 @@ class ShareDialog extends StatelessWidget {
       },
       tileColor: kprimaryBackgroundColor,
       title: Padding(
-        padding:
-            EdgeInsets.symmetric(vertical: homeController.scalingFactor * 16),
-        child: SingleChildScrollView(scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(
+          vertical: homeController.scalingFactor * 16,
+        ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -310,33 +302,6 @@ class ShareDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [ homeController.isProfile.value
-                ? const Text('Sharing Profile')
-                : const Text('Sharing Alarm'),
-             SizedBox(width: Get.width*0.35,child:
-                 homeController.isProfile.value
-                     ? Text(
-
-                   homeController.selectedProfile.value,
-                   style: TextStyle(
-                     color: kprimaryColor,
-                     fontSize: homeController.scalingFactor * 30,
-                     fontWeight: FontWeight.w700,
-                   ),                          overflow: TextOverflow.ellipsis,
-                 )
-                     : Text(
-                   Utils.timeOfDayToString(
-                     TimeOfDay.fromDateTime(
-                       controller.selectedTime.value,
-
-                     ),
-                   ), overflow: TextOverflow.ellipsis,
-                   style: TextStyle(
-                     color: kprimaryColor,
-                     fontSize: homeController.scalingFactor * 30,
-                     fontWeight: FontWeight.w700,
-                   ),
-                 ),)
             children: [
               homeController.isProfile.value
                   ? const Text('Sharing Profile')
@@ -355,9 +320,7 @@ class ShareDialog extends StatelessWidget {
                       )
                     : Text(
                         Utils.timeOfDayToString(
-                          TimeOfDay.fromDateTime(
-                            controller.selectedTime.value,
-                          ),
+                          TimeOfDay.fromDateTime(controller.selectedTime.value),
                         ),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -366,7 +329,7 @@ class ShareDialog extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-              )
+              ),
             ],
           ),
         ),
