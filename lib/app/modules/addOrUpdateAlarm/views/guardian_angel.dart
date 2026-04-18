@@ -21,7 +21,7 @@ class GuardianAngel extends StatelessWidget {
   Widget build(BuildContext context) {
     // Check if using Firestore and the current user is the owner
     // and if not using, just show the tile
-    
+
     Future<void> showGuardianDialog() async {
       var phonePerm = await Permission.phone.request().isGranted;
       var smsPerm = await Permission.sms.request().isGranted;
@@ -41,7 +41,8 @@ class GuardianAngel extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InternationalPhoneNumberInput(
-                      textFieldController: controller.contactTextEditingController,
+                      textFieldController:
+                          controller.contactTextEditingController,
                       onInputChanged: (value) {},
                       onInputValidated: (value) {},
                       spaceBetweenSelectorAndTextField: 0,
@@ -73,6 +74,19 @@ class GuardianAngel extends StatelessWidget {
             ),
           ),
         );
+      } 
+      else {
+        // If permissions are denied, flip the toggle back off
+        controller.isGuardian.value = false;
+
+        Get.snackbar(
+          'Permission Required',
+          'Please enable Phone and SMS permissions in app settings to use the Guardian Angel feature.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: themeController.secondaryBackgroundColor.value,
+          colorText: themeController.primaryTextColor.value,
+          duration: const Duration(seconds: 4),
+        );
       }
     }
 
@@ -99,7 +113,8 @@ class GuardianAngel extends StatelessWidget {
                   icon: Icon(
                     Icons.info_sharp,
                     size: 21,
-                    color: themeController.primaryTextColor.value.withOpacity(0.3),
+                    color:
+                        themeController.primaryTextColor.value.withOpacity(0.3),
                   ),
                   onPressed: () {
                     Utils.showModal(
@@ -111,7 +126,8 @@ class GuardianAngel extends StatelessWidget {
                           '\n \n CALLING AND SMS PERMISSION REQUIRED.'
                           '\n \n RATES MAY APPLY AS PER YOUR SERVICE PROVIDER',
                       iconData: Icons.info_sharp,
-                      isLightMode: themeController.currentTheme.value == ThemeMode.light,
+                      isLightMode:
+                          themeController.currentTheme.value == ThemeMode.light,
                     );
                   },
                 ),
@@ -202,7 +218,8 @@ class GuardianAngel extends StatelessWidget {
               borderRadius: BorderRadius.circular(28),
               onTap: () {
                 if (controller.contactTextEditingController.text.isNotEmpty) {
-                  controller.guardian.value = controller.contactTextEditingController.text;
+                  controller.guardian.value =
+                      controller.contactTextEditingController.text;
                   controller.isGuardian.value = true;
                   Get.back();
                 } else {
