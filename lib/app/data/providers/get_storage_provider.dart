@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ultimate_alarm_clock/app/data/models/world_clock_model.dart';
 
 class GetStorageProvider {
   late final GetStorage _getStorage;
@@ -51,5 +52,17 @@ class GetStorageProvider {
   Future<String> readProfile() async {
     String profile = await _getStorage.read('profile') ?? 'Default';
     return profile;
+  }
+
+  List<WorldClockModel> readWorldClocks() {
+    final List<dynamic>? raw = _getStorage.read<List>('worldClocks');
+    if (raw == null) return [];
+    return raw
+        .map((e) => WorldClockModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
+  void writeWorldClocks(List<WorldClockModel> clocks) {
+    _getStorage.write('worldClocks', clocks.map((e) => e.toJson()).toList());
   }
 }

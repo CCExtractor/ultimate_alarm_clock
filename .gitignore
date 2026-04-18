@@ -57,7 +57,6 @@ app.*.map.json
 /.fvm
 /.tmp
 /caches
-
 # Build artifacts
 android/app/build/
 android/.gradle/
@@ -75,6 +74,9 @@ node_modules/
 package-lock.json
 yarn.lock
 
-
 google-services (8).json
 google-services.json
+/.fvmrc
+
+# FVM Version Cache
+.fvm/
