@@ -466,7 +466,7 @@ class ShareDialog extends StatelessWidget {
                       if (email.isEmpty) return;
                       
                       if (RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+",
                       ).hasMatch(email)) {
                         Utils.hapticFeedback();
                         await IsarDb.addEmail(email);
