@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -44,6 +45,7 @@ class LocationFetcherService : Service() {
         sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         createNotificationChannel()
+    }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
