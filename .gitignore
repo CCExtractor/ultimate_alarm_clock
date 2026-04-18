@@ -57,6 +57,7 @@ app.*.map.json
 /.fvm
 /.tmp
 /caches
+/.fvmrc
 
 # Build artifacts
 android/app/build/
@@ -74,7 +75,6 @@ node_modules/
 # Package managers
 package-lock.json
 yarn.lock
-
 
 google-services (8).json
 google-services.json

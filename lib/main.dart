@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await PushNotifications().initFirebaseMessaging();
+  tzdata.initializeTimeZones();
   await Permission.notification.isDenied.then((value) {
     if (value) {
       Permission.notification.request();
