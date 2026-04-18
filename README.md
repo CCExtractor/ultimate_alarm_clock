@@ -35,7 +35,7 @@ Issue: [#562](https://github.com/CCExtractor/ultimate_alarm_clock/issues/562), P
 
 ### 3) Profile Switcher and Alarm/Profile Sharing
 
-Effortlessly manage and share custom alarm profiles for different days and occasions, ensuring only the active profile's alarms are prioritized. Alarms and profiles can now be shared with other users using their emails. In-app notifications for received alarms and profiles with the option to either accept or reject them.
+Effortlessly manage and share custom alarm profiles for different days and occasions, ensuring only the active profile's alarms are prioritized. Alarms and profiles can now be shared with other users using their email addresses, including those with subdomains or hyphens. In-app notifications for received alarms and profiles with the option to either accept or reject them.
 Issue: [#591](https://github.com/CCExtractor/ultimate_alarm_clock/issues/591), Pull-Request: [#584](https://github.com/CCExtractor/ultimate_alarm_clock/pull/584)
 
 ### 4) Google Calendar Integration and Date-based Scheduling
