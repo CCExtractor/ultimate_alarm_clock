@@ -15,6 +15,7 @@ class AlarmChallengeController extends GetxController {
   AlarmModel alarmRecord = Get.arguments;
 
   final RxDouble progress = 1.0.obs;
+  int _timerSessionId = 0;
 
   final RxInt shakedCount = 0.obs;
   final isShakeOngoing = Status.initialized.obs;
@@ -204,7 +205,15 @@ class AlarmChallengeController extends GetxController {
     const totalIterations = 1500000;
     const decrement = 0.000001;
 
+    // Capture the current session ID for this specific async loop
+    final int currentSessionId = _timerSessionId;
+
     for (var i = totalIterations; i > 0; i--) {
+      // If the global session ID has changed, kill this orphaned loop immediately
+      if (currentSessionId != _timerSessionId) {
+        break;
+      }
+
       if (!isTimerEnabled) {
         debugPrint('THIS IS THE BUG');
         break;
@@ -220,9 +229,35 @@ class AlarmChallengeController extends GetxController {
   }
 
   restartTimer() {
+    _timerSessionId++; // Increment ID to kill any existing async loops
     progress.value = 1.0; // Reset the progress to its initial value
     _startTimer(); // Start a new timer
   }
+
+  // void _startTimer() async {
+  //   const duration = Duration(seconds: 15);
+  //   const totalIterations = 1500000;
+  //   const decrement = 0.000001;
+
+  //   for (var i = totalIterations; i > 0; i--) {
+  //     if (!isTimerEnabled) {
+  //       debugPrint('THIS IS THE BUG');
+  //       break;
+  //     }
+  //     if (progress.value <= 0.0) {
+  //       shouldProcessStepCount = false;
+  //       Get.until((route) => route.settings.name == '/alarm-ring');
+  //       break;
+  //     }
+  //     await Future.delayed(duration ~/ i);
+  //     progress.value -= decrement;
+  //   }
+  // }
+
+  // restartTimer() {
+  //   progress.value = 1.0; // Reset the progress to its initial value
+  //   _startTimer(); // Start a new timer
+  // }
 
   isChallengesComplete() {
     if (!Utils.isChallengeEnabled(alarmRecord)) {
@@ -255,4 +290,3 @@ class AlarmChallengeController extends GetxController {
   }
 }
 }
-
