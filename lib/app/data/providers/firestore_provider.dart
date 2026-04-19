@@ -336,18 +336,24 @@ class FirestoreDb {
   static shareAlarm(List emails, AlarmModel alarm) async {
     final currentUserEmail = _firebaseAuthInstance.currentUser!.email;
     alarm.profile = 'Default';
+    final alarmData = AlarmModel.toMap(alarm);
     Map sharedItem = {
       'type': 'alarm',
+      'payloadVersion': 2,
       'AlarmName': alarm.alarmID,
+      'alarmId': alarm.alarmID,
       'owner': currentUserEmail,
-      'alarmTime': alarm.alarmTime
+      'alarmTime': alarm.alarmTime,
+      'alarmLabel': alarm.label,
+      'alarmRepeat': Utils.getRepeatDays(alarm.days),
+      'alarmData': alarmData,
     };
     await _firebaseFirestore
         .collection('users')
         .doc(currentUserEmail)
         .collection('sharedAlarms')
         .doc(alarm.alarmID)
-        .set(AlarmModel.toMap(alarm))
+        .set(alarmData)
         .then((v) {
       Get.snackbar('Notification', 'Item Shared!');
     });
