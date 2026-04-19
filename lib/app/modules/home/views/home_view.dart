@@ -29,6 +29,10 @@ class HomeView extends GetView<HomeController> {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     var width = Get.width;
     var height = Get.height;
+
+    // Homeview resetted to expanded state whenever HomeView is rebuilt.
+    controller.scalingFactor.value = 1.0;
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
@@ -68,7 +72,8 @@ class HomeView extends GetView<HomeController> {
                         actions: [Container()],
                         automaticallyImplyLeading: false,
                         expandedHeight: height / 7.9,
-                        floating: true,
+                        collapsedHeight: height / 7.9,
+                        floating: false,
                         pinned: true,
                         snap: false,
                         centerTitle: true,
@@ -249,7 +254,8 @@ class HomeView extends GetView<HomeController> {
                         automaticallyImplyLeading: false,
                         actions: [Container()],
                         expandedHeight: height / 7.9,
-                        floating: true,
+                        collapsedHeight: height / 7.9,
+                        floating: false,
                         pinned: true,
                         snap: false,
                         centerTitle: true,
@@ -558,8 +564,8 @@ class HomeView extends GetView<HomeController> {
                                         return alarm.profile ==
                                                 controller.selectedProfile.value
                                             ? Dismissible(
-                                                onDismissed: (direction) async {
-                                                  // pop up confirmation to delete on swipe
+                                                confirmDismiss: (direction) async {
+                                                  // Show confirmation dialog BEFORE removing the item
                                                   bool userConfirmed =
                                                       await showDeleteAlarmConfirmationPopupOnSwipe(
                                                     context,
@@ -570,13 +576,8 @@ class HomeView extends GetView<HomeController> {
                                                       alarm,
                                                     );
                                                   }
-                                                  
-                                                  Get.offNamedUntil(
-                                                    '/bottom-navigation-bar',
-                                                    (route) =>
-                                                        route.settings.name ==
-                                                        '/splash-screen',
-                                                  );
+                                                  // Returning true if delete is confirmed, false otherwise
+                                                  return userConfirmed;
                                                 },
                                                 key: ValueKey(alarms[index]),
                                                 background: Container(
