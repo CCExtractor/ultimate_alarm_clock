@@ -11,7 +11,7 @@ Widget hoverPresetButton(BuildContext context, String label, Duration duration) 
   final double width = MediaQuery.of(context).size.width;
   final double height = MediaQuery.of(context).size.height;
 
-  return ElevatedButton(
+  return Obx (() => ElevatedButton(
     onPressed: () {
       timerController.remainingTime.value = duration;
       timerController.createTimer();
@@ -42,5 +42,5 @@ Widget hoverPresetButton(BuildContext context, String label, Duration duration) 
         fontWeight: FontWeight.bold,
       ),
     ),
-  );
+  ));
 }
