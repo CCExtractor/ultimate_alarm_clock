@@ -354,6 +354,7 @@ class AlarmRingController extends GetxController {
       if (dbAlarm != null) {
         maxSnoozeCount.value = dbAlarm.maxSnoozeCount;
         currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+      currentlyRingingAlarm.refresh();
         debugPrint('🔔 Set maxSnoozeCount to ${dbAlarm.maxSnoozeCount} '
             'from local database');
       } else {
