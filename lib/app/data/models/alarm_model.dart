@@ -447,9 +447,8 @@ if (offsetDetails != null) {
     smartControlCombinationType = alarmData['smartControlCombinationType'] ?? 0;
   }
 
-  AlarmModel.fromJson(String alarmData, UserModel? user) {
-    AlarmModel.fromMap(jsonDecode(alarmData));
-  }
+  AlarmModel.fromJson(String alarmData, UserModel? user)
+      : this.fromMap(jsonDecode(alarmData) as Map<String, dynamic>);
 
   static String toJson(AlarmModel alarmRecord) {
     return jsonEncode(AlarmModel.toMap(alarmRecord));
