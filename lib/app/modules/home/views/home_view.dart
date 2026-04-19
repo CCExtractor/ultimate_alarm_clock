@@ -617,15 +617,25 @@ class HomeView extends GetView<HomeController> {
                                                           .isAnyAlarmHolded
                                                           .value = true;
 
-                                                      // Assigning the alarm list pairs to list of alarms and list of isSelected all equal to false initially
+                                                      // Assigning the alarm list pairs to list of alarms and list of isSelected
+                                                      // The long-pressed alarm is selected by default
                                                       controller
                                                               .alarmListPairs =
                                                           Pair(
                                                         alarms,
                                                         List.generate(
                                                           alarms.length,
-                                                          (index) => false.obs,
+                                                          (i) => (i == index).obs,
                                                         ),
+                                                      );
+
+                                                      // The long-pressed alarm added to the selected set
+                                                      controller.numberOfAlarmsSelected.value = 1;
+                                                      controller.selectedAlarmSet.clear();
+                                                      controller.selectedAlarmSet.add(
+                                                        alarm.isSharedAlarmEnabled
+                                                            ? Pair(alarm.firestoreId, true)
+                                                            : Pair(alarm.isarId, false),
                                                       );
 
                                                 Utils.hapticFeedback();
