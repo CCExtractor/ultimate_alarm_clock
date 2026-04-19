@@ -74,6 +74,18 @@ class NotificationsController extends GetxController {
     await IsarDb.addAlarm(alarm);
   }
 
+  Future<void> importAlarmFromNotification(Map notification) async {
+    final alarmMap = await _resolveAlarmMap(notification);
+    if (alarmMap == null) {
+      Get.snackbar('Notification', 'Shared alarm data is missing');
+      return;
+    }
+    final alarm = AlarmModel.fromMap(alarmMap);
+    alarm.alarmID = Uuid().v4();
+    alarm.profile = selectedProfile.value;
+    await IsarDb.addAlarm(alarm);
+  }
+
     Future acceptSharedALarm(String alarmOwnerId, String alarmId) async {
     try {
     final alarmMap = await FirestoreDb.receiveAlarm(alarmOwnerId, alarmId);
@@ -169,6 +181,95 @@ class NotificationsController extends GetxController {
       
       rethrow;
     }
+  }
+
+  Future<void> acceptSharedAlarmFromNotification(Map notification) async {
+    try {
+      final alarmMap = await _resolveAlarmMap(notification);
+      if (alarmMap == null) {
+        Get.snackbar('Notification', 'Shared alarm data is missing');
+        return;
+      }
+
+      final alarm = AlarmModel.fromMap(alarmMap);
+      alarm.alarmID = Uuid().v4();
+      alarm.profile = selectedProfile.value;
+
+      await FirestoreDb.acceptSharedAlarm(
+        notification['owner']?.toString() ?? '',
+        alarm,
+      );
+
+      await scheduleAcceptedSharedAlarm(alarm);
+
+      debugPrint('✅ Successfully accepted and scheduled shared alarm: ${alarm.alarmTime}');
+    } catch (e) {
+      debugPrint('❌ Error accepting shared alarm: $e');
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> _resolveAlarmMap(Map notification) async {
+    final embeddedPayload = parseAlarmPayload(notification);
+    if (embeddedPayload != null) {
+      return embeddedPayload;
+    }
+
+    final alarmName =
+        (notification['alarmId'] ?? notification['AlarmName'])?.toString();
+
+    if (alarmName == null) {
+      return null;
+    }
+
+    final legacyAlarm = await FirestoreDb.receiveAlarm('', alarmName);
+    if (legacyAlarm == null) {
+      return null;
+    }
+    return Map<String, dynamic>.from(legacyAlarm);
+  }
+
+  static Map<String, dynamic>? parseAlarmPayload(Map notification) {
+    final payload = notification['alarmData'];
+    if (payload is Map) {
+      return Map<String, dynamic>.from(payload as Map);
+    }
+    return null;
+  }
+
+  static String getAlarmLabel(Map notification) {
+    final payload = parseAlarmPayload(notification);
+    if (payload != null && payload['label'] is String) {
+      final label = payload['label'] as String;
+      if (label.trim().isNotEmpty) {
+        return label;
+      }
+    }
+    return (notification['alarmLabel'] ?? '').toString();
+  }
+
+  static String getAlarmTime(Map notification) {
+    final payload = parseAlarmPayload(notification);
+    if (payload != null && payload['alarmTime'] is String) {
+      final time = payload['alarmTime'] as String;
+      if (time.trim().isNotEmpty) {
+        return time;
+      }
+    }
+    return (notification['alarmTime'] ?? '--:--').toString();
+  }
+
+  static String getAlarmRepeat(Map notification) {
+    final payload = parseAlarmPayload(notification);
+    if (payload != null && payload['days'] is List) {
+      final days = (payload['days'] as List)
+          .map((item) => item == true)
+          .toList()
+          .cast<bool>();
+      return Utils.getRepeatDays(days);
+    }
+    final fallback = notification['alarmRepeat']?.toString() ?? '';
+    return fallback.isEmpty ? 'Never'.tr : fallback;
   }
 }
 

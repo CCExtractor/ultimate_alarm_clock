@@ -531,15 +531,29 @@ static Future<List<String>> getUserIdsByEmails(List emails) async {
     }
     
     alarm.profile = 'Default';
+    final alarmData = AlarmModel.toMap(alarm);
     Map sharedItem = {
       'type': 'alarm',
-      'AlarmName': alarm.firestoreId,
-      'owner': ownerName,  // Use readable name instead of userId
-      'alarmTime': alarm.alarmTime
+      'payloadVersion': 2,
+      'AlarmName': alarm.alarmID,
+      'alarmId': alarm.alarmID,
+      'owner': ownerName,
+      'alarmTime': alarm.alarmTime,
+      'alarmLabel': alarm.label,
+      'alarmRepeat': Utils.getRepeatDays(alarm.days),
+      'alarmData': alarmData,
     };
 
+    // Persist shared alarm data for backward compatibility
+    await _firebaseFirestore
+        .collection('users')
+        .doc(currentUserEmail)
+        .collection('sharedAlarms')
+        .doc(alarm.alarmID)
+        .set(alarmData);
+
     debugPrint('🔄 Sharing alarm with ${emails.length} users');
-    debugPrint('   - Alarm ID: ${alarm.firestoreId}');
+    debugPrint('   - Alarm ID: ${alarm.alarmID}');
     debugPrint('   - Alarm Time: ${alarm.alarmTime}');
     debugPrint('   - Owner: $ownerName');
     debugPrint('   - Recipients: $emails');
@@ -550,7 +564,7 @@ static Future<List<String>> getUserIdsByEmails(List emails) async {
       for (int i = 0; i < emails.length; i++) {
         final email = emails[i];
         debugPrint('📧 Processing recipient ${i + 1}/${emails.length}: $email');
-        
+
         try {
           bool success = await addItemToUserByEmail(email, sharedItem);
           if (success) {
@@ -563,7 +577,7 @@ static Future<List<String>> getUserIdsByEmails(List emails) async {
           debugPrint('❌ Error sharing alarm with $email: $e');
         }
       }
-      
+
       if (successCount > 0) {
         debugPrint('✅ Alarm shared successfully with $successCount/${emails.length} recipients');
       } else {

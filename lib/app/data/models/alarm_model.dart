@@ -139,115 +139,123 @@ class AlarmModel {
     required firestore.DocumentSnapshot documentSnapshot,
     required UserModel? user,
   }) {
+    final data = Map<String, dynamic>.from(
+      documentSnapshot.data() as Map<String, dynamic>,
+    );
+
     // Making sure the alarms work with the offsets
-    isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
-    
-    
-    final offsetDetailsRaw = documentSnapshot['offsetDetails'];
+    isSharedAlarmEnabled = _asBool(data['isSharedAlarmEnabled'], false);
+
+    final offsetDetailsRaw = data['offsetDetails'];
     if (offsetDetailsRaw is Map) {
-    
       final offsetDetailsMap = Map<String, dynamic>.from(offsetDetailsRaw);
-    
       offsetDetails = offsetDetailsMap.entries.map((entry) {
-        final data = Map<String, dynamic>.from(entry.value);
-        data['userId'] = entry.key;
-        return data;
+        final entryData = Map<String, dynamic>.from(entry.value);
+        entryData['userId'] = entry.key;
+        return entryData;
       }).toList();
     } else if (offsetDetailsRaw is List) {
-      
-      offsetDetails = (offsetDetailsRaw as List<dynamic>)
-    .map((item) => item as Map<String, dynamic>)
-    .toList();
+      offsetDetails = offsetDetailsRaw
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
     } else {
       offsetDetails = null;
     }
 
     if (isSharedAlarmEnabled && user != null) {
-      mainAlarmTime = documentSnapshot['alarmTime'];
-      // Using offsetted time only if it is enabled
+      mainAlarmTime = _asString(data['alarmTime'], '00:00');
 
-if (offsetDetails != null) {
-  final userOffset = offsetDetails!
-      .where((entry) => entry['userId'] == user.id)
-      .toList();
+      if (offsetDetails != null) {
+        final userOffset = offsetDetails!
+            .where((entry) => entry['userId'] == user.id)
+            .toList();
 
-  if (userOffset.isNotEmpty) {
-    final data = userOffset.first;
+        if (userOffset.isNotEmpty) {
+          final userOffsetData = Map<String, dynamic>.from(userOffset.first);
+          final offsetDuration = _asInt(userOffsetData['offsetDuration'], 0);
+          final offsettedTime = _asString(
+            userOffsetData['offsettedTime'],
+            _asString(data['alarmTime'], '00:00'),
+          );
 
-    alarmTime = (data['offsetDuration'] != 0)
-        ? data['offsettedTime']
-        : documentSnapshot['alarmTime'];
-
-    minutesSinceMidnight = Utils.timeOfDayToInt(
-      Utils.stringToTimeOfDay(data['offsettedTime']),
-    );
-  }
-}
+          alarmTime = offsetDuration != 0
+              ? offsettedTime
+              : _asString(data['alarmTime'], '00:00');
+          minutesSinceMidnight = Utils.timeOfDayToInt(
+            Utils.stringToTimeOfDay(offsettedTime),
+          );
+        } else {
+          alarmTime = _asString(data['alarmTime'], '00:00');
+          minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
+        }
+      } else {
+        alarmTime = _asString(data['alarmTime'], '00:00');
+        minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
+      }
     } else {
-      alarmTime = documentSnapshot['alarmTime'];
-      minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
+      alarmTime = _asString(data['alarmTime'], '00:00');
+      minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
     }
-    snoozeDuration = documentSnapshot['snoozeDuration'];
-    maxSnoozeCount = documentSnapshot['maxSnoozeCount'] ?? 3;
-    gradient = documentSnapshot['gradient'];
-    label = documentSnapshot['label'];
-    isOneTime = documentSnapshot['isOneTime'];
+    snoozeDuration = _asInt(data['snoozeDuration'], 0);
+    maxSnoozeCount = _asInt(data['maxSnoozeCount'], 3);
+    gradient = _asInt(data['gradient'], 0);
+    label = _asString(data['label'], '');
+    isOneTime = _asBool(data['isOneTime'], false);
     firestoreId = documentSnapshot.id;
-    alarmID = documentSnapshot['alarmID'];
-    sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
-    lastEditedUserId = documentSnapshot['lastEditedUserId'];
-    mutexLock = documentSnapshot['mutexLock'];
-    ownerId = documentSnapshot['ownerId'];
-    ownerName = documentSnapshot['ownerName'];
-    days = List<bool>.from(documentSnapshot['days']);
-    isEnabled = documentSnapshot['isEnabled'];
-    intervalToAlarm = documentSnapshot['intervalToAlarm'];
-    isActivityEnabled = documentSnapshot['isActivityEnabled'];
-    activityInterval = documentSnapshot['activityInterval'];
+    alarmID = _asString(data['alarmID'], documentSnapshot.id);
+    sharedUserIds = _asStringList(data['sharedUserIds']);
+    lastEditedUserId = _asString(data['lastEditedUserId'], '');
+    mutexLock = _asBool(data['mutexLock'], false);
+    ownerId = _asString(data['ownerId'], '');
+    ownerName = _asString(data['ownerName'], '');
+    days = _asBoolList(data['days']);
+    isEnabled = _asBool(data['isEnabled'], true);
+    intervalToAlarm = _asInt(data['intervalToAlarm'], 0);
+    isActivityEnabled = _asBool(data['isActivityEnabled'], false);
+    activityInterval = _asInt(data['activityInterval'], 0);
 
-    isLocationEnabled = documentSnapshot['isLocationEnabled'];
-    locationConditionType = documentSnapshot['locationConditionType'] ?? 2; 
-    isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
-    weatherConditionType = documentSnapshot['weatherConditionType'] ?? 2; 
-    activityConditionType = documentSnapshot['activityConditionType'] ?? 2; 
-    weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
-    location = documentSnapshot['location'];
-    isMathsEnabled = documentSnapshot['isMathsEnabled'];
-    mathsDifficulty = documentSnapshot['mathsDifficulty'];
-    numMathsQuestions = documentSnapshot['numMathsQuestions'];
-    isQrEnabled = documentSnapshot['isQrEnabled'];
-    qrValue = documentSnapshot['qrValue'];
-    isShakeEnabled = documentSnapshot['isShakeEnabled'];
-    shakeTimes = documentSnapshot['shakeTimes'];
-    isPedometerEnabled = documentSnapshot['isPedometerEnabled'];
-    numberOfSteps = documentSnapshot['numberOfSteps'];
-    ringtoneName = documentSnapshot['ringtoneName'];
-    note = documentSnapshot['note'];
-    deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
-    showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
+  isLocationEnabled = _asBool(data['isLocationEnabled'], false);
+  locationConditionType = _asInt(data['locationConditionType'], 2);
+  isWeatherEnabled = _asBool(data['isWeatherEnabled'], false);
+  weatherConditionType = _asInt(data['weatherConditionType'], 2);
+  activityConditionType = _asInt(data['activityConditionType'], 2);
+  weatherTypes = _asIntList(data['weatherTypes']);
+  location = _asString(data['location'], '0.0,0.0');
+  isMathsEnabled = _asBool(data['isMathsEnabled'], false);
+  mathsDifficulty = _asInt(data['mathsDifficulty'], 0);
+  numMathsQuestions = _asInt(data['numMathsQuestions'], 0);
+  isQrEnabled = _asBool(data['isQrEnabled'], false);
+  qrValue = _asString(data['qrValue'], '');
+  isShakeEnabled = _asBool(data['isShakeEnabled'], false);
+  shakeTimes = _asInt(data['shakeTimes'], 0);
+  isPedometerEnabled = _asBool(data['isPedometerEnabled'], false);
+  numberOfSteps = _asInt(data['numberOfSteps'], 0);
+  ringtoneName = _asString(data['ringtoneName'], 'Digital Alarm 1');
+  note = _asString(data['note'], '');
+  deleteAfterGoesOff = _asBool(data['deleteAfterGoesOff'], false);
+  showMotivationalQuote = _asBool(data['showMotivationalQuote'], false);
 
-    volMax = documentSnapshot['volMax'];
-    volMin = documentSnapshot['volMin'];
+    volMax = _asDouble(data['volMax'], 1.0);
+    volMin = _asDouble(data['volMin'], 0.0);
 
-    activityMonitor = documentSnapshot['activityMonitor'];
-    alarmDate = documentSnapshot['alarmDate'];
-    profile = documentSnapshot['profile'];
+    activityMonitor = _asInt(data['activityMonitor'], 0);
+    alarmDate = _asString(data['alarmDate'], '');
+    profile = _asString(data['profile'], 'Default');
 
-    isGuardian = documentSnapshot['isGuardian'];
-    guardianTimer = documentSnapshot['guardianTimer'];
-    guardian = documentSnapshot['guardian'];
-    isCall = documentSnapshot['isCall'];
-    ringOn = documentSnapshot['ringOn'];
-    isSunriseEnabled = documentSnapshot['isSunriseEnabled'] ?? false;
-    sunriseDuration = documentSnapshot['sunriseDuration'] ?? 30;
-    sunriseIntensity = documentSnapshot['sunriseIntensity'] ?? 1.0;
-    sunriseColorScheme = documentSnapshot['sunriseColorScheme'] ?? 0;
-    timezoneId = documentSnapshot['timezoneId'] ?? '';
-    isTimezoneEnabled = documentSnapshot['isTimezoneEnabled'] ?? false;
-    targetTimezoneOffset = documentSnapshot['targetTimezoneOffset'] ?? 0;
-    // Handle smartControlCombinationType field safely
-    final data = documentSnapshot.data() as Map<String, dynamic>?;
-    smartControlCombinationType = data?['smartControlCombinationType'] ?? 0;
+  isGuardian = _asBool(data['isGuardian'], false);
+  guardianTimer = _asInt(data['guardianTimer'], 0);
+  guardian = _asString(data['guardian'], '');
+  isCall = _asBool(data['isCall'], false);
+  ringOn = _asBool(data['ringOn'], false);
+  isSunriseEnabled = _asBool(data['isSunriseEnabled'], false);
+  sunriseDuration = _asInt(data['sunriseDuration'], 30);
+  sunriseIntensity = _asDouble(data['sunriseIntensity'], 1.0);
+  sunriseColorScheme = _asInt(data['sunriseColorScheme'], 0);
+  timezoneId = _asString(data['timezoneId'], '');
+  isTimezoneEnabled = _asBool(data['isTimezoneEnabled'], false);
+  targetTimezoneOffset = _asInt(data['targetTimezoneOffset'], 0);
+  smartControlCombinationType = _asInt(data['smartControlCombinationType'], 0);
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -381,70 +389,90 @@ if (offsetDetails != null) {
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
-    mainAlarmTime = alarmData['alarmTime'];
-    snoozeDuration = alarmData['snoozeDuration'];
-    maxSnoozeCount = alarmData['maxSnoozeCount'] ?? 3;
-    gradient = alarmData['gradient'];
-    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
-    minutesSinceMidnight = alarmData['minutesSinceMidnight'];
-    alarmTime = alarmData['alarmTime'];
+    final data = Map<String, dynamic>.from(alarmData);
+    snoozeDuration = _asInt(data['snoozeDuration'], 0);
+    maxSnoozeCount = _asInt(data['maxSnoozeCount'], 3);
+    gradient = _asInt(data['gradient'], 0);
+    isSharedAlarmEnabled = _asBool(data['isSharedAlarmEnabled'], false);
+    minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
+    alarmTime = _asString(data['alarmTime'], '00:00');
+    mainAlarmTime = data['mainAlarmTime'] != null
+      ? _asString(data['mainAlarmTime'], alarmTime)
+      : alarmTime;
     firestoreId = alarmData['firestoreId'];
-    alarmID = alarmData['alarmID'];
-    sharedUserIds = List<String>.from(alarmData['sharedUserIds']);
-    lastEditedUserId = alarmData['lastEditedUserId'];
-    mutexLock = alarmData['mutexLock'];
-    ownerId = alarmData['ownerId'];
-    ownerName = alarmData['ownerName'];
-    days = List<bool>.from(alarmData['days']);
-    isEnabled = alarmData['isEnabled'];
-    intervalToAlarm = alarmData['intervalToAlarm'];
-    isActivityEnabled = alarmData['isActivityEnabled'];
-    activityInterval = alarmData['activityInterval'];
+    alarmID = _asString(data['alarmID'], '');
+    sharedUserIds = _asStringList(data['sharedUserIds']);
+    lastEditedUserId = _asString(data['lastEditedUserId'], '');
+    mutexLock = _asBool(data['mutexLock'], false);
+    ownerId = _asString(data['ownerId'], '');
+    ownerName = _asString(data['ownerName'], '');
+    days = _asBoolList(data['days']);
+    isEnabled = _asBool(data['isEnabled'], true);
+    intervalToAlarm = _asInt(data['intervalToAlarm'], 0);
+    isActivityEnabled = _asBool(data['isActivityEnabled'], false);
+    activityInterval = _asInt(data['activityInterval'], 0);
 
-    isLocationEnabled = alarmData['isLocationEnabled'];
-    locationConditionType = alarmData['locationConditionType'] ?? 2; 
-    isWeatherEnabled = alarmData['isWeatherEnabled'];
-    weatherConditionType = alarmData['weatherConditionType'] ?? 2; 
-    activityConditionType = alarmData['activityConditionType'] ?? 2; 
-    weatherTypes = List<int>.from(alarmData['weatherTypes']);
-    location = alarmData['location'];
+  isLocationEnabled = _asBool(data['isLocationEnabled'], false);
+  locationConditionType = _asInt(data['locationConditionType'], 2);
+  isWeatherEnabled = _asBool(data['isWeatherEnabled'], false);
+  weatherConditionType = _asInt(data['weatherConditionType'], 2);
+  activityConditionType = _asInt(data['activityConditionType'], 2);
+  weatherTypes = _asIntList(data['weatherTypes']);
+  location = _asString(data['location'], '0.0,0.0');
 
-    isMathsEnabled = alarmData['isMathsEnabled'];
-    mathsDifficulty = alarmData['mathsDifficulty'];
-    numMathsQuestions = alarmData['numMathsQuestions'];
-    isQrEnabled = alarmData['isQrEnabled'];
-    qrValue = alarmData['qrValue'];
-    isShakeEnabled = alarmData['isShakeEnabled'];
-    shakeTimes = alarmData['shakeTimes'];
-    isPedometerEnabled = alarmData['isPedometerEnabled'];
-    numberOfSteps = alarmData['numberOfSteps'];
-    label = alarmData['label'];
-    isOneTime = alarmData['isOneTime'];
-    ringtoneName = alarmData['ringtoneName'];
-    note = alarmData['note'];
-    deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
-    showMotivationalQuote = alarmData['showMotivationalQuote'];
+    isMathsEnabled = _asBool(data['isMathsEnabled'], false);
+    mathsDifficulty = _asInt(data['mathsDifficulty'], 0);
+    numMathsQuestions = _asInt(data['numMathsQuestions'], 0);
+    isQrEnabled = _asBool(data['isQrEnabled'], false);
+    qrValue = _asString(data['qrValue'], '');
+    isShakeEnabled = _asBool(data['isShakeEnabled'], false);
+    shakeTimes = _asInt(data['shakeTimes'], 0);
+    isPedometerEnabled = _asBool(data['isPedometerEnabled'], false);
+    numberOfSteps = _asInt(data['numberOfSteps'], 0);
+    label = _asString(data['label'], '');
+    isOneTime = _asBool(data['isOneTime'], false);
+    ringtoneName = _asString(data['ringtoneName'], 'Digital Alarm 1');
+    note = _asString(data['note'], '');
+    deleteAfterGoesOff = _asBool(data['deleteAfterGoesOff'], false);
+    showMotivationalQuote = _asBool(data['showMotivationalQuote'], false);
 
-    volMin = alarmData['volMin'];
-    volMax = alarmData['volMax'];
+    volMin = _asDouble(data['volMin'], 0.0);
+    volMax = _asDouble(data['volMax'], 1.0);
 
-    activityMonitor = alarmData['activityMonitor'];
-    alarmDate = alarmData['alarmDate'];
-    profile = alarmData['profile'];
+    activityMonitor = _asInt(data['activityMonitor'], 0);
+    alarmDate = _asString(data['alarmDate'], '');
+    profile = _asString(data['profile'], 'Default');
 
-    isGuardian = alarmData['isGuardian'];
-    guardianTimer = alarmData['guardianTimer'];
-    guardian = alarmData['guardian'];
-    isCall = alarmData['isCall'];
-    ringOn = alarmData['ringOn'];
-    isSunriseEnabled = alarmData['isSunriseEnabled'] ?? false;
-    sunriseDuration = alarmData['sunriseDuration'] ?? 30;
-    sunriseIntensity = alarmData['sunriseIntensity'] ?? 1.0;
-    sunriseColorScheme = alarmData['sunriseColorScheme'] ?? 0;
-    timezoneId = alarmData['timezoneId'] ?? '';
-    isTimezoneEnabled = alarmData['isTimezoneEnabled'] ?? false;
-    targetTimezoneOffset = alarmData['targetTimezoneOffset'] ?? 0;
-    smartControlCombinationType = alarmData['smartControlCombinationType'] ?? 0;
+    isGuardian = _asBool(data['isGuardian'], false);
+    guardianTimer = _asInt(data['guardianTimer'], 0);
+    guardian = _asString(data['guardian'], '');
+    isCall = _asBool(data['isCall'], false);
+    ringOn = _asBool(data['ringOn'], false);
+    isSunriseEnabled = _asBool(data['isSunriseEnabled'], false);
+    sunriseDuration = _asInt(data['sunriseDuration'], 30);
+    sunriseIntensity = _asDouble(data['sunriseIntensity'], 1.0);
+    sunriseColorScheme = _asInt(data['sunriseColorScheme'], 0);
+    timezoneId = _asString(data['timezoneId'], '');
+    isTimezoneEnabled = _asBool(data['isTimezoneEnabled'], false);
+    targetTimezoneOffset = _asInt(data['targetTimezoneOffset'], 0);
+    smartControlCombinationType = _asInt(data['smartControlCombinationType'], 0);
+
+    final offsetDetailsRaw = data['offsetDetails'];
+    if (offsetDetailsRaw is Map) {
+      final offsetDetailsMap = Map<String, dynamic>.from(offsetDetailsRaw);
+      offsetDetails = offsetDetailsMap.entries.map((entry) {
+        final entryData = Map<String, dynamic>.from(entry.value);
+        entryData['userId'] = entry.key;
+        return entryData;
+      }).toList();
+    } else if (offsetDetailsRaw is List) {
+      offsetDetails = offsetDetailsRaw
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
+    } else {
+      offsetDetails = null;
+    }
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user)
@@ -536,5 +564,59 @@ if (offsetDetails != null) {
     final rotatedString = s.substring(1) + s[0];
     // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
+  }
+
+  static bool _asBool(dynamic value, bool fallback) {
+    if (value is bool) return value;
+    if (value is int) return value == 1;
+    return fallback;
+  }
+
+  static int _asInt(dynamic value, int fallback) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return fallback;
+  }
+
+  static double _asDouble(dynamic value, double fallback) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    return fallback;
+  }
+
+  static String _asString(dynamic value, String fallback) {
+    if (value is String) return value;
+    return fallback;
+  }
+
+  static List<String> _asStringList(dynamic value) {
+    if (value is List) {
+      return value.whereType<String>().toList();
+    }
+    return [];
+  }
+
+  static List<bool> _asBoolList(dynamic value) {
+    if (value is List) {
+      return value
+          .map((item) => _asBool(item, false))
+          .toList()
+          .cast<bool>();
+    }
+    return List<bool>.filled(7, false);
+  }
+
+  static List<int> _asIntList(dynamic value) {
+    if (value is List) {
+      return value.map((item) => _asInt(item, 0)).toList().cast<int>();
+    }
+    return [];
+  }
+
+  static Map<String, dynamic>? _asMap(dynamic value) {
+    if (value is Map) {
+      return Map<String, dynamic>.from(value);
+    }
+    return null;
   }
 }

@@ -228,7 +228,9 @@ class NotificationsView extends GetView<NotificationsController> {
                                         ),
                       const SizedBox(height: 4),
                       Text(
-                        isAlarm ? notification['alarmTime'] : notification['profileName'],
+                        isAlarm
+                            ? NotificationsController.getAlarmTime(notification)
+                            : notification['profileName'],
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -360,7 +362,9 @@ class NotificationsView extends GetView<NotificationsController> {
             child: Column(
               children: [
                     Text(
-                      isAlarm ? notification['alarmTime'] : notification['profileName'],
+                      isAlarm
+                          ? NotificationsController.getAlarmTime(notification)
+                          : notification['profileName'],
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -371,6 +375,24 @@ class NotificationsView extends GetView<NotificationsController> {
                       const SizedBox(height: 4),
                       Text(
                         'Shared Alarm',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.6),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        NotificationsController.getAlarmLabel(notification).isEmpty
+                            ? 'Label: -'
+                            : 'Label: ${NotificationsController.getAlarmLabel(notification)}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.6),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Repeat: ${NotificationsController.getAlarmRepeat(notification)}',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white.withOpacity(0.6),
@@ -503,9 +525,8 @@ class NotificationsView extends GetView<NotificationsController> {
                           
                           if (isAlarm) {
                             debugPrint('🔔 Accepting shared alarm...');
-                            await controller.acceptSharedALarm(
-                              notification['owner'],
-                              notification['AlarmName'],
+                            await controller.acceptSharedAlarmFromNotification(
+                              notification,
                             );
                             debugPrint('✅ Shared alarm accepted successfully');
                           } else {
