@@ -260,7 +260,20 @@ class WeatherTile extends StatelessWidget {
                 onTap: () async {
                   Utils.hapticFeedback();
                   controller.weatherConditionType.value = conditionType;
-                  await controller.checkAndRequestPermission();
+                  final hasPermission = await controller.checkAndRequestPermission();
+                  if (!hasPermission) {
+                    Get.defaultDialog(
+                      titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                      backgroundColor: themeController.secondaryBackgroundColor.value,
+                      title: 'Location Permission Denied!'.tr,
+                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                      content: const Text(
+                        'Please provide all time location access to use this feature.',
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                    return;
+                  }
                   Get.defaultDialog(
                     titlePadding: const EdgeInsets.symmetric(vertical: 20),
                     backgroundColor: themeController.secondaryBackgroundColor.value,

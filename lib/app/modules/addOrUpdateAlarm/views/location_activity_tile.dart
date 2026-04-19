@@ -259,13 +259,27 @@ class LocationTile extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
+        onTap: () async {
           Utils.hapticFeedback();
           controller.locationConditionType.value = type;
           
     
           if (type != LocationConditionType.off) {
-            _showLocationPicker(Get.context!, type);
+            final hasPermission = await controller.checkAndRequestPermission();
+            if (hasPermission) {
+              _showLocationPicker(Get.context!, type);
+            } else {
+              Get.defaultDialog(
+                titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                backgroundColor: themeController.secondaryBackgroundColor.value,
+                title: 'Location Permission Denied!'.tr,
+                titleStyle: Theme.of(Get.context!).textTheme.displaySmall,
+                content: const Text(
+                  'Please provide all time location access to use this feature.',
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
           }
         },
         child: Padding(
