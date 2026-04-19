@@ -26,7 +26,7 @@ class NotificationsView extends GetView<NotificationsController> {
         stream: FirestoreDb.getNotifications(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final List notif = snapshot.data!['receivedItems'];
+            final List notif = (snapshot.data!['receivedItems'] ?? []) as List;
             controller.notifications = notif;
             return controller.notifications.isNotEmpty
                 ? ListView.builder(
@@ -66,7 +66,7 @@ class NotificationsView extends GetView<NotificationsController> {
                                                       ['type'] ==
                                                   'profile'
                                               ? "${controller.notifications[index]['profileName']} ?"
-                                              : "${controller.notifications[index]['alarmTime']} ?",
+                                              : "${NotificationsController.getAlarmTime(controller.notifications[index])} ?",
                                           style: TextStyle(
                                             color: kprimaryColor,
                                             fontSize: controller.homeController
@@ -87,8 +87,27 @@ class NotificationsView extends GetView<NotificationsController> {
                                                       .scalingFactor *
                                                   20,
                                             ),
-                                            child: Text(
-                                                "Select profile to add to"),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Select profile to add to"),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  NotificationsController
+                                                              .getAlarmLabel(
+                                                                  controller
+                                                                          .notifications[
+                                                                      index])
+                                                          .isEmpty
+                                                      ? 'Label: -'
+                                                      : 'Label: ${NotificationsController.getAlarmLabel(controller.notifications[index])}',
+                                                ),
+                                                Text(
+                                                  'Repeat: ${NotificationsController.getAlarmRepeat(controller.notifications[index])}',
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                     controller.notifications[index]['type'] ==
                                             'profile'
@@ -168,10 +187,8 @@ class NotificationsView extends GetView<NotificationsController> {
                                                         index]['profileName'],
                                                   )
                                                 : await controller.importAlarm(
-                                                    controller.notifications[
-                                                        index]['owner'],
-                                                    controller.notifications[
-                                                        index]['AlarmName'],
+                                                  controller
+                                                    .notifications[index],
                                                   );
                                             await FirestoreDb.removeItem(
                                                 controller
@@ -282,12 +299,32 @@ class NotificationsView extends GetView<NotificationsController> {
                         ),
                       )
                     : Text(
-                        notification['alarmTime'],
+                        NotificationsController.getAlarmTime(notification),
                         style: TextStyle(
                           color: kprimaryColor,
                           fontSize:
                               controller.homeController.scalingFactor * 20,
                           fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                notification['type'] == 'profile'
+                    ? const SizedBox.shrink()
+                    : Text(
+                        NotificationsController.getAlarmLabel(notification)
+                                .trim()
+                                .isEmpty
+                            ? 'Label: -'
+                            : 'Label: ${NotificationsController.getAlarmLabel(notification)}',
+                        style: TextStyle(
+                          fontSize: controller.homeController.scalingFactor * 13,
+                        ),
+                      ),
+                notification['type'] == 'profile'
+                    ? const SizedBox.shrink()
+                    : Text(
+                        'Repeat: ${NotificationsController.getAlarmRepeat(notification)}',
+                        style: TextStyle(
+                          fontSize: controller.homeController.scalingFactor * 13,
                         ),
                       ),
               ],
