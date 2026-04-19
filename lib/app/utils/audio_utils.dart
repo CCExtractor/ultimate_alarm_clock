@@ -237,10 +237,12 @@ class AudioUtils {
         await alarmChannel.invokeMethod('stopDefaultAlarm');
         await SystemRingtoneService.stopSystemRingtone();
         await audioSession!.setActive(false);
-        isPreviewing = false;
       }
     } catch (e) {
       debugPrint(e.toString());
+    } finally {
+      // Guaranteed to execute even if the native channels throw an error!
+      isPreviewing = false; 
     }
   }
 
