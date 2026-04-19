@@ -1118,7 +1118,7 @@ class HomeController extends GetxController {
 
   Future<void> fetchGoogleCalendars() async {
     Calendars.value = (await GoogleCloudProvider.getCalenders()) ?? [];
-    if (Calendars.value == []) {
+    if (Calendars.value.isEmpty) {
       calendarFetchStatus.value = 'Empty';
     } else {
       calendarFetchStatus.value = 'Loaded';
@@ -1127,8 +1127,9 @@ class HomeController extends GetxController {
 
   Future<void> fetchEvents(String calenderId) async {
     Events.value = await GoogleCloudProvider.getEvents(calenderId) ?? [];
-    if (Events.value == []) {
+    if (Events.value.isEmpty) {
       calendarFetchStatus.value = 'Empty';
+      // print("DEBUG: Events list is empty. Setting status to Empty.");
       Get.snackbar('Events', 'No events available');
     } else {
       calendarFetchStatus.value = 'Loaded';
