@@ -387,12 +387,14 @@ class AddOrUpdateAlarmController extends GetxController {
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(timezoneAwareTime), 
         repeatDays,
+        selectedDate.value,
       );
     } else {
       // Use regular time calculation
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value), 
         repeatDays,
+        selectedDate.value,
       );
     }
   }
@@ -1154,6 +1156,7 @@ class AddOrUpdateAlarmController extends GetxController {
       timeToAlarm.value = Utils.timeUntilAlarm(
         TimeOfDay.fromDateTime(selectedTime.value),
         repeatDays,
+        selectedDate.value,
       );
 
       repeatDays.value = alarmRecord.value.days;
@@ -1289,6 +1292,7 @@ class AddOrUpdateAlarmController extends GetxController {
     timeToAlarm.value = Utils.timeUntilAlarm(
       TimeOfDay.fromDateTime(selectedTime.value),
       repeatDays,
+      selectedDate.value
     );
 
     // store initial values of the variables
@@ -1343,8 +1347,15 @@ class AddOrUpdateAlarmController extends GetxController {
     selectedTime.listen((time) {
       debugPrint('CHANGED CHANGED CHANGED CHANGED');
       timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays);
+          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays, selectedDate.value);
       _compareAndSetChange('selectedTime', time);
+    });
+    
+    selectedDate.listen((date) {
+      debugPrint('CHANGED CHANGED CHANGED CHANGED');
+      timeToAlarm.value =
+          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(selectedTime.value), repeatDays, date);
+      _compareAndSetChange('selectedTime', date);
     });
 
     //Updating UI to show repeated days
@@ -1761,6 +1772,7 @@ class AddOrUpdateAlarmController extends GetxController {
       String timeToAlarm = Utils.timeUntilAlarm(
         Utils.stringToTimeOfDay(alarmRecord.alarmTime),
         alarmRecord.days,
+        Utils.stringToDate(alarmRecord.alarmDate),
       );
 
       Fluttertoast.showToast(

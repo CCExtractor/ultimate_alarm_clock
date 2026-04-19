@@ -954,19 +954,21 @@ class HomeController extends GetxController {
           String timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(displayAlarm.alarmTime),
             displayAlarm.days,
+            Utils.stringToDate(displayAlarm.alarmDate),
           );
           alarmTime.value = 'Rings in $timeToAlarm';
-          
+
           // Cancel any existing timer to prevent leaks
           if (_timer.isActive) _timer.cancel();
           if (_delayTimer != null && _delayTimer!.isActive) _delayTimer!.cancel();
-          
+
           // Start a periodic timer that updates every 30 seconds for higher accuracy
           _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
             try {
               String updatedTimeToAlarm = Utils.timeUntilAlarm(
                 Utils.stringToTimeOfDay(displayAlarm!.alarmTime),
                 displayAlarm.days,
+                Utils.stringToDate(displayAlarm.alarmDate),
               );
               alarmTime.value = 'Rings in $updatedTimeToAlarm';
               debugPrint('Updated time-to-alarm: $updatedTimeToAlarm');

@@ -308,11 +308,12 @@ class Utils {
     _timeUntilAlarmCache.clear();
   }
 
-  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, DateTime alarmDate) {
     final now = DateTime.now();
     
     // Create cache key based on alarm parameters
-    final cacheKey = '${alarmTime.hour}:${alarmTime.minute}_${days.join('')}';
+    final cacheKey =
+        '${alarmTime.hour}:${alarmTime.minute}_${days.join('')}_${alarmDate.year}-${alarmDate.month}-${alarmDate.day}';
     
     // Check if we have cached data and if it's still valid (less than 1 minute old)
     if (_timeUntilAlarmCache.containsKey(cacheKey)) {
@@ -334,17 +335,29 @@ class Utils {
 
     DateTime nextAlarmTime;
 
-    // Optimized alarm calculation
-    if (days.every((day) => !day)) {
+    // If alarm is set for a specific future date
+    if (alarmDate.isAfter(now)) {
+      nextAlarmTime = DateTime(
+        alarmDate.year,
+        alarmDate.month,
+        alarmDate.day,
+        alarmTime.hour,
+        alarmTime.minute,
+      );
+    } else if (days.every((day) => !day)) {
       // One-time alarm
-      nextAlarmTime = now.isBefore(todayAlarm) ? todayAlarm : todayAlarm.add(const Duration(days: 1));
+      nextAlarmTime = now.isBefore(todayAlarm)
+          ? todayAlarm
+          : todayAlarm.add(const Duration(days: 1));
     } else if (days.every((day) => day)) {
-      // Daily alarm  
-      nextAlarmTime = now.isBefore(todayAlarm) ? todayAlarm : todayAlarm.add(const Duration(days: 1));
+      // Daily alarm
+      nextAlarmTime = now.isBefore(todayAlarm)
+          ? todayAlarm
+          : todayAlarm.add(const Duration(days: 1));
     } else {
       // Weekly alarm - optimized logic
       final currentDayIndex = now.weekday - 1;
-      
+
       if (days[currentDayIndex] && now.isBefore(todayAlarm)) {
         // Today is a repeat day and alarm hasn't passed
         nextAlarmTime = todayAlarm;
@@ -361,11 +374,11 @@ class Utils {
             break;
           }
         }
-        
+
         if (!found) {
           return 'No upcoming alarms';
         }
-        
+
         nextAlarmTime = DateTime(
           now.year,
           now.month,
