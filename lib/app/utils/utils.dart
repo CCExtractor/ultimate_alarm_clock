@@ -308,11 +308,14 @@ class Utils {
     _timeUntilAlarmCache.clear();
   }
 
-  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, [DateTime? alarmDate]) {
     final now = DateTime.now();
     
     // Create cache key based on alarm parameters
-    final cacheKey = '${alarmTime.hour}:${alarmTime.minute}_${days.join('')}';
+    final alarmDateKey = alarmDate != null
+        ? '${alarmDate.year}-${alarmDate.month}-${alarmDate.day}'
+        : 'none';
+    final cacheKey = '${alarmTime.hour}:${alarmTime.minute}_${days.join('')}_$alarmDateKey';
     
     // Check if we have cached data and if it's still valid (less than 1 minute old)
     if (_timeUntilAlarmCache.containsKey(cacheKey)) {
@@ -333,6 +336,28 @@ class Utils {
     );
 
     DateTime nextAlarmTime;
+
+    // Date-specific alarm takes precedence when set in the future.
+    if (alarmDate != null) {
+      final dateOnly = DateTime(alarmDate.year, alarmDate.month, alarmDate.day);
+      final todayOnly = DateTime(now.year, now.month, now.day);
+      if (dateOnly.isAfter(todayOnly)) {
+        nextAlarmTime = DateTime(
+          alarmDate.year,
+          alarmDate.month,
+          alarmDate.day,
+          alarmTime.hour,
+          alarmTime.minute,
+        );
+
+        _timeUntilAlarmCache[cacheKey] = _TimeUntilAlarmCache(
+          nextAlarmTime: nextAlarmTime,
+          timestamp: now,
+        );
+
+        return _formatDuration(nextAlarmTime.difference(now));
+      }
+    }
 
     // Optimized alarm calculation
     if (days.every((day) => !day)) {

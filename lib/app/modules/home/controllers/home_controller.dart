@@ -954,6 +954,7 @@ class HomeController extends GetxController {
           String timeToAlarm = Utils.timeUntilAlarm(
             Utils.stringToTimeOfDay(displayAlarm.alarmTime),
             displayAlarm.days,
+            Utils.stringToDate(displayAlarm.alarmDate),
           );
           alarmTime.value = 'Rings in $timeToAlarm';
           
@@ -967,6 +968,7 @@ class HomeController extends GetxController {
               String updatedTimeToAlarm = Utils.timeUntilAlarm(
                 Utils.stringToTimeOfDay(displayAlarm!.alarmTime),
                 displayAlarm.days,
+                Utils.stringToDate(displayAlarm.alarmDate),
               );
               alarmTime.value = 'Rings in $updatedTimeToAlarm';
               debugPrint('Updated time-to-alarm: $updatedTimeToAlarm');
