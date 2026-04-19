@@ -98,60 +98,71 @@ class LocationTile extends StatelessWidget {
             if (value == 0) {
               controller.isLocationEnabled.value = false;
             } else if (value == 1) {
-              Get.defaultDialog(
-                backgroundColor: themeController.secondaryBackgroundColor.value,
-                title: 'Set location to automatically cancel alarm!',
-                titleStyle: Theme.of(context).textTheme.bodyMedium,
-                content: Column(
-                  children: [
-                    SizedBox(
-                      height: height * 0.65,
-                      width: width * 0.92,
-                      child: FlutterMap(
-                        mapController: controller.mapController,
-                        options: MapOptions(
-                          onTap: (tapPosition, point) {
-                            controller.selectedPoint.value = point;
-                          },
-                          // screenSize: Size(width * 0.3, height * 0.8),
-                          center: controller.selectedPoint.value,
-                          zoom: 15,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
+              if(await controller.checkAndRequestPermission()){
+                Get.defaultDialog(
+                  backgroundColor: themeController.secondaryBackgroundColor.value,
+                  title: 'Set location to automatically cancel alarm!',
+                  titleStyle: Theme.of(context).textTheme.bodyMedium,
+                  content: Column(
+                    children: [
+                      SizedBox(
+                        height: height * 0.65,
+                        width: width * 0.92,
+                        child: FlutterMap(
+                          mapController: controller.mapController,
+                          options: MapOptions(
+                            onTap: (tapPosition, point) {
+                              controller.selectedPoint.value = point;
+                            },
+                            // screenSize: Size(width * 0.3, height * 0.8),
+                            center: controller.selectedPoint.value,
+                            zoom: 15,
                           ),
-                          Obx(() => MarkerLayer(
-                              markers:
-                                  List<Marker>.from(controller.markersList))),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                      ),
-                      child: Text(
-                        'Save',
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                              color: themeController.secondaryTextColor.value,
+                          children: [
+                            TileLayer(
+                              urlTemplate:
+                                  'https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png',
                             ),
+                            Obx(() => MarkerLayer(
+                                markers:
+                                    List<Marker>.from(controller.markersList))),
+                          ],
+                        ),
                       ),
-                      onPressed: () {
-                        Utils.hapticFeedback();
-                        Get.back();
-                        controller.isLocationEnabled.value = true;
-                      },
-                    ),
-                  ],
-                ),
-              );
-
-              if (controller.isLocationEnabled.value == false) {
-                await controller.getLocation();
-                controller.mapController.move(controller.selectedPoint.value, 15);
+                      const SizedBox(height: 10),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                        ),
+                        child: Text(
+                          'Save',
+                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                color: themeController.secondaryTextColor.value,
+                              ),
+                        ),
+                        onPressed: () {
+                          Utils.hapticFeedback();
+                          Get.back();
+                          controller.isLocationEnabled.value = true;
+                        },
+                      ),
+                    ],
+                  ),
+                );
+                
+                if (controller.isLocationEnabled.value == false) {
+                  await controller.getLocation();
+                  controller.mapController.move(controller.selectedPoint.value, 15);
+                }
+              }
+              else {
+                Get.defaultDialog(
+                  titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                  backgroundColor: themeController.secondaryBackgroundColor.value,
+                  title: 'Location Permission Denied!'.tr,
+                  titleStyle: Theme.of(context).textTheme.displaySmall,
+                  content: const Text('Please provide all time location access to use this feature.', textAlign: TextAlign.center,),
+                );
               }
             }
           });
