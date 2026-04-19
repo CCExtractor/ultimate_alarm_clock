@@ -295,12 +295,22 @@ class FirestoreDb {
       return alarmRecord;
     }
 
-    int nowInMinutes = Utils.timeOfDayToInt(
-      TimeOfDay(
-        hour: TimeOfDay.now().hour,
-        minute: TimeOfDay.now().minute + 1,
-      ),
-    );
+    int nowInMinutes = 0;
+    if (wantNextAlarm == true) {
+      nowInMinutes = Utils.timeOfDayToInt(
+        TimeOfDay(
+          hour: TimeOfDay.now().hour,
+          minute: TimeOfDay.now().minute + 1,
+        ),
+      );
+    } else {
+      nowInMinutes = Utils.timeOfDayToInt(
+        TimeOfDay(
+          hour: TimeOfDay.now().hour,
+          minute: TimeOfDay.now().minute,
+        ),
+      );
+    }
 
     late List<AlarmModel> alarms = [];
 
