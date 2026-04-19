@@ -99,6 +99,13 @@ class WorldClockView extends GetView<WorldClockController> {
                   controller: controller,
                   themeController: themeController,
                   is24Hour: is24Hour,
+                  onRemove: () async {
+                    final shouldRemove =
+                        await _confirmRemove(context, clock.cityName);
+                    if (shouldRemove) {
+                      controller.removeClock(userIndex);
+                    }
+                  },
                 ),
               ),
             );
@@ -316,12 +323,14 @@ class _ClockCard extends StatelessWidget {
   final WorldClockController controller;
   final ThemeController themeController;
   final bool is24Hour;
+  final VoidCallback onRemove;
 
   const _ClockCard({
     required this.clock,
     required this.controller,
     required this.themeController,
     required this.is24Hour,
+    required this.onRemove,
   });
 
   @override
@@ -346,15 +355,32 @@ class _ClockCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    clock.cityName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: themeController.primaryTextColor.value,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          clock.cityName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: themeController.primaryTextColor.value,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: onRemove,
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: themeController.primaryDisabledTextColor.value,
+                          size: 20,
+                        ),
+                        tooltip: 'Remove Clock'.tr,
+                        visualDensity: VisualDensity.compact,
+                        splashRadius: 18,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 5),
                   Text(
