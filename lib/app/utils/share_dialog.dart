@@ -50,15 +50,24 @@ class ShareDialog extends StatelessWidget {
                         ),
                         onPressed: () async {
                           if (controller.selectedEmails.isNotEmpty) {
-                            if (homeController.isProfile.value) {
-                              await FirestoreDb.shareProfile(
-                                controller.selectedEmails,
-                              );
-                            } else {
-                              await FirestoreDb.shareAlarm(
-                                controller.selectedEmails,
-                                controller.alarmRecord.value,
-                              );
+                            try {
+                              if (homeController.isProfile.value) {
+                                await FirestoreDb.shareProfile(
+                                  controller.selectedEmails,
+                                );
+                              } else {
+                                await FirestoreDb.shareAlarm(
+                                  controller.selectedEmails,
+                                  controller.alarmRecord.value,
+                                );
+                              }
+                              // Give the user feedback that it actually worked!
+                              Get.snackbar('Success', 'Successfully shared!');
+                            } catch (e) {
+                              // Prevent the silent crash if they are offline
+                              Get.snackbar('Error',
+                                  'Failed to share. Please check your connection.');
+                              debugPrint('Share Error: $e');
                             }
                           } else {
                             Get.snackbar('Error', 'Select an User');
