@@ -1354,6 +1354,7 @@ class AddOrUpdateAlarmController extends GetxController {
     });
 
     setupListener<int>(snoozeDuration, 'snoozeDuration');
+    setupListener<int>(maxSnoozeCount, 'maxSnoozeCount');
     setupListener<bool>(deleteAfterGoesOff, 'deleteAfterGoesOff');
     setupListener<String>(label, 'label');
     setupListener<String>(note, 'note');
