@@ -48,8 +48,8 @@ class AudioUtils {
     String customRingtonePath,
   ) async {
     try {
-      var volume = await FlutterVolumeController.getVolume();
-      await audioPlayer.setVolume(volume??1.0);
+      // Force internal volume to max, OS handles actual hardware alarm volume
+      await audioPlayer.setVolume(1.0);
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.DeviceFileSource(customRingtonePath));
     } catch (e) {
@@ -61,8 +61,7 @@ class AudioUtils {
     String customRingtonePath,
   ) async {
     try {
-      var volume = await FlutterVolumeController.getVolume();
-      await audioPlayer.setVolume(volume??1.0);
+      await audioPlayer.setVolume(1.0);
       await audioPlayer.setReleaseMode(audioplayer.ReleaseMode.loop);
       await audioPlayer.play(audioplayer.AssetSource(customRingtonePath));
     } catch (e) {
@@ -77,8 +76,7 @@ class AudioUtils {
       if (audioSession == null) {
         await initializeAudioSession();
       }
-      var volume = await FlutterVolumeController.getVolume();
-      await audioPlayer.setVolume(volume??1.0);
+      await audioPlayer.setVolume(1.0);
       await audioSession!.setActive(true);
 
       String ringtoneName = alarmRecord.ringtoneName;
