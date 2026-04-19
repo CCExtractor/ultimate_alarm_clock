@@ -66,7 +66,21 @@ class LocationTile extends StatelessWidget {
     }
   }
 
-  void _showLocationPicker(BuildContext context, LocationConditionType selectedType) {
+  void _showLocationPicker(BuildContext context, LocationConditionType selectedType) async {
+    if (!await controller.checkAndRequestPermission()) {
+      Get.defaultDialog(
+        titlePadding: const EdgeInsets.symmetric(vertical: 20),
+        backgroundColor: themeController.secondaryBackgroundColor.value,
+        title: 'Location Permission Denied!'.tr,
+        titleStyle: Theme.of(context).textTheme.displaySmall,
+        content: const Text(
+          'Please provide all time location access to use this feature.',
+          textAlign: TextAlign.center,
+        ),
+      );
+      return;
+    }
+
     Get.bottomSheet(
       Container(
         height: height * 0.9,
@@ -79,7 +93,6 @@ class LocationTile extends StatelessWidget {
         ),
         child: Column(
           children: [
-            
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: 40,
@@ -89,8 +102,6 @@ class LocationTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
-            
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -120,8 +131,6 @@ class LocationTile extends StatelessWidget {
                 ],
               ),
             ),
-            
-            
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -143,26 +152,18 @@ class LocationTile extends StatelessWidget {
                       zoom: 15,
                     ),
                     children: [
-                      // OpenStreetMap TileLayer with improved error handling and rate limiting prevention
-                      // This configuration includes proper User-Agent headers and fallback options
-                      // to prevent HTTP 403 errors from OpenStreetMap tile servers
                       TileLayer(
                         urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                         subdomains: const ['a', 'b', 'c'],
                         userAgentPackageName: 'com.ccextractor.ultimate_alarm_clock',
-                        // Add proper headers to prevent 403 errors
                         additionalOptions: const {
                           'User-Agent': 'Ultimate Alarm Clock/1.0',
                         },
-                        // Add error handling for failed tile loads
                         errorTileCallback: (tile, error, stackTrace) {
                           debugPrint('Map tile failed to load: $error');
                         },
-                        // Reduce maximum zoom to prevent over-requesting
                         maxZoom: 18,
-                        // Add tile caching
                         tileProvider: NetworkTileProvider(),
-                        // Fallback to alternative tile server if OSM fails
                         fallbackUrl: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
                       ),
                       Obx(() => MarkerLayer(
@@ -173,8 +174,6 @@ class LocationTile extends StatelessWidget {
                 ),
               ),
             ),
-            
-            
             Container(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -233,8 +232,7 @@ class LocationTile extends StatelessWidget {
       isScrollControlled: true,
     );
 
-    
-    if (controller.selectedPoint.value.latitude == 0 && 
+    if (controller.selectedPoint.value.latitude == 0 &&
         controller.selectedPoint.value.longitude == 0) {
       controller.getLocation().then((_) {
         controller.mapController.move(controller.selectedPoint.value, 15);

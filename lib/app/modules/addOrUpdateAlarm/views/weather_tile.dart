@@ -260,50 +260,62 @@ class WeatherTile extends StatelessWidget {
                 onTap: () async {
                   Utils.hapticFeedback();
                   controller.weatherConditionType.value = conditionType;
-                  await controller.checkAndRequestPermission();
-                  Get.defaultDialog(
-                    titlePadding: const EdgeInsets.symmetric(vertical: 20),
-                    backgroundColor: themeController.secondaryBackgroundColor.value,
-                    title: 'Select weather types for ${_getWeatherConditionTitle(conditionType)}'.tr,
-                    titleStyle: Theme.of(context).textTheme.displaySmall,
-                    content: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          WeatherOption(
-                            type: WeatherTypes.sunny,
-                            label: 'Sunny',
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                          WeatherOption(
-                            type: WeatherTypes.cloudy,
-                            label: 'Cloudy',
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                          WeatherOption(
-                            type: WeatherTypes.rainy,
-                            label: 'Rainy',
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                          WeatherOption(
-                            type: WeatherTypes.windy,
-                            label: 'Windy',
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                          WeatherOption(
-                            type: WeatherTypes.stormy,
-                            label: 'Stormy',
-                            controller: controller,
-                            themeController: themeController,
-                          ),
-                        ],
+                  if (await controller.checkAndRequestPermission()) {
+                    Get.defaultDialog(
+                      titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                      backgroundColor: themeController.secondaryBackgroundColor.value,
+                      title: 'Select weather types for ${_getWeatherConditionTitle(conditionType)}'.tr,
+                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            WeatherOption(
+                              type: WeatherTypes.sunny,
+                              label: 'Sunny',
+                              controller: controller,
+                              themeController: themeController,
+                            ),
+                            WeatherOption(
+                              type: WeatherTypes.cloudy,
+                              label: 'Cloudy',
+                              controller: controller,
+                              themeController: themeController,
+                            ),
+                            WeatherOption(
+                              type: WeatherTypes.rainy,
+                              label: 'Rainy',
+                              controller: controller,
+                              themeController: themeController,
+                            ),
+                            WeatherOption(
+                              type: WeatherTypes.windy,
+                              label: 'Windy',
+                              controller: controller,
+                              themeController: themeController,
+                            ),
+                            WeatherOption(
+                              type: WeatherTypes.stormy,
+                              label: 'Stormy',
+                              controller: controller,
+                              themeController: themeController,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    Get.defaultDialog(
+                      titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                      backgroundColor: themeController.secondaryBackgroundColor.value,
+                      title: 'Location Permission Denied!'.tr,
+                      titleStyle: Theme.of(context).textTheme.displaySmall,
+                      content: const Text(
+                        'Please provide all time location access to use this feature.',
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
