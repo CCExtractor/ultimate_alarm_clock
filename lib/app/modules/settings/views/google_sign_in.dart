@@ -31,51 +31,65 @@ class GoogleSignIn extends StatelessWidget {
       onTap: () async {
         Utils.hapticFeedback();
         if (controller.isUserLoggedIn.value == false) {
-          var isSuccessfulLogin = await GoogleCloudProvider.getInstance();
+          try {
+            var isSuccessfulLogin = await GoogleCloudProvider.getInstance();
 
-          if (isSuccessfulLogin != null) {
-            Get.defaultDialog(
-              titlePadding: const EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: themeController.secondaryBackgroundColor.value,
-              title: 'Success!'.tr,
-              titleStyle: Theme.of(context).textTheme.displaySmall,
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Icon(
-                    Icons.done,
-                    size: 50,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text(
-                      'Your account is now linked!'.tr,
-                      style: Theme.of(context).textTheme.displaySmall,
+            if (isSuccessfulLogin != null) {
+              Get.defaultDialog(
+                titlePadding: const EdgeInsets.symmetric(vertical: 20),
+                backgroundColor: themeController.secondaryBackgroundColor.value,
+                title: 'Success!'.tr,
+                titleStyle: Theme.of(context).textTheme.displaySmall,
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(
+                      Icons.done,
+                      size: 50,
+                      color: Colors.green,
                     ),
-                  ),
-                  TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kprimaryColor),
-                    ),
-                    child: Obx(
-                      () => Text(
-                        'Okay'.tr,
-                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                              color: themeController.secondaryTextColor.value,
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        'Your account is now linked!'.tr,
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ),
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Get.back();
-                    },
-                  ),
-                ],
-              ),
+                    TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(kprimaryColor),
+                      ),
+                      child: Obx(
+                        () => Text(
+                          'Okay'.tr,
+                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                color: themeController.secondaryTextColor.value,
+                              ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Utils.hapticFeedback();
+                        Get.back();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              Get.snackbar(
+                'Error'.tr, 
+                'Sign-In attempt failed! Please try again.'.tr,
+                backgroundColor: Colors.red.withOpacity(0.8),
+                colorText: Colors.white,
+              );
+            }
+          } catch (e) {
+            Get.snackbar(
+              'Error'.tr, 
+              'Sign-In failed: @error'.trParams({'error': e.toString()}),
+              backgroundColor: Colors.red.withOpacity(0.8),
+              colorText: Colors.white,
             );
-          } else {
-            Get.snackbar('Error', 'Sign-In attempt failed!');
           }
         } else {
           Get.defaultDialog(

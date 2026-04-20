@@ -2,9 +2,12 @@ package com.ccextractor.ultimate_alarm_clock
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import android.app.AlarmManager
+import android.app.PendingIntent
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalTime
@@ -12,7 +15,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,context: Context): Map<String, *>? {
+fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,context: Context): Map<String, Any>? {
     val now = Calendar.getInstance()
     var nowInMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
     var nowInSeconds = nowInMinutes * 60 + now.get(Calendar.SECOND)
@@ -22,7 +25,7 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
     }
     val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
     val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-    Log.d("d", "cd ${currentDay}")
+    Log.d("LocalAlarm", "Current day: $currentDay, Current time: $currentTime")
 
     // Initialize DatabaseHelper
     val logdbHelper = LogDatabaseHelper(context)
@@ -34,8 +37,8 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
         AND (profile = ? OR ringOn = 1)
         """, arrayOf(profile)
     )
-    var selectedAlarm = null
-    Log.d("Alarm", cursor.count.toString())
+    
+    Log.d("LocalAlarm", "Found ${cursor.count} enabled alarms in database")
 
     return if (cursor.count > 0) {
         // Parse the cursor into an AlarmModel object
@@ -46,45 +49,48 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
         do {
             alarm = AlarmModel.fromCursor(cursor)
             if (alarm.ringOn == 0) {
-
+                
                 var dayfromToday = 0
                 var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
-                Log.d("d", "timeDiff ${timeDif}")
+                Log.d("LocalAlarm", "Checking alarm (ID=${alarm.alarmId}): time=${alarm.alarmTime}, days=${alarm.days}, timeDiff=$timeDif")
 
                 if ((alarm.days[currentDay] == '1' || alarm.days == "0000000") && timeDif > -1L) {
                     if (timeDif < intervaltoAlarm) {
                         intervaltoAlarm = timeDif
                         setAlarm = alarm
+                        Log.d("LocalAlarm", "Found better alarm for today: ID=${alarm.alarmId}, time=${alarm.alarmTime}")
                     }
                 } else {
                     dayfromToday = getDaysUntilNextAlarm(alarm.days, currentDay)
+                    Log.d("LocalAlarm", "Days until next occurrence: $dayfromToday")
+                    
                     if (dayfromToday == 0) {
-
                         if (alarm.days == "0000000") {
-
                             var timeDif =
                                 getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
                             if (timeDif < intervaltoAlarm && timeDif > -1L) {
                                 intervaltoAlarm = timeDif
                                 setAlarm = alarm
+                                Log.d("LocalAlarm", "Found better one-time alarm: ID=${alarm.alarmId}, time=${alarm.alarmTime}")
                             }
                         } else {
-
                             var timeDif =
                                 getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * 6
                             if (timeDif < intervaltoAlarm && timeDif > -1L) {
                                 intervaltoAlarm = timeDif
                                 setAlarm = alarm
+                                Log.d("LocalAlarm", "Found better weekly alarm: ID=${alarm.alarmId}, time=${alarm.alarmTime}")
                             }
                         }
                     } else if (dayfromToday == 1) {
                         var timeDif =
                             getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight()
-                        Log.d("d", "timeDiff ${timeDif}")
+                        Log.d("LocalAlarm", "Next day alarm time diff: $timeDif")
 
                         if (timeDif < intervaltoAlarm && timeDif > -1L) {
                             intervaltoAlarm = timeDif
                             setAlarm = alarm
+                            Log.d("LocalAlarm", "Found better tomorrow alarm: ID=${alarm.alarmId}, time=${alarm.alarmTime}")
                         }
                     } else {
                         var timeDif =
@@ -92,18 +98,22 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
                         if (timeDif < intervaltoAlarm && timeDif > -1L) {
                             intervaltoAlarm = timeDif
                             setAlarm = alarm
+                            Log.d("LocalAlarm", "Found better future day alarm: ID=${alarm.alarmId}, time=${alarm.alarmTime}, daysAway=$dayfromToday")
                         }
                     }
-
                 }
             } else {
+                
                 val dayfromToday = getDaysFromCurrentDate(alarm.alarmDate)
+                Log.d("LocalAlarm", "Checking ringOn alarm (ID=${alarm.alarmId}): time=${alarm.alarmTime}, date=${alarm.alarmDate}, daysFromToday=$dayfromToday")
+                
                 if (dayfromToday == 0L) {
                     var timeDif = getTimeDifferenceInMillis(alarm.alarmTime)
                     if (alarm.days[currentDay] == '1' && timeDif > -1L) {
                         if (timeDif < intervaltoAlarm) {
                             intervaltoAlarm = timeDif
                             setAlarm = alarm
+                            Log.d("LocalAlarm", "Found better ringOn alarm for today: ID=${alarm.alarmId}, time=${alarm.alarmTime}")
                         }
                     }
                 } else if (dayfromToday == 1L) {
@@ -112,24 +122,23 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
                     if (timeDif < intervaltoAlarm) {
                         intervaltoAlarm = timeDif
                         setAlarm = alarm
+                        Log.d("LocalAlarm", "Found better ringOn alarm for tomorrow: ID=${alarm.alarmId}, time=${alarm.alarmTime}")
                     }
                 } else {
-
                     var timeDif =
                         getTimeDifferenceFromMidnight(alarm.alarmTime) + getMillisecondsUntilMidnight() + 86400000 * (dayfromToday - 1)
                     if (timeDif < intervaltoAlarm && timeDif > -1L) {
                         intervaltoAlarm = timeDif
                         setAlarm = alarm
+                        Log.d("LocalAlarm", "Found better ringOn alarm for future date: ID=${alarm.alarmId}, time=${alarm.alarmTime}, daysAway=$dayfromToday")
                     }
                 }
-
             }
-
         } while (cursor.moveToNext())
         cursor.close()
 
         if (setAlarm != null) {
-            Log.d("Alarm", intervaltoAlarm.toString())
+            Log.d("LocalAlarm", "Selected local alarm: ID=${setAlarm.alarmId}, time=${setAlarm.alarmTime}, interval=$intervaltoAlarm")
 
             // Add the latest alarm details to the LOG table
             val logDetails = """
@@ -142,20 +151,27 @@ fun getLatestAlarm(db: SQLiteDatabase, wantNextAlarm: Boolean, profile: String,c
             )
 
             // Return the latest alarm details
-            val a = mapOf(
+            val a = mapOf<String, Any>(
                 "interval" to intervaltoAlarm,
                 "isActivity" to setAlarm.activityMonitor,
-                "isLocation" to setAlarm.isLocationEnabled,
+                "activityConditionType" to setAlarm.activityConditionType,
+                "activityInterval" to setAlarm.activityInterval,
+                "isLocation" to if (setAlarm.isLocationEnabled == 1) setAlarm.locationConditionType else 0,
+                "locationConditionType" to setAlarm.locationConditionType,
                 "location" to setAlarm.location,
                 "isWeather" to setAlarm.isWeatherEnabled,
                 "weatherTypes" to setAlarm.weatherTypes,
-                "alarmID" to setAlarm.alarmId
+                "weatherConditionType" to setAlarm.weatherConditionType,
+                "alarmID" to setAlarm.alarmId,
+                "isSharedAlarm" to false
             )
-            Log.d("s", "sdsd ${a}")
+            Log.d("LocalAlarm", "Returning local alarm data: $a")
             return a
         }
+        Log.d("LocalAlarm", "No suitable local alarm found")
         null
     } else {
+        Log.d("LocalAlarm", "No enabled alarms in database")
         null
     }
 }
@@ -285,6 +301,126 @@ fun getDaysFromCurrentDate(dateString: String): Long {
 }
 
 
+fun checkActiveSharedAlarm(context: Context): Map<String, Any>? {
+
+    val sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+    
+
+    val hasSharedAlarm = sharedPreferences.getBoolean("flutter.has_active_shared_alarm", false)
+    
+    if (!hasSharedAlarm) {
+        Log.d("SharedAlarm", "No active shared alarm found in preferences")
+        return null
+    }
+    
+
+    val sharedAlarmTime = sharedPreferences.getString("flutter.shared_alarm_time", null)
+    val sharedAlarmId = sharedPreferences.getString("flutter.shared_alarm_id", null)
+    
+    if (sharedAlarmTime == null || sharedAlarmId == null) {
+        Log.d("SharedAlarm", "Missing required shared alarm data: time=$sharedAlarmTime, id=$sharedAlarmId")
+        return null
+    }
+    
+    Log.d("SharedAlarm", "Found shared alarm with ID=$sharedAlarmId, time=$sharedAlarmTime")
+    
+    val isActivityEnabled = sharedPreferences.getInt("flutter.shared_alarm_activity", 0)
+    val isLocationEnabled = sharedPreferences.getInt("flutter.shared_alarm_location", 0)
+    val location = sharedPreferences.getString("flutter.shared_alarm_location_data", "0.0,0.0") ?: "0.0,0.0"
+    val locationConditionType = sharedPreferences.getInt("flutter.shared_alarm_location_condition", 2)
+    val isWeatherEnabled = sharedPreferences.getInt("flutter.shared_alarm_weather", 0)
+    val weatherTypes = sharedPreferences.getString("flutter.shared_alarm_weather_types", "[]") ?: "[]"
+    val weatherConditionType = sharedPreferences.getInt("flutter.shared_alarm_weather_condition", 2)
+    
+
+    val timeToAlarm = getTimeDifferenceInMillis(sharedAlarmTime)
+    
+    Log.d("SharedAlarm", "Time until shared alarm: $timeToAlarm ms")
+    
+
+    if (timeToAlarm > -1) {
+        val alarmData = mapOf<String, Any>(
+            "interval" to timeToAlarm,
+            "isActivity" to isActivityEnabled,
+            "isLocation" to isLocationEnabled,
+            "locationConditionType" to locationConditionType,
+            "location" to location,
+            "isWeather" to isWeatherEnabled,
+            "weatherTypes" to weatherTypes,
+            "weatherConditionType" to weatherConditionType,
+            "alarmID" to sharedAlarmId,
+            "isSharedAlarm" to true
+        )
+        Log.d("SharedAlarm", "Returning valid shared alarm data: $alarmData")
+        return alarmData
+    }
+    
+    Log.d("SharedAlarm", "Shared alarm time is in the past, ignoring")
+    return null
+}
+
+
+fun determineNextAlarm(context: Context, profile: String): Map<String, Any>? {
+    // Get the next local alarm
+    val dbHelper = DatabaseHelper(context)
+    val db = dbHelper.readableDatabase
+    val localAlarm = getLatestAlarm(db, true, profile, context)
+    db.close()
+    
+
+    val sharedAlarm = checkActiveSharedAlarm(context)
+    
+
+    Log.d("NextAlarm", "Local alarm: $localAlarm")
+    Log.d("NextAlarm", "Shared alarm: $sharedAlarm")
+    
+
+    if (localAlarm == null && sharedAlarm == null) {
+        Log.d("NextAlarm", "No alarms found")
+        return null
+    }
+    
+
+    if (localAlarm == null) {
+        Log.d("NextAlarm", "Only shared alarm available, returning shared")
+        return sharedAlarm?.let {
+            val mutableSharedAlarm = it.toMutableMap()
+            mutableSharedAlarm.put("isSharedAlarm", true)
+            mutableSharedAlarm
+        }
+    }
+    
+    if (sharedAlarm == null) {
+        Log.d("NextAlarm", "Only local alarm available, returning local")
+
+        val mutableLocalAlarm = localAlarm.toMutableMap()
+        if (!mutableLocalAlarm.containsKey("isSharedAlarm")) {
+            mutableLocalAlarm.put("isSharedAlarm", false)
+        }
+        return mutableLocalAlarm
+    }
+    
+
+    val localInterval = localAlarm["interval"] as Long
+    val sharedInterval = sharedAlarm["interval"] as Long
+    
+    Log.d("NextAlarm", "Local interval: $localInterval, Shared interval: $sharedInterval")
+    
+    return if (sharedInterval < localInterval) {
+        Log.d("NextAlarm", "Shared alarm is sooner, returning shared")
+        val mutableSharedAlarm = sharedAlarm.toMutableMap()
+        mutableSharedAlarm.put("isSharedAlarm", true)
+        mutableSharedAlarm
+    } else {
+        Log.d("NextAlarm", "Local alarm is sooner, returning local")
+        val mutableLocalAlarm = localAlarm.toMutableMap()
+        if (!mutableLocalAlarm.containsKey("isSharedAlarm")) {
+            mutableLocalAlarm.put("isSharedAlarm", false)
+        }
+        mutableLocalAlarm
+    }
+}
+
 data class AlarmModel(
     val id: Int,
     val minutesSinceMidnight: Int,
@@ -292,9 +428,13 @@ data class AlarmModel(
     val days: String,
     val isOneTime: Int,
     val activityMonitor: Int,
+    val activityInterval: Int,
     val isWeatherEnabled: Int,
     val weatherTypes: String,
+    val weatherConditionType: Int,
+    val activityConditionType: Int,
     val isLocationEnabled: Int,
+    val locationConditionType: Int,
     val location: String,
     val alarmDate: String,
     val alarmId: String,
@@ -311,7 +451,38 @@ data class AlarmModel(
             val activityMonitor = cursor.getInt(cursor.getColumnIndex("activityMonitor"))
             val isWeatherEnabled = cursor.getInt(cursor.getColumnIndex("isWeatherEnabled"))
             val weatherTypes = cursor.getString(cursor.getColumnIndex("weatherTypes"))
+            
+            
+            val weatherConditionTypeIndex = cursor.getColumnIndex("weatherConditionType")
+            val weatherConditionType = if (weatherConditionTypeIndex >= 0) {
+                cursor.getInt(weatherConditionTypeIndex)
+            } else {
+                2 
+            }
+            
+            val activityConditionTypeIndex = cursor.getColumnIndex("activityConditionType")
+            val activityConditionType = if (activityConditionTypeIndex >= 0) {
+                cursor.getInt(activityConditionTypeIndex)
+            } else {
+                2 
+            }
+            
+            val activityIntervalIndex = cursor.getColumnIndex("activityInterval")
+            val activityInterval = if (activityIntervalIndex >= 0) {
+                cursor.getInt(activityIntervalIndex)
+            } else {
+                30
+            }
+            
             val isLocationEnabled = cursor.getInt(cursor.getColumnIndex("isLocationEnabled"))
+            
+            val locationConditionTypeIndex = cursor.getColumnIndex("locationConditionType")
+            val locationConditionType = if (locationConditionTypeIndex >= 0) {
+                cursor.getInt(locationConditionTypeIndex)
+            } else {
+                2 
+            }
+            
             val location = cursor.getString(cursor.getColumnIndex("location"))
             val alarmDate = cursor.getString(cursor.getColumnIndex("alarmDate"))
             val alarmId = cursor.getString(cursor.getColumnIndex("alarmID"))
@@ -323,9 +494,13 @@ data class AlarmModel(
                 days,
                 isOneTime,
                 activityMonitor,
+                activityInterval,
                 isWeatherEnabled,
                 weatherTypes,
+                weatherConditionType,
+                activityConditionType,
                 isLocationEnabled,
+                locationConditionType,
                 location,
                 alarmDate,
                 alarmId,
