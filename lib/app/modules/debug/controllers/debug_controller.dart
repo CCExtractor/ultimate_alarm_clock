@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'dart:async';
 import '../../../data/providers/isar_provider.dart';
 import '../../../modules/settings/controllers/theme_controller.dart';
@@ -12,14 +10,14 @@ import '../../../data/models/debug_model.dart';
 class DebugController extends GetxController {
   final ThemeController themeController = Get.find<ThemeController>();
   final TextEditingController searchController = TextEditingController();
-  
+
   var logs = <Map<String, dynamic>>[].obs;
   var filteredLogs = <Map<String, dynamic>>[].obs;
   var selectedLogLevel = Rxn<LogLevel>();
   var startDate = Rxn<DateTime>();
   var endDate = Rxn<DateTime>();
   RxBool isDevMode = false.obs;
-  
+
   Timer? _timer;
 
   @override
@@ -48,7 +46,8 @@ class DebugController extends GetxController {
       final fetchedLogs = await IsarDb().getLogs();
       logs.value = fetchedLogs.reversed.toList();
       applyFilters();
-      debugPrint('Debug screen: Successfully loaded ${fetchedLogs.length} logs');
+      debugPrint(
+          'Debug screen: Successfully loaded ${fetchedLogs.length} logs',);
     } catch (e) {
       debugPrint('Debug screen: Error loading logs: $e');
       Get.snackbar(
@@ -63,17 +62,22 @@ class DebugController extends GetxController {
   void applyFilters() {
     filteredLogs.value = logs.where((log) {
       bool matchesSearch = searchController.text.isEmpty ||
-          log['Status'].toString().toLowerCase().contains(searchController.text.toLowerCase()) ||
+          log['Status']
+              .toString()
+              .toLowerCase()
+              .contains(searchController.text.toLowerCase()) ||
           log['LogID'].toString().contains(searchController.text) ||
-          Utils.getFormattedDate(DateTime.fromMillisecondsSinceEpoch(log['LogTime']))
+          Utils.getFormattedDate(
+                  DateTime.fromMillisecondsSinceEpoch(log['LogTime']),)
               .toLowerCase()
               .contains(searchController.text.toLowerCase());
-      
+
       bool matchesLevel = selectedLogLevel.value == null;
       if (selectedLogLevel.value != null) {
         final status = log['Status'].toString().toLowerCase();
-        debugPrint('Checking log: "$status" for level: ${selectedLogLevel.value}');
-        
+        debugPrint(
+            'Checking log: "$status" for level: ${selectedLogLevel.value}',);
+
         switch (selectedLogLevel.value!) {
           case LogLevel.error:
             matchesLevel = status.contains('error');
@@ -82,23 +86,27 @@ class DebugController extends GetxController {
             matchesLevel = status.contains('warning');
             break;
           case LogLevel.info:
-            matchesLevel = !status.contains('error') && !status.contains('warning');
+            matchesLevel =
+                !status.contains('error') && !status.contains('warning');
             break;
         }
         debugPrint('Matches level: $matchesLevel');
       }
-      
+
       bool matchesDateRange = true;
       if (startDate.value != null && endDate.value != null) {
         final logTime = DateTime.fromMillisecondsSinceEpoch(log['LogTime']);
-        final startOfDay = DateTime(startDate.value!.year, startDate.value!.month, startDate.value!.day);
-        final endOfDay = DateTime(endDate.value!.year, endDate.value!.month, endDate.value!.day, 23, 59, 59);
-        matchesDateRange = logTime.isAfter(startOfDay) && logTime.isBefore(endOfDay);
+        final startOfDay = DateTime(startDate.value!.year,
+            startDate.value!.month, startDate.value!.day,);
+        final endOfDay = DateTime(endDate.value!.year, endDate.value!.month,
+            endDate.value!.day, 23, 59, 59,);
+        matchesDateRange =
+            logTime.isAfter(startOfDay) && logTime.isBefore(endOfDay);
       }
-      
+
       return matchesSearch && matchesLevel && matchesDateRange;
     }).toList();
-    
+
     debugPrint('Total logs: ${logs.length}');
     debugPrint('Filtered logs: ${filteredLogs.length}');
     if (filteredLogs.isEmpty) {
@@ -136,7 +144,8 @@ class DebugController extends GetxController {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
       initialDateRange: DateTimeRange(
-        start: startDate.value ?? DateTime.now().subtract(const Duration(days: 7)),
+        start:
+            startDate.value ?? DateTime.now().subtract(const Duration(days: 7)),
         end: endDate.value ?? DateTime.now(),
       ),
       builder: (context, child) {
@@ -147,15 +156,16 @@ class DebugController extends GetxController {
               onPrimary: Colors.white,
               surface: themeController.secondaryBackgroundColor.value,
               onSurface: themeController.primaryTextColor.value,
-              background: themeController.primaryBackgroundColor.value,
-              onBackground: themeController.primaryTextColor.value,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: kprimaryColor,
               ),
             ),
-            dialogBackgroundColor: themeController.secondaryBackgroundColor.value,
+            // ⬇️ was DialogThemeData(...), should be DialogTheme(...)
+            dialogTheme: DialogThemeData(
+              backgroundColor: themeController.secondaryBackgroundColor.value,
+            ),
           ),
           child: child!,
         );
@@ -174,4 +184,4 @@ class DebugController extends GetxController {
     if (status.contains('warning')) return Colors.orange;
     return Colors.green;
   }
-} 
+}
