@@ -139,6 +139,10 @@ class AlarmModel {
     required firestore.DocumentSnapshot documentSnapshot,
     required UserModel? user,
   }) {
+    final data = Map<String, dynamic>.from(
+      documentSnapshot.data() as Map<String, dynamic>,
+    );
+
     // Making sure the alarms work with the offsets
     isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
     
@@ -162,9 +166,15 @@ class AlarmModel {
       offsetDetails = null;
     }
 
-    if (isSharedAlarmEnabled && user != null) {
-      mainAlarmTime = documentSnapshot['alarmTime'];
+    if (isSharedAlarmEnabled && user != null && offsetDetails?[user.id] != null) {
+      mainAlarmTime = _asString(data['alarmTime'], '00:00');
       // Using offsetted time only if it is enabled
+      final userOffset = _asMap(offsetDetails?[user.id]);
+      final offsetDuration = _asInt(userOffset?['offsetDuration'], 0);
+      final offsettedTime = _asString(
+        userOffset?['offsettedTime'],
+        _asString(data['alarmTime'], '00:00'),
+      );
 
 if (offsetDetails != null) {
   final userOffset = offsetDetails!
@@ -184,26 +194,26 @@ if (offsetDetails != null) {
   }
 }
     } else {
-      alarmTime = documentSnapshot['alarmTime'];
-      minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
+      alarmTime = _asString(data['alarmTime'], '00:00');
+      minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
     }
-    snoozeDuration = documentSnapshot['snoozeDuration'];
-    maxSnoozeCount = documentSnapshot['maxSnoozeCount'] ?? 3;
-    gradient = documentSnapshot['gradient'];
-    label = documentSnapshot['label'];
-    isOneTime = documentSnapshot['isOneTime'];
+    snoozeDuration = _asInt(data['snoozeDuration'], 0);
+    maxSnoozeCount = _asInt(data['maxSnoozeCount'], 3);
+    gradient = _asInt(data['gradient'], 0);
+    label = _asString(data['label'], '');
+    isOneTime = _asBool(data['isOneTime'], false);
     firestoreId = documentSnapshot.id;
-    alarmID = documentSnapshot['alarmID'];
-    sharedUserIds = List<String>.from(documentSnapshot['sharedUserIds']);
-    lastEditedUserId = documentSnapshot['lastEditedUserId'];
-    mutexLock = documentSnapshot['mutexLock'];
-    ownerId = documentSnapshot['ownerId'];
-    ownerName = documentSnapshot['ownerName'];
-    days = List<bool>.from(documentSnapshot['days']);
-    isEnabled = documentSnapshot['isEnabled'];
-    intervalToAlarm = documentSnapshot['intervalToAlarm'];
-    isActivityEnabled = documentSnapshot['isActivityEnabled'];
-    activityInterval = documentSnapshot['activityInterval'];
+    alarmID = _asString(data['alarmID'], documentSnapshot.id);
+    sharedUserIds = _asStringList(data['sharedUserIds']);
+    lastEditedUserId = _asString(data['lastEditedUserId'], '');
+    mutexLock = _asBool(data['mutexLock'], false);
+    ownerId = _asString(data['ownerId'], '');
+    ownerName = _asString(data['ownerName'], '');
+    days = _asBoolList(data['days']);
+    isEnabled = _asBool(data['isEnabled'], true);
+    intervalToAlarm = _asInt(data['intervalToAlarm'], 0);
+    isActivityEnabled = _asBool(data['isActivityEnabled'], false);
+    activityInterval = _asInt(data['activityInterval'], 0);
 
     isLocationEnabled = documentSnapshot['isLocationEnabled'];
     locationConditionType = documentSnapshot['locationConditionType'] ?? 2; 
@@ -226,12 +236,12 @@ if (offsetDetails != null) {
     deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
     showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
 
-    volMax = documentSnapshot['volMax'];
-    volMin = documentSnapshot['volMin'];
+    volMax = _asDouble(data['volMax'], 1.0);
+    volMin = _asDouble(data['volMin'], 0.0);
 
-    activityMonitor = documentSnapshot['activityMonitor'];
-    alarmDate = documentSnapshot['alarmDate'];
-    profile = documentSnapshot['profile'];
+    activityMonitor = _asInt(data['activityMonitor'], 0);
+    alarmDate = _asString(data['alarmDate'], '');
+    profile = _asString(data['profile'], 'Default');
 
     isGuardian = documentSnapshot['isGuardian'];
     guardianTimer = documentSnapshot['guardianTimer'];
@@ -389,17 +399,17 @@ if (offsetDetails != null) {
     minutesSinceMidnight = alarmData['minutesSinceMidnight'];
     alarmTime = alarmData['alarmTime'];
     firestoreId = alarmData['firestoreId'];
-    alarmID = alarmData['alarmID'];
-    sharedUserIds = List<String>.from(alarmData['sharedUserIds']);
-    lastEditedUserId = alarmData['lastEditedUserId'];
-    mutexLock = alarmData['mutexLock'];
-    ownerId = alarmData['ownerId'];
-    ownerName = alarmData['ownerName'];
-    days = List<bool>.from(alarmData['days']);
-    isEnabled = alarmData['isEnabled'];
-    intervalToAlarm = alarmData['intervalToAlarm'];
-    isActivityEnabled = alarmData['isActivityEnabled'];
-    activityInterval = alarmData['activityInterval'];
+    alarmID = _asString(data['alarmID'], '');
+    sharedUserIds = _asStringList(data['sharedUserIds']);
+    lastEditedUserId = _asString(data['lastEditedUserId'], '');
+    mutexLock = _asBool(data['mutexLock'], false);
+    ownerId = _asString(data['ownerId'], '');
+    ownerName = _asString(data['ownerName'], '');
+    days = _asBoolList(data['days']);
+    isEnabled = _asBool(data['isEnabled'], true);
+    intervalToAlarm = _asInt(data['intervalToAlarm'], 0);
+    isActivityEnabled = _asBool(data['isActivityEnabled'], false);
+    activityInterval = _asInt(data['activityInterval'], 0);
 
     isLocationEnabled = alarmData['isLocationEnabled'];
     locationConditionType = alarmData['locationConditionType'] ?? 2; 
@@ -409,28 +419,28 @@ if (offsetDetails != null) {
     weatherTypes = List<int>.from(alarmData['weatherTypes']);
     location = alarmData['location'];
 
-    isMathsEnabled = alarmData['isMathsEnabled'];
-    mathsDifficulty = alarmData['mathsDifficulty'];
-    numMathsQuestions = alarmData['numMathsQuestions'];
-    isQrEnabled = alarmData['isQrEnabled'];
-    qrValue = alarmData['qrValue'];
-    isShakeEnabled = alarmData['isShakeEnabled'];
-    shakeTimes = alarmData['shakeTimes'];
-    isPedometerEnabled = alarmData['isPedometerEnabled'];
-    numberOfSteps = alarmData['numberOfSteps'];
-    label = alarmData['label'];
-    isOneTime = alarmData['isOneTime'];
-    ringtoneName = alarmData['ringtoneName'];
-    note = alarmData['note'];
-    deleteAfterGoesOff = alarmData['deleteAfterGoesOff'];
-    showMotivationalQuote = alarmData['showMotivationalQuote'];
+    isMathsEnabled = _asBool(data['isMathsEnabled'], false);
+    mathsDifficulty = _asInt(data['mathsDifficulty'], 0);
+    numMathsQuestions = _asInt(data['numMathsQuestions'], 0);
+    isQrEnabled = _asBool(data['isQrEnabled'], false);
+    qrValue = _asString(data['qrValue'], '');
+    isShakeEnabled = _asBool(data['isShakeEnabled'], false);
+    shakeTimes = _asInt(data['shakeTimes'], 0);
+    isPedometerEnabled = _asBool(data['isPedometerEnabled'], false);
+    numberOfSteps = _asInt(data['numberOfSteps'], 0);
+    label = _asString(data['label'], '');
+    isOneTime = _asBool(data['isOneTime'], false);
+    ringtoneName = _asString(data['ringtoneName'], 'Digital Alarm 1');
+    note = _asString(data['note'], '');
+    deleteAfterGoesOff = _asBool(data['deleteAfterGoesOff'], false);
+    showMotivationalQuote = _asBool(data['showMotivationalQuote'], false);
 
-    volMin = alarmData['volMin'];
-    volMax = alarmData['volMax'];
+    volMin = _asDouble(data['volMin'], 0.0);
+    volMax = _asDouble(data['volMax'], 1.0);
 
-    activityMonitor = alarmData['activityMonitor'];
-    alarmDate = alarmData['alarmDate'];
-    profile = alarmData['profile'];
+    activityMonitor = _asInt(data['activityMonitor'], 0);
+    alarmDate = _asString(data['alarmDate'], '');
+    profile = _asString(data['profile'], 'Default');
 
     isGuardian = alarmData['isGuardian'];
     guardianTimer = alarmData['guardianTimer'];
@@ -536,5 +546,59 @@ if (offsetDetails != null) {
     final rotatedString = s.substring(1) + s[0];
     // Convert the rotated string to a list of boolean values
     return rotatedString.split('').map((c) => c == '1').toList();
+  }
+
+  static bool _asBool(dynamic value, bool fallback) {
+    if (value is bool) return value;
+    if (value is int) return value == 1;
+    return fallback;
+  }
+
+  static int _asInt(dynamic value, int fallback) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return fallback;
+  }
+
+  static double _asDouble(dynamic value, double fallback) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    return fallback;
+  }
+
+  static String _asString(dynamic value, String fallback) {
+    if (value is String) return value;
+    return fallback;
+  }
+
+  static List<String> _asStringList(dynamic value) {
+    if (value is List) {
+      return value.whereType<String>().toList();
+    }
+    return [];
+  }
+
+  static List<bool> _asBoolList(dynamic value) {
+    if (value is List) {
+      return value
+          .map((item) => _asBool(item, false))
+          .toList()
+          .cast<bool>();
+    }
+    return List<bool>.filled(7, false);
+  }
+
+  static List<int> _asIntList(dynamic value) {
+    if (value is List) {
+      return value.map((item) => _asInt(item, 0)).toList().cast<int>();
+    }
+    return [];
+  }
+
+  static Map<String, dynamic>? _asMap(dynamic value) {
+    if (value is Map) {
+      return Map<String, dynamic>.from(value);
+    }
+    return null;
   }
 }

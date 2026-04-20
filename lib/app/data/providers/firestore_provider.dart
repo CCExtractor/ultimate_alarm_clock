@@ -531,6 +531,7 @@ static Future<List<String>> getUserIdsByEmails(List emails) async {
     }
     
     alarm.profile = 'Default';
+    final alarmData = AlarmModel.toMap(alarm);
     Map sharedItem = {
       'type': 'alarm',
       'AlarmName': alarm.firestoreId,
