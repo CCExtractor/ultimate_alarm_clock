@@ -273,6 +273,31 @@ class IsarDb {
     return profileModel;
   }
 
+  static void deleteProfile(String profileName) async {
+    final isarProvider = IsarDb();
+    final db = await isarProvider.db;
+    
+    final profile = await db.profileModels.filter().
+      profileNameEqualTo(profileName).findFirst();
+      
+    if (profile == null) return;
+
+    final deletedAlarms = await db.alarmModels.filter().
+      profileEqualTo(profileName).findAll();
+    
+    try {
+      await db.writeTxn(() async {
+        for (final alarm in deletedAlarms) {
+          await db.alarmModels.delete(alarm.isarId);
+        }
+        await db.profileModels.delete(profile.isarId);
+      });
+    } catch (e) {
+      debugPrint('Error deleting profile: $e');
+      rethrow;
+    }
+  }
+
   static Stream<List<ProfileModel>> getProfiles() async* {
     try {
       final isarProvider = IsarDb();
