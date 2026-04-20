@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -211,18 +210,16 @@ class MainActivity : FlutterActivity() {
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = AlarmPendingIntents.broadcast(
             this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.MAIN_ALARM,
+            intent
         )
         val activityCheckIntent = Intent(this, ScreenMonitorService::class.java)
-        val pendingActivityCheckIntent = PendingIntent.getService(
+        val pendingActivityCheckIntent = AlarmPendingIntents.service(
             this,
-            4,
-            activityCheckIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.ACTIVITY_CHECK,
+            activityCheckIntent
         )
         // Schedule the alarm
         val tenMinutesInMilliseconds = 600000L
@@ -254,11 +251,10 @@ class MainActivity : FlutterActivity() {
             editor.putInt("flutter.is_location_on", 1)
             editor.apply()
             val locationAlarmIntent = Intent(this, LocationFetcherService::class.java)
-            val pendingLocationAlarmIntent = PendingIntent.getService(
+            val pendingLocationAlarmIntent = AlarmPendingIntents.service(
                 this,
-                5,
-                locationAlarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                AlarmPendingIntentKind.LOCATION_CHECK,
+                locationAlarmIntent
             )
             val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerTime - 10000, pendingIntent)
             alarmManager.setAlarmClock(
@@ -273,11 +269,10 @@ class MainActivity : FlutterActivity() {
             Log.d("we", getWeatherConditions(weatherTypes))
             editor.apply()
             val weatherAlarmIntent = Intent(this, WeatherFetcherService::class.java)
-            val pendingWeatherAlarmIntent = PendingIntent.getService(
+            val pendingWeatherAlarmIntent = AlarmPendingIntents.service(
                 this,
-                6,
-                weatherAlarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                AlarmPendingIntentKind.WEATHER_CHECK,
+                weatherAlarmIntent
             )
             val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerTime - 10000, pendingIntent)
             alarmManager.setAlarmClock(
@@ -295,26 +290,47 @@ class MainActivity : FlutterActivity() {
     private fun cancelAllScheduledAlarms() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = AlarmPendingIntents.broadcast(
             this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.MAIN_ALARM,
+            intent
+        )
+        val legacyBootPendingIntent = AlarmPendingIntents.broadcast(
+            this,
+            AlarmPendingIntentKind.LEGACY_BOOT_ALARM,
+            intent
         )
 
         val activityCheckIntent = Intent(this, ScreenMonitorService::class.java)
-        val pendingActivityCheckIntent = PendingIntent.getService(
+        val pendingActivityCheckIntent = AlarmPendingIntents.service(
             this,
-            4,
-            activityCheckIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            AlarmPendingIntentKind.ACTIVITY_CHECK,
+            activityCheckIntent
+        )
+        val locationIntent = Intent(this, LocationFetcherService::class.java)
+        val pendingLocationIntent = AlarmPendingIntents.service(
+            this,
+            AlarmPendingIntentKind.LOCATION_CHECK,
+            locationIntent
+        )
+        val weatherIntent = Intent(this, WeatherFetcherService::class.java)
+        val pendingWeatherIntent = AlarmPendingIntents.service(
+            this,
+            AlarmPendingIntentKind.WEATHER_CHECK,
+            weatherIntent
         )
 
         // Cancel any existing alarms by providing the same pending intent
         alarmManager.cancel(pendingIntent)
         pendingIntent.cancel()
+        alarmManager.cancel(legacyBootPendingIntent)
+        legacyBootPendingIntent.cancel()
         alarmManager.cancel(pendingActivityCheckIntent)
         pendingActivityCheckIntent.cancel()
+        alarmManager.cancel(pendingLocationIntent)
+        pendingLocationIntent.cancel()
+        alarmManager.cancel(pendingWeatherIntent)
+        pendingWeatherIntent.cancel()
 
     }
 
