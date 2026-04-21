@@ -6,6 +6,34 @@ class RussianTranslations extends Translations {
         'ru_RU': {
           'Alarm': 'Будильник',
           'Timer': 'Таймер',
+          'Pomodoro': 'Помодоро',
+          'Pomodoro setup': 'Настройка помодоро',
+          'Work': 'Работа',
+          'Break': 'Перерыв',
+          'Sessions': 'Сессии',
+          'Current phase': 'Текущая фаза',
+          'Session': 'Сессия',
+          'Start Pomodoro': 'Запустить помодоро',
+          'Pause': 'Пауза',
+          'Resume': 'Продолжить',
+          'Skip': 'Пропустить',
+          'Reset': 'Сброс',
+          'Completed': 'Завершено',
+          'Ready': 'Готово',
+          'min': 'мин',
+          'Work session started': 'Рабочая сессия началась',
+          'Break started': 'Перерыв начался',
+          'Phase completed': 'Фаза завершена',
+          'Pomodoro completed': 'Помодоро завершено',
+          'Pomodoro resumed': 'Помодоро продолжено',
+          'Pomodoro paused': 'Помодоро приостановлено',
+          'Work session skipped': 'Рабочая сессия пропущена',
+          'Break skipped': 'Перерыв пропущен',
+          'Pomodoro reset': 'Помодоро сброшено',
+          'No active pomodoro phase to skip':
+              'Нет активной фазы помодоро для пропуска',
+          'Please set valid pomodoro values':
+              'Укажите корректные значения помодоро',
           'StopWatch': 'Секундомер',
           'Enable 24 Hour Format': 'Включить 24-часовой формат',
           'Enable Haptic Feedback': 'Включить тактильную отдачу',
@@ -55,7 +83,7 @@ class RussianTranslations extends Translations {
           'No': 'Нет',
           'Confirmation': 'подтверждение',
           'want to delete?': 'Вы уверены, что хотите удалить этот будильник?',
-          'delete':'удалить',
+          'delete': 'удалить',
           'You cannot join your own alarm!':
               'Вы не можете присоединиться к собственной тревоге!',
           'An alarm with this ID doesn\'t exist!':
@@ -169,7 +197,6 @@ class RussianTranslations extends Translations {
           'times': 'раз',
           'time': 'раз',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Общий будильник',
           'Shared alarms': 'Общие будильники',
           'sharedDescription':
               'Делитесь будильниками с другими, используя ID будильника. Каждый общий пользователь может выбрать, звонить ли его будильнику до или после установленного времени.',

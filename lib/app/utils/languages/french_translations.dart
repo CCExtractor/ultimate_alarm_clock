@@ -8,6 +8,34 @@ class FrenchTranslations extends Translations {
         'fr_FR': {
           'Alarm': 'Réveil',
           'Timer': 'Minuteur',
+          'Pomodoro': 'Pomodoro',
+          'Pomodoro setup': 'Configuration Pomodoro',
+          'Work': 'Travail',
+          'Break': 'Pause',
+          'Sessions': 'Sessions',
+          'Current phase': 'Phase actuelle',
+          'Session': 'Session',
+          'Start Pomodoro': 'Démarrer Pomodoro',
+          'Pause': 'Pause',
+          'Resume': 'Reprendre',
+          'Skip': 'Passer',
+          'Reset': 'Réinitialiser',
+          'Completed': 'Terminé',
+          'Ready': 'Prêt',
+          'min': 'min',
+          'Work session started': 'Session de travail démarrée',
+          'Break started': 'Pause démarrée',
+          'Phase completed': 'Phase terminée',
+          'Pomodoro completed': 'Pomodoro terminé',
+          'Pomodoro resumed': 'Pomodoro repris',
+          'Pomodoro paused': 'Pomodoro en pause',
+          'Work session skipped': 'Session de travail ignorée',
+          'Break skipped': 'Pause ignorée',
+          'Pomodoro reset': 'Pomodoro réinitialisé',
+          'No active pomodoro phase to skip':
+              'Aucune phase Pomodoro active à passer',
+          'Please set valid pomodoro values':
+              'Veuillez définir des valeurs Pomodoro valides',
           'StopWatch': 'Chronomètre',
           'Enable 24 Hour Format': 'Activer le format 24 heures',
           'Enable Haptic Feedback': 'Activer les commentaires haptiques',
@@ -55,8 +83,9 @@ class FrenchTranslations extends Translations {
           'Yes': 'Oui',
           'No': 'Non',
           'Confirmation': 'Confirmation',
-          'want to delete?': 'Êtes-vous sûr de vouloir supprimer cette alarme ?',
-          'delete' : 'supprimer',
+          'want to delete?':
+              'Êtes-vous sûr de vouloir supprimer cette alarme ?',
+          'delete': 'supprimer',
           'You cannot join your own alarm!':
               'Vous ne pouvez pas rejoindre votre propre réveil !',
           'An alarm with this ID doesn\'t exist!':
@@ -185,7 +214,6 @@ class FrenchTranslations extends Translations {
           'times': 'fois',
           'time': 'fois',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Alarme partagée',
           'Shared alarms': 'Alarmes partagées',
           'sharedDescription':
               'Partagez des alarmes avec d\'autres en utilisant l\'ID de l\'alarme. Chaque utilisateur partagé peut choisir de faire sonner son alarme avant ou après l\'heure définie.',

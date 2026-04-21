@@ -14,6 +14,34 @@ class AppTranslations extends Translations {
         'en_US': {
           'Alarm': 'Alarm',
           'Timer': 'Timer',
+          'Pomodoro': 'Pomodoro',
+          'Pomodoro setup': 'Pomodoro setup',
+          'Work': 'Work',
+          'Break': 'Break',
+          'Sessions': 'Sessions',
+          'Current phase': 'Current phase',
+          'Session': 'Session',
+          'Start Pomodoro': 'Start Pomodoro',
+          'Pause': 'Pause',
+          'Resume': 'Resume',
+          'Skip': 'Skip',
+          'Reset': 'Reset',
+          'Completed': 'Completed',
+          'Ready': 'Ready',
+          'min': 'min',
+          'Work session started': 'Work session started',
+          'Break started': 'Break started',
+          'Phase completed': 'Phase completed',
+          'Pomodoro completed': 'Pomodoro completed',
+          'Pomodoro resumed': 'Pomodoro resumed',
+          'Pomodoro paused': 'Pomodoro paused',
+          'Work session skipped': 'Work session skipped',
+          'Break skipped': 'Break skipped',
+          'Pomodoro reset': 'Pomodoro reset',
+          'No active pomodoro phase to skip':
+              'No active pomodoro phase to skip',
+          'Please set valid pomodoro values':
+              'Please set valid pomodoro values',
           'Enable 24 Hour Format': 'Enable 24 Hour Format',
           'Enable Haptic Feedback': 'Enable Haptic Feedback',
           'Enable Sorted Alarm List': 'Enable Sorted Alarm List',
@@ -57,7 +85,7 @@ class AppTranslations extends Translations {
           'No': 'No',
           'Confirmation': 'Confirmation',
           'want to delete?': 'Are you sure you want to delete this alarm?',
-          'delete' : 'Delete',
+          'delete': 'Delete',
 
           'You cannot join your own alarm!': 'You cannot join your own alarm!',
           'An alarm with this ID doesn\'t exist!':
@@ -87,7 +115,6 @@ class AppTranslations extends Translations {
           'Leave': 'Leave',
           'Save': 'Save',
           'Update': 'Update',
-          'Rings in @timeToAlarm': 'Rings in @timeToAlarm',
           'Uh-oh!': 'Uh-oh!',
           'alarmEditing': 'This alarm is currently being edited!',
           'Go back': 'Go back',
@@ -131,7 +158,8 @@ class AppTranslations extends Translations {
           'question': 'question',
           //pedometer_challenge_tile.dart
           'Pedometer': 'Pedometer',
-          'pedometerDescription': 'You will have to walk a set number of steps to dismiss the alarm.',
+          'pedometerDescription':
+              'You will have to walk a set number of steps to dismiss the alarm.',
           //note.dart
           'Add a note': 'Add a note',
           // qr_bar_code_tile.dart
@@ -161,7 +189,6 @@ class AppTranslations extends Translations {
           'times': 'times',
           'time': 'time',
           //'shared_alarm_tile.dart
-          'Shared Alarm': 'Shared Alarm',
           'Shared alarms': 'Shared alarms',
           'sharedDescription':
               'Share alarms with others using the Alarm ID. Each shared user can choose to have their alarm ring before or after the set time.',
