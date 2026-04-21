@@ -14,8 +14,12 @@ import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 class AlarmChallengeController extends GetxController {
   AlarmModel alarmRecord = Get.arguments;
 
+  // Kept for backward compatibility with your other screens
   final RxDouble progress = 1.0.obs;
-  int _timerSessionId = 0;
+
+  // --- NEW: Clean integer timer ---
+  final RxInt timeRemaining = 15.obs;
+  Timer? _challengeTimer;
 
   final RxInt shakedCount = 0.obs;
   final isShakeOngoing = Status.initialized.obs;
@@ -90,6 +94,7 @@ class AlarmChallengeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
     _startTimer();
 
     String ringtoneName = alarmRecord.ringtoneName;
@@ -163,7 +168,7 @@ class AlarmChallengeController extends GetxController {
 
     if (alarmRecord.isPedometerEnabled) {
       final PermissionStatus status =
-          await Permission.activityRecognition.request();
+      await Permission.activityRecognition.request();
 
       if (status == PermissionStatus.granted) {
         numberOfSteps = alarmRecord.numberOfSteps;
@@ -200,64 +205,36 @@ class AlarmChallengeController extends GetxController {
     }
   }
 
-  void _startTimer() async {
-    const duration = Duration(seconds: 15);
-    const totalIterations = 1500000;
-    const decrement = 0.000001;
+  // --- THE NEW 1-SECOND TIMER ENGINE ---
+  void _startTimer() {
+    _challengeTimer?.cancel();
 
-    // Capture the current session ID for this specific async loop
-    final int currentSessionId = _timerSessionId;
+    int duration = alarmRecord.challengeDuration;
+    timeRemaining.value = duration;
+    progress.value = 1.0;
 
-    for (var i = totalIterations; i > 0; i--) {
-      // If the global session ID has changed, kill this orphaned loop immediately
-      if (currentSessionId != _timerSessionId) {
-        break;
-      }
-
+    // Ticks exactly once per second, stopping the emulator crashes!
+    _challengeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!isTimerEnabled) {
-        debugPrint('THIS IS THE BUG');
-        break;
+        timer.cancel();
+        return;
       }
-      if (progress.value <= 0.0) {
+
+      if (timeRemaining.value > 0) {
+        timeRemaining.value--;
+        progress.value = timeRemaining.value / duration; // Keeps your other screens happy
+      } else {
+        timer.cancel();
+        progress.value = 0.0;
         shouldProcessStepCount = false;
         Get.until((route) => route.settings.name == '/alarm-ring');
-        break;
       }
-      await Future.delayed(duration ~/ i);
-      progress.value -= decrement;
-    }
+    });
   }
 
   restartTimer() {
-    _timerSessionId++; // Increment ID to kill any existing async loops
-    progress.value = 1.0; // Reset the progress to its initial value
-    _startTimer(); // Start a new timer
+    _startTimer();
   }
-
-  // void _startTimer() async {
-  //   const duration = Duration(seconds: 15);
-  //   const totalIterations = 1500000;
-  //   const decrement = 0.000001;
-
-  //   for (var i = totalIterations; i > 0; i--) {
-  //     if (!isTimerEnabled) {
-  //       debugPrint('THIS IS THE BUG');
-  //       break;
-  //     }
-  //     if (progress.value <= 0.0) {
-  //       shouldProcessStepCount = false;
-  //       Get.until((route) => route.settings.name == '/alarm-ring');
-  //       break;
-  //     }
-  //     await Future.delayed(duration ~/ i);
-  //     progress.value -= decrement;
-  //   }
-  // }
-
-  // restartTimer() {
-  //   progress.value = 1.0; // Reset the progress to its initial value
-  //   _startTimer(); // Start a new timer
-  // }
 
   isChallengesComplete() {
     if (!Utils.isChallengeEnabled(alarmRecord)) {
@@ -269,6 +246,8 @@ class AlarmChallengeController extends GetxController {
 
   @override
   void onClose() async {
+    _challengeTimer?.cancel();
+
     super.onClose();
 
     shouldProcessStepCount = false;
@@ -281,12 +260,13 @@ class AlarmChallengeController extends GetxController {
       AudioUtils.playAlarm(alarmRecord: alarmRecord);
     }
   }
+
   void removeDigit() {
-  if (displayValue.value.isNotEmpty) {
-    displayValue.value = displayValue.value.substring(
-      0, 
-      displayValue.value.length - 1
-    );
+    if (displayValue.value.isNotEmpty) {
+      displayValue.value = displayValue.value.substring(
+          0,
+          displayValue.value.length - 1
+      );
+    }
   }
-}
 }

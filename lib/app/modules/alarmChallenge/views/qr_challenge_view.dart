@@ -16,10 +16,6 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
-    // var width = Get.width;
-    // var height = Get.height;
-    // ignore: unused_local_variable
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
@@ -35,14 +31,29 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
         },
         child: Column(
           children: [
-            Obx(
-              () => LinearProgressIndicator(
-                minHeight: 2,
-                value: controller.progress.value,
-                backgroundColor: Colors.grey,
-                valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
-              ),
-            ),
+            // --- THE NEW MASSIVE TEXT TIMER ---
+            // --- THE OPTIMIZED TEXT TIMER ---
+            Obx(() {
+              // Directly read the clean integer from the new engine!
+              int secondsLeft = controller.timeRemaining.value;
+              String timerText = "00:${secondsLeft.toString().padLeft(2, '0')}";
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                child: Text(
+                  timerText,
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: secondsLeft <= 5
+                        ? Colors.red
+                        : themeController.primaryTextColor.value,
+                  ),
+                ),
+              );
+            }),
+            // -----------------------------------
+            // -----------------------------------
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
@@ -52,128 +63,128 @@ class QRChallengeView extends GetView<AlarmChallengeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Obx(
-                          () => Text(
-                            'Scan your QR/Bar Code!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
-                                ),
+                          Obx(
+                                () => Text(
+                              'Scan your QR/Bar Code!'.tr,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: themeController.primaryTextColor.value.withOpacity(0.7),
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: height * 0.08,
                           ),
                           Obx(
-                            () => Column(
+                                () => Column(
                               children: [
                                 (controller.isQrOngoing.value ==
-                                        Status.initialized)
+                                    Status.initialized)
                                     ? SizedBox(
-                                        height: 300,
-                                        width: 300,
-                                        child: MobileScanner(
-                                          controller: controller.qrController,
-                                          fit: BoxFit.cover,
-                                          onDetect: (capture) {
-                                            final List<Barcode> barcodes =
-                                                capture.barcodes;
-                                            for (final barcode in barcodes) {
-                                              controller.qrValue.value =
-                                                  barcode.rawValue.toString();
+                                  height: 300,
+                                  width: 300,
+                                  child: MobileScanner(
+                                    controller: controller.qrController,
+                                    fit: BoxFit.cover,
+                                    onDetect: (capture) {
+                                      final List<Barcode> barcodes =
+                                          capture.barcodes;
+                                      for (final barcode in barcodes) {
+                                        controller.qrValue.value =
+                                            barcode.rawValue.toString();
 
-                                              if (controller.qrValue.value !=
-                                                  controller
-                                                      .alarmRecord.qrValue) {
-                                                controller.isQrOngoing.value =
-                                                    Status.ongoing;
-                                              } else {
-                                                controller.isQrOngoing.value =
-                                                    Status.completed;
-                                              }
-                                            }
+                                        if (controller.qrValue.value !=
+                                            controller
+                                                .alarmRecord.qrValue) {
+                                          controller.isQrOngoing.value =
+                                              Status.ongoing;
+                                        } else {
+                                          controller.isQrOngoing.value =
+                                              Status.completed;
+                                        }
+                                      }
+                                    },
+                                  ),
+                                )
+                                    : SizedBox(
+                                  height: 300,
+                                  width: 300,
+                                  child: Center(
+                                    child: (controller.qrValue.value ==
+                                        controller
+                                            .alarmRecord.qrValue)
+                                        ? Icon(
+                                      Icons.done,
+                                      size: height * 0.2,
+                                      color: themeController.primaryTextColor.value
+                                          .withOpacity(0.7),
+                                    )
+                                        : Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Icon(
+                                          Icons.close,
+                                          size: height * 0.2,
+                                          color: themeController.primaryTextColor.value
+                                              .withOpacity(
+                                            0.7,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Wrong Code Scanned!'.tr,
+                                          style: Theme.of(
+                                            context,
+                                          )
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                            fontWeight:
+                                            FontWeight.w500,
+                                            color: themeController.primaryTextColor.value
+                                                .withOpacity(
+                                              0.7,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty
+                                                .all(
+                                              kprimaryColor,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Retake'.tr,
+                                            style: Theme.of(
+                                              context,
+                                            )
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                              color: themeController.secondaryTextColor.value,
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            Utils.hapticFeedback();
+                                            controller.qrController!
+                                                .dispose();
+                                            controller
+                                                .restartQRCodeController();
+                                            controller.isQrOngoing
+                                                .value =
+                                                Status.initialized;
                                           },
                                         ),
-                                      )
-                                    : SizedBox(
-                                        height: 300,
-                                        width: 300,
-                                        child: Center(
-                                          child: (controller.qrValue.value ==
-                                                  controller
-                                                      .alarmRecord.qrValue)
-                                              ? Icon(
-                                                  Icons.done,
-                                                  size: height * 0.2,
-                                                  color: themeController.primaryTextColor.value
-                                                          .withOpacity(0.7),
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.close,
-                                                      size: height * 0.2,
-                                                      color: themeController.primaryTextColor.value
-                                                              .withOpacity(
-                                                              0.7,
-                                                            ),
-                                                    ),
-                                                    Text(
-                                                      'Wrong Code Scanned!'.tr,
-                                                      style: Theme.of(
-                                                        context,
-                                                      )
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: themeController.primaryTextColor.value
-                                                                    .withOpacity(
-                                                                    0.7,
-                                                                  ),
-                                                          ),
-                                                    ),
-                                                    TextButton(
-                                                      style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(
-                                                          kprimaryColor,
-                                                        ),
-                                                      ),
-                                                      child: Text(
-                                                        'Retake'.tr,
-                                                        style: Theme.of(
-                                                          context,
-                                                        )
-                                                            .textTheme
-                                                            .displaySmall!
-                                                            .copyWith(
-                                                              color: themeController.secondaryTextColor.value,
-                                                            ),
-                                                      ),
-                                                      onPressed: () async {
-                                                        Utils.hapticFeedback();
-                                                        controller.qrController!
-                                                            .dispose();
-                                                        controller
-                                                            .restartQRCodeController();
-                                                        controller.isQrOngoing
-                                                                .value =
-                                                            Status.initialized;
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                        ),
-                                      ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

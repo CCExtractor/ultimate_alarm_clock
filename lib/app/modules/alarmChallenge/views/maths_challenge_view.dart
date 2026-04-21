@@ -5,7 +5,6 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
-// ignore: must_be_immutable
 class MathsChallengeView extends GetView<AlarmChallengeController> {
   MathsChallengeView({Key? key}) : super(key: key);
 
@@ -13,8 +12,6 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
-    // var height = Get.height;
-    // var width = Get.width;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return GestureDetector(
@@ -29,74 +26,86 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
         body: Center(
           child: Column(
             children: [
-              Obx(
-                () => LinearProgressIndicator(
-                  minHeight: 2,
-                  value: controller.progress.value,
-                  backgroundColor: Colors.grey,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(kprimaryColor),
-                ),
-              ),
+              // --- THE OPTIMIZED TEXT TIMER ---
+              Obx(() {
+                // Now it reads the pure integer once per second!
+                int secondsLeft = controller.timeRemaining.value;
+                String timerText = "00:${secondsLeft.toString().padLeft(2, '0')}";
+
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                  child: Text(
+                    timerText,
+                    style: TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: secondsLeft <= 5
+                          ? Colors.red
+                          : themeController.primaryTextColor.value,
+                    ),
+                  ),
+                );
+              }),
+              // -----------------------------------
               Expanded(
                 child: Obx(
-                  () => Column(
+                      () => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       (controller.isMathsOngoing.value == Status.ongoing)
                           ? Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
-                                  child: Obx(
-                                        () => Text(
-                                          'Question @noMathQ'.trParams({
-                                            'noMathQ' :  controller.numMathsQuestions.value.toString(),
-                                          }),
-                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                            letterSpacing: 1.5,
-                                          ),
-                                    ),
-                                  ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
+                            child: Obx(
+                                  () => Text(
+                                'Question @noMathQ'.trParams({
+                                  'noMathQ' :  controller.numMathsQuestions.value.toString(),
+                                }),
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  letterSpacing: 1.5,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Obx(
-                                    () => Text(
-                                      controller.questionText.value,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayLarge,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Obx(
-                                    () => Text(
-                                      controller.displayValue.value,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: (controller.correctAnswer.value)
-                                  ? Icon(
-                                      Icons.done,
-                                      size: height * 0.08,
-                                      color: Colors.green,
-                                    )
-                                  : Icon(
-                                      Icons.close,
-                                      size: height * 0.08,
-                                      color: Colors.red,
-                                    ),
+                              ),
                             ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Obx(
+                                  () => Text(
+                                controller.questionText.value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Obx(
+                                  () => Text(
+                                controller.displayValue.value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                          : Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: (controller.correctAnswer.value)
+                            ? Icon(
+                          Icons.done,
+                          size: height * 0.08,
+                          color: Colors.green,
+                        )
+                            : Icon(
+                          Icons.close,
+                          size: height * 0.08,
+                          color: Colors.red,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
@@ -106,7 +115,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildNumberButton('7'),
                                   _buildNumberButton('8'),
@@ -116,7 +125,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildNumberButton('4'),
                                   _buildNumberButton('5'),
@@ -126,7 +135,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildNumberButton('1'),
                                   _buildNumberButton('2'),
@@ -136,7 +145,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildClearButton(),
                                   _buildNumberButton('0'),
@@ -160,7 +169,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   Widget _buildNumberButton(String number) {
     return Obx(
-        () => ElevatedButton(
+          () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
           controller.onButtonPressed(number);
@@ -178,7 +187,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   Widget _buildClearButton() {
     return Obx(
-        () => ElevatedButton(
+          () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
           controller.removeDigit();
@@ -200,7 +209,7 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
 
   Widget _buildDoneButton() {
     return Obx(
-        () => ElevatedButton(
+          () => ElevatedButton(
         onPressed: () {
           Utils.hapticFeedback();
           if (controller.mathsAnswer.toString() ==
@@ -228,4 +237,3 @@ class MathsChallengeView extends GetView<AlarmChallengeController> {
     );
   }
 }
-
