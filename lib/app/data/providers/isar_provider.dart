@@ -320,19 +320,40 @@ class IsarDb {
     return a == null ? 'null' : a.isarId;
   }
 
-  static Future<AlarmModel> getTriggeredAlarm(String time) async {
-    final isarProvider = IsarDb();
-    final db = await isarProvider.db;
+  // static Future<AlarmModel> getTriggeredAlarm(String time) async {
+  //   final isarProvider = IsarDb();
+  //   final db = await isarProvider.db;
 
-    final alarms = await db.alarmModels
-        .where()
-        .filter()
-        .isEnabledEqualTo(true)
-        .and()
-        .alarmTimeEqualTo(time)
-        .findAll();
-    return alarms.first;
+  //   final alarms = await db.alarmModels
+  //       .where()
+  //       .filter()
+  //       .isEnabledEqualTo(true)
+  //       .and()
+  //       .alarmTimeEqualTo(time)
+  //       .findAll();
+  //   return alarms.first;
+  // }
+
+static Future<AlarmModel?> getTriggeredAlarm(String time) async {
+  final isarProvider = IsarDb();
+  final db = await isarProvider.db;
+
+  // Use findFirst() instead of findAll() to save memory and IO
+  final alarm = await db.alarmModels
+      .where()
+      .filter()
+      .isEnabledEqualTo(true)
+      .and()
+      .alarmTimeEqualTo(time)
+      .findFirst();
+
+  if (alarm == null) {
+    debugPrint('No enabled alarm found in ISAR for time: $time');
+    return null; // Return null instead of throwing an error to prevent crashes
   }
+
+  return alarm;
+}
 
   static Future<bool> doesAlarmExist(String alarmID) async {
     final isarProvider = IsarDb();
