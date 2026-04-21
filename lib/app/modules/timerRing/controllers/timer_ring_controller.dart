@@ -12,12 +12,14 @@ class TimerRingController extends GetxController {
   MethodChannel timerChannel = const MethodChannel('timer');
   Timer? vibrationTimer;
   late StreamSubscription<FGBGType> _subscription;
-   getFakeTimerModel()async {
-   TimerModel fakeTimer = await Utils.genFakeTimerModel();
-   return fakeTimer;
+
+  Future<TimerModel> getFakeTimerModel() async {
+    TimerModel fakeTimer = await Utils.genFakeTimerModel();
+    return fakeTimer;
   }
+
   @override
-  void onInit() async {
+  Future<void> onInit() async {
     super.onInit();
 
     // Preventing app from being minimized!
@@ -30,17 +32,19 @@ class TimerRingController extends GetxController {
         Timer.periodic(const Duration(milliseconds: 3500), (Timer timer) {
       Vibration.vibrate(pattern: [500, 3000]);
     });
-    AudioUtils.playTimer(alarmRecord: await getFakeTimerModel().value);
+    final timerRecord = await getFakeTimerModel();
+    AudioUtils.playTimer(alarmRecord: timerRecord);
 
     await timerChannel.invokeMethod('cancelTimer');
   }
 
   @override
-  onClose() async {
+  Future<void> onClose() async {
     Vibration.cancel();
-    vibrationTimer!.cancel();
+    vibrationTimer?.cancel();
+    final timerRecord = await getFakeTimerModel();
     AudioUtils.stopTimer(
-      ringtoneName: await getFakeTimerModel().ringtoneName,
+      ringtoneName: timerRecord.ringtoneName,
     );
     _subscription.cancel();
     super.onClose();
