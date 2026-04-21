@@ -14,9 +14,7 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
-    // var height = Get.height;
-    // ignore: unused_local_variable
-      final double width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -31,14 +29,29 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
         },
         child: Column(
           children: [
-            Obx(
-              () => LinearProgressIndicator(
-                minHeight: 2,
-                value: controller.progress.value,
-                backgroundColor: Colors.grey,
-                valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
-              ),
-            ),
+            // --- THE NEW MASSIVE TEXT TIMER ---
+            // --- THE OPTIMIZED TEXT TIMER ---
+            Obx(() {
+              // Directly read the clean integer from the new engine!
+              int secondsLeft = controller.timeRemaining.value;
+              String timerText = "00:${secondsLeft.toString().padLeft(2, '0')}";
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                child: Text(
+                  timerText,
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: secondsLeft <= 5
+                        ? Colors.red
+                        : themeController.primaryTextColor.value,
+                  ),
+                ),
+              );
+            }),
+            // -----------------------------------
+            // -----------------------------------
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
@@ -49,22 +62,22 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Obx(
-                            () => Text(
+                                () => Text(
                               'Walk it Out!',
                               style: Theme.of(context)
                                   .textTheme
                                   .displayMedium!
                                   .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: themeController.primaryTextColor.value.withOpacity(0.7),
-                                  ),
+                                fontWeight: FontWeight.w500,
+                                color: themeController.primaryTextColor.value.withOpacity(0.7),
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: height * 0.08,
                           ),
                           Obx(
-                            () => Icon(
+                                () => Icon(
                               Icons.directions_walk,
                               size: height * 0.2,
                               color: themeController.primaryTextColor.value.withOpacity(0.7),
@@ -74,13 +87,13 @@ class PedometerChallengeView extends GetView<AlarmChallengeController> {
                             height: height * 0.08,
                           ),
                           Obx(
-                            () => Text(
+                                () => Text(
                               (controller.alarmRecord.numberOfSteps -
-                                              controller.stepsCount.value >=
-                                          0
-                                      ? controller.alarmRecord.numberOfSteps -
-                                          controller.stepsCount.value
-                                      : 0)
+                                  controller.stepsCount.value >=
+                                  0
+                                  ? controller.alarmRecord.numberOfSteps -
+                                  controller.stepsCount.value
+                                  : 0)
                                   .toString(),
                               style: const TextStyle(fontSize: 35),
                             ),

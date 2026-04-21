@@ -15,10 +15,6 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
 
   @override
   Widget build(BuildContext context) {
-
-    // var width = Get.width;
-    // var height = Get.height;  
-    // ignore: unused_local_variable
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
@@ -34,14 +30,29 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
         },
         child: Column(
           children: [
-            Obx(
-              () => LinearProgressIndicator(
-                minHeight: 2,
-                value: controller.progress.value,
-                backgroundColor: Colors.grey,
-                valueColor: const AlwaysStoppedAnimation<Color>(kprimaryColor),
-              ),
+            // --- ADDED REPAINT BOUNDARY TO STOP FLICKERING ---
+            RepaintBoundary(
+              child: Obx(() {
+                // Directly read the clean integer from the new engine!
+                int secondsLeft = controller.timeRemaining.value;
+                String timerText = "00:${secondsLeft.toString().padLeft(2, '0')}";
+
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                  child: Text(
+                    timerText,
+                    style: TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: secondsLeft <= 5
+                          ? Colors.red
+                          : themeController.primaryTextColor.value,
+                    ),
+                  ),
+                );
+              }),
             ),
+            // -----------------------------------
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
@@ -51,23 +62,23 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Obx(
-                          () => Text(
-                            'Shake your phone!'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeController.primaryTextColor.value.withOpacity(0.7),
-                                ),
+                          Obx(
+                                () => Text(
+                              'Shake your phone!'.tr,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: themeController.primaryTextColor.value.withOpacity(0.7),
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: height * 0.08,
                           ),
                           Obx(
-                            () => Transform.rotate(
+                                () => Transform.rotate(
                               angle: -10 * math.pi / 180,
                               child: Icon(
                                 Icons.vibration,
@@ -80,7 +91,7 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
                             height: height * 0.08,
                           ),
                           Obx(
-                            () => Text(
+                                () => Text(
                               controller.shakedCount.value.toString(),
                               style: const TextStyle(fontSize: 35),
                             ),
@@ -98,3 +109,4 @@ class ShakeChallengeView extends GetView<AlarmChallengeController> {
     );
   }
 }
+//here

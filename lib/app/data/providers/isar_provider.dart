@@ -157,8 +157,8 @@ class IsarDb {
         guardianTimer INTEGER,
         guardian TEXT,
         isCall INTEGER,
-        ringOn INTEGER
-        
+        ringOn INTEGER,
+        challengeDuration INTEGER NOT NULL DEFAULT 15
       )
     ''');
     await db.execute('''
@@ -252,7 +252,7 @@ class IsarDb {
     final isarProvider = IsarDb();
     final sql = await IsarDb().getAlarmSQLiteDatabase();
     final db = await isarProvider.db;
-    
+
     await db.writeTxn(() async {
       await db.alarmModels.put(alarmRecord);
     });
@@ -306,8 +306,8 @@ class IsarDb {
   static Future<bool> profileExists(String name) async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
-     final a =
-        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    final a =
+    await db.profileModels.filter().profileNameEqualTo(name).findFirst();
 
     return a != null;
   }
@@ -316,7 +316,7 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final a =
-        await db.profileModels.filter().profileNameEqualTo(name).findFirst();
+    await db.profileModels.filter().profileNameEqualTo(name).findFirst();
     return a == null ? 'null' : a.isarId;
   }
 
@@ -338,16 +338,16 @@ class IsarDb {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final alarms =
-        await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
+    await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
     print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
 
     return alarms.isNotEmpty;
   }
 
   static Future<AlarmModel> getLatestAlarm(
-    AlarmModel alarmRecord,
-    bool wantNextAlarm,
-  ) async {
+      AlarmModel alarmRecord,
+      bool wantNextAlarm,
+      ) async {
     int nowInMinutes = 0;
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
@@ -426,7 +426,7 @@ class IsarDb {
 
         return aTimeUntilNextAlarm < bTimeUntilNextAlarm ? a : b;
       });
-      
+
       return closestAlarm;
     }
   }
@@ -447,18 +447,18 @@ class IsarDb {
     );
   }
 
-  
+
   static Future<void> fixMaxSnoozeCountInAlarms() async {
     final isarProvider = IsarDb();
     final db = await isarProvider.db;
     final sql = await IsarDb().getAlarmSQLiteDatabase();
-    
-  
+
+
     final alarms = await db.alarmModels.where().findAll();
-    
-  
+
+
     for (final alarm in alarms) {
-  
+
       await sql!.update(
         'alarms',
         {'maxSnoozeCount': alarm.maxSnoozeCount},
@@ -629,7 +629,7 @@ class IsarDb {
     isarProvider.db.then((db) {
       final stream = db.timerModels.where().watch(fireImmediately: true);
       stream.listen(
-        (data) => controller.add(data),
+            (data) => controller.add(data),
         onError: (error) => controller.addError(error),
         onDone: () => controller.close(),
       );
@@ -659,7 +659,7 @@ class IsarDb {
   static Future<int> getNumberOfTimers() async {
     final sql = await IsarDb().getTimerSQLiteDatabase();
     List<Map<String, dynamic>> x =
-        await sql!.rawQuery('SELECT COUNT (*) from timers');
+    await sql!.rawQuery('SELECT COUNT (*) from timers');
     sql.close();
     int result = Sqflite.firstIntValue(x)!;
     return result;
@@ -667,8 +667,8 @@ class IsarDb {
 
 // Ringtone functions
   static Future<void> addCustomRingtone(
-    RingtoneModel customRingtone,
-  ) async {
+      RingtoneModel customRingtone,
+      ) async {
     try {
       final isarProvider = IsarDb();
       final db = await isarProvider.db;
