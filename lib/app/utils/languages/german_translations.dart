@@ -6,6 +6,34 @@ class GermanTranslations extends Translations {
         'de_DE': {
           'Alarm': 'Wecker',
           'Timer': 'Schaltuhr',
+          'Pomodoro': 'Pomodoro',
+          'Pomodoro setup': 'Pomodoro-Einstellungen',
+          'Work': 'Arbeit',
+          'Break': 'Pause',
+          'Sessions': 'Sitzungen',
+          'Current phase': 'Aktuelle Phase',
+          'Session': 'Sitzung',
+          'Start Pomodoro': 'Pomodoro starten',
+          'Pause': 'Pause',
+          'Resume': 'Fortsetzen',
+          'Skip': 'Überspringen',
+          'Reset': 'Zurücksetzen',
+          'Completed': 'Abgeschlossen',
+          'Ready': 'Bereit',
+          'min': 'Min',
+          'Work session started': 'Arbeitssitzung gestartet',
+          'Break started': 'Pause gestartet',
+          'Phase completed': 'Phase abgeschlossen',
+          'Pomodoro completed': 'Pomodoro abgeschlossen',
+          'Pomodoro resumed': 'Pomodoro fortgesetzt',
+          'Pomodoro paused': 'Pomodoro pausiert',
+          'Work session skipped': 'Arbeitssitzung übersprungen',
+          'Break skipped': 'Pause übersprungen',
+          'Pomodoro reset': 'Pomodoro zurückgesetzt',
+          'No active pomodoro phase to skip':
+              'Keine aktive Pomodoro-Phase zum Überspringen',
+          'Please set valid pomodoro values':
+              'Bitte gültige Pomodoro-Werte festlegen',
           'StopWatch': 'Stoppuhr',
 
           'Enable 24 Hour Format': '24-Stunden-Format aktivieren',
@@ -48,8 +76,9 @@ class GermanTranslations extends Translations {
           'Yes': 'Ja',
           'No': 'Nein',
           'Confirmation': 'Bestätigung',
-          'want to delete?': 'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
-          'delete' : 'löschen',
+          'want to delete?':
+              'Sind Sie sicher, dass Sie diesen Alarm löschen möchten?',
+          'delete': 'löschen',
           'You cannot join your own alarm!':
               'Sie können Ihrem eigenen Alarm nicht beitreten!',
           'An alarm with this ID doesn\'t exist!':
@@ -147,10 +176,6 @@ class GermanTranslations extends Translations {
           'steps': 'Schritte',
           'pedometerDescription':
               'Schreiten Sie voran, um zu entlassen! Setzen Sie ein Schrittziel, um den Wecker auszuschalten und einen aktiven und energiegeladenen Start in den Tag zu fördern.',
-
-          'Solve Maths questions': 'Lösen Sie mathematische Fragen',
-          'questions': 'Fragen',
-          'question': 'Frage',
 //note.dart
           'Add a note': 'Füg ein Notiz hinzu',
 // qr_bar_code_tile.dart
@@ -180,8 +205,6 @@ class GermanTranslations extends Translations {
           'times': 'Mal',
           'time': 'Mal',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Geteilter Alarm',
-
           'Shared alarms': 'Geteilte Alarme',
           'sharedDescription':
               'Teilen Sie Alarme mit anderen mithilfe der Alarm-ID. Jeder geteilte Benutzer kann wählen, ob sein Alarm vor oder nach der eingestellten Zeit klingelt.',

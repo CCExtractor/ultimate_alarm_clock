@@ -8,6 +8,7 @@ import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/timer/views/timer_animation.dart';
+import 'package:ultimate_alarm_clock/app/modules/timer/views/pomodoro_tab_view.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
 import 'package:ultimate_alarm_clock/app/utils/end_drawer.dart';
 import 'package:ultimate_alarm_clock/app/utils/hover_preset_button.dart';
@@ -22,129 +23,175 @@ class TimerView extends GetView<TimerController> {
   final ThemeController themeController = Get.find<ThemeController>();
   // var width = Get.width;
   // var height = Get.height;
-  
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height / 8.9),
-        child: AppBar(
-          toolbarHeight: height / 7.9,
-          elevation: 0.0,
-          title: Obx(
-            () => Text(
-              'Timer',
-              style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: themeController.primaryTextColor.value.withOpacity(
-                      0.75,
+    return DefaultTabController(
+      length: 2,
+      child: Builder(
+        builder: (BuildContext tabContext) {
+          final TabController tabController =
+              DefaultTabController.of(tabContext);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (BuildContext context, Widget? child) {
+              final bool isTimerTab = tabController.index == 0;
+              return Scaffold(
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(height / 6.3),
+                  child: AppBar(
+                    toolbarHeight: height / 10.0,
+                    elevation: 0.0,
+                    title: Obx(
+                      () => Text(
+                        'Timer'.tr,
+                        style:
+                            Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  color: themeController.primaryTextColor.value
+                                      .withOpacity(
+                                    0.75,
+                                  ),
+                                  fontSize: 26,
+                                ),
+                      ),
                     ),
-                    fontSize: 26,
-                  ),
-            ),
-          ),
-          actions: [
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return Obx(
-                  () => IconButton(
-                    onPressed: () {
-                      Utils.hapticFeedback();
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                    icon: const Icon(
-                      Icons.menu,
-                    ),
-                    color: themeController.primaryTextColor.value
-                        .withOpacity(0.75),
-                    iconSize: 27,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Obx(
-        () => Visibility(
-          visible:
-              controller.isbottom.value && controller.timerList.length >= 3,
-          child: Container(
-            height: 85,
-            child: FittedBox(
-              child: FloatingActionButton(
-                onPressed: () {
-                  Utils.hapticFeedback();
-                  timerSelector(context, width, height);
-                },
-                backgroundColor: kprimaryColor,
-                child: const Icon(
-                  Icons.add_alarm,
-                  color: ksecondaryBackgroundColor,
-                  size: 26,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      body: Obx(() {
-        final hasTimers = controller.timerList.isNotEmpty;
-
-        return Stack(
-          children: [
-            // Main content: Timer list
-            if (hasTimers)
-              Positioned.fill(
-                child: StreamBuilder<List<TimerModel>>(
-                  stream: IsarDb.getTimers(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: CircularProgressIndicator.adaptive(
-                          backgroundColor: Colors.transparent,
-                          valueColor: AlwaysStoppedAnimation(kprimaryColor),
-                        ),
-                      );
-                    } else {
-                      List<TimerModel> timers = snapshot.data!;
-                      return ListView.builder(
-                        controller: controller.scrollController,
-                        itemCount: timers.length +
-                            1, // Include space for addATimerSpace only if not sticky
-                        padding: const EdgeInsets.only(bottom: 80),
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == timers.length) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child:
-                                  buildAddTimerSection(context, width, height),
-                            );
-                          }
-                          return TimerAnimatedCard(
-                            key: ValueKey(timers[index].timerId),
-                            index: index,
-                            timer: timers[index],
+                    actions: [
+                      LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return Obx(
+                            () => IconButton(
+                              onPressed: () {
+                                Utils.hapticFeedback();
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              icon: const Icon(Icons.menu),
+                              color: themeController.primaryTextColor.value
+                                  .withOpacity(0.75),
+                              iconSize: 27,
+                            ),
                           );
                         },
-                      );
-                    }
-                  },
+                      ),
+                    ],
+                    bottom: PreferredSize(
+                      preferredSize: const Size.fromHeight(44),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Obx(
+                          () => TabBar(
+                            indicatorColor: kprimaryColor,
+                            indicatorWeight: 3,
+                            labelColor: kprimaryColor,
+                            unselectedLabelColor:
+                                themeController.primaryDisabledTextColor.value,
+                            tabs: [
+                              Tab(
+                                text: 'Timer'.tr,
+                              ),
+                              Tab(
+                                text: 'Pomodoro'.tr,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-
-            // No timers: Centered addATimerSpace and preset buttons
-            if (!hasTimers)
-              Center(
-                child: buildAddTimerSection(context, width, height),
-              ),
-          ],
-        );
-      }),
-      endDrawer: buildEndDrawer(context),
+                floatingActionButton: isTimerTab
+                    ? Obx(
+                        () => Visibility(
+                          visible: controller.isbottom.value &&
+                              controller.timerList.length >= 3,
+                          child: SizedBox(
+                            height: 85,
+                            child: FittedBox(
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  Utils.hapticFeedback();
+                                  timerSelector(context, width, height);
+                                },
+                                backgroundColor: kprimaryColor,
+                                child: const Icon(
+                                  Icons.add_alarm,
+                                  color: ksecondaryBackgroundColor,
+                                  size: 26,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : null,
+                body: TabBarView(
+                  children: [
+                    buildTimerTabBody(context, width, height),
+                    PomodoroTabView(),
+                  ],
+                ),
+                endDrawer: buildEndDrawer(context),
+              );
+            },
+          );
+        },
+      ),
     );
+  }
+
+  Widget buildTimerTabBody(BuildContext context, double width, double height) {
+    return Obx(() {
+      final hasTimers = controller.timerList.isNotEmpty;
+
+      return Stack(
+        children: [
+          if (hasTimers)
+            Positioned.fill(
+              child: StreamBuilder<List<TimerModel>>(
+                stream: IsarDb.getTimers(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                        backgroundColor: Colors.transparent,
+                        valueColor: AlwaysStoppedAnimation(kprimaryColor),
+                      ),
+                    );
+                  }
+
+                  List<TimerModel> timers = snapshot.data!;
+                  return ListView.builder(
+                    controller: controller.scrollController,
+                    itemCount: timers.length + 1,
+                    padding: const EdgeInsets.only(bottom: 80),
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == timers.length) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: buildAddTimerSection(context, width, height),
+                        );
+                      }
+                      return TimerAnimatedCard(
+                        key: ValueKey(timers[index].timerId),
+                        index: index,
+                        timer: timers[index],
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          if (!hasTimers)
+            Center(
+              child: buildAddTimerSection(context, width, height),
+            ),
+        ],
+      );
+    });
   }
 
   Widget buildAddTimerSection(
@@ -559,7 +606,8 @@ class TimerView extends GetView<TimerController> {
                                               border: InputBorder.none,
                                             ),
                                             textAlign: TextAlign.center,
-                                            controller: controller.inputHoursControllerTimer,
+                                            controller: controller
+                                                .inputHoursControllerTimer,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
@@ -628,7 +676,8 @@ class TimerView extends GetView<TimerController> {
                                               border: InputBorder.none,
                                             ),
                                             textAlign: TextAlign.center,
-                                            controller: controller.inputMinutesControllerTimer,
+                                            controller: controller
+                                                .inputMinutesControllerTimer,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
@@ -697,7 +746,8 @@ class TimerView extends GetView<TimerController> {
                                               border: InputBorder.none,
                                             ),
                                             textAlign: TextAlign.center,
-                                            controller: controller.inputSecondsControllerTimer,
+                                            controller: controller
+                                                .inputSecondsControllerTimer,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(

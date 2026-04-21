@@ -4,6 +4,7 @@ import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_cont
 import 'package:ultimate_alarm_clock/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
 import '../../home/controllers/home_controller.dart';
+import '../../timer/controllers/pomodoro_controller.dart';
 import '../../timer/controllers/timer_controller.dart';
 
 class SplashScreenBinding extends Bindings {
@@ -19,6 +20,10 @@ class SplashScreenBinding extends Bindings {
     );
     Get.put<TimerController>(
       TimerController(),
+      permanent: true,
+    );
+    Get.put<PomodoroController>(
+      PomodoroController(),
       permanent: true,
     );
   }

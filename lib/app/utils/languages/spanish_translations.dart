@@ -8,6 +8,34 @@ class SpanishTranslations extends Translations {
         'es_ES': {
           'Alarm': 'Alarma',
           'Timer': 'Temporizador',
+          'Pomodoro': 'Pomodoro',
+          'Pomodoro setup': 'Configuración Pomodoro',
+          'Work': 'Trabajo',
+          'Break': 'Descanso',
+          'Sessions': 'Sesiones',
+          'Current phase': 'Fase actual',
+          'Session': 'Sesión',
+          'Start Pomodoro': 'Iniciar Pomodoro',
+          'Pause': 'Pausa',
+          'Resume': 'Reanudar',
+          'Skip': 'Saltar',
+          'Reset': 'Restablecer',
+          'Completed': 'Completado',
+          'Ready': 'Listo',
+          'min': 'min',
+          'Work session started': 'Sesión de trabajo iniciada',
+          'Break started': 'Descanso iniciado',
+          'Phase completed': 'Fase completada',
+          'Pomodoro completed': 'Pomodoro completado',
+          'Pomodoro resumed': 'Pomodoro reanudado',
+          'Pomodoro paused': 'Pomodoro en pausa',
+          'Work session skipped': 'Sesión de trabajo omitida',
+          'Break skipped': 'Descanso omitido',
+          'Pomodoro reset': 'Pomodoro restablecido',
+          'No active pomodoro phase to skip':
+              'No hay una fase de pomodoro activa para omitir',
+          'Please set valid pomodoro values':
+              'Establece valores válidos de pomodoro',
           'StopWatch': 'Cronómetro',
 
           'Enable 24 Hour Format': 'Habilitar formato de 24 horas',
@@ -57,8 +85,9 @@ class SpanishTranslations extends Translations {
           'Yes': 'Sí',
           'No': 'No',
           'Confirmation': 'Confirmación',
-          'want to delete?': '¿Estás seguro de que deseas eliminar esta alarma?',
-          'delete':'borrar',
+          'want to delete?':
+              '¿Estás seguro de que deseas eliminar esta alarma?',
+          'delete': 'borrar',
           'You cannot join your own alarm!':
               '¡No puedes unirte a tu propia alarma!',
           'An alarm with this ID doesn\'t exist!':
@@ -139,10 +168,6 @@ class SpanishTranslations extends Translations {
           'Easy': 'Fácil',
           'Medium': 'Medio',
           'Hard': 'Difícil',
-
-//maths_challenge_tile.dart
-          'Maths': 'Matemáticas',
-          'Math problems': 'Problemas matemáticos',
           'mathDescription':
               'Deberá resolver problemas matemáticos simples del nivel de dificultad elegido para desactivar la alarma.',
           'Solve Maths questions': 'Resolver preguntas de matemáticas',
@@ -185,7 +210,6 @@ class SpanishTranslations extends Translations {
           'times': 'veces',
           'time': 'vez',
 //'shared_alarm_tile.dart
-          'Shared Alarm': 'Alarma compartida',
           'Shared alarms': 'Alarmas compartidas',
           'sharedDescription':
               'Comparta alarmas con otros utilizando el ID de la alarma. Cada usuario compartido puede elegir hacer sonar su alarma antes o después del tiempo establecido.',

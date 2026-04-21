@@ -65,4 +65,20 @@ class GetStorageProvider {
   void writeWorldClocks(List<WorldClockModel> clocks) {
     _getStorage.write('worldClocks', clocks.map((e) => e.toJson()).toList());
   }
+
+  Future<void> writePomodoroState(Map<String, dynamic> state) async {
+    await _getStorage.write('pomodoroState', state);
+  }
+
+  Map<String, dynamic>? readPomodoroState() {
+    final dynamic raw = _getStorage.read('pomodoroState');
+    if (raw is Map) {
+      return Map<String, dynamic>.from(raw);
+    }
+    return null;
+  }
+
+  Future<void> clearPomodoroState() async {
+    await _getStorage.remove('pomodoroState');
+  }
 }
