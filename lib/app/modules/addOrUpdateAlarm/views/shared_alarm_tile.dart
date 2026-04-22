@@ -19,35 +19,58 @@ class SharedAlarm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var width = Get.width;
-    // var height = Get.height;
-        final double width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    return Obx(() => Container(
+    return Obx(() {
+      try {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: controller.isSharedAlarmEnabled.value 
+                ? themeController.secondaryBackgroundColor.value.withOpacity(0.3)
+                : Colors.transparent,
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           child: (controller.userModel.value != null)
               ? ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   title: Row(
                     children: [
+                      Icon(
+                        Icons.share_arrival_time,
+                        color: controller.isSharedAlarmEnabled.value 
+                            ? kprimaryColor 
+                            : themeController.primaryTextColor.value,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Shared Alarm'.tr,
                           style: TextStyle(
                             color: themeController.primaryTextColor.value,
+                            fontWeight: controller.isSharedAlarmEnabled.value 
+                                ? FontWeight.w600 
+                                : FontWeight.normal,
                           ),
                         ),
                       ),
                       IconButton(
                         icon: Icon(
-                          Icons.info_sharp,
-                          size: 21,
-                          color: themeController.primaryTextColor.value.withOpacity(0.3),
+                          Icons.info_outline,
+                          size: 20,
+                          color: themeController.primaryTextColor.value.withOpacity(0.5),
                         ),
                         onPressed: () {
                           Utils.hapticFeedback();
                           showModalBottomSheet(
                             context: context,
                             backgroundColor: themeController.secondaryBackgroundColor.value,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                            ),
                             builder: (context) {
                               return Center(
                                 child: Padding(
@@ -58,7 +81,7 @@ class SharedAlarm extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.share_arrival_time,
-                                        color: themeController.primaryTextColor.value,
+                                        color: kprimaryColor,
                                         size: height * 0.1,
                                       ),
                                       Text(
@@ -72,10 +95,6 @@ class SharedAlarm extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(top: 15.0),
                                         child: Text(
-                                          // 'Share alarms with others using the'
-                                          // ' Alarm ID. Each shared user can choose'
-                                          // ' to have their alarm ring before or'
-                                          // ' after the set time.',
                                           'sharedDescription'.tr,
                                           style: Theme.of(context)
                                               .textTheme
@@ -91,20 +110,28 @@ class SharedAlarm extends StatelessWidget {
                                                 MaterialStateProperty.all(
                                               kprimaryColor,
                                             ),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ),
                                           ),
                                           onPressed: () {
                                             Utils.hapticFeedback();
                                             Get.back();
                                           },
-                                          child: Text(
-                                            'Understood'.tr,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall!
-                                                .copyWith(
-                                                  color: themeController
-                                                          .secondaryTextColor.value,
-                                                ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                            child: Text(
+                                              'Understood'.tr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall!
+                                                  .copyWith(
+                                                    color: themeController
+                                                            .secondaryTextColor.value,
+                                                  ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -118,38 +145,101 @@ class SharedAlarm extends StatelessWidget {
                       ),
                     ],
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    try {
                     Utils.hapticFeedback();
-                    // Toggle the value of isSharedAlarmEnabled
-                    controller.isSharedAlarmEnabled.value =
-                        !controller.isSharedAlarmEnabled.value;
+                      // Add validation before toggling
+                      if (controller.userModel.value == null) {
+                        debugPrint('Cannot toggle shared alarm: User not logged in');
+                        return;
+                      }
+                      
+                      bool newValue = !controller.isSharedAlarmEnabled.value;
+                      debugPrint('Toggling shared alarm to: $newValue');
+                      
+                      
+                      controller.isSharedAlarmEnabled.value = newValue;
+                      
+                      
+                      if (newValue) {
+                        await controller.initializeSharedAlarmSettings();
+                      }
+                    } catch (e) {
+                      debugPrint('Error toggling shared alarm: $e');
+                      
+                      controller.isSharedAlarmEnabled.value = !controller.isSharedAlarmEnabled.value;
+                    }
                   },
                   trailing: Obx(
                     () => Switch.adaptive(
-                      onChanged: (value) {
+                      onChanged: (value) async {
+                        try {
                         Utils.hapticFeedback();
-                        // You can optionally add the onChanged callback here
-                        // as well
+                          debugPrint('Switch toggled to: $value');
+                          
+                          // Add validation before changing
+                          if (controller.userModel.value == null && value) {
+                            debugPrint('Cannot enable shared alarm: User not logged in');
+                            return;
+                          }
+                          
                         controller.isSharedAlarmEnabled.value = value;
+                          
+                          
+                          if (value) {
+                            await controller.initializeSharedAlarmSettings();
+                          }
+                        } catch (e) {
+                          debugPrint('Error in switch toggle: $e');
+                         
+                        }
                       },
                       value: controller.isSharedAlarmEnabled.value,
                       activeColor: ksecondaryColor,
+                      activeTrackColor: kprimaryColor.withOpacity(0.4),
                     ),
                   ),
                 )
               : ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.lock_outline,
+                        size: 20,
+                        color: themeController.primaryTextColor.value.withOpacity(0.7),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Enable Shared Alarm'.tr,
+                        style: TextStyle(
+                          color: themeController.primaryTextColor.value,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: Icon(
+                    Icons.login_rounded,
+                    color: themeController.primaryTextColor.value.withOpacity(0.7),
+                  ),
                   onTap: () {
                     Utils.hapticFeedback();
                     Get.defaultDialog(
-                      contentPadding: const EdgeInsets.all(10.0),
+                      contentPadding: const EdgeInsets.all(16.0),
                       titlePadding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: themeController.secondaryBackgroundColor.value,
-                      title: 'Disabled!'.tr,
+                      title: 'Account Required'.tr,
                       titleStyle: Theme.of(context).textTheme.displaySmall,
                       content: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Icon(
+                            Icons.login_rounded,
+                            size: 48,
+                            color: kprimaryColor,
+                          ),
+                          const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 4.0,),
@@ -157,10 +247,14 @@ class SharedAlarm extends StatelessWidget {
                               'To use this feature, you have to link your Google account!'
                                   .tr,
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: themeController.primaryTextColor.value,
+                              ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -172,56 +266,26 @@ class SharedAlarm extends StatelessWidget {
                                           MaterialStateProperty.all(
                                         kprimaryColor,
                                       ),
-                                    ),
-                                    child: FittedBox(
-                                      alignment: Alignment.centerLeft,
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'Go to settings'.tr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .copyWith(
-                                              color: themeController
-                                                      .secondaryTextColor.value,
-                                            ),
+                                      shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
                                       ),
+                                      padding: MaterialStateProperty.all(
+                                        const EdgeInsets.symmetric(vertical: 12),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Go to settings'.tr,
+                                      style: TextStyle(
+                                        color: themeController.secondaryTextColor.value,
+                                        fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                     onPressed: () {
                                       Utils.hapticFeedback();
                                       Get.back();
                                       Get.toNamed('/settings');
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * 0.05,
-                                ),
-                                Expanded(
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                            themeController.primaryTextColor.value
-                                                .withOpacity(0.5),
-                                      ),
-                                    ),
-                                    child: FittedBox(
-                                      alignment: Alignment.centerLeft,
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'Cancel'.tr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .copyWith(
-                                              color: themeController.primaryTextColor.value,
-                                            ),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Utils.hapticFeedback();
-                                      Get.back();
                                     },
                                   ),
                                 ),
@@ -232,23 +296,27 @@ class SharedAlarm extends StatelessWidget {
                       ),
                     );
                   },
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Enable Shared Alarm'.tr,
-                      style: TextStyle(
-                        color: themeController.primaryTextColor.value,
-                      ),
-                    ),
+                ),
+        );
+      } catch (e) {
+        debugPrint('Error in SharedAlarm widget build: $e');
+        // Return a safe fallback widget
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: ListTile(
+            title: Text(
+              'Shared Alarm'.tr,
+                        style: TextStyle(
+                          color: themeController.primaryTextColor.value,
+                        ),
                   ),
-                  trailing: InkWell(
-                    child: Icon(
-                      Icons.lock,
-                      color: themeController.primaryTextColor.value.withOpacity(0.7),
-                    ),
+                  trailing: Icon(
+              Icons.error_outline,
+              color: Colors.red,
                   ),
                 ),
-        ),);
+        );
+      }
+    });
   }
 }

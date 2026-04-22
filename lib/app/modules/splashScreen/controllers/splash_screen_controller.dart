@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -106,7 +108,9 @@ class SplashScreenController extends GetxController {
     alarmChannel.setMethodCallHandler((call) async {
       if (call.method == 'appStartup') {
         bool shouldAlarmRing = call.arguments['shouldAlarmRing'];
-        print("shouldring: $shouldAlarmRing");
+        bool isSharedAlarm = call.arguments['isSharedAlarm'] ?? false;
+        print("shouldring: $shouldAlarmRing, isSharedAlarm: $isSharedAlarm");
+        
         // This indicates the app was started through native code
         if (shouldAlarmRing == true) {
           shouldNavigate = false;
@@ -115,10 +119,41 @@ class SplashScreenController extends GetxController {
           // This exists to implement auto-cancellation using screen for the alarm
           if (isAlarmIgnored == true) {
             shouldAlarmRing = false;
-          } else {
+          }
+          
             if (shouldAlarmRing) {
+            // IMPORTANT: For shared alarms, don't refresh Firestore immediately
+            // This prevents the "gone off" issue when the owner dismisses the alarm
+            if (isSharedAlarm) {
+              debugPrint('🔔 Shared alarm is firing - preventing immediate Firestore refresh');
+              // Delay the Firestore refresh to allow alarm to ring properly
+              homeController.handleSharedAlarmFiring();
+            }
+            
+              // Get the currently ringing alarm based on its type
+              if (isSharedAlarm) {
+                // Get shared alarm from Firestore
+                UserModel? userModel = await SecureStorageProvider().retrieveUserModel();
+                AlarmModel sharedAlarmModel = homeController.genFakeAlarmModel();
+                currentlyRingingAlarm.value = await FirestoreDb.getLatestAlarm(
+                  userModel, 
+                  sharedAlarmModel, 
+                  false
+                );
+                debugPrint('Using SHARED alarm for ring screen: ${currentlyRingingAlarm.value.alarmTime}');
+              } else {
+                // Get local alarm from Isar
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
+                debugPrint('Using LOCAL alarm for ring screen: ${currentlyRingingAlarm.value.alarmTime}');
+              }
               
+              // Set the flag in the alarm model to ensure correct handling downstream
+              currentlyRingingAlarm.value.isSharedAlarmEnabled = isSharedAlarm;
+              
+              // Store the alarm type in HomeController for proper cleanup later
+              homeController.lastScheduledAlarmIsShared = isSharedAlarm;
+              
+              // Update max snooze count from database if needed
               if (currentlyRingingAlarm.value.alarmID != null) {
                 final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
                 if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
@@ -126,7 +161,8 @@ class SplashScreenController extends GetxController {
                 }
               }
               
-              Get.offNamed('/alarm-ring',arguments: currentlyRingingAlarm.value);
+              // Navigate to the alarm ring screen
+              Get.offNamed('/alarm-ring', arguments: currentlyRingingAlarm.value);
             } else {
               currentlyRingingAlarm.value = await getCurrentlyRingingAlarm();
               // If the alarm is set to NEVER repeat, then it will be chosen as
@@ -163,9 +199,19 @@ class SplashScreenController extends GetxController {
 
                 try {
                   await alarmChannel.invokeMethod('scheduleAlarm', {
-                    'milliSeconds': intervaltoAlarm,
-                    'activityMonitor': latestAlarm.activityMonitor
+                    'isSharedAlarm': latestAlarm.isSharedAlarmEnabled,
+                    'isActivityEnabled': latestAlarm.isActivityEnabled,
+                    'isLocationEnabled': latestAlarm.isLocationEnabled,
+                    'locationConditionType': latestAlarm.locationConditionType,
+                    'isWeatherEnabled': latestAlarm.isWeatherEnabled,
+                    'weatherConditionType': latestAlarm.weatherConditionType,
+                    'intervalToAlarm': intervaltoAlarm,
+                    'location': latestAlarm.location,
+                    'weatherTypes': jsonEncode(latestAlarm.weatherTypes),
+                    'smartControlCombinationType': latestAlarm.smartControlCombinationType,
                   });
+
+
                   print("Scheduled...");
                 } on PlatformException catch (e) {
                   print("Failed to schedule alarm: ${e.message}");
@@ -175,7 +221,6 @@ class SplashScreenController extends GetxController {
               Get.offNamed('/bottom-navigation-bar');
 
               alarmChannel.invokeMethod('minimizeApp');
-            }
           }
         }
       }

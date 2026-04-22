@@ -26,6 +26,12 @@ class SettingsController extends GetxController {
   final _flipToSnooze = 'flip_to_snooze';
   var isSortedAlarmListEnabled = true.obs;
   final _sortedAlarmListKey = 'sorted_alarm_list';
+  var isTimezoneEnabledByDefault = false.obs;
+  final _timezoneEnabledByDefaultKey = 'timezone_enabled_by_default';
+  var defaultTimezoneId = ''.obs;
+  final _defaultTimezoneIdKey = 'default_timezone_id';
+  var showTimezoneInAlarmList = true.obs;
+  final _showTimezoneInAlarmListKey = 'show_timezone_in_alarm_list';
   var currentLanguage = 'en_US'.obs;
   final _secureStorageProvider = SecureStorageProvider();
   final apiKey = TextEditingController();
@@ -174,6 +180,14 @@ class SettingsController extends GetxController {
     isSortedAlarmListEnabled.value = await _secureStorageProvider
         .readSortedAlarmListValue(key: _sortedAlarmListKey);
 
+    // Load timezone preferences
+    isTimezoneEnabledByDefault.value = await _secureStorageProvider
+        .readTimezoneEnabledByDefault(key: _timezoneEnabledByDefaultKey);
+    defaultTimezoneId.value = await _secureStorageProvider
+        .readDefaultTimezoneId(key: _defaultTimezoneIdKey);
+    showTimezoneInAlarmList.value = await _secureStorageProvider
+        .readShowTimezoneInAlarmList(key: _showTimezoneInAlarmListKey);
+
     currentLanguage.value = await storage.readCurrentLanguage();
 
     // Store the retrieved API key from the flutter secure storage
@@ -255,5 +269,42 @@ class SettingsController extends GetxController {
     local.value = Get.locale.toString();
     storage.writeCurrentLanguage(local.value);
     storage.writeLocale(languageCode, countryCode);
+  }
+
+  // Timezone preference methods
+  void _saveTimezoneEnabledByDefaultPreference() async {
+    await _secureStorageProvider.writeTimezoneEnabledByDefault(
+      key: _timezoneEnabledByDefaultKey,
+      isTimezoneEnabledByDefault: isTimezoneEnabledByDefault.value,
+    );
+  }
+
+  void toggleTimezoneEnabledByDefault(bool enabled) {
+    isTimezoneEnabledByDefault.value = enabled;
+    _saveTimezoneEnabledByDefaultPreference();
+  }
+
+  void _saveDefaultTimezoneIdPreference() async {
+    await _secureStorageProvider.writeDefaultTimezoneId(
+      key: _defaultTimezoneIdKey,
+      defaultTimezoneId: defaultTimezoneId.value,
+    );
+  }
+
+  void setDefaultTimezoneId(String timezoneId) {
+    defaultTimezoneId.value = timezoneId;
+    _saveDefaultTimezoneIdPreference();
+  }
+
+  void _saveShowTimezoneInAlarmListPreference() async {
+    await _secureStorageProvider.writeShowTimezoneInAlarmList(
+      key: _showTimezoneInAlarmListKey,
+      showTimezoneInAlarmList: showTimezoneInAlarmList.value,
+    );
+  }
+
+  void toggleShowTimezoneInAlarmList(bool enabled) {
+    showTimezoneInAlarmList.value = enabled;
+    _saveShowTimezoneInAlarmListPreference();
   }
 }

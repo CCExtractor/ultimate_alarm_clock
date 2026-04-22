@@ -215,4 +215,47 @@ class SecureStorageProvider {
       value: timerId.toString(),
     );
   }
+
+  // Timezone preference methods
+  Future<bool> readTimezoneEnabledByDefault({required String key}) async {
+    return await _secureStorage.read(key: key) == 'true';
+  }
+
+  Future<void> writeTimezoneEnabledByDefault({
+    required String key,
+    required bool isTimezoneEnabledByDefault,
+  }) async {
+    await _secureStorage.write(
+      key: key,
+      value: isTimezoneEnabledByDefault.toString(),
+    );
+  }
+
+  Future<String> readDefaultTimezoneId({required String key}) async {
+    return await _secureStorage.read(key: key) ?? '';
+  }
+
+  Future<void> writeDefaultTimezoneId({
+    required String key,
+    required String defaultTimezoneId,
+  }) async {
+    await _secureStorage.write(
+      key: key,
+      value: defaultTimezoneId,
+    );
+  }
+
+  Future<bool> readShowTimezoneInAlarmList({required String key}) async {
+    return await _secureStorage.read(key: key) != 'false'; // Default to true
+  }
+
+  Future<void> writeShowTimezoneInAlarmList({
+    required String key,
+    required bool showTimezoneInAlarmList,
+  }) async {
+    await _secureStorage.write(
+      key: key,
+      value: showTimezoneInAlarmList.toString(),
+    );
+  }
 }

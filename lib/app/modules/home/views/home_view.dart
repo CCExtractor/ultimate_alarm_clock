@@ -486,11 +486,11 @@ class HomeView extends GetView<HomeController> {
                       axisDirection: AxisDirection.down,
                       child: Obx(() {
                         return FutureBuilder(
-                          future: controller.isUserSignedIn.value
-                              ? controller
-                                  .initStream(controller.userModel.value)
-                              : controller
-                                  .initStream(controller.userModel.value),
+                          future: (() {
+                            print('🏠 HomeView: User signed in: ${controller.isUserSignedIn.value}');
+                            print('🏠 HomeView: User model: ${controller.userModel.value?.email ?? 'null'}');
+                            return controller.initStream(controller.userModel.value);
+                          })(),
                           builder: (context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
                               final Stream streamAlarms = snapshot.data;
@@ -509,6 +509,10 @@ class HomeView extends GetView<HomeController> {
                                     );
                                   } else {
                                     List<AlarmModel> alarms = snapshot.data;
+                                    print('🏠 HomeView: Received ${alarms.length} alarms');
+                                    for (int i = 0; i < alarms.length && i < 3; i++) {
+                                      print('   - Alarm ${i + 1}: ${alarms[i].alarmTime} (${alarms[i].isSharedAlarmEnabled ? 'Shared' : 'Local'})');
+                                    }
 
                                     alarms = alarms.toList();
                                     controller.refreshTimer = true;
@@ -992,8 +996,30 @@ class HomeView extends GetView<HomeController> {
                                                                                   debugPrint(alarm.isSharedAlarmEnabled.toString());
 
                                                                                         if (alarm.isSharedAlarmEnabled == true) {
+                                                                                          // Cancel the native Android alarm BEFORE deleting from database
+                                                                                          try {
+                                                                                            await controller.alarmChannel.invokeMethod('cancelAlarmById', {
+                                                                                              'alarmID': alarm.firestoreId!,
+                                                                                              'isSharedAlarm': true,
+                                                                                            });
+                                                                                            debugPrint('🗑️ Canceled native shared alarm before deletion: ${alarm.firestoreId}');
+                                                                                          } catch (e) {
+                                                                                            debugPrint('⚠️ Error canceling native shared alarm: $e');
+                                                                                          }
+                                                                                          
                                                                                           await FirestoreDb.deleteAlarm(controller.userModel.value, alarm.firestoreId!);
                                                                                         } else {
+                                                                                          // Cancel the native Android alarm BEFORE deleting from database
+                                                                                          try {
+                                                                                            await controller.alarmChannel.invokeMethod('cancelAlarmById', {
+                                                                                              'alarmID': alarm.alarmID,
+                                                                                              'isSharedAlarm': false,
+                                                                                            });
+                                                                                            debugPrint('🗑️ Canceled native local alarm before deletion: ${alarm.alarmID}');
+                                                                                          } catch (e) {
+                                                                                            debugPrint('⚠️ Error canceling native local alarm: $e');
+                                                                                          }
+                                                                                          
                                                                                           await IsarDb.deleteAlarm(alarm.isarId);
                                                                                         }
 
