@@ -339,7 +339,9 @@ class IsarDb {
     final db = await isarProvider.db;
     final alarms =
         await db.alarmModels.where().filter().alarmIDEqualTo(alarmID).findAll();
-    print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
+    if (alarms.isNotEmpty) {
+      print('checkEmpty ${alarms[0].alarmID} ${alarms.isNotEmpty}');
+    }
 
     return alarms.isNotEmpty;
   }
