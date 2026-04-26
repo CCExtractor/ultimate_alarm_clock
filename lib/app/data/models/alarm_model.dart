@@ -17,11 +17,8 @@ class AlarmModel {
   late String alarmID;
   late bool isEnabled;
   late bool isLocationEnabled;
-  late int locationConditionType; 
   late bool isSharedAlarmEnabled;
   late bool isWeatherEnabled;
-  late int weatherConditionType; 
-  late int activityConditionType;
   late bool isMathsEnabled;
   late bool isShakeEnabled;
   late bool isQrEnabled;
@@ -63,16 +60,8 @@ class AlarmModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
-  late bool isSunriseEnabled;
-  late int sunriseDuration;
-  late double sunriseIntensity;
-  late int sunriseColorScheme;
-  late String timezoneId;
-  late bool isTimezoneEnabled;
-  late int targetTimezoneOffset;
-  late int smartControlCombinationType;
   @ignore
-  List<Map>? offsetDetails;
+  Map? offsetDetails;
 
   AlarmModel(
       {required this.alarmTime,
@@ -88,11 +77,8 @@ class AlarmModel {
       required this.isActivityEnabled,
       required this.minutesSinceMidnight,
       required this.isLocationEnabled,
-      required this.locationConditionType,
       required this.isSharedAlarmEnabled,
       required this.isWeatherEnabled,
-      required this.weatherConditionType,
-      required this.activityConditionType,
       required this.location,
       required this.weatherTypes,
       required this.isMathsEnabled,
@@ -105,7 +91,7 @@ class AlarmModel {
       required this.isPedometerEnabled,
       required this.numberOfSteps,
       required this.activityInterval,
-      this.offsetDetails = const [{}],
+      this.offsetDetails = const {},
       required this.mainAlarmTime,
       required this.label,
       required this.isOneTime,
@@ -125,15 +111,7 @@ class AlarmModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall,
-      required this.isSunriseEnabled,
-      required this.sunriseDuration,
-      required this.sunriseIntensity,
-      required this.sunriseColorScheme,
-      this.timezoneId = '',
-      this.isTimezoneEnabled = false,
-      this.targetTimezoneOffset = 0,
-      this.smartControlCombinationType = 0});
+      required this.isCall});
 
   AlarmModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -144,27 +122,8 @@ class AlarmModel {
     );
 
     // Making sure the alarms work with the offsets
-    isSharedAlarmEnabled = documentSnapshot['isSharedAlarmEnabled'];
-    
-    
-    final offsetDetailsRaw = documentSnapshot['offsetDetails'];
-    if (offsetDetailsRaw is Map) {
-    
-      final offsetDetailsMap = Map<String, dynamic>.from(offsetDetailsRaw);
-    
-      offsetDetails = offsetDetailsMap.entries.map((entry) {
-        final data = Map<String, dynamic>.from(entry.value);
-        data['userId'] = entry.key;
-        return data;
-      }).toList();
-    } else if (offsetDetailsRaw is List) {
-      
-      offsetDetails = (offsetDetailsRaw as List<dynamic>)
-    .map((item) => item as Map<String, dynamic>)
-    .toList();
-    } else {
-      offsetDetails = null;
-    }
+    isSharedAlarmEnabled = _asBool(data['isSharedAlarmEnabled'], false);
+    offsetDetails = _asMap(data['offsetDetails']);
 
     if (isSharedAlarmEnabled && user != null && offsetDetails?[user.id] != null) {
       mainAlarmTime = _asString(data['alarmTime'], '00:00');
@@ -176,23 +135,11 @@ class AlarmModel {
         _asString(data['alarmTime'], '00:00'),
       );
 
-if (offsetDetails != null) {
-  final userOffset = offsetDetails!
-      .where((entry) => entry['userId'] == user.id)
-      .toList();
-
-  if (userOffset.isNotEmpty) {
-    final data = userOffset.first;
-
-    alarmTime = (data['offsetDuration'] != 0)
-        ? data['offsettedTime']
-        : documentSnapshot['alarmTime'];
-
-    minutesSinceMidnight = Utils.timeOfDayToInt(
-      Utils.stringToTimeOfDay(data['offsettedTime']),
-    );
-  }
-}
+      alarmTime =
+          (offsetDuration != 0) ? offsettedTime : _asString(data['alarmTime'], '00:00');
+      minutesSinceMidnight = Utils.timeOfDayToInt(
+        Utils.stringToTimeOfDay(offsettedTime),
+      );
     } else {
       alarmTime = _asString(data['alarmTime'], '00:00');
       minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
@@ -215,26 +162,23 @@ if (offsetDetails != null) {
     isActivityEnabled = _asBool(data['isActivityEnabled'], false);
     activityInterval = _asInt(data['activityInterval'], 0);
 
-    isLocationEnabled = documentSnapshot['isLocationEnabled'];
-    locationConditionType = documentSnapshot['locationConditionType'] ?? 2; 
-    isWeatherEnabled = documentSnapshot['isWeatherEnabled'];
-    weatherConditionType = documentSnapshot['weatherConditionType'] ?? 2; 
-    activityConditionType = documentSnapshot['activityConditionType'] ?? 2; 
-    weatherTypes = List<int>.from(documentSnapshot['weatherTypes']);
-    location = documentSnapshot['location'];
-    isMathsEnabled = documentSnapshot['isMathsEnabled'];
-    mathsDifficulty = documentSnapshot['mathsDifficulty'];
-    numMathsQuestions = documentSnapshot['numMathsQuestions'];
-    isQrEnabled = documentSnapshot['isQrEnabled'];
-    qrValue = documentSnapshot['qrValue'];
-    isShakeEnabled = documentSnapshot['isShakeEnabled'];
-    shakeTimes = documentSnapshot['shakeTimes'];
-    isPedometerEnabled = documentSnapshot['isPedometerEnabled'];
-    numberOfSteps = documentSnapshot['numberOfSteps'];
-    ringtoneName = documentSnapshot['ringtoneName'];
-    note = documentSnapshot['note'];
-    deleteAfterGoesOff = documentSnapshot['deleteAfterGoesOff'];
-    showMotivationalQuote = documentSnapshot['showMotivationalQuote'];
+    isLocationEnabled = _asBool(data['isLocationEnabled'], false);
+    isWeatherEnabled = _asBool(data['isWeatherEnabled'], false);
+    weatherTypes = _asIntList(data['weatherTypes']);
+    location = _asString(data['location'], '0.0,0.0');
+    isMathsEnabled = _asBool(data['isMathsEnabled'], false);
+    mathsDifficulty = _asInt(data['mathsDifficulty'], 0);
+    numMathsQuestions = _asInt(data['numMathsQuestions'], 0);
+    isQrEnabled = _asBool(data['isQrEnabled'], false);
+    qrValue = _asString(data['qrValue'], '');
+    isShakeEnabled = _asBool(data['isShakeEnabled'], false);
+    shakeTimes = _asInt(data['shakeTimes'], 0);
+    isPedometerEnabled = _asBool(data['isPedometerEnabled'], false);
+    numberOfSteps = _asInt(data['numberOfSteps'], 0);
+    ringtoneName = _asString(data['ringtoneName'], 'Digital Alarm 1');
+    note = _asString(data['note'], '');
+    deleteAfterGoesOff = _asBool(data['deleteAfterGoesOff'], false);
+    showMotivationalQuote = _asBool(data['showMotivationalQuote'], false);
 
     volMax = _asDouble(data['volMax'], 1.0);
     volMin = _asDouble(data['volMin'], 0.0);
@@ -243,21 +187,11 @@ if (offsetDetails != null) {
     alarmDate = _asString(data['alarmDate'], '');
     profile = _asString(data['profile'], 'Default');
 
-    isGuardian = documentSnapshot['isGuardian'];
-    guardianTimer = documentSnapshot['guardianTimer'];
-    guardian = documentSnapshot['guardian'];
-    isCall = documentSnapshot['isCall'];
-    ringOn = documentSnapshot['ringOn'];
-    isSunriseEnabled = documentSnapshot['isSunriseEnabled'] ?? false;
-    sunriseDuration = documentSnapshot['sunriseDuration'] ?? 30;
-    sunriseIntensity = documentSnapshot['sunriseIntensity'] ?? 1.0;
-    sunriseColorScheme = documentSnapshot['sunriseColorScheme'] ?? 0;
-    timezoneId = documentSnapshot['timezoneId'] ?? '';
-    isTimezoneEnabled = documentSnapshot['isTimezoneEnabled'] ?? false;
-    targetTimezoneOffset = documentSnapshot['targetTimezoneOffset'] ?? 0;
-    // Handle smartControlCombinationType field safely
-    final data = documentSnapshot.data() as Map<String, dynamic>?;
-    smartControlCombinationType = data?['smartControlCombinationType'] ?? 0;
+    isGuardian = _asBool(data['isGuardian'], false);
+    guardianTimer = _asInt(data['guardianTimer'], 0);
+    guardian = _asString(data['guardian'], '');
+    isCall = _asBool(data['isCall'], false);
+    ringOn = _asBool(data['ringOn'], false);
   }
 
   AlarmModel fromMapSQFlite(Map<String, dynamic> map) {
@@ -266,11 +200,8 @@ if (offsetDetails != null) {
       alarmID: map['alarmID'],
       isEnabled: map['isEnabled'] == 1,
       isLocationEnabled: map['isLocationEnabled'] == 1,
-      locationConditionType: map['locationConditionType'] ?? 2, 
       isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
       isWeatherEnabled: map['isWeatherEnabled'] == 1,
-      weatherConditionType: map['weatherConditionType'] ?? 2, 
-      activityConditionType: map['activityConditionType'] ?? 2, 
       location: map['location'],
       activityInterval: map['activityInterval'],
       minutesSinceMidnight: map['minutesSinceMidnight'],
@@ -314,14 +245,6 @@ if (offsetDetails != null) {
       guardian: map['guardian'],
       isCall: map['isCall'] == 1,
       ringOn: map['ringOn'] == 1,
-      isSunriseEnabled: map['isSunriseEnabled'] == 1,
-      sunriseDuration: map['sunriseDuration'] ?? 30,
-      sunriseIntensity: map['sunriseIntensity'] ?? 1.0,
-      sunriseColorScheme: map['sunriseColorScheme'] ?? 0,
-      timezoneId: map['timezoneId'] ?? '',
-      isTimezoneEnabled: map['isTimezoneEnabled'] == 1,
-      targetTimezoneOffset: map['targetTimezoneOffset'] ?? 0,
-      smartControlCombinationType: map['smartControlCombinationType'] ?? 0,
     );
   }
 
@@ -332,11 +255,8 @@ if (offsetDetails != null) {
       'alarmID': alarmID,
       'isEnabled': isEnabled ? 1 : 0,
       'isLocationEnabled': isLocationEnabled ? 1 : 0,
-      'locationConditionType': locationConditionType,
       'isSharedAlarmEnabled': isSharedAlarmEnabled ? 1 : 0,
       'isWeatherEnabled': isWeatherEnabled ? 1 : 0,
-      'weatherConditionType': weatherConditionType,
-      'activityConditionType': activityConditionType,
       'location': location,
       'activityInterval': activityInterval,
       'minutesSinceMidnight': minutesSinceMidnight,
@@ -378,26 +298,18 @@ if (offsetDetails != null) {
       'guardianTimer': guardianTimer,
       'guardian': guardian,
       'isCall': isCall ? 1 : 0,
-      'isSunriseEnabled': isSunriseEnabled ? 1 : 0,
-      'sunriseDuration': sunriseDuration,
-      'sunriseIntensity': sunriseIntensity,
-      'sunriseColorScheme': sunriseColorScheme,
-      'timezoneId': timezoneId,
-      'isTimezoneEnabled': isTimezoneEnabled ? 1 : 0,
-      'targetTimezoneOffset': targetTimezoneOffset,
-      'smartControlCombinationType': smartControlCombinationType,
     };
   }
 
   AlarmModel.fromMap(Map<String, dynamic> alarmData) {
     // Making sure the alarms work with the offsets
-    mainAlarmTime = alarmData['alarmTime'];
-    snoozeDuration = alarmData['snoozeDuration'];
-    maxSnoozeCount = alarmData['maxSnoozeCount'] ?? 3;
-    gradient = alarmData['gradient'];
-    isSharedAlarmEnabled = alarmData['isSharedAlarmEnabled'];
-    minutesSinceMidnight = alarmData['minutesSinceMidnight'];
-    alarmTime = alarmData['alarmTime'];
+    final data = Map<String, dynamic>.from(alarmData);
+    snoozeDuration = _asInt(data['snoozeDuration'], 0);
+    maxSnoozeCount = _asInt(data['maxSnoozeCount'], 3);
+    gradient = _asInt(data['gradient'], 0);
+    isSharedAlarmEnabled = _asBool(data['isSharedAlarmEnabled'], false);
+    minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
+    alarmTime = _asString(data['alarmTime'], '00:00');
     firestoreId = alarmData['firestoreId'];
     alarmID = _asString(data['alarmID'], '');
     sharedUserIds = _asStringList(data['sharedUserIds']);
@@ -411,13 +323,10 @@ if (offsetDetails != null) {
     isActivityEnabled = _asBool(data['isActivityEnabled'], false);
     activityInterval = _asInt(data['activityInterval'], 0);
 
-    isLocationEnabled = alarmData['isLocationEnabled'];
-    locationConditionType = alarmData['locationConditionType'] ?? 2; 
-    isWeatherEnabled = alarmData['isWeatherEnabled'];
-    weatherConditionType = alarmData['weatherConditionType'] ?? 2; 
-    activityConditionType = alarmData['activityConditionType'] ?? 2; 
-    weatherTypes = List<int>.from(alarmData['weatherTypes']);
-    location = alarmData['location'];
+    isLocationEnabled = _asBool(data['isLocationEnabled'], false);
+    isWeatherEnabled = _asBool(data['isWeatherEnabled'], false);
+    weatherTypes = _asIntList(data['weatherTypes']);
+    location = _asString(data['location'], '0.0,0.0');
 
     isMathsEnabled = _asBool(data['isMathsEnabled'], false);
     mathsDifficulty = _asInt(data['mathsDifficulty'], 0);
@@ -442,19 +351,15 @@ if (offsetDetails != null) {
     alarmDate = _asString(data['alarmDate'], '');
     profile = _asString(data['profile'], 'Default');
 
-    isGuardian = alarmData['isGuardian'];
-    guardianTimer = alarmData['guardianTimer'];
-    guardian = alarmData['guardian'];
-    isCall = alarmData['isCall'];
-    ringOn = alarmData['ringOn'];
-    isSunriseEnabled = alarmData['isSunriseEnabled'] ?? false;
-    sunriseDuration = alarmData['sunriseDuration'] ?? 30;
-    sunriseIntensity = alarmData['sunriseIntensity'] ?? 1.0;
-    sunriseColorScheme = alarmData['sunriseColorScheme'] ?? 0;
-    timezoneId = alarmData['timezoneId'] ?? '';
-    isTimezoneEnabled = alarmData['isTimezoneEnabled'] ?? false;
-    targetTimezoneOffset = alarmData['targetTimezoneOffset'] ?? 0;
-    smartControlCombinationType = alarmData['smartControlCombinationType'] ?? 0;
+    isGuardian = _asBool(data['isGuardian'], false);
+    guardianTimer = _asInt(data['guardianTimer'], 0);
+    guardian = _asString(data['guardian'], '');
+    isCall = _asBool(data['isCall'], false);
+    ringOn = _asBool(data['ringOn'], false);
+    mainAlarmTime = data['mainAlarmTime'] != null
+        ? _asString(data['mainAlarmTime'], alarmTime)
+        : null;
+    offsetDetails = _asMap(data['offsetDetails']);
   }
 
   AlarmModel.fromJson(String alarmData, UserModel? user)
@@ -482,12 +387,9 @@ if (offsetDetails != null) {
       'isActivityEnabled': alarmRecord.isActivityEnabled,
       'weatherTypes': alarmRecord.weatherTypes,
       'isWeatherEnabled': alarmRecord.isWeatherEnabled,
-      'weatherConditionType': alarmRecord.weatherConditionType,
-      'activityConditionType': alarmRecord.activityConditionType,
       'activityInterval': alarmRecord.activityInterval,
       'minutesSinceMidnight': alarmRecord.minutesSinceMidnight,
       'isLocationEnabled': alarmRecord.isLocationEnabled,
-      'locationConditionType': alarmRecord.locationConditionType,
       'location': alarmRecord.location,
       'isSharedAlarmEnabled': alarmRecord.isSharedAlarmEnabled,
       'isMathsEnabled': alarmRecord.isMathsEnabled,
@@ -515,15 +417,7 @@ if (offsetDetails != null) {
       'guardianTimer': alarmRecord.guardianTimer,
       'guardian': alarmRecord.guardian,
       'isCall': alarmRecord.isCall,
-      'ringOn': alarmRecord.ringOn,
-      'isSunriseEnabled': alarmRecord.isSunriseEnabled,
-      'sunriseDuration': alarmRecord.sunriseDuration,
-      'sunriseIntensity': alarmRecord.sunriseIntensity,
-      'sunriseColorScheme': alarmRecord.sunriseColorScheme,
-      'timezoneId': alarmRecord.timezoneId,
-      'isTimezoneEnabled': alarmRecord.isTimezoneEnabled,
-      'targetTimezoneOffset': alarmRecord.targetTimezoneOffset,
-      'smartControlCombinationType': alarmRecord.smartControlCombinationType,
+      'ringOn': alarmRecord.ringOn
     };
 
     if (alarmRecord.isSharedAlarmEnabled) {

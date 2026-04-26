@@ -6,11 +6,11 @@ import 'package:ultimate_alarm_clock/app/modules/timer/controllers/timer_control
 
 import '../controllers/alarm_ring_controller.dart';
 
-class AlarmRingBinding extends Bindings {
+class AlarmControlBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AlarmRingController>(
-      () => AlarmRingController(),
+    Get.lazyPut<AlarmControlController>(
+      () => AlarmControlController(),
     );
     Get.lazyPut<SettingsController>(
       () => SettingsController(),

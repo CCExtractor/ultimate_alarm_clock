@@ -28,7 +28,6 @@ class ScreenMonitorService : Service() {
     private lateinit var receiver: ScreenBroadcastReceiver
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var displayManager: DisplayManager
-    private var isSharedAlarm = false
 
     override fun onCreate() {
         super.onCreate()
@@ -46,12 +45,11 @@ class ScreenMonitorService : Service() {
         val currentDate = Date()
         val currentTimeMillis = currentDate.time
         Log.d("ScreenMonitorService", "time: $currentTimeMillis")
-        
         // Check initial screen state on service creation
         if (displayManager.getDisplay(0).getState() == Display.STATE_ON) {
-            updateScreenStatus(currentTimeMillis, true, isSharedAlarm)
+            updateScreenStatus(currentTimeMillis, true)
         } else {
-            updateScreenStatus(currentTimeMillis, false, isSharedAlarm)
+            updateScreenStatus(currentTimeMillis, false)
         }
     }
 
@@ -71,52 +69,30 @@ class ScreenMonitorService : Service() {
         }
     }
 
-    private fun updateScreenStatus(time: Long, isScreenOn: Boolean, isShared: Boolean) {
+    private fun updateScreenStatus(time: Long, isScreenOn: Boolean) {
         val editor = sharedPreferences.edit()
-        val prefix = if (isShared) "flutter.shared_" else "flutter."
-        
         if (isScreenOn) {
-            editor.putLong("${prefix}is_screen_on", time)
+            editor.putLong("flutter.is_screen_on", time)
         } else {
-            editor.putLong("${prefix}is_screen_off", time)
+            editor.putLong("flutter.is_screen_off", time)
         }
         editor.apply()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        
-        isSharedAlarm = intent?.getBooleanExtra("isSharedAlarm", false) ?: false
-        
-        
-        val alarmType = if (isSharedAlarm) "shared" else "local"
-        Log.d("ScreenMonitorService", "Started monitoring screen for $alarmType alarm")
-        
-        
-        val currentDate = Date()
-        val currentTimeMillis = currentDate.time
-        if (displayManager.getDisplay(0).getState() == Display.STATE_ON) {
-            updateScreenStatus(currentTimeMillis, true, isSharedAlarm)
-        } else {
-            updateScreenStatus(currentTimeMillis, false, isSharedAlarm)
-        }
-        
-        
-        val notifId = if (isSharedAlarm) notificationId + 1000 else notificationId
-        
-        startForeground(notifId, getNotification(isSharedAlarm), ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED)
+        startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED)
         return START_STICKY
     }
 
-    private fun getNotification(isShared: Boolean): Notification {
-        val intent = Intent(this, MainActivity::class.java)
+    private fun getNotification(): Notification {
+        val intent = Intent(this, MainActivity::class.java) // Replace with your main activity
         val pendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
 
-        val alarmType = if (isShared) "shared" else "local"
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Wake up activity")
-            .setContentText("Checking if user is awake for $alarmType alarm")
-            .setSmallIcon(R.mipmap.launcher_icon)
+            .setContentText("Checking if user is awake")
+            .setSmallIcon(R.mipmap.launcher_icon) // Replace with your icon drawable
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setCategory(Notification.CATEGORY_SERVICE)
@@ -132,6 +108,8 @@ class ScreenMonitorService : Service() {
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
+
+
 }
 
 class ScreenBroadcastReceiver : BroadcastReceiver() {
@@ -143,16 +121,11 @@ class ScreenBroadcastReceiver : BroadcastReceiver() {
         val mSec = currentDate.time
         val editor = sharedPreferences.edit()
         Log.d("ScreenBroadcastReceiver", "time: $mSec")
-        
-        
-        
         if (action == Intent.ACTION_SCREEN_ON) {
             editor.putLong("flutter.is_screen_on", mSec)
-            editor.putLong("flutter.shared_is_screen_on", mSec)
             editor.apply()
         } else if (action == Intent.ACTION_SCREEN_OFF) {
             editor.putLong("flutter.is_screen_off", mSec)
-            editor.putLong("flutter.shared_is_screen_off", mSec)
             editor.apply()
         }
     }

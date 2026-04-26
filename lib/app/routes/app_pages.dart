@@ -52,8 +52,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ALARM_RING,
-      page: () => AlarmRingView(),
-      binding: AlarmRingBinding(),
+      page: () => AlarmControlView(),
+      binding: AlarmControlBinding(),
     ),
     GetPage(
       name: _Paths.SETTINGS,
@@ -93,7 +93,7 @@ class AppPages {
       binding: NotificationsBinding(),
     ),
     GetPage(
-      name: _Paths.ALARM_HISTORY,
+      name: _Paths.DEBUG,
       page: () => DebugView(),
       binding: DebugBinding(),
     ),

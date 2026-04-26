@@ -19,30 +19,25 @@ class GoogleCloudProvider {
   static final _firebaseAuthInstance = FirebaseAuth.instance;
 
   static getInstance() async {
-    try {
-      HomeController homeController = Get.find<HomeController>();
-      Get.put(SettingsController());
-      SettingsController settingsController = Get.find<SettingsController>();
+    HomeController homeController = Get.find<HomeController>();
+    Get.put(SettingsController());
+    SettingsController settingsController = Get.find<SettingsController>();
 
-      if (await _firebaseAuthInstance.currentUser == null) {
-        var googleSignInAccount = await _googleSignIn.signIn();
-        
-        // User cancelled the sign-in
-        if (googleSignInAccount == null) {
-          return null;
-        }
-        
-        final GoogleSignInAuthentication? googleAuth =
-            await googleSignInAccount.authentication;
-        
-        if (googleAuth != null) {
-          final credential = GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken,
-            idToken: googleAuth.idToken,
-          );
-          await _firebaseAuthInstance.signInWithCredential(credential);
-        }
+    if (await _firebaseAuthInstance.currentUser == null) {
+      var googleSignInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleSignInAccount?.authentication;
+      if (googleAuth != null)
+      {
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        await _firebaseAuthInstance.signInWithCredential(credential);
+      }
 
+
+      if (googleSignInAccount != null) {
         // Process successful sign-in
         String fullName = googleSignInAccount.displayName.toString();
         List<String> parts = fullName.split(' ');
@@ -63,16 +58,12 @@ class GoogleCloudProvider {
         String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
         var userModel = UserModel(
-          id: _firebaseAuthInstance.currentUser!.uid,
+          id: googleSignInAccount.id,
           fullName: fullName,
           firstName: firstName,
           lastName: lastName,
           email: googleSignInAccount.email,
         );
-        
-        print('Creating user model with Firebase UID: ${userModel.id}');
-        print('User email: ${userModel.email}');
-        
         await FirestoreDb.addUser(userModel);
         await SecureStorageProvider().storeUserModel(userModel);
 
@@ -82,12 +73,10 @@ class GoogleCloudProvider {
         settingsController.userModel.value = userModel;
         return googleSignInAccount;
       } else {
-        print(_firebaseAuthInstance.currentUser!.email);
-        return _firebaseAuthInstance.currentUser;
+        return null;
       }
-    } catch (e) {
-      print('Google Sign-In Error: $e');
-      return null;
+    } else {
+      print(_firebaseAuthInstance.currentUser!.email);
     }
   }
 

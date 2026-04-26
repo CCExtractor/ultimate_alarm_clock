@@ -54,12 +54,8 @@ class ProfileModel {
   late int guardianTimer;
   late String guardian;
   late bool isCall;
-  late bool isSunriseEnabled;
-  late int sunriseDuration;
-  late double sunriseIntensity;
-  late int sunriseColorScheme;
   @ignore
-  List<Map>? offsetDetails;
+  Map? offsetDetails;
 
   ProfileModel(
       {required this.profileName,
@@ -88,7 +84,7 @@ class ProfileModel {
       required this.isPedometerEnabled,
       required this.numberOfSteps,
       required this.activityInterval,
-      this.offsetDetails = const [{}],
+      this.offsetDetails = const {},
       required this.label,
       required this.isOneTime,
       required this.snoozeDuration,
@@ -105,11 +101,7 @@ class ProfileModel {
       required this.isGuardian,
       required this.guardianTimer,
       required this.guardian,
-      required this.isCall,
-      required this.isSunriseEnabled,
-      required this.sunriseDuration,
-      required this.sunriseIntensity,
-      required this.sunriseColorScheme});
+      required this.isCall});
 
   ProfileModel.fromDocumentSnapshot({
     required firestore.DocumentSnapshot documentSnapshot,
@@ -122,18 +114,9 @@ class ProfileModel {
     if (isSharedAlarmEnabled && user != null) {
       // Using offsetted time only if it is enabled
 
-if (offsetDetails != null) {
-  final userOffset = offsetDetails!
-      .where((entry) => entry['userId'] == user.id)
-      .toList();
-
-  if (userOffset.isNotEmpty) {
-    final data = userOffset.first;
-    minutesSinceMidnight = Utils.timeOfDayToInt(
-      Utils.stringToTimeOfDay(data['offsettedTime']),
-    );
-  }
-}
+      minutesSinceMidnight = Utils.timeOfDayToInt(
+        Utils.stringToTimeOfDay(offsetDetails![user.id]['offsettedTime']),
+      );
     } else {
       minutesSinceMidnight = documentSnapshot['minutesSinceMidnight'];
     }

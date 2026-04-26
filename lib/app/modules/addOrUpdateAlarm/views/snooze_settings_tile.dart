@@ -106,23 +106,13 @@ class SnoozeSettingsTile extends StatelessWidget {
                                         Utils.hapticFeedback();
                                         controller.snoozeDuration.value = value;
                                       },
-                                      itemWidth: Utils
-                                          .getResponsiveNumberPickerItemWidth(
-                                        context,
-                                        screenWidth: MediaQuery.of(context).size.width,
-                                        baseWidthFactor: 0.2,
-                                      ),
-                                      textStyle: Utils
-                                          .getResponsiveNumberPickerTextStyle(
-                                        context,
-                                        baseFontSize: 20,
+                                      textStyle: TextStyle(
                                         color: themeController.primaryDisabledTextColor.value,
+                                        fontSize: 20,
                                       ),
-                                      selectedTextStyle: Utils
-                                          .getResponsiveNumberPickerSelectedTextStyle(
-                                        context,
-                                        baseFontSize: 32,
+                                      selectedTextStyle: TextStyle(
                                         color: kprimaryColor,
+                                        fontSize: 32,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -188,23 +178,13 @@ class SnoozeSettingsTile extends StatelessWidget {
                                         Utils.hapticFeedback();
                                         controller.maxSnoozeCount.value = value;
                                       },
-                                      itemWidth: Utils
-                                          .getResponsiveNumberPickerItemWidth(
-                                        context,
-                                        screenWidth: MediaQuery.of(context).size.width,
-                                        baseWidthFactor: 0.2,
-                                      ),
-                                      textStyle: Utils
-                                          .getResponsiveNumberPickerTextStyle(
-                                        context,
-                                        baseFontSize: 20,
+                                      textStyle: TextStyle(
                                         color: themeController.primaryDisabledTextColor.value,
+                                        fontSize: 20,
                                       ),
-                                      selectedTextStyle: Utils
-                                          .getResponsiveNumberPickerSelectedTextStyle(
-                                        context,
-                                        baseFontSize: 32,
+                                      selectedTextStyle: TextStyle(
                                         color: kprimaryColor,
+                                        fontSize: 32,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

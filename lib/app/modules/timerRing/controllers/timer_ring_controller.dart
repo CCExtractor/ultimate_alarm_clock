@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:get/get.dart';
@@ -38,22 +37,12 @@ class TimerRingController extends GetxController {
 
   @override
   onClose() async {
-    // Cancel vibration
     Vibration.cancel();
-    
-    // Cancel vibration timer
-    vibrationTimer?.cancel();
-    
-    // Stop audio
+    vibrationTimer!.cancel();
     AudioUtils.stopTimer(
-      ringtoneName: (await getFakeTimerModel()).ringtoneName,
+      ringtoneName: await getFakeTimerModel().ringtoneName,
     );
-    
-    // Cancel background/foreground subscription
     _subscription.cancel();
-    
     super.onClose();
-    
-    debugPrint('🧹 TimerRingController disposed - all resources cleaned up');
   }
 }

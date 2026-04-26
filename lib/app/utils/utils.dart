@@ -20,17 +20,6 @@ import '../data/models/profile_model.dart';
 import '../data/providers/get_storage_provider.dart';
 import 'constants.dart';
 
-// Cache class for time until alarm calculations
-class _TimeUntilAlarmCache {
-  final DateTime nextAlarmTime;
-  final DateTime timestamp;
-
-  _TimeUntilAlarmCache({
-    required this.nextAlarmTime,
-    required this.timestamp,
-  });
-}
-
 class Utils {
   static String timeOfDayToString(TimeOfDay time) {
     final hours = time.hour.toString().padLeft(2, '0');
@@ -45,11 +34,11 @@ class Utils {
     volMin: 0.0,
     snoozeDuration: 0,
     maxSnoozeCount: 3,
-    gradient: 0,
+    gradient: 1,
     label: '',
     isOneTime: true,
     deleteAfterGoesOff: false,
-    offsetDetails: [{}],
+    offsetDetails: {},
     lastEditedUserId: '',
     mutexLock: false,
     ownerName: '',
@@ -67,12 +56,9 @@ class Utils {
     days: [false, false, false, false, false, false, false],
     weatherTypes: [],
     isWeatherEnabled: false,
-    weatherConditionType: 0,
-    activityConditionType: 0, 
     isEnabled: false,
     isActivityEnabled: false,
     isLocationEnabled: false,
-    locationConditionType: 0, 
     isSharedAlarmEnabled: false,
     intervalToAlarm: 0,
     location: '0.0,0.0',
@@ -91,10 +77,6 @@ class Utils {
     guardian: '',
     isCall: false,
     ringOn: false,
-    isSunriseEnabled: false,
-    sunriseDuration: 30,
-    sunriseIntensity: 1.0,
-    sunriseColorScheme: 0,
   );
 
   static String formatDateTimeToHHMMSS(DateTime dateTime) {
@@ -182,15 +164,6 @@ class Utils {
 
     int milliseconds = alarmTime.difference(now).inMilliseconds;
     return milliseconds;
-  }
-
-  static int getMinutesToAlarm(DateTime now, DateTime alarmTime) {
-    if (alarmTime.isBefore(now)) {
-      alarmTime = alarmTime.add(const Duration(days: 1));
-    }
-
-    int minutes = alarmTime.difference(now).inMinutes;
-    return minutes;
   }
 
   static String formatMilliseconds(int milliseconds) {
@@ -300,33 +273,8 @@ class Utils {
     return deg * (pi / 180);
   }
 
-  // Cache for timeUntilAlarm calculations
-  static Map<String, _TimeUntilAlarmCache> _timeUntilAlarmCache = {};
-
-  // Method to clear the time calculation cache
-  static void clearTimeUntilAlarmCache() {
-    _timeUntilAlarmCache.clear();
-  }
-
-  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, [DateTime? alarmDate]) {
+  static String timeUntilAlarm(TimeOfDay alarmTime, List<bool> days, DateTime alarmDate) {
     final now = DateTime.now();
-    
-    // Create cache key based on alarm parameters
-    final alarmDateKey = alarmDate != null
-        ? '${alarmDate.year}-${alarmDate.month}-${alarmDate.day}'
-        : 'none';
-    final cacheKey = '${alarmTime.hour}:${alarmTime.minute}_${days.join('')}_$alarmDateKey';
-    
-    // Check if we have cached data and if it's still valid (less than 1 minute old)
-    if (_timeUntilAlarmCache.containsKey(cacheKey)) {
-      final cachedData = _timeUntilAlarmCache[cacheKey]!;
-      if (now.difference(cachedData.timestamp).inSeconds < 60) {
-        // Recalculate only the duration from the cached next alarm time
-        final duration = cachedData.nextAlarmTime.difference(now);
-        return _formatDuration(duration);
-      }
-    }
-    
     final todayAlarm = DateTime(
       now.year,
       now.month,
@@ -335,123 +283,81 @@ class Utils {
       alarmTime.minute,
     );
 
-    DateTime nextAlarmTime;
+    Duration duration;
 
-    // Date-specific alarm takes precedence when set in the future.
-    if (alarmDate != null) {
-      final dateOnly = DateTime(alarmDate.year, alarmDate.month, alarmDate.day);
-      final todayOnly = DateTime(now.year, now.month, now.day);
-      if (dateOnly.isAfter(todayOnly)) {
-        nextAlarmTime = DateTime(
-          alarmDate.year,
-          alarmDate.month,
-          alarmDate.day,
-          alarmTime.hour,
-          alarmTime.minute,
-        );
-
-        _timeUntilAlarmCache[cacheKey] = _TimeUntilAlarmCache(
-          nextAlarmTime: nextAlarmTime,
-          timestamp: now,
-        );
-
-        return _formatDuration(nextAlarmTime.difference(now));
-      }
+    // If alarm is set for a specific date (future date)
+    if (alarmDate.isAfter(now)) {
+      final specificDateAlarm = DateTime(
+        alarmDate.year,
+        alarmDate.month,
+        alarmDate.day,
+        alarmTime.hour,
+        alarmTime.minute,
+      );
+      duration = specificDateAlarm.difference(now);
+      return _formatTimeToRingDuration(duration);
     }
 
-    // Optimized alarm calculation
+    // Check if the alarm is a one-time alarm (no days selected)
     if (days.every((day) => !day)) {
-      // One-time alarm
-      nextAlarmTime = now.isBefore(todayAlarm) ? todayAlarm : todayAlarm.add(const Duration(days: 1));
-    } else if (days.every((day) => day)) {
-      // Daily alarm  
-      nextAlarmTime = now.isBefore(todayAlarm) ? todayAlarm : todayAlarm.add(const Duration(days: 1));
-    } else {
-      // Weekly alarm - optimized logic
-      final currentDayIndex = now.weekday - 1;
-      
-      if (days[currentDayIndex] && now.isBefore(todayAlarm)) {
-        // Today is a repeat day and alarm hasn't passed
-        nextAlarmTime = todayAlarm;
+      if (now.isBefore(todayAlarm)) {
+        duration = todayAlarm.difference(now);
       } else {
-        // Find next occurrence - improved algorithm
-        int daysToAdd = 1;
-        bool found = false;
+        // Schedule the alarm for the next day
+        final nextAlarm = todayAlarm.add(const Duration(days: 1));
+        duration = nextAlarm.difference(now);
+      }
+    } else if (now.isBefore(todayAlarm) && days[now.weekday - 1]) {
+        duration = todayAlarm.difference(now);
+    } else {
+      // Finding the next day when alarm will ring
+      int daysUntilNextAlarm = 7;
+      DateTime? nextAlarm;
 
-        for (int i = 1; i <= 7; i++) {
-          int nextDayIndex = (currentDayIndex + i) % 7;
-          if (days[nextDayIndex]) {
-            daysToAdd = i;
-            found = true;
-            break;
-          }
+      for (int i = 1; i <= 7; i++) {
+        int nextDayIndex = (now.weekday + i - 1) % 7;
+        if (days[nextDayIndex]) {
+          daysUntilNextAlarm = i;
+          nextAlarm = DateTime(
+            now.year,
+            now.month,
+            now.day + i,
+            alarmTime.hour,
+            alarmTime.minute,
+          );
+          break;
         }
-        
-        if (!found) {
-          return 'No upcoming alarms';
-        }
-        
-        nextAlarmTime = DateTime(
-          now.year,
-          now.month,
-          now.day + daysToAdd,
-          alarmTime.hour,
-          alarmTime.minute,
-        );
+      }
+
+      if (nextAlarm != null) {
+        duration = nextAlarm.difference(now);
+      } else {
+        return 'No upcoming alarms';
       }
     }
 
-    // Cache the result
-    _timeUntilAlarmCache[cacheKey] = _TimeUntilAlarmCache(
-      nextAlarmTime: nextAlarmTime,
-      timestamp: now,
-    );
-
-    final duration = nextAlarmTime.difference(now);
-    return _formatDuration(duration);
+    return _formatTimeToRingDuration(duration);
   }
 
-  // Optimized duration formatting with caching
-  static String _formatDuration(Duration duration) {
+  static String _formatTimeToRingDuration(Duration duration) {
     if (duration.inMinutes < 1) {
       return 'less than 1 minute';
-    } else if (duration.inHours < 1) {
-      final minutes = duration.inMinutes;
-      return minutes == 1 ? '$minutes minute' : '$minutes minutes';
     } else if (duration.inHours < 24) {
       final hours = duration.inHours;
       final minutes = duration.inMinutes % 60;
-      
-      if (minutes == 0) {
+      if (hours == 0) {
+        return minutes == 1 ? '$minutes minute' : '$minutes minutes';
+      } else if (minutes == 0) {
         return hours == 1 ? '$hours hour' : '$hours hours';
       } else {
-        if (hours == 1) {
-        return minutes == 1
-            ? '$hours hour $minutes minute'
-            : '$hours hour $minutes minutes';
-      } else {
-          return minutes == 1
-              ? '$hours hours $minutes minute'
-              : '$hours hours $minutes minutes';
+        return hours == 1
+            ? '$hours hour ${minutes == 1 ? "$minutes minute" : "$minutes minutes"}'
+            : '$hours hours ${minutes == 1 ? "$minutes minute" : "$minutes minutes"}';
       }
-      }
+    } else if (duration.inDays == 1) {
+      return '1 day';
     } else {
-      final days = duration.inDays;
-      final hours = duration.inHours % 24;
-      
-      if (hours == 0) {
-        return days == 1 ? '$days day' : '$days days';
-      } else {
-        if (days == 1) {
-          return hours == 1
-              ? '$days day $hours hour'
-              : '$days day $hours hours';
-        } else {
-          return hours == 1
-              ? '$days days $hours hour'
-              : '$days days $hours hours';
-        }
-      }
+      return '${duration.inDays} days';
     }
   }
 
@@ -566,11 +472,11 @@ class Utils {
       volMax: 1.0,
       volMin: 0.0,
       snoozeDuration: 0,
-      gradient: 0,
+      gradient: 1,
       label: '',
       isOneTime: true,
       deleteAfterGoesOff: false,
-      offsetDetails: [{}],
+      offsetDetails: {},
       lastEditedUserId: '',
       mutexLock: false,
       ownerName: '',
@@ -606,10 +512,6 @@ class Utils {
       guardian: '',
       isCall: false,
       ringOn: false,
-      isSunriseEnabled: false,
-      sunriseDuration: 30,
-      sunriseIntensity: 1.0,
-      sunriseColorScheme: 0,
     );
   }
 
@@ -781,36 +683,32 @@ class Utils {
       backgroundColor: isLightMode
           ? kLightSecondaryBackgroundColor
           : ksecondaryBackgroundColor,
-      isScrollControlled: true,
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(25.0),
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-          ),
-          child: SingleChildScrollView(
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Icon(
                   iconData,
                   color:
                       isLightMode ? kLightPrimaryTextColor : kprimaryTextColor,
-                  size: MediaQuery.of(context).size.height * 0.08,
+                  size: MediaQuery.of(context).size.height * 0.1,
                 ),
-                const SizedBox(height: 20),
                 Text(
                   title.tr,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  description.tr,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    description.tr,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                const SizedBox(height: 30),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
@@ -948,100 +846,5 @@ class Utils {
   static double getFontSize(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return width < 360 ? 14 : 30;
-  }
-
-  /// Get responsive font size for NumberPicker text styles
-  /// Considers both app scaling factor and system text scale factor
-  static double getResponsiveNumberPickerFontSize(
-    BuildContext context, {
-    required double baseSize,
-    double? appScalingFactor,
-  }) {
-    final systemScaleFactor = MediaQuery.textScaleFactorOf(context);
-    final effectiveAppScalingFactor = appScalingFactor ?? 1.0;
-    
-    // Combine app scaling with system accessibility scaling
-    // Apply a reasonable limit to prevent excessive scaling
-    final combinedScaleFactor = (effectiveAppScalingFactor * systemScaleFactor)
-        .clamp(0.5, 2.5);
-    
-    return baseSize * combinedScaleFactor;
-  }
-
-  /// Get responsive TextStyle for NumberPicker selected text
-  static TextStyle getResponsiveNumberPickerSelectedTextStyle(
-    BuildContext context, {
-    required double baseFontSize,
-    required Color color,
-    double? appScalingFactor,
-    FontWeight fontWeight = FontWeight.bold,
-  }) {
-    return TextStyle(
-      fontSize: getResponsiveNumberPickerFontSize(
-        context,
-        baseSize: baseFontSize,
-        appScalingFactor: appScalingFactor,
-      ),
-      fontWeight: fontWeight,
-      color: color,
-    );
-  }
-
-  /// Get responsive TextStyle for NumberPicker unselected text
-  static TextStyle getResponsiveNumberPickerTextStyle(
-    BuildContext context, {
-    required double baseFontSize,
-    required Color color,
-    double? appScalingFactor,
-    FontWeight fontWeight = FontWeight.normal,
-  }) {
-    return TextStyle(
-      fontSize: getResponsiveNumberPickerFontSize(
-        context,
-        baseSize: baseFontSize,
-        appScalingFactor: appScalingFactor,
-      ),
-      fontWeight: fontWeight,
-      color: color,
-    );
-  }
-
-  /// Get responsive item width for NumberPicker
-  /// Scales with both screen width and font scaling
-  static double getResponsiveNumberPickerItemWidth(
-    BuildContext context, {
-    required double screenWidth,
-    required double baseWidthFactor,
-    double? appScalingFactor,
-  }) {
-    final systemScaleFactor = MediaQuery.textScaleFactorOf(context);
-    final effectiveAppScalingFactor = appScalingFactor ?? 1.0;
-    
-    // Scale item width proportionally with font scaling
-    final combinedScaleFactor = (effectiveAppScalingFactor * systemScaleFactor)
-        .clamp(0.8, 2.0);
-    
-    return screenWidth * baseWidthFactor * combinedScaleFactor;
-  }
-
-  /// Get responsive item height for NumberPicker
-  /// Scales with font scaling to prevent text cutoff
-  static double getResponsiveNumberPickerItemHeight(
-    BuildContext context, {
-    required double baseFontSize,
-    double? appScalingFactor,
-  }) {
-    final systemScaleFactor = MediaQuery.textScaleFactorOf(context);
-    final effectiveAppScalingFactor = appScalingFactor ?? 1.0;
-    
-    // Scale item height proportionally with font scaling
-    final combinedScaleFactor = (effectiveAppScalingFactor * systemScaleFactor)
-        .clamp(0.5, 2.5);
-    
-    // Calculate height based on font size with padding
-    final scaledFontSize = baseFontSize * combinedScaleFactor;
-    
-    // Add padding around the text (1.8x font size gives good spacing)
-    return scaledFontSize * 1.8;
   }
 }

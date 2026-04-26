@@ -14,13 +14,9 @@ Widget notificationIcon(HomeController controller) {
           ? StreamBuilder(
               stream: FirestoreDb.getNotifications(),
               builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data != null) {
-                  final document = snapshot.data!;
-                  final data = document.data();
-                  final List notif = data != null ? (data['receivedItems'] ?? []) : [];
+                if (snapshot.hasData) {
+                  final List notif = snapshot.data!['receivedItems'];
                   controller.notifications = notif;
-                  
-                  debugPrint('🔔 NotificationIcon: Document exists: ${document.exists}, Data: $data, Notifications: ${notif.length}');
                   return notif.isEmpty
                       ? InkWell(
                           onTap: () {

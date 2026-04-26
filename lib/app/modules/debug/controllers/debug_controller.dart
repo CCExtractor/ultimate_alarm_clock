@@ -48,12 +48,12 @@ class DebugController extends GetxController {
       final fetchedLogs = await IsarDb().getLogs();
       logs.value = fetchedLogs.reversed.toList();
       applyFilters();
-      debugPrint('Alarm History: Successfully loaded ${fetchedLogs.length} history entries');
+      debugPrint('Debug screen: Successfully loaded ${fetchedLogs.length} logs');
     } catch (e) {
-      debugPrint('Alarm History: Error loading history: $e');
+      debugPrint('Debug screen: Error loading logs: $e');
       Get.snackbar(
         'Error',
-        'Error loading alarm history: $e',
+        'Error loading logs: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -116,14 +116,14 @@ class DebugController extends GetxController {
       filteredLogs.value = [];
       Get.snackbar(
         'Success',
-        'Alarm history cleared successfully',
+        'Logs cleared successfully',
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Error clearing alarm history: $e',
+        'Error clearing logs: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

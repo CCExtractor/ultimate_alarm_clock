@@ -109,21 +109,10 @@ class TimerController extends FullLifeCycleController with FullLifeCycleMixin {
 
   @override
   Future<void> onClose() async {
-    // Remove the observer
-    WidgetsBinding.instance.removeObserver(this);
-    
-    // Dispose of the scroll controller
-    scrollController.dispose();
-    
-    
-    // Dispose of text controllers
+    super.onClose();
     inputHoursControllerTimer.dispose();
     inputMinutesControllerTimer.dispose();
     inputSecondsControllerTimer.dispose();
-    
-    super.onClose();
-    
-    debugPrint('🧹 TimerController disposed - all resources cleaned up');
   }
 
   void startRinger(int id) async {

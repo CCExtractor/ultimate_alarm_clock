@@ -15,7 +15,6 @@ abstract class Routes {
   static const STOPWATCH = _Paths.STOPWATCH;
   static const ADD_OR_UPDATE_PROFILE = _Paths.ADD_OR_UPDATE_PROFILE;
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
-  static const ALARM_HISTORY = _Paths.ALARM_HISTORY;
   static const DEBUG = _Paths.DEBUG;
   static const WORLD_CLOCK = _Paths.WORLD_CLOCK;
 }
@@ -34,7 +33,6 @@ abstract class _Paths {
   static const STOPWATCH = '/stopwatch';
   static const ADD_OR_UPDATE_PROFILE = '/add-or-update-profile';
   static const NOTIFICATIONS = '/notifications';
-  static const ALARM_HISTORY = '/alarm-history';
   static const DEBUG = '/debug';
   static const WORLD_CLOCK = '/world-clock';
 }

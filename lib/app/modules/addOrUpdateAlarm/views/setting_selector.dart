@@ -42,12 +42,11 @@ class SettingSelector extends StatelessWidget {
                   final isLoggedIn = await GoogleCloudProvider.isUserLoggedin();
                   if(isLoggedIn)
                     {
-                      // Get.dialog(ShareDialog(
-                      //   homeController: controller.homeController,
-                      //   controller: controller,
-                      //   themeController: controller.themeController,
-                      // ));
-                                        controller.alarmSettingType.value = val;
+                      Get.dialog(ShareDialog(
+                        homeController: controller.homeController,
+                        controller: controller,
+                        themeController: controller.themeController,
+                      ));
                     }
                   else{
                     await GoogleCloudProvider.getInstance();

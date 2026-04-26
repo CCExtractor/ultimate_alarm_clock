@@ -10,15 +10,14 @@ dependencies:
   firebase_core: ^2.27.0
 
   screen_state: ^4.0.0
-  screen_brightness: ^0.2.2+1
   cupertino_icons: ^1.0.2
   win32: ^5.2.0
   get: 4.7.3
   get_storage: ^2.1.1
   flutter_time_picker_spinner: ^2.0.0
-  cloud_firestore: ^4.17.5
-  intl: ^0.18.0
-  latlong2: ^0.8.1
+  cloud_firestore: ^4.4.5
+  intl: ^0.20.2
+  latlong2: ^0.8.2
   flutter_map: ^4.0.0
   fl_location: ^2.0.0+1
   flutter_fgbg: ^0.3.0
@@ -60,9 +59,6 @@ dependencies:
   firebase_messaging: ^14.7.19
   shared_preferences: ^2.2.3
   timezone: ^0.9.4
-  flutter_local_notifications: ^16.3.2
-  collection: ^1.18.0
-  cloud_functions: ^4.7.6
 
 dev_dependencies:
   flutter_lints: ^4.0.0

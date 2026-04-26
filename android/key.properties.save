@@ -1,5 +1,0 @@
-storePassword=ultimateAlarmStore123
-keyPassword=ultimateAlarmStore123
-keyAlias=upload
-storeFile=upload-keystore.jks
-

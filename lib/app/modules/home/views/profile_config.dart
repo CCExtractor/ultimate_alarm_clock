@@ -120,7 +120,7 @@ class _ProfileSelectState extends State<ProfileSelect> {
 
   void _scrollToSelected() {
     Future.delayed(1000.milliseconds, () {
-      Scrollable.ensureVisible(Get.context!,
+      Scrollable.ensureVisible(scrollKey.currentContext!,
           duration: 500.milliseconds,);
     });
   }

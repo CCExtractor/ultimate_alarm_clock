@@ -81,18 +81,18 @@ Widget buildEndDrawer(BuildContext context) {
             onTap: () {
               Utils.hapticFeedback();
               Get.back();
-              Get.toNamed(Routes.ALARM_HISTORY);
+              Get.toNamed(Routes.DEBUG);
             },
             contentPadding: const EdgeInsets.only(left: 20, right: 44),
             title: Text(
-              'Alarm History'.tr,
+              'Debug Logs'.tr,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color:
                         themeController.primaryTextColor.value.withOpacity(0.8),
                   ),
             ),
             leading: Icon(
-              Icons.history,
+              Icons.bug_report,
               size: 26,
               color: themeController.primaryTextColor.value.withOpacity(0.8),
             ),
