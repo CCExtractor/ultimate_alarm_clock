@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ultimate_alarm_clock/app/data/models/alarm_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/saved_emails.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart';
@@ -9,6 +10,7 @@ import 'package:ultimate_alarm_clock/app/modules/addOrUpdateAlarm/controllers/ad
 import 'package:ultimate_alarm_clock/app/modules/home/controllers/home_controller.dart';
 import 'package:ultimate_alarm_clock/app/modules/settings/controllers/theme_controller.dart';
 import 'package:ultimate_alarm_clock/app/utils/constants.dart';
+import 'package:ultimate_alarm_clock/app/utils/shared_alarm_logger.dart';
 import 'package:ultimate_alarm_clock/app/utils/utils.dart';
 
 class ShareDialog extends StatelessWidget {
@@ -21,12 +23,12 @@ class ShareDialog extends StatelessWidget {
   final HomeController homeController;
   final AddOrUpdateAlarmController controller;
   final ThemeController themeController;
-  
+
   Future<void> _deleteEmail(Saved_Emails email) async {
     try {
       final isarProvider = IsarDb();
       final db = await isarProvider.db;
-      
+
       await db.writeTxn(() async {
         await db.saved_Emails.delete(email.isarId);
       });
@@ -41,7 +43,7 @@ class ShareDialog extends StatelessWidget {
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     // Function to dismiss loading dialog safely
@@ -51,7 +53,7 @@ class ShareDialog extends StatelessWidget {
         Get.back();
       }
     }
-    
+
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -75,7 +77,8 @@ class ShareDialog extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: themeController.primaryDisabledTextColor.value.withOpacity(0.3),
+                  color: themeController.primaryDisabledTextColor.value
+                      .withOpacity(0.3),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -102,7 +105,8 @@ class ShareDialog extends StatelessWidget {
                       onPressed: () => Get.back(),
                       icon: Icon(
                         Icons.close,
-                        color: themeController.primaryTextColor.value.withOpacity(0.7),
+                        color: themeController.primaryTextColor.value
+                            .withOpacity(0.7),
                       ),
                       splashRadius: 20,
                     ),
@@ -137,7 +141,8 @@ class ShareDialog extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: controller.selectedEmails.isNotEmpty
                               ? kprimaryColor
-                              : themeController.primaryDisabledTextColor.value.withOpacity(0.2),
+                              : themeController.primaryDisabledTextColor.value
+                                  .withOpacity(0.2),
                           minimumSize: const Size(double.infinity, 48),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -155,12 +160,12 @@ class ShareDialog extends StatelessWidget {
                             );
                             return;
                           }
-                          
+
                           Utils.hapticFeedback();
-                          
+
                           // Simple approach - show loading indicator in this screen
                           bool isLoading = true;
-                          
+
                           // Create an overlay for the loading indicator that we can easily remove
                           OverlayEntry? overlayEntry;
                           overlayEntry = OverlayEntry(
@@ -170,7 +175,8 @@ class ShareDialog extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                    color: themeController.secondaryBackgroundColor.value,
+                                    color: themeController
+                                        .secondaryBackgroundColor.value,
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Column(
@@ -188,7 +194,8 @@ class ShareDialog extends StatelessWidget {
                                       Text(
                                         'Sharing alarm...'.tr,
                                         style: TextStyle(
-                                          color: themeController.primaryTextColor.value,
+                                          color: themeController
+                                              .primaryTextColor.value,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -199,33 +206,37 @@ class ShareDialog extends StatelessWidget {
                               ),
                             ),
                           );
-                          
+
                           // Add overlay to screen
                           if (context.mounted) {
                             Overlay.of(context).insert(overlayEntry);
                           }
-                          
+
                           // Force remove overlay after 10 seconds no matter what
                           Future.delayed(const Duration(seconds: 10), () {
                             overlayEntry?.remove();
                             overlayEntry = null;
                           });
-                          
+
                           bool success = false;
                           String errorMessage = '';
-                          
+
                           try {
                             if (homeController.isProfile.value) {
                               await FirestoreDb.shareProfile(
                                 controller.selectedEmails,
                               );
                             } else {
-                              debugPrint('🚀 Starting alarm sharing process...');
-                              debugPrint('   - Recipients: ${controller.selectedEmails}');
-                              debugPrint('   - Alarm ID: ${controller.alarmRecord.value.firestoreId}');
-                              
+                              debugPrint(
+                                  '🚀 Starting alarm sharing process...');
+                              debugPrint(
+                                  '   - Recipients: ${controller.selectedEmails}');
+                              debugPrint(
+                                  '   - Alarm ID: ${controller.alarmRecord.value.firestoreId}');
+
                               // First share the alarm - with 10 second timeout
-                              debugPrint('📤 Step 1: Sharing alarm to Firestore...');
+                              debugPrint(
+                                  '📤 Step 1: Sharing alarm to Firestore...');
                               try {
                                 await Future.any([
                                   FirestoreDb.shareAlarm(
@@ -234,48 +245,95 @@ class ShareDialog extends StatelessWidget {
                                   ),
                                   Future.delayed(const Duration(seconds: 10))
                                 ]);
-                                debugPrint('✅ Step 1 completed: Firestore sharing');
+                                debugPrint(
+                                    '✅ Step 1 completed: Firestore sharing');
                               } catch (e) {
-                                debugPrint('❌ Step 1 failed: Firestore sharing error: $e');
+                                debugPrint(
+                                    '❌ Step 1 failed: Firestore sharing error: $e');
                               }
-                              
+
                               // Get user IDs (with 3 second timeout)
                               debugPrint('📤 Step 2: Getting user IDs...');
                               List<String> sharedUserIds = [];
                               try {
                                 sharedUserIds = await Future.any([
-                                  FirestoreDb.getUserIdsByEmails(controller.selectedEmails),
-                                  Future.delayed(const Duration(seconds: 3), () => <String>[])
+                                  FirestoreDb.getUserIdsByEmails(
+                                      controller.selectedEmails),
+                                  Future.delayed(const Duration(seconds: 3),
+                                      () => <String>[])
                                 ]);
-                                debugPrint('✅ Step 2 completed: Found ${sharedUserIds.length} user IDs');
-                                
+                                debugPrint(
+                                    '✅ Step 2 completed: Found ${sharedUserIds.length} user IDs');
+
                                 // Send notifications with timeout
-                                debugPrint('📤 Step 3: Sending push notifications...');
+                                debugPrint(
+                                    '📤 Step 3: Sending push notifications...');
                                 if (sharedUserIds.isNotEmpty) {
                                   try {
                                     // Create shared item data for the notification
+                                    final alarmData = AlarmModel.toMap(
+                                      controller.alarmRecord.value,
+                                    );
                                     final sharedItem = {
                                       'type': 'alarm',
-                                      'AlarmName': controller.alarmRecord.value.firestoreId,
-                                      'owner': controller.alarmRecord.value.ownerName ?? 'Someone',
-                                      'alarmTime': controller.alarmRecord.value.alarmTime
+                                      'payloadVersion': 2,
+                                      'id': controller
+                                              .alarmRecord.value.firestoreId ??
+                                          controller.alarmRecord.value.alarmID,
+                                      'firestoreId': controller
+                                          .alarmRecord.value.firestoreId,
+                                      'AlarmName': controller
+                                              .alarmRecord.value.firestoreId ??
+                                          controller.alarmRecord.value.alarmID,
+                                      'alarmId': controller
+                                              .alarmRecord.value.firestoreId ??
+                                          controller.alarmRecord.value.alarmID,
+                                      'owner':
+                                          controller.alarmRecord.value.ownerName,
+                                      'alarmTime': controller
+                                          .alarmRecord.value.alarmTime,
+                                      'alarmLabel':
+                                          controller.alarmRecord.value.label,
+                                      'alarmRepeat': Utils.getRepeatDays(
+                                        controller.alarmRecord.value.days,
+                                      ),
+                                      'alarmData': alarmData,
                                     };
-                                    
+
                                     await Future.any([
-                                      PushNotifications().triggerSharedItemNotification(sharedUserIds, sharedItem: sharedItem),
+                                      PushNotifications()
+                                          .triggerSharedItemNotification(
+                                              sharedUserIds,
+                                              sharedItem: sharedItem),
                                       Future.delayed(const Duration(seconds: 3))
                                     ]);
-                                    debugPrint('✅ Step 3 completed: Push notifications sent');
+                                    debugPrint(
+                                        '✅ Step 3 completed: Push notifications sent');
+
+                                    SharedAlarmLogger.notificationSent(
+                                      alarmId: controller
+                                              .alarmRecord
+                                              .value
+                                              .firestoreId ??
+                                          controller
+                                              .alarmRecord.value.alarmID,
+                                      alarmTime: controller
+                                          .alarmRecord.value.alarmTime,
+                                      recipientCount: sharedUserIds.length,
+                                    );
                                   } catch (e) {
-                                    debugPrint('❌ Step 3 failed: Push notification error: $e');
+                                    debugPrint(
+                                        '❌ Step 3 failed: Push notification error: $e');
                                   }
                                 } else {
-                                  debugPrint('⚠️ Step 3 skipped: No user IDs found');
+                                  debugPrint(
+                                      '⚠️ Step 3 skipped: No user IDs found');
                                 }
                               } catch (e) {
-                                debugPrint('❌ Step 2 failed: User ID lookup error: $e');
+                                debugPrint(
+                                    '❌ Step 2 failed: User ID lookup error: $e');
                               }
-                              
+
                               debugPrint('🏁 Alarm sharing process completed');
                             }
                             success = true;
@@ -287,12 +345,12 @@ class ShareDialog extends StatelessWidget {
                             // Remove loading overlay
                             overlayEntry?.remove();
                             overlayEntry = null;
-                            
+
                             // Close share dialog
                             if (Get.isDialogOpen ?? false) {
                               Get.back();
                             }
-                            
+
                             // Show appropriate snackbar
                             if (success) {
                               Get.snackbar(
@@ -334,62 +392,62 @@ class ShareDialog extends StatelessWidget {
 
   Widget _buildRecipientSection() {
     return Obx(() => Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: themeController.secondaryBackgroundColor.value,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: kprimaryColor.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Recipients'.tr,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: themeController.primaryTextColor.value,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: themeController.secondaryBackgroundColor.value,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: kprimaryColor.withOpacity(0.3),
+              width: 1,
             ),
           ),
-          const SizedBox(height: 8),
-          controller.selectedEmails.isEmpty
-              ? Text(
-                  'No recipients selected'.tr,
-                  style: TextStyle(
-                    color: themeController.primaryDisabledTextColor.value,
-                    fontSize: 14,
-                  ),
-                )
-              : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: controller.selectedEmails.map((email) {
-                    return Chip(
-                      backgroundColor: kprimaryColor.withOpacity(0.2),
-                      label: Text(
-                        email,
-                        style: TextStyle(
-                          color: kprimaryColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                      deleteIcon: Icon(
-                        Icons.close,
-                        size: 16,
-                        color: kprimaryColor,
-                      ),
-                      onDeleted: () {
-                        controller.selectedEmails.remove(email);
-                      },
-                    );
-                  }).toList(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Recipients'.tr,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: themeController.primaryTextColor.value,
                 ),
-        ],
-      ),
-    ));
+              ),
+              const SizedBox(height: 8),
+              controller.selectedEmails.isEmpty
+                  ? Text(
+                      'No recipients selected'.tr,
+                      style: TextStyle(
+                        color: themeController.primaryDisabledTextColor.value,
+                        fontSize: 14,
+                      ),
+                    )
+                  : Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: controller.selectedEmails.map((email) {
+                        return Chip(
+                          backgroundColor: kprimaryColor.withOpacity(0.2),
+                          label: Text(
+                            email,
+                            style: TextStyle(
+                              color: kprimaryColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                          deleteIcon: Icon(
+                            Icons.close,
+                            size: 16,
+                            color: kprimaryColor,
+                          ),
+                          onDeleted: () {
+                            controller.selectedEmails.remove(email);
+                          },
+                        );
+                      }).toList(),
+                    ),
+            ],
+          ),
+        ));
   }
 
   Widget _buildContactsHeader() {
@@ -447,7 +505,8 @@ class ShareDialog extends StatelessWidget {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: themeController.primaryDisabledTextColor.value,
+                            color:
+                                themeController.primaryDisabledTextColor.value,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -462,16 +521,17 @@ class ShareDialog extends StatelessWidget {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () async {
-                      final email = controller.emailTextEditingController.text.trim();
+                      final email =
+                          controller.emailTextEditingController.text.trim();
                       if (email.isEmpty) return;
-                      
+
                       if (RegExp(
                         r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+",
                       ).hasMatch(email)) {
                         Utils.hapticFeedback();
                         await IsarDb.addEmail(email);
                         controller.emailTextEditingController.clear();
-                        
+
                         Get.snackbar(
                           'Success'.tr,
                           'Contact added'.tr,
@@ -525,7 +585,7 @@ class ShareDialog extends StatelessWidget {
             ),
           );
         }
-        
+
         if (snapshot.hasError) {
           return Center(
             child: Padding(
@@ -542,7 +602,7 @@ class ShareDialog extends StatelessWidget {
 
         if (snapshot.hasData) {
           final userList = snapshot.data;
-          
+
           if (userList == null || userList.isEmpty) {
             return Center(
               child: Padding(
@@ -575,7 +635,7 @@ class ShareDialog extends StatelessWidget {
               ),
             );
           }
-          
+
           return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -594,7 +654,7 @@ class ShareDialog extends StatelessWidget {
   Widget _buildContactTile(Saved_Emails email) {
     return Obx(() {
       final isSelected = controller.selectedEmails.contains(email.email);
-      
+
       return ListTile(
         onTap: () {
           Utils.hapticFeedback();
@@ -643,45 +703,48 @@ class ShareDialog extends StatelessWidget {
           ),
           onPressed: () async {
             Utils.hapticFeedback();
-            
+
             final confirmed = await Get.dialog<bool>(
-              AlertDialog(
-                backgroundColor: themeController.secondaryBackgroundColor.value,
-                title: Text('Remove contact?'.tr),
-                content: Text(
-                  'Are you sure you want to remove ${email.username} from your contacts?'.tr,
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Get.back(result: false),
-                    child: Text(
-                      'Cancel'.tr,
-                      style: TextStyle(
-                        color: themeController.primaryTextColor.value,
+                  AlertDialog(
+                    backgroundColor:
+                        themeController.secondaryBackgroundColor.value,
+                    title: Text('Remove contact?'.tr),
+                    content: Text(
+                      'Are you sure you want to remove ${email.username} from your contacts?'
+                          .tr,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back(result: false),
+                        child: Text(
+                          'Cancel'.tr,
+                          style: TextStyle(
+                            color: themeController.primaryTextColor.value,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => Get.back(result: true),
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.red.withOpacity(0.1),
-                    ),
-                    child: Text(
-                      'Remove'.tr,
-                      style: const TextStyle(
-                        color: Colors.red,
+                      TextButton(
+                        onPressed: () => Get.back(result: true),
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.red.withOpacity(0.1),
+                        ),
+                        child: Text(
+                          'Remove'.tr,
+                          style: const TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ) ?? false;
-            
+                ) ??
+                false;
+
             if (confirmed) {
               if (controller.selectedEmails.contains(email.email)) {
                 controller.selectedEmails.remove(email.email);
               }
-              
+
               await _deleteEmail(email);
             }
           },

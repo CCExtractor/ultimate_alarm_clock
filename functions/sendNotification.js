@@ -19,6 +19,26 @@ export const sendNotification = onCall(async (request) => {
     throw new Error("Invalid receivingUserIds");
   }
 
+  // ── Build a compact data-only payload from the shared item ──────────
+  // FCM data values MUST be strings; we JSON-encode complex fields.
+  const alarmData = sharedItem?.alarmData || {};
+  const fcmData = {
+    silent: "false",
+    type: "sharedAlarm",
+    payloadVersion: "2",
+    message,
+    sharedItemId: sharedItem?.id || "",
+    firestoreId: sharedItem?.firestoreId || sharedItem?.id || "",
+    alarmTime: sharedItem?.alarmTime || alarmData.alarmTime || "",
+    alarmLabel: sharedItem?.alarmLabel || alarmData.label || "",
+    ownerName: sharedItem?.owner || alarmData.ownerName || "",
+    alarmRepeat: sharedItem?.alarmRepeat || "",
+    clickAction: "FLUTTER_NOTIFICATION_CLICK",
+    // Full alarm map as a JSON string so the client can reconstruct the
+    // AlarmModel without needing another Firestore read.
+    alarmDataJson: JSON.stringify(alarmData),
+  };
+
   // Prepare document references
   const userDocRefs = receivingUserIds.map((id) => db.collection("users").doc(id));
 
@@ -43,25 +63,22 @@ export const sendNotification = onCall(async (request) => {
 
       logger.info(`✅ Found FCM token for user ${userId}: ${token.substring(0, 20)}...`);
 
+      const notificationTitle = "🔔 Shared Alarm!";
+      const notificationBody = message;
+
       // Add push notification message with enhanced data
       messages.push({
         token,
         android: {
           priority: "high",
           notification: {
-            title: "🔔 Shared Alarm!",
-            body: message,
-            channelId: "alarm_updates",
+            title: notificationTitle,
+            body: notificationBody,
+            channelId: "shared_alarm_channel",
             sound: "default",
             autoCancel: true,
           },
-          data: {
-            silent: "false",
-            type: "sharedAlarm",
-            message,
-            sharedItemId: sharedItem?.id || "",
-            clickAction: "FLUTTER_NOTIFICATION_CLICK",
-          },
+          data: fcmData,
         },
         apns: {
           headers: {
@@ -71,27 +88,20 @@ export const sendNotification = onCall(async (request) => {
           payload: {
             aps: {
               alert: {
-                title: "🔔 Shared Alarm!",
-                body: message,
+                title: notificationTitle,
+                body: notificationBody,
               },
               sound: "default",
               badge: 1,
             },
-            sharedItemId: sharedItem?.id || "",
-            type: "sharedAlarm",
+            ...fcmData,
           },
         },
         notification: {
-          title: "🔔 Shared Alarm!",
-          body: message,
+          title: notificationTitle,
+          body: notificationBody,
         },
-        data: {
-          silent: "false",
-          type: "sharedAlarm",
-          message,
-          sharedItemId: sharedItem?.id || "",
-          clickAction: "FLUTTER_NOTIFICATION_CLICK",
-        },
+        data: fcmData,
       });
 
       // Add shared item to user's receivedItems array if sharedItem is provided

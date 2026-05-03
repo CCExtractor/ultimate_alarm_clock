@@ -1,4 +1,5 @@
 {
   "cmake.sourceDirectory": "E:/ultimate_alarm_clock/linux",
-  "dart.flutterSdkPath": ".fvm/versions/3.22.2"
+  "dart.flutterSdkPath": ".fvm/versions/3.22.2",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -33,6 +33,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.ccextractor.ultimate_alarm_clock"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
@@ -51,12 +52,12 @@ android {
     
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17 // Updated to Java 17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '17' // Updated to Java 17
+        jvmTarget = '1.8'
     }
 
     sourceSets {
@@ -67,7 +68,7 @@ android {
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('debug.keystore')
+            storeFile file("${System.properties['user.home']}/.android/debug.keystore")
             storePassword 'android'
         }
         release {

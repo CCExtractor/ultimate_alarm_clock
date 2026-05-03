@@ -16,7 +16,8 @@ import 'package:ultimate_alarm_clock/app/data/models/profile_model.dart';
 import 'package:ultimate_alarm_clock/app/data/models/user_model.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/firestore_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/get_storage_provider.dart';
-import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart' as isar;
+import 'package:ultimate_alarm_clock/app/data/providers/isar_provider.dart'
+    as isar;
 import 'package:ultimate_alarm_clock/app/data/providers/push_notifications.dart';
 import 'package:ultimate_alarm_clock/app/data/providers/secure_storage_provider.dart';
 import 'package:ultimate_alarm_clock/app/data/models/ringtone_model.dart';
@@ -71,10 +72,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxList<Map> offsetDetails = [{}].obs;
   final offsetDuration = 0.obs;
   final isOffsetBefore = true.obs;
-  
+
   // NEW: Selected location radius for customizable detection radius
   final selectedLocationRadius = 500.obs; // Default 500m radius
-  
+
   var qrController = MobileScannerController(
     autoStart: false,
     detectionSpeed: DetectionSpeed.noDuplicates,
@@ -130,11 +131,9 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt hours = 0.obs, minutes = 0.obs, meridiemIndex = 0.obs;
   final List<RxString> meridiem = ['AM'.obs, 'PM'.obs];
 
-  
   TextEditingController inputHrsController = TextEditingController();
   TextEditingController inputMinutesController = TextEditingController();
-  
-  
+
   final isTimePicker = false.obs;
   final isAM = true.obs;
   int? _previousDisplayHour;
@@ -161,7 +160,8 @@ class AddOrUpdateAlarmController extends GetxController {
   RxInt alarmSettingType = 0.obs;
 
   final RxBool isSystemRingtonesLoading = false.obs;
-  final RxMap<String, List<SystemRingtoneModel>> categorizedSystemRingtones = <String, List<SystemRingtoneModel>>{}.obs;
+  final RxMap<String, List<SystemRingtoneModel>> categorizedSystemRingtones =
+      <String, List<SystemRingtoneModel>>{}.obs;
   final RxString playingSystemRingtoneUri = ''.obs;
 
   late ProfileModel profileModel;
@@ -171,13 +171,13 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxInt guardianTimer = 120.obs; // Default to 2 minutes (120 seconds)
   final RxString guardian = ''.obs;
   final RxBool isCall = false.obs;
-  
+
   // Sunrise Alarm Variables
   final RxBool isSunriseEnabled = false.obs;
   final RxInt sunriseDuration = 30.obs;
   final RxDouble sunriseIntensity = 1.0.obs;
   final RxInt sunriseColorScheme = 0.obs;
-  
+
   // Timezone Variables
   final RxString selectedTimezoneId = ''.obs;
   final RxBool isTimezoneEnabled = false.obs;
@@ -186,9 +186,10 @@ class AddOrUpdateAlarmController extends GetxController {
   final RxList<TimezoneData> filteredTimezoneList = <TimezoneData>[].obs;
   final RxString timezoneSearchQuery = ''.obs;
   final RxString deviceTimezoneId = ''.obs;
-  
+
   // Smart Control Combination Variables
-  final RxInt smartControlCombinationType = SmartControlCombinationType.and.index.obs;
+  final RxInt smartControlCombinationType =
+      SmartControlCombinationType.and.index.obs;
 
   void setSmartControlCombinationType(SmartControlCombinationType type) {
     smartControlCombinationType.value = type.index;
@@ -240,11 +241,12 @@ class AddOrUpdateAlarmController extends GetxController {
     }
     print('🌍 Device timezone set to: ${deviceTimezoneId.value}');
     loadTimezones();
-    
+
     // Check if this is a new alarm (no arguments) and apply default settings
     if (Get.arguments == null) {
       // Apply default timezone settings for new alarms
-      isTimezoneEnabled.value = settingsController.isTimezoneEnabledByDefault.value;
+      isTimezoneEnabled.value =
+          settingsController.isTimezoneEnabledByDefault.value;
       if (settingsController.defaultTimezoneId.value.isNotEmpty) {
         selectedTimezoneId.value = settingsController.defaultTimezoneId.value;
       } else {
@@ -256,7 +258,7 @@ class AddOrUpdateAlarmController extends GetxController {
         selectedTimezoneId.value = deviceTimezoneId.value;
       }
     }
-    
+
     updateTimezoneOffset();
   }
 
@@ -297,56 +299,60 @@ class AddOrUpdateAlarmController extends GetxController {
 
   void updateTimezoneOffset() {
     if (selectedTimezoneId.value.isNotEmpty) {
-      targetTimezoneOffset.value = TimezoneUtils.calculateTimezoneOffset(selectedTimezoneId.value);
+      targetTimezoneOffset.value =
+          TimezoneUtils.calculateTimezoneOffset(selectedTimezoneId.value);
     }
   }
 
   void convertLocalTimeToTargetTimezone() {
     if (!isTimezoneEnabled.value || selectedTimezoneId.value.isEmpty) return;
-    
+
     try {
       // Get current selected time as local time
       final localTime = TimeOfDay.fromDateTime(selectedTime.value);
       final currentDate = selectedDate.value;
-      
+
       // Get timezone locations
       final localLocation = tz.getLocation(deviceTimezoneId.value);
       final targetLocation = tz.getLocation(selectedTimezoneId.value);
-      
+
       // Calculate the offset difference
       final now = DateTime.now();
       final localNow = tz.TZDateTime.now(localLocation);
       final targetNow = tz.TZDateTime.now(targetLocation);
-      final offsetDifference = targetNow.timeZoneOffset.inMinutes - localNow.timeZoneOffset.inMinutes;
-      
+      final offsetDifference = targetNow.timeZoneOffset.inMinutes -
+          localNow.timeZoneOffset.inMinutes;
+
       // Convert the local time to target timezone by adding the offset
       final localMinutes = localTime.hour * 60 + localTime.minute;
       final targetMinutes = localMinutes + offsetDifference;
-      
+
       // Handle day overflow/underflow
       var targetHour = (targetMinutes ~/ 60) % 24;
       var targetMinute = targetMinutes % 60;
-      
+
       // Handle negative minutes
       if (targetMinute < 0) {
         targetMinute += 60;
         targetHour -= 1;
       }
-      
+
       // Handle negative hours
       if (targetHour < 0) {
         targetHour += 24;
       }
-      
+
       // Debug output
       print('🔧 TIMEZONE CONVERSION DEBUG:');
       print('   Local Time Input: ${localTime.hour}:${localTime.minute}');
-      print('   Local TZ: ${deviceTimezoneId.value} (${localNow.timeZoneOffset})');
-      print('   Target TZ: ${selectedTimezoneId.value} (${targetNow.timeZoneOffset})');
+      print(
+          '   Local TZ: ${deviceTimezoneId.value} (${localNow.timeZoneOffset})');
+      print(
+          '   Target TZ: ${selectedTimezoneId.value} (${targetNow.timeZoneOffset})');
       print('   Offset Difference: $offsetDifference minutes');
       print('   Target Time: $targetHour:$targetMinute');
-      
-      // Update selectedTime to show the converted time 
+
+      // Update selectedTime to show the converted time
       selectedTime.value = DateTime(
         currentDate.year,
         currentDate.month,
@@ -354,11 +360,11 @@ class AddOrUpdateAlarmController extends GetxController {
         targetHour,
         targetMinute,
       );
-      
+
       // Update the time picker display
       hours.value = targetHour;
       minutes.value = targetMinute;
-      
+
       // Update meridiem for 12-hour format
       if (settingsController.is24HrsEnabled.value == false) {
         if (targetHour == 0) {
@@ -373,7 +379,6 @@ class AddOrUpdateAlarmController extends GetxController {
           meridiemIndex.value = 0;
         }
       }
-      
     } catch (e) {
       // If conversion fails, keep the original time
       print('Error converting timezone: $e');
@@ -385,14 +390,14 @@ class AddOrUpdateAlarmController extends GetxController {
       // Update the alarm time display using timezone-aware time
       final timezoneAwareTime = getTimezoneAwareAlarmTime();
       timeToAlarm.value = Utils.timeUntilAlarm(
-        TimeOfDay.fromDateTime(timezoneAwareTime), 
+        TimeOfDay.fromDateTime(timezoneAwareTime),
         repeatDays,
         selectedDate.value,
       );
     } else {
       // Use regular time calculation
       timeToAlarm.value = Utils.timeUntilAlarm(
-        TimeOfDay.fromDateTime(selectedTime.value), 
+        TimeOfDay.fromDateTime(selectedTime.value),
         repeatDays,
         selectedDate.value,
       );
@@ -407,10 +412,11 @@ class AddOrUpdateAlarmController extends GetxController {
     try {
       final selectedData = getSelectedTimezoneData();
       if (selectedData == null) return '';
-      
+
       final currentTime = TimeOfDay.fromDateTime(selectedTime.value);
-      final timeString = '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}';
-      
+      final timeString =
+          '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}';
+
       return 'Alarm will ring at $timeString in ${selectedData.displayName}';
     } catch (e) {
       return 'Timezone conversion error';
@@ -419,7 +425,7 @@ class AddOrUpdateAlarmController extends GetxController {
 
   TimezoneData? getSelectedTimezoneData() {
     if (selectedTimezoneId.value.isEmpty) return null;
-    
+
     return timezoneList.firstWhereOrNull(
       (timezone) => timezone.id == selectedTimezoneId.value,
     );
@@ -435,7 +441,7 @@ class AddOrUpdateAlarmController extends GetxController {
       // We need to convert it back to LOCAL time for scheduling
       final targetTime = TimeOfDay.fromDateTime(selectedTime.value);
       final currentDate = selectedDate.value;
-      
+
       // Create target timezone DateTime
       final targetDateTime = DateTime(
         currentDate.year,
@@ -444,11 +450,11 @@ class AddOrUpdateAlarmController extends GetxController {
         targetTime.hour,
         targetTime.minute,
       );
-      
+
       // Convert from target timezone to local timezone for scheduling
       final targetLocation = tz.getLocation(selectedTimezoneId.value);
       final localLocation = tz.getLocation(deviceTimezoneId.value);
-      
+
       // Create proper TZDateTime in target timezone
       final targetTZDateTime = tz.TZDateTime(
         targetLocation,
@@ -458,10 +464,11 @@ class AddOrUpdateAlarmController extends GetxController {
         targetTime.hour,
         targetTime.minute,
       );
-      
-      // Convert to local timezone for scheduling  
-      final localTZDateTime = tz.TZDateTime.from(targetTZDateTime, localLocation);
-      
+
+      // Convert to local timezone for scheduling
+      final localTZDateTime =
+          tz.TZDateTime.from(targetTZDateTime, localLocation);
+
       return DateTime(
         localTZDateTime.year,
         localTZDateTime.month,
@@ -657,7 +664,7 @@ class AddOrUpdateAlarmController extends GetxController {
       // is denied forever.
       return false;
     } else if (locationPermission == LocationPermission.denied ||
-                locationPermission == LocationPermission.whileInUse) {
+        locationPermission == LocationPermission.whileInUse) {
       bool? shouldAskPermission = await Get.defaultDialog<bool>(
         backgroundColor: themeController.secondaryBackgroundColor.value,
         barrierDismissible: false,
@@ -930,128 +937,128 @@ class AddOrUpdateAlarmController extends GetxController {
   updateAlarm(AlarmModel alarmData) async {
     // Adding the ID's so it can update depending on the db
     if (isSharedAlarmEnabled.value == true) {
-      
-      bool isConversion = await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) && 
-                         (alarmRecord.value.firestoreId == null || alarmRecord.value.firestoreId!.isEmpty);
-      
+      bool isConversion =
+          await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) &&
+              (alarmRecord.value.firestoreId == null ||
+                  alarmRecord.value.firestoreId!.isEmpty);
+
       if (isConversion) {
         debugPrint('🔄 Converting normal alarm to shared alarm');
-        
-      
+
         try {
           await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
             'alarmID': alarmRecord.value.alarmID,
             'isSharedAlarm': false,
           });
-          debugPrint('🗑️ Canceled existing local alarm: ${alarmRecord.value.alarmID}');
+          debugPrint(
+              '🗑️ Canceled existing local alarm: ${alarmRecord.value.alarmID}');
         } catch (e) {
           debugPrint('⚠️ Error canceling local alarm: $e');
         }
-        
-      
+
         await isar.IsarDb.deleteAlarm(alarmRecord.value.isarId);
-        debugPrint('🗑️ Deleted alarm from local database using isarId: ${alarmRecord.value.isarId}');
-        
-      
-        alarmRecord.value = await FirestoreDb.addAlarm(userModel.value, alarmData);
-        debugPrint('✅ Created new shared alarm in Firestore: ${alarmRecord.value.firestoreId}');
-        
-      } else if (alarmRecord.value.firestoreId != null && alarmRecord.value.firestoreId!.isNotEmpty) {
-      
-        debugPrint('📝 Updating existing shared alarm: ${alarmRecord.value.firestoreId}');
-        
+        debugPrint(
+            '🗑️ Deleted alarm from local database using isarId: ${alarmRecord.value.isarId}');
+
+        alarmRecord.value =
+            await FirestoreDb.addAlarm(userModel.value, alarmData);
+        debugPrint(
+            '✅ Created new shared alarm in Firestore: ${alarmRecord.value.firestoreId}');
+      } else if (alarmRecord.value.firestoreId != null &&
+          alarmRecord.value.firestoreId!.isNotEmpty) {
+        debugPrint(
+            '📝 Updating existing shared alarm: ${alarmRecord.value.firestoreId}');
+
         alarmData.firestoreId = alarmRecord.value.firestoreId;
-        
-      
+
         try {
           await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
             'alarmID': alarmData.firestoreId,
             'isSharedAlarm': true,
           });
-          debugPrint('🗑️ Canceled existing shared alarm before update: ${alarmData.firestoreId}');
+          debugPrint(
+              '🗑️ Canceled existing shared alarm before update: ${alarmData.firestoreId}');
         } catch (e) {
-          debugPrint('⚠️ Error canceling existing alarm (continuing anyway): $e');
+          debugPrint(
+              '⚠️ Error canceling existing alarm (continuing anyway): $e');
         }
-        
-      
+
         await FirestoreDb.updateAlarm(alarmRecord.value.ownerId, alarmData);
-        
-      
+
         try {
-          PushNotifications().triggerRescheduleAlarmNotification(alarmData.firestoreId!);
+          PushNotifications()
+              .triggerRescheduleAlarmNotification(alarmData.firestoreId!);
         } catch (e) {
           debugPrint('Push notification failed (this is ok): $e');
         }
-        
-      
+
         await FirestoreDb.triggerRescheduleUpdate(alarmData);
-        
-      
+
         try {
           await sendDirectNotificationToSharedUsers(alarmData);
         } catch (e) {
           debugPrint('Direct notification failed (this is ok): $e');
         }
-        
-      
-        homeController.forceRefreshAfterAlarmUpdate(alarmData.firestoreId, true);
+
+        homeController.forceRefreshAfterAlarmUpdate(
+            alarmData.firestoreId, true);
       } else {
-      
-        debugPrint('⚠️ Unexpected state: shared alarm enabled but no valid ID found');
-        alarmRecord.value = await FirestoreDb.addAlarm(userModel.value, alarmData);
+        debugPrint(
+            '⚠️ Unexpected state: shared alarm enabled but no valid ID found');
+        alarmRecord.value =
+            await FirestoreDb.addAlarm(userModel.value, alarmData);
       }
     } else {
-      
-      bool isConversion = (alarmRecord.value.firestoreId != null && alarmRecord.value.firestoreId!.isNotEmpty) &&
-                         !await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID);
-      
+      bool isConversion = (alarmRecord.value.firestoreId != null &&
+              alarmRecord.value.firestoreId!.isNotEmpty) &&
+          !await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID);
+
       if (isConversion) {
         debugPrint('🔄 Converting shared alarm to normal alarm');
-        
-      
+
         try {
           await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
             'alarmID': alarmRecord.value.firestoreId,
             'isSharedAlarm': true,
           });
-          debugPrint('🗑️ Canceled existing shared alarm: ${alarmRecord.value.firestoreId}');
+          debugPrint(
+              '🗑️ Canceled existing shared alarm: ${alarmRecord.value.firestoreId}');
         } catch (e) {
           debugPrint('⚠️ Error canceling shared alarm: $e');
         }
-        
-      
-        await FirestoreDb.deleteAlarm(userModel.value, alarmRecord.value.firestoreId!);
+
+        await FirestoreDb.deleteAlarm(
+            userModel.value, alarmRecord.value.firestoreId!);
         debugPrint('🗑️ Deleted alarm from Firestore');
-        
-      
+
         alarmRecord.value = await isar.IsarDb.addAlarm(alarmData);
-        debugPrint('✅ Created new normal alarm in local database: ${alarmRecord.value.alarmID}');
-        
-      } else if (await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) == true) {
-      
-        debugPrint('📝 Updating existing normal alarm: ${alarmRecord.value.alarmID}');
-        
+        debugPrint(
+            '✅ Created new normal alarm in local database: ${alarmRecord.value.alarmID}');
+      } else if (await isar.IsarDb.doesAlarmExist(alarmRecord.value.alarmID) ==
+          true) {
+        debugPrint(
+            '📝 Updating existing normal alarm: ${alarmRecord.value.alarmID}');
+
         alarmData.isarId = alarmRecord.value.isarId;
-        
-      
+
         try {
           await homeController.alarmChannel.invokeMethod('cancelAlarmById', {
             'alarmID': alarmRecord.value.alarmID,
             'isSharedAlarm': false,
           });
-          debugPrint('🗑️ Canceled existing local alarm before update: ${alarmRecord.value.alarmID}');
+          debugPrint(
+              '🗑️ Canceled existing local alarm before update: ${alarmRecord.value.alarmID}');
         } catch (e) {
-          debugPrint('⚠️ Error canceling existing alarm (continuing anyway): $e');
+          debugPrint(
+              '⚠️ Error canceling existing alarm (continuing anyway): $e');
         }
-        
-      
+
         await isar.IsarDb.updateAlarm(alarmData);
-        
-      
+
         homeController.forceRefreshAfterAlarmUpdate(alarmData.alarmID, false);
       } else {
-      
-        debugPrint('⚠️ Unexpected state: normal alarm but no valid local ID found');
+        debugPrint(
+            '⚠️ Unexpected state: normal alarm but no valid local ID found');
         alarmRecord.value = await isar.IsarDb.addAlarm(alarmData);
       }
     }
@@ -1106,14 +1113,15 @@ class AddOrUpdateAlarmController extends GetxController {
       sunriseDuration.value = alarmRecord.value.sunriseDuration;
       sunriseIntensity.value = alarmRecord.value.sunriseIntensity;
       sunriseColorScheme.value = alarmRecord.value.sunriseColorScheme;
-      
+
       // Initialize timezone values
       selectedTimezoneId.value = alarmRecord.value.timezoneId;
       isTimezoneEnabled.value = alarmRecord.value.isTimezoneEnabled;
       targetTimezoneOffset.value = alarmRecord.value.targetTimezoneOffset;
-      
+
       // Initialize smart control combination type
-      smartControlCombinationType.value = alarmRecord.value.smartControlCombinationType;
+      smartControlCombinationType.value =
+          alarmRecord.value.smartControlCombinationType;
       isActivityMonitorenabled.value =
           alarmRecord.value.isActivityEnabled ? 1 : 0;
       snoozeDuration.value = alarmRecord.value.snoozeDuration;
@@ -1164,10 +1172,11 @@ class AddOrUpdateAlarmController extends GetxController {
       isActivityenabled.value = alarmRecord.value.isActivityEnabled;
       useScreenActivity.value = alarmRecord.value.isActivityEnabled;
       activityInterval.value = alarmRecord.value.activityInterval ~/ 60000;
-      
+
       // Set activity condition type based on existing data
       if (alarmRecord.value.isActivityEnabled) {
-        activityConditionType.value = ActivityConditionType.values[alarmRecord.value.activityConditionType];
+        activityConditionType.value = ActivityConditionType
+            .values[alarmRecord.value.activityConditionType];
       } else {
         activityConditionType.value = ActivityConditionType.off;
       }
@@ -1175,7 +1184,8 @@ class AddOrUpdateAlarmController extends GetxController {
       isLocationEnabled.value = alarmRecord.value.isLocationEnabled;
       // Set location condition type based on existing data
       if (alarmRecord.value.isLocationEnabled) {
-        locationConditionType.value = LocationConditionType.values[alarmRecord.value.locationConditionType];
+        locationConditionType.value = LocationConditionType
+            .values[alarmRecord.value.locationConditionType];
       } else {
         locationConditionType.value = LocationConditionType.off;
       }
@@ -1193,9 +1203,10 @@ class AddOrUpdateAlarmController extends GetxController {
       );
 
       isWeatherEnabled.value = alarmRecord.value.isWeatherEnabled;
-      
+
       if (alarmRecord.value.isWeatherEnabled) {
-        weatherConditionType.value = WeatherConditionType.values[alarmRecord.value.weatherConditionType];
+        weatherConditionType.value =
+            WeatherConditionType.values[alarmRecord.value.weatherConditionType];
       } else {
         weatherConditionType.value = WeatherConditionType.off;
       }
@@ -1241,18 +1252,18 @@ class AddOrUpdateAlarmController extends GetxController {
 
         mainAlarmTime.value = Utils.timeOfDayToDateTime(
           Utils.stringToTimeOfDay(alarmRecord.value.mainAlarmTime!),
-          );
+        );
 
         offsetDetails.value = alarmRecord.value.offsetDetails!;
-      
-          final userOffset = alarmRecord.value.offsetDetails!
-      .firstWhereOrNull((entry) => entry['userId'] == userId);
 
-      if (userOffset != null) {
-        userOffsetDetails.value = userOffset;
-        offsetDuration.value = userOffset['offsetDuration'];
-        isOffsetBefore.value = userOffset['isOffsetBefore'];
-      }
+        final userOffset = alarmRecord.value.offsetDetails!
+            .firstWhereOrNull((entry) => entry['userId'] == userId);
+
+        if (userOffset != null) {
+          userOffsetDetails.value = userOffset;
+          offsetDuration.value = userOffset['offsetDuration'];
+          isOffsetBefore.value = userOffset['isOffsetBefore'];
+        }
       }
 
       // Set lock only if its not locked
@@ -1287,10 +1298,9 @@ class AddOrUpdateAlarmController extends GetxController {
     }
 
     timeToAlarm.value = Utils.timeUntilAlarm(
-      TimeOfDay.fromDateTime(selectedTime.value),
-      repeatDays,
-      selectedDate.value
-    );
+        TimeOfDay.fromDateTime(selectedTime.value),
+        repeatDays,
+        selectedDate.value);
 
     // store initial values of the variables
     initialValues.addAll({
@@ -1331,10 +1341,9 @@ class AddOrUpdateAlarmController extends GetxController {
 
     // If there's an argument sent, we are in update mode
 
-
     isTimePicker.value = true;
     initTimeTextField();
-    
+
     // Initialize timezone functionality
     initializeTimezone();
   }
@@ -1343,15 +1352,15 @@ class AddOrUpdateAlarmController extends GetxController {
     // Updating UI to show time to alarm
     selectedTime.listen((time) {
       debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(time), repeatDays, selectedDate.value);
+      timeToAlarm.value = Utils.timeUntilAlarm(
+          TimeOfDay.fromDateTime(time), repeatDays, selectedDate.value);
       _compareAndSetChange('selectedTime', time);
     });
-    
+
     selectedDate.listen((date) {
       debugPrint('CHANGED CHANGED CHANGED CHANGED');
-      timeToAlarm.value =
-          Utils.timeUntilAlarm(TimeOfDay.fromDateTime(selectedTime.value), repeatDays, date);
+      timeToAlarm.value = Utils.timeUntilAlarm(
+          TimeOfDay.fromDateTime(selectedTime.value), repeatDays, date);
       _compareAndSetChange('selectedTime', date);
     });
 
@@ -1411,7 +1420,6 @@ class AddOrUpdateAlarmController extends GetxController {
       },
     );
 
-    
     locationConditionType.listen((value) {
       if (value == LocationConditionType.off) {
         isLocationEnabled.value = false;
@@ -1431,11 +1439,14 @@ class AddOrUpdateAlarmController extends GetxController {
     setupListener<int>(numberOfSteps, 'numberOfSteps');
 
     setupListener<bool>(isSharedAlarmEnabled, 'isSharedAlarmEnabled');
-    setupListener<LocationConditionType>(locationConditionType, 'locationConditionType');
-    setupListener<WeatherConditionType>(weatherConditionType, 'weatherConditionType');
+    setupListener<LocationConditionType>(
+        locationConditionType, 'locationConditionType');
+    setupListener<WeatherConditionType>(
+        weatherConditionType, 'weatherConditionType');
     setupListener<int>(offsetDuration, 'offsetDuration');
     setupListener<bool>(isOffsetBefore, 'isOffsetBefore');
-    setupListener<int>(smartControlCombinationType, 'smartControlCombinationType');
+    setupListener<int>(
+        smartControlCombinationType, 'smartControlCombinationType');
   }
 
   // adds listener to rxVar variable
@@ -1493,8 +1504,8 @@ class AddOrUpdateAlarmController extends GetxController {
       ownerName = alarmRecord.value.ownerName;
     }
 
-    
-    debugPrint('🔔 Creating alarm with maxSnoozeCount: ${maxSnoozeCount.value}');
+    debugPrint(
+        '🔔 Creating alarm with maxSnoozeCount: ${maxSnoozeCount.value}');
     return AlarmModel(
       snoozeDuration: snoozeDuration.value,
       maxSnoozeCount: maxSnoozeCount.value,
@@ -1515,12 +1526,12 @@ class AddOrUpdateAlarmController extends GetxController {
       ownerName: ownerName,
       activityInterval: activityInterval.value * 60000,
       days: repeatDays.toList(),
-      alarmTime:
-          Utils.timeOfDayToString(TimeOfDay.fromDateTime(getTimezoneAwareAlarmTime())),
+      alarmTime: Utils.timeOfDayToString(
+          TimeOfDay.fromDateTime(getTimezoneAwareAlarmTime())),
       intervalToAlarm: getTimezoneAwareIntervalToAlarm(),
       isActivityEnabled: isActivityenabled.value,
-      minutesSinceMidnight:
-          Utils.timeOfDayToInt(TimeOfDay.fromDateTime(getTimezoneAwareAlarmTime())),
+      minutesSinceMidnight: Utils.timeOfDayToInt(
+          TimeOfDay.fromDateTime(getTimezoneAwareAlarmTime())),
       isLocationEnabled: isLocationEnabled.value,
       locationConditionType: locationConditionType.value.index,
       weatherTypes: Utils.getIntFromWeatherTypes(selectedWeather.toList()),
@@ -1667,8 +1678,8 @@ class AddOrUpdateAlarmController extends GetxController {
   }) async {
     try {
       int customRingtoneId = AudioUtils.fastHash(ringtoneName);
-      RingtoneModel? customRingtone =
-          await isar.IsarDb.getCustomRingtone(customRingtoneId: customRingtoneId);
+      RingtoneModel? customRingtone = await isar.IsarDb.getCustomRingtone(
+          customRingtoneId: customRingtoneId);
 
       if (customRingtone != null) {
         int currentCounterOfUsage = customRingtone.currentCounterOfUsage;
@@ -1740,15 +1751,15 @@ class AddOrUpdateAlarmController extends GetxController {
             return Theme(
               data: themeController.currentTheme.value == ThemeMode.light
                   ? ThemeData.light().copyWith(
-                colorScheme: const ColorScheme.light(
-                  primary: kprimaryColor,
-                ),
-              )
+                      colorScheme: const ColorScheme.light(
+                        primary: kprimaryColor,
+                      ),
+                    )
                   : ThemeData.dark().copyWith(
-                colorScheme: const ColorScheme.dark(
-                  primary: kprimaryColor,
-                ),
-              ),
+                      colorScheme: const ColorScheme.dark(
+                        primary: kprimaryColor,
+                      ),
+                    ),
               child: child!,
             );
           },
@@ -1798,7 +1809,8 @@ class AddOrUpdateAlarmController extends GetxController {
         return;
       }
 
-      bool exists = await isar.IsarDb.profileExists(profileTextEditingController.text.trim());
+      bool exists = await isar.IsarDb.profileExists(
+          profileTextEditingController.text.trim());
       if (exists) {
         Get.snackbar(
           'Error',
@@ -1813,65 +1825,65 @@ class AddOrUpdateAlarmController extends GetxController {
       }
 
       profileModel = ProfileModel(
-      profileName: profileTextEditingController.text,
-      deleteAfterGoesOff: deleteAfterGoesOff.value,
-      snoozeDuration: snoozeDuration.value,
-      volMax: volMax.value,
-      volMin: volMin.value,
-      gradient: gradient.value,
-      offsetDetails: offsetDetails,
-      label: label.value,
-      note: note.value,
-      showMotivationalQuote: showMotivationalQuote.value,
-      isOneTime: isOneTime.value,
-      lastEditedUserId: lastEditedUserId.value,
-      mutexLock: mutexLock.value,
-      ownerId: ownerId.value,
-      ownerName: ownerName.value,
-      activityInterval: activityInterval.value * 60000,
-      days: repeatDays.toList(),
-      intervalToAlarm: Utils.getMillisecondsToAlarm(
-        DateTime.now(),
-        selectedTime.value,
-      ),
-      isActivityEnabled: isActivityenabled.value,
-      minutesSinceMidnight: Utils.timeOfDayToInt(
-        TimeOfDay.fromDateTime(
+        profileName: profileTextEditingController.text,
+        deleteAfterGoesOff: deleteAfterGoesOff.value,
+        snoozeDuration: snoozeDuration.value,
+        volMax: volMax.value,
+        volMin: volMin.value,
+        gradient: gradient.value,
+        offsetDetails: offsetDetails,
+        label: label.value,
+        note: note.value,
+        showMotivationalQuote: showMotivationalQuote.value,
+        isOneTime: isOneTime.value,
+        lastEditedUserId: lastEditedUserId.value,
+        mutexLock: mutexLock.value,
+        ownerId: ownerId.value,
+        ownerName: ownerName.value,
+        activityInterval: activityInterval.value * 60000,
+        days: repeatDays.toList(),
+        intervalToAlarm: Utils.getMillisecondsToAlarm(
+          DateTime.now(),
           selectedTime.value,
         ),
-      ),
-      isLocationEnabled: isLocationEnabled.value,
-      weatherTypes: Utils.getIntFromWeatherTypes(
-        selectedWeather.toList(),
-      ),
-      isWeatherEnabled: isWeatherEnabled.value,
-      location: Utils.geoPointToString(
-        Utils.latLngToGeoPoint(
-          selectedPoint.value,
+        isActivityEnabled: isActivityenabled.value,
+        minutesSinceMidnight: Utils.timeOfDayToInt(
+          TimeOfDay.fromDateTime(
+            selectedTime.value,
+          ),
         ),
-      ),
-      isSharedAlarmEnabled: isSharedAlarmEnabled.value,
-      isQrEnabled: isQrEnabled.value,
-      qrValue: qrValue.value,
-      isMathsEnabled: isMathsEnabled.value,
-      numMathsQuestions: numMathsQuestions.value,
-      mathsDifficulty: mathsDifficulty.value.index,
-      isShakeEnabled: isShakeEnabled.value,
-      shakeTimes: shakeTimes.value,
-      isPedometerEnabled: isPedometerEnabled.value,
-      numberOfSteps: numberOfSteps.value,
-      ringtoneName: customRingtoneName.value,
-      activityMonitor: isActivityMonitorenabled.value,
-      alarmDate: selectedDate.value.toString().substring(0, 11),
-      isGuardian: isGuardian.value,
-      guardianTimer: guardianTimer.value,
-      guardian: guardian.value,
-      isCall: isCall.value,
-      ringOn: isFutureDate.value,
-      isSunriseEnabled: isSunriseEnabled.value,
-      sunriseDuration: sunriseDuration.value,
-      sunriseIntensity: sunriseIntensity.value,
-      sunriseColorScheme: sunriseColorScheme.value,
+        isLocationEnabled: isLocationEnabled.value,
+        weatherTypes: Utils.getIntFromWeatherTypes(
+          selectedWeather.toList(),
+        ),
+        isWeatherEnabled: isWeatherEnabled.value,
+        location: Utils.geoPointToString(
+          Utils.latLngToGeoPoint(
+            selectedPoint.value,
+          ),
+        ),
+        isSharedAlarmEnabled: isSharedAlarmEnabled.value,
+        isQrEnabled: isQrEnabled.value,
+        qrValue: qrValue.value,
+        isMathsEnabled: isMathsEnabled.value,
+        numMathsQuestions: numMathsQuestions.value,
+        mathsDifficulty: mathsDifficulty.value.index,
+        isShakeEnabled: isShakeEnabled.value,
+        shakeTimes: shakeTimes.value,
+        isPedometerEnabled: isPedometerEnabled.value,
+        numberOfSteps: numberOfSteps.value,
+        ringtoneName: customRingtoneName.value,
+        activityMonitor: isActivityMonitorenabled.value,
+        alarmDate: selectedDate.value.toString().substring(0, 11),
+        isGuardian: isGuardian.value,
+        guardianTimer: guardianTimer.value,
+        guardian: guardian.value,
+        isCall: isCall.value,
+        ringOn: isFutureDate.value,
+        isSunriseEnabled: isSunriseEnabled.value,
+        sunriseDuration: sunriseDuration.value,
+        sunriseIntensity: sunriseIntensity.value,
+        sunriseColorScheme: sunriseColorScheme.value,
       );
 
       if (homeController.isProfileUpdate.value) {
@@ -1880,7 +1892,8 @@ class AddOrUpdateAlarmController extends GetxController {
         print(profileId);
         if (profileId != 'null') profileModel.isarId = profileId;
         print(profileModel.isarId);
-        await isar.IsarDb.updateAlarmProfiles(profileTextEditingController.text);
+        await isar.IsarDb.updateAlarmProfiles(
+            profileTextEditingController.text);
       }
 
       await isar.IsarDb.addProfile(profileModel);
@@ -1914,52 +1927,47 @@ class AddOrUpdateAlarmController extends GetxController {
   Future<void> initializeSharedAlarmSettings() async {
     try {
       debugPrint('Initializing shared alarm settings...');
-      
-  
+
       if (userModel.value == null) {
         debugPrint('Cannot initialize shared alarm: User not logged in');
         throw Exception('User must be logged in to enable shared alarms');
       }
-      
-  
+
       if (ownerId.value.isEmpty) {
         ownerId.value = userModel.value!.id;
         ownerName.value = userModel.value!.fullName;
         debugPrint('Set owner: ${ownerName.value} (${ownerId.value})');
       }
-      
-  
+
       if (sharedUserIds.isEmpty) {
         sharedUserIds.value = [];
         debugPrint('Initialized empty shared users list');
       }
-      
-  
+
       if (offsetDetails.isEmpty || offsetDetails.first.isEmpty) {
-        offsetDetails.value = [{
-          'userId': userModel.value!.id,
-          'offsetDuration': 0,
-          'isOffsetBefore': true,
-        }];
+        offsetDetails.value = [
+          {
+            'userId': userModel.value!.id,
+            'offsetDuration': 0,
+            'isOffsetBefore': true,
+          }
+        ];
         debugPrint('Initialized offset details for user');
       }
-      
-  
+
       if (mainAlarmTime.value.difference(DateTime.now()).inMinutes <= 0) {
         mainAlarmTime.value = selectedTime.value;
         debugPrint('Set main alarm time: ${mainAlarmTime.value}');
       }
-      
-  
+
       final userOffset = offsetDetails.value
           .firstWhereOrNull((entry) => entry['userId'] == userModel.value!.id);
-      
+
       if (userOffset != null) {
         userOffsetDetails.value = userOffset;
         offsetDuration.value = userOffset['offsetDuration'] ?? 0;
         isOffsetBefore.value = userOffset['isOffsetBefore'] ?? true;
       } else {
-  
         Map<String, dynamic> newUserOffset = {
           'userId': userModel.value!.id,
           'offsetDuration': 0,
@@ -1970,55 +1978,64 @@ class AddOrUpdateAlarmController extends GetxController {
         offsetDuration.value = 0;
         isOffsetBefore.value = true;
       }
-      
+
       debugPrint('✅ Shared alarm settings initialized successfully');
     } catch (e) {
       debugPrint('❌ Error initializing shared alarm settings: $e');
-  
+
       isSharedAlarmEnabled.value = false;
       rethrow;
     }
   }
 
-  
   Future<void> sendDirectNotificationToSharedUsers(AlarmModel alarmData) async {
     if (alarmData.sharedUserIds == null || alarmData.sharedUserIds!.isEmpty) {
       debugPrint('No shared users to notify');
       return;
     }
-    
+
     try {
-      debugPrint('🔔 Sending direct notifications to ${alarmData.sharedUserIds!.length} shared users');
+      debugPrint(
+          '🔔 Sending direct notifications to ${alarmData.sharedUserIds!.length} shared users');
       debugPrint('   - Alarm time: ${alarmData.alarmTime}');
       debugPrint('   - Owner: ${alarmData.ownerName}');
-      
-  
+
       try {
         // Create shared item data for the notification
+        final alarmMap = AlarmModel.toMap(alarmData);
         final sharedItem = {
           'type': 'alarm',
-          'AlarmName': alarmData.firestoreId,
-          'owner': alarmData.ownerName ?? 'Someone',
-          'alarmTime': alarmData.alarmTime
+          'payloadVersion': 2,
+          'id': alarmData.firestoreId ?? alarmData.alarmID,
+          'firestoreId': alarmData.firestoreId,
+          'AlarmName': alarmData.firestoreId ?? alarmData.alarmID,
+          'alarmId': alarmData.firestoreId ?? alarmData.alarmID,
+          'owner': alarmData.ownerName,
+          'alarmTime': alarmData.alarmTime,
+          'alarmLabel': alarmData.label,
+          'alarmRepeat': Utils.getRepeatDays(alarmData.days),
+          'alarmData': alarmMap,
         };
-        
-        await PushNotifications().triggerSharedItemNotification(alarmData.sharedUserIds!, sharedItem: sharedItem);
+
+        await PushNotifications().triggerSharedItemNotification(
+            alarmData.sharedUserIds!,
+            sharedItem: sharedItem);
         debugPrint('✅ Cloud function notification sent');
       } catch (e) {
         debugPrint('⚠️ Cloud function notification failed: $e');
       }
-      
-  
+
       for (String userId in alarmData.sharedUserIds!) {
         try {
           await FirebaseFirestore.instance
-            .collection('userNotifications')
-            .doc(userId)
-            .collection('notifications')
-            .add({
+              .collection('userNotifications')
+              .doc(userId)
+              .collection('notifications')
+              .add({
             'type': 'alarm_update',
             'title': 'Shared Alarm Updated! 🔔',
-            'message': '${alarmData.ownerName ?? 'Someone'} updated the alarm time to ${alarmData.alarmTime}',
+            'message':
+                '${alarmData.ownerName} updated the alarm time to ${alarmData.alarmTime}',
             'alarmId': alarmData.firestoreId,
             'newAlarmTime': alarmData.alarmTime,
             'ownerName': alarmData.ownerName,
@@ -2027,29 +2044,28 @@ class AddOrUpdateAlarmController extends GetxController {
           });
           debugPrint('✅ Firestore notification created for user: $userId');
         } catch (e) {
-          debugPrint('⚠️ Failed to create Firestore notification for $userId: $e');
+          debugPrint(
+              '⚠️ Failed to create Firestore notification for $userId: $e');
         }
       }
-      
-  
 
       try {
         await FirebaseFirestore.instance
-          .collection('sharedAlarms')
-          .doc(alarmData.firestoreId)
-          .update({
+            .collection('sharedAlarms')
+            .doc(alarmData.firestoreId)
+            .update({
           'lastNotificationSent': FieldValue.serverTimestamp(),
-          'notificationMessage': '${alarmData.ownerName ?? 'Someone'} updated the alarm time to ${alarmData.alarmTime}',
+          'notificationMessage':
+              '${alarmData.ownerName} updated the alarm time to ${alarmData.alarmTime}',
         });
         debugPrint('✅ Updated shared alarm document with notification trigger');
       } catch (e) {
         debugPrint('⚠️ Failed to update alarm document: $e');
       }
-      
+
       debugPrint('🎯 Direct notification process completed');
     } catch (e) {
       debugPrint('❌ Error in sendDirectNotificationToSharedUsers: $e');
-
     }
   }
 
@@ -2059,16 +2075,16 @@ class AddOrUpdateAlarmController extends GetxController {
       initTimeTextField();
     }
   }
-  
+
   void changePeriod(String period) {
     isAM.value = period == 'AM';
   }
-  
+
   void confirmTimeInput() {
     setTime();
     changeDatePicker();
   }
-  
+
   void toggleIfAtBoundary() {
     if (!settingsController.is24HrsEnabled.value) {
       final rawHourText = inputHrsController.text.trim();
@@ -2092,7 +2108,7 @@ class AddOrUpdateAlarmController extends GetxController {
       _previousDisplayHour = newHour;
     }
   }
-  
+
   void setTime() {
     selectedTime.value = selectedTime.value;
     toggleIfAtBoundary();
@@ -2101,7 +2117,7 @@ class AddOrUpdateAlarmController extends GetxController {
       int hour = int.parse(inputHrsController.text);
       if (!settingsController.is24HrsEnabled.value) {
         if (isAM.value) {
-          if (hour == 12) hour = 0; 
+          if (hour == 12) hour = 0;
         } else {
           if (hour != 12) hour = hour + 12;
         }
@@ -2112,7 +2128,9 @@ class AddOrUpdateAlarmController extends GetxController {
       DateTime today = DateTime.now();
       DateTime tomorrow = today.add(const Duration(days: 1));
 
-      bool isNextDay = (time.hour == today.hour && time.minute < today.minute) || (time.hour < today.hour);
+      bool isNextDay =
+          (time.hour == today.hour && time.minute < today.minute) ||
+              (time.hour < today.hour);
       bool isNextMonth = isNextDay && (today.day > tomorrow.day);
       bool isNextYear = isNextMonth && (today.month > tomorrow.month);
       int day = isNextDay ? tomorrow.day : today.day;
@@ -2156,10 +2174,10 @@ class AddOrUpdateAlarmController extends GetxController {
     }
     return value;
   }
-  
+
   void initTimeTextField() {
     isAM.value = selectedTime.value.hour < 12;
-    
+
     inputHrsController.text = settingsController.is24HrsEnabled.value
         ? selectedTime.value.hour.toString()
         : (selectedTime.value.hour == 0
@@ -2167,7 +2185,8 @@ class AddOrUpdateAlarmController extends GetxController {
             : (selectedTime.value.hour > 12
                 ? (selectedTime.value.hour - 12).toString()
                 : selectedTime.value.hour.toString()));
-    inputMinutesController.text = selectedTime.value.minute.toString().padLeft(2, '0');
+    inputMinutesController.text =
+        selectedTime.value.minute.toString().padLeft(2, '0');
   }
 
   int orderedCountryCode(Country countryA, Country countryB) {
@@ -2185,14 +2204,17 @@ class LimitRange extends TextInputFormatter {
   final int maxRange;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     try {
       if (newValue.text.isEmpty) {
         return newValue;
       }
       int value = int.parse(newValue.text);
-      if (value < minRange) return TextEditingValue(text: minRange.toString());
-      else if (value > maxRange) return TextEditingValue(text: maxRange.toString());
+      if (value < minRange)
+        return TextEditingValue(text: minRange.toString());
+      else if (value > maxRange)
+        return TextEditingValue(text: maxRange.toString());
       return newValue;
     } catch (e) {
       debugPrint(e.toString());

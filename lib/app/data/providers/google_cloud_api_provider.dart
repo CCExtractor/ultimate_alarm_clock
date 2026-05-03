@@ -11,7 +11,11 @@ import '../models/user_model.dart';
 import 'firestore_provider.dart';
 
 class GoogleCloudProvider {
+  static const String _webClientId =
+      '570321397153-9a9karigj3uhd7k18aerbe3fg845f333.apps.googleusercontent.com';
+
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
+    serverClientId: _webClientId,
     scopes: <String>[
       CalendarApi.calendarScope,
     ],
@@ -26,15 +30,15 @@ class GoogleCloudProvider {
 
       if (await _firebaseAuthInstance.currentUser == null) {
         var googleSignInAccount = await _googleSignIn.signIn();
-        
+
         // User cancelled the sign-in
         if (googleSignInAccount == null) {
           return null;
         }
-        
+
         final GoogleSignInAuthentication? googleAuth =
             await googleSignInAccount.authentication;
-        
+
         if (googleAuth != null) {
           final credential = GoogleAuthProvider.credential(
             accessToken: googleAuth.accessToken,
@@ -69,10 +73,10 @@ class GoogleCloudProvider {
           lastName: lastName,
           email: googleSignInAccount.email,
         );
-        
+
         print('Creating user model with Firebase UID: ${userModel.id}');
         print('User email: ${userModel.email}');
-        
+
         await FirestoreDb.addUser(userModel);
         await SecureStorageProvider().storeUserModel(userModel);
 
@@ -91,8 +95,8 @@ class GoogleCloudProvider {
     }
   }
 
-  static isUserLoggedin()  {
-    return  _firebaseAuthInstance.currentUser != null;
+  static isUserLoggedin() {
+    return _firebaseAuthInstance.currentUser != null;
   }
 
   static Future<List<CalendarListEntry>?> getCalenders() async {

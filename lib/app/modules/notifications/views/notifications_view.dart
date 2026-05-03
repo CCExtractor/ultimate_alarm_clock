@@ -50,14 +50,14 @@ class NotificationsView extends GetView<NotificationsController> {
           debugPrint('   - Has data: ${snapshot.hasData}');
           debugPrint('   - Has error: ${snapshot.hasError}');
           debugPrint('   - Error: ${snapshot.error}');
-          
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             debugPrint('   - Showing loading indicator');
             return const Center(
               child: CircularProgressIndicator(color: kprimaryColor),
             );
           }
-          
+
           if (snapshot.hasError) {
             debugPrint('   - Showing error state: ${snapshot.error}');
             return Center(
@@ -81,13 +81,14 @@ class NotificationsView extends GetView<NotificationsController> {
               ),
             );
           }
-          
+
           if (snapshot.hasData && snapshot.data != null) {
             final document = snapshot.data!;
             final data = document.data();
-            final List notif = data != null ? (data['receivedItems'] ?? []) : [];
+            final List notif =
+                data != null ? (data['receivedItems'] ?? []) : [];
             controller.notifications = notif;
-            
+
             debugPrint('   - Document exists: ${document.exists}');
             debugPrint('   - Document ID: ${document.id}');
             debugPrint('   - Document data exists: ${data != null}');
@@ -96,13 +97,14 @@ class NotificationsView extends GetView<NotificationsController> {
             for (int i = 0; i < notif.length && i < 3; i++) {
               debugPrint('   - Notification ${i + 1}: ${notif[i]}');
             }
-            
+
             if (controller.notifications.isEmpty) {
               debugPrint('   - Showing empty state');
               return _buildEmptyState();
             }
-            
-            debugPrint('   - Showing notifications list with ${controller.notifications.length} items');
+
+            debugPrint(
+                '   - Showing notifications list with ${controller.notifications.length} items');
             return RefreshIndicator(
               color: kprimaryColor,
               backgroundColor: ksecondaryBackgroundColor,
@@ -112,15 +114,22 @@ class NotificationsView extends GetView<NotificationsController> {
               },
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
-                    itemCount: controller.notifications.length,
-                    itemBuilder: (context, index) {
-                  final notification = controller.notifications[index];
+                itemCount: controller.notifications.length,
+                itemBuilder: (context, index) {
+                  final notificationItem = controller.notifications[index];
+                  if (notificationItem is! Map) {
+                    debugPrint(
+                        'Skipping invalid notification item: $notificationItem');
+                    return const SizedBox.shrink();
+                  }
+                  final notification =
+                      Map<String, dynamic>.from(notificationItem);
                   return _buildNotificationCard(notification, index);
                 },
               ),
             );
           }
-          
+
           debugPrint('   - Falling back to empty state');
           return _buildEmptyState();
         },
@@ -170,7 +179,7 @@ class NotificationsView extends GetView<NotificationsController> {
 
   Widget _buildNotificationCard(Map notification, int index) {
     final isAlarm = notification['type'] != 'profile';
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Material(
@@ -181,7 +190,7 @@ class NotificationsView extends GetView<NotificationsController> {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () => _showAcceptDialog(notification, index),
-                              child: Padding(
+          child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
@@ -190,7 +199,9 @@ class NotificationsView extends GetView<NotificationsController> {
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: isAlarm ? kprimaryColor.withOpacity(0.1) : Colors.purple.withOpacity(0.1),
+                    color: isAlarm
+                        ? kprimaryColor.withOpacity(0.1)
+                        : Colors.purple.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: isAlarm
@@ -201,9 +212,7 @@ class NotificationsView extends GetView<NotificationsController> {
                         )
                       : Center(
                           child: Text(
-                            '${notification['profileName']}'
-                                .substring(0, 2)
-                                .toUpperCase(),
+                            _profileInitials(notification['profileName']),
                             style: const TextStyle(
                               color: Colors.purple,
                               fontSize: 18,
@@ -215,17 +224,17 @@ class NotificationsView extends GetView<NotificationsController> {
                 const SizedBox(width: 16),
                 // Content
                 Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         isAlarm ? 'Shared Alarm' : 'Shared Profile',
-                                          style: TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           color: Colors.white.withOpacity(0.6),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         isAlarm
@@ -238,53 +247,54 @@ class NotificationsView extends GetView<NotificationsController> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                                        Text(
+                      Text(
                         'From ${notification['owner']}',
-                                          style: TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           color: Colors.white.withOpacity(0.7),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 // Action indicator
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: kprimaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
-                                            ),
-                                            child: Text(
+                  ),
+                  child: Text(
                     'Tap to accept',
-                                                    style: TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       color: kprimaryColor,
                       fontWeight: FontWeight.w500,
-                                                    ),
+                    ),
                   ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
   void _showAcceptDialog(Map notification, int index) {
     final isAlarm = notification['type'] != 'profile';
-    
+
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: ksecondaryBackgroundColor,
+          decoration: BoxDecoration(
+            color: ksecondaryBackgroundColor,
             borderRadius: BorderRadius.circular(20),
-            ),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -293,7 +303,9 @@ class NotificationsView extends GetView<NotificationsController> {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: isAlarm ? kprimaryColor.withOpacity(0.1) : Colors.purple.withOpacity(0.1),
+                  color: isAlarm
+                      ? kprimaryColor.withOpacity(0.1)
+                      : Colors.purple.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: isAlarm
@@ -304,19 +316,17 @@ class NotificationsView extends GetView<NotificationsController> {
                       )
                     : Center(
                         child: Text(
-                          '${notification['profileName']}'
-                              .substring(0, 2)
-                              .toUpperCase(),
+                          _profileInitials(notification['profileName']),
                           style: const TextStyle(
                             color: Colors.purple,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                ),
+                      ),
               ),
               const SizedBox(height: 20),
-              
+
               // Title
               Text(
                 isAlarm ? 'Accept Shared Alarm?' : 'Accept Shared Profile?',
@@ -328,7 +338,7 @@ class NotificationsView extends GetView<NotificationsController> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              
+
               // Subtitle
               RichText(
                 textAlign: TextAlign.center,
@@ -350,7 +360,7 @@ class NotificationsView extends GetView<NotificationsController> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Item details
               Container(
                 width: double.infinity,
@@ -359,8 +369,8 @@ class NotificationsView extends GetView<NotificationsController> {
                   color: kprimaryBackgroundColor.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
-            child: Column(
-              children: [
+                child: Column(
+                  children: [
                     Text(
                       isAlarm
                           ? NotificationsController.getAlarmTime(notification)
@@ -382,7 +392,8 @@ class NotificationsView extends GetView<NotificationsController> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        NotificationsController.getAlarmLabel(notification).isEmpty
+                        NotificationsController.getAlarmLabel(notification)
+                                .isEmpty
                             ? 'Label: -'
                             : 'Label: ${NotificationsController.getAlarmLabel(notification)}',
                         style: TextStyle(
@@ -402,7 +413,7 @@ class NotificationsView extends GetView<NotificationsController> {
                   ],
                 ),
               ),
-              
+
               // Profile selection for alarms
               if (isAlarm && controller.allProfiles.isNotEmpty) ...[
                 const SizedBox(height: 20),
@@ -425,53 +436,63 @@ class NotificationsView extends GetView<NotificationsController> {
                     itemCount: controller.allProfiles.length,
                     itemBuilder: (context, profileIndex) {
                       return Obx(() => Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: Material(
-                          color: controller.selectedProfile.value == controller.allProfiles[profileIndex]
-                              ? kprimaryColor
-                              : kprimaryBackgroundColor.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(12),
-                            onTap: () {
-                              controller.selectedProfile.value = controller.allProfiles[profileIndex];
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    controller.selectedProfile.value == controller.allProfiles[profileIndex]
-                                        ? Icons.radio_button_checked
-                                        : Icons.radio_button_unchecked,
-                                    color: controller.selectedProfile.value == controller.allProfiles[profileIndex]
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.5),
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: Material(
+                              color: controller.selectedProfile.value ==
+                                      controller.allProfiles[profileIndex]
+                                  ? kprimaryColor
+                                  : kprimaryBackgroundColor.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(12),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () {
+                                  controller.selectedProfile.value =
+                                      controller.allProfiles[profileIndex];
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        controller.selectedProfile.value ==
+                                                controller
+                                                    .allProfiles[profileIndex]
+                                            ? Icons.radio_button_checked
+                                            : Icons.radio_button_unchecked,
+                                        color: controller
+                                                    .selectedProfile.value ==
+                                                controller
+                                                    .allProfiles[profileIndex]
+                                            ? Colors.white
+                                            : Colors.white.withOpacity(0.5),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        controller.allProfiles[profileIndex],
+                                        style: TextStyle(
+                                          color: controller
+                                                      .selectedProfile.value ==
+                                                  controller
+                                                      .allProfiles[profileIndex]
+                                              ? Colors.white
+                                              : Colors.white.withOpacity(0.8),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    controller.allProfiles[profileIndex],
-                                    style: TextStyle(
-                                      color: controller.selectedProfile.value == controller.allProfiles[profileIndex]
-                                          ? Colors.white
-                                          : Colors.white.withOpacity(0.8),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ));
+                          ));
                     },
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 24),
-              
+
               // Action buttons
               Row(
                 children: [
@@ -513,16 +534,17 @@ class NotificationsView extends GetView<NotificationsController> {
                       onPressed: () async {
                         try {
                           debugPrint('🎯 Accept button pressed');
-                          
+
                           // Show loading
                           Get.dialog(
                             const Center(
-                              child: CircularProgressIndicator(color: kprimaryColor),
+                              child: CircularProgressIndicator(
+                                  color: kprimaryColor),
                             ),
                             barrierDismissible: false,
                           );
                           debugPrint('🔄 Loading dialog shown');
-                          
+
                           if (isAlarm) {
                             debugPrint('🔔 Accepting shared alarm...');
                             await controller.acceptSharedAlarmFromNotification(
@@ -533,19 +555,19 @@ class NotificationsView extends GetView<NotificationsController> {
                             debugPrint('📁 Importing profile...');
                             await controller.importProfile(
                               notification['owner'],
-                        notification['profileName'],
+                              notification['profileName'],
                             );
                             debugPrint('✅ Profile imported successfully');
                           }
-                          
+
                           debugPrint('🗑️ Removing notification item...');
                           await FirestoreDb.removeItem(notification);
                           debugPrint('✅ Notification item removed');
-                          
+
                           // Close all dialogs and navigate back to notifications
                           debugPrint('❌ Closing all dialogs');
                           Get.until((route) => !Get.isDialogOpen!);
-                          
+
                           debugPrint('🎉 Showing success snackbar');
                           Get.snackbar(
                             'Success!',
@@ -559,13 +581,13 @@ class NotificationsView extends GetView<NotificationsController> {
                         } catch (e) {
                           debugPrint('❌ Error in accept button: $e');
                           debugPrint('❌ Stack trace: ${StackTrace.current}');
-                          
+
                           // Close all dialogs if open
                           if (Get.isDialogOpen ?? false) {
                             debugPrint('❌ Closing all dialogs due to error');
                             Get.until((route) => !Get.isDialogOpen!);
                           }
-                          
+
                           Get.snackbar(
                             'Error',
                             'Failed to add shared ${isAlarm ? 'alarm' : 'profile'}: ${e.toString()}',
@@ -593,14 +615,24 @@ class NotificationsView extends GetView<NotificationsController> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-            ),
-          ),
-        ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String _profileInitials(dynamic profileName) {
+    final name = profileName?.toString().trim() ?? '';
+    if (name.isEmpty) {
+      return '--';
+    }
+    return name.length == 1
+        ? name.toUpperCase()
+        : name.substring(0, 2).toUpperCase();
   }
 }

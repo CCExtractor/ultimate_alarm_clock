@@ -18,9 +18,8 @@ class SplashScreenController extends GetxController {
 
   bool shouldAlarmRing = true;
   bool shouldNavigate = true;
-  HomeController homeController = Get.find<HomeController>();
-  late Rx<AlarmModel> currentlyRingingAlarm =
-      homeController.genFakeAlarmModel().obs;
+  late HomeController homeController;
+  late Rx<AlarmModel> currentlyRingingAlarm;
 
   getCurrentlyRingingAlarm() async {
     AlarmModel _alarmRecord = homeController.genFakeAlarmModel();
@@ -44,65 +43,30 @@ class SplashScreenController extends GetxController {
     return latestAlarm;
   }
 
-  // Future<bool> checkWeatherCondition(
-  //   LatLng location,
-  //   List<int> weatherTypeInt,
-  // ) async {
-  //   List<WeatherTypes> weatherTypes =
-  //       Utils.getWeatherTypesFromInt(weatherTypeInt);
-  //   String? apiKey =
-  //       await SecureStorageProvider().retrieveApiKey(ApiKeys.openWeatherMap);
-  //   WeatherFactory weatherFactory = WeatherFactory(apiKey!);
-  //   try {
-  //     Weather weatherData = await weatherFactory.currentWeatherByLocation(
-  //       location.latitude,
-  //       location.longitude,
-  //     );
-  //     for (var weatherType in weatherTypes) {
-  //       bool isConditionMet = false;
-  //       switch (weatherType) {
-  //         case WeatherTypes.sunny:
-  //           isConditionMet =
-  //               weatherData.weatherMain?.toLowerCase().contains('clear') ??
-  //                   false;
-  //           break;
-  //         case WeatherTypes.cloudy:
-  //           isConditionMet =
-  //               weatherData.weatherMain?.toLowerCase().contains('cloud') ??
-  //                   false;
-  //           break;
-  //         case WeatherTypes.rainy:
-  //           isConditionMet =
-  //               weatherData.weatherMain?.toLowerCase().contains('rain') ??
-  //                   false;
-  //           break;
-  //         case WeatherTypes.windy:
-  //           isConditionMet =
-  //               weatherData.windSpeed != null && weatherData.windSpeed! >= 15;
-  //           break;
-  //         case WeatherTypes.stormy:
-  //           isConditionMet =
-  //               weatherData.weatherMain?.toLowerCase().contains('storm') ??
-  //                   false;
-  //           break;
-  //       }
-  //
-  //       if (isConditionMet) {
-  //         return true;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     debugPrint('An error occurred while fetching the weather: $e');
-  //   }
-  //
-  //   return false;
-  // }
-
   @override
   void onInit() async {
     super.onInit();
     
-    await IsarDb.fixMaxSnoozeCountInAlarms();
+    // Safely get the HomeController (it's registered in the binding)
+    try {
+      homeController = Get.find<HomeController>();
+    } catch (e) {
+      debugPrint('❌ Could not find HomeController: $e');
+      // Navigate to main screen even if HomeController isn't ready
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Get.offNamed('/bottom-navigation-bar');
+      });
+      return;
+    }
+    
+    currentlyRingingAlarm = homeController.genFakeAlarmModel().obs;
+    
+    // Wrap database fix in try-catch so it doesn't block navigation
+    try {
+      await IsarDb.fixMaxSnoozeCountInAlarms();
+    } catch (e) {
+      debugPrint('❌ Error fixing max snooze count: $e');
+    }
     
     currentlyRingingAlarm.value = homeController.genFakeAlarmModel();
     alarmChannel.setMethodCallHandler((call) async {
@@ -155,9 +119,13 @@ class SplashScreenController extends GetxController {
               
               // Update max snooze count from database if needed
               if (currentlyRingingAlarm.value.alarmID != null) {
-                final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
-                if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
-                  currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+                try {
+                  final dbAlarm = await IsarDb.getAlarm(currentlyRingingAlarm.value.isarId);
+                  if (dbAlarm != null && dbAlarm.maxSnoozeCount != currentlyRingingAlarm.value.maxSnoozeCount) {
+                    currentlyRingingAlarm.value.maxSnoozeCount = dbAlarm.maxSnoozeCount;
+                  }
+                } catch (e) {
+                  debugPrint('Error updating max snooze count: $e');
                 }
               }
               
@@ -225,8 +193,9 @@ class SplashScreenController extends GetxController {
         }
       }
     });
-    // Necessary when hot restarting
-    Future.delayed(const Duration(seconds: 0), () {
+    // Necessary when hot restarting — navigate to main screen
+    // Use a slight delay to allow the method channel handler to register first
+    Future.delayed(const Duration(milliseconds: 500), () {
       if (shouldNavigate == true) {
         Get.offNamed('/bottom-navigation-bar');
       }

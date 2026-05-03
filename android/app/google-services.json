@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "1049389808442",
-    "project_id": "uac-shared-alarm",
-    "storage_bucket": "uac-shared-alarm.firebasestorage.app"
+    "project_number": "570321397153",
+    "project_id": "uac3-6c997",
+    "storage_bucket": "uac3-6c997.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1049389808442:android:1c37f2a32ccb8921ccee03",
+        "mobilesdk_app_id": "1:570321397153:android:52bb982dc3ac96c08297e0",
         "android_client_info": {
           "package_name": "com.ccextractor.ultimate_alarm_clock"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1049389808442-5i7vheuqq8mr30u13g2mokvlc4uh0bme.apps.googleusercontent.com",
+          "client_id": "570321397153-qhdn01kv3i6c3kh02ragd9nba67icc5i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ccextractor.ultimate_alarm_clock",
-            "certificate_hash": "af2e8099a2450348d8d0071c6dd64cd84c63d846"
+            "certificate_hash": "52e4f6358354b0b49d3224ed157b76dfc346f6c6"
           }
         },
         {
-          "client_id": "1049389808442-1534b2579p165uttim1ickuke4jan4i3.apps.googleusercontent.com",
+          "client_id": "570321397153-9a9karigj3uhd7k18aerbe3fg845f333.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAkNU056XAFNXr_aelnu_HBcrzxysu_Aag"
+          "current_key": "AIzaSyB56gkVUgn5_Z4soHbaeDqEd4Ml0WtK-sM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1049389808442-1534b2579p165uttim1ickuke4jan4i3.apps.googleusercontent.com",
+              "client_id": "570321397153-9a9karigj3uhd7k18aerbe3fg845f333.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
