@@ -48,8 +48,6 @@ android {
         multiDexEnabled true
     }
 
-    
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17 // Updated to Java 17
         targetCompatibility JavaVersion.VERSION_17
@@ -78,7 +76,8 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.release
+            // Fall back to debug signing if no release keystore is configured
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {

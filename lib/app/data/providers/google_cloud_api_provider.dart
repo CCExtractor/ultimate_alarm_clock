@@ -11,7 +11,11 @@ import '../models/user_model.dart';
 import 'firestore_provider.dart';
 
 class GoogleCloudProvider {
+  static const String _webClientId =
+      '570321397153-9a9karigj3uhd7k18aerbe3fg845f333.apps.googleusercontent.com';
+
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
+    serverClientId: _webClientId,
     scopes: <String>[
       CalendarApi.calendarScope,
     ],
@@ -19,25 +23,37 @@ class GoogleCloudProvider {
   static final _firebaseAuthInstance = FirebaseAuth.instance;
 
   static getInstance() async {
-    HomeController homeController = Get.find<HomeController>();
-    Get.put(SettingsController());
-    SettingsController settingsController = Get.find<SettingsController>();
+    try {
+      HomeController homeController = Get.find<HomeController>();
+      Get.put(SettingsController());
+      SettingsController settingsController = Get.find<SettingsController>();
 
-    if (await _firebaseAuthInstance.currentUser == null) {
-      var googleSignInAccount = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleSignInAccount?.authentication;
-      if (googleAuth != null)
-      {
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        await _firebaseAuthInstance.signInWithCredential(credential);
+      GoogleSignInAccount? googleSignInAccount =
+          _googleSignIn.currentUser ??
+              await _googleSignIn.signInSilently();
+
+      if (googleSignInAccount == null) {
+        googleSignInAccount = await _googleSignIn.signIn();
       }
 
+      // User cancelled the sign-in
+      if (googleSignInAccount == null) {
+        return null;
+      }
 
-      if (googleSignInAccount != null) {
+      if (_firebaseAuthInstance.currentUser == null) {
+
+        final GoogleSignInAuthentication? googleAuth =
+            await googleSignInAccount.authentication;
+
+        if (googleAuth != null) {
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+          await _firebaseAuthInstance.signInWithCredential(credential);
+        }
+
         // Process successful sign-in
         String fullName = googleSignInAccount.displayName.toString();
         List<String> parts = fullName.split(' ');
@@ -58,12 +74,16 @@ class GoogleCloudProvider {
         String firstName = parts[0].toLowerCase().capitalizeFirst.toString();
 
         var userModel = UserModel(
-          id: googleSignInAccount.id,
+          id: _firebaseAuthInstance.currentUser!.uid,
           fullName: fullName,
           firstName: firstName,
           lastName: lastName,
           email: googleSignInAccount.email,
         );
+
+        print('Creating user model with Firebase UID: ${userModel.id}');
+        print('User email: ${userModel.email}');
+
         await FirestoreDb.addUser(userModel);
         await SecureStorageProvider().storeUserModel(userModel);
 
@@ -73,21 +93,23 @@ class GoogleCloudProvider {
         settingsController.userModel.value = userModel;
         return googleSignInAccount;
       } else {
-        return null;
+        print(_firebaseAuthInstance.currentUser!.email);
+        return googleSignInAccount;
       }
-    } else {
-      print(_firebaseAuthInstance.currentUser!.email);
+    } catch (e) {
+      print('Google Sign-In Error: $e');
+      return null;
     }
   }
 
-  static isUserLoggedin()  {
-    return  _firebaseAuthInstance.currentUser != null;
+  static isUserLoggedin() {
+    return _firebaseAuthInstance.currentUser != null;
   }
 
   static Future<List<CalendarListEntry>?> getCalenders() async {
-    if (_googleSignIn.currentUser == null) {
-      await _firebaseAuthInstance.signOut();
-      await getInstance();
+    final account = await getInstance();
+    if (account == null || _googleSignIn.currentUser == null) {
+      return null;
     }
     final authHeaders = await _googleSignIn.currentUser!.authHeaders;
     final httpClient = GoogleHttpClient(authHeaders);
@@ -101,7 +123,10 @@ class GoogleCloudProvider {
   }
 
   static Future<List<Event>?> getEvents(String calenderId) async {
-    await getInstance();
+    final account = await getInstance();
+    if (account == null || _googleSignIn.currentUser == null) {
+      return null;
+    }
     final authHeaders = await _googleSignIn.currentUser!.authHeaders;
     final httpClient = GoogleHttpClient(authHeaders);
     var dataList = await CalendarApi(httpClient).events.list(calenderId);

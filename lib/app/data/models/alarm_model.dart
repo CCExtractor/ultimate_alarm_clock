@@ -15,6 +15,11 @@ class AlarmModel {
   String? firestoreId;
   late String alarmTime;
   late String alarmID;
+  String? calendarEventId;
+  String? calendarEventStart;
+  String? calendarEventUpdated;
+  String? calendarId;
+  late bool isCalendarEvent;
   late bool isEnabled;
   late bool isLocationEnabled;
   late bool isSharedAlarmEnabled;
@@ -66,6 +71,11 @@ class AlarmModel {
   AlarmModel(
       {required this.alarmTime,
       required this.alarmID,
+      this.calendarEventId,
+      this.calendarEventStart,
+      this.calendarEventUpdated,
+      this.calendarId,
+      this.isCalendarEvent = false,
       this.sharedUserIds = const [],
       required this.ownerId,
       required this.ownerName,
@@ -147,6 +157,11 @@ class AlarmModel {
     snoozeDuration = _asInt(data['snoozeDuration'], 0);
     maxSnoozeCount = _asInt(data['maxSnoozeCount'], 3);
     gradient = _asInt(data['gradient'], 0);
+    calendarEventId = _asString(data['calendarEventId'], '');
+    calendarEventStart = _asString(data['calendarEventStart'], '');
+    calendarEventUpdated = _asString(data['calendarEventUpdated'], '');
+    calendarId = _asString(data['calendarId'], '');
+    isCalendarEvent = _asBool(data['isCalendarEvent'], false);
     label = _asString(data['label'], '');
     isOneTime = _asBool(data['isOneTime'], false);
     firestoreId = documentSnapshot.id;
@@ -198,6 +213,11 @@ class AlarmModel {
     return AlarmModel(
       alarmTime: map['alarmTime'],
       alarmID: map['alarmID'],
+      calendarEventId: map['calendarEventId'],
+      calendarEventStart: map['calendarEventStart'],
+      calendarEventUpdated: map['calendarEventUpdated'],
+      calendarId: map['calendarId'],
+      isCalendarEvent: map['isCalendarEvent'] == 1,
       isEnabled: map['isEnabled'] == 1,
       isLocationEnabled: map['isLocationEnabled'] == 1,
       isSharedAlarmEnabled: map['isSharedAlarmEnabled'] == 1,
@@ -253,6 +273,11 @@ class AlarmModel {
       'firestoreId': firestoreId,
       'alarmTime': alarmTime,
       'alarmID': alarmID,
+      'calendarEventId': calendarEventId,
+      'calendarEventStart': calendarEventStart,
+      'calendarEventUpdated': calendarEventUpdated,
+      'calendarId': calendarId,
+      'isCalendarEvent': isCalendarEvent ? 1 : 0,
       'isEnabled': isEnabled ? 1 : 0,
       'isLocationEnabled': isLocationEnabled ? 1 : 0,
       'isSharedAlarmEnabled': isSharedAlarmEnabled ? 1 : 0,
@@ -308,6 +333,11 @@ class AlarmModel {
     maxSnoozeCount = _asInt(data['maxSnoozeCount'], 3);
     gradient = _asInt(data['gradient'], 0);
     isSharedAlarmEnabled = _asBool(data['isSharedAlarmEnabled'], false);
+    calendarEventId = _asString(data['calendarEventId'], '');
+    calendarEventStart = _asString(data['calendarEventStart'], '');
+    calendarEventUpdated = _asString(data['calendarEventUpdated'], '');
+    calendarId = _asString(data['calendarId'], '');
+    isCalendarEvent = _asBool(data['isCalendarEvent'], false);
     minutesSinceMidnight = _asInt(data['minutesSinceMidnight'], 0);
     alarmTime = _asString(data['alarmTime'], '00:00');
     firestoreId = alarmData['firestoreId'];
@@ -373,6 +403,11 @@ class AlarmModel {
     final alarmMap = <String, dynamic>{
       'firestoreId': alarmRecord.firestoreId,
       'alarmID': alarmRecord.alarmID,
+      'calendarEventId': alarmRecord.calendarEventId,
+      'calendarEventStart': alarmRecord.calendarEventStart,
+      'calendarEventUpdated': alarmRecord.calendarEventUpdated,
+      'calendarId': alarmRecord.calendarId,
+      'isCalendarEvent': alarmRecord.isCalendarEvent,
       'ownerId': alarmRecord.ownerId,
       'lastEditedUserId': alarmRecord.lastEditedUserId,
       'mutexLock': alarmRecord.mutexLock,

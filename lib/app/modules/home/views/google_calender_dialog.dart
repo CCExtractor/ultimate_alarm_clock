@@ -22,7 +22,7 @@ Future<Widget> googleCalenderDialog(
         height: controller.scalingFactor.value * 350,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: controller.calendarFetchStatus == 'Loading'
+            child: controller.calendarFetchStatus.value == 'Loading'
               ? const SizedBox(
                   child: Center(
                     child: CircularProgressIndicator(
@@ -33,7 +33,19 @@ Future<Widget> googleCalenderDialog(
                     ),
                   ),
                 )
-              : Column(
+              : controller.calendarFetchStatus.value == 'Error'
+                  ? Center(
+                      child: Text(
+                        'Failed to load calendars',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
+                              color: themeController.primaryTextColor.value,
+                            ),
+                      ),
+                    )
+                  : Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(

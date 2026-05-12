@@ -1,8 +1,13 @@
-import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'dart:async';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../data/providers/isar_provider.dart';
 import '../../../modules/settings/controllers/theme_controller.dart';
 import '../../../utils/utils.dart';
@@ -128,6 +133,164 @@ class DebugController extends GetxController {
         colorText: Colors.white,
       );
     }
+  }
+
+  Future<void> exportLogs({required String format}) async {
+    try {
+      final logsToExport = await IsarDb().getLogs();
+      if (logsToExport.isEmpty) {
+        Get.snackbar(
+          'Export',
+          'No logs to export',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final hasPermission = await _ensureStoragePermission();
+      if (!hasPermission && Platform.isAndroid) {
+        Get.snackbar(
+          'Export',
+          'Storage permission is required to save in Downloads',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final directory = await _resolveDownloadDirectory();
+      if (directory == null) {
+        Get.snackbar(
+          'Export',
+          'Unable to access Downloads folder',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final extension = format.toLowerCase() == 'json' ? 'json' : 'csv';
+      final filePath =
+          '${directory.path}/alarm_history_$timestamp.$extension';
+
+      final file = File(filePath);
+      if (extension == 'json') {
+        final payload = _buildJsonPayload(logsToExport);
+        await file.writeAsString(payload);
+      } else {
+        final payload = _buildCsvPayload(logsToExport);
+        await file.writeAsString(payload);
+      }
+
+      Get.snackbar(
+        'Export',
+        'Saved to ${file.path}',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Export',
+        'Failed to export logs: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<bool> _ensureStoragePermission() async {
+    if (!Platform.isAndroid) {
+      return true;
+    }
+
+    final manageStatus = await Permission.manageExternalStorage.request();
+    if (manageStatus.isGranted) {
+      return true;
+    }
+
+    final storageStatus = await Permission.storage.request();
+    return storageStatus.isGranted;
+  }
+
+  Future<Directory?> _resolveDownloadDirectory() async {
+    if (Platform.isAndroid) {
+      final publicDownloads = Directory('/storage/emulated/0/Download');
+      if (await publicDownloads.exists()) {
+        return publicDownloads;
+      }
+
+      final appDownloads = await getExternalStorageDirectories(
+        type: StorageDirectory.downloads,
+      );
+      if (appDownloads != null && appDownloads.isNotEmpty) {
+        return appDownloads.first;
+      }
+    }
+
+    return getApplicationDocumentsDirectory();
+  }
+
+  String _buildJsonPayload(List<Map<String, dynamic>> logsToExport) {
+    final normalized = logsToExport.map((log) {
+      final logTime = log['LogTime'];
+      DateTime? logTimeValue;
+      if (logTime is int) {
+        logTimeValue = DateTime.fromMillisecondsSinceEpoch(logTime);
+      }
+      return {
+        ...log,
+        'LogTimeIso': logTimeValue?.toIso8601String(),
+      };
+    }).toList();
+
+    return const JsonEncoder.withIndent('  ').convert(normalized);
+  }
+
+  String _buildCsvPayload(List<Map<String, dynamic>> logsToExport) {
+    const headers = [
+      'LogID',
+      'LogTimeEpoch',
+      'LogTimeIso',
+      'Status',
+      'LogType',
+      'Message',
+      'HasRung',
+      'AlarmID',
+    ];
+
+    final buffer = StringBuffer();
+    buffer.writeln(headers.join(','));
+
+    for (final log in logsToExport) {
+      final logTime = log['LogTime'];
+      DateTime? logTimeValue;
+      if (logTime is int) {
+        logTimeValue = DateTime.fromMillisecondsSinceEpoch(logTime);
+      }
+
+      final row = [
+        log['LogID'],
+        logTime,
+        logTimeValue?.toIso8601String() ?? '',
+        log['Status'] ?? '',
+        log['LogType'] ?? '',
+        log['Message'] ?? '',
+        log['HasRung'] ?? 0,
+        log['AlarmID'] ?? '',
+      ].map(_csvEscape).join(',');
+
+      buffer.writeln(row);
+    }
+
+    return buffer.toString();
+  }
+
+  String _csvEscape(dynamic value) {
+    final text = (value ?? '').toString();
+    final escaped = text.replaceAll('"', '""');
+    return '"$escaped"';
   }
 
   Future<void> selectDateRange() async {
