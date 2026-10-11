@@ -1,8 +1,10 @@
+#!/usr/bin/env bash
+
 # Get the list of Dart files to check
 dart_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(dart)$')
 
 # Check if there are no Dart files to check
-if [[ -z "$dart_files" ]]; then
+if [ -z "$dart_files" ]; then
   exit 0
 fi
 

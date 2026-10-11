@@ -7,7 +7,7 @@ Thank you for considering contributing to the Ultimate Alarm Clock project! Your
 ## Prerequisites
 Before getting started, ensure you have the following prerequisites installed on your system:
 
-- [Flutter](https://flutter.dev/docs/get-started/install): Install the latest version of Flutter, including Dart SDK, by following the official installation guide.
+- [Flutter](https://flutter.dev/docs/get-started/install): This project is pinned to **Flutter 3.22.2** (Dart 3.4.3) in `pubspec.yaml`, `.fvmrc`, and CI. Install that version rather than the latest release, or use [FVM](https://fvm.app/) (the repo ships a `.fvmrc`, so `fvm install && fvm use` selects the correct version automatically).
 
 - [Git](https://git-scm.com/downloads): Version control tool to clone the project's repository.
 
@@ -20,22 +20,36 @@ Before getting started, ensure you have the following prerequisites installed on
 2. **Clone the Repository**: Clone the forked repository to your local development environment using the following command:
 
     ```bash
-    git clone https://github.com/your-username/ultimate-alarm-clock.git
+    git clone https://github.com/your-username/ultimate_alarm_clock.git
     ```
 
-3. **Create a Branch**: Create a new branch for your contributions, giving it a descriptive name.
+3. **Install Dependencies**: Fetch the project's packages (make sure the Flutter 3.22.2 toolchain is active first):
+
+    ```bash
+    cd ultimate_alarm_clock
+    flutter pub get
+    ```
+
+4. **Create a Branch**: Create a new branch for your contributions, giving it a descriptive name.
 
     ```bash
     git checkout -b your-feature-name
     ```
 
-4. **Make Changes**: Make your desired changes, improvements, or bug fixes in your local environment.
+5. **Make Changes**: Make your desired changes, improvements, or bug fixes in your local environment.
 
-5. **Test**: Ensure that your changes do not introduce new issues and do not break existing features. Test your code thoroughly.
+6. **Test**: Ensure that your changes do not introduce new issues and do not break existing features. Test your code thoroughly, and run the analyzer and test suite before committing:
 
-6. **Documentation**: If your changes impact the user interface, configuration, or functionality, update the documentation to reflect the changes.
+    ```bash
+    flutter analyze
+    flutter test
+    ```
 
-7. **Commit**:
+    Note that CI (`.github/workflows/flutter.yml`) only builds a debug APK on pushes to `main`/`next`, so it does not gate pull requests. Please run the commands above locally.
+
+7. **Documentation**: If your changes impact the user interface, configuration, or functionality, update the documentation to reflect the changes.
+
+8. **Commit**:
 
 - **Activate pre-commit hooks (one-time process):** We strongly recommend activating the pre-commit hooks to ensure code consistency. Follow the instructions in the [Activating Pre-Commit Hooks](#activating-pre-commit-hooks) section. This is a one-time setup process, so you only need to do it once on your local machine.
 
@@ -45,21 +59,23 @@ Before getting started, ensure you have the following prerequisites installed on
     git commit -m "Add feature/fix: Describe your changes here"
     ```
 
-8. **Push Changes**: Push your changes to your GitHub fork.
+9. **Push Changes**: Push your changes to your GitHub fork.
 
     ```bash
     git push origin your-feature-name
     ```
 
-9. **Pull Request**: Create a Pull Request (PR) from your fork to the original repository. Ensure your PR has a clear title and description outlining the changes.
+10. **Pull Request**: Create a Pull Request (PR) from your fork to the original repository. Ensure your PR has a clear title and description outlining the changes.
 
-10. **Code Review**: Your PR will undergo code review. Make any necessary adjustments based on feedback.
+11. **Code Review**: Your PR will undergo code review. Make any necessary adjustments based on feedback.
 
-11. **Merge**: Once your PR is approved, it will be merged into the main project repository.
+12. **Merge**: Once your PR is approved, it will be merged into the main project repository.
 
 ## Activating Pre-Commit Hooks
 
 To ensure code consistency and improved code readability, we have implemented pre-commit hooks that automatically format your Dart code before each commit. To activate these hooks:
+
+### Linux / macOS (or Git Bash)
 
 1. **Make the hook script executable:**
 
@@ -72,6 +88,30 @@ To ensure code consistency and improved code readability, we have implemented pr
     ```bash
     ln -s ../../.github/hooks/pre_commit.sh .git/hooks/pre-commit
     ```
+
+### Windows (PowerShell)
+
+Run these commands from the repository root:
+
+```powershell
+New-Item -ItemType SymbolicLink -Path .git/hooks/pre-commit -Target (Resolve-Path .github/hooks/pre_commit.sh)
+```
+
+Creating a symbolic link on Windows may require enabling Developer Mode or running the shell as Administrator. If you get a permissions error, use Git Bash with the Linux/macOS instructions above, or the wrapper-hook alternative below.
+
+### Alternative: wrapper hook (all platforms)
+
+If creating the symlink is not practical on your system, use a small wrapper hook instead. Create `.git/hooks/pre-commit` with the following contents:
+
+```bash
+#!/usr/bin/env bash
+exec "$(git rev-parse --show-toplevel)/.github/hooks/pre_commit.sh"
+```
+
+Then make it executable:
+
+- **Linux / macOS:** `chmod +x .git/hooks/pre-commit`
+- **Windows:** no extra step is needed — Git for Windows runs hooks with its bundled Bash, so the `#!/usr/bin/env bash` shebang is enough.
 
 ## Reporting Issues
 
